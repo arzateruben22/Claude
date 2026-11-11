@@ -277,7 +277,7 @@ _p05 = {"id": "sink", "file": PLATE05, "file9": PLATE05, "push": 0.04, "parallax
         "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(2200 / _PX, 4), "rotX": 0}}}
 # plate-06: one red apple on the oak counter (Part 5). Its picture is projected onto an apple-shaped proxy mesh (pixel-identical before impact); the apple is 334 px wide, so 4175 px per code-metre
 PLATE06 = "../lf01/art/owner/plates/plate-06-apple-16x9.png"
-_p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1032 - 836) / _PX, 4), "ppm": _PX},
+_p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1085 - 836) / _PX, 4), "ppm": _PX},
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
         "anchor": {"rig": {"kind": "apple", "pos": [round((1032 - 836) / _PX, 4), round(0.4 + (470.5 - 515) / _PX, 4), -1.0], "scale": round(4175 / _PX, 4), "rotX": 0}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"

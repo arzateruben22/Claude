@@ -310,13 +310,14 @@ const appleU = { uPlate: { value: null }, uExit: { value: 0 }, uEntry: { value: 
 const appleMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 appleMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, appleU);
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nattribute vec2 uvRest; varying vec2 vPUV; varying vec3 vLoc; uniform float uExit, uEntry;")
-    .replace("#include <begin_vertex>", "vLoc = position; vPUV = uvRest; vec3 transformed = position; float yz2 = dot(position.yz, position.yz); transformed.x += exp(-yz2 / 0.00018) * step(0.0, position.x) * uExit * 0.016 + exp(-yz2 / 0.00002) * step(position.x, 0.0) * uEntry * 0.003;");
+    .replace("#include <begin_vertex>", "vLoc = position; vPUV = uvRest; vec3 transformed = position; float yz2 = dot(position.yz, position.yz); transformed.x += exp(-yz2 / 0.00022) * step(0.0, position.x) * uExit * 0.018 + exp(-yz2 / 0.00002) * step(position.x, 0.0) * uEntry * 0.003;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec2 vPUV; varying vec3 vLoc; uniform sampler2D uPlate; uniform float uExit, uEntry;\n" + ACES_INV_GLSL)
     .replace("#include <opaque_fragment>", `
   vec3 lin = texture2D(uPlate, vPUV).rgb;
   float dE = length(vLoc.yz), an = atan(vLoc.y, vLoc.z), jag = 0.2 * sin(an * 7.0 + 2.0) + 0.12 * sin(an * 13.0 + 0.5), rE = 0.013 * min(1.0, uExit * 3.0);
   float wm = smoothstep(rE * (1.0 + jag), rE * (0.8 + jag), dE) * step(0.0, vLoc.x) * step(0.001, uExit);
   vec3 wc = mix(vec3(0.07, 0.025, 0.02), mix(vec3(0.83, 0.72, 0.46), vec3(0.62, 0.45, 0.26), smoothstep(0.5 * rE, rE, dE)), smoothstep(0.3 * rE, 0.55 * rE, dE));
+  float wb = exp(-dot(vLoc.yz, vLoc.yz) / 0.00022) * step(0.0, vLoc.x) * uExit; lin = mix(lin, mix(vec3(0.66, 0.5, 0.28), vec3(0.85, 0.74, 0.48), smoothstep(0.5, 1.0, wb)), smoothstep(0.22, 0.55, wb) * 0.92);
   lin = mix(lin, wc, wm * 0.96);
   float wn = smoothstep(0.0048, 0.0036, dE) * step(vLoc.x, 0.0) * step(0.001, uEntry); lin = mix(lin, vec3(0.05, 0.02, 0.015), wn);
   outgoingLight = acesInv(lin, 1.0);
@@ -328,7 +329,7 @@ const appleUV = (rg) => { if (appleUVfor === rg) return; appleUVfor = rg; const 
 const MACH = CAL.bullet.mach, HALFANG = Math.asin(1 / MACH);
 const coneM = new THREE.MeshBasicMaterial({ color: 0x9CB4FF, transparent: true, opacity: 0.12, depthWrite: false, side: THREE.DoubleSide });
 const cone = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 24, 1, true), coneM); scene.add(cone);
-const spray = []; const rs2 = rng(5); for (let i = 0; i < 60; i++) { const sz = 0.0028 + 0.005 * rs2() * rs2(), m = new THREE.Mesh(new THREE.IcosahedronGeometry(sz, 0), new THREE.MeshStandardMaterial({ color: i % 3 ? 0xEBDDB4 : 0xB0261C, roughness: i % 3 ? 0.45 : 0.35, flatShading: true })); m.userData = { v: [40 + 120 * rs2(), (rs2() - 0.5) * 120, (rs2() - 0.5) * 120], s: 0.5 + rs2(), spin: [rs2() * 40, rs2() * 40, rs2() * 40] }; m.visible = false; scene.add(m); spray.push(m); }
+const spray = []; const rs2 = rng(5); for (let i = 0; i < 110; i++) { const sz = 0.0012 + 0.0034 * rs2() * rs2(), cream = i % 3 !== 0, m = new THREE.Mesh(new THREE.IcosahedronGeometry(sz, 0), new THREE.MeshStandardMaterial({ color: cream ? 0xF2E6BF : 0xB0261C, roughness: cream ? 0.4 : 0.35, flatShading: true, emissive: cream ? 0xD9C48C : 0x7A1410, emissiveIntensity: cream ? 0.55 : 0.4 })); m.userData = { v: [50 + 130 * rs2(), (rs2() - 0.5) * 90, (rs2() - 0.5) * 90], s: 0.5 + rs2(), spin: [rs2() * 40, rs2() * 40, rs2() * 40] }; m.visible = false; scene.add(m); spray.push(m); }
 
 // ── the storm: a leader tree in the window, a return stroke (drawn in the backdrop plane) ──
 const SL = FILM.ev.leader, LZ = -4.4, TOPY = 6.6, GROUNDY = 0.15, LX0 = -1.2;
@@ -466,7 +467,7 @@ window.seek = function (t) {
       if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
       else if (rg.kind === "apple") {
         if (appleP.parent !== plateRig) plateRig.add(appleP, bullet, cone, ...spray);
-        appleUV(rg); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const tx = new THREE.Texture(im); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
+        appleUV(rg); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
         appleP.visible = !!appleU.uPlate.value; }
       else { if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0); }
       if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
@@ -509,9 +510,9 @@ window.seek = function (t) {
   { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ax = bullet.parent === plateRig ? 0 : APPX, ay = bullet.parent === plateRig ? 0 : APPY, az = bullet.parent === plateRig ? 0 : CUPZ, ap = ax - 0.04, speed = CAL.bullet.v;
     const x = ap + speed * r - 0.0, show = t >= Bt.approach - 1.0 && t < Bt.enter + 70 && x < 3.4;
     bullet.visible = show && !(Math.abs(x - APPX) < 0.0 && false); bullet.position.set(x, ay, az); cone.visible = show;
-    const L = 0.22; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, ay, az);
+    const inRig = bullet.parent === plateRig, L = inRig ? 0.09 : 0.22; coneM.opacity = inRig ? 0.07 : 0.12; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, ay, az);
     const exit = ap + 0.08, afterExit = x > exit, rEx = (t - (Bt.enter + 0.08 / speed * 1e4)) / 1e4;
-    spray.forEach((m) => { m.visible = rEx > 0 && rEx < 0.0009; if (!m.visible) return; const v = m.userData.v; m.position.set(exit + v[0] * rEx * m.userData.s, ay + v[1] * rEx * 0.6, az + v[2] * rEx * 0.6); m.rotation.set(m.userData.spin[0] * rEx * 1e3, m.userData.spin[1] * rEx * 1e3, m.userData.spin[2] * rEx * 1e3); });
+    spray.forEach((m) => { m.visible = rEx > 0 && rEx < 0.0009; if (!m.visible) return; const v = m.userData.v; { const kk = bullet.parent === plateRig ? 4 : 1; m.scale.setScalar(1); m.position.set(exit + v[0] * rEx * m.userData.s * kk, ay + v[1] * rEx * 0.6 * kk, az + v[2] * rEx * 0.6 * kk); } m.rotation.set(m.userData.spin[0] * rEx * 1e3, m.userData.spin[1] * rEx * 1e3, m.userData.spin[2] * rEx * 1e3); });
     const dim = seg(t, Bt.enter - 3.0, Bt.enter - 0.2), shell = afterExit ? 0 : 1; apple.visible = true; apple.scale.set(1 - 0.12 * dim * (afterExit ? 0 : 1) - (afterExit ? 0.0 : 0), 1, 1 - 0.12 * dim); apple.scale.x = t >= Bt.enter + 70 ? 1 : afterExit ? Math.max(0.6, 1 - 0.4 * seg(t, Bt.enter + 0.08 / speed * 1e4, Bt.enter + 0.08 / speed * 1e4 + 2.0)) : 1 - 0.06 * dim; void shell;
     apple.position.set(APPX, APPY, CUPZ); stem.visible = !afterExit;
     if (appleP.parent === plateRig) { const tEx = Bt.enter + 0.08 / speed * 1e4; appleP.position.set(0, 0, 0); appleU.uExit.value = seg(t, tEx - 0.05, tEx + 0.3); appleU.uEntry.value = seg(t, Bt.enter - 0.05, Bt.enter + 0.25); } }
