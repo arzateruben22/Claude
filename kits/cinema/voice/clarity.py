@@ -17,6 +17,8 @@ Chain, in order:
 Measured on Evelyn's S3 recording (11 Nov 2026): noise floor -65 to -90 dB, clipped peaks repaired, and the speech
 recogniser got more words right afterwards ("two soft steps", "your muscles begin to tremble"), so clarity rose.
 Breath ducking with word alignment (duck only between aligned words) is better still: apply it on top, on the stems.
+For a QUIET whisper (the owner's PL reading: -43 dB RMS, mostly unvoiced) use --style normal: the expander can swallow
+soft words ("Here are the rules" was lost with it, kept without it), so duck breaths only by word alignment.
 
 Needs: ffmpeg, and `pip install numpy soundfile noisereduce` (pure Python and numpy; no GPU).
 """
@@ -54,11 +56,22 @@ def main(argv):
         raw, den = Path(td) / "raw.wav", Path(td) / "den.wav"
         run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", a.src, "-ac", "1", "-ar", "48000", "-c:a", "pcm_f32le", "-y", str(raw)])
         x, sr = sf.read(raw, dtype="float32")
+        # pre-level to about -26 LUFS so the compressor and the breath expander see the same level for a quiet
+        # whisper as for a loud memo (a -43 dB whisper would otherwise sit at the expander's threshold)
+        r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", str(raw), "-af", "ebur128", "-f", "null", "-"],
+                           capture_output=True, text=True)
+        lufs = [float(l.split()[1]) for l in r.stderr.splitlines() if l.strip().startswith("I:") and "LUFS" in l]
+        if lufs and lufs[-1] > -70:
+            x = x * np.float32(10 ** ((-26.0 - lufs[-1]) / 20))
+            x = np.clip(x, -1.0, 1.0)
         noise = x[int(n0 * sr):int(n1 * sr)]
         if len(noise) < sr // 2:
             sys.exit("room-tone span is under 0.5 s: pass --noise with a longer silent stretch")
-        y = nr.reduce_noise(y=x, sr=sr, y_noise=noise, stationary=True, prop_decrease=0.75,
-                            n_std_thresh_stationary=1.5, freq_mask_smooth_hz=300, time_mask_smooth_ms=60)
+        if float(np.abs(noise).max()) < 1e-6:
+            y = x   # the room tone is digital silence (the recorder gated it): nothing to profile, skip the denoiser
+        else:
+            y = nr.reduce_noise(y=x, sr=sr, y_noise=noise, stationary=True, prop_decrease=0.75,
+                                n_std_thresh_stationary=1.5, freq_mask_smooth_hz=300, time_mask_smooth_ms=60)
         sf.write(den, np.asarray(y, dtype="float32"), sr, subtype="FLOAT")
         chain = ",".join([CHAIN_COMMON] + ([EXPANDER] if a.style == "whisper" else []) + [LOUDNESS])
         run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", str(den), "-af", chain, "-ar", "48000", "-c:a", "pcm_s24le", "-y", a.dst])
