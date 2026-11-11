@@ -46,8 +46,8 @@
   },
   {
    "id": "vo02",
-   "text": "No camera on Earth could film all of this. So every picture here is drawn by a computer, from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes ten. A small hummingbird hovers at the window. Its wings beat about fifty times a second. At ten times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings, going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips: they trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about sixty a second. So fifty wing beats a second just smear together. But look at the fly by the cup. Even at ten times slower, its wings are still a blur.",
-   "heard": "No camera on Earth could film all of this. So every picture here is drawn by a computer from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes 10. A small hummingbird hovers at the window. Its wings beat about 50 times a second. At 10 times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips. They trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about 60 a second. So 50 wing beats a second just smear together. But look at the fly by the cup. Even at 10 times slower, its wings are still a blur.",
+   "text": "No camera on Earth could film all of this. So every picture here is drawn by a computer, from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes ten. A small hummingbird hovers at the window. Its wings beat about fifty times a second. At ten times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings, going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips: they trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about sixty a second. So fifty wing beats a second just smear together. Quick pause: if that one got you, tap like and follow. Okay, back to it. But look at the fly by the cup. Even at ten times slower, its wings are still a blur.",
+   "heard": "No camera on Earth could film all of this. So every picture here is drawn by a computer from the physics. When a number was measured by someone, I'll say so. When a picture is just an idea, it will wear a badge. Ten times slower. One second now takes 10. A small hummingbird hovers at the window. Its wings beat about 50 times a second. At 10 times slower, that's five beats a second. Now you can see them. Not a blur anymore, just wings going up and down. The wings are doing all the work of holding it still. Each wing sweeps forward, flips, and sweeps back. Watch the wing tips. They trace tiny loops in the air. Here's why they blur at full speed. Your eyes blend flashes that come faster than about 60 a second. So 50 wing beats a second just smear together. Quick pause if that one got you tap like and follow. Okay, back to it. But look at the fly by the cup. Even at 10 times slower, its wings are still a blur.",
    "words": [
     {
      "w": "No",
@@ -57,7 +57,7 @@
     },
     {
      "w": "camera",
-     "start": 0.29,
+     "start": 0.28,
      "end": 0.72,
      "heard": true
     },
@@ -69,986 +69,1076 @@
     },
     {
      "w": "Earth",
-     "start": 0.92,
+     "start": 0.915,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "could",
-     "start": 1.2,
+     "start": 1.19,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "film",
-     "start": 1.395,
+     "start": 1.39,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "all",
-     "start": 1.72,
+     "start": 1.71,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "of",
-     "start": 2.0,
+     "start": 1.99,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "this.",
-     "start": 2.03,
+     "start": 2.02,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "So",
-     "start": 2.8,
+     "start": 2.795,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "every",
-     "start": 2.99,
+     "start": 2.985,
      "end": 3.2,
      "heard": true
     },
     {
      "w": "picture",
-     "start": 3.31,
+     "start": 3.3,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "here",
-     "start": 3.705,
+     "start": 3.675,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "is",
-     "start": 3.735,
+     "start": 3.845,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "drawn",
-     "start": 4.085,
-     "end": 4.48,
+     "start": 4.04,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "by",
-     "start": 4.475,
-     "end": 4.64,
+     "start": 4.395,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.73,
-     "end": 4.8,
+     "start": 4.625,
+     "end": 4.675,
      "heard": true
     },
     {
      "w": "computer,",
-     "start": 4.915,
-     "end": 5.36,
+     "start": 4.655,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "from",
-     "start": 5.355,
+     "start": 5.195,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.265,
      "end": 5.52,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 5.425,
-     "end": 5.68,
-     "heard": true
-    },
-    {
      "w": "physics.",
-     "start": 5.695,
-     "end": 6.64,
+     "start": 5.54,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "When",
-     "start": 6.84,
-     "end": 6.89,
+     "start": 6.665,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.87,
-     "end": 7.04,
+     "start": 6.695,
+     "end": 6.88,
      "heard": true
     },
     {
      "w": "number",
-     "start": 7.125,
-     "end": 7.28,
+     "start": 6.94,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "was",
-     "start": 7.21,
-     "end": 7.52,
+     "start": 7.025,
+     "end": 7.28,
      "heard": true
     },
     {
      "w": "measured",
-     "start": 7.475,
-     "end": 8.0,
+     "start": 7.29,
+     "end": 7.76,
      "heard": true
     },
     {
      "w": "by",
-     "start": 7.955,
-     "end": 8.16,
+     "start": 7.72,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "someone,",
-     "start": 8.245,
-     "end": 8.64,
+     "start": 8.01,
+     "end": 8.4,
      "heard": true
     },
     {
      "w": "I'll",
-     "start": 8.605,
-     "end": 9.04,
+     "start": 8.34,
+     "end": 8.8,
      "heard": true
     },
     {
      "w": "say",
-     "start": 8.92,
-     "end": 9.28,
+     "start": 8.88,
+     "end": 8.96,
      "heard": true
     },
     {
      "w": "so.",
-     "start": 9.21,
-     "end": 9.84,
+     "start": 9.01,
+     "end": 9.52,
      "heard": true
     },
     {
      "w": "When",
-     "start": 10.04,
-     "end": 10.09,
+     "start": 9.715,
+     "end": 9.765,
      "heard": true
     },
     {
      "w": "a",
-     "start": 10.07,
-     "end": 10.24,
+     "start": 9.745,
+     "end": 9.84,
      "heard": true
     },
     {
      "w": "picture",
-     "start": 10.24,
-     "end": 10.64,
+     "start": 9.905,
+     "end": 10.24,
      "heard": true
     },
     {
      "w": "is",
-     "start": 10.64,
-     "end": 10.8,
+     "start": 10.18,
+     "end": 10.4,
      "heard": true
     },
     {
      "w": "just",
-     "start": 10.82,
-     "end": 11.04,
+     "start": 10.4,
+     "end": 10.56,
      "heard": true
     },
     {
      "w": "an",
-     "start": 11.01,
-     "end": 11.2,
+     "start": 10.58,
+     "end": 10.8,
      "heard": true
     },
     {
      "w": "idea,",
-     "start": 11.295,
-     "end": 11.76,
+     "start": 10.91,
+     "end": 11.28,
      "heard": true
     },
     {
      "w": "it",
-     "start": 11.75,
-     "end": 11.92,
+     "start": 11.36,
+     "end": 11.41,
      "heard": true
     },
     {
      "w": "will",
-     "start": 11.865,
-     "end": 12.0,
+     "start": 11.39,
+     "end": 11.52,
      "heard": true
     },
     {
      "w": "wear",
-     "start": 11.895,
-     "end": 12.32,
+     "start": 11.535,
+     "end": 11.76,
      "heard": true
     },
     {
      "w": "a",
-     "start": 12.38,
-     "end": 12.43,
+     "start": 11.85,
+     "end": 11.92,
      "heard": true
     },
     {
      "w": "badge.",
-     "start": 12.41,
-     "end": 13.28,
+     "start": 12.015,
+     "end": 12.64,
      "heard": true
     },
     {
      "w": "Ten",
-     "start": 13.415,
-     "end": 13.76,
+     "start": 12.765,
+     "end": 13.04,
      "heard": true
     },
     {
      "w": "times",
-     "start": 13.68,
-     "end": 14.08,
+     "start": 13.02,
+     "end": 13.44,
      "heard": true
     },
     {
      "w": "slower.",
-     "start": 14.175,
-     "end": 15.04,
+     "start": 13.53,
+     "end": 14.24,
      "heard": true
     },
     {
      "w": "One",
-     "start": 15.145,
-     "end": 15.36,
+     "start": 14.365,
+     "end": 14.56,
      "heard": true
     },
     {
      "w": "second",
-     "start": 15.445,
-     "end": 15.84,
+     "start": 14.64,
+     "end": 14.96,
      "heard": true
     },
     {
      "w": "now",
-     "start": 15.765,
-     "end": 16.08,
+     "start": 14.905,
+     "end": 15.2,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 16.035,
-     "end": 16.4,
+     "start": 15.15,
+     "end": 15.52,
      "heard": true
     },
     {
      "w": "ten.",
-     "start": 16.35,
-     "end": 17.12,
+     "start": 15.465,
+     "end": 16.16,
      "heard": true
     },
     {
      "w": "A",
-     "start": 17.295,
-     "end": 17.36,
+     "start": 16.32,
+     "end": 16.4,
      "heard": true
     },
     {
      "w": "small",
-     "start": 17.44,
-     "end": 17.68,
+     "start": 16.49,
+     "end": 16.64,
      "heard": true
     },
     {
      "w": "hummingbird",
-     "start": 17.77,
-     "end": 18.4,
+     "start": 16.735,
+     "end": 17.36,
      "heard": true
     },
     {
      "w": "hovers",
-     "start": 18.37,
-     "end": 18.88,
+     "start": 17.395,
+     "end": 17.76,
      "heard": true
     },
     {
      "w": "at",
-     "start": 18.93,
-     "end": 18.98,
+     "start": 17.8,
+     "end": 17.85,
      "heard": true
     },
     {
      "w": "the",
-     "start": 18.96,
-     "end": 19.12,
+     "start": 17.885,
+     "end": 18.0,
      "heard": true
     },
     {
      "w": "window.",
-     "start": 19.215,
-     "end": 19.84,
+     "start": 18.08,
+     "end": 18.64,
      "heard": true
     },
     {
      "w": "Its",
-     "start": 19.95,
-     "end": 20.08,
+     "start": 18.74,
+     "end": 18.88,
      "heard": true
     },
     {
      "w": "wings",
-     "start": 20.035,
-     "end": 20.56,
+     "start": 18.825,
+     "end": 19.28,
      "heard": true
     },
     {
      "w": "beat",
-     "start": 20.69,
-     "end": 20.96,
+     "start": 19.38,
+     "end": 19.6,
      "heard": true
     },
     {
      "w": "about",
-     "start": 20.945,
-     "end": 21.12,
+     "start": 19.64,
+     "end": 19.84,
      "heard": true
     },
     {
      "w": "fifty",
-     "start": 21.125,
-     "end": 21.6,
+     "start": 19.8,
+     "end": 20.24,
      "heard": true
     },
     {
      "w": "times",
-     "start": 21.535,
-     "end": 21.92,
+     "start": 20.18,
+     "end": 20.56,
      "heard": true
     },
     {
      "w": "a",
-     "start": 21.91,
-     "end": 22.08,
+     "start": 20.525,
+     "end": 20.72,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 22.09,
-     "end": 22.88,
+     "start": 20.855,
+     "end": 21.44,
      "heard": true
     },
     {
      "w": "At",
-     "start": 23.01,
-     "end": 23.12,
+     "start": 21.605,
+     "end": 21.68,
      "heard": true
     },
     {
      "w": "ten",
-     "start": 23.15,
-     "end": 23.52,
+     "start": 21.73,
+     "end": 22.0,
      "heard": true
     },
     {
      "w": "times",
-     "start": 23.405,
-     "end": 23.84,
+     "start": 21.97,
+     "end": 22.32,
      "heard": true
     },
     {
      "w": "slower,",
-     "start": 23.935,
-     "end": 24.4,
+     "start": 22.405,
+     "end": 22.88,
      "heard": true
     },
     {
      "w": "that's",
-     "start": 24.425,
-     "end": 24.72,
+     "start": 22.875,
+     "end": 23.12,
      "heard": true
     },
     {
      "w": "five",
-     "start": 24.73,
-     "end": 25.04,
+     "start": 23.025,
+     "end": 23.44,
      "heard": true
     },
     {
      "w": "beats",
-     "start": 25.12,
-     "end": 25.44,
+     "start": 23.51,
+     "end": 23.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 25.51,
-     "end": 25.6,
+     "start": 23.905,
+     "end": 23.955,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 25.66,
-     "end": 26.24,
+     "start": 24.05,
+     "end": 24.56,
      "heard": true
     },
     {
      "w": "Now",
-     "start": 26.27,
-     "end": 26.48,
+     "start": 24.605,
+     "end": 24.8,
      "heard": true
     },
     {
      "w": "you",
-     "start": 26.535,
-     "end": 26.72,
+     "start": 24.8,
+     "end": 25.04,
      "heard": true
     },
     {
      "w": "can",
-     "start": 26.665,
-     "end": 26.96,
+     "start": 24.955,
+     "end": 25.2,
      "heard": true
     },
     {
      "w": "see",
-     "start": 26.95,
-     "end": 27.12,
+     "start": 25.24,
+     "end": 25.44,
      "heard": true
     },
     {
      "w": "them.",
-     "start": 27.16,
-     "end": 27.68,
+     "start": 25.425,
+     "end": 26.0,
      "heard": true
     },
     {
      "w": "Not",
-     "start": 27.725,
-     "end": 27.84,
+     "start": 26.11,
+     "end": 26.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 27.755,
-     "end": 28.0,
+     "start": 26.3,
+     "end": 26.4,
      "heard": true
     },
     {
      "w": "blur",
-     "start": 28.035,
-     "end": 28.4,
+     "start": 26.45,
+     "end": 26.8,
      "heard": true
     },
     {
      "w": "anymore,",
-     "start": 28.345,
-     "end": 28.96,
+     "start": 26.78,
+     "end": 27.44,
      "heard": true
     },
     {
      "w": "just",
-     "start": 28.935,
-     "end": 29.2,
+     "start": 27.385,
+     "end": 27.68,
      "heard": true
     },
     {
      "w": "wings,",
-     "start": 29.155,
-     "end": 29.76,
+     "start": 27.59,
+     "end": 28.32,
      "heard": true
     },
     {
      "w": "going",
-     "start": 29.785,
-     "end": 30.08,
+     "start": 28.325,
+     "end": 28.64,
      "heard": true
     },
     {
      "w": "up",
-     "start": 30.24,
-     "end": 30.32,
+     "start": 28.805,
+     "end": 28.88,
      "heard": true
     },
     {
      "w": "and",
-     "start": 30.39,
-     "end": 30.64,
+     "start": 28.985,
+     "end": 29.12,
      "heard": true
     },
     {
      "w": "down.",
-     "start": 30.695,
-     "end": 31.28,
+     "start": 29.205,
+     "end": 29.68,
      "heard": true
     },
     {
      "w": "The",
-     "start": 31.455,
-     "end": 31.505,
+     "start": 29.795,
+     "end": 29.845,
      "heard": true
     },
     {
      "w": "wings",
-     "start": 31.485,
-     "end": 31.84,
+     "start": 29.825,
+     "end": 30.24,
      "heard": true
     },
     {
      "w": "are",
-     "start": 31.82,
-     "end": 32.0,
+     "start": 30.225,
+     "end": 30.4,
      "heard": true
     },
     {
      "w": "doing",
-     "start": 31.96,
-     "end": 32.24,
+     "start": 30.365,
+     "end": 30.64,
      "heard": true
     },
     {
      "w": "all",
-     "start": 32.275,
-     "end": 32.4,
+     "start": 30.71,
+     "end": 30.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 32.46,
-     "end": 32.56,
+     "start": 30.89,
+     "end": 30.96,
      "heard": true
     },
     {
      "w": "work",
-     "start": 32.49,
-     "end": 32.72,
+     "start": 30.92,
+     "end": 31.12,
      "heard": true
     },
     {
      "w": "of",
-     "start": 32.745,
-     "end": 32.88,
+     "start": 31.175,
+     "end": 31.28,
      "heard": true
     },
     {
      "w": "holding",
-     "start": 32.925,
-     "end": 33.28,
+     "start": 31.355,
+     "end": 31.76,
      "heard": true
     },
     {
      "w": "it",
-     "start": 33.34,
-     "end": 33.6,
+     "start": 31.775,
+     "end": 32.0,
      "heard": true
     },
     {
      "w": "still.",
-     "start": 33.505,
-     "end": 34.24,
+     "start": 31.935,
+     "end": 32.64,
      "heard": true
     },
     {
      "w": "Each",
-     "start": 34.36,
-     "end": 34.48,
+     "start": 32.79,
+     "end": 32.96,
      "heard": true
     },
     {
      "w": "wing",
-     "start": 34.5,
-     "end": 34.88,
+     "start": 33.045,
+     "end": 33.28,
      "heard": true
     },
     {
      "w": "sweeps",
-     "start": 35.0,
-     "end": 35.28,
+     "start": 33.285,
+     "end": 33.76,
      "heard": true
     },
     {
      "w": "forward,",
-     "start": 35.315,
-     "end": 35.76,
+     "start": 33.745,
+     "end": 34.24,
      "heard": true
     },
     {
      "w": "flips,",
-     "start": 35.775,
-     "end": 36.24,
+     "start": 34.205,
+     "end": 34.64,
      "heard": true
     },
     {
      "w": "and",
-     "start": 36.205,
-     "end": 36.4,
+     "start": 34.63,
+     "end": 34.8,
      "heard": true
     },
     {
      "w": "sweeps",
-     "start": 36.495,
-     "end": 37.04,
+     "start": 34.925,
+     "end": 35.44,
      "heard": true
     },
     {
      "w": "back.",
-     "start": 37.11,
-     "end": 37.6,
+     "start": 35.54,
+     "end": 36.0,
      "heard": true
     },
     {
      "w": "Watch",
-     "start": 37.705,
-     "end": 37.92,
+     "start": 36.165,
+     "end": 36.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 37.905,
-     "end": 38.08,
+     "start": 36.495,
+     "end": 36.56,
      "heard": true
     },
     {
      "w": "wing",
-     "start": 38.04,
-     "end": 38.4,
+     "start": 36.525,
+     "end": 36.88,
      "heard": true
     },
     {
      "w": "tips:",
-     "start": 38.355,
-     "end": 38.96,
+     "start": 36.81,
+     "end": 37.28,
      "heard": true
     },
     {
      "w": "they",
-     "start": 39.095,
-     "end": 39.145,
+     "start": 37.37,
+     "end": 37.44,
      "heard": true
     },
     {
      "w": "trace",
-     "start": 39.195,
-     "end": 39.52,
+     "start": 37.4,
+     "end": 37.84,
      "heard": true
     },
     {
      "w": "tiny",
-     "start": 39.54,
-     "end": 39.84,
+     "start": 37.82,
+     "end": 38.16,
      "heard": true
     },
     {
      "w": "loops",
-     "start": 39.84,
-     "end": 40.24,
+     "start": 38.16,
+     "end": 38.56,
      "heard": true
     },
     {
      "w": "in",
-     "start": 40.195,
-     "end": 40.4,
+     "start": 38.475,
+     "end": 38.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 40.445,
-     "end": 40.495,
+     "start": 38.71,
+     "end": 38.76,
      "heard": true
     },
     {
      "w": "air.",
-     "start": 40.56,
-     "end": 40.96,
+     "start": 38.74,
+     "end": 39.28,
      "heard": true
     },
     {
      "w": "Here's",
-     "start": 41.0,
-     "end": 41.2,
+     "start": 39.36,
+     "end": 39.52,
      "heard": true
     },
     {
      "w": "why",
-     "start": 41.18,
-     "end": 41.36,
+     "start": 39.55,
+     "end": 39.76,
      "heard": true
     },
     {
      "w": "they",
-     "start": 41.41,
-     "end": 41.52,
+     "start": 39.765,
+     "end": 39.84,
      "heard": true
     },
     {
      "w": "blur",
-     "start": 41.565,
-     "end": 41.92,
+     "start": 39.92,
+     "end": 40.24,
      "heard": true
     },
     {
      "w": "at",
-     "start": 41.925,
-     "end": 42.08,
+     "start": 40.28,
+     "end": 40.4,
      "heard": true
     },
     {
      "w": "full",
-     "start": 42.025,
-     "end": 42.48,
+     "start": 40.38,
+     "end": 40.72,
      "heard": true
     },
     {
      "w": "speed.",
-     "start": 42.39,
-     "end": 43.28,
+     "start": 40.775,
+     "end": 41.52,
      "heard": true
     },
     {
      "w": "Your",
-     "start": 43.36,
-     "end": 43.52,
+     "start": 41.61,
+     "end": 41.76,
      "heard": true
     },
     {
      "w": "eyes",
-     "start": 43.53,
-     "end": 43.92,
+     "start": 41.765,
+     "end": 42.16,
      "heard": true
     },
     {
      "w": "blend",
-     "start": 44.02,
-     "end": 44.4,
+     "start": 42.23,
+     "end": 42.56,
      "heard": true
     },
     {
      "w": "flashes",
-     "start": 44.425,
-     "end": 44.96,
+     "start": 42.63,
+     "end": 43.12,
      "heard": true
     },
     {
      "w": "that",
-     "start": 45.07,
-     "end": 45.12,
+     "start": 43.165,
+     "end": 43.28,
      "heard": true
     },
     {
      "w": "come",
-     "start": 45.1,
-     "end": 45.36,
+     "start": 43.275,
+     "end": 43.52,
      "heard": true
     },
     {
      "w": "faster",
-     "start": 45.315,
-     "end": 45.76,
+     "start": 43.525,
+     "end": 43.92,
      "heard": true
     },
     {
      "w": "than",
-     "start": 45.675,
-     "end": 46.0,
+     "start": 43.835,
+     "end": 44.08,
      "heard": true
     },
     {
      "w": "about",
-     "start": 45.975,
-     "end": 46.16,
+     "start": 43.975,
+     "end": 44.32,
      "heard": true
     },
     {
      "w": "sixty",
-     "start": 46.175,
-     "end": 46.72,
+     "start": 44.305,
+     "end": 44.8,
      "heard": true
     },
     {
      "w": "a",
-     "start": 46.815,
-     "end": 46.88,
+     "start": 44.7,
+     "end": 44.96,
      "heard": true
     },
     {
      "w": "second.",
-     "start": 46.97,
-     "end": 47.6,
+     "start": 45.07,
+     "end": 45.68,
      "heard": true
     },
     {
      "w": "So",
-     "start": 47.7,
-     "end": 47.84,
+     "start": 45.78,
+     "end": 45.92,
      "heard": true
     },
     {
      "w": "fifty",
-     "start": 47.935,
-     "end": 48.24,
+     "start": 45.995,
+     "end": 46.32,
      "heard": true
     },
     {
      "w": "wing",
-     "start": 48.18,
-     "end": 48.56,
+     "start": 46.22,
+     "end": 46.64,
      "heard": true
     },
     {
      "w": "beats",
-     "start": 48.62,
-     "end": 48.96,
+     "start": 46.625,
+     "end": 46.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 49.025,
-     "end": 49.075,
+     "start": 47.03,
+     "end": 47.08,
      "heard": true
     },
     {
      "w": "second",
-     "start": 49.155,
-     "end": 49.36,
+     "start": 47.16,
+     "end": 47.36,
      "heard": true
     },
     {
      "w": "just",
-     "start": 49.315,
-     "end": 49.6,
+     "start": 47.32,
+     "end": 47.52,
      "heard": true
     },
     {
      "w": "smear",
-     "start": 49.575,
-     "end": 49.92,
+     "start": 47.59,
+     "end": 47.84,
      "heard": true
     },
     {
      "w": "together.",
-     "start": 49.99,
-     "end": 50.72,
+     "start": 48.005,
+     "end": 48.64,
      "heard": true
     },
     {
-     "w": "But",
-     "start": 50.89,
-     "end": 50.96,
+     "w": "Quick",
+     "start": 48.8,
+     "end": 49.04,
      "heard": true
     },
     {
-     "w": "look",
-     "start": 50.97,
+     "w": "pause:",
+     "start": 49.05,
+     "end": 49.44,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 49.565,
+     "end": 49.68,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 49.71,
+     "end": 49.84,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 49.855,
+     "end": 50.0,
+     "heard": true
+    },
+    {
+     "w": "got",
+     "start": 50.03,
+     "end": 50.16,
+     "heard": true
+    },
+    {
+     "w": "you,",
+     "start": 50.24,
+     "end": 50.32,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 50.415,
+     "end": 50.64,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 50.68,
+     "end": 50.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 50.88,
      "end": 51.12,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 51.125,
-     "end": 51.2,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 51.235,
-     "end": 51.36,
-     "heard": true
-    },
-    {
-     "w": "fly",
-     "start": 51.405,
-     "end": 51.76,
-     "heard": true
-    },
-    {
-     "w": "by",
-     "start": 51.745,
+     "w": "follow.",
+     "start": 51.09,
      "end": 51.92,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 51.985,
-     "end": 52.08,
+     "w": "Okay,",
+     "start": 52.005,
+     "end": 52.56,
      "heard": true
     },
     {
-     "w": "cup.",
-     "start": 52.015,
+     "w": "back",
+     "start": 52.525,
      "end": 52.8,
      "heard": true
     },
     {
-     "w": "Even",
-     "start": 52.885,
-     "end": 53.12,
+     "w": "to",
+     "start": 52.8,
+     "end": 52.96,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 53.075,
+     "end": 53.44,
+     "heard": true
+    },
+    {
+     "w": "But",
+     "start": 53.57,
+     "end": 53.62,
+     "heard": true
+    },
+    {
+     "w": "look",
+     "start": 53.6,
+     "end": 53.76,
      "heard": true
     },
     {
      "w": "at",
-     "start": 53.215,
-     "end": 53.28,
+     "start": 53.805,
+     "end": 53.92,
      "heard": true
     },
     {
-     "w": "ten",
-     "start": 53.305,
-     "end": 53.6,
-     "heard": true
-    },
-    {
-     "w": "times",
-     "start": 53.585,
+     "w": "the",
+     "start": 53.915,
      "end": 54.0,
      "heard": true
     },
     {
+     "w": "fly",
+     "start": 54.085,
+     "end": 54.4,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 54.425,
+     "end": 54.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 54.565,
+     "end": 54.72,
+     "heard": true
+    },
+    {
+     "w": "cup.",
+     "start": 54.67,
+     "end": 55.44,
+     "heard": true
+    },
+    {
+     "w": "Even",
+     "start": 55.515,
+     "end": 55.76,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 55.855,
+     "end": 55.92,
+     "heard": true
+    },
+    {
+     "w": "ten",
+     "start": 55.935,
+     "end": 56.24,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 56.215,
+     "end": 56.56,
+     "heard": true
+    },
+    {
      "w": "slower,",
-     "start": 54.095,
-     "end": 54.64,
+     "start": 56.655,
+     "end": 57.2,
      "heard": true
     },
     {
      "w": "its",
-     "start": 54.665,
-     "end": 54.88,
+     "start": 57.19,
+     "end": 57.36,
      "heard": true
     },
     {
      "w": "wings",
-     "start": 54.765,
-     "end": 55.2,
+     "start": 57.295,
+     "end": 57.76,
      "heard": true
     },
     {
      "w": "are",
-     "start": 55.235,
-     "end": 55.36,
+     "start": 57.74,
+     "end": 57.92,
      "heard": true
     },
     {
      "w": "still",
-     "start": 55.47,
-     "end": 55.52,
+     "start": 57.975,
+     "end": 58.08,
      "heard": true
     },
     {
      "w": "a",
-     "start": 55.5,
-     "end": 55.68,
+     "start": 58.005,
+     "end": 58.16,
      "heard": true
     },
     {
      "w": "blur.",
-     "start": 55.75,
-     "end": 56.16,
+     "start": 58.255,
+     "end": 58.64,
      "heard": true
     }
    ]
