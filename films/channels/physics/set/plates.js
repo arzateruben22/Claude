@@ -13,12 +13,13 @@
 //   layers         [{ file, file9, depth }]: depth slices cut from the plate (PNG with alpha), nearest last; each drifts by its own amount (2.5D)
 //   fade           seconds of cross-fade at the ends of the shot (default 0.35)
 //   cam            { look, fitW, yaw, pitch }: pins the code camera for the shot so the subjects line up with the plate
+//   cam3           { pos: [x, y, z], target: [x, y, z], fov }: a pinhole camera that matches the plate (the vertical field of view in degrees); the push is a zoom of that field, so the proxy room stays aligned
 //   anchor         { pos: [x, y, z], scale, tint: "#rrggbb", shadow: 0..1, focus: [x, y, z], fstop }: where the code subject sits, its light tint, its contact shadow and the depth of field
 // Missing or unreadable images switch that plate off, and the code kitchen is drawn instead (the fallback).
 import * as THREE from "three";
 
 export const createPlates = ({ scene, camera, W, H, FILM }) => {
-  const nine = H > W, list = (FILM.plates || []).filter(Boolean), D = 6, fov = (camera.fov * Math.PI) / 180, qh = 2 * D * Math.tan(fov / 2), qw = qh * (W / H);
+  const nine = H > W, list = (FILM.plates || []).filter(Boolean), D = 6;
   const loader = new THREE.TextureLoader();
   if (!scene.children.includes(camera)) scene.add(camera);
   const load = (file) => new Promise((res) => {
@@ -29,10 +30,7 @@ export const createPlates = ({ scene, camera, W, H, FILM }) => {
     const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false }));
     m.renderOrder = -100 + z; m.visible = false; m.frustumCulled = false; camera.add(m); return m;
   };
-  const cover = (tex, m) => {   // fit the image to cover the frame (no stretch), centred
-    const ia = tex.image.width / tex.image.height, fa = W / H, w = ia > fa ? qh * ia : qw, h = ia > fa ? qh : qw / ia;
-    m.userData.base = [w, h];
-  };
+  const cover = (tex, m) => { m.userData.ia = tex.image.width / tex.image.height; };   // fit the image to cover the frame (no stretch), centred: sized every frame from the camera's field of view
   const items = list.map((p) => ({ p, quads: [], ok: false }));
   const ready = Promise.all(items.map(async (it) => {
     const layers = it.p.layers && it.p.layers.length ? it.p.layers : [{ file: it.p.file, file9: it.p.file9, depth: 0 }];
@@ -47,13 +45,17 @@ export const createPlates = ({ scene, camera, W, H, FILM }) => {
     const it = active(t); if (!it) return false;
     const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), f = p.fade ?? 0.35;
     const a = Math.min(1, (t - p.t0) / f, (p.t1 - t) / f), push = p.push ?? 0.05, par = p.parallax ?? 0.02;
-    it.quads.forEach((m, i) => {
-      const [bw, bh] = m.userData.base, s = 1 + push * d * (1 + 0.6 * (m.userData.depth || 0)), shift = par * (d - 0.5) * qw * (1 + (m.userData.depth || 0));
-      m.visible = true; m.position.set(shift, 0, -D); m.scale.set(bw * s * 1.08, bh * s * 1.08, 1); m.material.opacity = Math.max(0, Math.min(1, a));
+    const qh = 2 * D * Math.tan((camera.fov * Math.PI) / 360), qw = qh * (W / H), over = p.over ?? (p.cam3 ? 1 : 1.08);   // a pinned (cam3) plate has no overscan: it must line up with its proxy
+    it.quads.forEach((m) => {
+      const ia = m.userData.ia, fa = W / H, bw = ia > fa ? qh * ia : qw, bh = ia > fa ? qh : qw / ia;
+      const s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * (m.userData.depth || 0)), shift = par * (d - 0.5) * qw * (1 + (m.userData.depth || 0));
+      m.visible = true; m.position.set(shift, 0, -D); m.scale.set(bw * s * over, bh * s * over, 1); m.material.opacity = Math.max(0, Math.min(1, a));
     });
     return true;
   };
   const cam = (t) => { const it = active(t); return it && it.p.cam ? it.p.cam : null; };
+  const zoom = (t) => { const it = active(t); if (!it) return 1; const p = it.p; return 1 + (p.push ?? 0.05) * Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))); };
+  const cam3 = (t) => { const it = active(t); return it && it.p.cam3 ? it.p.cam3 : null; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
-  return { ready, apply, cam, anchor, active, items };
+  return { ready, apply, cam, cam3, zoom, anchor, active, items };
 };

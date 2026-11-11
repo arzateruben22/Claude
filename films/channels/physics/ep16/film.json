@@ -285,6 +285,58 @@
    67.7
   ]
  ],
+ "plates": [
+  {
+   "id": "wide",
+   "file": "../lf01/art/owner/plates/plate-01-wide-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-01-wide-16x9.png",
+   "push": 0.06,
+   "parallax": 0,
+   "fade": 0.35,
+   "cam3": {
+    "pos": [
+     0,
+     1.06,
+     0
+    ],
+    "target": [
+     0,
+     1.001,
+     -1
+    ],
+    "fov": 50.4
+   },
+   "anchor": {
+    "pos": [
+     0.05,
+     1.0,
+     -3.1
+    ],
+    "mirror": [
+     0.05,
+     1.0,
+     -4.5
+    ],
+    "proxy": true,
+    "tint": [
+     [
+      0.5,
+      0.3,
+      0.08
+     ],
+     [
+      0.38,
+      0.2,
+      0.04
+     ],
+     15241264,
+     11563040
+    ]
+   },
+   "t0": 0.0,
+   "t1": 70.8
+  }
+ ],
  "captions": [
   {
    "t0": 0.12,

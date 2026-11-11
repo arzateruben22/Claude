@@ -37,7 +37,7 @@ const Rint = (t) => { const x = Math.max(0, t) * 30, i = Math.floor(x); return C
 // ── the wave painter: one patch for every kitchen material: the light front (lit behind, dark ahead) and the sound ring ──────────────
 const WV = {
   uLSrc: { value: new THREE.Vector3(-2.5, 0.96, -1.0) }, uLR: { value: 0 }, uLOn: { value: 0 }, uLW: { value: 0.05 }, uLK: { value: 1 },
-  uSS1: { value: new THREE.Vector3() }, uSS2: { value: new THREE.Vector3() }, uSR1: { value: -9 }, uSR2: { value: -9 }, uSOn: { value: 0 }, uSW: { value: 0.085 },
+  uSS1: { value: new THREE.Vector3() }, uSS2: { value: new THREE.Vector3() }, uSR1: { value: -9 }, uSR2: { value: -9 }, uSOn: { value: 0 }, uSW: { value: 0.085 }, uSTa: { value: new THREE.Vector3(0.62, 0.82, 1.0) }, uSTb: { value: new THREE.Vector3(0.3, 0.52, 0.95) },
 };
 const planeSolid = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1e6), planeWire = new THREE.Plane(new THREE.Vector3(1, 0, 0), -1e6);
 const patch = (m, clip = true) => {
@@ -45,7 +45,7 @@ const patch = (m, clip = true) => {
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, WV);
     sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvWP = (modelMatrix * vec4(transformed, 1.0)).xyz;");
-    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP; uniform vec3 uLSrc, uSS1, uSS2; uniform float uLR, uLOn, uLW, uLK, uSR1, uSR2, uSOn, uSW;")
+    sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec3 vWP; uniform vec3 uLSrc, uSS1, uSS2; uniform float uLR, uLOn, uLW, uLK, uSR1, uSR2, uSOn, uSW; uniform vec3 uSTa, uSTb;")
       .replace("#include <dithering_fragment>", `
   float rl = length(vWP - uLSrc);
   float lit = smoothstep(uLR + uLW * 0.5, uLR - uLW * 0.5, rl);
@@ -55,7 +55,7 @@ const patch = (m, clip = true) => {
   float sr = exp(-pow((sd1 - uSR1) / uSW, 2.0)) + exp(-pow((sd2 - uSR2) / uSW, 2.0));
   float st = exp(-pow((sd1 - uSR1 + 0.26) / 0.24, 2.0)) * step(sd1, uSR1) + exp(-pow((sd2 - uSR2 + 0.26) / 0.24, 2.0)) * step(sd2, uSR2);
   float rp = 0.65 + 0.35 * sin((sd1 - uSR1) * 48.0);
-  gl_FragColor.rgb += (vec3(0.62, 0.82, 1.0) * sr * 1.05 + vec3(0.3, 0.52, 0.95) * st * 0.4 * rp) * uSOn;
+  gl_FragColor.rgb += (uSTa * sr * 1.05 + uSTb * st * 0.4 * rp) * uSOn;
   #include <dithering_fragment>`);
   };
   m.customProgramCacheKey = () => "wp" + (clip ? "c" : "n");
@@ -249,11 +249,18 @@ let bubTh = -1;
 const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); bubble.rotation.x = Math.PI / 2; bubble.position.set(BUBX, BUBY, BUBZ); kitchen.add(bubble);   // the pole points at the camera: the hole opens there and grows to the equator and beyond
 const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0006, 6, 36), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
 
+// the proxy room of a plate: black additive surfaces (they add nothing but the wave painter's band and ripples), matched to the plate's walls, floor, ceiling and table
+const proxy = new THREE.Group(); proxy.visible = false; scene.add(proxy);
+const proxyMat = patch(new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }), false);
+const proxyBox = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), proxyMat); m.position.set(x, y, z); m.frustumCulled = false; proxy.add(m); };
+// plate-01 (the wide kitchen from the doorway): camera 1.06 m up, back wall 3.8 m away, counters 1.73 m left and 1.36 m right, ceiling 2.6 m, the table 1.3-2.6 m out
+proxyBox(3.1, 2.6, 0.02, -0.185, 1.3, -3.8); proxyBox(0.02, 2.6, 3.8, -1.73, 1.3, -1.9); proxyBox(0.02, 2.6, 3.8, 1.36, 1.3, -1.9); proxyBox(3.1, 0.02, 3.8, -0.185, 0.0, -1.9); proxyBox(3.1, 0.02, 3.8, -0.185, 2.6, -1.9);
+proxyBox(0.68, 0.04, 1.3, -0.01, 0.76, -1.95);
 // ── sound: hands that clap, a ring (the wave painter draws it on every surface) ──
 const waveRing = new THREE.Mesh(new THREE.RingGeometry(0.93, 1.0, 128), new THREE.MeshBasicMaterial({ color: 0xA8D4FF, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); waveRing.visible = false; scene.add(waveRing);
 const waveFill = new THREE.Mesh(new THREE.CircleGeometry(0.93, 96), new THREE.MeshBasicMaterial({ color: 0x7FB6FF, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); waveFill.visible = false; scene.add(waveFill);
-const hands = new THREE.Group(); kitchen.add(hands); const handL = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.09, 0.07), std("#D9A786", 0.7)), handR = handL.clone(); hands.add(handL, handR);
-const CLAPX = 2.45, CLAPY = TOP + 0.32, CLAPZ = -0.8;
+const hands = new THREE.Group(); scene.add(hands); const handL = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.09, 0.07), std("#D9A786", 0.7)), handR = handL.clone(); hands.add(handL, handR);
+let CLAPX = 2.45, CLAPY = TOP + 0.32, CLAPZ = -0.8;   // where the clap is (a plate's anchor moves it)
 
 // ── the bullet and the apple's spray ──
 const bullet = new THREE.Group(); scene.add(bullet);
@@ -301,6 +308,10 @@ const camNow = (t) => {
   return { look: [0, 1, 2].map((j) => lerp(a.look[j], b.look[j], u)), fitW: lw(a.fitW, b.fitW), yaw: lerp(a.yaw, b.yaw, u), pitch: lerp(a.pitch ?? 3, b.pitch ?? 3, u) };
 };
 const placeCam = (t) => {
+  const c3 = plates.cam3(t);
+  if (c3) {   // a plate's own pinhole camera: the push is a zoom, so the proxy room stays on the plate
+    const z = plates.zoom(t); camera.position.set(...c3.pos); camera.fov = (2 * Math.atan(Math.tan((c3.fov * Math.PI) / 360) / z) * 180) / Math.PI; camera.near = 0.05; camera.far = 80; camera.updateProjectionMatrix(); camera.lookAt(...c3.target); camera.updateMatrixWorld(); return;
+  }
   const c = plates.cam(t) || camNow(t), dr = driftAt(t), dist = c.fitW * (1 - 0.034 * dr) / (2 * Math.tan((VFOV * Math.PI) / 360) * (W / H)), y = ((c.yaw + 1.6 * dr + 0.9 * Math.sin(t * 0.55)) * Math.PI) / 180, p = ((c.pitch + 0.45 * Math.sin(t * 0.37 + 1.0)) * Math.PI) / 180;   // a slow sway: nothing is ever perfectly still
   camera.position.set(c.look[0] + dist * Math.sin(y) * Math.cos(p), c.look[1] + dist * Math.sin(p), c.look[2] + dist * Math.cos(y) * Math.cos(p));
   camera.near = Math.max(1e-5, dist * 0.05); camera.far = 80; camera.fov = VFOV; camera.updateProjectionMatrix(); camera.lookAt(c.look[0], c.look[1], c.look[2]); camera.updateMatrixWorld();
@@ -402,9 +413,12 @@ window.seek = function (t) {
     if (inB && rB > 0 && rB < CAL.bubble_t) { rimR.visible = true; const rr = BUBR * Math.sin(th); rimR.position.set(bubble.position.x, bubble.position.y, bubble.position.z + BUBR * Math.cos(th)); rimR.scale.set(Math.max(rr, 1e-4), Math.max(rr, 1e-4), 1); } }
   // sound: the clap, a ring from the hands, its bounce off the left wall
   { const C0 = EV.clap, r = (t - C0) / 1000, vs = CAL.sound * 0.0, sm = t >= C0 - 16 && t < C0 + 36;
+    const an = plates.anchor(t); proxy.visible = !!(plateOn && an && an.proxy);
+    if (an && an.pos) { [CLAPX, CLAPY, CLAPZ] = an.pos; } else { CLAPX = 2.45; CLAPY = TOP + 0.32; CLAPZ = -0.8; }
+    const tint = an && an.tint ? an.tint : null; WV.uSTa.value.set(...(tint ? tint[0] : [0.62, 0.82, 1.0])); WV.uSTb.value.set(...(tint ? tint[1] : [0.3, 0.52, 0.95])); waveRing.material.color.set(tint ? tint[2] : 0xA8D4FF); waveFill.material.color.set(tint ? tint[3] : 0x7FB6FF);
     hands.visible = sm; hands.position.set(CLAPX, CLAPY, CLAPZ); const clap = t < C0 ? 0.5 + 0.5 * Math.abs(Math.sin(t * 2.5)) * seg(t, C0 - 14, C0 - 10) * (t < C0 - 2 ? 1 : 0) : 0; void vs;
     const sep = t < C0 ? 0.06 * (1 - seg(t, C0 - 1.2, C0)) + 0.002 : 0.002; handL.position.set(-sep - 0.015, 0, 0); handR.position.set(sep + 0.015, 0, 0); void clap;
-    WV.uSS1.value.set(CLAPX, CLAPY, CLAPZ); WV.uSS2.value.set(-5.4 - CLAPX, CLAPY, CLAPZ);   // the image source behind the left wall (x = -2.7)
+    WV.uSS1.value.set(CLAPX, CLAPY, CLAPZ); if (an && an.mirror) WV.uSS2.value.set(...an.mirror); else WV.uSS2.value.set(-5.4 - CLAPX, CLAPY, CLAPZ);   // the image source behind the left wall (x = -2.7)
     { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm; m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.8 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.07 * (1 - seg(r, 0.03, 0.052)); }
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray

@@ -253,6 +253,19 @@ else:
     END = {"title": "Next drop: why the sky is *blue*", "follow": "Follow Reality Rulebook", "foot": "Velten et al., femto-photography (2012-2013)."}
     CAPCH, CAPY = 44, 0.77
 
+# the owner's photographic plates (set/plates.js): plate-01, the wide kitchen from the doorway, behind the sound shell (Part 4 and the film's sound chapter); the code kitchen is the fallback
+PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
+PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
+_p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
+        "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
+        "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.5, 0.3, 0.08], [0.38, 0.2, 0.04], 0xE89030, 0xB07020]}}
+if PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
+    PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
+elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:
+    PLATES = [dict(_p01, t0=R(CUTS["sound"]), t1=R(CUTS["bullet"]))]
+else:
+    PLATES = []
+
 film = {
     "id": f"reality-rulebook-s3p{PART}" if PART else "reality-rulebook-lf01", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,
     "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
@@ -265,6 +278,7 @@ film = {
     "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
     "disclosures": {"aiVoice": True},
     "drifts": ([[18.5, 21.1], [62.0, 64.4], [64.7, 67.7]] if PART == 4 else None),
+    "plates": PLATES,
     "captions": [pg for pg in phrase_captions(f, max_chars=CAPCH, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC, "end": END,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
