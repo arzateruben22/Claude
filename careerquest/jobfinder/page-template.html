@@ -101,6 +101,17 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
 .method td, .method th { text-align: left; padding: 5px 8px 5px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
 .method th { color: var(--subtle); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
 .scroll { overflow-x: auto; }
+.me { margin-top: 18px; border-top: 1px solid var(--line); }
+.me summary { padding-top: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 10px 0; }
+.grid2 label, .me label { display: grid; gap: 4px; font-size: 12px; color: var(--subtle); text-transform: uppercase; letter-spacing: .06em; }
+.me label span { text-transform: none; letter-spacing: 0; }
+.grid2 input { font: inherit; font-size: 14px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 9px; padding: 8px 10px; min-width: 0; text-transform: none; letter-spacing: 0; }
+#me-resume { min-height: 170px; margin-top: 4px; }
+.ai-out { white-space: pre-wrap; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--fg); font-size: 14px; }
+.ai-out:empty { display: none; }
+.btn.ai { border-color: color-mix(in srgb, var(--gold) 55%, var(--line)); color: var(--gold); }
+.btn[disabled] { opacity: .55; cursor: default; }
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
 @media (max-width: 560px) { .head { grid-template-columns: minmax(0, 1fr) auto; } .rank { grid-column: 1 / -1; padding: 0; } .row { grid-template-columns: 92px minmax(40px, 1fr) 40px; } .row + p { margin-left: 0; } }
 @media (prefers-reduced-motion: reduce) { .progress .fill { transition: none; } }
@@ -125,6 +136,21 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       <span class="sync" id="sync" role="status"></span>
     </div>
   </div>
+
+  <details class="card me" id="me">
+    <summary>Your details and résumé <span id="me-state"></span></summary>
+    <div class="sect">
+      <p>Fill these in once. They replace [Your name], [your city], [phone] and [email] in every cover letter draft. Saved privately to your account and this browser; nobody else who opens this page can read them.</p>
+      <div class="grid2">
+        <label for="me-name">Name <input id="me-name" data-me="name" autocomplete="name"></label>
+        <label for="me-city">City <input id="me-city" data-me="city" autocomplete="address-level2" placeholder="e.g. Anaheim"></label>
+        <label for="me-phone">Phone <input id="me-phone" data-me="phone" autocomplete="tel"></label>
+        <label for="me-email">Email <input id="me-email" data-me="email" autocomplete="email"></label>
+      </div>
+      <label for="me-resume">Résumé text <span>Paste it as plain text. It is sent to Claude only when you press a “Tailor” or “Suggest” button on a job.</span></label>
+      <textarea id="me-resume" data-me="resume" placeholder="Paste your résumé here"></textarea>
+    </div>
+  </details>
 
   <main class="list" id="list" aria-live="polite"></main>
 
@@ -152,6 +178,23 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
   var js = function (id) { return state.jobs[id] || (state.jobs[id] = { status: "todo", appliedOn: "", checks: {}, letter: null }); };
   var peek = function (id) { return state.jobs[id] || { status: "todo", appliedOn: "", checks: {}, letter: null }; };
 
+  var sampleFn = null;
+  function fill(text) {
+    var p = state.profile || {}, out = String(text || "");
+    if (p.name) out = out.replace(/\[your (full )?name\]/gi, p.name);
+    if (p.city) out = out.replace(/\[your city[^\]]*\]/gi, p.city);
+    if (p.phone) out = out.replace(/\[(your )?phone( number)?\]/gi, p.phone);
+    if (p.email) out = out.replace(/\[(your )?email( address)?\]/gi, p.email);
+    return out;
+  }
+  function meForm() {
+    var p = state.profile || {};
+    ["name", "city", "phone", "email"].forEach(function (k) { $("me-" + k).value = p[k] || ""; });
+    $("me-resume").value = state.resume || "";
+    var has = Boolean((state.resume || "").trim());
+    $("me-state").textContent = has ? "résumé added" : "no résumé yet";
+    if (!has && !p.name) $("me").open = true;
+  }
   function setSync(t) { $("sync").textContent = t; }
   function persist() {
     state.updatedAt = Date.now();
@@ -171,6 +214,7 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       var db = caps[0], user = caps[1];
       if (!db || !user) throw new Error("unavailable");
       return user.id().then(function (id) {
+        if (!id) throw new Error("signed out");
         var ref = db.collection("data/users/" + id).doc("jobfinder");
         return ref.get().then(function (snap) {
           clearTimeout(timer);
@@ -178,13 +222,56 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
           if (remote && remote.v === 1 && remote.jobs && (remote.updatedAt || 0) > (state.updatedAt || 0)) {
             state = remote;
             try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
-            render();
+            meForm(); render();
           }
           remoteRef = ref;
           setSync("Synced to your account");
         });
       });
     }).catch(function () { clearTimeout(timer); setSync("Saved on this device only"); });
+    window.claude.use("sample").then(function (fn) { if (typeof fn === "function") { sampleFn = fn; render(); } }, function () {});
+  }
+
+  function aiPrompt(job, kind, draft) {
+    var p = state.profile || {};
+    var lines = [
+      "You are helping a job applicant. Follow these rules exactly:",
+      "- Use ONLY facts found in the applicant's résumé and details below. Never invent or imply employers, job titles, dates, years of experience, certifications, licences, tools or achievements that are not there.",
+      "- If the posting asks for something the résumé does not show, do not claim it. Say plainly what the applicant does offer instead, or leave it out.",
+      "- Plain text only. No markdown, no preamble, no closing commentary.",
+      "",
+      "JOB: " + job.title + " at " + job.employer + ", " + job.city + ". Pay as posted: " + job.payText,
+      "POSTED MINIMUM REQUIREMENTS (from search results; may be incomplete):",
+      (job.minimumRequirements || []).map(function (x) { return "- " + x; }).join("\n") || "- not captured",
+      "PREFERRED: " + ((job.preferredQualifications || []).join("; ") || "not captured"),
+      "POSSIBLE GAPS NOTED: " + ((job.gaps.soft || []).slice(0, 6).join("; ") || "none noted"),
+      "APPLICANT DETAILS: name " + (p.name || "[Your name]") + "; city " + (p.city || "[your city]") + "; phone " + (p.phone || "[phone]") + "; email " + (p.email || "[email]"),
+      "APPLICANT RESUME:", '"""', String(state.resume || "").slice(0, 12000), '"""', ""
+    ];
+    if (kind === "letter") lines.push("TASK: Write a cover letter of 150 to 200 words for this job, addressed to the hiring team, ending with the applicant's name and contact details. Ground every claim in the resume. If a needed fact is missing, keep a short [bracketed placeholder] for it. The current draft is given for structure only; do not copy claims from it:", String(draft || "").slice(0, 3000));
+    else lines.push("TASK: Suggest resume changes for this job in four short sections with these exact headings:", "MOVE UP OR REWORD (quote the resume line, then the reworded line; add no new facts)", "POSTING KEYWORDS THAT TRUTHFULLY APPLY", "REQUIREMENTS YOUR RESUME DOES NOT SHOW (be upfront about these; never claim them)", "HONEST ONE-LINE SUMMARY OF FIT");
+    return lines.join("\n");
+  }
+
+  function runAi(btn, cardEl, id, kind) {
+    var job = tracked.filter(function (j) { return j.id === id; })[0], msg = btn.parentElement.querySelector("[data-msg]");
+    if (!sampleFn || !job) return;
+    if (!(state.resume || "").trim()) { if (msg) msg.textContent = "Paste your résumé under “Your details and résumé” at the top first."; $("me").open = true; return; }
+    var area = cardEl.querySelector("textarea[data-letter]"), out = cardEl.querySelector("[data-resume-out]");
+    var before = kind === "letter" ? area.value : out.textContent;
+    btn.disabled = true; if (msg) msg.textContent = "Thinking… this can take up to a minute.";
+    sampleFn(aiPrompt(job, kind, before), { modelTier: "default", onText: function (e) { if (kind === "letter") area.value = e.text; else out.textContent = e.text; } })
+      .then(function (r) {
+        var st = js(id);
+        if (kind === "letter") { area.value = r.text; st.letter = r.text; } else { out.textContent = r.text; st.resumeNotes = r.text; }
+        persist();
+        if (msg) msg.textContent = r.truncated ? "The answer was cut short. Try again." : "Written only from your résumé. Read it before you use it.";
+      }, function (e) {
+        var code = e && e.code;
+        if (kind === "letter") area.value = before; else out.textContent = before;
+        if (msg) msg.textContent = code === "not_granted" ? "Claude was not allowed for this page, so nothing was sent." : code === "rate_limited" ? "Too many requests. Wait a minute and try again." : "Could not reach Claude. Nothing was changed.";
+      })
+      .then(function () { btn.disabled = false; });
   }
 
   var MORE = DATA.bench || [];
@@ -278,12 +365,13 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       ((j.preferredQualifications || []).length ? "<h4>Preferred, not required</h4><ul>" + j.preferredQualifications.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("") + "</ul>" : "") + "</div></details>");
 
     if (v.coverLetter) {
-      h.push('<details><summary>Cover letter draft <span>edit, then copy</span></summary><div class="sect"><p>Replace every [bracketed] part with your own facts before sending. Delete any sentence that is not true for you.</p><label class="sync" for="l-' + esc(j.id) + '">Cover letter</label><textarea id="l-' + esc(j.id) + '" data-letter spellcheck="true">' + esc(st.letter != null ? st.letter : v.coverLetter) + '</textarea><div class="actions"><button type="button" class="btn" data-copy>Copy letter</button><button type="button" class="btn" data-reset>Reset to draft</button><span class="sync" data-msg role="status"></span></div></div></details>');
+      h.push('<details><summary>Cover letter draft <span>edit, then copy</span></summary><div class="sect"><p>Replace every [bracketed] part with your own facts before sending. Delete any sentence that is not true for you.</p><label class="sync" for="l-' + esc(j.id) + '">Cover letter</label><textarea id="l-' + esc(j.id) + '" data-letter spellcheck="true">' + esc(st.letter != null ? st.letter : fill(v.coverLetter)) + '</textarea><div class="actions"><button type="button" class="btn" data-copy>Copy letter</button><button type="button" class="btn ai" data-tailor' + (sampleFn ? "" : " hidden") + '>Tailor to my résumé</button><button type="button" class="btn" data-reset>Reset to draft</button><span class="sync" data-msg role="status"></span></div></div></details>');
     }
     if ((v.resumeEmphasis || []).length || (v.doNotClaim || []).length) {
       h.push('<details><summary>Résumé adjustments for this job <span>what to bring forward, what not to claim</span></summary><div class="sect">' +
         ((v.resumeEmphasis || []).length ? "<h4>Bring forward, where true</h4><ul>" + v.resumeEmphasis.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
-        ((v.doNotClaim || []).length ? "<h4>Do not claim unless it is true for you</h4><ul>" + v.doNotClaim.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") + "</div></details>");
+        ((v.doNotClaim || []).length ? "<h4>Do not claim unless it is true for you</h4><ul>" + v.doNotClaim.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>" : "") +
+        '<div class="actions"><button type="button" class="btn ai" data-resume' + (sampleFn ? "" : " hidden") + '>Suggest résumé changes for this job</button><span class="sync" data-msg role="status"></span></div><div class="ai-out" data-resume-out>' + esc(st.resumeNotes || "") + "</div></div></details>");
     }
     var order = ["access", "pay", "interest", "ai", "open", "driving"], names = { access: "Within reach", pay: "Pay", interest: "Your priorities", ai: "AI resilience", open: "Still open", driving: "Driving" };
     h.push('<details><summary>Why it scored ' + esc(j.score) + "</summary><div class=\"sect\">" + order.map(function (k) {
@@ -369,11 +457,13 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
       if (fTodo && st.status !== "todo") render();
       return;
     }
+    if (t.hasAttribute("data-tailor")) { runAi(t, cardEl, id, "letter"); return; }
+    if (t.hasAttribute("data-resume")) { runAi(t, cardEl, id, "resume"); return; }
     var area = cardEl.querySelector("textarea[data-letter]"), msg = t.parentElement.querySelector("[data-msg]");
     if (t.hasAttribute("data-copy") && area) { copy(area.value, function (ok) { if (!ok) { area.focus(); area.select(); } if (msg) msg.textContent = ok ? "Copied to clipboard" : "Select all and copy manually"; }); return; }
     if (t.hasAttribute("data-reset") && area) {
       var job = tracked.filter(function (j) { return j.id === id; })[0];
-      st = js(id); st.letter = null; persist(); area.value = job && job.verdict ? job.verdict.coverLetter : ""; if (msg) msg.textContent = "Draft restored";
+      st = js(id); st.letter = null; persist(); area.value = job && job.verdict ? fill(job.verdict.coverLetter) : ""; if (msg) msg.textContent = "Draft restored";
     }
   });
   document.addEventListener("change", function (e) {
@@ -381,6 +471,14 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     if (t.id === "f-field") { fField = t.value; render(); return; }
     if (t.id === "f-drive") { fDrive = t.checked; render(); return; }
     if (t.id === "f-todo") { fTodo = t.checked; render(); return; }
+    if (t.dataset && t.dataset.me) {
+      if (t.dataset.me === "resume") state.resume = t.value.slice(0, 20000);
+      else { (state.profile || (state.profile = {}))[t.dataset.me] = t.value.trim().slice(0, 120); }
+      persist();
+      $("me-state").textContent = (state.resume || "").trim() ? "résumé added" : "no résumé yet";
+      if (t.dataset.me !== "resume") render();
+      return;
+    }
     var cardEl = t.closest ? t.closest(".card") : null; if (!cardEl) return;
     var st = js(cardEl.dataset.id);
     if (t.dataset.req != null) {
@@ -399,7 +497,7 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
 
   var hash = (location.hash || "").replace("#", "");
   if (["best", "stretch", "routes", "watch", "ruled"].indexOf(hash) >= 0) view = hash;
-  header(); fieldFilter(); method(); render();
+  header(); fieldFilter(); method(); meForm(); render();
   setSync("Saved on this device");
   connect();
 })();

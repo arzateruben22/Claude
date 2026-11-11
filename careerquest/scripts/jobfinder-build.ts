@@ -107,7 +107,7 @@ export function build(dirs: string[], date: string, programsFile?: string) {
   } else {
     notices.push(`Open each link to confirm it is still accepting applications.||These were found and cross-checked through web search on ${label}; the job sites themselves could not be opened from where this ran.`);
   }
-  notices.push("Your résumé has not been shared yet.||Fit is scored against your stated goals and an assumed beginner background, so tick the requirement boxes yourself. Cover letters use [square brackets] wherever only you know the fact.");
+  notices.push("Your résumé has not been shared yet.||Fit is scored against your stated goals and an assumed beginner background, so tick the requirement boxes yourself. Cover letters use [square brackets] wherever only you know the fact. Paste your résumé under “Your details and résumé” and the Tailor buttons will rewrite each letter from it, using only what it says.");
   notices.push("Nothing has been submitted for you.||Every application is yours to send.");
 
   return {
