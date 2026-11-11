@@ -46,7 +46,7 @@ def cover(n, im, box, lines, fs=None, ty=280, save_to=True):
     f = ImageFont.truetype(str(FONT), fs)
     try: f.set_variation_by_name("ExtraBold")
     except Exception: pass
-    while fs > 70 and max(ImageFont.truetype(str(FONT), fs).getlength(l) for l in lines) > 0.9 * size[0]: fs -= 6
+    while fs > 70 and max(ImageFont.truetype(str(FONT), fs).getlength(l) for l in lines) > 0.86 * size[0]: fs -= 6
     out = words(out, "", 0, ty, fs, align="center", lines=lines)
     if not save_to: return out
     for base in (W / f"ep{12 + n}/out", ES / f"parts/part{n}/out"):

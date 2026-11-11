@@ -1,0 +1,62 @@
+[
+ {
+  "id": "c16",
+  "sentence": "A year would hold over six thousand days at a day of an hour and twenty-four minutes.",
+  "claim": "At a day of 1 hour 24 minutes a year holds about 6,200 days (365.25 days × 23.93 h ÷ 1.41 h).",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "365.25 x 23.93 h / 1.41 h = about 6,200 days."
+ },
+ {
+  "id": "c20",
+  "sentence": "at a six hour day, a year already holds about fourteen hundred and sixty days",
+  "claim": "At a 6 h day a year holds 1,461 days (365.25 days × 24 h ÷ 6 h).",
+  "source_title": "Our calculation (shown in the film)",
+  "verified_via": "calculation",
+  "accessed": "2026-11-10",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "365.25 days x 24 h / 6 h = 1,461 days per year at a 6 h day (calendar days at the Earth's orbital period)."
+ },
+ {
+  "id": "c17",
+  "sentence": "At forty-five degrees north you move at seventy percent of the equator's speed and the push outward is only half as strong.",
+  "claim": "At 45° north your speed is 71% of the equator's and the outward push on you is 50%.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "cos 45 = 0.71 for the speed; the outward push on the vertical scales as cos^2 = 0.50."
+ },
+ {
+  "id": "c5",
+  "sentence": "Weight at 12, 6, 3, 2 and 1.5 hour days",
+  "claim": "Your weight as a share of what it would be on a non-spinning Earth: 99.7% today, 98.6% at a 12 h day, 94.5% at 6 h, 78.0% at 3 h, 50.4% at 2 h and 11.9% at 1.5 h. A 70 kg person weighs 69 kg at 12 h and 55 kg at 3 h.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "{\"now\": 99.7, \"h12\": 98.6, \"h6\": 94.5, \"h3\": 78.0, \"h2\": 50.4, \"h1_5\": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg."
+ },
+ {
+  "id": "c6",
+  "sentence": "The oceans: the water wants to be higher at the equator than at the poles; it drains toward an equatorial belt",
+  "claim": "The faster Earth spins, the higher the sea wants to stand at the equator compared with the poles: 33 km higher at a 12 h day, and far more as the day gets shorter.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "Extra rise (compared with today) of the sea's equipotential at the equator relative to the pole = (w^2 - w0^2) R^2 / (2 g0): 33 km at a 12 h day, 165 km at 6 h, 692 km at 3 h; far more than the mean ocean depth (c18), so the water drains toward the equator. First-order only: it ignores the self-gravity of the water and the slow response of the ground; the direction is the claim, not the numbers."
+ }
+]

@@ -26,70 +26,74 @@ export const makeEnv = (renderer, o = {}) => {
 
 export const createRobot = (o = {}) => {
   const H = o.height ?? 1;
-  const white = new THREE.MeshPhysicalMaterial({ color: o.body || "#f1f2f4", roughness: 0.45, metalness: 0, clearcoat: 0.35, clearcoatRoughness: 0.35, envMapIntensity: 0.9 });
-  const seam = new THREE.MeshPhysicalMaterial({ color: "#c9ccd2", roughness: 0.55, clearcoat: 0.1 });
-  const sole = new THREE.MeshPhysicalMaterial({ color: "#101114", roughness: 0.5, clearcoat: 0.3 });
+  const white = new THREE.MeshPhysicalMaterial({ color: o.body || "#f4f5f7", roughness: 0.5, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.4, envMapIntensity: 0.8 });
+  const seam = new THREE.MeshPhysicalMaterial({ color: "#c3c7ce", roughness: 0.6, clearcoat: 0.0 });
+  const sole = new THREE.MeshPhysicalMaterial({ color: "#0e0f12", roughness: 0.55, clearcoat: 0.2 });
   const glass = new THREE.MeshPhysicalMaterial({ color: "#020304", roughness: 0.06, metalness: 0.0, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.6, reflectivity: 0.9 });
   const eyeMat = new THREE.MeshBasicMaterial({ color: "#ffffff", toneMapped: false });
   const ell = (r, sx, sy, sz, m = white, seg = [40, 28]) => { const g = new THREE.Mesh(new THREE.SphereGeometry(r, seg[0], seg[1]), m); g.scale.set(sx, sy, sz); return g; };
+  // a tapered soft tube: radius r0 at the bottom end, r1 at the top end, `len` between the two end-sphere centres (a lathe, so the ends are smooth domes)
+  const tube = (r0, r1, len, m = white) => { const pts = []; const N = 10;
+    for (let k = 0; k <= N; k++) { const a = -Math.PI / 2 + (Math.PI / 2) * (k / N); pts.push(new THREE.Vector2(Math.max(0.0001, r0 * Math.cos(a)), -len / 2 + r0 * Math.sin(a))); }
+    for (let k = 0; k <= N; k++) { const a = (Math.PI / 2) * (k / N); pts.push(new THREE.Vector2(Math.max(0.0001, r1 * Math.cos(a)), len / 2 + r1 * Math.sin(a))); }
+    return new THREE.Mesh(new THREE.LatheGeometry(pts, 40), m); };
+  const ring = (r, t, y, m = seam) => { const g = new THREE.Mesh(new THREE.TorusGeometry(r, t, 8, 40), m); g.rotation.x = Math.PI / 2; g.position.y = y; return g; };   // a thin seam line
   const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
 
-  // torso: a pear (a belly and a smaller chest)
-  const belly = ell(1, 0.235, 0.255, 0.22); belly.position.set(0, 0.55, 0.0);
-  const chest = ell(1, 0.18, 0.2, 0.17); chest.position.set(0, 0.71, -0.005);
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.05, 28), seam); neck.position.set(0, 0.84, 0);
-  body.add(belly, chest, neck);
+  // torso: one soft pear, fullest at the chest, tapering to the hips (a lathe through a smooth profile)
+  const prof = [[0.0, 0.44], [0.1, 0.445], [0.15, 0.48], [0.185, 0.55], [0.212, 0.64], [0.222, 0.73], [0.2, 0.81], [0.15, 0.875], [0.09, 0.91], [0.0, 0.925]];
+  const curve = new THREE.SplineCurve(prof.map(([r, y]) => new THREE.Vector2(r, y))); const tp = curve.getPoints(48).map((v) => new THREE.Vector2(Math.max(0.0001, v.x), v.y));
+  const torso = new THREE.Mesh(new THREE.LatheGeometry(tp, 56), white); torso.scale.set(1.12, 1, 1.1); body.add(torso);
 
-  // head: a rounded helmet with a swept-back hood, the visor set into the front
-  const head = new THREE.Group(); head.position.set(0, 1.0, 0.02); head.scale.setScalar(1.17); body.add(head);
-  const helmet = ell(1, 0.31, 0.255, 0.285); const hood = ell(1, 0.225, 0.19, 0.2); hood.position.set(0, 0.04, -0.11); const hood2 = ell(1, 0.17, 0.14, 0.15); hood2.position.set(0, 0.07, -0.19);
-  const visor = ell(1, 0.245, 0.185, 0.17, glass, [56, 40]); visor.position.set(0, -0.005, 0.15);
-  const rim = new THREE.Mesh(new THREE.TorusGeometry(1, 0.045, 14, 72), white); rim.scale.set(0.252, 0.19, 0.3); rim.position.set(0, -0.005, 0.2); rim.rotation.x = 0;
-  head.add(helmet, hood, hood2, visor, rim);
-  // eyes live on the visor surface
+  // head: a hood, a tilted egg swept back, with a thick bezel round a large visor
+  const head = new THREE.Group(); head.position.set(0, 1.2, 0.0); head.scale.setScalar(1.3); body.add(head);
+  const helmet = ell(1, 0.35, 0.3, 0.33, white, [56, 40]);
+  const back = ell(1, 0.27, 0.27, 0.27, white, [48, 32]); back.position.set(0, 0.075, -0.15);
+  const back2 = ell(1, 0.2, 0.2, 0.22, white, [40, 28]); back2.position.set(0, 0.15, -0.24);
+  const visor = ell(1, 0.265, 0.205, 0.19, glass, [64, 44]); visor.position.set(0, -0.015, 0.165);
+  const bezel = new THREE.Mesh(new THREE.TorusGeometry(1, 0.052, 18, 96), white); bezel.scale.set(0.283, 0.226, 0.3); bezel.position.set(0, -0.015, 0.205);
+  head.add(helmet, back, back2, visor, bezel); head.rotation.x = 0;
   const eyes = [];
-  const VA = 0.245, VB = 0.185, VC = 0.17, VZ = 0.15, VY = -0.005;
+  const VA = 0.265, VB = 0.205, VC = 0.19, VZ = 0.165, VY = -0.015;
   const onVisor = (x, y) => VZ + VC * Math.sqrt(Math.max(0.0, 1 - (x / VA) ** 2 - (y / VB) ** 2)) + 0.003;
   [-1, 1].forEach((s) => {
-    const g = new THREE.Group(); const x = s * 0.085, y = 0.02; g.position.set(x, VY + y, onVisor(x, y)); head.add(g);
+    const g = new THREE.Group(); const x = s * 0.092, y = 0.02; g.position.set(x, VY + y, onVisor(x, y)); head.add(g);
     const oval = ell(1, 1, 1, 0.008, eyeMat, [20, 14]);
-    const arc = new THREE.Mesh(new THREE.TorusGeometry(1, 0.3, 8, 24, Math.PI), eyeMat); arc.visible = false;
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(1, 0.42, 8, 24, Math.PI), eyeMat); arc.visible = false;
     g.add(oval, arc); eyes.push({ g, oval, arc, s, x, y });
   });
-  // a soft specular blob on the visor, upper right (as in the reference)
-  const hl = ell(1, 0.05, 0.034, 0.006, new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.55, toneMapped: false })); { const x = 0.165, y = 0.125; hl.position.set(x, VY + y, onVisor(x, y) + 0.001); hl.rotation.z = 0.5; head.add(hl); }
+  const hl = ell(1, 0.055, 0.036, 0.006, new THREE.MeshBasicMaterial({ color: "#ffffff", transparent: true, opacity: 0.55, toneMapped: false })); { const x = 0.175, y = 0.13; hl.position.set(x, VY + y, onVisor(x, y) + 0.001); hl.rotation.z = 0.5; head.add(hl); }
 
-  // arms: shoulder pivot, upper arm, elbow pivot, forearm, mitten
+  // arms: thick soft tubes with thin seam lines at the shoulder and elbow, big rounded mittens
   const arm = (s) => {
-    const sh = new THREE.Group(); sh.position.set(s * 0.215, 0.74, 0); body.add(sh);
-    const up = new THREE.Mesh(new THREE.CapsuleGeometry(0.068, 0.1, 8, 18), white); up.position.y = -0.09; sh.add(up);
-    const el = new THREE.Group(); el.position.y = -0.18; sh.add(el);
-    const lo = new THREE.Mesh(new THREE.CapsuleGeometry(0.07, 0.08, 8, 18), white); lo.position.y = -0.075; el.add(lo);
-    const hand = ell(1, 0.08, 0.075, 0.07); hand.position.y = -0.185; el.add(hand);
-    const thumb = ell(1, 0.03, 0.045, 0.03); thumb.position.set(-s * 0.035, -0.18, 0.045); thumb.rotation.z = s * 0.4; el.add(thumb);
+    const sh = new THREE.Group(); sh.position.set(s * 0.245, 0.8, 0); body.add(sh);
+    const up = tube(0.088, 0.095, 0.1); up.position.y = -0.095; sh.add(up); const r1 = ring(0.092, 0.004, -0.02); sh.add(r1);
+    const el = new THREE.Group(); el.position.y = -0.2; sh.add(el); el.add(ring(0.086, 0.004, 0.0));
+    const lo = tube(0.086, 0.084, 0.09); lo.position.y = -0.09; el.add(lo);
+    const hand = ell(1, 0.12, 0.11, 0.105); hand.position.y = -0.225; el.add(hand);
+    const thumb = ell(1, 0.036, 0.05, 0.034); thumb.position.set(-s * 0.06, -0.225, 0.065); thumb.rotation.z = s * 0.5; el.add(thumb);
     return { sh, el };
   };
   const armL = arm(-1), armR = arm(1);
-  // legs: hip pivot, thigh, knee pivot, shin, boot with a black sole
+  // legs: one long, slightly tapered smooth leg (thigh + shin, same radius at the knee, a seam line there), big rounded boots with thick black soles
   const leg = (s) => {
-    const hp = new THREE.Group(); hp.position.set(s * 0.125, 0.4, 0); body.add(hp);
-    const th = new THREE.Mesh(new THREE.CapsuleGeometry(0.082, 0.07, 8, 18), white); th.position.y = -0.075; hp.add(th);
-    const kn = new THREE.Group(); kn.position.y = -0.16; hp.add(kn);
-    const sh = new THREE.Mesh(new THREE.CapsuleGeometry(0.075, 0.06, 8, 18), white); sh.position.y = -0.07; kn.add(sh);
-    const boot = ell(1, 0.105, 0.075, 0.155); boot.position.set(0, -0.165, 0.045); kn.add(boot);
-    const so = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.03, 32), sole); so.scale.set(0.104, 1, 0.152); so.position.set(0, -0.228, 0.05); kn.add(so);
+    const hp = new THREE.Group(); hp.position.set(s * 0.125, 0.5, 0); body.add(hp);
+    const th = tube(0.112, 0.128, 0.1); th.position.y = -0.1; hp.add(th);
+    const kn = new THREE.Group(); kn.position.y = -0.21; hp.add(kn); kn.add(ring(0.104, 0.004, 0.0));
+    const sh = tube(0.09, 0.104, 0.1); sh.position.y = -0.1; kn.add(sh);
+    const boot = ell(1, 0.175, 0.115, 0.245); boot.position.set(0, -0.225, 0.06); kn.add(boot);
+    const so = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 0.05, 40), sole); so.scale.set(0.175, 1, 0.245); so.position.set(0, -0.31, 0.06); kn.add(so);
     return { hp, kn };
   };
   const legL = leg(-1), legR = leg(1);
-  const FOOT = 0.4 + 0.16 + 0.228 + 0.015;              // hip height + knee + sole bottom: the group's origin is the sole
-  body.position.y = 0; root.scale.setScalar(H / 1.24); const group = new THREE.Group(); group.add(root);
+  body.position.y = 0.31; root.scale.setScalar(H / 1.75); const group = new THREE.Group(); group.add(root);
 
   const lerp = (a, b, k) => a + (b - a) * k;
   const setEyes = (expr) => {
     for (const e of eyes) {
       const s = e.s; e.oval.visible = true; e.arc.visible = false; e.g.rotation.set(0, 0, 0);
       const sc = (x, y) => e.oval.scale.set(x, y, 0.008);
-      if (expr === "happy") { e.oval.visible = false; e.arc.visible = true; e.arc.scale.set(0.034, 0.034, 0.034); e.g.position.y = VY + e.y - 0.01; }
+      if (expr === "happy") { e.oval.visible = false; e.arc.visible = true; e.arc.scale.set(0.04, 0.04, 0.04); e.g.position.y = VY + e.y - 0.01; }
       else { e.g.position.y = VY + e.y; }
       if (expr === "neutral") sc(0.027, 0.04);
       else if (expr === "wide") sc(0.037, 0.055);
@@ -117,11 +121,12 @@ export const createRobot = (o = {}) => {
 
 // named poses: arm / leg / head / body numbers in one place (radians). z rotates the arm outward from the body (about 1.5 = straight out), x swings it forward.
 export const POSES = {
-  stand: { armL: { z: 0.14 }, armR: { z: 0.14 }, expr: "neutral" },
-  hips: { armL: { z: 0.55, e: 1.6 }, armR: { z: 0.55, e: 1.6 }, head: { z: 0.08 }, expr: "neutral" },
+  stand: { armL: { z: 0.16 }, armR: { z: 0.16 }, expr: "neutral" },
+  hips: { armL: { z: 0.5, e: 1.75 }, armR: { z: 0.5, e: 1.75 }, head: { z: 0.06 }, expr: "neutral" },
+  heroHips: { armL: { z: 0.55, e: 1.8 }, armR: { z: 0.5, e: 1.8 }, head: { z: 0.1, y: 0.1 }, tilt: 0.0, legL: { z: 0.1, x: 0 }, legR: { z: -0.12, x: -0.1, k: 0.35 }, expr: "neutral", yaw: 0 },
   armsOut: { armL: { z: 1.4 }, armR: { z: 1.4 }, head: { x: -0.05 }, expr: "happy" },
   armsUp: { armL: { z: 2.6 }, armR: { z: 2.6 }, head: { x: -0.1 }, expr: "wide" },
   lean: { armL: { z: 0.5, x: 0.7, e: 0.6 }, armR: { z: 0.9, x: -0.8, e: 0.6 }, lean: 0.3, legL: { x: -0.4, k: 0.55 }, legR: { x: 0.4, k: 0.0 }, head: { x: 0.12 }, expr: "squint" },
-  lookUp: { armL: { z: 0.14 }, armR: { z: 0.14 }, head: { x: -0.5 }, expr: "awe" },
+  lookUp: { armL: { z: 0.16 }, armR: { z: 0.16 }, head: { x: -0.5 }, expr: "awe" },
   float: { armL: { z: 1.2, e: 0.3 }, armR: { z: 1.2, e: 0.3 }, legL: { x: 0.2, k: 0.5 }, legR: { x: -0.15, k: 0.35 }, head: { x: -0.1, z: 0.05 }, expr: "happy" },
 };

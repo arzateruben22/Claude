@@ -1,0 +1,132 @@
+{
+ "version": 1,
+ "format": "short",
+ "channel": "Possibility Lab",
+ "video": "Season 3 part 6 of 8",
+ "hook": "A year holds about 1,460 days at a six hour day, over 6,000 at the end, with a sunrise every 84 minutes.",
+ "titles": [
+  {
+   "text": "The year gets thousands of days",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "A Sunrise Every 84 Minutes",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "How Many Days in a Year Now?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "The Calendar That Broke",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Sleeping Eight Times a Day",
+   "mechanism": "contradiction"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the figure beside a wall calendar whose pages are fanning off in a blur",
+   "composition": "figure left, calendar upper right with pages flying",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "a tiny 'you' doing an ordinary action at an impossible scale; the goal is in view and the answer is not",
+   "text": "",
+   "complements": "shows the setup only; every number stays in the video"
+  },
+  {
+   "id": "B",
+   "subject": "the glowing day-length readout alone on a dark ground, the figure small below it",
+   "composition": "readout upper third, figure lower third",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "knowledge gap",
+   "text": "",
+   "complements": "a weaker focal point at phone size"
+  },
+  {
+   "id": "C",
+   "subject": "the Earth seen from space with a bright band of day crossing it",
+   "composition": "globe centred",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "scale",
+   "text": "",
+   "complements": "no human anchor"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 86,
+    "curiosity": 86,
+    "clarity": 88,
+    "synergy": 88,
+    "originality": 82,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 90
+   },
+   "note": "the title is the chapter's own plain statement; the cover is the figure about to meet it; clear at phone size"
+  },
+  {
+   "title": 2,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 76,
+    "curiosity": 78,
+    "clarity": 72,
+    "synergy": 70,
+    "originality": 74,
+    "accuracy": 90,
+    "mobile": 70,
+    "satisfaction": 82
+   },
+   "note": "a number on the cover gives the answer away"
+  },
+  {
+   "title": 1,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 70,
+    "curiosity": 74,
+    "clarity": 74,
+    "synergy": 66,
+    "originality": 70,
+    "accuracy": 92,
+    "mobile": 72,
+    "satisfaction": 80
+   },
+   "note": "no human anchor"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "The year gets thousands of days",
+  "thumbnail": "A",
+  "thumbnailText": "6,000 days a year",
+  "why": "The title is the chapter's own title in the long video, so Prism links the part to the film; the cover shows the figure in the setup, with no answer on screen."
+ },
+ "testAndCompare": [
+  "A",
+  "B"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "My own creative judgments, not measured. truth: the cover is a frame of the film (setup only). The part never gives the film's ending.",
+ "thumbnailFile": "possibility-lab-s3p6-cover.jpg",
+ "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the figure beside a wall calendar whose pages are fanning off in a blur.\nComposition: 9:16 vertical; figure left, calendar upper right with pages flying; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "shortsCover": {
+  "frameSeconds": null,
+  "text": "6,000 days a year"
+ }
+}
