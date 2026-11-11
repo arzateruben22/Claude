@@ -3,7 +3,8 @@
 //
 //   npm run build && npm test             every group
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
-//                                         progression, render, phone, launch, store, store-live, venues)
+//                                         progression, render, phone, nav-hud, launch, store, store-live, venues,
+//                                         venues-trips)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   SUITE_HANDLING=0.9 npm test -- ...    every group at that handling value: Settings' Arcade is 0.15, Sport 0.5,
 //                                         Simulation 0.9 (src/game/settings.ts PROFILES). Without it the suite drives at
@@ -62,9 +63,9 @@ const browser = await chromium.launch({
 // share these 4 cores, and under that load a boot has taken over 120 s (the boot check prints the real time)
 const BOOT_MS = 300000;
 // a fresh context (empty storage) with these settings saved, loaded to the main menu
-async function open({ settings = {}, phone = false, size = [1280, 720] } = {}) {
+async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 } = {}) {
   const ctx = await browser.newContext(phone
-    ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 }
+    ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: dpr }
     : { viewport: { width: size[0], height: size[1] } });
   const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
   await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
@@ -1957,6 +1958,49 @@ function hudLayoutInPage() {
 }
 const pct = (f) => (f * 100).toFixed(1) + '%';
 
+// The driving HUD's boxes with a destination set (owner, 2026-11-09): every visible HUD box (the plate or, on a desktop,
+// the navigation panel and the numbers, the road sign, the speed, THRUST's panel and button, the ability, the rail's
+// buttons, the corner window, the clock, and the touch controls), the outermost only (a phone's plate holds its lines),
+// which pairs overlap, which run outside the viewport minus the safe areas (.app's --sa-*, read off a probe), and
+// whether the destination's "at your pace" and "simulated" show whole inside it.
+// Go to > a place, through the buttons themselves (their own click handlers), without Playwright's wait for a stable box:
+// under load a software-rendered frame can take long enough that the rail's Go to never reads "stable" (2026-11-09: a
+// 240 s timeout on a visible, enabled button)
+async function goToPlace(name) {
+  const until = async (f) => { for (let i = 0; i < 1200; i++) { const v = f(); if (v) return v; await new Promise((r) => setTimeout(r, 250)); } throw new Error('Go to: timed out'); };
+  (await until(() => [...document.querySelectorAll('.tbar .tbtn')].find((b) => b.title === 'Go to'))).click();
+  (await until(() => [...document.querySelectorAll('.grid.places .gcell')].find((b) => b.textContent.includes(name)))).click();
+}
+function hudBoxesInPage() {
+  const W = innerWidth, app = document.querySelector('.app');
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;left:var(--sa-l);top:var(--sa-t);right:var(--sa-r);bottom:var(--sa-b);visibility:hidden;pointer-events:none';
+  app.appendChild(probe); const sa = probe.getBoundingClientRect(); probe.remove();
+  const SEL = ['.hud-plate', '.hud-navs', '.hud-nav', '.hud-dest', '.hud-next', '.hud-roadname', '.hud-stats', '.hud-speed', '.hud-thrust', '.hud-thrustbtn', '.hud-ability', '.hud-clock',
+    '.hud-fps', '.tbar .tbtn', '.corner', '.livechip', '.venue-prompt', '.touch-steer', '.pedal', '.touch-shift .tbtn', '.tbtn.honk'];
+  const shown = (e) => {
+    const r = e.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return false;
+    for (let a = e; a && a !== document.body; a = a.parentElement) { const cs = getComputedStyle(a); if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) <= 0.05) return false; }
+    return true;
+  };
+  const els = [...new Set(SEL.flatMap((q) => [...document.querySelectorAll(q)]))].filter(shown);
+  const top = els.filter((e) => !els.some((o) => o !== e && o.contains(e)));
+  const name = (e) => String(e.className.baseVal ?? e.className).split(' ').slice(0, 2).join('.');
+  const bx = top.map((e) => { const r = e.getBoundingClientRect(); return { n: name(e), l: r.left, t: r.top, r: r.right, b: r.bottom }; });
+  const hit = (a, b) => a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5;
+  const overlaps = [], outside = [];
+  for (let i = 0; i < bx.length; i++) for (let j = i + 1; j < bx.length; j++) if (hit(bx[i], bx[j])) overlaps.push(`${bx[i].n} / ${bx[j].n}`);
+  for (const b of bx) if (b.l < sa.left - 0.5 || b.t < sa.top - 0.5 || b.r > sa.right + 0.5 || b.b > sa.bottom + 0.5) outside.push(`${b.n} ${Math.round(b.l)},${Math.round(b.t)}..${Math.round(b.r)},${Math.round(b.b)}`);
+  const dest = document.querySelector('.hud-dest'), dr = dest.getBoundingClientRect();
+  const labels = [...dest.querySelectorAll('em')].filter((e) => /pace|simulated/.test(e.textContent)).map((e) => {
+    const r = e.getBoundingClientRect();
+    return { t: e.textContent, ok: shown(e) && r.left >= dr.left - 0.5 && r.right <= dr.right + 0.5 && r.right <= W && e.scrollWidth <= e.clientWidth + 1 };
+  });
+  const has = Object.fromEntries([['dest', '.hud-dest'], ['nav', '.hud-nav'], ['thrust', '.hud-thrustbtn'], ['ability', '.hud-ability']].map(([k, q]) => [k, shown(document.querySelector(q))]));
+  return { layout: app.dataset.hud, boxes: bx.length, overlaps, outside, labels, has, safe: { l: sa.left, t: sa.top, r: sa.right, b: sa.bottom }, side: document.documentElement.scrollWidth > W };
+}
+
 await group('phone', async (use) => {
   // Modern, so the controls stay put while the checks press them (a phone's first run is Minimal; the last check here
   // covers its tuck and wake)
@@ -2438,6 +2482,75 @@ await group('phone', async (use) => {
     expect(!mine.length, `overlaps: ${mine.join(', ')} ${JSON.stringify(b)}`);
     expect([b.panel, b.btn, b.abil].every((x) => x.l >= 0 && x.r <= r.w && x.t >= 0 && x.b <= r.h), `off screen: ${JSON.stringify(b)}`);
     return `${r.w} × ${r.h}: THRUST ${b.btn.l}-${b.btn.r} and the ability ${b.abil.l}-${b.abil.r} px across at ${b.btn.t}-${b.btn.b}, the tank panel over them at ${b.panel.t}-${b.panel.b}, the corner map ${b.corner.l}-${b.corner.r} × ${b.corner.t}-${b.corner.b}; no overlaps${r.overlaps.length ? ` (elsewhere: ${r.overlaps.join(', ')})` : ''}`;
+  });
+});
+
+// the driving HUD with a destination set (owner, 2026-11-09, "lets fix the interface when i choose a destiantion", with
+// screenshots at 1450 x 767 and 1350 x 750 in the OC Hypercar headed for Stoppage Time: the destination card under the
+// rail's VIEW button, its "at your pace" and "simulated" hidden; THRUST's tank panel under PAUSE on a short window).
+// With a destination set, in the hypercar (THRUST and FOCUS TIME up), no two visible HUD boxes overlap and every one sits
+// inside the viewport minus its safe areas, the honest labels whole: a phone (DPR 3, touch) upright and on its side, then
+// a desktop at 1450 x 767 (the owner's), 1350 x 750 (the owner's second window) and 1280 x 600 (a short window: the rail
+// goes to icons), Auto-drive off and on. Its own group (2026-11-11 review: inside the phone group it took that group past
+// 20 minutes), one page at a time: the phone's context is closed before the desktop's opens.
+await group('nav-hud', async (use) => {
+  const at = async (p, w, h, out, note = '') => {
+    await p.setViewportSize({ width: w, height: h });
+    await p.waitForTimeout(450);                                                  // the layout follows a resize a moment later (App.tsx useHudLayout)
+    await frames(p, 3, 900000);
+    const m = await game(p, hudBoxesInPage);
+    const tag = `${w}x${h} (${m.layout}${note})`;
+    expect(m.has.dest && m.has.nav && m.has.thrust && m.has.ability, `${tag}: missing ${JSON.stringify(m.has)}`);
+    expect(m.overlaps.length === 0, `${tag}: overlapping ${m.overlaps.join(', ')}`);
+    expect(m.outside.length === 0, `${tag}: outside ${JSON.stringify(m.safe)}: ${m.outside.join(', ')}`);
+    expect(m.labels.length === 2 && m.labels.every((l) => l.ok), `${tag}: the destination's labels ${JSON.stringify(m.labels)}`);
+    expect(!m.side, `${tag}: the page scrolls sideways`);
+    out.push(`${tag} ${m.boxes} boxes`);
+  };
+  // the hypercar (owner mode for the test) on CA-22 East (the owner's road), no traffic, Stoppage Time from the rail's Go
+  // to. Free Drive and Drive from the menu, by their own handlers (the UI's driving state, so the rail is up: Game.start
+  // alone leaves the menu's state; under load Playwright's wait for a stable box on Drive ran past 240 s, 2026-11-09)
+  const headFor = async (p) => {
+    await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: true, density: 'none' }); g.chooseOwnerCar('oc-hyper'); });
+    await game(p, () => { [...document.querySelectorAll('[role="radio"]')].find((r) => /Free Drive/.test(r.textContent)).click(); });
+    await game(p, () => { [...document.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Drive').click(); });
+    await p.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
+    await game(p, () => { const g = window.__game, m = g.findMain('CA-22 East'); g.placeCar(m, m.len * 0.35, 1, 60); g.setCam('chase'); });
+    await game(p, goToPlace, 'Stoppage Time');
+    await p.waitForFunction(() => { const e = document.querySelector('.hud-dest'), t = document.querySelector('.hud-thrustbtn');
+      return e && !e.hidden && /Stoppage Time/.test(e.textContent) && t && !t.hidden && !document.querySelector('.app.hud-min'); }, null, { timeout: 900000, polling: 500 });
+  };
+  await check('destination set in the OC Hypercar on a phone (DPR 3, touch): no HUD boxes overlap, all inside the viewport and its safe areas, at 390 × 844 and 844 × 390', async () => {
+    const out = [];
+    const ph = await open({ phone: true, dpr: 3, settings: { hudStyle: 'modern' } });
+    try {
+      await headFor(ph.page);
+      await at(ph.page, 390, 844, out);
+      await ph.page.screenshot({ path: path.join(OUT, 'navhud-phone-390x844.png') });
+      await at(ph.page, 844, 390, out);
+      await ph.page.screenshot({ path: path.join(OUT, 'navhud-phone-844x390.png') });
+      const dpr = await game(ph.page, () => devicePixelRatio);
+      expect(dpr === 3, `devicePixelRatio ${dpr}`);
+      expect(ph.errors.length === 0, `phone page errors: ${ph.errors.slice(0, 3).join(' | ')}`);
+    } finally { await ph.ctx.close(); }
+    return `${out.join('; ')} (DPR 3)`;
+  });
+  // a desktop window: a mouse, the sky camera top right as the owner had it
+  const { page } = await use({ size: [1450, 767], settings: { corner: 'sky', hudStyle: 'modern' } });
+  await check('destination set in the OC Hypercar on a desktop: no HUD boxes overlap, all inside the viewport, at 1450 × 767, 1350 × 750 and 1280 × 600, Auto-drive off and on', async () => {
+    const out = [];
+    await headFor(page);
+    await at(page, 1450, 767, out);
+    await page.screenshot({ path: path.join(OUT, 'navhud-desk-1450x767.png') });
+    await at(page, 1350, 750, out);
+    await page.screenshot({ path: path.join(OUT, 'navhud-desk-1350x750.png') });
+    await at(page, 1280, 600, out);
+    await page.screenshot({ path: path.join(OUT, 'navhud-desk-1280x600.png') });
+    // Auto-drive on (its rail button lit, the AUTO tag in the panel), the shortest window
+    await game(page, () => window.__game.setAutoDrive(true));
+    await page.waitForFunction(() => !!document.querySelector('.tbtn.auto.on'), null, { timeout: 900000, polling: 500 });
+    await at(page, 1280, 600, out, ', Auto-drive');
+    return out.join('; ');
   });
 });
 
@@ -3390,6 +3503,13 @@ await group('venues', async (use) => {
       return `Car walked you to ${r.walk.m} m from the door, Drive (${r.btn.w}x${r.btn.h}) tapped: on the ramp to ${r.leads} (path ${r.path}) at ${r.s} m, ${r.mph} mph; "${r.toast}"`;
     });
   }
+  writeFileSync(path.join(OUT, 'venues-trips.json'), JSON.stringify(trips, null, 1));
+});
+// three Lot 57 round trips in a page of their own (2026-11-11: inside the venues group they took that run past the
+// suite's 20-minute limit for one run at a load average of about 24): mount, back to the car, the memory read after each
+await group('venues-trips', async (use) => {
+  const { page } = await use({ settings: { time: 'sunset' } });
+  await drive(page, 'Free Drive');
   await check('venues: three Lot 57 round trips: no growth in the game renderer or the JS heap, no errors', async () => {
     const rows = [], base = await heap(page);
     for (let i = 0; i < 3; i++) {
@@ -3418,10 +3538,9 @@ await group('venues', async (use) => {
     expect(g[2].sceneGeo - g[1].sceneGeo <= 16 && g.every((x) => x.geometries <= x.sceneGeo + 24) && g[2].textures - g[1].textures <= 4 && g[2].programs - g[1].programs <= 2, `game renderer ${JSON.stringify(g)}`);
     const left = await game(page, () => { let n = 0; window.__game.scene.traverse((o) => { if (/^(lot57|venue|onfoot|sportsbar|your-car)/i.test(o.name) || o.userData?.group === 'your-car') n++; }); return n; });
     expect(left === 0, `${left} venue objects left in the game's scene`);
-    trips.push(...rows);
+    writeFileSync(path.join(OUT, 'venues-roundtrips.json'), JSON.stringify(rows, null, 1));
     return `heap ${base.heapMB} MB before, then ${h.join(', ')} MB after each trip; game renderer geometries ${g.map((x) => x.geometries).join('/')} (scene graph ${g.map((x) => x.sceneGeo).join('/')}), textures ${g.map((x) => x.textures).join('/')}, programs ${g.map((x) => x.programs).join('/')}; venue renderer at ready ${rows.map((r) => `${r.venue.geometries} geo ${r.venue.textures} tex`).join(', ')}`;
   });
-  writeFileSync(path.join(OUT, 'venues-trips.json'), JSON.stringify(trips, null, 1));
 });
 // the phone, in a context of its own once the first has closed (booting a second game beside the first, still drawing,
 // timed out twice at a load of about 20: both share the one software GPU process)
