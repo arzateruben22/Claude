@@ -122,9 +122,6 @@
  },
  "thumbnailFile": "reality-rulebook-s3p8-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a human hair in extreme close-up with a thin line of warm light just beginning to cross it, a millimeter ruler along the bottom, black background. Composition: hair vertical centre, light line at its left edge, ruler along the bottom. Lighting and treatment: dark, one warm line of light; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: awe. Text: No text. Scientific accuracy: at a trillion times slower, light moves about 0.3 mm per second; a hair is about 0.1 mm wide, so light crosses it in about a third of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
- "shortsCover": {
-  "frameSeconds": 46.0,
-  "text": ""
- },
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title."
 }

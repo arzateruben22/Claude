@@ -103,7 +103,7 @@
  "winner": {
   "title": "A Soap Bubble Takes 11 Seconds to Pop (Slowed 1,000×)",
   "thumbnail": "A",
-  "thumbnailText": "ELEVEN SECONDS",
+  "thumbnailText": "Egg-Sized",
   "why": "The hole mid-pop is the mystery; the title gives the scale. The part really shows the bubble popping over about eleven seconds."
  },
  "testAndCompare": [
@@ -122,9 +122,6 @@
  },
  "thumbnailFile": "reality-rulebook-s3p3-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a soap bubble about as wide as an egg with a round hole opening in its film, iridescent thin-film colours around the rim, dark kitchen cabinet behind. Composition: bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast. Lighting and treatment: backlit, thin-film colours; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"ELEVEN SECONDS\" in a bold geometric sans, placed upper third. Scientific accuracy: the hole in a bursting bubble opens at several meters per second; the whole egg-sized bubble is gone in about a hundredth of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
- "shortsCover": {
-  "frameSeconds": 55.0,
-  "text": "ELEVEN SECONDS"
- },
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title."
 }
