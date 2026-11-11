@@ -1,21 +1,18 @@
 {
- "file": "films/channels/space/compilations/s3/s3-16x9.mp4",
- "uploadVersion": "films/channels/space/compilations/s3/s3-16x9-1080p.mp4",
+ "file": "films/channels/space/compilations/s3/s3-16x9.mp4 (master, delivered outside git; see master.json)",
  "w": 2560,
  "h": 1440,
  "fps": "30/1",
  "dur": 517.7,
- "size_mb": 93.8,
- "size_mb_1080p": 74.8,
- "sha256_1440p": "19e89c834a70471592a0474d0b9cd5f960ef1dbab4dcb74b7fb19a804c6e8e9b",
- "sha256_1080p": "a670a6de81b00440cbd23bb4324a97ff0857fc5ebd3e46febd98b2fce5a1e651",
+ "size_mb": 418.7,
+ "sha256_1440p": "611b176b1433b0bb659125d7b8b201a59644d0d5e928e602097c9810d3c814d5",
  "lufs": -14.1,
  "true_peak_db": -1.7,
  "lra": 2.1,
  "freezes": {
-  "rule": "freezedetect n=0.003 d=1 at native resolution",
-  "render_quality_master": "longest still 1.37 s (opening 0.47 s); none over 1.4 s",
-  "delivery_encode": "size-capped to stay under 100 MB (x264 crf 27); stills over 1.4 s: 25.4 s (1.47 s) and 334.9 s (1.83 s), both slow camera moves the low bitrate flattens; the full-quality render stays on the build machine"
+  "rule": "freezedetect n=0.003 d=1.4 at native resolution on the master",
+  "result": "none over 1.4 s",
+  "opening": "0.47-1.84 s is the cold-open fade (1.37 s)"
  },
  "flash": {
   "max_1_frame_luminance_step": 0.029,
@@ -28,5 +25,10 @@
  "chapters_under_10s": 0,
  "chapters_identical_to_part_titles": true,
  "counter_synced_to_voice": "each distance key is timed from the aligned sentence that says the number (build_timeline.py)",
- "fails": []
+ "fails": [],
+ "previewFile": "films/channels/space/compilations/s3/s3-16x9-preview.mp4",
+ "mbps": 6.47,
+ "notes": [
+  "Chapter 1 reworked after the coordinator's feedback: Moon placed below the caption from the first frame, sunbeam starts below the readout."
+ ]
 }

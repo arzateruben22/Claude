@@ -1,0 +1,10 @@
+{
+ "file": "s3-16x9.mp4",
+ "local_path_on_build_machine": "films/channels/space/long01/out/master-s3.mp4",
+ "sha256": "611b176b1433b0bb659125d7b8b201a59644d0d5e928e602097c9810d3c814d5",
+ "bytes": 418727818,
+ "mbps": 6.47,
+ "crf": 17,
+ "encode": "libx264 High, preset slow, crf 17, maxrate 30M, bufsize 60M, yuv420p, BT.709 tagged, 30 fps, faststart; audio is the existing AAC mix copied unchanged (-14.1 LUFS)",
+ "note": "too large for git (GitHub 100 MB limit); not yet pushed to Prism (the builder was told not to push to Prism); s3-16x9-preview.mp4 in git is a small preview only"
+}
