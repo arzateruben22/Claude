@@ -127,5 +127,6 @@
   "text": "TEN TIMES SLOWER"
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
- "note": "Cover re-cut from a HUD-free render of the film at 33.4 s; no hand or figure exists in this part (the model bird is the human-anchor substitute)."
+ "note": "Cover re-cut from a HUD-free render of the film at 33.4 s; no hand or figure exists in this part (the model bird is the human-anchor substitute).",
+ "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it"
 }
