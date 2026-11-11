@@ -212,6 +212,24 @@ the facts, the options and your recommendation, and record each answer in PROJEC
 Do not change code in this session beyond recording the decisions.
 ```
 
+**F7. Overhead clearance over the ramps' lanes (levelling design; found 2026-11-11 by the debris r5 repair).**
+
+```
+OC Ultra (top-speed-ultra), worktree tsu-fix-road, branch claude/fix-road (debris fix, r5 uncommitted or WIP).
+Read CLAUDE.md, PROJECT_OC_TECHNICAL_NOTES.md (the debris sections) and the 2026-11-11 entry of
+PROJECT_OC_PROGRESS.md. The r5 rule holds nothing of another road between 0.05 m and 4.5 m (Network.CLEAR) over a
+CARRIAGEWAY's drawn travel lanes (Network.laneRuns at load, Roads.bandOnRow/sideFoot when building, the boot checks).
+Ramps' lanes are not covered: a Node scan of every chunk (the boot lanes check with !h.path.main) found 414 spots in
+ramps' lanes, 209 of them 0.5 m or more up, e.g. ramp 895's deck 2.7 to 4.4 m over ramp 797's lane (I-5 North exit
+to Ball Road / Harbor Boulevard, a Stoppage Time exit) at 797's s 161-175, ramp 1164's cut side, barrier and deck
+2.8 to 3.7 m over ramp 929 at s 671-690, ramp 940 over ramp 403 (2.2 to 3.8 m), street ramps of Bolsa Chica Road,
+East 17th Street, Alton Parkway and East Lincoln Avenue 0.6 to 4 m over ramp lanes. Design and build the same rule
+for ramps (a crossing ramp held CLEAR_TOP over a better-ranked ramp's lanes or following it at grade; what can't be
+held, cut back with closed sides), without new crests, dips or grades (the Profile.ts limits and the boot check
+"levelled heights add no crest, dip or steep grade"), bump LEVELS and rebake (npm run levels). Prove: a boot check
+for ramps' lanes at 0 spots, the whole suite, and before/after frames of each place named above.
+```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
