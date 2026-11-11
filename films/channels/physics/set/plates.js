@@ -1,6 +1,6 @@
 // plates.js: photographic PLATES behind the code-animated physics subjects (the way One More Orbit uses its paintings).
 //
-//   const plates = createPlates({ scene, camera, W, H, FILM });     // FILM.plates = [ plate, ... ] (film.json)
+//   const plates = createPlates({ scene, camera, W, H, FILM, canvas });     // FILM.plates = [ plate, ... ] (film.json)
 //   window.SCENE_READY = plates.ready;                                // resolves when every plate image is loaded (or has failed: never rejects)
 //   if (plates.apply(t)) { /* a plate is on screen: hide the code kitchen */ }
 //   const c = plates.cam(t);                                          // the plate's own camera ({look, fitW, yaw, pitch}) or null
@@ -15,41 +15,39 @@
 //   cam            { look, fitW, yaw, pitch }: pins the code camera for the shot so the subjects line up with the plate
 //   cam3           { pos: [x, y, z], target: [x, y, z], fov }: a pinhole camera that matches the plate (the vertical field of view in degrees); the push is a zoom of that field, so the proxy room stays aligned
 //   anchor         { pos: [x, y, z], scale, tint: "#rrggbb", shadow: 0..1, focus: [x, y, z], fstop }: where the code subject sits, its light tint, its contact shadow and the depth of field
+// The plate is a DOM image BEHIND the 3-D canvas (the canvas is transparent where nothing is drawn), so the cinema finish (ACES, bloom, grade) never touches it:
+// its pixels reach the screen exactly as the source file has them. Only the code subjects and the shell go through the finish.
 // Missing or unreadable images switch that plate off, and the code kitchen is drawn instead (the fallback).
-import * as THREE from "three";
 
-export const createPlates = ({ scene, camera, W, H, FILM }) => {
-  const nine = H > W, list = (FILM.plates || []).filter(Boolean), D = 6;
-  const loader = new THREE.TextureLoader();
-  if (!scene.children.includes(camera)) scene.add(camera);
+export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
+  const nine = H > W, list = (FILM.plates || []).filter(Boolean);
   const load = (file) => new Promise((res) => {
     if (!file) return res(null);
-    loader.load(new URL(file, import.meta.url).href, (tex) => { tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4; res(tex); }, undefined, () => res(null));
+    const im = new Image(); im.decoding = "sync";
+    im.onload = () => { (im.decode ? im.decode() : Promise.resolve()).catch(() => {}).then(() => res(im)); }; im.onerror = () => res(null);
+    im.src = new URL(file, import.meta.url).href;
   });
-  const mkQuad = (tex, z) => {
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false }));
-    m.renderOrder = -100 + z; m.visible = false; m.frustumCulled = false; camera.add(m); return m;
+  const mk = (im, z) => {
+    im.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;object-fit:cover;display:none;transform-origin:50% 50%;will-change:transform;pointer-events:none;`;
+    canvas.parentNode.insertBefore(im, canvas); im.dataset.z = z; return im;
   };
-  const cover = (tex, m) => { m.userData.ia = tex.image.width / tex.image.height; m.userData.alpha = !!m.userData.layerAlpha; };   // fit the image to cover the frame (no stretch), centred: sized every frame from the camera's field of view
-  const items = list.map((p) => ({ p, quads: [], ok: false }));
+  const items = list.map((p) => ({ p, imgs: [], ok: false }));
   const ready = Promise.all(items.map(async (it) => {
     const layers = it.p.layers && it.p.layers.length ? it.p.layers : [{ file: it.p.file, file9: it.p.file9, depth: 0 }];
-    const texs = await Promise.all(layers.map((l) => load(nine ? l.file9 || l.file : l.file)));
-    if (texs.some((t) => !t)) { it.ok = false; return; }
-    it.quads = texs.map((tex, i) => { const m = mkQuad(tex, i); m.userData.layerAlpha = i > 0; cover(tex, m); m.userData.depth = layers[i].depth || 0; return m; });
+    const ims = await Promise.all(layers.map((l) => load(nine ? l.file9 || l.file : l.file)));
+    if (ims.some((m) => !m)) { it.ok = false; return; }
+    it.imgs = ims.map((im, i) => { mk(im, i); im.dataset.depth = layers[i].depth || 0; return im; });
     it.ok = true;
   })).catch(() => {});
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
   const apply = (t) => {
-    for (const it of items) for (const m of it.quads) m.visible = false;
+    for (const it of items) for (const im of it.imgs) im.style.display = "none";
     const it = active(t); if (!it) return false;
     const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), f = p.fade ?? 0.35;
     const a = Math.min(1, (t - p.t0) / f, (p.t1 - t) / f), push = p.push ?? 0.05, par = p.parallax ?? 0.02;
-    const qh = 2 * D * Math.tan((camera.fov * Math.PI) / 360), qw = qh * (W / H), over = p.over ?? (p.cam3 ? 1 : 1.08);   // a pinned (cam3) plate has no overscan: it must line up with its proxy
-    it.quads.forEach((m) => {
-      const ia = m.userData.ia, fa = W / H, bw = ia > fa ? qh * ia : qw, bh = ia > fa ? qh : qw / ia;
-      const s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * (m.userData.depth || 0)), shift = par * (d - 0.5) * qw * (1 + (m.userData.depth || 0));
-      m.visible = true; m.position.set(shift, 0, -D); m.scale.set(bw * s * over, bh * s * over, 1); m.material.opacity = Math.max(0, Math.min(1, a)); m.material.transparent = a < 0.999 || !!m.userData.alpha;   // opaque while fully in, so it draws before the code subjects (a transparent quad would be drawn over them)
+    it.imgs.forEach((im) => {
+      const dep = +im.dataset.depth, s = 1 + push * d * (p.cam3 ? 1 : 1 + 0.6 * dep), shift = par * (d - 0.5) * W * (1 + dep), over = p.over ?? (p.cam3 ? 1 : 1.04);
+      im.style.display = "block"; im.style.opacity = String(Math.max(0, Math.min(1, a))); im.style.transform = `translate(${shift.toFixed(2)}px,0) scale(${(s * over).toFixed(5)})`;
     });
     return true;
   };

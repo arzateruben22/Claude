@@ -1,127 +1,130 @@
 {
- "version": 1,
- "format": "short",
- "hook": "Sound needs about fifteen thousandths of a second to cross a kitchen: slow time 1,000 times and you can watch the ring cross it.",
- "titles": [
-  {
-   "text": "Watch Sound Cross a Kitchen in 15 Seconds",
-   "mechanism": "hidden mechanism"
+  "version": 1,
+  "format": "short",
+  "hook": "Sound needs about fifteen thousandths of a second to cross a kitchen: slow time 1,000 times and you can watch the ring cross it.",
+  "titles": [
+    {
+      "text": "Watch Sound Cross a Kitchen in 15 Seconds",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "How Far Away Is the Lightning? Count and Divide by 3",
+      "mechanism": "personal relevance"
+    },
+    {
+      "text": "A Clap Is a Ring of Squeezed Air",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "Why Do You Hear an Echo?",
+      "mechanism": "unanswered question"
+    },
+    {
+      "text": "The Fastest Thing on This Table Isn't Sound",
+      "mechanism": "contradiction"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "a ring of squeezed air drawn as glowing blue arcs on a kitchen wall and counter, expanding from two small hands at the far end",
+      "composition": "wide, ring centred, hands tiny at the right",
+      "lighting": "cool blue arcs on warm cream surfaces",
+      "trigger": "wonder",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "B",
+      "subject": "two small hands about to clap, a ring beginning",
+      "composition": "hands centre, close",
+      "lighting": "daylight",
+      "trigger": "anticipation",
+      "text": "CLAP",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    },
+    {
+      "id": "C",
+      "subject": "a stopwatch beside the ring",
+      "composition": "",
+      "lighting": "",
+      "trigger": "",
+      "text": "",
+      "complements": "adds the scale/clarity the title only hints at, without repeating its words"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 86,
+        "curiosity": 84,
+        "clarity": 86,
+        "synergy": 90,
+        "originality": 76,
+        "accuracy": 96,
+        "mobile": 90,
+        "satisfaction": 88
+      },
+      "note": "The visible ring is the unexpected image; the title names the impossible act."
+    },
+    {
+      "title": 1,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 78,
+        "curiosity": 78,
+        "clarity": 72,
+        "synergy": 80,
+        "originality": 74,
+        "accuracy": 96,
+        "mobile": 90,
+        "satisfaction": 82
+      },
+      "note": "Personal-relevance title, but the thumbnail does not show lightning."
+    },
+    {
+      "title": 3,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 60,
+        "curiosity": 66,
+        "clarity": 64,
+        "synergy": 62,
+        "originality": 70,
+        "accuracy": 92,
+        "mobile": 80,
+        "satisfaction": 70
+      },
+      "note": "Weaker picture."
+    }
+  ],
+  "winner": {
+    "title": "Watch Sound Cross a Kitchen in 15 Seconds",
+    "thumbnail": "A",
+    "thumbnailText": "343 m/s in air",
+    "why": "The glowing ring across the kitchen is the picture; the title says what it does. The part shows the ring crossing and bouncing back."
   },
-  {
-   "text": "How Far Away Is the Lightning? Count and Divide by 3",
-   "mechanism": "personal relevance"
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
   },
-  {
-   "text": "A Clap Is a Ring of Squeezed Air",
-   "mechanism": "knowledge gap"
-  },
-  {
-   "text": "Why Do You Hear an Echo?",
-   "mechanism": "unanswered question"
-  },
-  {
-   "text": "The Fastest Thing on This Table Isn't Sound",
-   "mechanism": "contradiction"
-  }
- ],
- "thumbnails": [
-  {
-   "id": "A",
-   "subject": "a ring of squeezed air drawn as glowing blue arcs on a kitchen wall and counter, expanding from two small hands at the far end",
-   "composition": "wide, ring centred, hands tiny at the right",
-   "lighting": "cool blue arcs on warm cream surfaces",
-   "trigger": "wonder",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "B",
-   "subject": "two small hands about to clap, a ring beginning",
-   "composition": "hands centre, close",
-   "lighting": "daylight",
-   "trigger": "anticipation",
-   "text": "CLAP",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  },
-  {
-   "id": "C",
-   "subject": "a stopwatch beside the ring",
-   "composition": "",
-   "lighting": "",
-   "trigger": "",
-   "text": "",
-   "complements": "adds the scale/clarity the title only hints at, without repeating its words"
-  }
- ],
- "pairings": [
-  {
-   "title": 0,
-   "thumbnail": "A",
-   "scores": {
-    "scroll": 86,
-    "curiosity": 84,
-    "clarity": 86,
-    "synergy": 90,
-    "originality": 76,
-    "accuracy": 96,
-    "mobile": 90,
-    "satisfaction": 88
-   },
-   "note": "The visible ring is the unexpected image; the title names the impossible act."
-  },
-  {
-   "title": 1,
-   "thumbnail": "A",
-   "scores": {
-    "scroll": 78,
-    "curiosity": 78,
-    "clarity": 72,
-    "synergy": 80,
-    "originality": 74,
-    "accuracy": 96,
-    "mobile": 90,
-    "satisfaction": 82
-   },
-   "note": "Personal-relevance title, but the thumbnail does not show lightning."
-  },
-  {
-   "title": 3,
-   "thumbnail": "B",
-   "scores": {
-    "scroll": 60,
-    "curiosity": 66,
-    "clarity": 64,
-    "synergy": 62,
-    "originality": 70,
-    "accuracy": 92,
-    "mobile": 80,
-    "satisfaction": 70
-   },
-   "note": "Weaker picture."
-  }
- ],
- "winner": {
-  "title": "Watch Sound Cross a Kitchen in 15 Seconds",
-  "thumbnail": "A",
-  "thumbnailText": "343 m/s in air",
-  "why": "The glowing ring across the kitchen is the picture; the title says what it does. The part shows the ring crossing and bouncing back."
- },
- "testAndCompare": [
-  "A",
-  "B",
-  "C"
- ],
- "checks": {
-  "halfSecond": true,
-  "curiosity": true,
-  "duplication": true,
-  "competition": true,
-  "truth": true,
-  "satisfaction": true,
-  "originality": true
- },
- "thumbnailFile": "reality-rulebook-s3p4-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a ring of squeezed air shown as glowing blue arcs crossing a kitchen counter and wall, expanding from two tiny hands at the far right. Composition: wide, ring centred, hands tiny at the right. Lighting and treatment: cool blue arcs on warm cream surfaces; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: No text. Scientific accuracy: sound moves about 343 meters per second in air; a five-meter room takes about 15 thousandths of a second; at 1,000x slower, about 15 seconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
- "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
- "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title."
+  "thumbnailFile": "reality-rulebook-s3p4-cover.jpg",
+  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a ring of squeezed air shown as glowing blue arcs crossing a kitchen counter and wall, expanding from two tiny hands at the far right. Composition: wide, ring centred, hands tiny at the right. Lighting and treatment: cool blue arcs on warm cream surfaces; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: No text. Scientific accuracy: sound moves about 343 meters per second in air; a five-meter room takes about 15 thousandths of a second; at 1,000x slower, about 15 seconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title.",
+  "postingCopyLines": [
+    "Kitchen illustration made with AI. The sound wave is drawn by code."
+  ]
 }
