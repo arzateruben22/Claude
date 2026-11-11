@@ -57,6 +57,9 @@ qualified. Long-form watch hours are also what unlock the Partner Program (short
   - Part D: the like/follow lines, each read with "follow" then "subscribe", recorded once per channel
   Commit it as `films/channels/voice-scripts/<channel>-season-N-recording-script.md` and send it to the coordinator,
   who passes it to the owner.
+- **One session per season, 7-10 minutes of reading** (owner, 11 Nov 2026). The script prints the time and warns above 10
+  minutes: trim repeated or decorative lines (never a fact the story needs) while the long video still runs at least 8:30.
+  The like/follow lines are two per season, rotating through CTA.md.
 - **The owner uploads to `films/channels/<channel>/voice-owner/`** on the channel's branch, as `<pl|oo>-sN.m4a`,
   `<pl|oo>-sN-parts.m4a`, `part-closers.m4a` and `<pl|oo>-cta.m4a`. The builder cuts the files into lines, swaps them for
   the AI stand-in, rebuilds the captions from the recording and re-renders. The AI voice stands in until then, so

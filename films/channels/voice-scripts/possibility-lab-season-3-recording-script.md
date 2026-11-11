@@ -1,16 +1,18 @@
 # Possibility Lab Season 3: your recording script
 
 Season 3 is one long video, “What If Earth Spun Faster and Couldn't Stop?”, cut into 8 short parts. This is everything you read for it.
-The words are exactly what's on screen and what has been fact-checked, so read them as written. If a phrase doesn't
+The words match what's on screen, so read them as written (every fact is checked before it posts). If a phrase doesn't
 feel natural in your mouth, say which line and it gets reworded and re-checked (the captions are rebuilt from your
 recording, so they'll match what you say).
 
-### How to record (5 minutes of setup, then it's easy)
+**About 9.5 minutes of reading in one session** (about 9.5 if you've already recorded the closers). Until you record, an AI voice stands in; the builder swaps yours in when the files land.
+
+### How to record
 - **Room:** quiet, with soft stuff around you (a closet of clothes or a bedroom is great; a bathroom or kitchen echoes).
 - **Phone:** Voice Memos is fine. Hold it **about a hand's width (15–20 cm) from your mouth**, slightly to the side. Same spot every session.
 - **Pauses:** 2 seconds between lines. Flubbed one? Pause, then read **that whole line again**; the last take is kept.
 - **Start each file by saying its name**, e.g. *“Possibility Lab, Season 3, long video”*.
-- **Files:** `pl-s3.m4a` (Part A), `pl-s3-parts.m4a` (Part B), `part-closers.m4a` (Part C, once ever) and `pl-cta.m4a` (Part D, once per channel).
+- **Files:** `pl-s3.m4a` (Part A), `pl-s3-parts.m4a` (Part B), `part-closers.m4a` (Part C, once ever) and `pl-s3-cta.m4a` (Part D). One long file is fine too: say each part's name before it.
 - **Upload:** https://github.com/arzateruben22/claude/upload/claude/whatif-s2/films/channels/whatif/voice-owner
 
 ### How it should sound
@@ -101,8 +103,8 @@ Each part also gets its own cliffhanger, read right after its opening.
 
 ---
 
-## Part C. The closers (record once ever; every season and channel reuses them)
-File: `part-closers.m4a`. Already recorded? Skip this part.
+## Part C. The closers (once ever: skip if you've recorded them)
+File: `part-closers.m4a`. Every season and channel reuses them.
 
 **1.** Part one of eight. Full video on **YouTube**.
 
@@ -122,8 +124,8 @@ File: `part-closers.m4a`. Already recorded? Skip this part.
 
 ---
 
-## Part D. The like and follow lines (record once for Possibility Lab)
-File: `pl-cta.m4a`. Already recorded for Possibility Lab? Skip this part. Each line twice: “follow” (TikTok, Instagram), then “subscribe” (YouTube).
+## Part D. The like and follow lines
+File: `pl-s3-cta.m4a`. Each line twice: “follow” (TikTok, Instagram), then “subscribe” (YouTube).
 
 **1.** Hang on. If you're enjoying this, tap like and **follow**. Okay, back to the math.
 
@@ -133,14 +135,6 @@ File: `pl-cta.m4a`. Already recorded for Possibility Lab? Skip this part. Each l
 
 **4.** Quick break: like and **subscribe**. Then let's see how bad this gets.
 
-**5.** If your brain's doing the math with me, tap like and **follow**.
-
-**6.** If your brain's doing the math with me, tap like and **subscribe**.
-
-**7.** Real quick: like and **follow**. The next what-if is even stranger.
-
-**8.** Real quick: like and **subscribe**. The next what-if is even stranger.
-
 ---
 
-*About 13 minutes of reading. Until you record, an AI voice stands in; the builder swaps yours in when the files land.*
+*Thanks! Upload the files and that's it.*
