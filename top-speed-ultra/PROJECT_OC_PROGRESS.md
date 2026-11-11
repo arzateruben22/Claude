@@ -4,6 +4,96 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: The driving HUD fits with a destination set
+
+The owner asked to fix the interface when a destination is chosen: at 1450 x 767 and 1350 x 750 in the OC Hypercar
+headed for Stoppage Time, the destination card sat under the rail, THRUST crowded the speed box and the HUD ran off the
+window's edges. Built: one navigation panel top left (turn, guide sign, next exit, then the destination with distance,
+time "at your pace", "No traffic", "simulated"); a rail that turns into 44px icons on short windows; THRUST, the ability
+and the tank panel left of the speed box; HUD boxes held 16px above the visible bottom in a frame that crops the page
+(`--bot`, `--ctl-b`); "Timing..." instead of "-" until the car is fast enough to time. New test groups `nav-hud` and
+`venues-trips` (the Lot 57 round trips moved out of `venues` so no run passes 20 minutes).
+
+Frames (tests/out/nav-hud/): before-r1-framed-1350x750, before-r1 (1450x767), after-r1 at 1450x767, 1280x600, 390x844
+and 844x390, after-r1-framed-1350x750. Framed scan: 16px gap for the speed box and clock at 1450x767 and 1350x750;
+c3962c5 in the same frames has them 14px below the edge and cuts 12 boxes.
+
+Suite (headless Chromium, SwiftShader, load average 18-24): `npx tsc --noEmit` clean; boot 6/6; venues 13/13;
+venues-trips 2/2; phone 16/17 (the sky camera check fails the same way on c3962c5, so it was already there); nav-hud 3/3.
+It passed a play lens and a code lens.
+
+## 2026-11-11: the driving HUD with a destination set (`claude/nav-hud`, uncommitted)
+
+The owner, 2026-11-09, with screenshots at 1450 × 767 and 1350 × 750 in the OC Hypercar headed for Stoppage Time:
+"lets fix the interface when i choose a destiantion". The destination card sat under the right-hand rail (VIEW over
+"at your pace" and "simulated"), THRUST sat against the speed block, and in the owner's window the HUD ran off the
+top, left, right and bottom.
+
+What changed (`src/ui/HUD.tsx`, `src/ui/App.tsx`, `src/ui/styles.css`):
+- **One navigation panel top left** (`.hud-tl` > `.hud-navs`): the next manoeuvre (arrow, distance, guide sign, the next
+  exit) and, under a hairline, the destination (name, distance, time "at your pace", traffic "simulated"), with the
+  mode's numbers under it in the same column. On a phone they stay lines of the plate, ordered.
+- **The rail** fills the band between the sky camera and the speed block and is a size container: labelled rows when
+  they fit, icons (hidden label plus tooltip) in one, two or three columns on a short window.
+- **The bottom-right cluster** is sized from one set of tokens (`--spd-w`, `--spd-h`, `--spd-b`, `--act`): the ability
+  and THRUST sit left of the speed block, the tank panel over them, never over the speed or the rail.
+- **A host frame bigger than the window** (what the owner's screenshots showed): `useVisibleInsets` reads the visible
+  part of the page with an IntersectionObserver and feeds the cut-off edges into the HUD's safe areas (`--vis-*` into
+  `--sa-*`). `.app` is `overflow: clip`, so focus cannot scroll the game sideways.
+
+Checked (headless Chromium, SwiftShader; the machine at a load average of about 23):
+- A scratch DOM scan, destination Stoppage Time set, Auto-drive off and on: no two visible HUD boxes overlap, every
+  box inside the viewport minus safe areas, "at your pace" and "simulated" whole, no sideways scroll, at 1450 × 767,
+  1350 × 750, 1366 × 768, 1280 × 720, 1440 × 900, 1920 × 1080, 1280 × 600 and on a phone (DPR 3, touch) at 390 × 844
+  and 844 × 390: OC Hypercar Modern with the sky camera, OC Hypercar Modern and Minimal with the map dial (plus
+  cockpit and hood at 1350 × 750 and 1280 × 600), Rossini GT Modern and Minimal: 0 failures in 98 measurements.
+  The same scan on c3962c5 failed at all four desktop sizes run (1450 × 767, 1350 × 750, 1280 × 600, 1920 × 1080: the
+  destination card under the rail; the ability over the speed block; at 1280 × 600 the tank panel under Pause); its
+  two phone sizes passed. Not separately confirmed: Minimal's tucked state (in the scan the rail was still showing
+  after 5.5 s; tucking only hides boxes, and the phone group's Minimal check covers the tuck itself).
+- The game in a frame larger than its window (cut 20/30 px and 10/20/90/30 px): the observer read the crop exactly and
+  no HUD box fell outside the visible part; c3962c5 in the same frame cut the rail, the sky camera, the speed block,
+  THRUST and the clock, as in the owner's screenshots. Whether claude.ai's viewer crops this way is inferred from those
+  screenshots, not measured in the viewer.
+- Frames (first pass): `tests/out/nav-hud/before-*.png` and `after-*.png`.
+
+Repair after review (2026-11-11, same branch, uncommitted; the HUD fix itself kept as it was):
+- **The bottom line in a host frame.** The speed block, the clock, the map dial and its compass sat flush on the visible
+  bottom edge when the page was cut by a bigger frame (`--spd-b` and the clock used `max(16px, var(--sa-b))`). They now
+  read one token, `--bot: max(16px, var(--sa-b), calc(var(--vis-b, 0px) + 16px))` (and `--ctl-b` the same with 14 px):
+  on a device the same as before, in a cropping frame 16 px off the visible edge like the other edges. Framed scan
+  (`after-r1-framed-*`): speed block and clock 16 px above the visible bottom at 1450 × 767 and 1350 × 750, no box cut,
+  no overlap; c3962c5 in the same frames: both 14 px below it, 12 boxes cut.
+- **Small polish.** The time line reads "Timing…" (not "–") until the car has a pace to time (Game.ts gives -1 below
+  4.5 m/s); on a phone the time and the traffic each stay on one line ("No traffic" no longer splits).
+- **The check is its own group, `nav-hud`** (`npm test -- --only=nav-hud`), out of the phone group. It opens a phone
+  context (390 × 844, DPR 3, isMobile, hasTouch, the hypercar on the Modern HUD, Stoppage Time from the rail's Go to),
+  checks 390 × 844 and 844 × 390, closes it, then opens the desktop page (sky camera, Modern) for 1450 × 767,
+  1350 × 750, 1280 × 600 and 1280 × 600 with Auto-drive. The blank-page step is gone. `open()` takes a `dpr`.
+- **The venue round trips are their own group, `venues-trips`**: inside `venues` they took that run past 20 minutes
+  here (cut at 1,200 s in the round trips, as the reviewer's run was).
+- **The sky-camera check at base.** c3962c5's phone group (scratch copy outside the worktree, same load, one run at a
+  time) fails "sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map" the same way:
+  `page.waitForFunction: Timeout 60000ms exceeded` (its wait for the Minimal tuck). So it is already there, not from
+  this work; its 60 s wait is left as it is (raising it is the owner's call). That base run was then stopped by the
+  1,200 s cap during the THRUST check (`tests/out/nav-hud/suite-phone-base-c3962c5-r1.txt`).
+
+Proof, re-run after the repair (headless Chromium, SwiftShader, one Playwright process at a time, load average 18-24):
+- `npx tsc --noEmit` clean. `npm run build`: "artifact page marked as the owner test build (owner mode on)".
+- `--only=boot`: 6/6 passed (103 s).
+- `--only=venues`: 13/13 passed (587 s; desktop 412 s, phone 142 s).
+- `--only=venues-trips`: 2/2 passed (1,119 s): heap 88.1 MB, then 162.9 / 163.4 / 163.8 MB after each trip; game
+  renderer geometries 232/232/232.
+- `--only=phone`: 16/17 (1,121 s). The one failure is the sky-camera check above (also failing at c3962c5).
+- `--only=nav-hud`: 3/3 passed (411 s): phone 390x844 (pp) 13 boxes, 844x390 (pl) 12 boxes, DPR 3 (88 s); desktop
+  1450x767, 1350x750, 1280x600 and 1280x600 with Auto-drive, 13 boxes each (258 s); no page errors.
+- Frames with Stoppage Time chosen, OC Hypercar, Modern HUD, sky camera, Auto-drive off, `tests/out/nav-hud/`:
+  `after-r1-oc-hyper-modern-sky-autooff-{1450x767,1350x750,1280x600,1920x1080,390x844,844x390}.png` (scan: 0 bad;
+  the 1280 × 600 rail is 44 px icons) and `before-r1-*` from c3962c5 (scan: 4 bad: the destination card under the
+  rail at 1450 × 767, 1350 × 750 and 1280 × 600, the ability over the speed block at all four desktop sizes, the tank
+  panel under Pause at 1280 × 600; its phone sizes passed); `after-r1-framed-*` and `before-r1-framed-*` as above.
+  The phone frames are at DPR 3 with touch. The ability in these runs is the default driver's (Clear Path).
+
 ## 2026-11-11: A fresh sport steering wheel with dial widgets
 
 The owner (2026-11-09): "Make sure the steering wheel is updated and looks all fresh like the [a real maker's] Alcantara
