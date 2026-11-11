@@ -1,8 +1,11 @@
-"""Assemble one vertical part of the Earth-spin film from the owner's own recordings: opening, chosen sentences of the long narration (+ his add-on
-sentences, if they sit after a chosen sentence), the like/follow line right after the payoff, the cliffhanger and the closer.
-Writes partN/vo/NN.wav (one wav per item), partN/vo/lines.json, partN/script.md and partN/items.json. Run with the voice venv's python:
+"""Assemble one vertical part of the Earth-spin film: opening, chosen sentences of the long narration, the like/follow line right after the sentence that ends
+nearest 77 % of the runtime, the cliffhanger and the closer. Writes partN/vo/NN.wav (one wav per item), vo/lines.json, script.md and items.json.
 
-  CINEMA_VOICE=/root/.cache/cinema-voice $CINEMA_VOICE/venv/bin/python -I films/channels/whatif/longform/earth-spin/parts/make_part.py N [--cta follow|subscribe]
+  CINEMA_VOICE=/root/.cache/cinema-voice $CINEMA_VOICE/venv/bin/python -I films/channels/whatif/longform/earth-spin/parts/make_part.py N [--voice own|owner] [--partlines DIR]
+
+  --voice own    the owner's cloned voice: sentences are cut from ../vo-own/NN.wav by the aligner's word times (../vo-own/words.json), text from ../script.md (v3)
+  --voice owner  his real recording: sentences from ../vo-owner (the alternate set; needs script-owner.md)
+  --partlines    where the opening/cliffhanger/closer/like-follow lines are (a lines.json with beats p1-open, p1-cliff, closer1, cta-hang-follow, ...); default: his real takes, voice-owner/cut
 then align.py on partN/vo, then compile_part.py N."""
 import json, re, sys, hashlib
 from pathlib import Path
@@ -13,42 +16,56 @@ HERE = Path(__file__).resolve().parent
 ES = HERE.parent
 OWN = ES.parents[1] / "voice-owner"
 N = int(sys.argv[1])
+arg = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
+VOICE = arg("--voice", "own")
+PL = Path(arg("--partlines", str(OWN / "cut")))
 CTA_KIND = "follow"                     # the picture is built once, with the "follow" line (and its captions); the -sub file only swaps the audio
-# part -> [(line number, "all" or the recorded sentences kept)], the key after which the like/follow line goes
+# which sentences each part keeps: (line number, "all" or the sentence numbers of that line in the final script)
 PLAN = {
- 1: dict(lines=[(1, [2]), (2, [1, 3, 4, 5]), (3, [1, 3, 4, 5, 6]), (4, "all")], payoff="L3.3"),
- 2: dict(lines=[(5, "all")], payoff="L5.2"),
- 3: dict(lines=[(6, "all")], payoff="L6.4"),
- 4: dict(lines=[(7, "all")], payoff="L7.5"),
- 5: dict(lines=[(8, "all"), (9, "all")], payoff="L9.1"),
- 6: dict(lines=[(10, "all"), (11, "all")], payoff="L10.5"),
- 7: dict(lines=[(12, "all"), (13, "all")], payoff="L13.1"),
- 8: dict(lines=[(14, "all")], payoff="L14.3"),
-}[N]
-CTA = {1: ("cta-hang", 25), 2: ("cta-break", 27)}
-cta_name = ("cta-hang" if N % 2 else "cta-break") + "-" + CTA_KIND
-cut = json.loads((OWN / "cut/lines.json").read_text())["lines"]
-byname = {l["beat"]: OWN / "cut" / l["file"] for l in cut}
+ "own":   {1: [(1, [2]), (2, [1, 2, 3, 4]), (3, "all")], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
+           6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
+ "owner": {1: [(1, [2]), (2, [1, 3, 4, 5]), (3, [1, 3, 4, 5, 6])], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
+           6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
+}[VOICE][N]
+cut = json.loads((PL / "lines.json").read_text())["lines"]
+byname = {l["beat"]: PL / l["file"] for l in cut}
 textof = {l["beat"]: l["text"] for l in cut}
-LO = json.loads((ES / "vo-owner/lines.json").read_text())["lines"]
+cta_name = ("cta-hang" if N % 2 else "cta-break") + "-" + CTA_KIND
 items = []
-def clip(path, kind, text, beat, key):
-    items.append(dict(kind=kind, wav=str(path), text=text, beat=beat, key=key))
+def clip(path, kind, text, beat, key, sl=None):
+    items.append(dict(kind=kind, wav=str(path), text=text, beat=beat, key=key, **({"slice": sl} if sl else {})))
 clip(byname[f"p{N}-open"], "open", textof[f"p{N}-open"], "open", "open")
 first_beat = None
-for ln, keep in PLAN["lines"]:
-    L = LO[ln - 1]
-    keep_prev = False
-    for s in L["sentences"]:
-        if s["kind"] == "rec":
-            si = int(s["key"].split(".")[1])
-            keep_prev = keep == "all" or si in keep
-        if keep_prev:
+if VOICE == "own":
+    LO = json.loads((ES / "vo-own/lines.json").read_text())["lines"]
+    WD = {l["id"]: l["words"] for l in json.loads((ES / "vo-own/words.json").read_text())["lines"]}
+    for ln, keep in PLAN:
+        L = LO[ln - 1]
+        ws = WD[L["id"]]
+        sents, cur = [], []
+        for w in ws:
+            cur.append(w)
+            if re.search(r"[.?!]$", w["w"]): sents.append(cur); cur = []
+        if cur: sents.append(cur)
+        for si, sw in enumerate(sents, 1):
+            if keep != "all" and si not in keep: continue
+            prev_end = sents[si - 2][-1]["end"] if si > 1 else 0.0
+            nxt = sents[si][0]["start"] if si < len(sents) else L["dur"]
+            a = max(prev_end + 0.02, sw[0]["start"] - 0.06)
+            b = min(nxt - 0.02, sw[-1]["end"] + 0.12)
             first_beat = first_beat or L["beat"]
-            clip(ES / "vo-owner" / L["file"], "sent", s["text"], L["beat"], s["key"])
-            items[-1]["slice"] = [s["t0"], s["t1"]]
+            clip(ES / "vo-own" / L["file"], "sent", " ".join(w["w"] for w in sw), L["beat"], f"L{ln}.{si}", [round(a, 3), round(b, 3)])
+else:
+    LO = json.loads((ES / "vo-owner/lines.json").read_text())["lines"]
+    for ln, keep in PLAN:
+        L = LO[ln - 1]; keep_prev = False
+        for s in L["sentences"]:
+            if s["kind"] == "rec":
+                si = int(s["key"].split(".")[1]); keep_prev = keep == "all" or si in keep
+            if keep_prev:
+                first_beat = first_beat or L["beat"]
+                clip(ES / "vo-owner" / L["file"], "sent", s["text"], L["beat"], s["key"], [s["t0"], s["t1"]])
 items[0]["beat"] = first_beat
-# the like/follow line goes right after the sentence that ends nearest 77 % of the runtime (70-85 %)
 dur = lambda it: (it["slice"][1] - it["slice"][0]) if "slice" in it else sf.info(it["wav"]).duration
 sent_idx = [i for i, it in enumerate(items) if it["kind"] == "sent"]
 tot = sum(dur(it) for it in items) + 4.0 + 0.55 * len(items) + (sf.info(byname[cta_name]).duration + 3.0)
@@ -61,33 +78,30 @@ clip(byname[f"p{N}-cliff"], "cliff", textof[f"p{N}-cliff"], items[-1]["beat"], "
 clip(byname[f"closer{N}"], "closer", textof[f"closer{N}"], "tease", "closer")
 D = HERE / f"part{N}"
 (D / "vo").mkdir(parents=True, exist_ok=True)
-lines, out_items = [], []
-beats_n = {}
+lines, out_items, beats_n = [], [], {}
 for k, it in enumerate(items, 1):
     x, sr = sf.read(it["wav"])
     if "slice" in it:
         a, b = it["slice"]; x = x[int(a * sr): int(b * sr)]
     if it["kind"] == "cta":                         # both variants (follow / subscribe) padded to the longer, so the picture never changes between the two files
-        other = byname[cta_name.replace(CTA_KIND, "subscribe" if CTA_KIND == "follow" else "follow")]
+        other = byname[cta_name.replace(CTA_KIND, "subscribe")]
         y2, sr2 = sf.read(other)
         n = max(len(x), len(y2))
         pad = lambda v: np.concatenate([v, np.zeros(n - len(v))])
-        fol, sub = (pad(x), pad(y2)) if CTA_KIND == "follow" else (pad(y2), pad(x))
-        sf.write(D / "vo" / f"{k:02d}-sub.wav", sub, sr, subtype="PCM_24")
-        x = fol
+        sf.write(D / "vo" / f"{k:02d}-sub.wav", pad(y2), sr, subtype="PCM_24")
+        x = pad(x)
         it["sub_file"] = f"vo/{k:02d}-sub.wav"
     f = D / "vo" / f"{k:02d}.wav"
     sf.write(f, x, sr, subtype="PCM_24")
     bid = {"open": "open", "cta": "cta", "cliff": "cliff", "closer": "tease"}.get(it["kind"], f"{it['beat']}")
     beats_n[bid] = beats_n.get(bid, 0) + 1
     uid = bid if bid in ("open", "cta", "cliff", "tease") else f"{bid}-{beats_n[bid]}"
-    spoken = it["text"]
-    lines.append({"id": f"vo{k:02d}", "beat": uid, "text": spoken, "stars": [], "phonemes": None, "file": f.name, "dur": round(len(x) / sr, 3), "sha256": hashlib.sha256(f.read_bytes()).hexdigest()})
+    lines.append({"id": f"vo{k:02d}", "beat": uid, "text": it["text"], "stars": [], "phonemes": None, "file": f.name, "dur": round(len(x) / sr, 3), "sha256": hashlib.sha256(f.read_bytes()).hexdigest()})
     out_items.append(dict(it, uid=uid, vo=f"vo{k:02d}", dur=round(len(x) / sr, 3)))
-(D / "vo/lines.json").write_text(json.dumps({"voice": "recorded", "speaker": "owner", "lang": "en-us", "made_by": "parts/make_part.py", "lines": lines}, indent=1, ensure_ascii=False))
+(D / "vo/lines.json").write_text(json.dumps({"voice": "recorded" if VOICE == "owner" else "cloned", "speaker": "owner", "lang": "en-us", "made_by": "parts/make_part.py", "lines": lines}, indent=1, ensure_ascii=False))
 (D / "items.json").write_text(json.dumps(out_items, indent=1, ensure_ascii=False))
-sc = f"# Earth-spin Season 3, part {N} of 8 (generated by make_part.py)\n\n"
+sc = f"# Earth-spin Season 3, part {N} of 8 (generated by make_part.py, voice: {VOICE})\n\n"
 for l in lines:
     sc += f"## {l['beat']} {{shot: see compile_part.py · energy: 0.6}} (__)\nvo: {l['text']} {{-}}\n\n"
 (D / "script.md").write_text(sc)
-print(f"part {N}: {len(lines)} items, speech {sum(l['dur'] for l in lines):.1f} s; CTA {cta_name}")
+print(f"part {N} ({VOICE}): {len(lines)} items, speech {sum(l['dur'] for l in lines):.1f} s; CTA {cta_name}")

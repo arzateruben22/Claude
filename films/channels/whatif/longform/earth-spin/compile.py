@@ -22,8 +22,10 @@ from calc import RESULTS as R, T_ORB, R as R_EQ, E_ORB, E_NOW   # noqa: E402
 FPS, BPM = 30, 50
 ID = "possibility-lab-earth-spin"
 import os
-OWNER = os.environ.get("OWNER", "1") == "1"            # the owner's own voice (vo-owner/, script-owner.md); OWNER=0 is the old AI stand-in
-f = Film(HERE / ("script-owner.md" if OWNER else "script.md"), HERE / ("vo-owner" if OWNER else "vo"), fps=FPS, bpm=BPM)
+VOICE = os.environ.get("VOICE", "own")               # own: the owner's cloned voice (vo-own/, script.md) · owner: his real recording (vo-owner/, script-owner.md) · ai: the old stand-in (vo/)
+OWNER = VOICE != "ai"
+SCRIPT, VODIR = {"own": ("script.md", "vo-own"), "owner": ("script-owner.md", "vo-owner"), "ai": ("script.md", "vo")}[VOICE]
+f = Film(HERE / SCRIPT, HERE / VODIR, fps=FPS, bpm=BPM, grid=0.25)
 plan, end_hold = f.script_plan()
 BEATS = f.layout(plan, end_hold=end_hold)
 A = f.at
@@ -81,7 +83,7 @@ for b in BADGES:
     assert b["t1"] > b["t0"], b
 TITLE = {"series": "Possibility Lab · Long form", "title": "What if Earth spun faster and *couldn't stop*?", "t0": 0.3, "t1": round(t_title_out, 4), "sig": A("line:vo01:end", 0.05)}
 END = {"title": "Subscribe for the next *what-if*", "follow": "Possibility Lab · What If Earth Spun Faster and Couldn't Stop?",
-       "next": ("Every number's source is in the description." if OWNER else "Narration: synthetic voice (AI). Every number's source is in the description.")}
+       "next": ("Narration: a synthetic version of the owner's own voice (AI). Every number's source is in the description." if VOICE == "own" else "Every number's source is in the description." if OWNER else "Narration: synthetic voice (AI). Every number's source is in the description.")}
 
 CUE = {"fps": FPS, "float": [B["float"]["t0"], B["float"]["t1"]], "break": [B["break"]["t0"], B["break"]["t1"]], "cost": [B["cost"]["t0"], B["cost"]["t1"]],
        "weather": [B["weather"]["t0"], B["weather"]["t1"]], "wind": [B["wind"]["t0"], B["wind"]["t1"]], "oceans": [B["oceans"]["t0"], B["oceans"]["t1"]],

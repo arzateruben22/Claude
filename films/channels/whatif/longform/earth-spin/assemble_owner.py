@@ -38,7 +38,7 @@ def main():
     else:
         adds = []
     # the original script: split each vo line into sentences with their tags
-    txt = (HERE / "script.md").read_text().split("\n")
+    txt = (HERE / "script-v2.md").read_text().split("\n")        # the script the owner actually read (before the v3 trims and add-ons)
     out_lines, vo_i = [], 0
     chain = {}                              # sentence key -> add-on ids placed after it
     for ad in adds: chain.setdefault(ad["after"], []).append(ad)
