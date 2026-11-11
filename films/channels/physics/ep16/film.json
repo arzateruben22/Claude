@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p4",
  "fps": 30,
  "bpm": 112.5,
- "dur": 64.2667,
+ "dur": 74.6667,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,7 @@
    "name": "body"
   },
   {
-   "at": 59.450033,
+   "at": 69.850033,
    "name": "tease"
   }
  ],
@@ -32,14 +32,14 @@
   {
    "id": "body",
    "t0": 2.1333,
-   "t1": 59.4667,
+   "t1": 69.8667,
    "line": "vo02",
    "energy": 0.7
   },
   {
    "id": "tease",
-   "t0": 59.4667,
-   "t1": 64.2667,
+   "t0": 69.8667,
+   "t1": 74.6667,
    "line": "vo03",
    "energy": 0.4
   }
@@ -48,13 +48,13 @@
   "cuts": {
    "hook": 0.0,
    "body": 2.116633,
-   "tease": 59.450033
+   "tease": 69.850033
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 59.15,
+   "t1": 69.55,
    "label": "slow-motion"
   }
  ],
@@ -155,7 +155,8 @@
    1000000000.0,
    1000000000.0
   ],
-  "back": 1000000000.0
+  "back": 1000000000.0,
+  "fades": []
  },
  "cam": [
   {
@@ -183,7 +184,7 @@
    "ease": "p2"
   },
   {
-   "t": 16.7333,
+   "t": 19.3,
    "look": [
     0.0,
     1.2,
@@ -195,7 +196,7 @@
    "ease": "sine"
   },
   {
-   "t": 53.6,
+   "t": 64.1,
    "look": [
     0.4,
     1.0,
@@ -246,12 +247,18 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 59.15,
+   "t1": 69.55,
    "slot": "tr"
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 4 of 8",
+  "title": "Watch sound cross a kitchen"
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -285,7 +292,7 @@
   },
   {
    "t0": 2.287,
-   "t1": 3.297,
+   "t1": 3.667,
    "lines": [
     [
      [
@@ -294,974 +301,1048 @@
      ],
      [
       "someone",
-      2.692
+      2.802
      ],
      [
       "claps",
-      3.027
+      3.187
      ]
     ]
    ]
   },
   {
-   "t0": 3.297,
-   "t1": 5.067,
+   "t0": 3.667,
+   "t1": 5.342,
    "lines": [
     [
      [
       "at",
-      3.297
+      3.667
      ],
      [
       "the",
-      3.452
+      3.807
      ],
      [
       "far",
-      3.592
+      3.847
      ],
      [
       "end",
-      3.942
+      4.152
      ]
     ],
     [
      [
       "of",
-      4.047
+      4.312
      ],
      [
       "the",
-      4.147
+      4.412
      ],
      [
       "kitchen.",
-      4.317
+      4.592
      ]
     ]
    ]
   },
   {
-   "t0": 5.202,
-   "t1": 7.477,
+   "t0": 5.597,
+   "t1": 8.087,
    "lines": [
     [
      [
       "Sound",
-      5.202
+      5.597
      ],
      [
       "is",
-      5.617
+      6.082
      ],
      [
       "air",
-      5.832
+      6.317
      ],
      [
       "pushing",
-      6.157
+      6.712
      ]
     ],
     [
      [
       "on",
-      6.697
+      7.147
      ],
      [
       "air.",
-      6.727
+      7.337
      ]
     ]
    ]
   },
   {
-   "t0": 7.592,
-   "t1": 9.602,
+   "t0": 8.282,
+   "t1": 10.767,
    "lines": [
     [
      [
       "Without",
-      7.592
+      8.282
      ],
      [
       "air,",
-      7.872
+      8.657
      ],
      [
       "there",
-      8.372
+      9.322
      ],
      [
       "would",
-      8.572
+      9.352
      ]
     ],
     [
      [
       "be",
-      8.602
+      9.527
      ],
      [
       "nothing",
-      8.892
+      9.802
      ],
      [
       "to",
-      9.057
+      10.167
      ],
      [
       "push,",
-      9.192
+      10.252
      ]
     ]
    ]
   },
   {
-   "t0": 9.602,
-   "t1": 11.342,
+   "t0": 10.767,
+   "t1": 12.672,
    "lines": [
     [
      [
       "and",
-      9.602
+      10.767
      ],
      [
       "no",
-      9.787
+      10.907
      ],
      [
       "sound",
-      10.007
+      11.222
      ],
      [
       "at",
-      10.597
+      11.602
      ],
      [
       "all.",
-      10.672
+      12.642
      ]
     ]
    ]
   },
   {
-   "t0": 11.342,
-   "t1": 14.872,
+   "t0": 12.672,
+   "t1": 16.777,
    "lines": [
     [
      [
       "In",
-      11.342
+      12.672
      ],
      [
       "a",
-      11.372
+      12.842
      ],
      [
       "room,",
-      11.532
+      12.907
      ],
      [
       "it",
-      11.887
+      13.432
      ],
      [
       "moves",
-      11.992
+      13.552
      ]
     ],
     [
      [
       "about",
-      12.362
+      13.997
      ],
      [
       "340",
-      12.647
+      14.312
      ],
      [
       "meters",
-      13.387
+      15.137
      ],
      [
       "a",
-      14.037
+      15.677
      ],
      [
       "second.",
-      14.177
+      16.027
      ]
     ]
    ]
   },
   {
-   "t0": 14.872,
-   "t1": 16.722,
+   "t0": 16.827,
+   "t1": 18.962,
    "lines": [
     [
      [
       "That's",
-      14.872
+      16.827
      ],
      [
       "why",
-      15.092
+      17.052
      ],
      [
       "you",
-      15.242
+      17.307
      ]
     ],
     [
      [
       "never",
-      15.447
+      17.642
      ],
      [
       "see",
-      15.477
+      17.862
      ],
      [
       "it",
-      15.877
+      18.117
      ],
      [
       "travel.",
-      15.972
+      18.212
      ]
     ]
    ]
   },
   {
-   "t0": 16.842,
-   "t1": 18.427,
+   "t0": 19.182,
+   "t1": 21.502,
    "lines": [
     [
      [
       "The",
-      16.842
+      19.182
      ],
      [
       "room",
-      16.872
+      19.212
      ]
     ],
     [
      [
       "is",
-      17.217
+      19.717
      ],
      [
       "5",
-      17.342
+      19.907
      ],
      [
       "meters",
-      17.657
+      20.292
      ],
      [
       "across,",
-      18.057
+      20.752
      ]
     ]
    ]
   },
   {
-   "t0": 18.427,
-   "t1": 19.602,
+   "t0": 21.572,
+   "t1": 22.797,
    "lines": [
     [
      [
       "so",
-      18.427
+      21.572
      ],
      [
       "the",
-      18.797
+      21.602
      ],
      [
       "clap",
-      18.862
+      21.817
      ],
      [
       "crosses",
-      19.112
+      22.272
      ],
      [
       "it",
-      19.402
+      22.692
      ]
     ]
    ]
   },
   {
-   "t0": 19.602,
-   "t1": 22.137,
+   "t0": 22.797,
+   "t1": 25.507,
    "lines": [
     [
      [
       "in",
-      19.602
+      22.797
      ],
      [
       "about",
-      19.787
+      23.007
      ],
      [
       "15",
-      19.932
+      23.187
      ],
      [
       "thousandths",
-      20.487
+      23.882
      ]
     ],
     [
      [
       "of",
-      21.002
+      24.387
      ],
      [
       "a",
-      21.322
+      24.727
      ],
      [
       "second.",
-      21.387
+      24.882
      ]
     ]
    ]
   },
   {
-   "t0": 22.297,
-   "t1": 24.232,
+   "t0": 25.507,
+   "t1": 27.512,
    "lines": [
     [
      [
       "Here,",
-      22.297
+      25.507
      ],
      [
       "that's",
-      22.697
+      25.877
      ],
      [
       "15",
-      22.882
+      26.047
      ],
      [
       "seconds.",
-      23.482
+      26.762
      ]
     ]
    ]
   },
   {
-   "t0": 24.447,
-   "t1": 25.457,
+   "t0": 27.632,
+   "t1": 28.692,
    "lines": [
     [
      [
       "There",
-      24.447
+      27.632
      ],
      [
       "it",
-      24.677
+      27.927
      ],
      [
       "goes:",
-      24.707
+      27.957
      ]
     ]
    ]
   },
   {
-   "t0": 25.537,
-   "t1": 28.497,
+   "t0": 28.692,
+   "t1": 31.777,
    "lines": [
     [
      [
       "a",
-      25.537
+      28.692
      ],
      [
       "ring",
-      25.567
+      28.857
      ],
      [
       "of",
-      25.962
+      29.202
      ],
      [
       "squeezed",
-      25.992
+      29.422
      ],
      [
       "air,",
-      26.642
+      29.977
      ]
     ],
     [
      [
       "crossing",
-      27.157
+      30.407
      ],
      [
       "the",
-      27.522
+      30.997
      ],
      [
       "room.",
-      27.747
+      31.027
      ]
     ]
    ]
   },
   {
-   "t0": 28.622,
-   "t1": 31.097,
+   "t0": 31.957,
+   "t1": 34.622,
    "lines": [
     [
      [
       "Imagine",
-      28.622
+      31.957
      ],
      [
       "standing",
-      29.402
+      32.672
      ]
     ],
     [
      [
       "at",
-      29.902
+      33.187
      ],
      [
       "the",
-      30.042
+      33.217
      ],
      [
       "far",
-      30.072
+      33.332
      ],
      [
       "wall.",
-      30.347
+      33.872
      ]
     ]
    ]
   },
   {
-   "t0": 31.127,
-   "t1": 33.067,
+   "t0": 34.707,
+   "t1": 36.922,
    "lines": [
     [
      [
       "You'd",
-      31.127
+      34.707
      ],
      [
       "hear",
-      31.337
+      34.947
      ],
      [
       "the",
-      31.502
+      35.122
      ],
      [
       "clap",
-      31.607
+      35.267
      ]
     ],
     [
      [
       "only",
-      31.992
+      35.732
      ],
      [
       "when",
-      32.312
+      36.062
      ],
      [
       "this",
-      32.342
+      36.092
      ],
      [
       "ring",
-      32.672
+      36.452
      ]
     ]
    ]
   },
   {
-   "t0": 33.067,
-   "t1": 33.947,
+   "t0": 36.922,
+   "t1": 37.917,
    "lines": [
     [
      [
       "reached",
-      33.067
+      36.922
      ],
      [
       "you.",
-      33.197
+      37.317
      ]
     ]
    ]
   },
   {
-   "t0": 33.947,
-   "t1": 36.657,
+   "t0": 37.917,
+   "t1": 40.722,
    "lines": [
     [
      [
       "It",
-      33.947
+      37.917
      ],
      [
       "reaches",
-      34.022
+      38.002
      ],
      [
       "the",
-      34.482
+      38.462
      ],
      [
       "wall,",
-      34.512
+      38.492
      ]
     ],
     [
      [
       "and",
-      35.052
+      39.052
      ],
      [
       "bounces",
-      35.227
+      39.227
      ],
      [
       "back.",
-      36.087
+      40.112
      ]
     ]
    ]
   },
   {
-   "t0": 36.657,
-   "t1": 38.502,
+   "t0": 40.722,
+   "t1": 42.727,
    "lines": [
     [
      [
       "That",
-      36.657
+      40.722
      ],
      [
       "bounce",
-      36.827
+      40.982
      ],
      [
       "is",
-      37.377
+      41.422
      ],
      [
       "an",
-      37.407
+      41.517
      ],
      [
       "echo.",
-      37.762
+      41.977
      ]
     ]
    ]
   },
   {
-   "t0": 38.502,
-   "t1": 40.627,
+   "t0": 42.777,
+   "t1": 45.007,
    "lines": [
     [
      [
       "You",
-      38.502
+      42.777
      ],
      [
       "use",
-      38.532
+      42.807
      ],
      [
       "this",
-      38.862
+      43.142
      ],
      [
       "trick",
-      39.087
+      43.367
      ]
     ],
     [
      [
       "in",
-      39.312
+      43.602
      ],
      [
       "every",
-      39.587
+      43.942
      ],
      [
       "storm.",
-      39.877
+      44.257
      ]
     ]
    ]
   },
   {
-   "t0": 40.897,
-   "t1": 42.932,
+   "t0": 45.262,
+   "t1": 47.322,
    "lines": [
     [
      [
       "Sound",
-      40.897
+      45.262
      ],
      [
       "covers",
-      41.417
+      45.767
      ]
     ],
     [
      [
       "about",
-      41.842
+      46.282
      ],
      [
       "a",
-      42.152
+      46.527
      ],
      [
       "kilometer",
-      42.182
+      46.577
      ]
     ]
    ]
   },
   {
-   "t0": 42.952,
-   "t1": 44.202,
+   "t0": 47.322,
+   "t1": 48.472,
    "lines": [
     [
      [
       "in",
-      42.952
+      47.322
      ],
      [
       "3",
-      42.982
+      47.372
      ],
      [
       "seconds.",
-      43.452
+      47.722
      ]
     ]
    ]
   },
   {
-   "t0": 44.272,
-   "t1": 46.277,
+   "t0": 48.522,
+   "t1": 50.692,
    "lines": [
     [
      [
       "So",
-      44.272
+      48.522
      ],
      [
       "count",
-      44.477
+      48.742
      ],
      [
       "the",
-      44.792
+      49.097
      ],
      [
       "seconds",
-      44.997
+      49.312
      ]
     ],
     [
      [
       "between",
-      45.362
+      49.752
      ],
      [
       "a",
-      45.717
+      50.107
      ],
      [
       "flash",
-      45.822
+      50.217
      ]
     ]
    ]
   },
   {
-   "t0": 46.277,
-   "t1": 48.757,
+   "t0": 50.692,
+   "t1": 53.247,
    "lines": [
     [
      [
       "and",
-      46.277
+      50.692
      ],
      [
       "its",
-      46.482
+      50.902
      ],
      [
       "thunder,",
-      46.627
+      51.037
      ]
     ],
     [
      [
       "and",
-      47.107
+      51.517
      ],
      [
       "divide",
-      47.252
+      51.667
      ],
      [
       "by",
-      47.762
+      52.227
      ],
      [
       "three.",
-      48.007
+      52.497
      ]
     ]
    ]
   },
   {
-   "t0": 49.002,
-   "t1": 49.987,
+   "t0": 53.542,
+   "t1": 54.552,
    "lines": [
     [
      [
       "That's",
-      49.002
+      53.542
      ],
      [
       "roughly",
-      49.152
+      53.742
      ],
      [
       "how",
-      49.452
+      54.202
      ],
      [
       "many",
-      49.787
+      54.232
      ]
     ]
    ]
   },
   {
-   "t0": 49.987,
-   "t1": 52.347,
+   "t0": 54.552,
+   "t1": 57.147,
    "lines": [
     [
      [
       "kilometers",
-      49.987
+      54.552
      ],
      [
       "away",
-      50.742
+      55.317
      ]
     ],
     [
      [
       "the",
-      50.967
+      55.532
      ],
      [
       "lightning",
-      51.082
+      55.642
      ],
      [
       "is.",
-      51.702
+      57.117
      ]
     ]
    ]
   },
   {
-   "t0": 52.347,
-   "t1": 53.937,
+   "t0": 57.147,
+   "t1": 59.517,
+   "lines": [
+    [
+     [
+      "Real",
+      57.147
+     ],
+     [
+      "quick:",
+      57.592
+     ]
+    ],
+    [
+     [
+      "like",
+      58.292
+     ],
+     [
+      "and",
+      58.487
+     ],
+     [
+      "follow.",
+      58.767
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 59.637,
+   "t1": 61.117,
+   "lines": [
+    [
+     [
+      "It",
+      59.637
+     ],
+     [
+      "genuinely",
+      59.762
+     ],
+     [
+      "helps.",
+      60.367
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 61.367,
+   "t1": 62.882,
+   "lines": [
+    [
+     [
+      "Now,",
+      61.367
+     ],
+     [
+      "where",
+      61.792
+     ],
+     [
+      "were",
+      61.992
+     ],
+     [
+      "we?",
+      62.177
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 62.882,
+   "t1": 64.492,
    "lines": [
     [
      [
       "But",
-      52.347
+      62.882
      ],
      [
       "a",
-      52.377
+      63.002
      ],
      [
       "clap",
-      52.512
+      63.072
      ],
      [
       "is",
-      52.907
+      63.447
      ],
      [
       "slow.",
-      53.187
+      63.742
      ]
     ]
    ]
   },
   {
-   "t0": 54.202,
-   "t1": 57.287,
+   "t0": 64.697,
+   "t1": 67.772,
    "lines": [
     [
      [
       "Something",
-      54.202
+      64.697
      ],
      [
       "on",
-      54.492
+      64.982
      ],
      [
       "this",
-      54.837
+      65.322
      ],
      [
       "table",
-      54.957
+      65.447
      ]
     ],
     [
      [
       "is",
-      55.457
+      65.667
      ],
      [
       "much",
-      55.652
+      66.142
      ],
      [
       "faster",
-      55.807
+      66.292
      ],
      [
       "than",
-      56.277
+      66.762
      ],
      [
       "sound,",
-      56.537
+      67.027
      ]
     ]
    ]
   },
   {
-   "t0": 57.337,
-   "t1": 59.262,
+   "t0": 67.772,
+   "t1": 69.722,
    "lines": [
     [
      [
       "and",
-      57.337
+      67.772
      ],
      [
       "it's",
-      57.367
+      67.802
      ],
      [
       "about",
-      57.482
+      67.922
      ],
      [
       "to",
-      57.767
+      68.232
      ],
      [
       "go",
-      57.887
+      68.352
      ]
     ],
     [
      [
       "through",
-      58.202
+      68.602
      ],
      [
       "an",
-      58.232
+      68.657
      ],
      [
       "apple.",
-      58.512
+      68.972
      ]
     ]
    ]
   },
   {
-   "t0": 59.787,
-   "t1": 61.072,
+   "t0": 70.187,
+   "t1": 71.472,
    "lines": [
     [
      [
       "Part",
-      59.787
+      70.187
      ],
      [
       "4",
-      60.032
+      70.432
      ],
      [
       "of",
-      60.347
+      70.747
      ],
      [
       "8.",
-      60.582
+      70.982
      ]
     ]
    ]
   },
   {
-   "t0": 61.072,
-   "t1": 62.242,
+   "t0": 71.472,
+   "t1": 72.642,
    "lines": [
     [
      [
       "Full",
-      61.072
+      71.472
      ],
      [
       "video",
-      61.362
+      71.762
      ],
      [
       "on",
-      61.687
+      72.087
      ],
      [
       "YouTube.",
-      61.942
+      72.342
      ]
     ]
    ]
   }
  ],
- "endShow": 62.2667,
- "endCard": 62.7667,
+ "endShow": 72.6667,
+ "endCard": 73.1667,
  "end": {
   "title": "Part 4 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1278,13 +1359,13 @@
   {
    "id": "vo02",
    "t": 2.2666666666666666,
-   "dur": 56.718,
+   "dur": 67.196,
    "file": "vo/02.wav",
-   "text": "Now, someone claps at the far end of the kitchen. Sound is air pushing on air. Without air, there would be nothing to push, and no sound at all. In a room, it moves about three hundred forty meters a second. That's why you never see it travel. The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. There it goes: a ring of squeezed air, crossing the room. Imagine standing at the far wall. You'd hear the clap only when this ring reached you. It reaches the wall, and bounces back. That bounce is an echo. You use this trick in every storm. Sound covers about a kilometer in three seconds. So count the seconds between a flash and its thunder, and divide by three. That's roughly how many kilometers away the lightning is. But a clap is slow. Something on this table is much faster than sound, and it's about to go through an apple."
+   "text": "Now, someone claps at the far end of the kitchen. Sound is air pushing on air. Without air, there would be nothing to push, and no sound at all. In a room, it moves about three hundred forty meters a second. That's why you never see it travel. The room is five meters across, so the clap crosses it in about fifteen thousandths of a second. Here, that's fifteen seconds. There it goes: a ring of squeezed air, crossing the room. Imagine standing at the far wall. You'd hear the clap only when this ring reached you. It reaches the wall, and bounces back. That bounce is an echo. You use this trick in every storm. Sound covers about a kilometer in three seconds. So count the seconds between a flash and its thunder, and divide by three. That's roughly how many kilometers away the lightning is. Real quick: like and follow. It genuinely helps. Now, where were we? But a clap is slow. Something on this table is much faster than sound, and it's about to go through an apple."
   },
   {
    "id": "vo03",
-   "t": 59.766666666666666,
+   "t": 70.16666666666667,
    "dur": 2.751,
    "file": "vo/03.wav",
    "text": "Part 4 of 8. Full video on YouTube."

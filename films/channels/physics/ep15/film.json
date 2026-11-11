@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p3",
  "fps": 30,
  "bpm": 112.5,
- "dur": 64.0,
+ "dur": 66.1333,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,7 @@
    "name": "body"
   },
   {
-   "at": 59.183333,
+   "at": 61.316633,
    "name": "tease"
   }
  ],
@@ -32,14 +32,14 @@
   {
    "id": "body",
    "t0": 2.9333,
-   "t1": 59.2,
+   "t1": 61.3333,
    "line": "vo02",
    "energy": 0.7
   },
   {
    "id": "tease",
-   "t0": 59.2,
-   "t1": 64.0,
+   "t0": 61.3333,
+   "t1": 66.1333,
    "line": "vo03",
    "energy": 0.4
   }
@@ -48,13 +48,13 @@
   "cuts": {
    "hook": 0.0,
    "body": 2.916633,
-   "tease": 59.183333
+   "tease": 61.316633
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 58.8833,
+   "t1": 61.0166,
    "label": "slow-motion"
   }
  ],
@@ -116,13 +116,13 @@
   ],
   "settle": 1000000000.0,
   "kernel": {
-   "jump": 6.9667,
-   "pop": 21.4667,
-   "foamEnd": 33.6333
+   "jump": 7.0667,
+   "pop": 21.8333,
+   "foamEnd": 33.4667
   },
   "bubble": {
-   "in": 35.1667,
-   "pop": 43.1333
+   "in": 34.9667,
+   "pop": 42.5667
   },
   "clap": 1000000000.0,
   "bullet": {
@@ -155,7 +155,8 @@
    1000000000.0,
    1000000000.0
   ],
-  "back": 1000000000.0
+  "back": 1000000000.0,
+  "fades": []
  },
  "cam": [
   {
@@ -171,7 +172,7 @@
    "ease": "p2"
   },
   {
-   "t": 7.4,
+   "t": 7.5,
    "look": [
     1.57,
     1.02,
@@ -183,7 +184,7 @@
    "ease": "p2"
   },
   {
-   "t": 20.3667,
+   "t": 20.7333,
    "look": [
     1.57,
     1.02,
@@ -195,7 +196,7 @@
    "ease": "p2"
   },
   {
-   "t": 33.9667,
+   "t": 33.7667,
    "look": [
     1.57,
     1.02,
@@ -207,7 +208,7 @@
    "ease": "sine"
   },
   {
-   "t": 35.3667,
+   "t": 35.1667,
    "look": [
     -2.05,
     1.25,
@@ -219,7 +220,7 @@
    "ease": "p2"
   },
   {
-   "t": 42.4333,
+   "t": 41.8667,
    "look": [
     -2.05,
     1.25,
@@ -231,7 +232,7 @@
    "ease": "p2"
   },
   {
-   "t": 54.1333,
+   "t": 52.7333,
    "look": [
     -2.05,
     1.25,
@@ -282,12 +283,18 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 58.8833,
+   "t1": 61.0166,
    "slot": "tr"
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 3 of 8",
+  "title": "A popcorn pop, in slow motion"
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -325,7 +332,7 @@
   },
   {
    "t0": 3.087,
-   "t1": 4.502,
+   "t1": 4.542,
    "lines": [
     [
      [
@@ -350,946 +357,1020 @@
      ],
      [
       "stove,",
-      3.997
+      4.002
      ]
     ]
    ]
   },
   {
-   "t0": 4.502,
-   "t1": 7.022,
+   "t0": 4.542,
+   "t1": 7.077,
    "lines": [
     [
      [
       "a",
-      4.502
+      4.542
      ],
      [
       "few",
-      4.532
+      4.572
      ],
      [
       "kernels",
-      4.792
+      4.842
      ]
     ],
     [
      [
       "of",
-      5.307
+      5.362
      ],
      [
       "popcorn",
-      5.337
+      5.392
      ],
      [
       "sit",
-      6.137
+      6.122
      ],
      [
       "still.",
-      6.272
+      6.327
      ]
     ]
    ]
   },
   {
-   "t0": 7.087,
-   "t1": 8.302,
+   "t0": 7.187,
+   "t1": 8.402,
    "lines": [
     [
      [
       "Then",
-      7.087
+      7.187
      ],
      [
       "one",
-      7.307
+      7.447
      ],
      [
       "jumps.",
-      7.552
+      7.652
      ]
     ]
    ]
   },
   {
-   "t0": 8.627,
-   "t1": 10.572,
+   "t0": 8.727,
+   "t1": 10.672,
    "lines": [
     [
      [
       "Its",
-      8.627
+      8.727
      ],
      [
       "hard",
-      8.707
+      8.812
      ],
      [
       "shell",
-      9.122
+      9.282
      ]
     ],
     [
      [
       "holds",
-      9.522
+      9.622
      ],
      [
       "the",
-      9.827
+      9.927
      ],
      [
       "steam",
-      9.857
+      10.132
      ],
      [
       "in,",
-      10.302
+      10.392
      ]
     ]
    ]
   },
   {
-   "t0": 10.572,
-   "t1": 11.982,
+   "t0": 10.672,
+   "t1": 12.072,
    "lines": [
     [
      [
       "until",
-      10.572
+      10.672
      ],
      [
       "the",
-      10.812
+      10.912
      ],
      [
       "pressure",
-      10.842
+      10.942
      ],
      [
       "wins.",
-      11.232
+      11.322
      ]
     ]
    ]
   },
   {
-   "t0": 12.262,
-   "t1": 13.212,
+   "t0": 12.342,
+   "t1": 13.292,
    "lines": [
     [
      [
       "It",
-      12.262
+      12.342
      ],
      [
       "pops",
-      12.397
+      12.472
      ],
      [
       "when",
-      12.757
+      12.832
      ],
      [
       "it",
-      12.952
+      13.027
      ],
      [
       "gets",
-      13.082
+      13.187
      ]
     ]
    ]
   },
   {
-   "t0": 13.212,
-   "t1": 15.692,
+   "t0": 13.292,
+   "t1": 15.717,
    "lines": [
     [
      [
       "to",
-      13.212
+      13.292
      ],
      [
       "about",
-      13.242
+      13.457
      ],
      [
       "180",
-      13.542
+      13.617
      ],
      [
       "degrees",
-      14.442
+      14.467
      ]
     ],
     [
      [
       "Celsius.",
-      14.942
+      14.967
      ]
     ]
    ]
   },
   {
-   "t0": 16.227,
-   "t1": 19.182,
+   "t0": 16.277,
+   "t1": 16.967,
    "lines": [
     [
      [
       "The",
-      16.227
+      16.277
      ],
      [
       "pop",
-      16.257
+      16.307
      ],
      [
       "is",
-      16.627
+      16.652
      ],
      [
       "over",
-      16.737
-     ],
-     [
-      "in",
-      16.972
-     ],
-     [
-      "a",
-      17.282
-     ],
-     [
-      "few",
-      17.312
-     ]
-    ],
-    [
-     [
-      "thousandths",
-      17.522
-     ],
-     [
-      "of",
-      18.027
-     ],
-     [
-      "a",
-      18.417
-     ],
-     [
-      "second.",
-      18.447
+      16.762
      ]
     ]
    ]
   },
   {
-   "t0": 19.182,
-   "t1": 19.522,
+   "t0": 16.967,
+   "t1": 19.267,
+   "lines": [
+    [
+     [
+      "in",
+      16.967
+     ],
+     [
+      "about",
+      17.267
+     ],
+     [
+      "two",
+      17.532
+     ],
+     [
+      "hundredths",
+      17.617
+     ]
+    ],
+    [
+     [
+      "of",
+      18.127
+     ],
+     [
+      "a",
+      18.367
+     ],
+     [
+      "second.",
+      18.517
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.312,
+   "t1": 19.642,
    "lines": [
     [
      [
       "Here,",
-      19.182
+      19.312
      ]
     ]
    ]
   },
   {
-   "t0": 19.522,
-   "t1": 20.957,
+   "t0": 19.642,
+   "t1": 21.352,
    "lines": [
     [
      [
       "that's",
-      19.522
+      19.642
      ],
      [
-      "a",
-      19.692
+      "about",
+      19.822
      ],
      [
-      "few",
-      19.812
+      "20",
+      20.117
      ],
      [
       "seconds.",
-      20.207
+      20.602
      ]
     ]
    ]
   },
   {
-   "t0": 20.977,
-   "t1": 22.067,
+   "t0": 21.397,
+   "t1": 22.442,
    "lines": [
     [
      [
       "The",
-      20.977
+      21.397
      ],
      [
       "shell",
-      21.007
+      21.427
      ],
      [
       "splits,",
-      21.572
+      21.947
      ]
     ]
    ]
   },
   {
-   "t0": 22.067,
-   "t1": 24.202,
+   "t0": 22.442,
+   "t1": 24.527,
    "lines": [
     [
      [
       "and",
-      22.067
+      22.442
      ],
      [
       "the",
-      22.097
+      22.472
      ],
      [
       "white",
-      22.287
+      22.672
      ]
     ],
     [
      [
       "foam",
-      22.502
+      22.907
      ],
      [
       "bursts",
-      23.062
+      23.387
      ],
      [
       "out.",
-      23.642
+      23.952
      ]
     ]
    ]
   },
   {
-   "t0": 24.202,
-   "t1": 27.172,
+   "t0": 24.527,
+   "t1": 27.322,
    "lines": [
     [
      [
       "That",
-      24.202
+      24.527
      ],
      [
       "crack",
-      24.422
+      24.747
      ],
      [
       "you'd",
-      24.762
+      25.042
      ],
      [
       "hear",
-      24.982
+      25.297
      ]
     ],
     [
      [
       "is",
-      25.432
+      25.657
      ],
      [
       "the",
-      25.462
+      25.687
      ],
      [
       "shell",
-      25.627
+      25.882
      ],
      [
       "giving",
-      25.932
+      26.157
      ],
      [
       "way.",
-      26.502
+      26.702
      ]
     ]
    ]
   },
   {
-   "t0": 27.172,
-   "t1": 29.512,
+   "t0": 27.322,
+   "t1": 29.682,
    "lines": [
     [
      [
       "One",
-      27.172
+      27.322
      ],
      [
       "kernel",
-      27.497
+      27.647
      ],
      [
       "becomes",
-      28.032
+      28.182
      ]
     ],
     [
      [
       "a",
-      28.067
+      28.227
      ],
      [
       "fluffy",
-      28.417
+      28.562
      ],
      [
       "cloud,",
-      28.912
+      29.087
      ]
     ]
    ]
   },
   {
-   "t0": 29.512,
-   "t1": 31.177,
+   "t0": 29.682,
+   "t1": 31.352,
    "lines": [
     [
      [
       "many",
-      29.512
+      29.682
      ],
      [
       "times",
-      29.757
+      29.927
      ],
      [
       "its",
-      30.287
+      30.462
      ],
      [
       "size.",
-      30.427
+      30.602
      ]
     ]
    ]
   },
   {
-   "t0": 31.277,
-   "t1": 33.332,
+   "t0": 31.457,
+   "t1": 33.222,
    "lines": [
     [
      [
       "The",
-      31.277
-     ],
-     [
-      "foam",
       31.457
      ],
      [
+      "foam",
+      31.627
+     ],
+     [
       "hangs",
-      31.937
+      32.012
      ]
     ],
     [
      [
       "for",
-      32.347
+      32.442
      ],
      [
       "a",
-      32.397
+      32.472
      ],
      [
       "moment,",
-      32.712
+      32.702
      ]
     ]
    ]
   },
   {
-   "t0": 33.332,
-   "t1": 35.057,
+   "t0": 33.222,
+   "t1": 34.882,
    "lines": [
     [
      [
       "then",
-      33.332
+      33.222
      ],
      [
       "settles",
-      33.622
+      33.452
      ],
      [
       "in",
-      33.977
+      33.822
      ],
      [
       "the",
-      34.222
+      34.042
      ],
      [
       "pan.",
-      34.307
+      34.132
      ]
     ]
    ]
   },
   {
-   "t0": 35.312,
-   "t1": 36.147,
+   "t0": 35.117,
+   "t1": 35.872,
    "lines": [
     [
      [
       "Over",
-      35.312
+      35.117
      ],
      [
       "the",
-      35.552
+      35.147
      ],
      [
       "sink,",
-      35.582
+      35.352
      ]
     ]
    ]
   },
   {
-   "t0": 36.147,
-   "t1": 39.322,
+   "t0": 35.872,
+   "t1": 39.012,
    "lines": [
     [
      [
       "a",
-      36.147
+      35.872
      ],
      [
       "soap",
-      36.362
+      36.027
      ],
      [
       "bubble",
-      36.632
+      36.352
      ],
      [
       "drifts,",
-      36.947
+      36.672
      ]
     ],
     [
      [
       "about",
-      37.522
+      37.242
      ],
      [
       "as",
-      37.862
+      37.512
      ],
      [
       "wide",
-      37.892
+      37.542
      ],
      [
       "as",
-      38.277
+      37.922
      ],
      [
       "an",
-      38.542
+      38.212
      ],
      [
       "egg.",
-      38.572
+      38.362
      ]
     ]
    ]
   },
   {
-   "t0": 39.432,
-   "t1": 40.652,
+   "t0": 39.012,
+   "t1": 40.227,
    "lines": [
     [
      [
       "Its",
-      39.432
+      39.012
      ],
      [
       "colors",
-      39.637
+      39.207
      ],
      [
       "swirl",
-      40.202
+      39.692
      ]
     ]
    ]
   },
   {
-   "t0": 40.652,
-   "t1": 42.727,
+   "t0": 40.227,
+   "t1": 42.252,
    "lines": [
     [
      [
       "as",
-      40.652
+      40.227
      ],
      [
       "the",
-      40.847
+      40.417
      ],
      [
       "wall",
-      40.997
+      40.447
      ]
     ],
     [
      [
       "of",
-      41.402
+      40.922
      ],
      [
       "the",
-      41.467
+      40.992
      ],
      [
       "bubble",
-      41.577
+      41.022
      ],
      [
       "thins.",
-      41.977
+      41.502
      ]
     ]
    ]
   },
   {
-   "t0": 43.027,
-   "t1": 45.602,
+   "t0": 42.467,
+   "t1": 44.797,
    "lines": [
     [
      [
       "When",
-      43.027
+      42.467
      ],
      [
       "it",
-      43.057
+      42.497
      ],
      [
       "pops,",
-      43.242
+      42.682
      ],
      [
       "the",
-      43.797
+      43.147
      ],
      [
       "hole",
-      43.957
+      43.177
      ]
     ],
     [
      [
       "races",
-      44.272
+      43.552
      ],
      [
       "around",
-      44.822
+      44.052
      ],
      [
       "the",
-      45.082
+      44.127
      ],
      [
       "film",
-      45.147
+      44.372
      ]
     ]
    ]
   },
   {
-   "t0": 45.602,
-   "t1": 47.527,
+   "t0": 44.797,
+   "t1": 46.637,
    "lines": [
     [
      [
       "at",
-      45.602
+      44.797
      ],
      [
       "several",
-      45.632
+      44.827
      ]
     ],
     [
      [
       "meters",
-      46.027
+      45.227
      ],
      [
       "a",
-      46.432
+      45.797
      ],
      [
       "second.",
-      46.777
+      45.947
      ]
     ]
    ]
   },
   {
-   "t0": 47.537,
-   "t1": 48.732,
+   "t0": 46.637,
+   "t1": 47.787,
    "lines": [
     [
      [
       "The",
-      47.537
+      46.637
      ],
      [
       "whole",
-      47.567
+      46.667
      ],
      [
       "bubble",
-      47.917
+      47.002
      ],
      [
       "is",
-      48.347
+      47.502
      ],
      [
       "gone",
-      48.407
+      47.532
      ]
     ]
    ]
   },
   {
-   "t0": 48.732,
-   "t1": 51.012,
+   "t0": 47.787,
+   "t1": 49.837,
    "lines": [
     [
      [
       "in",
-      48.732
+      47.787
      ],
      [
       "about",
-      49.052
+      48.077
      ],
      [
       "a",
-      49.277
+      48.297
      ],
      [
       "hundredth",
-      49.307
+      48.327
      ]
     ],
     [
      [
       "of",
-      49.687
+      48.677
      ],
      [
       "a",
-      50.157
+      48.952
      ],
      [
       "second.",
-      50.262
+      49.097
      ]
     ]
    ]
   },
   {
-   "t0": 51.057,
-   "t1": 53.662,
+   "t0": 49.837,
+   "t1": 51.747,
+   "lines": [
+    [
+     [
+      "If",
+      49.837
+     ],
+     [
+      "you",
+      49.912
+     ],
+     [
+      "just",
+      50.062
+     ],
+     [
+      "replayed",
+      50.257
+     ]
+    ],
+    [
+     [
+      "that",
+      50.782
+     ],
+     [
+      "in",
+      50.912
+     ],
+     [
+      "your",
+      51.202
+     ],
+     [
+      "head,",
+      51.232
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.747,
+   "t1": 53.212,
+   "lines": [
+    [
+     [
+      "tap",
+      51.747
+     ],
+     [
+      "like",
+      52.037
+     ],
+     [
+      "and",
+      52.432
+     ],
+     [
+      "follow.",
+      52.462
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.572,
+   "t1": 56.097,
    "lines": [
     [
      [
       "Here,",
-      51.057
+      53.572
      ],
      [
       "that",
-      51.687
+      54.137
      ],
      [
       "takes",
-      51.877
+      54.322
      ]
     ],
     [
      [
       "about",
-      52.072
+      54.522
      ],
      [
       "11",
-      52.332
+      54.782
      ],
      [
       "seconds.",
-      52.912
+      55.347
      ]
     ]
    ]
   },
   {
-   "t0": 53.837,
-   "t1": 54.772,
+   "t0": 56.237,
+   "t1": 57.172,
    "lines": [
     [
      [
       "And",
-      53.837
+      56.237
      ],
      [
       "somebody",
-      54.022
+      56.417
      ],
      [
       "across",
-      54.442
+      56.842
      ]
     ]
    ]
   },
   {
-   "t0": 54.772,
-   "t1": 56.527,
+   "t0": 57.172,
+   "t1": 58.892,
    "lines": [
     [
      [
       "the",
-      54.772
+      57.172
      ],
      [
       "kitchen",
-      54.867
+      57.262
      ],
      [
       "has",
-      55.402
+      57.787
      ]
     ],
     [
      [
       "just",
-      55.487
+      57.857
      ],
      [
       "clapped.",
-      55.777
+      58.142
      ]
     ]
    ]
   },
   {
-   "t0": 56.807,
-   "t1": 59.082,
+   "t0": 59.067,
+   "t1": 61.177,
    "lines": [
     [
      [
       "How",
-      56.807
+      59.067
      ],
      [
       "long",
-      56.987
+      59.247
      ],
      [
       "does",
-      57.227
+      59.517
      ],
      [
       "that",
-      57.562
+      59.707
      ],
      [
       "take",
-      57.752
+      59.897
      ]
     ],
     [
      [
       "to",
-      57.957
+      60.137
      ],
      [
       "reach",
-      58.022
+      60.182
      ],
      [
       "you?",
-      58.332
+      60.427
      ]
     ]
    ]
   },
   {
-   "t0": 59.52,
-   "t1": 60.805,
+   "t0": 61.653,
+   "t1": 62.938,
    "lines": [
     [
      [
       "Part",
-      59.52
+      61.653
      ],
      [
       "3",
-      59.785
+      61.918
      ],
      [
       "of",
-      60.07
+      62.203
      ],
      [
       "8.",
-      60.285
+      62.418
      ]
     ]
    ]
   },
   {
-   "t0": 60.805,
-   "t1": 62.05,
+   "t0": 62.938,
+   "t1": 64.183,
    "lines": [
     [
      [
       "Full",
-      60.805
+      62.938
      ],
      [
       "video",
-      61.095
+      63.228
      ],
      [
       "on",
-      61.445
+      63.578
      ],
      [
       "YouTube.",
-      61.75
+      63.883
      ]
     ]
    ]
   }
  ],
- "endShow": 62.0,
- "endCard": 62.5,
+ "endShow": 64.1333,
+ "endCard": 64.6333,
  "end": {
   "title": "Part 3 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1306,13 +1387,13 @@
   {
    "id": "vo02",
    "t": 3.066666666666667,
-   "dur": 55.615,
+   "dur": 57.699,
    "file": "vo/02.wav",
-   "text": "In the pan on the stove, a few kernels of popcorn sit still. Then one jumps. Its hard shell holds the steam in, until the pressure wins. It pops when it gets to about one hundred eighty degrees Celsius. The pop is over in a few thousandths of a second. Here, that's a few seconds. The shell splits, and the white foam bursts out. That crack you'd hear is the shell giving way. One kernel becomes a fluffy cloud, many times its size. The foam hangs for a moment, then settles in the pan. Over the sink, a soap bubble drifts, about as wide as an egg. Its colors swirl as the wall of the bubble thins. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. Here, that takes about eleven seconds. And somebody across the kitchen has just clapped. How long does that take to reach you?"
+   "text": "In the pan on the stove, a few kernels of popcorn sit still. Then one jumps. Its hard shell holds the steam in, until the pressure wins. It pops when it gets to about one hundred eighty degrees Celsius. The pop is over in about two hundredths of a second. Here, that's about twenty seconds. The shell splits, and the white foam bursts out. That crack you'd hear is the shell giving way. One kernel becomes a fluffy cloud, many times its size. The foam hangs for a moment, then settles in the pan. Over the sink, a soap bubble drifts, about as wide as an egg. Its colors swirl as the wall of the bubble thins. When it pops, the hole races around the film at several meters a second. The whole bubble is gone in about a hundredth of a second. If you just replayed that in your head, tap like and follow. Here, that takes about eleven seconds. And somebody across the kitchen has just clapped. How long does that take to reach you?"
   },
   {
    "id": "vo03",
-   "t": 59.5,
+   "t": 61.63333333333333,
    "dur": 2.751,
    "file": "vo/03.wav",
    "text": "Part 3 of 8. Full video on YouTube."

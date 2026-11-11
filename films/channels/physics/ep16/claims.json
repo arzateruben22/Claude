@@ -3,12 +3,12 @@
 "id": "c14",
 "sentence": "In a room, it moves about three hundred forty meters a second.",
 "claim": "The speed of sound in air at 20 C is about 343 m/s.",
-"source_url": "https://openstax.org/books/university-physics-volume-1/pages/17-1-sound-waves",
-"source_title": "OpenStax, University Physics Vol. 1, 17.1 Sound Waves (recalled, not opened)",
-"accessed": "2026-11-10",
-"verified_via": "from memory",
-"status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Standard textbook value; depends on temperature."
+"source_url": "https://openstax.org/books/college-physics-2e/pages/17-2-speed-of-sound-frequency-and-wavelength",
+"source_title": "OpenStax College Physics 2e, 17.2 Speed of Sound, Frequency, and Wavelength",
+"accessed": "11 Nov 2026",
+"verified_via": "SOURCE-READ (builder read the page text)",
+"status": "OPEN: a person must open the link and check",
+"note": "Read: speed of sound is 331 m/s at 0 C and 343 m/s at 20 C."
 },
 {
 "id": "c15",

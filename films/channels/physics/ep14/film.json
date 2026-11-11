@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p2",
  "fps": 30,
  "bpm": 112.5,
- "dur": 64.8,
+ "dur": 73.3333,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,7 @@
    "name": "body"
   },
   {
-   "at": 59.983333,
+   "at": 68.516633,
    "name": "tease"
   }
  ],
@@ -32,14 +32,14 @@
   {
    "id": "body",
    "t0": 2.6667,
-   "t1": 60.0,
+   "t1": 68.5333,
    "line": "vo02",
    "energy": 0.7
   },
   {
    "id": "tease",
-   "t0": 60.0,
-   "t1": 64.8,
+   "t0": 68.5333,
+   "t1": 73.3333,
    "line": "vo03",
    "energy": 0.4
   }
@@ -48,13 +48,13 @@
   "cuts": {
    "hook": 0.0,
    "body": 2.650033,
-   "tease": 59.983333
+   "tease": 68.516633
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 59.6833,
+   "t1": 68.2166,
    "label": "slow-motion"
   }
  ],
@@ -102,19 +102,19 @@
    1000000000.0
   ],
   "fly100": [
-   3.0333,
-   11.2667
+   3.1333,
+   13.0
   ],
   "mosq": [
-   11.2667,
-   19.0667
+   13.0,
+   21.7333
   ],
   "tapdrop": [
-   21.6333,
-   25.7333,
-   27.3333
+   24.0333,
+   28.5333,
+   30.3333
   ],
-  "settle": 43.0667,
+  "settle": 47.5,
   "kernel": {
    "jump": 1000000000.0,
    "pop": 1000000000.0,
@@ -155,7 +155,8 @@
    1000000000.0,
    1000000000.0
   ],
-  "back": 1000000000.0
+  "back": 1000000000.0,
+  "fades": []
  },
  "cam": [
   {
@@ -171,7 +172,7 @@
    "ease": "p2"
   },
   {
-   "t": 2.5333,
+   "t": 2.6333,
    "look": [
     -0.3,
     1.12,
@@ -183,7 +184,7 @@
    "ease": "sine"
   },
   {
-   "t": 18.9667,
+   "t": 21.6333,
    "look": [
     -0.3,
     1.1,
@@ -195,7 +196,7 @@
    "ease": "p2"
   },
   {
-   "t": 26.6333,
+   "t": 29.6333,
    "look": [
     -0.3,
     1.0,
@@ -207,7 +208,7 @@
    "ease": "p2"
   },
   {
-   "t": 43.0667,
+   "t": 47.5,
    "look": [
     -0.3,
     1.0,
@@ -219,7 +220,7 @@
    "ease": "sine"
   },
   {
-   "t": 55.2667,
+   "t": 63.3667,
    "look": [
     -0.3,
     1.0,
@@ -270,12 +271,18 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 59.6833,
+   "t1": 68.2166,
    "slot": "tr"
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 2 of 8",
+  "title": "A fly's wings, then a splash"
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -312,988 +319,1036 @@
    ]
   },
   {
-   "t0": 2.825,
-   "t1": 4.185,
+   "t0": 2.925,
+   "t1": 4.33,
    "lines": [
     [
      [
       "First,",
-      2.825
+      2.925
      ],
      [
       "a",
-      3.25
+      3.38
      ],
      [
       "fly.",
-      3.435
+      3.58
      ]
     ]
    ]
   },
   {
-   "t0": 4.44,
-   "t1": 8.015,
+   "t0": 4.7,
+   "t1": 6.61,
    "lines": [
     [
      [
       "A",
-      4.44
+      4.7
      ],
      [
-      "housefly",
-      4.47
+      "fly",
+      4.86
      ],
      [
       "beats",
-      5.235
-     ],
-     [
-      "its",
-      5.555
-     ],
-     [
-      "wings",
-      5.635
+      5.38
      ]
     ],
     [
      [
-      "about",
-      6.035
+      "its",
+      5.705
      ],
      [
-      "200",
-      6.245
+      "wings",
+      5.77
      ],
      [
-      "times",
-      6.78
-     ],
-     [
-      "a",
-      7.155
-     ],
-     [
-      "second.",
-      7.33
+      "close",
+      6.3
      ]
     ]
    ]
   },
   {
-   "t0": 8.015,
-   "t1": 9.32,
+   "t0": 6.61,
+   "t1": 8.845,
+   "lines": [
+    [
+     [
+      "to",
+      6.61
+     ],
+     [
+      "200",
+      6.76
+     ],
+     [
+      "times",
+      7.41
+     ],
+     [
+      "a",
+      7.805
+     ],
+     [
+      "second.",
+      8.13
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.845,
+   "t1": 10.545,
    "lines": [
     [
      [
       "Slow",
-      8.015
+      8.845
      ],
      [
       "it",
-      8.34
+      9.275
      ],
      [
       "100",
-      8.495
+      9.42
      ],
      [
       "times,",
-      8.825
+      9.81
      ]
     ]
    ]
   },
   {
-   "t0": 9.32,
-   "t1": 11.24,
+   "t0": 10.545,
+   "t1": 12.83,
    "lines": [
     [
      [
       "and",
-      9.32
+      10.545
      ],
      [
       "that's",
-      9.535
+      10.575
+     ],
+     [
+      "about",
+      10.88
      ],
      [
       "two",
-      9.705
+      11.23
      ],
      [
       "beats",
-      9.955
+      11.53
      ]
     ],
     [
      [
       "a",
-      10.125
+      11.93
      ],
      [
       "second.",
-      10.5
+      12.08
      ]
     ]
    ]
   },
   {
-   "t0": 11.24,
-   "t1": 15.055,
+   "t0": 12.965,
+   "t1": 17.16,
    "lines": [
     [
      [
       "A",
-      11.24
+      12.965
      ],
      [
       "mosquito's",
-      11.27
+      12.995
      ],
      [
       "wings",
-      11.975
+      13.8
      ],
      [
       "beat",
-      12.46
+      14.41
      ]
     ],
     [
      [
       "about",
-      12.715
+      14.705
      ],
      [
       "500",
-      12.89
+      14.9
      ],
      [
       "times",
-      13.63
+      15.705
      ],
      [
       "a",
-      13.98
+      16.08
      ],
      [
       "second.",
-      14.305
+      16.41
      ]
     ]
    ]
   },
   {
-   "t0": 15.17,
-   "t1": 17.39,
+   "t0": 17.265,
+   "t1": 19.865,
    "lines": [
     [
      [
       "Here,",
-      15.17
+      17.265
      ],
      [
       "that's",
-      15.52
+      17.795
      ],
      [
       "five",
-      15.73
+      17.985
      ],
      [
       "beats",
-      16.235
+      18.565
      ]
     ],
     [
      [
       "a",
-      16.63
+      18.975
      ],
      [
       "second.",
-      16.775
+      19.13
      ]
     ]
    ]
   },
   {
-   "t0": 17.39,
-   "t1": 19.175,
+   "t0": 19.865,
+   "t1": 21.75,
    "lines": [
     [
      [
       "You",
-      17.39
+      19.865
      ],
      [
       "can",
-      17.48
+      19.98
      ],
      [
       "count",
-      17.655
+      20.16
      ],
      [
       "them",
-      17.955
+      20.48
      ]
     ],
     [
      [
       "on",
-      17.985
+      20.52
      ],
      [
       "one",
-      18.24
+      20.88
      ],
      [
       "hand.",
-      18.425
+      21.0
      ]
     ]
    ]
   },
   {
-   "t0": 19.205,
-   "t1": 20.61,
+   "t0": 21.88,
+   "t1": 23.27,
    "lines": [
     [
      [
       "Now",
-      19.205
+      21.88
      ],
      [
       "look",
-      19.455
+      22.12
      ],
      [
       "at",
-      19.61
+      22.31
      ],
      [
       "the",
-      19.82
+      22.42
      ],
      [
       "tap.",
-      19.86
+      22.52
      ]
     ]
    ]
   },
   {
-   "t0": 20.835,
-   "t1": 22.83,
+   "t0": 23.285,
+   "t1": 25.495,
    "lines": [
     [
      [
       "A",
-      20.835
+      23.285
      ],
      [
       "drop",
-      20.935
+      23.415
      ],
      [
       "of",
-      21.235
+      23.755
      ],
      [
       "water",
-      21.335
+      23.865
      ]
     ],
     [
      [
       "swells",
-      21.935
+      24.32
      ],
      [
       "there,",
-      22.38
+      24.94
      ]
     ]
    ]
   },
   {
-   "t0": 22.83,
-   "t1": 25.615,
+   "t0": 25.495,
+   "t1": 28.37,
    "lines": [
     [
      [
       "heavier",
-      22.83
+      25.495
      ],
      [
       "and",
-      23.32
+      25.985
      ],
      [
       "heavier,",
-      23.47
+      26.15
      ]
     ],
     [
      [
       "until",
-      24.01
+      26.65
      ],
      [
       "it",
-      24.315
+      26.98
      ],
      [
       "lets",
-      24.5
+      27.165
      ],
      [
       "go.",
-      24.895
+      27.64
      ]
     ]
    ]
   },
   {
-   "t0": 25.615,
-   "t1": 27.07,
+   "t0": 28.37,
+   "t1": 29.99,
    "lines": [
     [
      [
       "It",
-      25.615
+      28.37
      ],
      [
       "falls",
-      25.75
+      28.55
      ],
      [
       "into",
-      26.16
+      28.895
      ],
      [
       "the",
-      26.245
+      29.21
      ],
      [
       "cup.",
-      26.35
+      29.24
      ]
     ]
    ]
   },
   {
-   "t0": 27.07,
-   "t1": 30.005,
+   "t0": 30.03,
+   "t1": 32.995,
    "lines": [
     [
      [
       "It",
-      27.07
+      30.03
      ],
      [
       "hits,",
-      27.245
+      30.235
      ],
      [
       "and",
-      27.84
+      30.765
      ],
      [
       "the",
-      27.87
+      30.795
      ],
      [
       "water",
-      28.07
+      31.015
      ]
     ],
     [
      [
       "climbs",
-      28.435
+      31.385
      ],
      [
       "into",
-      28.935
+      31.925
      ],
      [
       "a",
-      29.14
+      32.13
      ],
      [
       "crown.",
-      29.255
+      32.245
      ]
     ]
    ]
   },
   {
-   "t0": 30.085,
-   "t1": 31.315,
+   "t0": 33.43,
+   "t1": 34.88,
    "lines": [
     [
      [
       "The",
-      30.085
+      33.43
      ],
      [
       "whole",
-      30.115
+      33.565
      ],
      [
       "crown",
-      30.475
+      33.855
      ],
      [
       "forms",
-      30.985
+      34.45
      ]
     ]
    ]
   },
   {
-   "t0": 31.315,
-   "t1": 33.25,
+   "t0": 34.88,
+   "t1": 36.925,
    "lines": [
     [
      [
       "in",
-      31.315
+      34.88
      ],
      [
       "a",
-      31.455
+      35.03
      ],
      [
       "few",
-      31.485
+      35.065
      ],
      [
       "hundredths",
-      31.675
+      35.305
      ]
     ],
     [
      [
       "of",
-      32.08
+      35.825
      ],
      [
       "a",
-      32.47
+      36.02
      ],
      [
       "second.",
-      32.5
+      36.175
      ]
     ]
    ]
   },
   {
-   "t0": 33.315,
-   "t1": 35.835,
+   "t0": 37.01,
+   "t1": 39.695,
    "lines": [
     [
      [
       "At",
-      33.315
+      37.01
      ],
      [
       "this",
-      33.46
+      37.165
      ],
      [
       "speed,",
-      33.765
+      37.515
      ]
     ],
     [
      [
       "that",
-      34.19
+      37.99
      ],
      [
       "takes",
-      34.39
+      38.195
      ],
      [
       "a",
-      34.54
+      38.365
      ],
      [
       "few",
-      34.68
+      38.515
      ],
      [
       "seconds.",
-      35.085
+      38.945
      ]
     ]
    ]
   },
   {
-   "t0": 35.855,
-   "t1": 38.4,
+   "t0": 39.73,
+   "t1": 42.43,
    "lines": [
     [
      [
       "You",
-      35.855
+      39.73
      ],
      [
       "can",
-      35.94
+      39.845
      ],
      [
       "watch",
-      35.975
+      39.88
      ],
      [
       "each",
-      36.405
+      40.4
      ],
      [
       "point",
-      36.69
+      40.725
      ]
     ],
     [
      [
       "of",
-      36.975
+      41.01
      ],
      [
       "the",
-      37.005
+      41.13
      ],
      [
       "crown",
-      37.095
+      41.225
      ],
      [
       "rise.",
-      37.69
+      41.68
      ]
     ]
    ]
   },
   {
-   "t0": 38.4,
-   "t1": 40.95,
+   "t0": 42.62,
+   "t1": 45.475,
    "lines": [
     [
      [
       "Then",
-      38.4
+      42.62
      ],
      [
       "little",
-      38.43
+      42.65
      ],
      [
       "drops",
-      38.725
+      43.05
      ],
      [
       "pinch",
-      39.17
+      43.555
      ]
     ],
     [
      [
       "off,",
-      39.42
+      43.85
      ],
      [
       "and",
-      39.755
+      44.23
      ],
      [
       "fly",
-      39.97
+      44.455
      ],
      [
       "outward.",
-      40.2
+      44.725
      ]
     ]
    ]
   },
   {
-   "t0": 41.24,
-   "t1": 42.33,
+   "t0": 45.63,
+   "t1": 46.71,
    "lines": [
     [
      [
       "The",
-      41.24
+      45.63
      ],
      [
       "cup",
-      41.27
+      45.745
      ],
      [
       "rings.",
-      41.58
+      45.96
      ]
     ]
    ]
   },
   {
-   "t0": 42.605,
-   "t1": 43.515,
+   "t0": 46.965,
+   "t1": 47.98,
    "lines": [
     [
      [
       "The",
-      42.605
+      46.965
      ],
      [
       "water",
-      42.635
+      46.995
      ],
      [
       "settles,",
-      43.05
+      47.515
      ]
     ]
    ]
   },
   {
-   "t0": 43.515,
-   "t1": 45.6,
+   "t0": 47.98,
+   "t1": 50.285,
    "lines": [
     [
      [
       "and",
-      43.515
+      47.98
      ],
      [
       "the",
-      43.725
+      48.01
      ],
      [
       "surface",
-      43.78
+      48.24
      ]
     ],
     [
      [
       "goes",
-      44.24
+      48.765
      ],
      [
       "flat",
-      44.57
+      49.14
      ],
      [
       "again.",
-      44.85
+      49.68
      ]
     ]
    ]
   },
   {
-   "t0": 45.72,
-   "t1": 48.225,
+   "t0": 50.285,
+   "t1": 51.525,
+   "lines": [
+    [
+     [
+      "Still",
+      50.285
+     ],
+     [
+      "with",
+      50.72
+     ],
+     [
+      "me?",
+      50.775
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.55,
+   "t1": 53.13,
+   "lines": [
+    [
+     [
+      "Tap",
+      51.55
+     ],
+     [
+      "like",
+      51.845
+     ],
+     [
+      "and",
+      52.33
+     ],
+     [
+      "follow.",
+      52.38
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 53.425,
+   "t1": 55.69,
+   "lines": [
+    [
+     [
+      "There's",
+      53.425
+     ],
+     [
+      "plenty",
+      53.675
+     ],
+     [
+      "more",
+      53.885
+     ]
+    ],
+    [
+     [
+      "where",
+      54.27
+     ],
+     [
+      "that",
+      54.435
+     ],
+     [
+      "came",
+      54.685
+     ],
+     [
+      "from.",
+      54.94
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 55.745,
+   "t1": 58.495,
    "lines": [
     [
      [
       "The",
-      45.72
+      55.745
      ],
      [
       "cup",
-      45.75
+      55.85
      ],
      [
       "sits",
-      46.02
+      56.065
      ],
      [
       "still",
-      46.465
+      56.545
      ]
     ],
     [
      [
       "while",
-      46.685
+      56.81
      ],
      [
       "all",
-      46.87
+      57.045
      ],
      [
       "this",
-      47.2
+      57.455
      ],
      [
       "happens.",
-      47.475
+      57.745
      ]
     ]
    ]
   },
   {
-   "t0": 48.275,
-   "t1": 49.535,
+   "t0": 58.615,
+   "t1": 60.0,
    "lines": [
     [
      [
       "Nothing",
-      48.275
-     ],
-     [
-      "else",
-      48.45
-     ]
-    ],
-    [
-     [
-      "in",
-      48.8
-     ],
-     [
-      "the",
-      49.005
-     ],
-     [
-      "kitchen",
-      49.055
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 49.535,
-   "t1": 50.695,
-   "lines": [
-    [
-     [
-      "has",
-      49.535
-     ],
-     [
-      "moved",
-      49.565
-     ],
-     [
-      "yet.",
-      49.945
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 50.795,
-   "t1": 52.24,
-   "lines": [
-    [
-     [
-      "Nothing",
-      50.795
+      58.615
      ],
      [
       "here",
-      51.005
+      58.84
      ],
      [
       "moved",
-      51.44
+      59.28
      ],
      [
       "faster",
-      51.775
+      59.645
      ]
     ]
    ]
   },
   {
-   "t0": 52.24,
-   "t1": 55.06,
+   "t0": 60.0,
+   "t1": 63.18,
    "lines": [
     [
      [
       "than",
-      52.24
+      60.0
      ],
      [
       "you",
-      52.5
+      60.42
      ],
      [
       "could",
-      52.545
+      60.45
      ],
      [
       "follow,",
-      52.75
+      60.675
      ]
     ],
     [
      [
       "once",
-      53.28
+      61.255
      ],
      [
       "you",
-      53.615
+      61.525
      ],
      [
       "gave",
-      53.645
+      61.655
      ],
      [
       "it",
-      53.935
+      61.99
      ],
      [
       "time.",
-      54.31
+      62.48
      ]
     ]
    ]
   },
   {
-   "t0": 55.06,
-   "t1": 57.77,
+   "t0": 63.18,
+   "t1": 66.06,
    "lines": [
     [
      [
       "But",
-      55.06
+      63.18
      ],
      [
       "the",
-      55.155
+      63.275
      ],
      [
       "next",
-      55.405
+      63.525
      ],
      [
       "thing",
-      55.565
+      63.69
      ],
      [
       "happens",
-      55.78
+      63.92
      ]
     ],
     [
      [
       "faster",
-      56.28
+      64.5
      ],
      [
       "than",
-      56.745
+      64.825
      ],
      [
       "a",
-      56.775
+      65.175
      ],
      [
       "splash,",
-      57.125
+      65.385
      ]
     ]
    ]
   },
   {
-   "t0": 57.77,
-   "t1": 59.83,
+   "t0": 66.06,
+   "t1": 68.15,
    "lines": [
     [
      [
       "in",
-      57.77
+      66.06
      ],
      [
       "a",
-      57.925
+      66.245
      ],
      [
       "hot",
-      58.01
+      66.34
      ],
      [
       "pan",
-      58.33
+      66.655
      ]
     ],
     [
      [
       "on",
-      58.73
+      67.065
      ],
      [
       "the",
-      58.95
+      67.275
      ],
      [
       "stove.",
-      59.08
+      67.4
      ]
     ]
    ]
   },
   {
-   "t0": 60.32,
-   "t1": 61.61,
+   "t0": 68.853,
+   "t1": 70.143,
    "lines": [
     [
      [
       "Part",
-      60.32
+      68.853
      ],
      [
       "2",
-      60.635
+      69.168
      ],
      [
       "of",
-      60.88
+      69.413
      ],
      [
       "8.",
-      61.115
+      69.648
      ]
     ]
    ]
   },
   {
-   "t0": 61.61,
-   "t1": 62.775,
+   "t0": 70.143,
+   "t1": 71.308,
    "lines": [
     [
      [
       "Full",
-      61.61
+      70.143
      ],
      [
       "video",
-      61.87
+      70.403
      ],
      [
       "on",
-      62.125
+      70.658
      ],
      [
       "YouTube.",
-      62.475
+      71.008
      ]
     ]
    ]
   }
  ],
- "endShow": 62.8,
- "endCard": 63.3,
+ "endShow": 71.3333,
+ "endCard": 71.8333,
  "end": {
   "title": "Part 2 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1310,13 +1365,13 @@
   {
    "id": "vo02",
    "t": 2.8,
-   "dur": 56.771,
+   "dur": 65.106,
    "file": "vo/02.wav",
-   "text": "First, a fly. A housefly beats its wings about two hundred times a second. Slow it a hundred times, and that's two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier, until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. The water settles, and the surface goes flat again. The cup sits still while all this happens. Nothing else in the kitchen has moved yet. Nothing here moved faster than you could follow, once you gave it time. But the next thing happens faster than a splash, in a hot pan on the stove."
+   "text": "First, a fly. A fly beats its wings close to two hundred times a second. Slow it a hundred times, and that's about two beats a second. A mosquito's wings beat about five hundred times a second. Here, that's five beats a second. You can count them on one hand. Now look at the tap. A drop of water swells there, heavier and heavier, until it lets go. It falls into the cup. It hits, and the water climbs into a crown. The whole crown forms in a few hundredths of a second. At this speed, that takes a few seconds. You can watch each point of the crown rise. Then little drops pinch off, and fly outward. The cup rings. The water settles, and the surface goes flat again. Still with me? Tap like and follow. There's plenty more where that came from. The cup sits still while all this happens. Nothing here moved faster than you could follow, once you gave it time. But the next thing happens faster than a splash, in a hot pan on the stove."
   },
   {
    "id": "vo03",
-   "t": 60.3,
+   "t": 68.83333333333333,
    "dur": 2.704,
    "file": "vo/03.wav",
    "text": "Part 2 of 8. Full video on YouTube."

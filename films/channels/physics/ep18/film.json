@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p6",
  "fps": 30,
  "bpm": 112.5,
- "dur": 73.0667,
+ "dur": 66.1333,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,7 @@
    "name": "body"
   },
   {
-   "at": 68.250033,
+   "at": 61.316633,
    "name": "tease"
   }
  ],
@@ -32,14 +32,14 @@
   {
    "id": "body",
    "t0": 2.9333,
-   "t1": 68.2667,
+   "t1": 61.3333,
    "line": "vo02",
    "energy": 0.7
   },
   {
    "id": "tease",
-   "t0": 68.2667,
-   "t1": 73.0667,
+   "t0": 61.3333,
+   "t1": 66.1333,
    "line": "vo03",
    "energy": 0.4
   }
@@ -48,13 +48,13 @@
   "cuts": {
    "hook": 0.0,
    "body": 2.916633,
-   "tease": 68.250033
+   "tease": 61.316633
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 67.95,
+   "t1": 61.0166,
    "label": "slow-motion"
   }
  ],
@@ -131,10 +131,10 @@
   },
   "storm": 3.1,
   "leader": {
-   "t0": 24.3667,
+   "t0": 20.9667,
    "stepEvery": 3.0,
    "steps": 8,
-   "ground": 48.4
+   "ground": 39.3667
   },
   "flash8": 1000000000.0,
   "light9": 1000000000.0,
@@ -155,7 +155,8 @@
    1000000000.0,
    1000000000.0
   ],
-  "back": 1000000000.0
+  "back": 1000000000.0,
+  "fades": []
  },
  "cam": [
   {
@@ -171,7 +172,7 @@
    "ease": "p2"
   },
   {
-   "t": 19.4667,
+   "t": 17.0333,
    "look": [
     -1.2,
     2.3,
@@ -183,7 +184,7 @@
    "ease": "sine"
   },
   {
-   "t": 43.6667,
+   "t": 35.0,
    "look": [
     -1.2,
     2.0,
@@ -195,7 +196,7 @@
    "ease": "sine"
   },
   {
-   "t": 63.2667,
+   "t": 48.9667,
    "look": [
     -0.6,
     1.5,
@@ -246,12 +247,18 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 67.95,
+   "t1": 61.0166,
    "slot": "tr"
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 6 of 8",
+  "title": "Lightning, a million times slower"
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -281,7 +288,7 @@
   },
   {
    "t0": 3.087,
-   "t1": 5.142,
+   "t1": 4.972,
    "lines": [
     [
      [
@@ -290,984 +297,1006 @@
      ],
      [
       "the",
-      3.552
+      3.487
      ],
      [
       "window,",
-      3.582
+      3.517
      ]
     ],
     [
      [
       "a",
-      4.092
+      3.977
      ],
      [
       "storm.",
-      4.392
+      4.222
      ]
     ]
    ]
   },
   {
-   "t0": 5.377,
-   "t1": 8.137,
+   "t0": 5.192,
+   "t1": 7.647,
    "lines": [
     [
      [
       "Lightning",
-      5.377
+      5.192
      ],
      [
       "looks",
-      5.867
+      5.627
      ],
      [
       "like",
-      6.037
+      5.792
      ],
      [
       "it",
-      6.357
+      6.087
      ]
     ],
     [
      [
       "strikes",
-      6.522
+      6.212
      ],
      [
       "in",
-      6.792
+      6.542
      ],
      [
       "an",
-      7.147
+      6.782
      ],
      [
       "instant.",
-      7.387
+      7.002
      ]
     ]
    ]
   },
   {
-   "t0": 8.252,
-   "t1": 9.147,
+   "t0": 7.647,
+   "t1": 8.522,
    "lines": [
     [
      [
       "It",
-      8.252
+      7.647
      ],
      [
       "doesn't.",
-      8.397
+      7.772
      ]
     ]
    ]
   },
   {
-   "t0": 9.412,
-   "t1": 11.302,
+   "t0": 8.692,
+   "t1": 10.342,
    "lines": [
     [
      [
       "The",
-      9.412
+      8.692
      ],
      [
       "whole",
-      9.442
+      8.722
      ],
      [
       "fall",
-      9.862
+      9.082
      ]
     ],
     [
      [
       "from",
-      10.197
+      9.347
      ],
      [
       "the",
-      10.457
+      9.582
      ],
      [
       "cloud",
-      10.557
+      9.662
      ],
      [
       "takes",
-      11.002
+      10.057
      ]
     ]
    ]
   },
   {
-   "t0": 11.302,
-   "t1": 13.737,
+   "t0": 10.342,
+   "t1": 12.437,
    "lines": [
     [
      [
       "tens",
-      11.302
+      10.342
      ],
      [
       "of",
-      11.642
+      10.817
      ],
      [
       "thousandths",
-      11.892
+      10.847
      ]
     ],
     [
      [
       "of",
-      12.617
+      11.272
      ],
      [
       "a",
-      12.837
+      11.587
      ],
      [
       "second.",
-      12.987
+      11.737
      ]
     ]
    ]
   },
   {
-   "t0": 13.827,
-   "t1": 16.122,
+   "t0": 12.437,
+   "t1": 14.452,
    "lines": [
     [
      [
       "At",
-      13.827
+      12.437
      ],
      [
       "this",
-      13.977
+      12.567
      ],
      [
       "speed,",
-      14.332
+      12.857
      ]
     ],
     [
      [
       "that",
-      14.747
+      13.177
      ],
      [
       "would",
-      15.082
+      13.302
      ],
      [
       "take",
-      15.122
+      13.432
      ],
      [
       "hours.",
-      15.372
+      13.702
      ]
     ]
    ]
   },
   {
-   "t0": 16.487,
-   "t1": 17.672,
+   "t0": 14.582,
+   "t1": 15.467,
    "lines": [
     [
      [
       "So",
-      16.487
+      14.582
      ],
      [
       "I'll",
-      16.517
+      14.612
      ],
      [
       "skip",
-      16.922
+      14.972
      ],
      [
       "ahead,",
-      17.252
+      15.107
      ]
     ]
    ]
   },
   {
-   "t0": 17.672,
-   "t1": 19.112,
+   "t0": 15.467,
+   "t1": 16.847,
    "lines": [
     [
      [
       "and",
-      17.672
+      15.467
      ],
      [
       "show",
-      17.702
+      15.722
      ],
      [
       "you",
-      17.942
+      15.752
      ]
     ],
     [
      [
       "the",
-      18.237
+      15.967
      ],
      [
       "highlights.",
-      18.362
+      16.097
      ]
     ]
    ]
   },
   {
-   "t0": 19.757,
-   "t1": 20.507,
+   "t0": 17.342,
+   "t1": 17.777,
    "lines": [
     [
      [
       "First,",
-      19.757
+      17.342
      ]
     ]
    ]
   },
   {
-   "t0": 20.522,
-   "t1": 23.447,
+   "t0": 17.777,
+   "t1": 20.372,
    "lines": [
     [
      [
       "a",
-      20.522
+      17.777
      ],
      [
       "faint",
-      20.677
+      17.947
      ],
      [
       "path",
-      21.092
+      18.307
      ],
      [
       "of",
-      21.437
+      18.562
      ],
      [
       "electric",
-      21.467
+      18.642
      ]
     ],
     [
      [
       "charge",
-      22.092
+      19.182
      ],
      [
       "reaches",
-      22.622
+      19.652
      ],
      [
       "down",
-      23.127
+      20.102
      ]
     ]
    ]
   },
   {
-   "t0": 23.447,
-   "t1": 25.422,
+   "t0": 20.372,
+   "t1": 22.012,
    "lines": [
     [
      [
       "from",
-      23.447
+      20.372
      ],
      [
       "the",
-      23.702
+      20.582
      ],
      [
       "cloud,",
-      23.807
+      20.662
      ],
      [
       "in",
-      24.492
+      21.052
      ],
      [
       "jumps.",
-      24.672
+      21.262
      ]
     ]
    ]
   },
   {
-   "t0": 25.537,
-   "t1": 28.162,
+   "t0": 22.252,
+   "t1": 24.507,
    "lines": [
     [
      [
       "Each",
-      25.537
+      22.252
      ],
      [
       "jump",
-      25.857
+      22.522
      ],
      [
       "is",
-      26.132
+      22.747
      ],
      [
       "tens",
-      26.342
+      22.917
      ]
     ],
     [
      [
       "of",
-      26.762
+      23.172
      ],
      [
       "meters",
-      26.792
+      23.402
      ],
      [
       "long.",
-      27.482
+      23.867
      ]
     ]
    ]
   },
   {
-   "t0": 28.162,
-   "t1": 29.682,
+   "t0": 24.507,
+   "t1": 25.957,
    "lines": [
     [
      [
       "Each",
-      28.162
+      24.507
      ],
      [
       "takes",
-      28.437
+      24.767
      ]
     ],
     [
      [
       "about",
-      28.647
+      24.937
      ],
      [
       "a",
-      28.902
+      25.177
      ],
      [
       "microsecond.",
-      28.932
+      25.207
      ]
     ]
    ]
   },
   {
-   "t0": 30.562,
-   "t1": 33.807,
+   "t0": 26.762,
+   "t1": 29.612,
    "lines": [
     [
      [
       "Here,",
-      30.562
+      26.762
      ],
      [
       "one",
-      30.992
+      27.172
      ],
      [
       "jump",
-      31.227
+      27.472
      ],
      [
       "lasts",
-      31.667
+      27.707
      ]
     ],
     [
      [
       "one",
-      32.122
+      28.142
      ],
      [
       "whole",
-      32.487
+      28.452
      ],
      [
       "second.",
-      33.057
+      28.862
      ]
     ]
    ]
   },
   {
-   "t0": 33.902,
-   "t1": 35.242,
+   "t0": 29.742,
+   "t1": 32.262,
    "lines": [
     [
      [
       "Then",
-      33.902
+      29.742
      ],
      [
       "the",
-      34.197
+      29.772
      ],
      [
       "path",
-      34.267
+      30.057
      ],
      [
       "waits,",
-      34.652
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 35.242,
-   "t1": 37.107,
-   "lines": [
-    [
-     [
-      "about",
-      35.242
-     ],
-     [
-      "30",
-      35.652
+      30.442
      ]
     ],
     [
      [
-      "to",
-      36.002
+      "about",
+      30.932
      ],
      [
       "50",
-      36.147
+      31.202
      ],
      [
       "microseconds.",
-      36.357
+      31.512
      ]
     ]
    ]
   },
   {
-   "t0": 38.087,
-   "t1": 40.392,
+   "t0": 32.887,
+   "t1": 33.287,
    "lines": [
     [
      [
       "Here,",
-      38.087
-     ],
-     [
-      "that's",
-      38.512
-     ],
-     [
-      "half",
-      38.757
-     ]
-    ],
-    [
-     [
-      "a",
-      39.057
-     ],
-     [
-      "minute",
-      39.087
-     ],
-     [
-      "or",
-      39.352
-     ],
-     [
-      "more.",
-      39.802
+      32.887
      ]
     ]
    ]
   },
   {
-   "t0": 40.392,
-   "t1": 43.457,
+   "t0": 33.287,
+   "t1": 34.817,
    "lines": [
     [
      [
-      "Then",
-      40.392
+      "that's",
+      33.287
      ],
      [
-      "it",
-      40.422
+      "almost",
+      33.462
      ],
      [
-      "jumps",
-      40.742
+      "a",
+      33.837
      ],
      [
-      "again,",
-      41.197
-     ]
-    ],
-    [
-     [
-      "feeling",
-      41.622
-     ],
-     [
-      "its",
-      42.067
-     ],
-     [
-      "way",
-      42.427
-     ],
-     [
-      "down.",
-      42.842
+      "minute.",
+      34.122
      ]
     ]
    ]
   },
   {
-   "t0": 43.457,
-   "t1": 44.852,
+   "t0": 34.817,
+   "t1": 36.132,
    "lines": [
     [
      [
       "Look",
-      43.457
+      34.817
      ],
      [
       "at",
-      43.622
+      34.952
      ],
      [
       "how",
-      43.717
+      34.982
      ],
      [
       "it",
-      44.042
+      35.312
      ],
      [
       "branches,",
-      44.102
+      35.382
      ]
     ]
    ]
   },
   {
-   "t0": 44.912,
-   "t1": 47.357,
+   "t0": 36.132,
+   "t1": 38.497,
    "lines": [
     [
      [
       "like",
-      44.912
+      36.132
      ],
      [
       "a",
-      45.167
+      36.247
      ],
      [
       "tree",
-      45.297
+      36.362
      ],
      [
       "turned",
-      45.642
+      36.622
      ]
     ],
     [
      [
       "upside",
-      46.012
+      37.102
      ],
      [
       "down.",
-      46.757
+      37.747
      ]
     ]
    ]
   },
   {
-   "t0": 47.357,
-   "t1": 50.137,
+   "t0": 38.507,
+   "t1": 40.522,
    "lines": [
     [
      [
       "At",
-      47.357
+      38.507
      ],
      [
       "last",
-      47.472
+      38.587
      ],
      [
       "it",
-      47.942
+      38.952
      ],
      [
       "touches",
-      48.097
+      39.082
      ]
     ],
     [
      [
       "the",
-      48.507
+      39.467
      ],
      [
       "ground,",
-      48.607
+      39.567
      ],
      [
       "and",
-      49.557
+      40.072
      ],
      [
       "a",
-      49.587
+      40.287
      ],
      [
       "bright",
-      49.747
+      40.317
      ]
     ]
    ]
   },
   {
-   "t0": 50.137,
-   "t1": 53.062,
+   "t0": 40.522,
+   "t1": 43.327,
    "lines": [
     [
      [
       "flash",
-      50.137
+      40.522
      ],
      [
       "runs",
-      50.597
+      41.077
      ],
      [
       "back",
-      50.972
+      41.387
      ],
      [
       "up",
-      51.192
+      41.592
      ]
     ],
     [
      [
       "the",
-      51.402
+      41.722
      ],
      [
       "3-kilometer",
-      51.582
+      41.842
      ],
      [
       "path.",
-      52.312
+      42.577
      ]
     ]
    ]
   },
   {
-   "t0": 53.452,
-   "t1": 54.967,
+   "t0": 43.542,
+   "t1": 44.837,
    "lines": [
     [
      [
       "That",
-      53.452
+      43.542
      ],
      [
       "flash",
-      53.667
+      43.692
      ],
      [
       "travels",
-      54.337
+      44.267
      ],
      [
       "up",
-      54.922
+      44.792
      ]
     ]
    ]
   },
   {
-   "t0": 54.967,
-   "t1": 57.432,
+   "t0": 44.837,
+   "t1": 46.817,
    "lines": [
     [
      [
       "to",
-      54.967
+      44.837
      ],
      [
       "about",
-      55.187
+      44.882
      ],
      [
       "a",
-      55.402
+      45.312
      ],
      [
       "third",
-      55.527
+      45.342
      ]
     ],
     [
      [
       "of",
-      55.802
+      45.577
      ],
      [
       "the",
-      55.832
+      45.607
      ],
      [
       "speed",
-      56.072
+      45.807
      ],
      [
       "of",
-      56.387
+      45.952
      ],
      [
       "light.",
-      56.682
+      46.067
      ]
     ]
    ]
   },
   {
-   "t0": 57.492,
-   "t1": 60.142,
+   "t0": 46.897,
+   "t1": 48.127,
+   "lines": [
+    [
+     [
+      "Still",
+      46.897
+     ],
+     [
+      "with",
+      47.297
+     ],
+     [
+      "me?",
+      47.377
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.127,
+   "t1": 49.512,
+   "lines": [
+    [
+     [
+      "Tap",
+      48.127
+     ],
+     [
+      "like",
+      48.387
+     ],
+     [
+      "and",
+      48.557
+     ],
+     [
+      "follow.",
+      48.762
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.667,
+   "t1": 51.787,
+   "lines": [
+    [
+     [
+      "There's",
+      49.667
+     ],
+     [
+      "plenty",
+      49.882
+     ],
+     [
+      "more",
+      50.077
+     ]
+    ],
+    [
+     [
+      "where",
+      50.522
+     ],
+     [
+      "that",
+      50.672
+     ],
+     [
+      "came",
+      50.737
+     ],
+     [
+      "from.",
+      51.097
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.787,
+   "t1": 54.167,
    "lines": [
     [
      [
       "Even",
-      57.492
+      51.787
      ],
      [
       "at",
-      57.662
+      51.952
      ],
      [
       "1 million",
-      57.837
+      52.157
      ],
      [
       "times",
-      58.537
+      52.722
      ]
     ],
     [
      [
       "slower,",
-      58.962
+      53.157
      ],
      [
       "it",
-      59.812
+      53.802
      ],
      [
       "takes",
-      59.932
+      53.842
      ]
     ]
    ]
   },
   {
-   "t0": 60.142,
-   "t1": 62.487,
+   "t0": 54.167,
+   "t1": 56.252,
    "lines": [
     [
      [
       "at",
-      60.142
+      54.167
      ],
      [
       "least",
-      60.307
+      54.197
      ],
      [
       "30",
-      60.697
+      54.512
      ],
      [
       "seconds",
-      61.122
+      54.937
      ]
     ],
     [
      [
       "to",
-      61.522
+      55.407
      ],
      [
       "climb.",
-      61.737
+      55.502
      ]
     ]
    ]
   },
   {
-   "t0": 62.877,
-   "t1": 65.422,
+   "t0": 56.392,
+   "t1": 58.732,
    "lines": [
     [
      [
       "And",
-      62.877
+      56.392
      ],
      [
       "that's",
-      62.907
+      56.422
      ],
      [
       "the",
-      63.172
+      56.637
      ],
      [
       "fastest",
-      63.452
+      56.877
      ]
     ],
     [
      [
       "thing",
-      64.277
+      57.432
      ],
      [
       "so",
-      64.397
+      57.737
      ],
      [
       "far.",
-      64.672
+      58.007
      ]
     ]
    ]
   },
   {
-   "t0": 65.467,
-   "t1": 67.812,
+   "t0": 58.732,
+   "t1": 61.102,
    "lines": [
     [
      [
       "But",
-      65.467
+      58.732
      ],
      [
       "it's",
-      65.497
+      58.762
      ],
      [
       "still",
-      65.842
+      59.032
      ]
     ],
     [
      [
       "not",
-      65.962
+      59.127
      ],
      [
       "light's",
-      66.332
+      59.472
      ],
      [
       "top",
-      66.737
+      59.877
      ],
      [
       "speed.",
-      67.062
+      60.352
      ]
     ]
    ]
   },
   {
-   "t0": 68.587,
-   "t1": 69.977,
+   "t0": 61.653,
+   "t1": 63.043,
    "lines": [
     [
      [
       "Part",
-      68.587
+      61.653
      ],
      [
       "6",
-      68.872
+      61.938
      ],
      [
       "of",
-      69.237
+      62.303
      ],
      [
       "8.",
-      69.452
+      62.518
      ]
     ]
    ]
   },
   {
-   "t0": 69.977,
-   "t1": 71.232,
+   "t0": 63.043,
+   "t1": 64.298,
    "lines": [
     [
      [
       "Full",
-      69.977
+      63.043
      ],
      [
       "video",
-      70.262
+      63.328
      ],
      [
       "on",
-      70.567
+      63.633
      ],
      [
       "YouTube.",
-      70.932
+      63.998
      ]
     ]
    ]
   }
  ],
- "endShow": 71.0667,
- "endCard": 71.5667,
+ "endShow": 64.1333,
+ "endCard": 64.6333,
  "end": {
   "title": "Part 6 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1284,13 +1313,13 @@
   {
    "id": "vo02",
    "t": 3.066666666666667,
-   "dur": 64.682,
+   "dur": 57.703,
    "file": "vo/02.wav",
-   "text": "Beyond the window, a storm. Lightning looks like it strikes in an instant. It doesn't. The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours. So I'll skip ahead, and show you the highlights. First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond. Here, one jump lasts one whole second. Then the path waits, about thirty to fifty microseconds. Here, that's half a minute or more. Then it jumps again, feeling its way down. Look at how it branches, like a tree turned upside down. At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light. Even at a million times slower, it takes at least thirty seconds to climb. And that's the fastest thing so far. But it's still not light's top speed."
+   "text": "Beyond the window, a storm. Lightning looks like it strikes in an instant. It doesn't. The whole fall from the cloud takes tens of thousandths of a second. At this speed, that would take hours. So I'll skip ahead, and show you the highlights. First, a faint path of electric charge reaches down from the cloud, in jumps. Each jump is tens of meters long. Each takes about a microsecond. Here, one jump lasts one whole second. Then the path waits, about fifty microseconds. Here, that's almost a minute. Look at how it branches, like a tree turned upside down. At last it touches the ground, and a bright flash runs back up the three-kilometer path. That flash travels up to about a third of the speed of light. Still with me? Tap like and follow. There's plenty more where that came from. Even at a million times slower, it takes at least thirty seconds to climb. And that's the fastest thing so far. But it's still not light's top speed."
   },
   {
    "id": "vo03",
-   "t": 68.56666666666666,
+   "t": 61.63333333333333,
    "dur": 2.85,
    "file": "vo/03.wav",
    "text": "Part 6 of 8. Full video on YouTube."

@@ -4598,8 +4598,8 @@
   },
   {
    "id": "vo06",
-   "text": "Ten thousand times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. The apple has no time to react. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
-   "heard": "10,000 times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgiton shows a bullet going through an apple. That bullet flew at about 850 meters a second. The apple is about eight centimeters across, so the bullet crosses it in less than a ten thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. The apple has no time to react. Then the back of the apple blows outward in a spray. Pieces of the apple trail behind it one at a time, and the bullet is already passed. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about 12 seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
+   "text": "Ten thousand times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
+   "heard": "10,000 times slower. One second now lasts almost three hours. A famous old photograph by Harold Edgiton shows a bullet going through an apple. That bullet flew at about 850 meters a second. The apple is about eight centimeters across, so the bullet crosses it in less than a ten thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. Then the back of the apple blows outward in a spray. Pieces of the apple trail behind it one at a time, and the bullet is already passed. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about 12 seconds to cross. A bullet is fast. But out the window, something is about to be much faster.",
    "words": [
     {
      "w": "Ten",
@@ -4675,7 +4675,7 @@
     },
     {
      "w": "famous",
-     "start": 5.29,
+     "start": 5.285,
      "end": 5.6,
      "heard": true
     },
@@ -4903,7 +4903,7 @@
     },
     {
      "w": "than",
-     "start": 17.995,
+     "start": 17.99,
      "end": 18.08,
      "heard": true
     },
@@ -4915,13 +4915,13 @@
     },
     {
      "w": "ten-thousandth",
-     "start": 18.24,
+     "start": 18.235,
      "end": 19.04,
      "heard": false
     },
     {
      "w": "of",
-     "start": 18.97,
+     "start": 18.965,
      "end": 19.2,
      "heard": true
     },
@@ -5102,589 +5102,547 @@
     {
      "w": "fish.",
      "start": 29.365,
-     "end": 30.0,
+     "end": 30.08,
      "heard": true
     },
     {
      "w": "The",
-     "start": 30.13,
+     "start": 30.12,
      "end": 30.24,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 30.34,
+     "start": 30.335,
      "end": 30.64,
      "heard": true
     },
     {
      "w": "dimples.",
-     "start": 30.64,
-     "end": 31.52,
-     "heard": true
-    },
-    {
-     "w": "The",
-     "start": 31.67,
-     "end": 31.72,
-     "heard": true
-    },
-    {
-     "w": "apple",
-     "start": 31.7,
-     "end": 32.16,
-     "heard": true
-    },
-    {
-     "w": "has",
-     "start": 32.11,
-     "end": 32.32,
-     "heard": true
-    },
-    {
-     "w": "no",
-     "start": 32.265,
-     "end": 32.56,
-     "heard": true
-    },
-    {
-     "w": "time",
-     "start": 32.52,
-     "end": 32.8,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 32.835,
-     "end": 33.04,
-     "heard": true
-    },
-    {
-     "w": "react.",
-     "start": 32.95,
-     "end": 33.84,
+     "start": 30.725,
+     "end": 31.68,
      "heard": true
     },
     {
      "w": "Then",
-     "start": 33.99,
-     "end": 34.08,
+     "start": 31.795,
+     "end": 31.92,
      "heard": true
     },
     {
      "w": "the",
-     "start": 34.02,
-     "end": 34.24,
+     "start": 31.825,
+     "end": 32.08,
      "heard": true
     },
     {
      "w": "back",
-     "start": 34.225,
-     "end": 34.4,
+     "start": 32.05,
+     "end": 32.24,
      "heard": true
     },
     {
      "w": "of",
-     "start": 34.435,
-     "end": 34.485,
+     "start": 32.27,
+     "end": 32.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 34.55,
-     "end": 34.64,
+     "start": 32.38,
+     "end": 32.48,
      "heard": true
     },
     {
      "w": "apple",
-     "start": 34.58,
-     "end": 35.04,
+     "start": 32.53,
+     "end": 32.88,
      "heard": true
     },
     {
      "w": "blows",
-     "start": 35.02,
-     "end": 35.36,
+     "start": 32.905,
+     "end": 33.28,
      "heard": true
     },
     {
      "w": "outward,",
-     "start": 35.375,
-     "end": 35.76,
+     "start": 33.2,
+     "end": 33.68,
      "heard": true
     },
     {
      "w": "in",
-     "start": 35.765,
-     "end": 35.92,
+     "start": 33.685,
+     "end": 33.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 35.81,
-     "end": 36.08,
+     "start": 33.725,
+     "end": 34.0,
      "heard": true
     },
     {
      "w": "spray.",
-     "start": 36.14,
-     "end": 36.96,
+     "start": 34.075,
+     "end": 34.8,
      "heard": true
     },
     {
      "w": "Pieces",
-     "start": 37.105,
-     "end": 37.36,
+     "start": 34.99,
+     "end": 35.28,
      "heard": true
     },
     {
      "w": "of",
-     "start": 37.315,
-     "end": 37.44,
+     "start": 35.2,
+     "end": 35.36,
      "heard": true
     },
     {
      "w": "the",
-     "start": 37.52,
-     "end": 37.6,
+     "start": 35.405,
+     "end": 35.52,
      "heard": true
     },
     {
      "w": "apple",
-     "start": 37.55,
-     "end": 38.0,
+     "start": 35.55,
+     "end": 35.92,
      "heard": true
     },
     {
      "w": "trail",
-     "start": 37.975,
-     "end": 38.4,
+     "start": 35.91,
+     "end": 36.4,
      "heard": true
     },
     {
      "w": "behind",
-     "start": 38.345,
-     "end": 38.72,
+     "start": 36.305,
+     "end": 36.72,
      "heard": true
     },
     {
      "w": "it,",
-     "start": 38.755,
-     "end": 38.88,
+     "start": 36.735,
+     "end": 36.96,
      "heard": true
     },
     {
      "w": "one",
-     "start": 38.96,
-     "end": 39.28,
+     "start": 36.925,
+     "end": 37.2,
      "heard": true
     },
     {
      "w": "at",
-     "start": 39.32,
-     "end": 39.44,
+     "start": 37.24,
+     "end": 37.44,
      "heard": true
     },
     {
      "w": "a",
-     "start": 39.445,
-     "end": 39.6,
+     "start": 37.36,
+     "end": 37.6,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 39.52,
-     "end": 40.16,
+     "start": 37.685,
+     "end": 38.16,
      "heard": true
     },
     {
      "w": "And",
-     "start": 40.305,
-     "end": 40.355,
+     "start": 38.3,
+     "end": 38.35,
      "heard": true
     },
     {
      "w": "the",
-     "start": 40.335,
-     "end": 40.4,
+     "start": 38.33,
+     "end": 38.48,
      "heard": true
     },
     {
      "w": "bullet",
-     "start": 40.505,
-     "end": 40.8,
+     "start": 38.535,
+     "end": 38.88,
      "heard": true
     },
     {
      "w": "is",
-     "start": 40.79,
-     "end": 40.96,
+     "start": 38.82,
+     "end": 39.04,
      "heard": true
     },
     {
      "w": "already",
-     "start": 40.905,
-     "end": 41.36,
+     "start": 38.94,
+     "end": 39.36,
      "heard": true
     },
     {
      "w": "past.",
-     "start": 41.365,
-     "end": 42.08,
+     "start": 39.3,
+     "end": 40.24,
      "heard": false
     },
     {
      "w": "In",
-     "start": 42.21,
-     "end": 42.32,
+     "start": 40.415,
+     "end": 40.48,
      "heard": true
     },
     {
      "w": "real",
-     "start": 42.24,
-     "end": 42.56,
+     "start": 40.445,
+     "end": 40.64,
      "heard": true
     },
     {
      "w": "time,",
-     "start": 42.585,
-     "end": 42.96,
+     "start": 40.8,
+     "end": 41.2,
      "heard": true
     },
     {
      "w": "that",
-     "start": 42.88,
-     "end": 43.12,
+     "start": 41.275,
+     "end": 41.36,
      "heard": true
     },
     {
      "w": "was",
-     "start": 43.145,
-     "end": 43.28,
+     "start": 41.405,
+     "end": 41.6,
      "heard": true
     },
     {
      "w": "far",
-     "start": 43.36,
-     "end": 43.6,
+     "start": 41.62,
+     "end": 41.84,
      "heard": true
     },
     {
      "w": "too",
-     "start": 43.595,
-     "end": 43.76,
+     "start": 41.87,
+     "end": 42.0,
      "heard": true
     },
     {
      "w": "quick",
-     "start": 43.765,
-     "end": 44.0,
+     "start": 42.05,
+     "end": 42.24,
      "heard": true
     },
     {
      "w": "to",
-     "start": 44.0,
-     "end": 44.16,
+     "start": 42.285,
+     "end": 42.4,
      "heard": true
     },
     {
      "w": "blink.",
-     "start": 44.12,
-     "end": 44.8,
+     "start": 42.41,
+     "end": 43.12,
      "heard": true
     },
     {
      "w": "It's",
-     "start": 44.94,
-     "end": 45.12,
+     "start": 43.295,
+     "end": 43.44,
      "heard": true
     },
     {
      "w": "moving",
-     "start": 45.02,
-     "end": 45.44,
+     "start": 43.38,
+     "end": 43.84,
      "heard": true
     },
     {
      "w": "more",
-     "start": 45.44,
-     "end": 45.6,
+     "start": 43.84,
+     "end": 44.0,
      "heard": true
     },
     {
      "w": "than",
-     "start": 45.655,
-     "end": 45.84,
+     "start": 44.045,
+     "end": 44.24,
      "heard": true
     },
     {
      "w": "twice",
-     "start": 45.905,
-     "end": 46.16,
+     "start": 44.315,
+     "end": 44.56,
      "heard": true
     },
     {
      "w": "as",
-     "start": 46.16,
-     "end": 46.32,
+     "start": 44.57,
+     "end": 44.72,
      "heard": true
     },
     {
      "w": "fast",
-     "start": 46.36,
-     "end": 46.64,
+     "start": 44.77,
+     "end": 45.04,
      "heard": true
     },
     {
      "w": "as",
-     "start": 46.655,
-     "end": 46.8,
+     "start": 45.065,
+     "end": 45.28,
      "heard": true
     },
     {
      "w": "sound,",
-     "start": 46.87,
-     "end": 47.28,
+     "start": 45.3,
+     "end": 45.76,
      "heard": true
     },
     {
      "w": "so",
-     "start": 47.26,
-     "end": 47.44,
+     "start": 45.81,
+     "end": 45.92,
      "heard": true
     },
     {
      "w": "it",
-     "start": 47.53,
-     "end": 47.6,
+     "start": 45.84,
+     "end": 46.08,
      "heard": true
     },
     {
      "w": "drags",
-     "start": 47.585,
-     "end": 47.92,
+     "start": 46.07,
+     "end": 46.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 47.9,
-     "end": 48.08,
+     "start": 46.39,
+     "end": 46.64,
      "heard": true
     },
     {
      "w": "narrow",
-     "start": 47.97,
-     "end": 48.48,
+     "start": 46.64,
+     "end": 47.04,
      "heard": true
     },
     {
      "w": "cone",
-     "start": 48.465,
-     "end": 48.8,
+     "start": 47.015,
+     "end": 47.36,
      "heard": true
     },
     {
      "w": "of",
-     "start": 48.93,
-     "end": 48.98,
+     "start": 47.44,
+     "end": 47.52,
      "heard": true
     },
     {
      "w": "air",
-     "start": 48.96,
-     "end": 49.28,
+     "start": 47.515,
+     "end": 47.84,
      "heard": true
     },
     {
      "w": "behind",
-     "start": 49.2,
-     "end": 49.6,
+     "start": 47.785,
+     "end": 48.32,
      "heard": true
     },
     {
      "w": "it.",
-     "start": 49.695,
-     "end": 50.24,
+     "start": 48.34,
+     "end": 48.88,
      "heard": true
     },
     {
      "w": "Even",
-     "start": 50.265,
-     "end": 50.56,
+     "start": 48.925,
+     "end": 49.28,
      "heard": true
     },
     {
      "w": "now,",
-     "start": 50.56,
-     "end": 50.88,
+     "start": 49.28,
+     "end": 49.6,
      "heard": true
     },
     {
      "w": "a",
-     "start": 50.99,
-     "end": 51.04,
+     "start": 49.67,
+     "end": 49.76,
      "heard": true
     },
     {
      "w": "table",
-     "start": 51.12,
-     "end": 51.44,
+     "start": 49.8,
+     "end": 50.16,
      "heard": true
     },
     {
      "w": "a",
-     "start": 51.365,
-     "end": 51.6,
+     "start": 50.055,
+     "end": 50.32,
      "heard": true
     },
     {
      "w": "meter",
-     "start": 51.53,
-     "end": 52.0,
+     "start": 50.32,
+     "end": 50.64,
      "heard": true
     },
     {
      "w": "wide",
-     "start": 52.0,
-     "end": 52.24,
+     "start": 50.625,
+     "end": 50.96,
      "heard": true
     },
     {
      "w": "would",
-     "start": 52.255,
-     "end": 52.48,
+     "start": 50.97,
+     "end": 51.2,
      "heard": true
     },
     {
      "w": "take",
-     "start": 52.495,
-     "end": 52.64,
+     "start": 51.14,
+     "end": 51.36,
      "heard": true
     },
     {
      "w": "it",
-     "start": 52.65,
-     "end": 52.8,
+     "start": 51.365,
+     "end": 51.52,
      "heard": true
     },
     {
      "w": "about",
-     "start": 52.81,
-     "end": 53.04,
+     "start": 51.52,
+     "end": 51.68,
      "heard": true
     },
     {
      "w": "twelve",
-     "start": 53.02,
-     "end": 53.44,
+     "start": 51.71,
+     "end": 52.08,
      "heard": true
     },
     {
      "w": "seconds",
-     "start": 53.48,
-     "end": 53.84,
+     "start": 52.165,
+     "end": 52.56,
      "heard": true
     },
     {
      "w": "to",
-     "start": 53.93,
-     "end": 54.0,
+     "start": 52.615,
+     "end": 52.72,
      "heard": true
     },
     {
      "w": "cross.",
-     "start": 54.01,
-     "end": 54.72,
+     "start": 52.695,
+     "end": 53.52,
      "heard": true
     },
     {
      "w": "A",
-     "start": 54.86,
-     "end": 54.91,
+     "start": 53.67,
+     "end": 53.72,
      "heard": true
     },
     {
      "w": "bullet",
-     "start": 55.015,
-     "end": 55.44,
+     "start": 53.775,
+     "end": 54.24,
      "heard": true
     },
     {
      "w": "is",
-     "start": 55.345,
-     "end": 55.68,
+     "start": 54.13,
+     "end": 54.48,
      "heard": true
     },
     {
      "w": "fast.",
-     "start": 55.765,
-     "end": 56.32,
+     "start": 54.575,
+     "end": 55.12,
      "heard": true
     },
     {
      "w": "But",
-     "start": 56.505,
-     "end": 56.56,
+     "start": 55.29,
+     "end": 55.36,
      "heard": true
     },
     {
      "w": "out",
-     "start": 56.56,
-     "end": 56.8,
+     "start": 55.32,
+     "end": 55.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 56.82,
-     "end": 56.96,
+     "start": 55.555,
+     "end": 55.68,
      "heard": true
     },
     {
      "w": "window,",
-     "start": 56.9,
-     "end": 57.52,
+     "start": 55.585,
+     "end": 56.24,
      "heard": true
     },
     {
      "w": "something",
-     "start": 57.48,
-     "end": 57.84,
+     "start": 56.265,
+     "end": 56.56,
      "heard": true
     },
     {
      "w": "is",
-     "start": 57.75,
-     "end": 58.0,
+     "start": 56.535,
+     "end": 56.8,
      "heard": true
     },
     {
      "w": "about",
-     "start": 58.105,
-     "end": 58.24,
+     "start": 56.895,
+     "end": 57.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 58.305,
-     "end": 58.4,
+     "start": 57.115,
+     "end": 57.2,
      "heard": true
     },
     {
      "w": "be",
-     "start": 58.4,
-     "end": 58.56,
+     "start": 57.205,
+     "end": 57.36,
      "heard": true
     },
     {
      "w": "much",
-     "start": 58.68,
-     "end": 58.8,
+     "start": 57.455,
+     "end": 57.6,
      "heard": true
     },
     {
      "w": "faster.",
-     "start": 58.85,
-     "end": 59.36,
+     "start": 57.49,
+     "end": 58.24,
      "heard": true
     }
    ]

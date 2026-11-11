@@ -2,7 +2,7 @@
  "id": "reality-rulebook-s3p5",
  "fps": 30,
  "bpm": 112.5,
- "dur": 65.3333,
+ "dur": 66.1333,
  "poster": 0.0,
  "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
  "scene": "../lf01/scene.mjs",
@@ -17,7 +17,7 @@
    "name": "body"
   },
   {
-   "at": 60.516633,
+   "at": 61.316633,
    "name": "tease"
   }
  ],
@@ -32,14 +32,14 @@
   {
    "id": "body",
    "t0": 2.9333,
-   "t1": 60.5333,
+   "t1": 61.3333,
    "line": "vo02",
    "energy": 0.7
   },
   {
    "id": "tease",
-   "t0": 60.5333,
-   "t1": 65.3333,
+   "t0": 61.3333,
+   "t1": 66.1333,
    "line": "vo03",
    "energy": 0.4
   }
@@ -48,13 +48,13 @@
   "cuts": {
    "hook": 0.0,
    "body": 2.916633,
-   "tease": 60.516633
+   "tease": 61.316633
   }
  },
  "spine": [
   {
    "t0": 0.45,
-   "t1": 60.2166,
+   "t1": 61.0166,
    "label": "slow-motion"
   }
  ],
@@ -126,8 +126,8 @@
   },
   "clap": 1000000000.0,
   "bullet": {
-   "enter": 31.1,
-   "approach": 21.8
+   "enter": 30.7333,
+   "approach": 21.4333
   },
   "storm": 1000000000.0,
   "leader": {
@@ -155,7 +155,8 @@
    1000000000.0,
    1000000000.0
   ],
-  "back": 1000000000.0
+  "back": 1000000000.0,
+  "fades": []
  },
  "cam": [
   {
@@ -171,7 +172,7 @@
    "ease": "p2"
   },
   {
-   "t": 22.6,
+   "t": 22.2333,
    "look": [
     0.8,
     0.98,
@@ -183,7 +184,7 @@
    "ease": "p2"
   },
   {
-   "t": 28.7,
+   "t": 28.3333,
    "look": [
     0.8,
     0.98,
@@ -195,7 +196,7 @@
    "ease": "sine"
   },
   {
-   "t": 32.6333,
+   "t": 30.0667,
    "look": [
     0.9,
     0.98,
@@ -207,7 +208,7 @@
    "ease": "sine"
   },
   {
-   "t": 39.5333,
+   "t": 36.5667,
    "look": [
     1.1,
     1.0,
@@ -219,7 +220,7 @@
    "ease": "sine"
   },
   {
-   "t": 57.1667,
+   "t": 58.1333,
    "look": [
     0.4,
     1.0,
@@ -270,12 +271,18 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 60.2166,
+   "t1": 61.0166,
    "slot": "tr"
   }
  ],
  "captionY": 0.7,
- "title": null,
+ "title": {
+  "series": "Reality Rulebook · Season 3 · Part 5 of 8",
+  "title": "A bullet, through an apple, slowly"
+ },
+ "disclosures": {
+  "aiVoice": true
+ },
  "captions": [
   {
    "t0": 0.12,
@@ -313,7 +320,7 @@
   },
   {
    "t0": 3.087,
-   "t1": 6.077,
+   "t1": 5.962,
    "lines": [
     [
      [
@@ -322,11 +329,11 @@
      ],
      [
       "famous",
-      3.232
+      3.237
      ],
      [
       "old",
-      3.627
+      3.622
      ],
      [
       "photograph",
@@ -336,968 +343,1016 @@
     [
      [
       "by",
-      4.557
+      4.532
      ],
      [
       "Harold",
-      4.587
+      4.562
      ],
      [
       "Edgerton",
-      5.062
+      4.997
      ],
      [
       "shows",
-      5.727
+      5.677
      ]
     ]
    ]
   },
   {
-   "t0": 6.077,
-   "t1": 8.082,
+   "t0": 5.962,
+   "t1": 7.982,
    "lines": [
     [
      [
       "a",
-      6.077
+      5.962
      ],
      [
       "bullet",
-      6.107
+      6.012
      ],
      [
       "going",
-      6.422
+      6.347
      ]
     ],
     [
      [
       "through",
-      6.757
+      6.677
      ],
      [
       "an",
-      7.072
+      6.992
      ],
      [
       "apple.",
-      7.332
+      7.232
      ]
     ]
    ]
   },
   {
-   "t0": 8.167,
-   "t1": 9.082,
+   "t0": 8.067,
+   "t1": 8.977,
    "lines": [
     [
      [
       "That",
-      8.167
+      8.067
      ],
      [
       "bullet",
-      8.332
+      8.307
      ],
      [
       "flew",
-      8.667
+      8.567
      ]
     ]
    ]
   },
   {
-   "t0": 9.082,
-   "t1": 11.622,
+   "t0": 8.977,
+   "t1": 11.472,
    "lines": [
     [
      [
       "at",
-      9.082
+      8.977
      ],
      [
       "about",
-      9.162
+      9.057
      ],
      [
       "850",
-      9.347
+      9.237
      ],
      [
       "meters",
-      10.112
+      9.987
      ]
     ],
     [
      [
       "a",
-      10.592
+      10.457
      ],
      [
       "second.",
-      10.927
+      10.777
      ]
     ]
    ]
   },
   {
-   "t0": 11.622,
-   "t1": 13.507,
+   "t0": 11.472,
+   "t1": 13.357,
    "lines": [
     [
      [
       "The",
-      11.622
+      11.472
      ],
      [
       "apple",
-      11.757
+      11.502
      ]
     ],
     [
      [
       "is",
-      11.992
+      11.837
      ],
      [
       "about",
-      12.222
+      12.137
      ],
      [
       "8",
-      12.542
+      12.392
      ],
      [
       "centimeters",
-      12.757
+      12.607
      ]
     ]
    ]
   },
   {
-   "t0": 13.512,
-   "t1": 14.262,
+   "t0": 13.362,
+   "t1": 14.112,
    "lines": [
     [
      [
       "across.",
-      13.512
+      13.362
      ]
     ]
    ]
   },
   {
-   "t0": 14.577,
-   "t1": 16.262,
+   "t0": 14.422,
+   "t1": 16.112,
    "lines": [
     [
      [
       "So",
-      14.577
+      14.422
      ],
      [
       "the",
-      14.607
+      14.452
      ],
      [
       "bullet",
-      14.827
+      14.682
      ],
      [
       "crosses",
-      15.132
+      14.982
      ],
      [
       "it",
-      15.447
+      15.527
      ]
     ],
     [
      [
       "in",
-      15.677
+      15.557
      ],
      [
       "less",
-      16.042
+      15.787
      ]
     ]
    ]
   },
   {
-   "t0": 16.262,
-   "t1": 18.442,
+   "t0": 16.112,
+   "t1": 18.232,
    "lines": [
     [
      [
       "than",
-      16.262
+      16.112
      ],
      [
       "a",
-      16.467
+      16.317
      ],
      [
       "ten-thousandth",
-      16.497
+      16.352
      ]
     ],
     [
      [
       "of",
-      17.232
+      17.057
      ],
      [
       "a",
-      17.662
+      17.332
      ],
      [
       "second.",
-      17.692
+      17.482
      ]
     ]
    ]
   },
   {
-   "t0": 18.547,
-   "t1": 21.137,
+   "t0": 18.372,
+   "t1": 20.832,
    "lines": [
     [
      [
       "Here,",
-      18.547
+      18.372
      ],
      [
       "that",
-      19.122
+      18.922
      ],
      [
       "takes",
-      19.332
+      19.127
      ]
     ],
     [
      [
       "about",
-      19.582
+      19.282
      ],
      [
       "1",
-      19.817
+      19.537
      ],
      [
       "second.",
-      20.387
+      20.082
      ]
     ]
    ]
   },
   {
-   "t0": 21.162,
-   "t1": 23.642,
+   "t0": 20.842,
+   "t1": 23.267,
    "lines": [
     [
      [
       "The",
-      21.162
+      20.842
      ],
      [
       "bullet",
-      21.192
+      20.977
      ],
      [
       "is",
-      21.647
+      21.297
      ],
      [
       "a",
-      21.757
+      21.492
      ],
      [
       "small,",
-      22.017
+      21.637
      ]
     ],
     [
      [
       "dark",
-      22.627
+      22.252
      ],
      [
       "shape.",
-      22.892
+      22.517
      ]
     ]
    ]
   },
   {
-   "t0": 23.852,
-   "t1": 25.862,
+   "t0": 23.477,
+   "t1": 25.522,
    "lines": [
     [
      [
       "At",
-      23.852
+      23.477
      ],
      [
       "this",
-      23.997
+      23.622
      ],
      [
       "speed,",
-      24.327
+      23.927
      ]
     ],
     [
      [
       "you",
-      24.872
+      24.547
      ],
      [
       "can",
-      24.982
+      24.652
      ],
      [
       "watch",
-      25.217
+      24.682
      ],
      [
       "it",
-      25.362
+      25.037
      ],
      [
       "drift",
-      25.577
+      25.252
      ]
     ]
    ]
   },
   {
-   "t0": 25.862,
-   "t1": 28.187,
+   "t0": 25.522,
+   "t1": 27.837,
    "lines": [
     [
      [
       "into",
-      25.862
+      25.522
      ],
      [
       "the",
-      26.222
+      25.722
      ],
      [
       "apple",
-      26.267
+      25.872
      ]
     ],
     [
      [
       "like",
-      26.762
+      26.387
      ],
      [
       "a",
-      26.792
+      26.417
      ],
      [
       "slow",
-      27.022
+      26.652
      ],
      [
       "fish.",
-      27.437
+      27.087
      ]
     ]
    ]
   },
   {
-   "t0": 28.457,
-   "t1": 29.847,
+   "t0": 28.107,
+   "t1": 29.492,
    "lines": [
     [
      [
       "The",
-      28.457
+      28.107
      ],
      [
       "skin",
-      28.487
+      28.137
      ],
      [
       "dimples.",
-      29.097
+      28.742
      ]
     ]
    ]
   },
   {
-   "t0": 30.142,
-   "t1": 32.187,
-   "lines": [
-    [
-     [
-      "The",
-      30.142
-     ],
-     [
-      "apple",
-      30.292
-     ],
-     [
-      "has",
-      30.662
-     ],
-     [
-      "no",
-      30.817
-     ],
-     [
-      "time",
-      31.077
-     ]
-    ],
-    [
-     [
-      "to",
-      31.392
-     ],
-     [
-      "react.",
-      31.437
-     ]
-    ]
-   ]
-  },
-  {
-   "t0": 32.447,
-   "t1": 35.587,
+   "t0": 29.862,
+   "t1": 33.042,
    "lines": [
     [
      [
       "Then",
-      32.447
+      29.862
      ],
      [
       "the",
-      32.762
+      29.892
      ],
      [
       "back",
-      32.797
+      30.147
      ],
      [
       "of",
-      33.012
+      30.367
      ],
      [
       "the",
-      33.127
+      30.397
      ],
      [
       "apple",
-      33.267
+      30.617
      ]
     ],
     [
      [
       "blows",
-      33.647
+      31.002
      ],
      [
       "outward,",
-      33.992
+      31.482
      ],
      [
       "in",
-      34.487
+      31.972
      ],
      [
       "a",
-      34.517
+      32.117
      ],
      [
       "spray.",
-      34.837
+      32.292
      ]
     ]
    ]
   },
   {
-   "t0": 35.807,
-   "t1": 39.337,
+   "t0": 33.062,
+   "t1": 36.382,
    "lines": [
     [
      [
       "Pieces",
-      35.807
+      33.062
      ],
      [
       "of",
-      36.017
+      33.482
      ],
      [
       "the",
-      36.242
+      33.512
      ],
      [
       "apple",
-      36.392
+      33.637
      ],
      [
       "trail",
-      36.752
+      33.997
      ]
     ],
     [
      [
       "behind",
-      37.117
+      34.362
      ],
      [
       "it,",
-      37.547
+      34.767
      ],
      [
       "one",
-      37.837
+      34.962
      ],
      [
       "at",
-      38.202
+      35.322
      ],
      [
       "a",
-      38.322
+      35.372
      ],
      [
       "time.",
-      38.642
+      35.807
      ]
     ]
    ]
   },
   {
-   "t0": 39.337,
-   "t1": 41.112,
+   "t0": 36.382,
+   "t1": 38.157,
    "lines": [
     [
      [
       "And",
-      39.337
+      36.382
      ],
      [
       "the",
-      39.367
+      36.412
      ],
      [
       "bullet",
-      39.577
+      36.617
      ]
     ],
     [
      [
       "is",
-      39.892
+      36.937
      ],
      [
       "already",
-      40.007
+      37.047
      ],
      [
       "past.",
-      40.362
+      37.407
      ]
     ]
    ]
   },
   {
-   "t0": 41.427,
-   "t1": 43.377,
+   "t0": 38.402,
+   "t1": 40.192,
    "lines": [
     [
      [
       "In",
-      41.427
+      38.402
      ],
      [
       "real",
-      41.457
+      38.432
      ],
      [
       "time,",
-      41.837
+      38.807
      ]
     ],
     [
      [
       "that",
-      42.332
+      39.212
      ],
      [
       "was",
-      42.467
+      39.337
      ],
      [
       "far",
-      42.687
+      39.552
      ],
      [
       "too",
-      42.942
+      39.787
      ],
      [
       "quick",
-      43.142
+      39.962
      ]
     ]
    ]
   },
   {
-   "t0": 43.377,
-   "t1": 44.247,
+   "t0": 40.192,
+   "t1": 41.067,
    "lines": [
     [
      [
       "to",
-      43.377
+      40.192
      ],
      [
       "blink.",
-      43.497
+      40.317
      ]
     ]
    ]
   },
   {
-   "t0": 44.407,
-   "t1": 45.757,
+   "t0": 41.182,
+   "t1": 42.367,
    "lines": [
     [
      [
       "It's",
-      44.407
+      41.182
      ],
      [
       "moving",
-      44.497
+      41.262
      ],
      [
       "more",
-      44.987
+      41.587
      ]
     ],
     [
      [
       "than",
-      45.197
+      41.902
      ],
      [
       "twice",
-      45.507
+      42.127
      ]
     ]
    ]
   },
   {
-   "t0": 45.757,
-   "t1": 47.022,
+   "t0": 42.367,
+   "t1": 43.482,
    "lines": [
     [
      [
       "as",
-      45.757
+      42.367
      ],
      [
       "fast",
-      45.962
+      42.552
      ],
      [
       "as",
-      46.257
+      42.802
      ],
      [
       "sound,",
-      46.492
+      43.012
      ]
     ]
    ]
   },
   {
-   "t0": 47.022,
-   "t1": 50.292,
+   "t0": 43.482,
+   "t1": 46.442,
    "lines": [
     [
      [
       "so",
-      47.022
+      43.482
      ],
      [
       "it",
-      47.052
+      43.637
      ],
      [
       "drags",
-      47.287
+      43.677
      ],
      [
       "a",
-      47.692
+      43.997
      ],
      [
       "narrow",
-      47.867
+      44.067
      ]
     ],
     [
      [
       "cone",
-      48.277
+      44.557
      ],
      [
       "of",
-      48.682
+      44.957
      ],
      [
       "air",
-      48.782
+      44.987
      ],
      [
       "behind",
-      49.052
+      45.192
      ],
      [
       "it.",
-      50.262
+      45.987
      ]
     ]
    ]
   },
   {
-   "t0": 50.292,
-   "t1": 52.577,
+   "t0": 46.442,
+   "t1": 48.557,
+   "lines": [
+    [
+     [
+      "Quick",
+      46.442
+     ],
+     [
+      "pause:",
+      46.692
+     ]
+    ],
+    [
+     [
+      "if",
+      47.517
+     ],
+     [
+      "that",
+      47.657
+     ],
+     [
+      "one",
+      47.802
+     ],
+     [
+      "got",
+      48.037
+     ],
+     [
+      "you,",
+      48.307
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.557,
+   "t1": 50.047,
+   "lines": [
+    [
+     [
+      "tap",
+      48.557
+     ],
+     [
+      "like",
+      48.832
+     ],
+     [
+      "and",
+      49.072
+     ],
+     [
+      "follow.",
+      49.297
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 50.267,
+   "t1": 51.882,
+   "lines": [
+    [
+     [
+      "Okay,",
+      50.267
+     ],
+     [
+      "back",
+      50.847
+     ],
+     [
+      "to",
+      51.072
+     ],
+     [
+      "it.",
+      51.417
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.882,
+   "t1": 53.922,
    "lines": [
     [
      [
       "Even",
-      50.292
+      51.882
      ],
      [
       "now,",
-      50.587
+      52.187
      ],
      [
       "a",
-      51.062
+      52.602
      ],
      [
       "table",
-      51.192
+      52.652
      ]
     ],
     [
      [
       "a",
-      51.442
+      52.882
      ],
      [
       "meter",
-      51.707
+      53.147
      ],
      [
       "wide",
-      52.077
+      53.442
      ],
      [
       "would",
-      52.407
+      53.882
      ]
     ]
    ]
   },
   {
-   "t0": 52.577,
-   "t1": 54.957,
+   "t0": 53.922,
+   "t1": 56.177,
    "lines": [
     [
      [
       "take",
-      52.577
+      53.922
      ],
      [
       "it",
-      52.802
+      54.122
      ],
      [
       "about",
-      53.147
+      54.272
      ],
      [
       "12",
-      53.262
+      54.512
      ],
      [
       "seconds",
-      53.497
+      55.002
      ]
     ],
     [
      [
       "to",
-      54.122
+      55.347
      ],
      [
       "cross.",
-      54.207
+      55.427
      ]
     ]
    ]
   },
   {
-   "t0": 55.232,
-   "t1": 56.712,
+   "t0": 56.277,
+   "t1": 57.712,
    "lines": [
     [
      [
       "A",
-      55.232
+      56.277
      ],
      [
       "bullet",
-      55.387
+      56.432
      ],
      [
       "is",
-      55.717
+      56.762
      ],
      [
       "fast.",
-      55.962
+      56.962
      ]
     ]
    ]
   },
   {
-   "t0": 56.952,
-   "t1": 57.977,
+   "t0": 57.922,
+   "t1": 58.867,
    "lines": [
     [
      [
       "But",
-      56.952
+      57.922
      ],
      [
       "out",
-      56.982
+      57.952
      ],
      [
       "the",
-      57.242
+      58.187
      ],
      [
       "window,",
-      57.332
+      58.272
      ]
     ]
    ]
   },
   {
-   "t0": 57.977,
-   "t1": 59.412,
+   "t0": 58.867,
+   "t1": 60.202,
    "lines": [
     [
      [
       "something",
-      57.977
+      58.867
      ]
     ],
     [
      [
       "is",
-      58.252
+      59.142
      ],
      [
       "about",
-      58.632
+      59.322
      ],
      [
       "to",
-      58.877
+      59.672
      ],
      [
       "be",
-      58.972
+      59.702
      ],
      [
       "much",
-      59.257
+      60.052
      ]
     ]
    ]
   },
   {
-   "t0": 59.412,
-   "t1": 60.162,
+   "t0": 60.202,
+   "t1": 60.952,
    "lines": [
     [
      [
       "faster.",
-      59.412
+      60.202
      ]
     ]
    ]
   },
   {
-   "t0": 60.853,
-   "t1": 62.263,
+   "t0": 61.653,
+   "t1": 63.063,
    "lines": [
     [
      [
       "Part",
-      60.853
+      61.653
      ],
      [
       "5",
-      61.203
+      62.003
      ],
      [
       "of",
-      61.523
+      62.323
      ],
      [
       "8.",
-      61.553
+      62.353
      ]
     ]
    ]
   },
   {
-   "t0": 62.263,
-   "t1": 63.503,
+   "t0": 63.063,
+   "t1": 64.303,
    "lines": [
     [
      [
       "Full",
-      62.263
+      63.063
      ],
      [
       "video",
-      62.543
+      63.343
      ],
      [
       "on",
-      62.818
+      63.618
      ],
      [
       "YouTube.",
-      63.203
+      64.003
      ]
     ]
    ]
   }
  ],
- "endShow": 63.3333,
- "endCard": 63.8333,
+ "endShow": 64.1333,
+ "endCard": 64.6333,
  "end": {
   "title": "Part 5 of *8*",
   "follow": "Full video on YouTube · Follow Reality Rulebook",
@@ -1314,13 +1369,13 @@
   {
    "id": "vo02",
    "t": 3.066666666666667,
-   "dur": 56.963,
+   "dur": 57.756,
    "file": "vo/02.wav",
-   "text": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. The apple has no time to react. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster."
+   "text": "A famous old photograph by Harold Edgerton shows a bullet going through an apple. That bullet flew at about eight hundred fifty meters a second. The apple is about eight centimeters across. So the bullet crosses it in less than a ten-thousandth of a second. Here, that takes about one second. The bullet is a small, dark shape. At this speed, you can watch it drift into the apple like a slow fish. The skin dimples. Then the back of the apple blows outward, in a spray. Pieces of the apple trail behind it, one at a time. And the bullet is already past. In real time, that was far too quick to blink. It's moving more than twice as fast as sound, so it drags a narrow cone of air behind it. Quick pause: if that one got you, tap like and follow. Okay, back to it. Even now, a table a meter wide would take it about twelve seconds to cross. A bullet is fast. But out the window, something is about to be much faster."
   },
   {
    "id": "vo03",
-   "t": 60.833333333333336,
+   "t": 61.63333333333333,
    "dur": 2.864,
    "file": "vo/03.wav",
    "text": "Part 5 of 8. Full video on YouTube."

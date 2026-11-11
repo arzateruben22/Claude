@@ -2,18 +2,18 @@
 {
 "id": "c5",
 "sentence": "A housefly beats its wings about two hundred times a second.",
-"claim": "A housefly's wingbeat is on the order of 200 per second.",
-"source_url": "https://en.wikipedia.org/wiki/Housefly",
-"source_title": "Wikipedia, Housefly (recalled, not opened)",
-"accessed": "2026-11-10",
-"verified_via": "from memory",
-"status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged as 'about'."
+"claim": "Flies beat their wings roughly 140 to 200 times a second (blow flies about 160 to 200); the film says \"close to two hundred\" for a fly.",
+"source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4685551/",
+"source_title": "Kinematic diversity suggests expanded roles for fly halteres (wingbeat frequencies of many fly families), Biology Letters (2015)",
+"accessed": "11 Nov 2026",
+"verified_via": "SOURCE-READ (builder read the page text)",
+"status": "OPEN: a person must open the link and check",
+"note": "Read the table: wingbeat frequencies of flies in this survey run from about 137 to about 200 Hz (blow flies about 160 to 200). A housefly was not read separately, so the script says \"a fly\" and \"close to two hundred\"."
 },
 {
 "id": "c6",
 "sentence": "Slow it a hundred times, and that's two beats a second.",
-"claim": "200 / 100 = 2 beats per second of screen time.",
+"claim": "About 200 / 100 = about 2 beats per second of screen time.",
 "source_url": "",
 "source_title": "Our own arithmetic (calc.py)",
 "accessed": "2026-11-10",
@@ -30,7 +30,7 @@
 "accessed": "2026-11-10",
 "verified_via": "from memory",
 "status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Crown timescales depend on drop size, speed and the liquid layer; 'a few hundredths of a second' is a hedge, not a measurement."
+"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Crown timescales depend on drop size, speed and the liquid layer; 'a few hundredths of a second' is a hedge, not a measurement. LEAD: a search summary says the crown (corolla) emerges on the drop-film merger time scale of about 1 ms and grows over tens of milliseconds; the film says \"a few hundredths\", still unverified."
 },
 {
 "id": "c8",
@@ -47,12 +47,12 @@
 "id": "c30",
 "sentence": "A mosquito's wings beat about five hundred times a second.",
 "claim": "Mosquito wingbeats are several hundred per second (reports range roughly 300 to 800); the film uses 500 as one round value.",
-"source_url": "https://en.wikipedia.org/wiki/Mosquito",
-"source_title": "Wikipedia, Mosquito (recalled, not opened)",
-"accessed": "2026-11-10",
-"verified_via": "from memory",
-"status": "TODO open link",
-"note": "FROM MEMORY, NOT OPENED (the builder recalled this; no source text was read this session); a person must open the source and check the number and the wording before posting. Hedged as 'about'; species vary."
+"source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8113239/",
+"source_title": "Infrared light sensors permit rapid recording of wingbeat frequency and bioacoustic species identification of mosquitoes (Scientific Reports, 2021)",
+"accessed": "11 Nov 2026",
+"verified_via": "SOURCE-READ (builder read the page text)",
+"status": "OPEN: a person must open the link and check",
+"note": "Read Table 1: mean wingbeat frequency of 29 North American mosquito species spans about 342 Hz (Culex restuans) to about 737 Hz; Aedes aegypti mean about 498 Hz. 500 is a fair round value."
 },
 {
 "id": "c38",
