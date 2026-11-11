@@ -20,6 +20,7 @@ const VFOV = 30;
 const camera = new THREE.PerspectiveCamera(VFOV, W / H, 0.0001, 80);
 const INK = "#1B1E24", COB = TK.force || "#1F3BD1", AMB = "#E8A356";
 window.SCENE_READY = Promise.resolve();
+window.CINEMA_FOCUS = (t) => (window.FILM && window.FILM.ev && window.FILM.ev.bird && t >= window.FILM.ev.bird[0] && t < window.FILM.ev.bird[1]) ? { point: [-1.4, 1.86, -1.45], fstop: 0.7 } : { fstop: 0 };
 
 // ── the slow-motion factor: k = log10 F (keys from compile.py), the light front's radius R(t) = integral of c / F dt ─────────────────
 const FK = FILM.factorKeys;
@@ -147,7 +148,7 @@ const skyTex = (() => { const c = document.createElement("canvas"); c.width = 51
   g.fillStyle = gr; g.fillRect(0, 0, 512, 512); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
 const sky = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), new THREE.MeshBasicMaterial({ map: skyTex })); sky.position.set(-1.0, 2.0, -4.6); scene.add(sky);
 const stormMat = new THREE.MeshBasicMaterial({ color: 0x1D2331, transparent: true, opacity: 0 }); const storm = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), stormMat); storm.position.set(-1.0, 2.0, -4.55); scene.add(storm);
-const feeder = new THREE.Group(); feeder.position.set(-1.45 + 0.215, 1.865, -2.05); scene.add(feeder);
+const feeder = new THREE.Group(); feeder.position.set(-1.5 + 0.215, 1.865, -1.45); scene.add(feeder);
 { const fm = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.13, 18), new THREE.MeshStandardMaterial({ color: 0xD9372B, roughness: 0.4 })); feeder.add(fm); const port = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, 0.03, 10), new THREE.MeshStandardMaterial({ color: 0xF2C94C, roughness: 0.5 })); port.rotation.z = Math.PI / 2; port.position.set(-0.04, 0.0, 0); feeder.add(port); { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const cx = cv.getContext("2d"), gr = cx.createRadialGradient(32, 32, 2, 32, 32, 30); gr.addColorStop(0, "rgba(20,22,26,0.55)"); gr.addColorStop(1, "rgba(20,22,26,0)"); cx.fillStyle = gr; cx.fillRect(0, 0, 64, 64); const sh = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 0.07), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true, depthWrite: false })); sh.position.set(-0.018, -0.01, 0.036); feeder.add(sh); } const st = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.4, 5), new THREE.MeshBasicMaterial({ color: 0x333333 })); st.position.y = 0.26; feeder.add(st); }
 
 // wire overlay: the kitchen is drawn on (wireframe, then solid behind a sweeping line)
@@ -192,7 +193,7 @@ const flyH = mkFlyer(0.03, 0x2B2E34, 0xDDE6EE), flyC = mkFlyer(0.03, 0x2B2E34, 0
 // beat in a figure of eight (sweep forward and back, tip loops via a second-harmonic tilt, flip at each end of the stroke); the ghosts stand in for what the eye blends at full speed
 const mkBird = () => {
   const g = new THREE.Group();
-  const prof = [[0.02, -1.3], [0.09, -1.05], [0.2, -0.65], [0.31, -0.2], [0.34, 0.2], [0.3, 0.55], [0.21, 0.82], [0.13, 0.95]].map(([r, x]) => new THREE.Vector2(r, x));
+  const prof = [[0.07, -0.98], [0.13, -0.82], [0.22, -0.58], [0.31, -0.2], [0.34, 0.2], [0.3, 0.55], [0.21, 0.82], [0.13, 0.95]].map(([r, x]) => new THREE.Vector2(r, x));
   const bg = new THREE.LatheGeometry(prof, 28); bg.rotateZ(-Math.PI / 2);
   { const pos = bg.attributes.position, col = new Float32Array(pos.count * 3), back = new THREE.Color(0x1B8A4C), belly = new THREE.Color(0xE9E2CF), c = new THREE.Color();
     for (let k = 0; k < pos.count; k++) { const m = Math.min(1, Math.max(0, (pos.getY(k) + 0.12) / 0.26)); c.copy(belly).lerp(back, m); col.set([c.r, c.g, c.b], k * 3); }
@@ -204,8 +205,9 @@ const mkBird = () => {
   for (const sd of [-1, 1]) {
     const eye = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 8), new THREE.MeshBasicMaterial({ color: 0x0B0B0D })); eye.position.set(1.12, 0.2, sd * 0.22); g.add(eye);
     const hl = new THREE.Mesh(new THREE.SphereGeometry(0.016, 6, 5), new THREE.MeshBasicMaterial({ color: 0xFFFFFF })); hl.position.set(1.14, 0.225, sd * 0.255); g.add(hl);
-    const tl = new THREE.Mesh(new THREE.ConeGeometry(0.075, 0.95, 6), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6 })); tl.scale.set(1, 1, 0.28); tl.rotation.z = Math.PI / 2; tl.rotation.y = sd * 0.16; tl.position.set(-1.65, 0.0, sd * 0.08); g.add(tl);
   }
+  { const tsh = new THREE.Shape(); tsh.moveTo(0, 0.1); tsh.lineTo(-0.5, 0.24); tsh.lineTo(-0.38, 0.02); tsh.lineTo(-0.5, -0.22); tsh.lineTo(0, -0.1); tsh.closePath();   // a short forked tail, a fifth of the body
+    for (const rx of [-0.38, 0, 0.38]) { const tm = new THREE.Mesh(new THREE.ShapeGeometry(tsh), new THREE.MeshStandardMaterial({ color: 0x14301F, roughness: 0.6, side: THREE.DoubleSide })); tm.position.set(-0.95, -0.02, 0); tm.rotation.x = rx; g.add(tm); } }
   const wings = [], wsh = new THREE.Shape(); wsh.moveTo(-0.06, 0); wsh.bezierCurveTo(0.22, 0.2, 0.22, 0.9, 0.05, 2.0); wsh.bezierCurveTo(-0.06, 1.2, -0.12, 0.5, -0.06, 0);
   for (let i = 0; i < GHOSTS; i++) for (const side of [-1, 1]) {
     const hinge = new THREE.Group(); hinge.position.set(0.3, 0.26, side * 0.12); hinge.rotation.order = "ZXY";
@@ -347,7 +349,7 @@ window.seek = function (t) {
   if (t >= EV.bird[0] && t < EV.bird[1]) {
     const r = (t - EV.bird[0]) / 10, blurMix = E.inout2(seg(t, EV.blur[0], EV.blur[0] + 0.8)) * (1 - E.inout2(seg(t, EV.blur[1] - 0.6, EV.blur[1])));
     const fr = blurMix > 0.01 ? Math.max(0.0, 1) : 1;
-    place(hum, -1.45 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -2.05, -0.4); hum.g.rotation.z = 0.2;
+    place(hum, -1.5 + 0.012 * Math.sin(r * 3), 1.86 + 0.01 * Math.sin(r * 7), -1.45, -0.4); hum.g.rotation.z = 0.2;
     poseBird(hum, CAL.hz.hum, blurMix > 0.01 ? (t - EV.bird[0]) / 1 : r, blurMix);
     if (blurMix <= 0.01) poseBird(hum, CAL.hz.hum, r, 0);
     void fr;

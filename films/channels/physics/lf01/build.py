@@ -71,7 +71,7 @@ def ck(t, look, fitW, yaw=0.0, ease="p2", pitch=3.0):
 
 CUP, PAN, BUB, APP = [-0.3, 1.0, -1.0], [1.57, 1.02, -1.0], [-2.05, 1.12, -1.05], [0.8, 0.98, -1.0]
 BUB_T = [-2.05, 1.16, -1.05]   # the bubble sits above the caption plate: the camera looks a little below it
-WIN, HUM, CHIP = [-1.0, 1.85, -1.8], [-1.45, 1.85, -2.0], [2.4, 0.97, -0.85]
+WIN, HUM, CHIP = [-1.0, 1.85, -1.8], [-1.39, 1.85, -1.45], [2.4, 0.97, -0.85]
 WIDE = ([0.0, 1.2, -0.8], 5.6)
 EV.update({"fly1": BIG, "fly2": BIG, "fly3": BIG, "fly4": BIG, "wire": NEVER, "bird": NEVER, "blur": NEVER, "cupfly": NEVER, "fly100": NEVER, "mosq": NEVER,
            "tapdrop": [BIG, BIG, BIG], "settle": BIG, "kernel": {"jump": BIG, "pop": BIG, "foamEnd": BIG}, "bubble": {"in": BIG, "pop": BIG}, "clap": BIG,
@@ -104,7 +104,7 @@ if has("wings"):
     EV["bird"] = [R(W("wings", "hummingbird") - 0.6), R(W("wings", "But") - 0.2)]
     EV["blur"] = [R(W("wings", "Here's")), R(W("wings", "But") - 0.3)]
     EV["cupfly"] = [R(W("wings", "But") + 0.2), R(W("wings", "But") + 24.0)]
-    CAM += [ck(W("wings", "hummingbird") - 0.9, HUM, 0.55, -8.0), ck(W("wings", "Here's") - 0.5, HUM, 0.5, 8.0, "sine"), ck(W("wings", "But") - 0.5, HUM, 0.5, 6.0, "sine"),
+    CAM += [ck(W("wings", "hummingbird") - 0.9, HUM, 0.8, -2.0), ck(W("wings", "Here's") - 0.5, HUM, 0.72, 2.0, "sine"), ck(W("wings", "But") - 0.5, HUM, 0.72, 1.0, "sine"),
             ck(W("wings", "But") + 0.1, [-0.3, 1.1, -1.0], 0.5, -6.0)]
     CAM += [ck(DUR if False else W("wings", "blur#2") + 3.0, [-0.3, 1.1, -1.0], 0.5, 3.0, "sine")] if PART else []
     BADGES.append({"id": "code", "kind": "tag", "text": "Model · drawn by code", "t0": R(W("wings", "Ten") - 5.0), "t1": R(cut("tease") - 0.3 if PART else cut("takeaway")), "slot": BSLOT})
