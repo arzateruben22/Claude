@@ -88,7 +88,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     frit: oc ? once('m.fritOC', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.35, envMapIntensity: 0.5 }), { name: 'gloss' }))) : M.gloss(0x050505),
     trim: M.gloss(0x070708), dark,
     glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, P.carbonTint), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
