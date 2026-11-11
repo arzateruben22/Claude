@@ -1,0 +1,111 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Look closely at your skin. Those tiny dots… are pores.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 6.0,
+   "sha256": "a6405f1cf4134d03ab29a6853f16edfe6fd9cdfc24df6a6ef360293f22bd5412"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The pores you can see are little doorways, into narrow tunnels called hair follicles.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 7.6,
+   "sha256": "aead11ea815c4450984eda8a8c1d2a7872f871e9d2431fe13f74dab10a604ddd"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Even where you can't see one… a fine hair is usually growing inside.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 6.0,
+   "sha256": "cc573a1feae25699882d4d6dfcd015e83d7df386cddaffe7908f5bef9cbd5076"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Partway down sits a small oil gland. Its cells do something strange.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 6.32,
+   "sha256": "5a4dd464b0cb943c93c7d32acb18d4d1323116cc40b64e2429d3229d0e61041c"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 7.68,
+   "sha256": "a09ccaecf9a4464f1c0ce6eb89f4d81eb48d6e654ba3e4aea30485aa102651ad"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 8.8,
+   "sha256": "e5dbbad2bb1c6997a4bdae2804b9a49ce23dbb20bee3fe1ba5be5fba2d889c12"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "Tiny microbes live in there too, quietly feeding on that oil.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 6.56,
+   "sha256": "218a2c6d29731cb47c3dfaf35afa066a520bf2acb3124201fdd75ed432c00044"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "That's a pore. A doorway. A hair. A gland. And its tiny residents.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 7.6,
+   "sha256": "44c0b83c2b4fc46c2a050bb453a96351c81cb86a4358a8a6af6da807d2c6be42"
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Until… the doorway gets blocked.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.84,
+   "sha256": "f6017cb9b8c3920fa513ff929c5294745d4c9e0d00f9d53f12c97341a2a2c274"
+  },
+  {
+   "id": "vo10",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 4.96,
+   "sha256": "651197c183c168788f17272a124aaf50e67c1a76c2ca30a5316ea81e37c61ced"
+  }
+ ]
+}

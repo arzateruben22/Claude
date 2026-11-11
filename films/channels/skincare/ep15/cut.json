@@ -1,0 +1,79 @@
+{
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Look closely at your skin. Those tiny dots… are pores.",
+   "a": 153.04,
+   "b": 158.8
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "The pores you can see are little doorways, into narrow tunnels called hair follicles.",
+   "a": 159.12,
+   "b": 166.48
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Even where you can't see one… a fine hair is usually growing inside.",
+   "a": 166.8,
+   "b": 172.72
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "Partway down sits a small oil gland. Its cells do something strange.",
+   "a": 172.72,
+   "b": 178.8
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
+   "a": 179.12,
+   "b": 186.56
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
+   "a": 190.56,
+   "b": 199.2
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "Tiny microbes live in there too, quietly feeding on that oil.",
+   "a": 200.8,
+   "b": 207.2
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "That's a pore. A doorway. A hair. A gland. And its tiny residents.",
+   "a": 207.44,
+   "b": 214.8
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Until… the doorway gets blocked.",
+   "a": 215.6,
+   "b": 219.2
+  }
+ ],
+ "cta": {
+  "follow": [
+   521.0,
+   525.74,
+   "If you're feeling a little calmer, tap like and follow."
+  ],
+  "subscribe": [
+   526.04,
+   529.42,
+   "If you're feeling a little calmer, tap like and subscribe."
+  ]
+ }
+}

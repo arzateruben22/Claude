@@ -1,0 +1,155 @@
+{
+ "title": "What Is Actually Inside a Pore?",
+ "three": {
+  "module": "../set/pore3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.02,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   2.32,
+   4.9,
+   "Look closely at your skin."
+  ],
+  [
+   4.87,
+   8.33,
+   "Those tiny dots… are pores."
+  ],
+  [
+   10.175,
+   12.9,
+   "The pores you can see are little doorways,"
+  ],
+  [
+   12.87,
+   17.41,
+   "into narrow tunnels called hair follicles."
+  ],
+  [
+   19.595,
+   21.455,
+   "Even where you can't see one…"
+  ],
+  [
+   21.425,
+   25.53,
+   "a fine hair is usually growing inside."
+  ],
+  [
+   27.35,
+   30.745,
+   "Partway down sits a small oil gland."
+  ],
+  [
+   30.715,
+   33.65,
+   "Its cells do something strange."
+  ],
+  [
+   35.455,
+   38.67,
+   "Each one slowly fills with oil…"
+  ],
+  [
+   38.675,
+   43.23,
+   "until the whole cell breaks down and becomes oil."
+  ],
+  [
+   45.22,
+   47.68,
+   "That oil is called sebum."
+  ],
+  [
+   47.65,
+   49.93,
+   "It glides up along the hair,"
+  ],
+  [
+   49.9,
+   52.515,
+   "and spreads over your skin in a thin,"
+  ],
+  [
+   52.485,
+   54.03,
+   "soft coat."
+  ],
+  [
+   55.96,
+   59.32,
+   "Tiny microbes live in there too,"
+  ],
+  [
+   59.29,
+   62.17,
+   "quietly feeding on that oil."
+  ],
+  [
+   64.255,
+   68.095,
+   "That's a pore. A doorway. A hair."
+  ],
+  [
+   68.065,
+   71.47,
+   "A gland. And its tiny residents."
+  ],
+  [
+   73.775,
+   77.21,
+   "Until… the doorway gets blocked."
+  ],
+  [
+   79.885,
+   81.875,
+   "If you're feeling a little calmer,"
+  ],
+  [
+   81.845,
+   84.89,
+   "tap like and follow."
+  ]
+ ]
+}

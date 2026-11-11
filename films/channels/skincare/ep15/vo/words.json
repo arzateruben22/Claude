@@ -1,0 +1,819 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Look closely at your skin. Those tiny dots… are pores.",
+   "heard": "Look closely at your skin. Those tiny dots are pores.",
+   "words": [
+    {
+     "w": "Look",
+     "start": 0.17,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "closely",
+     "start": 0.43,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.04,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.255,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "skin.",
+     "start": 1.625,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "Those",
+     "start": 2.72,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 3.055,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "dots…",
+     "start": 3.47,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 4.46,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "pores.",
+     "start": 4.8,
+     "end": 5.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "The pores you can see are little doorways, into narrow tunnels called hair follicles.",
+   "heard": "The pores you can see are little doorways into narrow tunnels called hair follicles.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.225,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "pores",
+     "start": 0.385,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.985,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 1.085,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.52,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.695,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "doorways,",
+     "start": 2.0,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "into",
+     "start": 2.92,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "narrow",
+     "start": 3.285,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "tunnels",
+     "start": 3.69,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "called",
+     "start": 4.63,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 5.265,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "follicles.",
+     "start": 5.645,
+     "end": 6.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Even where you can't see one… a fine hair is usually growing inside.",
+   "heard": "Even where you can't see one, a fine hair is usually growing inside.",
+   "words": [
+    {
+     "w": "Even",
+     "start": 0.245,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "where",
+     "start": 0.41,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.68,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "can't",
+     "start": 0.885,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "see",
+     "start": 1.36,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "one…",
+     "start": 1.615,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.075,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "fine",
+     "start": 2.255,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 2.605,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.21,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "usually",
+     "start": 3.55,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "growing",
+     "start": 4.075,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "inside.",
+     "start": 4.61,
+     "end": 5.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Partway down sits a small oil gland. Its cells do something strange.",
+   "heard": "Part way down sits a small oil gland, its cells do something strange.",
+   "words": [
+    {
+     "w": "Partway",
+     "start": 0.2,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "down",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "sits",
+     "start": 1.075,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.485,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "small",
+     "start": 1.74,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 2.125,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "gland.",
+     "start": 2.49,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "Its",
+     "start": 3.565,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "cells",
+     "start": 3.725,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 4.25,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 4.8,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "strange.",
+     "start": 5.01,
+     "end": 6.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
+   "heard": "Each one slowly fills with oil until the whole cell breaks down and becomes oil.",
+   "words": [
+    {
+     "w": "Each",
+     "start": 0.085,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.535,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "slowly",
+     "start": 0.81,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "fills",
+     "start": 1.675,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 2.16,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "oil…",
+     "start": 2.3,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "until",
+     "start": 3.305,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.7,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 3.73,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "cell",
+     "start": 4.11,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "breaks",
+     "start": 4.7,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "down",
+     "start": 5.245,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.36,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 5.7,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "oil.",
+     "start": 6.4,
+     "end": 7.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
+   "heard": "That oil is called sebum. It glides up along the hair and spreads over your skin in a thin, soft coat.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.17,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "oil",
+     "start": 0.475,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.91,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "called",
+     "start": 1.16,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "sebum.",
+     "start": 1.475,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 2.6,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "glides",
+     "start": 2.81,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 3.555,
+     "end": 3.605,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 3.675,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.9,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "hair,",
+     "start": 4.075,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.85,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "spreads",
+     "start": 5.155,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 5.515,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 5.85,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 6.175,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 6.63,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.91,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "thin,",
+     "start": 6.94,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "soft",
+     "start": 7.435,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "coat.",
+     "start": 7.735,
+     "end": 8.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Tiny microbes live in there too, quietly feeding on that oil.",
+   "heard": "Tiny microbes live in there too, quietly feeding on that oil.",
+   "words": [
+    {
+     "w": "Tiny",
+     "start": 0.21,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "microbes",
+     "start": 0.595,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "live",
+     "start": 1.63,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.015,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 2.13,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "too,",
+     "start": 2.41,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "quietly",
+     "start": 3.54,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "feeding",
+     "start": 4.17,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 4.53,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 4.815,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "oil.",
+     "start": 5.16,
+     "end": 5.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "That's a pore. A doorway. A hair. A gland. And its tiny residents.",
+   "heard": "That's a bore, a doorway, a hair, a gland, and its tiny residence.",
+   "words": [
+    {
+     "w": "That's",
+     "start": 0.145,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.62,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "pore.",
+     "start": 0.81,
+     "end": 1.6,
+     "heard": false
+    },
+    {
+     "w": "A",
+     "start": 1.68,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "doorway.",
+     "start": 1.865,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 2.925,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "hair.",
+     "start": 3.17,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 3.955,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "gland.",
+     "start": 4.165,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 5.59,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 5.875,
+     "end": 5.925,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 6.115,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "residents.",
+     "start": 6.51,
+     "end": 6.86,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Until… the doorway gets blocked.",
+   "heard": "Until the doorway gets blocked.",
+   "words": [
+    {
+     "w": "Until…",
+     "start": 0.265,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.01,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "doorway",
+     "start": 1.185,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.78,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "blocked.",
+     "start": 2.245,
+     "end": 3.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "heard": "If you're feeling a little calmer, tap like and follow.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.135,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.26,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "feeling",
+     "start": 0.525,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.07,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.1,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "calmer,",
+     "start": 1.525,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.095,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.44,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.505,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.81,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
