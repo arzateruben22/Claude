@@ -15,8 +15,8 @@ export async function create(args) {
   const rbox = (s, r, n) => { const g = new THREE.BoxGeometry(s, s, s, n, n, n), p = g.attributes.position, nm = g.attributes.normal, h = s / 2 - r, q = new THREE.Vector3(), d = new THREE.Vector3();
     for (let i = 0; i < p.count; i++) { q.set(clamp(p.getX(i), -h, h), clamp(p.getY(i), -h, h), clamp(p.getZ(i), -h, h)); d.set(p.getX(i), p.getY(i), p.getZ(i)).sub(q); if (d.lengthSq() > 1e-10) d.normalize(); else d.set(nm.getX(i), nm.getY(i), nm.getZ(i));
       p.setXYZ(i, q.x + d.x * r, q.y + d.y * r, q.z + d.z * r); nm.setXYZ(i, d.x, d.y, d.z); } return g; };
-  const cubeG = rbox(0.97, 0.13, 6);
-  const cubeM = mat({ roughness: 0.46, clearcoat: 0.25, clearcoatRoughness: 0.5, sheen: 0.35, sheenColor: new THREE.Color(1, 0.6, 0.4), emissive: 0x000000, envMapIntensity: 0.5 });
+  const cubeG = rbox(0.97, 0.13, 4);
+  const cubeM = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.0, emissive: 0x000000, envMapIntensity: 0.5 });
   cubeM.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace("#include <emissivemap_fragment>", "#include <emissivemap_fragment>\n  totalEmissiveRadiance += vColor.rgb * 0.32;"); };   // glowing from within: each cube lights itself a little in its own colour
 
   // ── the block: layers of deep warm brown at the top, warmer and rosier below; a rough stepped surface ───────────────────────────
