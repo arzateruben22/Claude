@@ -180,17 +180,32 @@ Requests **not** applied, and why (candidates for a later stage):
 
 
 ## Job Finder (added 2026-11-11, separate from the paused integration work)
-- New: `jobfinder/` (sweep workflow, page template, README), `src/lib/jobfinder/score.ts` (+ 22 unit tests),
+- New: `jobfinder/` (sweep workflow, page template, README), `src/lib/jobfinder/score.ts` (+ unit tests),
   `scripts/jobfinder-build.ts`, `data/jobs/2026-11-11.json`. Published private page:
   https://claude.ai/artifact/F1YK2dnRzYcaE7j5ke3xyR (per-user state in the artifact db under `data/users/<id>/jobfinder`).
 - First pass result: 20 postings found by 8 finders; 4 best-fit, 9 stretch, 4 ruled out, 54 watch-list notes,
   6 apprenticeship routes from `data/seed`. **None is double-checked**: the 200-call WebSearch allowance for the
   turn was spent by the finders, so the second pass could not search. The page states this on every card.
-- Short of the 10 best-fit openings requested. Next exact step: run `jobfinder/sweep.workflow.js` with
-  `leads` = bestFit + stretch + bench from `data/jobs/2026-11-11.json`, `verifyCap` 5, then finders with
-  `findCap` 12 on role-first queries; rebuild and republish to the same artifact.
-- Needs from the user: their résumé (paste or upload) to replace the assumed beginner profile, and optionally
-  approval to allow job-site hosts in the environment so postings can be opened directly.
+- **Second pass (same day, after the user's follow-up):** home base Canoga Park; pay rule about $35/hr within
+  15 miles plus $0.45/hr per extra mile (`src/lib/jobfinder/geo.ts`, an assumption stated on the page); jobs
+  split into Los Angeles area and Orange County; every job has a cover-letter draft and a "Tailored résumé"
+  slot; "Tailor every job" writes both per job from a pasted résumé (Claude on the viewer's account). Written
+  documents are stored one record per job (`data/users/<id>/jf-<jobId>`); the tracker stays in `jobfinder`.
+- Second pass result (6 workflow runs, 17 leads re-checked, 5 new slices): 35 distinct postings; **2 best-fit,
+  11 stretch** meet the pay rule (11 LA, 2 OC), 4 pay below target, 15 ruled out, 89 watch-list notes. 15 of
+  the 17 listed leads went through the independent check; 2 are found-once. Still short of 10 best-fit: with no
+  résumé, "best fit" only means the posting states no experience minimum.
+- Engine changes: distance factor (weights now access .22, pay .20, interest .16, open .14, ai .12, distance
+  .10, driving .06), `below_pay` list, gap buckets (experience / preferred / job conditions / paperwork /
+  driving), found-once leads never ruled out unchecked, checked copy wins on duplicates. 28 unit tests.
+- Page checked locally only (render on desktop, phone, light; stand-in runtime for db/user/sample; second-device
+  restore). The live "Tailor" calls have not been exercised with a real résumé.
+- Needs from the user: their résumé (paste into the page, or into chat) to replace the assumed beginner
+  profile and produce real tailored résumés; optionally approval to allow job-site hosts in the environment
+  so postings can be opened directly instead of read from search extracts.
+- Next exact step when asked: re-run `jobfinder/sweep.workflow.js` with `leadIdx` for the listed leads to
+  refresh open status (postings age quickly), plus finders for slices not yet covered (see the watch list in
+  `data/jobs/2026-11-11.json`); rebuild with `--leads data/jobs/<date>.leads.json` and republish.
 
 ## Next exact step
 Run the next integration stage: Phase 2–3 browser tests with a local mock OAuth/Gmail/Outlook provider and the
