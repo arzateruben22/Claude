@@ -164,9 +164,9 @@ window.seek = function (t) {
   const gl = shot === "globe", sp = shot !== "tower", beatId = (FILM.beats.find((b) => t >= b.t0 && t < b.t1) || {}).id;
   const fixedL = new THREE.Vector3(-0.45, 0.35, 0.8).normalize(), lightV = fixedL.clone().lerp(sunDir, amp).normalize();     // the light swings less and less as the days get short (photosensitivity)
   sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = sp;
-  skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = FILM.thumb ? 0.0 : 0.9;
+  skyU.uSun.value.copy(sunDir); skyU.uDay.value = 0; skyU.uGlow.value = FILM.thumb ? 0.2 : 0.25 + 0.75 * amp; const gs = 0.3 + 0.7 * amp; stars.rotation.x = 0.04 * ph; starM.opacity = FILM.thumb ? 0.0 : 0.9;
   sunDisk.position.copy(sunDir).multiplyScalar(1200); sunDisk.scale.setScalar(52 * gs); sunDisk.lookAt(camera.position);
-  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar((FILM.cams ? 170 : 260) * gs); sunHalo.lookAt(camera.position);
+  sunHalo.position.copy(sunDir).multiplyScalar(1190); sunHalo.scale.setScalar((FILM.cams ? 170 : 260) * gs * (FILM.thumb ? 0.55 : 1)); sunHalo.material.opacity = FILM.thumb ? 0.07 : 0.22; sunHalo.lookAt(camera.position);
   desk.group.visible = false; dustF.visible = false; sunDisk.material.depthTest = true; sunHalo.material.depthTest = true;   // the planet hides the Sun when it is behind it
   gU.uLight.value.copy(lightV); gU.uExposure.value = 0.9 + 0.35 * day;
 
@@ -212,7 +212,7 @@ window.seek = function (t) {
   // the globe (planet shots): flattening, drying poles, storms, markers, debris
   globe.visible = sp;
   const f = 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
-  globe.scale.set(1, 1 - f, 1); const ow = fxw0("ocean"); water.visible = ow > 0.01; water.scale.set(1 + 0.07 * ow, (1 - f) * 1.003, 1 + 0.07 * ow); gU.uSpin.value = gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
+  globe.scale.set(1, 1 - f, 1); const ow = fxw0("ocean"); water.visible = ow > 0.01; water.scale.set(1 + 0.07 * ow, (1 - f) * 1.003, 1 + 0.07 * ow); gU.uSpin.value = FILM.thumb ? 0.6 : gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
   if (gl) {
     const pulling = beatId === "break" ? E.inout2(seg(t, CUE.break[0] + 1.5, CUE.break[1] - 2)) : 0;
     // markers and arrows (poles beat)

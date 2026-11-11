@@ -23,7 +23,7 @@ Sources
 4. The speed of sound in air at sea level is about 340 m/s (343 m/s at 20 degrees C): 929 m/s / 343 = 2.7; 463 m/s / 343 = 1.35. — https://www.grc.nasa.gov/www/k-12/airplane/sound.html
 5. {"now": 99.7, "h12": 98.6, "h6": 94.5, "h3": 78.0, "h2": 50.4, "h1_5": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg. — Derivation (no outside page; arithmetic shown in the film)
 
-Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
+Narration: synthetic voice (AI). Thumbnail illustration made with AI. Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
 Possibility Lab: Impossible questions, honest assumptions, real calculations.
 

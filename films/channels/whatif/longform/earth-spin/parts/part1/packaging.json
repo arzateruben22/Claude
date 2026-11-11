@@ -126,7 +126,7 @@
  "thumbnailFile": "possibility-lab-s3p1-cover.jpg",
  "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920).\nSubject: the blue figure standing on the equator at dawn, seen from behind, the Sun a small disk on a low horizon.\nComposition: 9:16 vertical; figure left third, low horizon, empty sky right; keep everything important clear of the bottom quarter and the right-hand edge.\nLighting and treatment: the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent; clean, minimal, high contrast, stylised 3-D render.\nMood: wonder and anticipation.\nText: No text.\nScientific accuracy: it shows the setup only, never the answer; it is a diagram-style illustration, not a photograph.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, or anything that looks like a real photograph.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
  "shortsCover": {
-  "frameSeconds": 28.0,
+  "frameSeconds": 28.3,
   "text": "24 h to 90 min"
  }
 }

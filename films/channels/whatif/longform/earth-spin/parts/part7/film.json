@@ -240,6 +240,21 @@
  "counters": [],
  "work": null,
  "cam": {},
+ "cams": [
+  {
+   "t0": 13.65,
+   "mode": "ground"
+  },
+  {
+   "t0": 28.05,
+   "mode": "wide"
+  },
+  {
+   "t0": 46.35,
+   "mode": "push"
+  }
+ ],
+ "fx": {},
  "captions": [
   {
    "t0": 0.135,

@@ -20,7 +20,7 @@ Sources
 1. Extra rise (compared with today) of the sea's equipotential at the equator relative to the pole = (w^2 - w0^2) R^2 / (2 g0): 33 km at a 12 h day, 165 km at 6 h, 692 km at 3 h; far more than the mean ocean depth (c18), so the water drains toward the equator. First-order only: it ignores the self-gravity of the water and the slow response of the ground; the direction is the claim, not the numbers. — Derivation (no outside page; arithmetic shown in the film)
 2. The average depth of the ocean is about 3,688 m. — https://oceanservice.noaa.gov/facts/oceandepth.html
 
-Narration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.
+Narration: synthetic voice (AI). Thumbnail illustration made with AI. Animation: code-rendered, no stock footage. Every number is checked against the sources.
 
 Possibility Lab: Impossible questions, honest assumptions, real calculations.
 

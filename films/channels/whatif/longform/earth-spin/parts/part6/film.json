@@ -212,6 +212,21 @@
  "counters": [],
  "work": null,
  "cam": {},
+ "cams": [
+  {
+   "t0": 10.95,
+   "mode": "ground"
+  },
+  {
+   "t0": 37.95,
+   "mode": "wide"
+  },
+  {
+   "t0": 57.75,
+   "mode": "push"
+  }
+ ],
+ "fx": {},
  "captions": [
   {
    "t0": 0.08,

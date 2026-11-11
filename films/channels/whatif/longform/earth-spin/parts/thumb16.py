@@ -19,8 +19,8 @@ for name in sel:
     f["world"] = {**f["world"], "keys": [[0.0, o["keys"]], [9999.0, o["keys"]]]}
     if o.get("fx"): f["fx"] = o["fx"]
     D = ES / "thumbs16" / name; D.mkdir(parents=True, exist_ok=True); (D / "film.json").write_text(json.dumps(f, indent=1))
-    n = 12 if o["streak"] else 1
-    times = ",".join(f"{o['t'] + o['streak'] * i / 11:.3f}" for i in range(n)) if o["streak"] else str(o["t"])
+    n = 48 if o["streak"] else 1
+    times = ",".join(f"{o['t'] + o['streak'] * i / 47:.3f}" for i in range(n)) if o["streak"] else str(o["t"])
     subprocess.run(["node", str(repo / "kits/cinema/film/render.mjs"), "--film", str(D), "--tier", "final", "--aspect", "16x9", "--times", times, "--build", f"/tmp/th16-{name}", "--share-cpu"], check=True, capture_output=True)
     pngs = sorted(glob.glob(f"/tmp/th16-{name}/final/16x9/frames/*/*.png")); im = Image.open(pngs[0]).convert("RGB")
     for p in pngs[1:]: im = ImageChops.lighter(im, Image.open(p).convert("RGB"))

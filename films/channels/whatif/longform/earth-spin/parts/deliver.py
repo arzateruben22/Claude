@@ -55,11 +55,13 @@ def srcs():
         out.append(f"{i}. {t} — " + (f"{c['source_url']}" if c.get("source_url") else ("Derivation (no outside page; arithmetic shown in the film)" if c["kind"] == "derivation" else "source to be found")))
     return "Sources\n" + "\n".join(out)
 hook = pk["hook"]
-yt_cap = f"{hook}\n\nPart {N} of 8 of \"What If Earth Spun Faster and Couldn't Stop?\" — the full video is on this channel.\n\n{srcs()}\n\nNarration: synthetic voice (AI). Animation: code-rendered, no stock footage. Every number is checked against the sources.\n\nPossibility Lab: Impossible questions, honest assumptions, real calculations.\n\n#Shorts #whatif #science"
+AI_ART = {2, 4, 8}       # covers made from the owner's AI illustrations (art/owner)
+ART_NOTE = " Thumbnail illustration made with AI." if N in AI_ART else ""
+yt_cap = f"{hook}\n\nPart {N} of 8 of \"What If Earth Spun Faster and Couldn't Stop?\" — the full video is on this channel.\n\n{srcs()}\n\nNarration: synthetic voice (AI).{ART_NOTE} Animation: code-rendered, no stock footage. Every number is checked against the sources.\n\nPossibility Lab: Impossible questions, honest assumptions, real calculations.\n\n#Shorts #whatif #science"
 tt_cap = f"{hook} Part {N} of 8. Full video on YouTube (link in bio). #whatif #science #physics"
 posting = {"youtube": {"title": title, "caption": yt_cap, "hashtags": "#Shorts #whatif #science", "pinnedComment": f"Full video: What If Earth Spun Faster and Couldn't Stop? (link). Sources: see the description.\n\n{srcs()}"},
            "tiktok": {"caption": tt_cap, "pinnedComment": "Full video on YouTube: link in bio."}, "instagram": {"caption": tt_cap + " (link in bio)"},
-           "disclosure": "Narration is a synthetic voice (AI): turn on each platform's AI / synthetic content label."}
+           "disclosure": "Narration is a synthetic voice (AI): turn on each platform's AI / synthetic content label." + (" Cover illustration made with AI." if N in AI_ART else "")}
 (EP / "out" / "posting.json").write_text(json.dumps(posting, indent=1, ensure_ascii=False))
 (EP / "out" / "POSTING.md").write_text(f"# Posting sheet: Possibility Lab · Season 3 · Part {N} of 8, \"{title}\"\n\nPost the long video first (compilations/s3), then one part a day. Every claim is still OPEN. Turn on each platform's AI / synthetic content label. Captions are burned in: leave auto-captions off.\n\n**Files**: `{base}-9x16.mp4` (1080x1920, TikTok/Instagram: says \"follow\") · `{base}-9x16-youtube.mp4` (1440p, Shorts: says \"subscribe\") · `{base}-9x16.srt`\n\n## YouTube Shorts\n**Title**\n\n{title}\n\n**Description**\n\n```\n{yt_cap}\n```\n\n## TikTok\n\n```\n{tt_cap}\n```\n\n## Instagram Reels\n\n```\n{tt_cap} (link in bio)\n```\n\nTODO before posting: the link to the full video, the channel handle, and the platform AI labels.\n")
 print(f"ep{12 + N}: delivered ({len(used)} claims)")
