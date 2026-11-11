@@ -1,0 +1,160 @@
+{
+ "title": "Where Do Your Skin Cells Go?",
+ "three": {
+  "module": "../set/cells3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.02,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   2.325,
+   4.375,
+   "Deep in your skin, right now,"
+  ],
+  [
+   4.345,
+   7.13,
+   "a new cell is being born."
+  ],
+  [
+   8.77,
+   11.395,
+   "It starts at the very bottom…"
+  ],
+  [
+   11.365,
+   14.43,
+   "and slowly begins to rise."
+  ],
+  [
+   16.375,
+   17.765,
+   "As it climbs,"
+  ],
+  [
+   17.735,
+   21.335,
+   "it fills with a tough protein called keratin."
+  ],
+  [
+   21.305,
+   24.33,
+   "It grows flatter… and flatter."
+  ],
+  [
+   26.115,
+   26.905,
+   "Near the top,"
+  ],
+  [
+   26.875,
+   29.57,
+   "it lets go of its nucleus…"
+  ],
+  [
+   30.105,
+   33.33,
+   "and its life gently ends."
+  ],
+  [
+   35.775,
+   41.81,
+   "So the skin you can touch right now is made of cells that have finished their lives."
+  ],
+  [
+   43.6,
+   45.49,
+   "Stacked like bricks,"
+  ],
+  [
+   45.46,
+   47.83,
+   "they seal in water."
+  ],
+  [
+   49.65,
+   53.23,
+   "The whole journey takes about a month."
+  ],
+  [
+   55.085,
+   58.78,
+   "Then, quietly, the top cells drift away,"
+  ],
+  [
+   58.75,
+   61.14,
+   "far too small to see."
+  ],
+  [
+   61.11,
+   62.915,
+   "Some of the dust in your home…"
+  ],
+  [
+   62.885,
+   65.29,
+   "began as you."
+  ],
+  [
+   67.275,
+   71.04,
+   "Underneath, new cells are already rising."
+  ],
+  [
+   71.01,
+   75.05,
+   "Always rebuilding… from the bottom up."
+  ],
+  [
+   77.645,
+   81.03,
+   "Your skin has plenty more quiet secrets."
+  ],
+  [
+   81.0,
+   83.69,
+   "Tap like and subscribe."
+  ]
+ ]
+}

@@ -27,8 +27,8 @@
   "thumbnails": [
     {
       "id": "A",
-      "subject": "a tall voxel stack of flat tan-brown skin cells like bricks, a round rosy cell with a small pale nucleus rising from below, a few flat cells drifting off the top as dust",
-      "composition": "the stack filling the frame, the rising cell lower centre, dark space at the top for the text",
+      "subject": "a voxel cut-away of living skin cells: rows of rounded rosy-orange cells with a small soft nucleus glowing inside each, standing on the pink rounded voxels of the dermis",
+      "composition": "the cells fill the frame above the dermis, text over the upper third",
       "lighting": "soft studio light, warm glow where skin meets the dark, green-black ground",
       "trigger": "a cell's journey in one picture",
       "text": "From the bottom up",
@@ -121,9 +121,9 @@
     "originality": true
   },
   "thumbnailFile": "skin-sense-014-cover.jpg",
-  "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of skin as a tall stack of rounded cubes: round rosy cells with a small pale nucleus at the bottom, flatter tan-brown brick-like cells (medium-brown skin tone, about RGB 120, 74, 48) stacked above them, and a few flat cells drifting off the top like dust. No face, no person.\nComposition: the stack fills the frame, one rising rosy cell lower centre, dark space at the top for the text.\nLighting and treatment: soft studio light, a warm glow where the skin meets the dark, very dark green-black ground (#0B1513), shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"From the bottom up\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: skin cells are made at the bottom of the epidermis, rise, flatten and lose their nuclei, and the dead outer cells are shed; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
+  "chatgptPrompt": "Create a 9:16 (1080x1920) Short cover, focal point inside the centre safe area (clear of the bottom 25% and the right edge).\nSubject: a soft 3-D voxel cut-away of skin as rows of rounded, touching rosy-orange cells (medium skin tone) each with a small soft dusky-lilac nucleus glowing inside, standing on the pink rounded voxels of the dermis with a soft vessel in it. No face, no person.\nComposition: the cells fill the frame above the dermis, the text over the upper third.\nLighting and treatment: soft studio light, a warm glow where the skin meets the dark, very dark green-black ground (#0B1513), shallow depth of field, fine film grain.\nMood: quiet, calm, ASMR.\nText: \"From the bottom up\" in a small ivory (#F4EDE3) editorial serif, upper centre.\nScientific accuracy: skin cells are made at the bottom of the epidermis, rise, flatten and lose their nuclei, and the dead outer cells are shed; an illustration, not to scale, not a photograph.\nAvoid: no faces, arrows, circles, logos, watermarks, brand names, extra text, or anything that looks like a real medical photo.\nStyle: premium medical-editorial documentary illustration, soft voxel (rounded cube) look, distinctive and art-directed, not generic AI art.",
   "shortsCover": {
-    "frameSeconds": 36.0,
+    "frameSeconds": 74.5,
     "text": "From the bottom up"
   },
   "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
