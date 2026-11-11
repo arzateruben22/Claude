@@ -1,0 +1,90 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Tiny sensors in your skin feel the air cool… and quietly let your brain know.",
+  "claim": "Cold-sensitive endings in the skin signal through sensory neurons toward the brain's temperature-control centre (the hypothalamus).",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3098654",
+  "source_title": "Central nervous system control of cold defense (PMC3098654)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] cool cutaneous thermoreceptors send signals to primary sensory neurons in the dorsal root ganglia, then to second-order thermal neurons; skin and core signals converge on the preoptic hypothalamus. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c2",
+  "sentence": "Your brain answers in two soft steps.",
+  "claim": "The brain answers cold with several cold-defence responses, in order of rising energy cost: vessel narrowing in the skin first, shivering last (goosebumps also occur). The film simplifies to two steps plus goosebumps.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4846468",
+  "source_title": "Cold-defence effector pathways (PMC4846468)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] effectors are recruited in order of increasing energy cost: behaviour, cutaneous vasoconstriction, piloerection, brown-fat thermogenesis, shivering. 'Two soft steps' is a simplification for the film; a person should confirm the wording. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c3",
+  "sentence": "First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you.",
+  "claim": "Cutaneous vasoconstriction narrows skin vessels in the cold and keeps blood, and its heat, in the body's core.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3098654",
+  "source_title": "Central nervous system control of cold defense (PMC3098654)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] sympathetic regulation of cutaneous blood flow routes blood centrally during cold exposure to conserve heat; vasoconstriction does not require burning fuel. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c4",
+  "sentence": "Then, if you're cold… your muscles begin to tremble. Not on purpose. Tiny, quick tightenings, over and over.",
+  "claim": "Shivering is involuntary, rhythmic muscle contraction, the last cold-defence response to switch on.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4846468",
+  "source_title": "Cold-defence effector pathways (PMC4846468)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] shivering thermogenesis in skeletal muscle is the last cold defence recruited. She reads 'if you're cold' (the script said 'if you're still cold'); the caption follows her voice. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c5",
+  "sentence": "They do just one thing. They make heat.",
+  "claim": "Shivering produces heat through the inefficiency of energy use in muscle contraction.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3098654",
+  "source_title": "Central nervous system control of cold defense (PMC3098654)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] shivering generates heat through the inefficiency of cross-bridge cycling and calcium sequestration. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c6",
+  "sentence": "A strong shiver makes several times more than your body makes at rest.",
+  "claim": "Shivering raises heat production several-fold over the resting rate (peak about five times resting reported; moderate shivering about 3.5 times).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/11394237/",
+  "source_title": "Measurement and prediction of peak shivering intensity in humans (PubMed 11394237)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] a peak shivering metabolic rate of about five times resting has been reported; moderate shivering about 3.5 times resting. A person opens the source; 'several times' is the safe wording. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c7",
+  "sentence": "And goosebumps? The same signal reaches the tiny muscle beside each hair… and lifts it upright.",
+  "claim": "Sympathetic nerve signals make the arrector pili muscle beside each hair follicle contract, pulling the hair upright (piloerection, goosebumps).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/32679029/",
+  "source_title": "Shwartz et al., Cell 2020 (PubMed 32679029, PMC7540726)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ] introduction: sympathetic impulses trigger contraction of the arrector pili muscle, pulling the hair erect. 'The same signal' is a simplification (the sympathetic nervous system); a person should confirm. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ },
+ {
+  "id": "c8",
+  "sentence": "One cool breeze. Skin, nerves, vessels and muscle, all answering together. All… without asking you.",
+  "claim": "The skin's sensing and the body's cold-defence responses run automatically through the nervous system, without conscious control.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3098654",
+  "source_title": "Central nervous system control of cold defense (PMC3098654)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] thermoregulatory effectors are driven by central autonomic pathways. Piloerection adds little heat conservation in humans, so the film frames goosebumps as part of the same reflex, not as the main defence. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "TODO open link"
+ }
+]
