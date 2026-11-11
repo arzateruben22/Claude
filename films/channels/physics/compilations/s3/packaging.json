@@ -1,0 +1,126 @@
+{
+ "version": 1,
+ "format": "long",
+ "hook": "How slow would time have to be to watch light move? One kitchen second, slowed ten times, a thousand, a billion and a trillion, until light itself crawls.",
+ "titles": [
+  {
+   "text": "How Much Would You Slow Time to Watch Light Move?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Slow One Second Down a Trillion Times: What Happens?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "What Is Inside One Second of a Kitchen?",
+   "mechanism": "hidden mechanism"
+  },
+  {
+   "text": "Light Is Slower Than a Snail (If You Slow Time Enough)",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Watch a Bullet, Lightning and Light in One Kitchen",
+   "mechanism": "curiosity list"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the light front crossing a dim kitchen counter, a water drop falling above a cup",
+   "composition": "front arcing across the counter, tap and cup centre, text upper right on the dark wall",
+   "lighting": "a single bright front against shadow, warm wood",
+   "trigger": "curiosity",
+   "text": "32 YEARS in one second",
+   "complements": "the number the title does not state; the picture shows the moving light"
+  },
+  {
+   "id": "B",
+   "subject": "a hummingbird frozen beside a feeder with a fan of ghost wings",
+   "composition": "bird left, empty sky right",
+   "lighting": "daylight",
+   "trigger": "wonder",
+   "text": "",
+   "complements": "a picture, not a number"
+  },
+  {
+   "id": "C",
+   "subject": "a bullet entering an apple with a blue cone",
+   "composition": "apple centre",
+   "lighting": "warm side light",
+   "trigger": "suspense",
+   "text": "",
+   "complements": "dramatic but off the film's core idea"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 84,
+    "synergy": 90,
+    "originality": 78,
+    "accuracy": 94,
+    "mobile": 88,
+    "satisfaction": 90
+   },
+   "note": "A question the viewer can guess at, over the picture of light caught mid-crossing; the number is new information."
+  },
+  {
+   "title": 3,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 82,
+    "curiosity": 86,
+    "clarity": 72,
+    "synergy": 76,
+    "originality": 76,
+    "accuracy": 88,
+    "mobile": 86,
+    "satisfaction": 82
+   },
+   "note": "Strong paradox but promises more than the film proves (light is not literally slower than a snail; at that scale it is)."
+  },
+  {
+   "title": 4,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 66,
+    "curiosity": 72,
+    "clarity": 66,
+    "synergy": 64,
+    "originality": 66,
+    "accuracy": 92,
+    "mobile": 76,
+    "satisfaction": 72
+   },
+   "note": "A list; generic."
+  }
+ ],
+ "winner": {
+  "title": "How Much Would You Slow Time to Watch Light Move?",
+  "thumbnail": "A",
+  "thumbnailText": "32 YEARS in one second",
+  "why": "The title is a question people can guess at; the frame is the light front the film really delivers at a billion times slower (one second lasts about 32 years); the number on the thumbnail is not in the title. No human figure exists in the film, so the human anchor from 'What's working' is skipped."
+ },
+ "testAndCompare": [
+  "A",
+  "B",
+  "C"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "thumbnailFile": "thumbnail.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080). Subject: a bright front of light caught halfway across a dim kitchen counter, the lit side warm and the far side in shadow, a water drop falling from a tap above a white cup. Composition: tap and cup centre, the front arcing across the counter, dark wall at upper right for text. Lighting and treatment: a single warm light front against shadow, warm wooden counter, premium editorial science documentary look, clearly a code-rendered illustration rather than a photograph. Mood: curiosity. Text: '32 YEARS' very large in cream white above 'in one second' in warm yellow, upper right. Scientific accuracy: at a billion times slower one real second lasts about 32 years and light moves about 30 centimeters per screen second. Avoid: no arrows, circles, faces, logos, watermarks, extra text. Style: distinctive, not generic AI art.",
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
+}
