@@ -18,10 +18,11 @@ TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A p
 # 2.5 s where the slow-motion picture carries the moment (a voice gap is allowed to run to 3 s only while the picture is visibly changing)
 TRIM = {"wings": (["When a number was measured", "When a picture is just an idea", "The wings are doing all"], "Each wing sweeps forward"),
         "bullet": (["Pieces of the apple trail", "Even now, a table"], "Then the back of the apple"),
+        "sound": (["That's why you never see it travel", "You'd hear the clap only when"], "There it goes"),
         "leader": (["Lightning looks like it strikes in an instant"], "At last it touches the ground"),
         "light": (["Ahead of it, the table is still dark", "The cup lights up on one side first"], "Someone flicks on a flashlight"),
         "still": (["Light hasn't stopped", "It looks almost frozen"], "A human hair is about a tenth")}
-TRIMMED = {"wings", "bullet", "leader", "light", "still"}
+TRIMMED = {"wings", "bullet", "leader", "light", "still", "sound"}
 FIRST_EP = 13
 CTA_AFTER = {"wings": "So fifty wing beats", "fly": "The water settles", "pop": "The whole bubble is gone", "sound": "That's roughly how many", "bullet": "It's moving more than twice",
              "leader": "That flash travels", "light": "The drop of water above the cup", "still": "At this speed, that takes about a third"}

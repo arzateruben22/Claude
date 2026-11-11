@@ -35,7 +35,7 @@ const Rint = (t) => { const x = Math.max(0, t) * 30, i = Math.floor(x); return C
 // ── the wave painter: one patch for every kitchen material: the light front (lit behind, dark ahead) and the sound ring ──────────────
 const WV = {
   uLSrc: { value: new THREE.Vector3(-2.5, 0.96, -1.0) }, uLR: { value: 0 }, uLOn: { value: 0 }, uLW: { value: 0.05 }, uLK: { value: 1 },
-  uSS1: { value: new THREE.Vector3() }, uSS2: { value: new THREE.Vector3() }, uSR1: { value: -9 }, uSR2: { value: -9 }, uSOn: { value: 0 }, uSW: { value: 0.045 },
+  uSS1: { value: new THREE.Vector3() }, uSS2: { value: new THREE.Vector3() }, uSR1: { value: -9 }, uSR2: { value: -9 }, uSOn: { value: 0 }, uSW: { value: 0.085 },
 };
 const planeSolid = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 1e6), planeWire = new THREE.Plane(new THREE.Vector3(1, 0, 0), -1e6);
 const patch = (m, clip = true) => {
@@ -49,8 +49,11 @@ const patch = (m, clip = true) => {
   float lit = smoothstep(uLR + uLW * 0.5, uLR - uLW * 0.5, rl);
   gl_FragColor.rgb *= mix(1.0, mix(0.06, 1.0, lit), uLOn);
   gl_FragColor.rgb += vec3(1.0, 0.9, 0.62) * (exp(-pow((rl - uLR) / uLW, 2.0)) * 1.7 + 0.28 * exp(-pow((rl - uLR) / (uLW * 7.0), 2.0))) * uLOn * uLK;
-  float s1 = exp(-pow((length(vWP - uSS1) - uSR1) / uSW, 2.0)), s2 = exp(-pow((length(vWP - uSS2) - uSR2) / uSW, 2.0));
-  gl_FragColor.rgb += vec3(0.22, 0.4, 1.0) * (s1 + s2) * uSOn * 0.55;
+  float sd1 = length(vWP - uSS1), sd2 = length(vWP - uSS2);
+  float sr = exp(-pow((sd1 - uSR1) / uSW, 2.0)) + exp(-pow((sd2 - uSR2) / uSW, 2.0));
+  float st = exp(-pow((sd1 - uSR1 + 0.26) / 0.24, 2.0)) * step(sd1, uSR1) + exp(-pow((sd2 - uSR2 + 0.26) / 0.24, 2.0)) * step(sd2, uSR2);
+  float rp = 0.65 + 0.35 * sin((sd1 - uSR1) * 48.0);
+  gl_FragColor.rgb += (vec3(0.62, 0.82, 1.0) * sr * 1.05 + vec3(0.3, 0.52, 0.95) * st * 0.4 * rp) * uSOn;
   #include <dithering_fragment>`);
   };
   m.customProgramCacheKey = () => "wp" + (clip ? "c" : "n");
@@ -245,6 +248,8 @@ const bubble = new THREE.Mesh(new THREE.SphereGeometry(BUBR, 40, 28), bubMat); b
 const rimR = new THREE.Mesh(new THREE.TorusGeometry(1, 0.0006, 6, 36), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.9 })); kitchen.add(rimR);
 
 // ── sound: hands that clap, a ring (the wave painter draws it on every surface) ──
+const waveRing = new THREE.Mesh(new THREE.RingGeometry(0.93, 1.0, 128), new THREE.MeshBasicMaterial({ color: 0xA8D4FF, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); waveRing.visible = false; scene.add(waveRing);
+const waveFill = new THREE.Mesh(new THREE.CircleGeometry(0.93, 96), new THREE.MeshBasicMaterial({ color: 0x7FB6FF, transparent: true, opacity: 0.07, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })); waveFill.visible = false; scene.add(waveFill);
 const hands = new THREE.Group(); kitchen.add(hands); const handL = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.09, 0.07), std("#D9A786", 0.7)), handR = handL.clone(); hands.add(handL, handR);
 const CLAPX = 2.45, CLAPY = TOP + 0.32, CLAPZ = -0.8;
 
@@ -322,7 +327,7 @@ const place = (fl, x, y, z, yaw = 0) => { fl.g.visible = true; fl.g.position.set
 
 // a slow push-and-drift (a sine bump: still at both ends) over the holds that read as stills, so nothing sits motionless for more than a beat
 const DRIFTS = [[19.4, 22.0], [343.2, 345.8], [474.7, 477.3], [487.2, 489.8], [498.2, 501.2], [515.4, 518.8], [520.4, 523.0], [531.5, 534.1]];
-const driftAt = (t) => { if (FILM.part) return 0; for (const [a, b] of DRIFTS) if (t > a && t < b) return Math.pow(Math.sin(Math.PI * (t - a) / (b - a)), 2); return 0; };
+const driftAt = (t) => { for (const [a, b] of (FILM.drifts || (FILM.part ? [] : DRIFTS))) if (t > a && t < b) return Math.pow(Math.sin(Math.PI * (t - a) / (b - a)), 2); return 0; };
 window.seek = function (t) {
   stage(t);
   placeCam(t);
@@ -397,6 +402,7 @@ window.seek = function (t) {
     hands.visible = sm; hands.position.set(CLAPX, CLAPY, CLAPZ); const clap = t < C0 ? 0.5 + 0.5 * Math.abs(Math.sin(t * 2.5)) * seg(t, C0 - 14, C0 - 10) * (t < C0 - 2 ? 1 : 0) : 0; void vs;
     const sep = t < C0 ? 0.06 * (1 - seg(t, C0 - 1.2, C0)) + 0.002 : 0.002; handL.position.set(-sep - 0.015, 0, 0); handR.position.set(sep + 0.015, 0, 0); void clap;
     WV.uSS1.value.set(CLAPX, CLAPY, CLAPZ); WV.uSS2.value.set(-5.4 - CLAPX, CLAPY, CLAPZ);   // the image source behind the left wall (x = -2.7)
+    { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm; m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.8 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.07 * (1 - seg(r, 0.03, 0.052)); }
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray
   { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ap = APPX - 0.04, speed = CAL.bullet.v;

@@ -264,6 +264,7 @@ film = {
     "badges": BADGES, "captionY": CAPY,
     "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
     "disclosures": {"aiVoice": True},
+    "drifts": ([[18.5, 21.1], [62.0, 64.4], [64.7, 67.7]] if PART == 4 else None),
     "captions": [pg for pg in phrase_captions(f, max_chars=CAPCH, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC, "end": END,
     "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines],
 }
