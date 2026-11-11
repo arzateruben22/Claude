@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.65,
-   "sha256": "ea977d4a95593f36b40daed6666896f28a5431144218922e22304d54a23df96e"
+   "dur": 2.192,
+   "sha256": "db18645fe0acd2ffcd4bed8cfb39f98bb1a99bebbab05226a13aefbb20d5f577"
   },
   {
    "id": "vo02",
@@ -21,8 +21,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 1.05,
-   "sha256": "5b2ab7be6d4bf38d9cdfe6581625b1cc10af8cffbe96b21587c4ab1859694a0f"
+   "dur": 1.829,
+   "sha256": "745f88e55b93213b63755fe49a4dfa0f6ab6ff07087e38263a1f7155a3222c28"
   },
   {
    "id": "vo03",
@@ -31,8 +31,8 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 4.07,
-   "sha256": "1ab46ed42659ea91923dac0261733817d720d2a75c7aa987d81500c0d969f806"
+   "dur": 7.739,
+   "sha256": "ae52b7ba8b9fe0748fcd4073053b548cc41f86a092b13c9ef988825d2ee332f1"
   },
   {
    "id": "vo04",
@@ -41,8 +41,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 1.94,
-   "sha256": "9f13cf2dca6b0f3707532652cd2b03a5c5503791b249877abc6e925d92f8df0b"
+   "dur": 3.038,
+   "sha256": "013f929f955393c1e2cdf36ec8a8c17e251602bf595d2e36f63b16a2c096c719"
   },
   {
    "id": "vo05",
@@ -51,48 +51,88 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 5.95,
-   "sha256": "76edc2e50de209ed9021173f3f909a33542b286d2698d98178be730e9f202ecd"
+   "dur": 10.381,
+   "sha256": "d01af5421243f46a00247c99ce20013b1de8f1b039d565a5c5298cf9d2a91e49"
   },
   {
    "id": "vo06",
    "beat": "wind-5",
-   "text": "Winds like that would strip the surface, and they would only be the beginning.",
+   "text": "That is about sixteen hundred and seventy kilometers an hour.",
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 2.25,
-   "sha256": "e5a320b68dab5a312b60c04ce564913260f1354f13512e63c5d347d86b2fcbbf"
+   "dur": 4.756,
+   "sha256": "e4a66cad632a91a33d267303df5c50c78d196d0765e880c296f620a529939595"
   },
   {
    "id": "vo07",
+   "beat": "wind-6",
+   "text": "The strongest gust ever measured by a weather station was about four hundred and eight kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 8.157,
+   "sha256": "54ad345b067e3de341f20cf71fea962a30b01ba4893107c08f516867f2347278"
+  },
+  {
+   "id": "vo08",
+   "beat": "wind-7",
+   "text": "So this wind would be about four times stronger.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 3.379,
+   "sha256": "e7c04eda472f75315a696c5c1a4a833ef9f672c0a227a020fea55ebea7047100"
+  },
+  {
+   "id": "vo09",
+   "beat": "wind-8",
+   "text": "And it would blow from the east, because the ground is running ahead of the air.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 5.35,
+   "sha256": "a0f5143c32156a23baca30a4abb4e90f7e94ad8e6526c703177027e8d5586c1d"
+  },
+  {
+   "id": "vo10",
    "beat": "cta",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
    "stars": [],
    "phonemes": null,
-   "file": "07.wav",
-   "dur": 4.11,
-   "sha256": "1d78d7d531e67c349e36d3e2f5d6fd243109b3c99f970747d513081b61d38830"
+   "file": "10.wav",
+   "dur": 6.197,
+   "sha256": "1af20f4a97abdf86d2c8963174790231e18f3926e533514b83026de24df0b573"
   },
   {
-   "id": "vo08",
+   "id": "vo11",
+   "beat": "wind-9",
+   "text": "Winds like that would strip the surface, and they would only be the beginning.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 5.035,
+   "sha256": "dad3ab9e571c4654729139cb3a82447c34acce10366557a76c7407f5b391b69d"
+  },
+  {
+   "id": "vo12",
    "beat": "cliff",
    "text": "And then the oceans start to move.",
    "stars": [],
    "phonemes": null,
-   "file": "08.wav",
-   "dur": 2.03,
-   "sha256": "ed6267eccba88081866725a076dc3c93e678f21fc1cf95fe3fee664f412826dd"
+   "file": "12.wav",
+   "dur": 2.116,
+   "sha256": "7f94d5648e44894aae69841c627f5a5c801eda50416f50b2d173d6dc67e59136"
   },
   {
-   "id": "vo09",
+   "id": "vo13",
    "beat": "tease",
    "text": "Part three of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "09.wav",
-   "dur": 2.2,
-   "sha256": "ae94bd3a7c4512bb053a5ec73959bc63f3b46fe2802a53a113a90d422376c986"
+   "file": "13.wav",
+   "dur": 3.221,
+   "sha256": "19e8d5504b825806f2ed6acc147420770693e064f091a53bc4f90f3b8a178ed6"
   }
  ]
 }

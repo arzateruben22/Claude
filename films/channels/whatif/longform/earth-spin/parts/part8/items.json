@@ -1,99 +1,155 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/15.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/15.wav",
   "text": "A day now lasts about an hour and a half.",
   "beat": "one-five",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 2.1
+  "dur": 2.677
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
   "text": "At an hour and a half, you are almost weightless.",
   "beat": "one-five",
   "key": "L14.1",
   "slice": [
-   0.0,
-   1.83
+   0.02,
+   3.061
   ],
   "uid": "one-five-1",
   "vo": "vo02",
-  "dur": 1.83
+  "dur": 3.041
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
   "text": "You weigh about one eighth of what you did.",
   "beat": "one-five",
   "key": "L14.2",
   "slice": [
-   2.63,
-   4.56
+   3.295,
+   5.95
   ],
   "uid": "one-five-2",
   "vo": "vo03",
-  "dur": 1.93
+  "dur": 2.655
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
-  "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "A seventy kilogram person would weigh about eight kilograms.",
   "beat": "one-five",
   "key": "L14.3",
   "slice": [
-   5.36,
-   8.225
+   6.17,
+   10.731
   ],
   "uid": "one-five-3",
   "vo": "vo04",
-  "dur": 2.865
+  "dur": 4.561
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/14.wav",
-  "text": "One more nudge, and something changes completely.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "The same jump that lifts you half a meter today would carry you about four meters, higher than a basketball hoop.",
   "beat": "one-five",
   "key": "L14.4",
   "slice": [
-   9.025,
-   11.735
+   10.95,
+   19.831
   ],
   "uid": "one-five-4",
   "vo": "vo05",
-  "dur": 2.71
+  "dur": 8.881
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "A cup falling off a table would take about three times as long to land.",
+  "beat": "one-five",
+  "key": "L14.5",
+  "slice": [
+   20.05,
+   25.542
+  ],
+  "uid": "one-five-5",
+  "vo": "vo06",
+  "dur": 5.492
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+  "beat": "one-five",
+  "key": "L14.6",
+  "slice": [
+   25.76,
+   30.527
+  ],
+  "uid": "one-five-6",
+  "vo": "vo07",
+  "dur": 4.767
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "The Sun now crosses the whole sky in forty-five minutes.",
+  "beat": "one-five",
+  "key": "L14.7",
+  "slice": [
+   30.745,
+   34.999
+  ],
+  "uid": "one-five-7",
+  "vo": "vo08",
+  "dur": 4.254
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/14.wav",
+  "text": "One more nudge, and something changes completely.",
+  "beat": "one-five",
+  "key": "L14.8",
+  "slice": [
+   35.22,
+   38.755
+  ],
+  "uid": "one-five-8",
+  "vo": "vo09",
+  "dur": 3.535
  },
  {
   "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/27.wav",
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "one-five",
   "key": "cta",
-  "sub_file": "vo/06-sub.wav",
+  "sub_file": "vo/10-sub.wav",
   "uid": "cta",
-  "vo": "vo06",
-  "dur": 3.29
+  "vo": "vo10",
+  "dur": 4.512
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/16.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/16.wav",
   "text": "One more nudge, and something changes completely.",
   "beat": "one-five",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo07",
-  "dur": 3.26
+  "vo": "vo11",
+  "dur": 3.516
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/24.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/24.wav",
   "text": "Part eight of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo08",
-  "dur": 2.07
+  "vo": "vo12",
+  "dur": 3.1
  }
 ]

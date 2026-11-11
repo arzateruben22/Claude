@@ -1,113 +1,169 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/05.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/05.wav",
   "text": "The air can't keep up with the ground.",
   "beat": "wind",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 2.65
+  "dur": 2.192
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
   "text": "But the air has a problem.",
   "beat": "wind",
   "key": "L6.1",
   "slice": [
-   0.0,
-   1.05
+   0.02,
+   1.849
   ],
   "uid": "wind-1",
   "vo": "vo02",
-  "dur": 1.05
+  "dur": 1.829
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
   "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time.",
   "beat": "wind",
   "key": "L6.2",
   "slice": [
-   1.85,
-   5.92
+   2.075,
+   9.814
   ],
   "uid": "wind-2",
   "vo": "vo03",
-  "dur": 4.07
+  "dur": 7.739
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
   "text": "For the first hours, the air is left behind.",
   "beat": "wind",
   "key": "L6.3",
   "slice": [
-   6.72,
-   8.66
+   10.035,
+   13.073
   ],
   "uid": "wind-3",
   "vo": "vo04",
-  "dur": 1.94
+  "dur": 3.038
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
   "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
   "beat": "wind",
   "key": "L6.4",
   "slice": [
-   9.46,
-   15.41
+   13.3,
+   23.681
   ],
   "uid": "wind-4",
   "vo": "vo05",
-  "dur": 5.95
+  "dur": 10.381
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/06.wav",
-  "text": "Winds like that would strip the surface, and they would only be the beginning.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
+  "text": "That is about sixteen hundred and seventy kilometers an hour.",
   "beat": "wind",
   "key": "L6.5",
   "slice": [
-   16.21,
-   18.46
+   23.905,
+   28.661
   ],
   "uid": "wind-5",
   "vo": "vo06",
-  "dur": 2.25
+  "dur": 4.756
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
+  "text": "The strongest gust ever measured by a weather station was about four hundred and eight kilometers an hour.",
+  "beat": "wind",
+  "key": "L6.6",
+  "slice": [
+   28.885,
+   37.042
+  ],
+  "uid": "wind-6",
+  "vo": "vo07",
+  "dur": 8.157
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
+  "text": "So this wind would be about four times stronger.",
+  "beat": "wind",
+  "key": "L6.7",
+  "slice": [
+   37.265,
+   40.644
+  ],
+  "uid": "wind-7",
+  "vo": "vo08",
+  "dur": 3.379
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
+  "text": "And it would blow from the east, because the ground is running ahead of the air.",
+  "beat": "wind",
+  "key": "L6.8",
+  "slice": [
+   40.86,
+   46.21
+  ],
+  "uid": "wind-8",
+  "vo": "vo09",
+  "dur": 5.35
  },
  {
   "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/25.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/25.wav",
   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
   "beat": "wind",
   "key": "cta",
-  "sub_file": "vo/07-sub.wav",
+  "sub_file": "vo/10-sub.wav",
   "uid": "cta",
-  "vo": "vo07",
-  "dur": 4.11
+  "vo": "vo10",
+  "dur": 6.197
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/06.wav",
+  "text": "Winds like that would strip the surface, and they would only be the beginning.",
+  "beat": "wind",
+  "key": "L6.9",
+  "slice": [
+   46.435,
+   51.47
+  ],
+  "uid": "wind-9",
+  "vo": "vo11",
+  "dur": 5.035
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/06.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/06.wav",
   "text": "And then the oceans start to move.",
   "beat": "wind",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo08",
-  "dur": 2.03
+  "vo": "vo12",
+  "dur": 2.116
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/19.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/19.wav",
   "text": "Part three of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo09",
-  "dur": 2.2
+  "vo": "vo13",
+  "dur": 3.221
  }
 ]

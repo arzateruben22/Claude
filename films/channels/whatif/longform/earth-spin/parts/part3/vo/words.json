@@ -8,7 +8,7 @@
    "words": [
     {
      "w": "The",
-     "start": 0.125,
+     "start": 0.02,
      "end": 0.24,
      "heard": true
     },
@@ -20,38 +20,38 @@
     },
     {
      "w": "can't",
-     "start": 0.46,
-     "end": 0.8,
+     "start": 0.545,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "keep",
-     "start": 0.835,
-     "end": 0.885,
+     "start": 0.88,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "up",
-     "start": 0.995,
-     "end": 1.045,
+     "start": 1.085,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "with",
-     "start": 1.095,
-     "end": 1.2,
+     "start": 1.24,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.195,
-     "end": 1.36,
+     "start": 1.45,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "ground.",
-     "start": 1.45,
-     "end": 2.4,
+     "start": 1.555,
+     "end": 2.16,
      "heard": true
     }
    ]
@@ -63,38 +63,38 @@
    "words": [
     {
      "w": "But",
-     "start": 0.055,
-     "end": 0.105,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.18,
+     "start": 0.0,
      "end": 0.24,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 0.155,
+     "end": 0.32,
+     "heard": true
+    },
+    {
      "w": "air",
-     "start": 0.29,
-     "end": 0.48,
+     "start": 0.3,
+     "end": 0.64,
      "heard": true
     },
     {
      "w": "has",
-     "start": 0.475,
-     "end": 0.72,
+     "start": 0.685,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.785,
-     "end": 0.835,
+     "start": 0.85,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "problem.",
-     "start": 0.895,
-     "end": 1.04,
+     "start": 1.215,
+     "end": 1.76,
      "heard": true
     }
    ]
@@ -102,114 +102,114 @@
   {
    "id": "vo03",
    "text": "The ground speeds up at once; the atmosphere is pulled along only by friction, and that takes time.",
-   "heard": "The crown speeds up at once, the atmosphere is pulled along by friction that and that takes time.",
+   "heard": "The ground speeds up at once. The atmosphere is pulled along only by friction, and that takes time.",
    "words": [
     {
      "w": "The",
-     "start": 0.06,
-     "end": 0.16,
+     "start": 0.055,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "ground",
-     "start": 0.14,
-     "end": 0.4,
-     "heard": false
-    },
-    {
-     "w": "speeds",
-     "start": 0.43,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "up",
-     "start": 0.73,
+     "start": 0.245,
      "end": 0.8,
      "heard": true
     },
     {
+     "w": "speeds",
+     "start": 0.925,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 1.455,
+     "end": 1.6,
+     "heard": true
+    },
+    {
      "w": "at",
-     "start": 0.91,
-     "end": 0.96,
+     "start": 1.505,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "once;",
-     "start": 0.94,
-     "end": 1.12,
+     "start": 1.705,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.095,
-     "end": 1.28,
+     "start": 2.32,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "atmosphere",
-     "start": 1.19,
-     "end": 1.84,
+     "start": 2.555,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.92,
-     "end": 1.97,
+     "start": 3.405,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "pulled",
-     "start": 1.985,
-     "end": 2.16,
+     "start": 3.6,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "along",
-     "start": 2.365,
-     "end": 2.415,
+     "start": 4.145,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "only",
-     "start": 2.555,
-     "end": 2.605,
-     "heard": false
+     "start": 4.6,
+     "end": 5.04,
+     "heard": true
     },
     {
      "w": "by",
-     "start": 2.585,
-     "end": 2.635,
+     "start": 5.13,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "friction,",
-     "start": 2.655,
-     "end": 2.88,
+     "start": 5.39,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.205,
-     "end": 3.36,
+     "start": 6.165,
+     "end": 6.32,
      "heard": true
     },
     {
      "w": "that",
-     "start": 3.355,
-     "end": 3.52,
+     "start": 6.2,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 3.555,
-     "end": 3.76,
+     "start": 6.615,
+     "end": 7.12,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 3.72,
-     "end": 4.0,
+     "start": 7.05,
+     "end": 7.68,
      "heard": true
     }
    ]
@@ -221,56 +221,56 @@
    "words": [
     {
      "w": "For",
-     "start": 0.01,
-     "end": 0.08,
+     "start": 0.06,
+     "end": 0.24,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.165,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "first",
-     "start": 0.225,
+     "start": 0.39,
      "end": 0.48,
      "heard": true
     },
     {
+     "w": "first",
+     "start": 0.42,
+     "end": 0.8,
+     "heard": true
+    },
+    {
      "w": "hours,",
-     "start": 0.57,
-     "end": 0.72,
+     "start": 0.745,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.895,
-     "end": 0.945,
+     "start": 1.295,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "air",
-     "start": 0.95,
-     "end": 1.12,
+     "start": 1.46,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.215,
-     "end": 1.265,
+     "start": 1.845,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "left",
-     "start": 1.245,
-     "end": 1.36,
+     "start": 1.875,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "behind.",
-     "start": 1.355,
-     "end": 1.84,
+     "start": 2.24,
+     "end": 2.96,
      "heard": true
     }
    ]
@@ -278,460 +278,806 @@
   {
    "id": "vo05",
    "text": "At a twelve hour day, the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
-   "heard": "At a 12-hour day, the ground is moving through the air at about 460 meters a second, faster than the speed of a sound.",
+   "heard": "At a twelve hour day the ground is moving through the air at about four hundred and sixty meters a second, faster than the speed of sound.",
    "words": [
     {
      "w": "At",
-     "start": 0.005,
-     "end": 0.16,
+     "start": 0.06,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.195,
-     "end": 0.245,
+     "start": 0.41,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "twelve",
-     "start": 0.33,
-     "end": 0.64,
-     "heard": false
+     "start": 0.49,
+     "end": 0.88,
+     "heard": true
     },
     {
      "w": "hour",
-     "start": 0.36,
-     "end": 0.64,
-     "heard": false
+     "start": 0.865,
+     "end": 1.2,
+     "heard": true
     },
     {
      "w": "day,",
-     "start": 0.625,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.985,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "ground",
-     "start": 1.1,
-     "end": 1.28,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 1.26,
+     "start": 1.24,
      "end": 1.44,
      "heard": true
     },
     {
+     "w": "the",
+     "start": 1.58,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 1.71,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.23,
+     "end": 2.48,
+     "heard": true
+    },
+    {
      "w": "moving",
-     "start": 1.435,
-     "end": 1.68,
+     "start": 2.39,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "through",
-     "start": 1.685,
-     "end": 1.84,
+     "start": 2.97,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.775,
-     "end": 1.92,
+     "start": 3.29,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "air",
-     "start": 1.975,
-     "end": 2.16,
+     "start": 3.505,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "at",
-     "start": 2.23,
-     "end": 2.28,
+     "start": 3.95,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "about",
-     "start": 2.26,
-     "end": 2.4,
+     "start": 4.185,
+     "end": 4.48,
      "heard": true
     },
     {
      "w": "four",
-     "start": 2.48,
-     "end": 3.36,
-     "heard": false
+     "start": 4.63,
+     "end": 4.88,
+     "heard": true
     },
     {
      "w": "hundred",
-     "start": 2.51,
-     "end": 3.36,
-     "heard": false
-    },
-    {
-     "w": "and",
-     "start": 2.54,
-     "end": 3.36,
-     "heard": false
-    },
-    {
-     "w": "sixty",
-     "start": 2.57,
-     "end": 3.36,
-     "heard": false
-    },
-    {
-     "w": "meters",
-     "start": 3.425,
-     "end": 3.84,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 3.82,
-     "end": 4.0,
-     "heard": true
-    },
-    {
-     "w": "second,",
-     "start": 4.135,
-     "end": 4.8,
-     "heard": true
-    },
-    {
-     "w": "faster",
-     "start": 4.895,
-     "end": 5.12,
-     "heard": true
-    },
-    {
-     "w": "than",
-     "start": 5.22,
-     "end": 5.28,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 5.31,
-     "end": 5.36,
-     "heard": true
-    },
-    {
-     "w": "speed",
-     "start": 5.48,
-     "end": 5.53,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 5.51,
+     "start": 5.11,
      "end": 5.6,
      "heard": true
     },
     {
+     "w": "and",
+     "start": 5.565,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "sixty",
+     "start": 5.73,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "meters",
+     "start": 6.2,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.945,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "second,",
+     "start": 7.185,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "faster",
+     "start": 7.915,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 8.66,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 8.81,
+     "end": 8.96,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 9.09,
+     "end": 9.36,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 9.41,
+     "end": 9.6,
+     "heard": true
+    },
+    {
      "w": "sound.",
-     "start": 5.635,
-     "end": 5.92,
+     "start": 9.585,
+     "end": 10.32,
      "heard": true
     }
    ]
   },
   {
    "id": "vo06",
-   "text": "Winds like that would strip the surface, and they would only be the beginning.",
-   "heard": "Was like that would show up the service and that would only be the beginning.",
+   "text": "That is about sixteen hundred and seventy kilometers an hour.",
+   "heard": "That is about sixteen hundred and seventy kilometers an hour.",
    "words": [
     {
-     "w": "Winds",
-     "start": 0.03,
-     "end": 0.24,
-     "heard": false
-    },
-    {
-     "w": "like",
-     "start": 0.295,
-     "end": 0.345,
-     "heard": true
-    },
-    {
-     "w": "that",
-     "start": 0.345,
+     "w": "That",
+     "start": 0.055,
      "end": 0.4,
      "heard": true
     },
     {
-     "w": "would",
-     "start": 0.48,
-     "end": 0.56,
+     "w": "is",
+     "start": 0.385,
+     "end": 0.64,
      "heard": true
     },
     {
-     "w": "strip",
-     "start": 0.595,
-     "end": 0.88,
-     "heard": false
-    },
-    {
-     "w": "the",
-     "start": 0.805,
-     "end": 0.88,
+     "w": "about",
+     "start": 0.675,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "surface,",
-     "start": 0.84,
-     "end": 1.28,
-     "heard": false
+     "w": "sixteen",
+     "start": 0.94,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 1.69,
+     "end": 2.24,
+     "heard": true
     },
     {
      "w": "and",
-     "start": 1.375,
-     "end": 1.44,
+     "start": 2.29,
+     "end": 2.48,
      "heard": true
     },
     {
-     "w": "they",
-     "start": 1.405,
-     "end": 1.52,
-     "heard": false
-    },
-    {
-     "w": "would",
-     "start": 1.595,
-     "end": 1.645,
+     "w": "seventy",
+     "start": 2.57,
+     "end": 3.04,
      "heard": true
     },
     {
-     "w": "only",
-     "start": 1.65,
-     "end": 1.76,
+     "w": "kilometers",
+     "start": 3.02,
+     "end": 3.68,
      "heard": true
     },
     {
-     "w": "be",
-     "start": 1.775,
-     "end": 1.92,
+     "w": "an",
+     "start": 4.0,
+     "end": 4.08,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.97,
-     "end": 2.02,
-     "heard": true
-    },
-    {
-     "w": "beginning.",
-     "start": 2.08,
-     "end": 2.24,
+     "w": "hour.",
+     "start": 4.035,
+     "end": 4.72,
      "heard": true
     }
    ]
   },
   {
    "id": "vo07",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-   "heard": "Hang on, if you're enjoying this, tap like and follow. Okay, back to the map.",
+   "text": "The strongest gust ever measured by a weather station was about four hundred and eight kilometers an hour.",
+   "heard": "The strongest gust ever measured by a weather station was about four hundred and eight kilometers an hour.",
    "words": [
     {
-     "w": "Hang",
-     "start": 0.335,
-     "end": 0.56,
+     "w": "The",
+     "start": 0.055,
+     "end": 0.105,
      "heard": true
     },
     {
-     "w": "on.",
-     "start": 0.64,
-     "end": 0.88,
+     "w": "strongest",
+     "start": 0.325,
+     "end": 1.04,
      "heard": true
     },
     {
-     "w": "If",
-     "start": 0.9,
-     "end": 0.96,
-     "heard": true
-    },
-    {
-     "w": "you're",
-     "start": 0.93,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "enjoying",
-     "start": 1.185,
+     "w": "gust",
+     "start": 1.005,
      "end": 1.44,
      "heard": true
     },
     {
-     "w": "this,",
-     "start": 1.375,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "tap",
-     "start": 1.81,
+     "w": "ever",
+     "start": 1.605,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "like",
-     "start": 1.985,
-     "end": 2.16,
+     "w": "measured",
+     "start": 1.81,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 2.525,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.725,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "weather",
+     "start": 2.935,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "station",
+     "start": 3.455,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "was",
+     "start": 3.96,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 4.365,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 4.675,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 5.265,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.13,
-     "end": 2.32,
+     "start": 5.745,
+     "end": 5.795,
      "heard": true
     },
     {
-     "w": "follow.",
-     "start": 2.435,
-     "end": 2.96,
+     "w": "eight",
+     "start": 5.955,
+     "end": 6.32,
      "heard": true
     },
     {
-     "w": "Okay,",
-     "start": 2.955,
-     "end": 3.28,
+     "w": "kilometers",
+     "start": 6.27,
+     "end": 7.2,
      "heard": true
     },
     {
-     "w": "back",
-     "start": 3.425,
-     "end": 3.6,
+     "w": "an",
+     "start": 7.26,
+     "end": 7.52,
      "heard": true
     },
     {
-     "w": "to",
-     "start": 3.56,
-     "end": 3.68,
+     "w": "hour.",
+     "start": 7.435,
+     "end": 8.08,
      "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.59,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "math.",
-     "start": 3.67,
-     "end": 4.06,
-     "heard": false
     }
    ]
   },
   {
    "id": "vo08",
-   "text": "And then the oceans start to move.",
-   "heard": "And then the ocean starts to move.",
+   "text": "So this wind would be about four times stronger.",
+   "heard": "So this wind would be about four times stronger.",
    "words": [
     {
-     "w": "And",
-     "start": 0.025,
-     "end": 0.24,
+     "w": "So",
+     "start": 0.06,
+     "end": 0.32,
      "heard": true
     },
     {
-     "w": "then",
-     "start": 0.175,
-     "end": 0.4,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.415,
+     "w": "this",
+     "start": 0.255,
      "end": 0.56,
      "heard": true
     },
     {
-     "w": "oceans",
-     "start": 0.57,
-     "end": 1.28,
-     "heard": false
-    },
-    {
-     "w": "start",
-     "start": 0.6,
-     "end": 1.28,
-     "heard": false
-    },
-    {
-     "w": "to",
-     "start": 1.32,
-     "end": 1.44,
+     "w": "wind",
+     "start": 0.505,
+     "end": 0.96,
      "heard": true
     },
     {
-     "w": "move.",
-     "start": 1.43,
-     "end": 2.0,
+     "w": "would",
+     "start": 0.98,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 1.125,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.305,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 1.52,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 1.94,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "stronger.",
+     "start": 2.505,
+     "end": 3.36,
      "heard": true
     }
    ]
   },
   {
    "id": "vo09",
-   "text": "Part three of eight. Full video on YouTube.",
-   "heard": "Part 3 of 8. Full video on YouTube.",
+   "text": "And it would blow from the east, because the ground is running ahead of the air.",
+   "heard": "and it would blow from the east, because the ground is running ahead of the air.",
    "words": [
     {
-     "w": "Part",
+     "w": "And",
      "start": 0.06,
      "end": 0.32,
      "heard": true
     },
     {
-     "w": "three",
-     "start": 0.275,
+     "w": "it",
+     "start": 0.41,
      "end": 0.48,
      "heard": true
     },
     {
-     "w": "of",
-     "start": 0.495,
-     "end": 0.64,
+     "w": "would",
+     "start": 0.57,
+     "end": 0.72,
      "heard": true
     },
     {
-     "w": "eight.",
-     "start": 0.73,
+     "w": "blow",
+     "start": 0.64,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 1.11,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.345,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "east,",
+     "start": 1.5,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "because",
+     "start": 2.235,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.64,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 2.78,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.335,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "running",
+     "start": 3.54,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "ahead",
+     "start": 4.03,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.415,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.505,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "air.",
+     "start": 4.695,
+     "end": 5.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "heard": "Hang on. If you're enjoying this, tap like and follow. Okay back to the maths.",
+   "words": [
+    {
+     "w": "Hang",
+     "start": 0.025,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "on.",
+     "start": 0.39,
      "end": 1.12,
      "heard": true
     },
     {
-     "w": "Full",
-     "start": 1.23,
+     "w": "If",
+     "start": 1.245,
      "end": 1.36,
      "heard": true
     },
     {
+     "w": "you're",
+     "start": 1.38,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "enjoying",
+     "start": 1.69,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 2.21,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.6,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.895,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.09,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.315,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 4.415,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 4.895,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 5.165,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 5.195,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "math.",
+     "start": 5.25,
+     "end": 5.66,
+     "heard": false
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "Winds like that would strip the surface, and they would only be the beginning.",
+   "heard": "Winds like that would strip the surface and they would only be the beginning.",
+   "words": [
+    {
+     "w": "Winds",
+     "start": 0.055,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 0.655,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "that",
+     "start": 0.76,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 1.02,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "strip",
+     "start": 1.395,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.715,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "surface,",
+     "start": 1.96,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.795,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 2.945,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 3.135,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 3.595,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 3.855,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.9,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "beginning.",
+     "start": 4.215,
+     "end": 4.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "text": "And then the oceans start to move.",
+   "heard": "and then the oceans start to move.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.46,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "oceans",
+     "start": 0.49,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "start",
+     "start": 1.145,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.385,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "move.",
+     "start": 1.43,
+     "end": 2.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo13",
+   "text": "Part three of eight. Full video on YouTube.",
+   "heard": "Part 3 of 8. Full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.02,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 0.405,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.665,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.89,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.63,
+     "end": 1.84,
+     "heard": true
+    },
+    {
      "w": "video",
-     "start": 1.34,
-     "end": 1.68,
+     "start": 1.96,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "on",
-     "start": 1.765,
-     "end": 1.815,
+     "start": 2.41,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "YouTube.",
-     "start": 1.97,
-     "end": 2.16,
+     "start": 2.605,
+     "end": 3.2,
      "heard": true
     }
    ]

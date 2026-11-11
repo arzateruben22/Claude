@@ -1,155 +1,183 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/13.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/13.wav",
   "text": "Three hours, then two: a day is as long as a movie.",
   "beat": "three",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 4.67
+  "dur": 3.62
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/12.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/12.wav",
   "text": "At a three hour day, the Sun crosses the sky in just ninety minutes.",
   "beat": "three",
   "key": "L12.1",
   "slice": [
-   0.0,
-   2.83
+   0.02,
+   4.977
   ],
   "uid": "three-1",
   "vo": "vo02",
-  "dur": 2.83
+  "dur": 4.957
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/12.wav",
-  "text": "The ground now moves at over thirteen thousand kilometers an hour.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/12.wav",
+  "text": "It slides its own width every sixteen seconds.",
   "beat": "three",
   "key": "L12.2",
   "slice": [
-   3.63,
-   7.085
+   5.195,
+   8.684
   ],
   "uid": "three-2",
   "vo": "vo03",
-  "dur": 3.455
+  "dur": 3.489
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/12.wav",
-  "text": "You weigh twenty-two percent less.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/12.wav",
+  "text": "The ground now moves at over thirteen thousand kilometers an hour.",
   "beat": "three",
   "key": "L12.3",
   "slice": [
-   7.885,
-   9.99
+   8.91,
+   14.021
   ],
   "uid": "three-3",
   "vo": "vo04",
-  "dur": 2.105
+  "dur": 5.111
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/12.wav",
-  "text": "Seventy kilograms feels like fifty-five.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/12.wav",
+  "text": "You weigh twenty-two percent less.",
   "beat": "three",
   "key": "L12.4",
   "slice": [
-   10.79,
-   11.96
+   14.24,
+   16.44
   ],
   "uid": "three-4",
   "vo": "vo05",
-  "dur": 1.17
+  "dur": 2.2
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/13.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/12.wav",
+  "text": "Seventy kilograms feels like fifty-five.",
+  "beat": "three",
+  "key": "L12.5",
+  "slice": [
+   16.66,
+   19.14
+  ],
+  "uid": "three-5",
+  "vo": "vo06",
+  "dur": 2.48
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/13.wav",
   "text": "At two hours, you weigh half of what you did.",
   "beat": "two",
   "key": "L13.1",
   "slice": [
-   0.0,
-   1.94
+   0.02,
+   2.729
   ],
   "uid": "two-1",
-  "vo": "vo06",
-  "dur": 1.94
+  "vo": "vo07",
+  "dur": 2.709
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/13.wav",
-  "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/13.wav",
+  "text": "The same jump that lifts you half a meter today would now lift you about a meter.",
   "beat": "two",
   "key": "L13.2",
   "slice": [
-   2.74,
-   6.34
+   2.945,
+   8.946
   ],
   "uid": "two-2",
-  "vo": "vo07",
-  "dur": 3.6
+  "vo": "vo08",
+  "dur": 6.001
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/13.wav",
-  "text": "Every object near the equator is half as heavy as it should be.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/13.wav",
+  "text": "Twenty thousand kilometers an hour; the Sun crosses the whole sky in an hour.",
   "beat": "two",
   "key": "L13.3",
   "slice": [
-   7.14,
-   9.91
+   9.17,
+   15.253
   ],
   "uid": "two-3",
-  "vo": "vo08",
-  "dur": 2.77
+  "vo": "vo09",
+  "dur": 6.083
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/13.wav",
-  "text": "Buildings, bridges and oceans are all being asked to hold on with half the force.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/13.wav",
+  "text": "Every object near the equator is half as heavy as it should be.",
   "beat": "two",
   "key": "L13.4",
   "slice": [
-   10.71,
-   13.74
+   15.475,
+   20.262
   ],
   "uid": "two-4",
-  "vo": "vo09",
-  "dur": 3.03
+  "vo": "vo10",
+  "dur": 4.787
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/13.wav",
+  "text": "Buildings, bridges and oceans are all being asked to hold on with half the force.",
+  "beat": "two",
+  "key": "L13.5",
+  "slice": [
+   20.48,
+   26.46
+  ],
+  "uid": "two-5",
+  "vo": "vo11",
+  "dur": 5.98
  },
  {
   "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/25.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/25.wav",
   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
   "beat": "two",
   "key": "cta",
-  "sub_file": "vo/10-sub.wav",
+  "sub_file": "vo/12-sub.wav",
   "uid": "cta",
-  "vo": "vo10",
-  "dur": 4.11
+  "vo": "vo12",
+  "dur": 6.197
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/14.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/14.wav",
   "text": "And at an hour and a half, you are almost weightless.",
   "beat": "two",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo11",
-  "dur": 2.91
+  "vo": "vo13",
+  "dur": 3.15
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/23.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/23.wav",
   "text": "Part seven of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo12",
-  "dur": 2.63
+  "vo": "vo14",
+  "dur": 3.349
  }
 ]

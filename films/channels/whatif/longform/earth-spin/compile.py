@@ -22,7 +22,7 @@ from calc import RESULTS as R, T_ORB, R as R_EQ, E_ORB, E_NOW   # noqa: E402
 FPS, BPM = 30, 50
 ID = "possibility-lab-earth-spin"
 import os
-VOICE = os.environ.get("VOICE", "own")               # own: the owner's cloned voice (vo-own/, script.md) · owner: his real recording (vo-owner/, script-owner.md) · ai: the old stand-in (vo/)
+VOICE = os.environ.get("VOICE", "ai")               # own: the owner's cloned voice (vo-own/, script.md) · owner: his real recording (vo-owner/, script-owner.md) · ai: the old stand-in (vo/)
 OWNER = VOICE != "ai"
 SCRIPT, VODIR = {"own": ("script.md", "vo-own"), "owner": ("script-owner.md", "vo-owner"), "ai": ("script.md", "vo")}[VOICE]
 f = Film(HERE / SCRIPT, HERE / VODIR, fps=FPS, bpm=BPM, grid=0.25)

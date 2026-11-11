@@ -1,99 +1,169 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/03.wav",
-  "text": "The day is now twelve hours long.",
-  "beat": "twelve",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/03.wav",
+  "text": "The day is shrinking fast.",
+  "beat": "spinup",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 3.05
+  "dur": 1.775
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/04.wav",
+  "text": "Now the spin begins to speed up.",
+  "beat": "spinup",
+  "key": "L4.1",
+  "slice": [
+   0.02,
+   2.285
+  ],
+  "uid": "spinup-1",
+  "vo": "vo02",
+  "dur": 2.265
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/04.wav",
+  "text": "At twenty hours, you can see the shadows sweep.",
+  "beat": "spinup",
+  "key": "L4.2",
+  "slice": [
+   2.505,
+   5.678
+  ],
+  "uid": "spinup-2",
+  "vo": "vo03",
+  "dur": 3.173
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/04.wav",
+  "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
+  "beat": "spinup",
+  "key": "L4.3",
+  "slice": [
+   5.895,
+   10.481
+  ],
+  "uid": "spinup-3",
+  "vo": "vo04",
+  "dur": 4.586
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/04.wav",
+  "text": "A day only ever gets shorter, and you cannot turn it back.",
+  "beat": "spinup",
+  "key": "L4.4",
+  "slice": [
+   10.7,
+   14.981
+  ],
+  "uid": "spinup-4",
+  "vo": "vo05",
+  "dur": 4.281
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/05.wav",
   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
   "beat": "twelve",
   "key": "L5.1",
   "slice": [
-   0.0,
-   3.06
+   0.02,
+   4.429
   ],
   "uid": "twelve-1",
-  "vo": "vo02",
-  "dur": 3.06
+  "vo": "vo06",
+  "dur": 4.409
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
-  "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/05.wav",
+  "text": "At a twelve hour day the Sun moves across the sky as fast as the hour hand on a clock.",
   "beat": "twelve",
   "key": "L5.2",
   "slice": [
-   3.86,
-   9.49
+   4.65,
+   11.746
   ],
   "uid": "twelve-2",
-  "vo": "vo03",
-  "dur": 5.63
+  "vo": "vo07",
+  "dur": 7.096
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
-  "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/05.wav",
+  "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
   "beat": "twelve",
   "key": "L5.3",
   "slice": [
-   10.29,
-   15.65
+   11.97,
+   21.877
   ],
   "uid": "twelve-3",
-  "vo": "vo04",
-  "dur": 5.36
+  "vo": "vo08",
+  "dur": 9.907
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/05.wav",
-  "text": "A seventy kilogram person feels like about sixty-nine.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/05.wav",
+  "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
   "beat": "twelve",
   "key": "L5.4",
   "slice": [
-   16.45,
-   18.555
+   22.095,
+   29.065
   ],
   "uid": "twelve-4",
-  "vo": "vo05",
-  "dur": 2.105
+  "vo": "vo09",
+  "dur": 6.97
  },
  {
   "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/27.wav",
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "twelve",
   "key": "cta",
-  "sub_file": "vo/06-sub.wav",
+  "sub_file": "vo/10-sub.wav",
   "uid": "cta",
-  "vo": "vo06",
-  "dur": 3.29
+  "vo": "vo10",
+  "dur": 4.512
+ },
+ {
+  "kind": "sent",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/05.wav",
+  "text": "Eight hours of sleep no longer fits inside one night.",
+  "beat": "twelve",
+  "key": "L5.5",
+  "slice": [
+   29.29,
+   33.085
+  ],
+  "uid": "twelve-5",
+  "vo": "vo11",
+  "dur": 3.795
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/04.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/04.wav",
   "text": "And then the wind starts to blow.",
   "beat": "twelve",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo07",
-  "dur": 1.83
+  "vo": "vo12",
+  "dur": 1.958
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/18.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/18.wav",
   "text": "Part two of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo08",
-  "dur": 2.15
+  "vo": "vo13",
+  "dur": 3.218
  }
 ]

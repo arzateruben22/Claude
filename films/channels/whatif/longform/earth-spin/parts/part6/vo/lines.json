@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.34,
-   "sha256": "f35a13f81cf97611feb9ac71e85f2b02876eb39326e45283482b77e1a6217d1a"
+   "dur": 3.124,
+   "sha256": "cd5e1c78acc139f12d91a53a9eee868967d6517bd986ac74355d0079ae8c3d83"
   },
   {
    "id": "vo02",
@@ -21,138 +21,118 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 2.06,
-   "sha256": "99129e9b2373abdbc6a71e34b8e2d500a0a6871a097951a945cbd6356e940d70"
+   "dur": 1.972,
+   "sha256": "9a807f0f407773a3db60252e2694211bff5acdc8ec82ec10f71ad47dbeb1485a"
   },
   {
    "id": "vo03",
    "beat": "calendar-2",
-   "text": "The year does not change, because the Earth still goes round the Sun once.",
+   "text": "But every day gets shorter, so a year contains more days.",
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 2.935,
-   "sha256": "c3a47b5eb2fa941aed85e1fee68438813b2b2d810304ec5bd62a51aa37d21531"
+   "dur": 4.446,
+   "sha256": "99e2e38a8910b1773a56a151f251f55ef162aba947b74f06385c1f6937ebf9f4"
   },
   {
    "id": "vo04",
    "beat": "calendar-3",
-   "text": "But every day gets shorter, so a year contains more days.",
+   "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days.",
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 3.415,
-   "sha256": "1763a88f86d34682a5f7477d9ba3fefcae7d869b6a67702bbff3369cb8303bd5"
+   "dur": 7.214,
+   "sha256": "43ebded2b1f43bd4170bb11cc0514fb92d539ecc179c9d42a179b98ce915e283"
   },
   {
    "id": "vo05",
    "beat": "calendar-4",
-   "text": "Right now, at a six hour day, a year already holds about fourteen hundred and sixty days.",
-   "stars": [],
-   "phonemes": null,
-   "file": "05.wav",
-   "dur": 3.305,
-   "sha256": "710ec0b082a44695e0798978e89df1ff29c44f676c7a9a16c06cc8b69cb7e67d"
-  },
-  {
-   "id": "vo06",
-   "beat": "calendar-5",
    "text": "By the end, it would hold over six thousand, with a sunrise every eighty-four minutes, and you would be asked to sleep eight times a day.",
    "stars": [],
    "phonemes": null,
-   "file": "06.wav",
-   "dur": 8.935,
-   "sha256": "aee2e20b1d96c5bf16f37db635c7c5a26237a04521a6b48b54921c55fe0d3649"
+   "file": "05.wav",
+   "dur": 9.632,
+   "sha256": "9a0607cfffb89cb889610f7c53dd9982a40785d6893c1cc94c196462abba4696"
   },
   {
-   "id": "vo07",
+   "id": "vo06",
    "beat": "poles-1",
-   "text": "Not everyone on Earth would feel the same thing.",
-   "stars": [],
-   "phonemes": null,
-   "file": "07.wav",
-   "dur": 1.98,
-   "sha256": "8c350104cc8b83eb1d6997bb4df508e160e6aadfef6679ea669898c13074a9f8"
-  },
-  {
-   "id": "vo08",
-   "beat": "poles-2",
    "text": "At the poles, the ground only turns on the spot.",
    "stars": [],
    "phonemes": null,
-   "file": "08.wav",
-   "dur": 1.94,
-   "sha256": "0896237cf461edf9ae4da2a176fe731f5fa9b1fa4a008fb88ef131d5fd1ddf25"
+   "file": "06.wav",
+   "dur": 3.341,
+   "sha256": "9c02455ce5c0c2055ece839bff43b6b6348feef9e86d9a29f677e379ce7b85e6"
   },
   {
-   "id": "vo09",
-   "beat": "poles-3",
+   "id": "vo07",
+   "beat": "poles-2",
    "text": "Nobody there is carried around at all, and they would weigh the same as ever.",
    "stars": [],
    "phonemes": null,
-   "file": "09.wav",
-   "dur": 3.405,
-   "sha256": "3a7b30b2a994ba701658faae7fda220405dfcef162ecfe6a15a493eca748a047"
+   "file": "07.wav",
+   "dur": 5.218,
+   "sha256": "931136cad6729324ca761a83ebc4cf4550882f993fd19f5477fbdd7f91a20d39"
   },
   {
-   "id": "vo10",
-   "beat": "poles-4",
+   "id": "vo08",
+   "beat": "poles-3",
    "text": "At forty-five degrees north, you move at seventy percent of the equator's speed, and the push outward is only half as strong.",
    "stars": [],
    "phonemes": null,
-   "file": "10.wav",
-   "dur": 6.405,
-   "sha256": "212f8d6bd2e5b8293f1fa8b8e74d3318a9b34a1a093242daa7e37d36469fdcc9"
+   "file": "08.wav",
+   "dur": 9.356,
+   "sha256": "76d1d91a86fe29b4322077772c425b8bddae7e6caf7e640c908f95d9f7ca05bf"
   },
   {
-   "id": "vo11",
-   "beat": "poles-5",
+   "id": "vo09",
+   "beat": "poles-4",
    "text": "The farther you stand from the equator, the longer you keep your weight.",
    "stars": [],
    "phonemes": null,
-   "file": "11.wav",
-   "dur": 3.25,
-   "sha256": "b52563d762601dc574b408327cd5c921f1f48bddaa153e68ab118f591e5b50de"
+   "file": "09.wav",
+   "dur": 4.756,
+   "sha256": "405cfd42652fa8d14da5727c73f6ec4a9e77d77a104bc20f680a1db12ce1263b"
   },
   {
-   "id": "vo12",
+   "id": "vo10",
    "beat": "cta",
    "text": "Quick break: like and follow. Then let's see how bad this gets.",
    "stars": [],
    "phonemes": null,
-   "file": "12.wav",
-   "dur": 3.29,
-   "sha256": "4ea9836e05d9e63415178c69d7165f20eab48cdd6fbf004ff308ee3c35aa1cf9"
+   "file": "10.wav",
+   "dur": 4.512,
+   "sha256": "5658b0ac9086d5b704827d7b94a746e6af1d3d3342363e83d762b52fa65945b7"
   },
   {
-   "id": "vo13",
-   "beat": "poles-6",
+   "id": "vo11",
+   "beat": "poles-5",
    "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
    "stars": [],
    "phonemes": null,
-   "file": "13.wav",
-   "dur": 5.94,
-   "sha256": "71b0804ae43b89f10db3dcf383514cb944824784d18a894dfa7fd7aaa46acb38"
+   "file": "11.wav",
+   "dur": 6.695,
+   "sha256": "85b3ca7988bd64853c70e437610deecd7ab0d6e73356f6e769837d4314be8349"
   },
   {
-   "id": "vo14",
+   "id": "vo12",
    "beat": "cliff",
    "text": "And the days keep getting shorter.",
    "stars": [],
    "phonemes": null,
-   "file": "14.wav",
-   "dur": 1.94,
-   "sha256": "bf14cace3c1b7f27746283e15ea83eb38bf1f95e7f401a1046606af1f7843023"
+   "file": "12.wav",
+   "dur": 2.017,
+   "sha256": "2679af58087fa62c5431c441f383e35dfe86a2141820f425b9742f2ecedcb620"
   },
   {
-   "id": "vo15",
+   "id": "vo13",
    "beat": "tease",
    "text": "Part six of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "15.wav",
-   "dur": 3.1,
-   "sha256": "91270d23328cff332021426b5df189fa757696e1d1263f18a64ea5d46470f220"
+   "file": "13.wav",
+   "dur": 3.378,
+   "sha256": "0d492725ab4bac8e3f1717e6f7f2dc2f24160968ef85a2f2c6e74091ec45b8bf"
   }
  ]
 }

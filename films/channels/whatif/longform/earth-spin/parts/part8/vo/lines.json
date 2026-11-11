@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.1,
-   "sha256": "a1e4591cb68c06510d7793e33cf441b03a6bcb5bdd62c50d1ca9bb989ba09b99"
+   "dur": 2.677,
+   "sha256": "46d65c23957c1c831fd5594b4e389966c93f8907a54f118f6c56282329dc7f0e"
   },
   {
    "id": "vo02",
@@ -21,8 +21,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 1.83,
-   "sha256": "feca44c9052885397c3101df72845382b243944ca0db105180f72790cc151d89"
+   "dur": 3.041,
+   "sha256": "69bee171cc79cbfbef7a643777eb2c7fab08f029cdd10add8c7ec96f3c252a38"
   },
   {
    "id": "vo03",
@@ -31,58 +31,98 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 1.93,
-   "sha256": "cf9abc58875488617f42c7b24ec3e110ec33356056f0cedb695ca22380da596e"
+   "dur": 2.655,
+   "sha256": "e8112a8f65495808f7d887c851ee54ad5600543e03c9ece6fdc826c10b0831a0"
   },
   {
    "id": "vo04",
    "beat": "one-five-3",
-   "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+   "text": "A seventy kilogram person would weigh about eight kilograms.",
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 2.865,
-   "sha256": "ba2120257b0ebd844d014c37ab2a847f3f5bc6b5b9b67b51c7f4117016719097"
+   "dur": 4.561,
+   "sha256": "40a384e536b5f6ca968bad9fcdb9cb5984d637bbcf937b6b87a092f5e3ee54de"
   },
   {
    "id": "vo05",
    "beat": "one-five-4",
-   "text": "One more nudge, and something changes completely.",
+   "text": "The same jump that lifts you half a meter today would carry you about four meters, higher than a basketball hoop.",
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 2.71,
-   "sha256": "a88a319119743f3fb9f4edbec051fa740965342e385871e3510987c14fce1901"
+   "dur": 8.881,
+   "sha256": "bf56b82729670642bd8061966dc3677ea4a1fc975c4269cc85db30fbdd3c9ee3"
   },
   {
    "id": "vo06",
+   "beat": "one-five-5",
+   "text": "A cup falling off a table would take about three times as long to land.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 5.492,
+   "sha256": "757decd4c66c4221cc91ff4bcccd73dba152401d3ae34699cdd67755c67d13af"
+  },
+  {
+   "id": "vo07",
+   "beat": "one-five-6",
+   "text": "The equator moves at twenty-seven thousand kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 4.767,
+   "sha256": "41ad7b99e50aede46663da5184bd5b384653a95f8b9686d07ff2db05e53a10e0"
+  },
+  {
+   "id": "vo08",
+   "beat": "one-five-7",
+   "text": "The Sun now crosses the whole sky in forty-five minutes.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 4.254,
+   "sha256": "c2c38f70dba626111f376a1f970fa3a6270dfcd76f5bc288742ebb3e41fcad33"
+  },
+  {
+   "id": "vo09",
+   "beat": "one-five-8",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.535,
+   "sha256": "d65a504b871bbf4551b52bdbfd4091525386ceaea7218abeec97a04e612d93d2"
+  },
+  {
+   "id": "vo10",
    "beat": "cta",
    "text": "Quick break: like and follow. Then let's see how bad this gets.",
    "stars": [],
    "phonemes": null,
-   "file": "06.wav",
-   "dur": 3.29,
-   "sha256": "4ea9836e05d9e63415178c69d7165f20eab48cdd6fbf004ff308ee3c35aa1cf9"
+   "file": "10.wav",
+   "dur": 4.512,
+   "sha256": "5658b0ac9086d5b704827d7b94a746e6af1d3d3342363e83d762b52fa65945b7"
   },
   {
-   "id": "vo07",
+   "id": "vo11",
    "beat": "cliff",
    "text": "One more nudge, and something changes completely.",
    "stars": [],
    "phonemes": null,
-   "file": "07.wav",
-   "dur": 3.26,
-   "sha256": "59658ef36f874b09e48607e65af1640b1a2a3c5f361b71af9ef44d878da33ab3"
+   "file": "11.wav",
+   "dur": 3.516,
+   "sha256": "116e397a49099132b0d35f939bda861f8ecd87bf08431845effaa3f2b65b0d50"
   },
   {
-   "id": "vo08",
+   "id": "vo12",
    "beat": "tease",
    "text": "Part eight of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "08.wav",
-   "dur": 2.07,
-   "sha256": "6d27151a6274d07a43b771fd2197c4dcadafc296ef58e3bffb34c499c5818997"
+   "file": "12.wav",
+   "dur": 3.1,
+   "sha256": "2c9ba473a23677a70887a70ea4d3f6dc3ea9daaac7907aef1948bcacee00c78c"
   }
  ]
 }

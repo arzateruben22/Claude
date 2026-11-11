@@ -1,183 +1,183 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/09.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/09.wav",
   "text": "Storms are turning faster, and the days are six hours long.",
   "beat": "weather",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 2.73
+  "dur": 4.313
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "The sky has another problem.",
   "beat": "weather",
   "key": "L8.1",
   "slice": [
-   0.0,
-   1.185
+   0.02,
+   2.078
   ],
   "uid": "weather-1",
   "vo": "vo02",
-  "dur": 1.185
+  "dur": 2.058
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "Storms are steered by the planet's spin, through the Coriolis effect, and that steering grows in step with the spin rate.",
   "beat": "weather",
   "key": "L8.2",
   "slice": [
-   1.985,
-   9.98
+   2.295,
+   11.1
   ],
   "uid": "weather-2",
   "vo": "vo03",
-  "dur": 7.995
+  "dur": 8.805
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "At a six hour day it is four times stronger than today.",
   "beat": "weather",
   "key": "L8.3",
   "slice": [
-   10.78,
-   12.83
+   11.32,
+   15.378
   ],
   "uid": "weather-3",
   "vo": "vo04",
-  "dur": 2.05
+  "dur": 4.058
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "At the edge of floating, it is seventeen times stronger.",
   "beat": "weather",
   "key": "L8.4",
   "slice": [
-   13.63,
-   16.41
+   15.6,
+   19.616
   ],
   "uid": "weather-4",
   "vo": "vo05",
-  "dur": 2.78
+  "dur": 4.016
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "Weather systems would be squeezed into tight, fast bands, and the calm of an ordinary afternoon would be gone.",
   "beat": "weather",
   "key": "L8.5",
   "slice": [
-   17.21,
-   21.1
+   19.835,
+   28.373
   ],
   "uid": "weather-5",
   "vo": "vo06",
-  "dur": 3.89
+  "dur": 8.538
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/08.wav",
   "text": "Nobody could forecast it, because nobody has seen a planet like this.",
   "beat": "weather",
   "key": "L8.6",
   "slice": [
-   21.9,
-   25.42
+   28.595,
+   33.649
   ],
   "uid": "weather-6",
   "vo": "vo07",
-  "dur": 3.52
+  "dur": 5.054
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/09.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/09.wav",
   "text": "At a six hour day, the Sun races from horizon to horizon in three hours.",
   "beat": "six",
   "key": "L9.1",
   "slice": [
-   0.0,
-   3.615
+   0.02,
+   5.98
   ],
   "uid": "six-1",
   "vo": "vo08",
-  "dur": 3.615
+  "dur": 5.96
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/09.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/09.wav",
   "text": "The equator moves at nearly seven thousand kilometers an hour.",
   "beat": "six",
   "key": "L9.2",
   "slice": [
-   4.415,
-   6.835
+   6.205,
+   11.023
   ],
   "uid": "six-2",
   "vo": "vo09",
-  "dur": 2.42
+  "dur": 4.818
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/09.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/09.wav",
   "text": "You are five and a half percent lighter.",
   "beat": "six",
   "key": "L9.3",
   "slice": [
-   7.635,
-   9.095
+   11.245,
+   13.716
   ],
   "uid": "six-3",
   "vo": "vo10",
-  "dur": 1.46
+  "dur": 2.471
+ },
+ {
+  "kind": "cta",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/25.wav",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "beat": "six",
+  "key": "cta",
+  "sub_file": "vo/11-sub.wav",
+  "uid": "cta",
+  "vo": "vo11",
+  "dur": 6.197
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/09.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/09.wav",
   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
   "beat": "six",
   "key": "L9.4",
   "slice": [
-   9.895,
-   13.375
+   13.935,
+   20.459
   ],
   "uid": "six-4",
-  "vo": "vo11",
-  "dur": 3.48
- },
- {
-  "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/25.wav",
-  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-  "beat": "six",
-  "key": "cta",
-  "sub_file": "vo/12-sub.wav",
-  "uid": "cta",
   "vo": "vo12",
-  "dur": 4.11
+  "dur": 6.524
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/10.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/10.wav",
   "text": "And the calendar is about to break.",
   "beat": "six",
   "key": "cliff",
   "uid": "cliff",
   "vo": "vo13",
-  "dur": 1.82
+  "dur": 2.26
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/21.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/21.wav",
   "text": "Part five of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
   "vo": "vo14",
-  "dur": 2.87
+  "dur": 3.3
  }
 ]

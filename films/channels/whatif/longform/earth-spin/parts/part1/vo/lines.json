@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.32,
-   "sha256": "e19e8bc46ddc13ff14427becddfcf20c9affcf7b73a59d37b8b84fc9d6f506d9"
+   "dur": 2.807,
+   "sha256": "18f4c3cecb84568121fb9e8d5b079c3f9decbf1cc6d8075d763ca3b51470410e"
   },
   {
    "id": "vo02",
@@ -21,18 +21,18 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 6.85,
-   "sha256": "061ec5f6fbe378da263727f794647f996d2e4408c108cdb9ad2dd01dd7425eff"
+   "dur": 9.575,
+   "sha256": "3a44d32beda2e06d67cd0c2e9f22c2f84c02c2ceae762bf0066c17b079129fec"
   },
   {
    "id": "vo03",
    "beat": "premise-1",
-   "text": "Here are the rules.",
+   "text": "The Earth keeps its size, its shape, its air and its water.",
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 0.94,
-   "sha256": "9c5d651e68bca1e2bbffce203a989cf0e9faee448a439141f1370cb0aa93aedc"
+   "dur": 4.105,
+   "sha256": "ed2fc02ab65ab98df6ba8b337490f0941dbe345a5e78342e26c939997df66242"
   },
   {
    "id": "vo04",
@@ -41,8 +41,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 3.05,
-   "sha256": "c1574a0f64d3596bb861477c2d08f0a5206c88991c458a3322f98c0a1de33d2b"
+   "dur": 4.35,
+   "sha256": "9024b9253a8d2b1b5c8107bd45e943a127e85d5d76cea87e97250563e2311bc5"
   },
   {
    "id": "vo05",
@@ -51,8 +51,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 4.02,
-   "sha256": "717ae068d1dd20ca0de05c663d205543037f2f83cd7fb5730ed0acd0314ecb47"
+   "dur": 4.644,
+   "sha256": "806a5ab8def9ee84f6dd5dceae1ca6d3f1fbb793b6bf6e55bb34cae6010b2a90"
   },
   {
    "id": "vo06",
@@ -61,8 +61,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 5.21,
-   "sha256": "692e0409a24a3dc22bfff1a6311423613b509bec2d13f12f482da76a8c0fcadc"
+   "dur": 7.544,
+   "sha256": "79ab6d267fdb3a639fef097fa8a071ba3130ffbdd500881fce46c8fbf76503e0"
   },
   {
    "id": "vo07",
@@ -71,8 +71,8 @@
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 2.85,
-   "sha256": "24f93cbf362012116ebd6b69b3f261c66555f0b402f2db5ae767afac6f5ef453"
+   "dur": 2.949,
+   "sha256": "ec263b8f167986e52d711f9ff8a7c486788178350716689872ab6f270daf72c7"
   },
   {
    "id": "vo08",
@@ -81,118 +81,58 @@
    "stars": [],
    "phonemes": null,
    "file": "08.wav",
-   "dur": 6.805,
-   "sha256": "27e5ee85e65882034a48853fb1651c8ea440de52609b941c41a621323062197c"
+   "dur": 8.67,
+   "sha256": "6eab5f46a0335b245756732f4ecd8848297ca4d4cd55e5acaa5562926e9a8933"
   },
   {
    "id": "vo09",
    "beat": "today-3",
-   "text": "You never feel it, because everything moves with you.",
-   "stars": [],
-   "phonemes": null,
-   "file": "09.wav",
-   "dur": 1.84,
-   "sha256": "b7298a2ff205565887fbaebf22e8a7dca94ea8cec53d55e7f2b691409f55240c"
-  },
-  {
-   "id": "vo10",
-   "beat": "today-4",
    "text": "What you do feel is a tiny push outward.",
    "stars": [],
    "phonemes": null,
-   "file": "10.wav",
-   "dur": 1.325,
-   "sha256": "6bb505d1b5c8f9b4e5bd79760e0cbfa8d1a349bca5aab854a64e33d0420f6516"
+   "file": "09.wav",
+   "dur": 3.121,
+   "sha256": "f2860dd5e2c0f483389ac46b52110de4c552f6571a170ddd2a2857972752fd6b"
   },
   {
-   "id": "vo11",
-   "beat": "today-5",
-   "text": "You weigh about a third of a percent less than you would on a planet that did not spin.",
-   "stars": [],
-   "phonemes": null,
-   "file": "11.wav",
-   "dur": 3.78,
-   "sha256": "36d8113932cf07f6e48d8157e46c3f1377af8cc02af20ef5c017d6f958aa3879"
-  },
-  {
-   "id": "vo12",
-   "beat": "spinup-1",
-   "text": "Now the spin begins to speed up.",
-   "stars": [],
-   "phonemes": null,
-   "file": "12.wav",
-   "dur": 2.05,
-   "sha256": "eb6648cd914961998cb2421b9208ce74f7f384202d2c6b40631cfd19568a0129"
-  },
-  {
-   "id": "vo13",
-   "beat": "spinup-2",
-   "text": "At twenty hours, you can see the shadows sweep.",
-   "stars": [],
-   "phonemes": null,
-   "file": "13.wav",
-   "dur": 2.15,
-   "sha256": "f29a5a219157cb53551296b864c28e9e8af9796fd61eb79a96c03f0e2c3eec5e"
-  },
-  {
-   "id": "vo14",
-   "beat": "spinup-3",
-   "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
-   "stars": [],
-   "phonemes": null,
-   "file": "14.wav",
-   "dur": 3.295,
-   "sha256": "ace30cec5bc9598f395795baa163f3a87e5704159869886254ca88cb56533d81"
-  },
-  {
-   "id": "vo15",
+   "id": "vo10",
    "beat": "cta",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
    "stars": [],
    "phonemes": null,
-   "file": "15.wav",
-   "dur": 4.11,
-   "sha256": "1d78d7d531e67c349e36d3e2f5d6fd243109b3c99f970747d513081b61d38830"
+   "file": "10.wav",
+   "dur": 6.197,
+   "sha256": "1af20f4a97abdf86d2c8963174790231e18f3926e533514b83026de24df0b573"
   },
   {
-   "id": "vo16",
-   "beat": "spinup-4",
-   "text": "The rule never changes.",
+   "id": "vo11",
+   "beat": "today-4",
+   "text": "You weigh about a third of a percent less than you would on a planet that did not spin.",
    "stars": [],
    "phonemes": null,
-   "file": "16.wav",
-   "dur": 1.69,
-   "sha256": "06420b8299c4da4a9420174a2347497153b6ff33edad4778e5db4041380135b5"
+   "file": "11.wav",
+   "dur": 5.809,
+   "sha256": "9d040ede02e40309869c949b3a982c5670ee820daf64e35133fdf04abd7fec97"
   },
   {
-   "id": "vo17",
-   "beat": "spinup-5",
-   "text": "A day only ever gets shorter, and you cannot turn it back.",
-   "stars": [],
-   "phonemes": null,
-   "file": "17.wav",
-   "dur": 2.92,
-   "sha256": "74d5de7809be6e0f2f5b07242d0dc3bada21e67aecd27a02937102df658c7d3e"
-  },
-  {
-   "id": "vo18",
+   "id": "vo12",
    "beat": "cliff",
    "text": "And the spin has only just begun to speed up.",
    "stars": [],
    "phonemes": null,
-   "file": "18.wav",
-   "dur": 2.26,
-   "sha256": "3aca2ed631afdab829ada5716dd46290696656e5f0bf8eaa6377565c2cc2f7dd"
+   "file": "12.wav",
+   "dur": 3.212,
+   "sha256": "a8dff636b49f920bffff6acb5cab278833568fdcdfad148f4c6dd93f85c0024d"
   },
   {
-   "id": "vo19",
+   "id": "vo13",
    "beat": "tease",
    "text": "Part one of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "19.wav",
-   "dur": 3.38,
-   "sha256": "ca18ced85ab2581bf8e28f017b794cfd7487f299b2135a6a9ae4fa07344975c6"
+   "file": "13.wav",
+   "dur": 3.082,
+   "sha256": "b98ef87a13390c270fe99f2b17ac68afe7db2062e61a14b7a824b9488a57cf48"
   }
  ]
 }

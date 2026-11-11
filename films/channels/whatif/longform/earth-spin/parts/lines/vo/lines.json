@@ -1,0 +1,543 @@
+{
+ "voice": "am_puck",
+ "speed": "per sentence",
+ "lang": "en-us",
+ "model_sha256": "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5",
+ "voices_sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+ "kokoro_onnx": "0.6.1",
+ "onnxruntime": "1.31.0",
+ "python": "3.13.18",
+ "made_by": "films/channels/whatif/longform/earth-spin/voice.py (tts.py's phonemes and trim, one call and speed per sentence, measured pauses)",
+ "gap": 0.38,
+ "gap_question": 0.6,
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "p1-open",
+   "text": "What if Earth spun faster, and couldn't stop?",
+   "stars": [],
+   "phonemes": "wˌʌt ɪf ˈɜːθ spˈʌn fˈæstɚ, ænd kˌʊdənt stˈɑːp?",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "01.wav",
+   "dur": 2.807,
+   "sha256": "18f4c3cecb84568121fb9e8d5b079c3f9decbf1cc6d8075d763ca3b51470410e"
+  },
+  {
+   "id": "vo02",
+   "beat": "p1-cliff",
+   "text": "And the spin has only just begun to speed up.",
+   "stars": [],
+   "phonemes": "ænd ðə spˈɪn hɐz ˈoʊnli dʒˈʌst bɪɡˈʌn tə spˈiːd ˈʌp.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "02.wav",
+   "dur": 3.212,
+   "sha256": "a8dff636b49f920bffff6acb5cab278833568fdcdfad148f4c6dd93f85c0024d"
+  },
+  {
+   "id": "vo03",
+   "beat": "p2-open",
+   "text": "The day is shrinking fast.",
+   "stars": [],
+   "phonemes": "ðə dˈeɪ ɪz ʃɹˈɪŋkɪŋ fˈæst.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "03.wav",
+   "dur": 1.775,
+   "sha256": "31d27ae72372239c18e8345014e34cc52dcc1060596b937967a3caf8bccccd0b"
+  },
+  {
+   "id": "vo04",
+   "beat": "p2-cliff",
+   "text": "And then the wind starts to blow.",
+   "stars": [],
+   "phonemes": "ænd ðˈɛn ðə wˈɪnd stˈɑːɹts tə blˈoʊ.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "04.wav",
+   "dur": 1.958,
+   "sha256": "8e9ac4b1bfb87ca082a0224067fba767ccbbbf08cab670ff75115ff1421f9d16"
+  },
+  {
+   "id": "vo05",
+   "beat": "p3-open",
+   "text": "The air can't keep up with the ground.",
+   "stars": [],
+   "phonemes": "ðɪ ˈɛɹ kˈænt kˈiːp ˌʌp wɪððə ɡɹˈaʊnd.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "05.wav",
+   "dur": 2.192,
+   "sha256": "db18645fe0acd2ffcd4bed8cfb39f98bb1a99bebbab05226a13aefbb20d5f577"
+  },
+  {
+   "id": "vo06",
+   "beat": "p3-cliff",
+   "text": "And then the oceans start to move.",
+   "stars": [],
+   "phonemes": "ænd ðˈɛn ðɪ ˈoʊʃənz stˈɑːɹt tə mˈuːv.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "06.wav",
+   "dur": 2.116,
+   "sha256": "7f94d5648e44894aae69841c627f5a5c801eda50416f50b2d173d6dc67e59136"
+  },
+  {
+   "id": "vo07",
+   "beat": "p4-open",
+   "text": "The oceans are sliding toward the equator.",
+   "stars": [],
+   "phonemes": "ðɪ ˈoʊʃənz ɑːɹ slˈaɪdɪŋ təwˈɔːɹd ðɪ ɪkwˈeɪɾɚ.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "07.wav",
+   "dur": 2.902,
+   "sha256": "5356e7ec8ef461dc852b61a11c52ec84e7a828444bfd76e26cd61c6d5219402a"
+  },
+  {
+   "id": "vo08",
+   "beat": "p4-cliff",
+   "text": "And the weather is about to change completely.",
+   "stars": [],
+   "phonemes": "ænd ðə wˈɛðɚɹ ɪz ɐbˌaʊt tə tʃˈeɪndʒ kəmplˈiːtli.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "08.wav",
+   "dur": 3.047,
+   "sha256": "bebfc3b8f977cc046667745cc0c5c6166e0120e98e4802df3eb7a3541e2969f4"
+  },
+  {
+   "id": "vo09",
+   "beat": "p5-open",
+   "text": "Storms are turning faster, and the days are six hours long.",
+   "stars": [],
+   "phonemes": "stˈɔːɹmz ɑːɹ tˈɜːnɪŋ fˈæstɚ, ænd ðə dˈeɪz ɑːɹ sˈɪks ˈaʊɚz lˈɔŋ.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "09.wav",
+   "dur": 4.313,
+   "sha256": "b2b344d6286078e4823b59054c18caaaed21aa9fb0f4662556facfa105136fd6"
+  },
+  {
+   "id": "vo10",
+   "beat": "p5-cliff",
+   "text": "And the calendar is about to break.",
+   "stars": [],
+   "phonemes": "ænd ðə kˈæləndɚɹ ɪz ɐbˌaʊt tə bɹˈeɪk.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "10.wav",
+   "dur": 2.26,
+   "sha256": "72e75de989191423d9bf800c0d1af8773b640bcb419191d8dd32ad4a4dfb439b"
+  },
+  {
+   "id": "vo11",
+   "beat": "p6-open",
+   "text": "Now a year has more than a thousand days in it.",
+   "stars": [],
+   "phonemes": "nˈaʊ ɐ jˈɪɹ hɐz mˈɔːɹ ðˌænə θˈaʊzənd dˈeɪz ɪn ɪt.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "11.wav",
+   "dur": 3.124,
+   "sha256": "cd5e1c78acc139f12d91a53a9eee868967d6517bd986ac74355d0079ae8c3d83"
+  },
+  {
+   "id": "vo12",
+   "beat": "p6-cliff",
+   "text": "And the days keep getting shorter.",
+   "stars": [],
+   "phonemes": "ænd ðə dˈeɪz kˈiːp ɡˌɛɾɪŋ ʃˈɔːɹɾɚ.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "12.wav",
+   "dur": 2.017,
+   "sha256": "2679af58087fa62c5431c441f383e35dfe86a2141820f425b9742f2ecedcb620"
+  },
+  {
+   "id": "vo13",
+   "beat": "p7-open",
+   "text": "Three hours, then two: a day is as long as a movie.",
+   "stars": [],
+   "phonemes": "θɹˈiː ˈaʊɚz, ðˈɛn tˈuː: ɐ dˈeɪ ɪz æz lˈɔŋ æz ɐ mˈuːvi.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "13.wav",
+   "dur": 3.62,
+   "sha256": "54b3110dcf35698f9474ccf178ce33ba9bc9f0fe77bd853f994538b135f9f876"
+  },
+  {
+   "id": "vo14",
+   "beat": "p7-cliff",
+   "text": "And at an hour and a half, you are almost weightless.",
+   "stars": [],
+   "phonemes": "ænd æɾ ɐn ˈaʊɚ ænd ɐ hˈæf, juː ɑːɹ ˈɔːlmoʊst wˈeɪtləs.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "14.wav",
+   "dur": 3.15,
+   "sha256": "3a926a4c1f5719afe8f0f89331f34cc4343785d5d8a0ada824647b33cdd4c78c"
+  },
+  {
+   "id": "vo15",
+   "beat": "p8-open",
+   "text": "A day now lasts about an hour and a half.",
+   "stars": [],
+   "phonemes": "ɐ dˈeɪ nˈaʊ lˈæsts ɐbˌaʊt ɐn ˈaʊɚ ænd ɐ hˈæf.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "15.wav",
+   "dur": 2.677,
+   "sha256": "46d65c23957c1c831fd5594b4e389966c93f8907a54f118f6c56282329dc7f0e"
+  },
+  {
+   "id": "vo16",
+   "beat": "p8-cliff",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": "wˈʌn mˈɔːɹ nˈʌdʒ, ænd sˈʌmθɪŋ tʃˈeɪndʒᵻz kəmplˈiːtli.",
+   "speeds": [
+    0.76
+   ],
+   "gaps": [],
+   "silences": [],
+   "file": "16.wav",
+   "dur": 3.516,
+   "sha256": "116e397a49099132b0d35f939bda861f8ecd87bf08431845effaa3f2b65b0d50"
+  },
+  {
+   "id": "vo17",
+   "beat": "closer1",
+   "text": "Part one of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt wˈʌn ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.0784,
+     1.4584
+    ]
+   ],
+   "file": "17.wav",
+   "dur": 3.082,
+   "sha256": "b98ef87a13390c270fe99f2b17ac68afe7db2062e61a14b7a824b9488a57cf48"
+  },
+  {
+   "id": "vo18",
+   "beat": "closer2",
+   "text": "Part two of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt tˈuː ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.2141,
+     1.5941
+    ]
+   ],
+   "file": "18.wav",
+   "dur": 3.218,
+   "sha256": "041f832d50b6e4138567777b10206d0d467e1b06fe74863a2f77d50a30c42483"
+  },
+  {
+   "id": "vo19",
+   "beat": "closer3",
+   "text": "Part three of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt θɹˈiː ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.2176,
+     1.5976
+    ]
+   ],
+   "file": "19.wav",
+   "dur": 3.221,
+   "sha256": "19e8d5504b825806f2ed6acc147420770693e064f091a53bc4f90f3b8a178ed6"
+  },
+  {
+   "id": "vo20",
+   "beat": "closer4",
+   "text": "Part four of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt fˈɔːɹ ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.2472,
+     1.6272
+    ]
+   ],
+   "file": "20.wav",
+   "dur": 3.251,
+   "sha256": "37c481d735f4dd9965ae6f53c3a23a124fcb81326dd7732b0eed03f0d4ebf22b"
+  },
+  {
+   "id": "vo21",
+   "beat": "closer5",
+   "text": "Part five of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt fˈaɪv ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.2967,
+     1.6767
+    ]
+   ],
+   "file": "21.wav",
+   "dur": 3.3,
+   "sha256": "e75e79727e255d6263ccd913f3fc39802dd908d11cfada43b453e4e07ac60fd2"
+  },
+  {
+   "id": "vo22",
+   "beat": "closer6",
+   "text": "Part six of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt sˈɪks ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.3744,
+     1.7544
+    ]
+   ],
+   "file": "22.wav",
+   "dur": 3.378,
+   "sha256": "0d492725ab4bac8e3f1717e6f7f2dc2f24160968ef85a2f2c6e74091ec45b8bf"
+  },
+  {
+   "id": "vo23",
+   "beat": "closer7",
+   "text": "Part seven of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt sˈɛvən ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.3458,
+     1.7258
+    ]
+   ],
+   "file": "23.wav",
+   "dur": 3.349,
+   "sha256": "fc26821fb3b7556c033b771354b5b2fc648a4cd3b057281b9ad3a2f83e9e8224"
+  },
+  {
+   "id": "vo24",
+   "beat": "closer8",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": "pˈɑːɹt ˈeɪt ʌv ˈeɪt. fˈʊl vˈɪdɪoʊ ˌɔn juː tˈuːb.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.0966,
+     1.4766
+    ]
+   ],
+   "file": "24.wav",
+   "dur": 3.1,
+   "sha256": "2c9ba473a23677a70887a70ea4d3f6dc3ea9daaac7907aef1948bcacee00c78c"
+  },
+  {
+   "id": "vo25",
+   "beat": "cta-hang-follow",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": "hˈæŋ ˈɔn. ɪf jʊɹ ɛndʒˈɔɪɪŋ ðˈɪs, tˈæp lˈaɪk ænd fˈɑːloʊ. oʊkˈeɪ, bˈæk tə ðə mˈæθ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     0.8435,
+     1.2235
+    ],
+    [
+     4.0133,
+     4.3933
+    ]
+   ],
+   "file": "25.wav",
+   "dur": 5.922,
+   "sha256": "21d38a7139df38158c2d7259cc7a5422f7ba8b2ae702e7a54120659eaf5eae7e"
+  },
+  {
+   "id": "vo26",
+   "beat": "cta-hang-subscribe",
+   "text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+   "stars": [],
+   "phonemes": "hˈæŋ ˈɔn. ɪf jʊɹ ɛndʒˈɔɪɪŋ ðˈɪs, tˈæp lˈaɪk ænd səbskɹˈaɪb. oʊkˈeɪ, bˈæk tə ðə mˈæθ.",
+   "speeds": [
+    0.76,
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38,
+    0.38
+   ],
+   "silences": [
+    [
+     0.8435,
+     1.2235
+    ],
+    [
+     4.2886,
+     4.6686
+    ]
+   ],
+   "file": "26.wav",
+   "dur": 6.197,
+   "sha256": "e297ba1d29f59c556b52df8cb9eb4c9f6b8e0f7b043459a4a8cd6856e5121bd6"
+  },
+  {
+   "id": "vo27",
+   "beat": "cta-break-follow",
+   "text": "Quick break: like and follow. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": "kwˈɪk bɹˈeɪk: lˈaɪk ænd fˈɑːloʊ. ðˈɛn lˈɛts sˈiː hˌaʊ bˈæd ðɪs ɡˈɛts.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     1.8723,
+     2.2523
+    ]
+   ],
+   "file": "27.wav",
+   "dur": 4.282,
+   "sha256": "a070888a3b0a17cc6b29fd98703834610b3f133d5d4498f97a18a985eae596b6"
+  },
+  {
+   "id": "vo28",
+   "beat": "cta-break-subscribe",
+   "text": "Quick break: like and subscribe. Then let's see how bad this gets.",
+   "stars": [],
+   "phonemes": "kwˈɪk bɹˈeɪk: lˈaɪk ænd səbskɹˈaɪb. ðˈɛn lˈɛts sˈiː hˌaʊ bˈæd ðɪs ɡˈɛts.",
+   "speeds": [
+    0.76,
+    0.76
+   ],
+   "gaps": [
+    0.38
+   ],
+   "silences": [
+    [
+     2.1015,
+     2.4815
+    ]
+   ],
+   "file": "28.wav",
+   "dur": 4.512,
+   "sha256": "d4c9410e64b4a7bfb320c86e521e777871b8960c788c37054bc81109c5252d94"
+  }
+ ]
+}

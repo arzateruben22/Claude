@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 3.41,
-   "sha256": "e6f984b6e22bbfe5c6a55aad8c0792bb218a11b460afdf69238d7140a951ef16"
+   "dur": 2.902,
+   "sha256": "5356e7ec8ef461dc852b61a11c52ec84e7a828444bfd76e26cd61c6d5219402a"
   },
   {
    "id": "vo02",
@@ -21,8 +21,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 1.58,
-   "sha256": "2e3cc22f3147784ab12b91207dd1c470066fb8f26b56e8d153c23daa864dccb7"
+   "dur": 2.236,
+   "sha256": "43eb14120a95f9406139b9df57bdc4f1abfccdff807a6575d2ff46ff12e3e563"
   },
   {
    "id": "vo03",
@@ -31,108 +31,88 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 5.37,
-   "sha256": "46f8381d7dfb9bf21bbf17b3ea61e313805055cd702c925bb6927a6f8f8945e1"
+   "dur": 6.772,
+   "sha256": "0d6e059aa9633cb9f86432abf83651c3d28c6b75a111e3469ddd20e514ecb9b0"
   },
   {
    "id": "vo04",
    "beat": "oceans-3",
-   "text": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape.",
+   "text": "Speed the spin up quickly and the ground cannot adjust in time.",
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 7.59,
-   "sha256": "c27451ef16202657fdb09a89c49f25d553ffec7c1f40fe3aa80afaf66528dcc3"
+   "dur": 4.719,
+   "sha256": "bc39d17bd834c9693b33f83e4a89c5056a4a8fcc2c5326488c17d7aeef0ea233"
   },
   {
    "id": "vo05",
    "beat": "oceans-4",
-   "text": "Speed the spin up quickly and the ground cannot adjust in time.",
+   "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 2.5,
-   "sha256": "928fe4ad42f4daea187328b3835d012929d7ff6de9ff6dab3539240a06b23535"
+   "dur": 10.682,
+   "sha256": "8318dcf1eb5c49dc82e57c2df654db71cec108fdd34faa8d85507447b6397df4"
   },
   {
    "id": "vo06",
    "beat": "oceans-5",
-   "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
+   "text": "The whole ocean is only about three point seven kilometers deep.",
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 5.41,
-   "sha256": "2bee744588df44a148a32645e4aa0a41040b1247e0755ef3a134f49f7d5db4c5"
+   "dur": 5.225,
+   "sha256": "54c861e309eb9238bfca7ce9055fa327ca933726c7a37fc6ecc7a311f87d2cdf"
   },
   {
    "id": "vo07",
    "beat": "oceans-6",
-   "text": "The whole ocean is only about three point seven kilometers deep.",
+   "text": "It drains toward a belt around the equator, while the poles dry out.",
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 3.84,
-   "sha256": "8f3f10f3a2e98e9b0532083879b22dd741fab9df0234ea9aafeb162cf7db35f9"
+   "dur": 4.924,
+   "sha256": "e23ddcebc46edbeb45e883dbbf0edba52b577381305e25599e6f946481e45705"
   },
   {
    "id": "vo08",
    "beat": "oceans-7",
-   "text": "So the water does not simply rise.",
-   "stars": [],
-   "phonemes": null,
-   "file": "08.wav",
-   "dur": 1.77,
-   "sha256": "1d7d3286e5cc2095246c7cfb0ca74700015ba2c92ab785d9c30860a5635564b8"
-  },
-  {
-   "id": "vo09",
-   "beat": "oceans-8",
-   "text": "It drains toward a belt around the equator, while the poles dry out.",
-   "stars": [],
-   "phonemes": null,
-   "file": "09.wav",
-   "dur": 3.03,
-   "sha256": "07929223674e5d7dea84dc31c8af43aba8257c38ae0b33000763945ec4051c09"
-  },
-  {
-   "id": "vo10",
-   "beat": "oceans-9",
    "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
    "stars": [],
    "phonemes": null,
-   "file": "10.wav",
-   "dur": 5.92,
-   "sha256": "61997627ba80260add5140796abe34c567301b3221cf8905c41b8ad24c11f3e8"
+   "file": "08.wav",
+   "dur": 8.752,
+   "sha256": "81b1412c04994ca9732eb73d9024594fbfd63a6e7ab114dfa63c7434d03eef87"
   },
   {
-   "id": "vo11",
+   "id": "vo09",
    "beat": "cta",
    "text": "Quick break: like and follow. Then let's see how bad this gets.",
    "stars": [],
    "phonemes": null,
-   "file": "11.wav",
-   "dur": 3.29,
-   "sha256": "4ea9836e05d9e63415178c69d7165f20eab48cdd6fbf004ff308ee3c35aa1cf9"
+   "file": "09.wav",
+   "dur": 4.512,
+   "sha256": "5658b0ac9086d5b704827d7b94a746e6af1d3d3342363e83d762b52fa65945b7"
   },
   {
-   "id": "vo12",
+   "id": "vo10",
    "beat": "cliff",
    "text": "And the weather is about to change completely.",
    "stars": [],
    "phonemes": null,
-   "file": "12.wav",
-   "dur": 2.04,
-   "sha256": "329584667e82b18664ed67dff99128361bf1fdf28cf6895fc3720739cc8ccfbf"
+   "file": "10.wav",
+   "dur": 3.047,
+   "sha256": "bebfc3b8f977cc046667745cc0c5c6166e0120e98e4802df3eb7a3541e2969f4"
   },
   {
-   "id": "vo13",
+   "id": "vo11",
    "beat": "tease",
    "text": "Part four of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "13.wav",
-   "dur": 2.58,
-   "sha256": "026ffec06fdb58774396ae888222f3169f165d28069eeb575575a7188db4cc5a"
+   "file": "11.wav",
+   "dur": 3.251,
+   "sha256": "37c481d735f4dd9965ae6f53c3a23a124fcb81326dd7732b0eed03f0d4ebf22b"
   }
  ]
 }

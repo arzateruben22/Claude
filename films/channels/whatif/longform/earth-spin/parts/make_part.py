@@ -17,16 +17,20 @@ ES = HERE.parent
 OWN = ES.parents[1] / "voice-owner"
 N = int(sys.argv[1])
 arg = lambda k, d=None: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else d
-VOICE = arg("--voice", "own")
-PL = Path(arg("--partlines", str(OWN / "cut")))
+VOICE = arg("--voice", "ai")
+PL = Path(arg("--partlines", str(HERE / "lines/vo")))
 CTA_KIND = "follow"                     # the picture is built once, with the "follow" line (and its captions); the -sub file only swaps the audio
 # which sentences each part keeps: (line number, "all" or the sentence numbers of that line in the final script)
 PLAN = {
- "own":   {1: [(1, [2]), (2, [2, 3, 4, 5]), (3, "all")], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
+ "own":   {1: [(1, [2]), (2, [2, 3, 4, 5]), (3, "all")], 2: [(4, "all"), (5, "all")], 3: [(6, [1, 2, 3, 4, 5, 6, 7, 8, 9])], 4: [(7, "all")], 5: [(8, [1, 2, 3, 4, 5]), (9, "all")],
            6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
+ "ai":    None,
  "owner": {1: [(1, [2]), (2, [1, 3, 4, 5]), (3, [1, 3, 4, 5, 6])], 2: [(4, "all"), (5, "all")], 3: [(6, "all")], 4: [(7, "all")], 5: [(8, "all"), (9, "all")],
            6: [(10, "all"), (11, "all")], 7: [(12, "all"), (13, "all")], 8: [(14, "all")]},
-}[VOICE][N]
+}
+PLAN["ai"] = PLAN["own"]
+PLAN = PLAN[VOICE][N]
+VODIR = {"own": "vo-own", "ai": "vo"}.get(VOICE, "vo-owner")
 cut = json.loads((PL / "lines.json").read_text())["lines"]
 byname = {l["beat"]: PL / l["file"] for l in cut}
 textof = {l["beat"]: l["text"] for l in cut}
@@ -36,9 +40,9 @@ def clip(path, kind, text, beat, key, sl=None):
     items.append(dict(kind=kind, wav=str(path), text=text, beat=beat, key=key, **({"slice": sl} if sl else {})))
 clip(byname[f"p{N}-open"], "open", textof[f"p{N}-open"], "open", "open")
 first_beat = None
-if VOICE == "own":
-    LO = json.loads((ES / "vo-own/lines.json").read_text())["lines"]
-    WD = {l["id"]: l["words"] for l in json.loads((ES / "vo-own/words.json").read_text())["lines"]}
+if VOICE in ("own", "ai"):
+    LO = json.loads((ES / VODIR / "lines.json").read_text())["lines"]
+    WD = {l["id"]: l["words"] for l in json.loads((ES / VODIR / "words.json").read_text())["lines"]}
     for ln, keep in PLAN:
         L = LO[ln - 1]
         ws = WD[L["id"]]
@@ -54,7 +58,7 @@ if VOICE == "own":
             a = max(prev_end + 0.02, sw[0]["start"] - 0.06)
             b = min(nxt - 0.02, sw[-1]["end"] + 0.12)
             first_beat = first_beat or L["beat"]
-            clip(ES / "vo-own" / L["file"], "sent", " ".join(w["w"] for w in sw), L["beat"], f"L{ln}.{si}", [round(a, 3), round(b, 3)])
+            clip(ES / VODIR / L["file"], "sent", " ".join(w["w"] for w in sw), L["beat"], f"L{ln}.{si}", [round(a, 3), round(b, 3)])
 else:
     LO = json.loads((ES / "vo-owner/lines.json").read_text())["lines"]
     for ln, keep in PLAN:

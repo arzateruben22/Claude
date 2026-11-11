@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -7,82 +7,132 @@
   {
    "id": "vo01",
    "beat": "open",
-   "text": "The day is now twelve hours long.",
+   "text": "The day is shrinking fast.",
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 3.05,
-   "sha256": "389a90682c24c0b512d27b0024cd2d702c2801943ca98292eebeab7915c38401"
+   "dur": 1.775,
+   "sha256": "31d27ae72372239c18e8345014e34cc52dcc1060596b937967a3caf8bccccd0b"
   },
   {
    "id": "vo02",
+   "beat": "spinup-1",
+   "text": "Now the spin begins to speed up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 2.265,
+   "sha256": "1c1a500ce95d4b1df8d66be06d846582379e469baa2a76e41b21528999c241ab"
+  },
+  {
+   "id": "vo03",
+   "beat": "spinup-2",
+   "text": "At twenty hours, you can see the shadows sweep.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.173,
+   "sha256": "f0aadd14149ae3c0d72ccb37a76b06bcc528e7927f6683d1cd6df4495b0084e5"
+  },
+  {
+   "id": "vo04",
+   "beat": "spinup-3",
+   "text": "At sixteen, the Sun climbs the sky like a slow elevator.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 4.586,
+   "sha256": "694a79996dd416c909dd7c315da9c99e69fe993443cc716334b70f1f6fd2fd7b"
+  },
+  {
+   "id": "vo05",
+   "beat": "spinup-4",
+   "text": "A day only ever gets shorter, and you cannot turn it back.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 4.281,
+   "sha256": "eefa027230bf1ab7bf62ee7ffbf86fc10dcb840c542abca69ff56d555f1e3d7a"
+  },
+  {
+   "id": "vo06",
    "beat": "twelve-1",
    "text": "At a twelve hour day, sunrise to sunset takes six hours.",
    "stars": [],
    "phonemes": null,
-   "file": "02.wav",
-   "dur": 3.06,
-   "sha256": "8c2b1692792510ac0b2b5b94cae54df5d808c07140d9da0235936058b592702c"
+   "file": "06.wav",
+   "dur": 4.409,
+   "sha256": "f540bcea6e37917d66ef76214cdcb23d5fb822bc609f3565bd1c58f4eeecda69"
   },
   {
-   "id": "vo03",
+   "id": "vo07",
    "beat": "twelve-2",
+   "text": "At a twelve hour day the Sun moves across the sky as fast as the hour hand on a clock.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 7.096,
+   "sha256": "8cf44d32cea5f67efddae7e9be72b0944848ebc76f93fa41311f5537293b60b6"
+  },
+  {
+   "id": "vo08",
+   "beat": "twelve-3",
    "text": "The ground under your feet now moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
    "stars": [],
    "phonemes": null,
-   "file": "03.wav",
-   "dur": 5.63,
-   "sha256": "c597c333f01d06a5b5e2167b6956f74a0ab02d9076d5d99e6808c05fac6a0c6e"
+   "file": "08.wav",
+   "dur": 9.907,
+   "sha256": "2720e71d38c7d877ac07a2c41099d33852d742e304e7296234d4392bf3a8bdf0"
   },
   {
-   "id": "vo04",
-   "beat": "twelve-3",
+   "id": "vo09",
+   "beat": "twelve-4",
    "text": "You weigh one point four percent less than on a still Earth, four times what you feel today.",
    "stars": [],
    "phonemes": null,
-   "file": "04.wav",
-   "dur": 5.36,
-   "sha256": "1ba7dc49b9cabd756a8222a5c8a0041b0e7a60e8f30751746d687e4d36d7b188"
+   "file": "09.wav",
+   "dur": 6.97,
+   "sha256": "13814773e8e8e2fb428f280fc1a47561a309c9a8de405bae1fb6d06a3dc5c684"
   },
   {
-   "id": "vo05",
-   "beat": "twelve-4",
-   "text": "A seventy kilogram person feels like about sixty-nine.",
-   "stars": [],
-   "phonemes": null,
-   "file": "05.wav",
-   "dur": 2.105,
-   "sha256": "5e168a2b21ec8b08bc67365ee29a47c83500afee48772baa7d1576ef98abbcc0"
-  },
-  {
-   "id": "vo06",
+   "id": "vo10",
    "beat": "cta",
    "text": "Quick break: like and follow. Then let's see how bad this gets.",
    "stars": [],
    "phonemes": null,
-   "file": "06.wav",
-   "dur": 3.29,
-   "sha256": "4ea9836e05d9e63415178c69d7165f20eab48cdd6fbf004ff308ee3c35aa1cf9"
+   "file": "10.wav",
+   "dur": 4.512,
+   "sha256": "5658b0ac9086d5b704827d7b94a746e6af1d3d3342363e83d762b52fa65945b7"
   },
   {
-   "id": "vo07",
+   "id": "vo11",
+   "beat": "twelve-5",
+   "text": "Eight hours of sleep no longer fits inside one night.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 3.795,
+   "sha256": "50ae065e57d5f94d27971c2fe82ed418e5aec833eea9124a87c25ff34818745c"
+  },
+  {
+   "id": "vo12",
    "beat": "cliff",
    "text": "And then the wind starts to blow.",
    "stars": [],
    "phonemes": null,
-   "file": "07.wav",
-   "dur": 1.83,
-   "sha256": "103d38c4261304ab9f4ddf2837a88bfaa5869a87545afafce7a1f0a13aa12a3a"
+   "file": "12.wav",
+   "dur": 1.958,
+   "sha256": "8e9ac4b1bfb87ca082a0224067fba767ccbbbf08cab670ff75115ff1421f9d16"
   },
   {
-   "id": "vo08",
+   "id": "vo13",
    "beat": "tease",
    "text": "Part two of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "08.wav",
-   "dur": 2.15,
-   "sha256": "545f241d84142cc8e81420e32090c92caeff258fa85ee4fe21d2c75e67533e19"
+   "file": "13.wav",
+   "dur": 3.218,
+   "sha256": "041f832d50b6e4138567777b10206d0d467e1b06fe74863a2f77d50a30c42483"
   }
  ]
 }

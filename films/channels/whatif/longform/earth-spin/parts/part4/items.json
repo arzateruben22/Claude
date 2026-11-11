@@ -1,169 +1,141 @@
 [
  {
   "kind": "open",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/07.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/07.wav",
   "text": "The oceans are sliding toward the equator.",
   "beat": "oceans",
   "key": "open",
   "uid": "open",
   "vo": "vo01",
-  "dur": 3.41
+  "dur": 2.902
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
   "text": "And then the oceans begin to move.",
   "beat": "oceans",
   "key": "L7.1",
   "slice": [
-   0.0,
-   1.58
+   0.02,
+   2.256
   ],
   "uid": "oceans-1",
   "vo": "vo02",
-  "dur": 1.58
+  "dur": 2.236
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
   "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
   "beat": "oceans",
   "key": "L7.2",
   "slice": [
-   2.38,
-   7.75
+   2.475,
+   9.247
   ],
   "uid": "oceans-2",
   "vo": "vo03",
-  "dur": 5.37
+  "dur": 6.772
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "Today the Earth already bulges about twenty-one kilometers wider at the equator than from pole to pole, and the ground has had billions of years to settle into that shape.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
+  "text": "Speed the spin up quickly and the ground cannot adjust in time.",
   "beat": "oceans",
   "key": "L7.3",
   "slice": [
-   8.55,
-   16.14
+   9.475,
+   14.194
   ],
   "uid": "oceans-3",
   "vo": "vo04",
-  "dur": 7.59
+  "dur": 4.719
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "Speed the spin up quickly and the ground cannot adjust in time.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
+  "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
   "beat": "oceans",
   "key": "L7.4",
   "slice": [
-   16.94,
-   19.44
+   14.415,
+   25.097
   ],
   "uid": "oceans-4",
   "vo": "vo05",
-  "dur": 2.5
+  "dur": 10.682
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "At a twelve hour day, the water wants to stand about thirty-three kilometers higher at the equator than at the poles, extra, compared with today.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
+  "text": "The whole ocean is only about three point seven kilometers deep.",
   "beat": "oceans",
   "key": "L7.5",
   "slice": [
-   20.24,
-   25.65
+   25.32,
+   30.545
   ],
   "uid": "oceans-5",
   "vo": "vo06",
-  "dur": 5.41
+  "dur": 5.225
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "The whole ocean is only about three point seven kilometers deep.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
+  "text": "It drains toward a belt around the equator, while the poles dry out.",
   "beat": "oceans",
   "key": "L7.6",
   "slice": [
-   26.45,
-   30.29
+   30.765,
+   35.689
   ],
   "uid": "oceans-6",
   "vo": "vo07",
-  "dur": 3.84
+  "dur": 4.924
  },
  {
   "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "So the water does not simply rise.",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo/07.wav",
+  "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
   "beat": "oceans",
   "key": "L7.7",
   "slice": [
-   31.09,
-   32.86
+   35.91,
+   44.662
   ],
   "uid": "oceans-7",
   "vo": "vo08",
-  "dur": 1.77
- },
- {
-  "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "It drains toward a belt around the equator, while the poles dry out.",
-  "beat": "oceans",
-  "key": "L7.8",
-  "slice": [
-   33.66,
-   36.69
-  ],
-  "uid": "oceans-8",
-  "vo": "vo09",
-  "dur": 3.03
- },
- {
-  "kind": "sent",
-  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/vo-owner/07.wav",
-  "text": "This is a rough, first guess, but the direction is certain: land near the poles emerges, and your own coast is flooded.",
-  "beat": "oceans",
-  "key": "L7.9",
-  "slice": [
-   37.49,
-   43.41
-  ],
-  "uid": "oceans-9",
-  "vo": "vo10",
-  "dur": 5.92
+  "dur": 8.752
  },
  {
   "kind": "cta",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/27.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/27.wav",
   "text": "Quick break: like and follow. Then let's see how bad this gets.",
   "beat": "oceans",
   "key": "cta",
-  "sub_file": "vo/11-sub.wav",
+  "sub_file": "vo/09-sub.wav",
   "uid": "cta",
-  "vo": "vo11",
-  "dur": 3.29
+  "vo": "vo09",
+  "dur": 4.512
  },
  {
   "kind": "cliff",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/08.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/08.wav",
   "text": "And the weather is about to change completely.",
   "beat": "oceans",
   "key": "cliff",
   "uid": "cliff",
-  "vo": "vo12",
-  "dur": 2.04
+  "vo": "vo10",
+  "dur": 3.047
  },
  {
   "kind": "closer",
-  "wav": "/home/user/claude/films/channels/whatif/voice-owner/cut/20.wav",
+  "wav": "/home/user/claude/films/channels/whatif/longform/earth-spin/parts/lines/vo/20.wav",
   "text": "Part four of eight. Full video on YouTube.",
   "beat": "tease",
   "key": "closer",
   "uid": "tease",
-  "vo": "vo13",
-  "dur": 2.58
+  "vo": "vo11",
+  "dur": 3.251
  }
 ]

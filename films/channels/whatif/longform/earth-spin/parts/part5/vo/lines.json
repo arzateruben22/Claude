@@ -1,5 +1,5 @@
 {
- "voice": "recorded",
+ "voice": "cloned",
  "speaker": "owner",
  "lang": "en-us",
  "made_by": "parts/make_part.py",
@@ -11,8 +11,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.73,
-   "sha256": "316899d12c33ad0aee9da76ea7a50802465b17a16dd45f68ccc8f4b1732b8628"
+   "dur": 4.313,
+   "sha256": "b2b344d6286078e4823b59054c18caaaed21aa9fb0f4662556facfa105136fd6"
   },
   {
    "id": "vo02",
@@ -21,8 +21,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 1.185,
-   "sha256": "9f311641d58d0df3c06fd6d30069e388b03bee7648e9184115596c9380d40339"
+   "dur": 2.058,
+   "sha256": "fc4cb0946a0d9be727708bf42deb2e1fe3e640290317e7615f7ef4043cc8ac51"
   },
   {
    "id": "vo03",
@@ -31,8 +31,8 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 7.995,
-   "sha256": "8840374f790e6b713c658b926da6b0d98b9c8bcb1b4e832959453d0908087a35"
+   "dur": 8.805,
+   "sha256": "7b4393022b0450c9d9edb6c6ff2e2a7e75cd19d7edc581f81f0052c5e2fe37f3"
   },
   {
    "id": "vo04",
@@ -41,8 +41,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 2.05,
-   "sha256": "ce60bddb79bf6ea07aa274044f2522a361297b9f29703c9457adf89d5127af43"
+   "dur": 4.058,
+   "sha256": "865b550c482b9f0d889d67bdfae00f4c3aecf38a9a1da65d42beb1453e2e800e"
   },
   {
    "id": "vo05",
@@ -51,8 +51,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 2.78,
-   "sha256": "d17006dd6d9736283d977929f9801294a59f7923cb2525d3c34a23c8eb5943df"
+   "dur": 4.016,
+   "sha256": "ddbc886213a75ddbe356421ec58a541e2ef4d4fb48357efc1f4c4ed380e5bfc1"
   },
   {
    "id": "vo06",
@@ -61,8 +61,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 3.89,
-   "sha256": "940a6769aa4d8d350298c1e669e2c5cc9899189fdd34b5588951b4318089f328"
+   "dur": 8.538,
+   "sha256": "9f23d42f0bc4ed8fbfbd0627a948173b416f337ed418835c8eacbc4a5721486f"
   },
   {
    "id": "vo07",
@@ -71,8 +71,8 @@
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 3.52,
-   "sha256": "246e7b3ed93440abb1d3d95d7710799a9a3337dae4feffa374b2edf90c017532"
+   "dur": 5.054,
+   "sha256": "b92c970019cd65e20fa21443beeb1bb62ac6f9e4c31d49d49ad328f88ac7faef"
   },
   {
    "id": "vo08",
@@ -81,8 +81,8 @@
    "stars": [],
    "phonemes": null,
    "file": "08.wav",
-   "dur": 3.615,
-   "sha256": "abe9dfdf7f817426f49fbeb0addabd3ed65733d09f6bd49d7251e686d38df71d"
+   "dur": 5.96,
+   "sha256": "4b16c216b34851dca5b9c71c549703e9ac10ff31523ef6a260269057d7b69ff4"
   },
   {
    "id": "vo09",
@@ -91,8 +91,8 @@
    "stars": [],
    "phonemes": null,
    "file": "09.wav",
-   "dur": 2.42,
-   "sha256": "1fcece71b061f47a600f81c038c513aef03ef1c03ecac66d5c01121eb916be3e"
+   "dur": 4.818,
+   "sha256": "7120349c560d7769d2bb025dd8562200ce5da2117c442052159aa0d0d61521f2"
   },
   {
    "id": "vo10",
@@ -101,28 +101,28 @@
    "stars": [],
    "phonemes": null,
    "file": "10.wav",
-   "dur": 1.46,
-   "sha256": "8216c9d06ebf4b2cc5db97fc12cdaf2b230e5b888e34bcd96fb522b477ae7388"
+   "dur": 2.471,
+   "sha256": "d2a9e707a16e09e4a1cebdc88f19ae2eb188a7c660428e7dc9de1943468e8ee4"
   },
   {
    "id": "vo11",
-   "beat": "six-4",
-   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
-   "stars": [],
-   "phonemes": null,
-   "file": "11.wav",
-   "dur": 3.48,
-   "sha256": "1167be339495360c1e62794481e5d0b03a27adc7a5842bceff1cea8f1f2741f5"
-  },
-  {
-   "id": "vo12",
    "beat": "cta",
    "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
    "stars": [],
    "phonemes": null,
+   "file": "11.wav",
+   "dur": 6.197,
+   "sha256": "1af20f4a97abdf86d2c8963174790231e18f3926e533514b83026de24df0b573"
+  },
+  {
+   "id": "vo12",
+   "beat": "six-4",
+   "text": "Jumping now takes you noticeably higher than it should, and every step feels slightly wrong.",
+   "stars": [],
+   "phonemes": null,
    "file": "12.wav",
-   "dur": 4.11,
-   "sha256": "1d78d7d531e67c349e36d3e2f5d6fd243109b3c99f970747d513081b61d38830"
+   "dur": 6.524,
+   "sha256": "f75f4720a95214b657d5a6083bd09d4db189cee01bc98e4af65493cf8c3b771f"
   },
   {
    "id": "vo13",
@@ -131,8 +131,8 @@
    "stars": [],
    "phonemes": null,
    "file": "13.wav",
-   "dur": 1.82,
-   "sha256": "17bee6b62ff292f581a74f9b8a5b65f6f1669f7b711ae9b8be43b6936d551450"
+   "dur": 2.26,
+   "sha256": "72e75de989191423d9bf800c0d1af8773b640bcb419191d8dd32ad4a4dfb439b"
   },
   {
    "id": "vo14",
@@ -141,8 +141,8 @@
    "stars": [],
    "phonemes": null,
    "file": "14.wav",
-   "dur": 2.87,
-   "sha256": "def008ec4542c0abe152c95a5a93d0492a7d499feed99988f5123a1a81d58bae"
+   "dur": 3.3,
+   "sha256": "e75e79727e255d6263ccd913f3fc39802dd908d11cfada43b453e4e07ac60fd2"
   }
  ]
 }
