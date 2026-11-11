@@ -6,14 +6,14 @@
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
   "source_title": "Moon Fact Sheet (NASA NSSDC)",
   "accessed": "2026-11-09",
-  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK.",
-  "verified_via": "not read",
-  "status": "OPEN",
+  "note": "SOURCE-READ 11 Nov: Moon Fact Sheet shows semimajor axis 0.3844 x 10^6 km (= 384,400 km).",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
   "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): search excerpt only, page not opened",
-   "quote": "",
-   "qualification": "Not yet read."
+   "date": "2026-11-11",
+   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
+   "quote": "Semimajor axis (10^6 km) 0.3844",
+   "qualification": "A person still opens the page before OK."
   }
  },
  {
@@ -55,16 +55,16 @@
   "sentence": "About the same size as the Sun.",
   "claim": "The Sun's mean angular diameter is about 0.53 deg, close to the Moon's: they look about the same size from Earth.",
   "source_url": "https://science.nasa.gov/eclipses/geometry",
-  "source_title": "Eclipse geometry (NASA Science)",
+  "source_title": "Why Do Eclipses Happen? (NASA Science)",
   "accessed": "2026-11-09",
-  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK.",
-  "verified_via": "not read",
-  "status": "OPEN",
+  "note": "SOURCE-READ 11 Nov at science.nasa.gov/eclipses/geometry (page title 'Why Do Eclipses Happen?').",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
   "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): search excerpt only, page not opened",
-   "quote": "",
-   "qualification": "Not yet read."
+   "date": "2026-11-11",
+   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
+   "quote": "Even though the Sun is about 400 times bigger than the Moon, it is also about 400 times farther away. This makes the Sun and the Moon appear almost exactly the same size in our sky.",
+   "qualification": "A person still opens the page before OK."
   }
  },
  {
@@ -227,7 +227,7 @@
   "source_url": "https://science.nasa.gov/eclipses/geometry",
   "source_title": "Eclipse geometry (NASA Science) — URL found by search, page not read",
   "accessed": "2026-11-09",
-  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK.",
+  "note": "OPEN: NOT on the NASA eclipse page I read (it only says eclipses do not happen every month). 'About every 18 months' is still unsourced; a person finds a source or the sentence goes.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -241,17 +241,17 @@
   "id": "c17",
   "sentence": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
   "claim": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination).",
-  "source_url": "",
-  "source_title": "",
+  "source_url": "https://science.nasa.gov/eclipses/geometry",
+  "source_title": "Why Do Eclipses Happen? (NASA Science); Moon Fact Sheet (NASA NSSDC): inclination to ecliptic 5.145 deg",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (geometry): the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination).",
-  "verified_via": "not read",
-  "status": "OPEN",
+  "note": "SOURCE-READ 11 Nov; the claim now rests on NASA's page, not only our inference.",
+  "verified_via": "page",
+  "status": "SOURCE-READ",
   "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): derivation, no page read for this step",
-   "quote": "",
-   "qualification": "Own inference; see the note."
+   "date": "2026-11-11",
+   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
+   "quote": "Although a new moon happens about once a month, solar eclipses do not. ... Because the Moon's orbit is tilted ... (Moon Fact Sheet: Inclination to ecliptic 5.145 deg)",
+   "qualification": "A person still opens the page before OK."
   }
  },
  {
@@ -660,6 +660,91 @@
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
+  }
+ },
+ {
+  "id": "c42",
+  "sentence": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
+  "claim": "The Sun's tidal effect is roughly half the Moon's.",
+  "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
+  "source_title": "What causes tides? (NOAA Ocean Service)",
+  "accessed": "2026-11-11",
+  "note": "",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c43",
+  "sentence": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
+  "claim": "Tidal friction transfers angular momentum from Earth's spin to the Moon's orbit, which is why the Moon recedes.",
+  "source_url": "https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035",
+  "source_title": "The Moon Is Moving Farther From Earth Each Year, and Tides Are the Reason (Discover)",
+  "accessed": "2026-11-11",
+  "note": "Secondary source; a NASA/JPL page is better.",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c44",
+  "sentence": "Material inside the Roche limit tends to spread into rings, while material outside tends to clump into small moons.",
+  "claim": "Inside the Roche limit, orbiting material tends to disperse and form rings; outside it, material tends to coalesce.",
+  "source_url": "https://www.sfu.ca/~boal/390lecs/390lec8.pdf",
+  "source_title": "SFU PHYS 390 lecture on tides and the Roche limit",
+  "accessed": "2026-11-11",
+  "note": "",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c45",
+  "sentence": "Saturn's rings are the famous example, though they are made mostly of water ice, not rock.",
+  "claim": "Saturn's rings are made mostly of water ice.",
+  "source_url": "https://science.nasa.gov/saturn/rings/",
+  "source_title": "Saturn Rings (NASA Science)",
+  "accessed": "2026-11-11",
+  "note": "",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
+  }
+ },
+ {
+  "id": "c48",
+  "sentence": "We know because laser light bounces off mirrors the Apollo astronauts left behind.",
+  "claim": "The Moon's distance is measured by lunar laser ranging, laser pulses bounced off retroreflectors left by the Apollo missions.",
+  "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
+  "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
+  "accessed": "2026-11-11",
+  "note": "",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "source_read": {
+   "date": "2026-11-11",
+   "by": "builder (an AI): source not yet read",
+   "quote": "",
+   "qualification": "Not yet read."
   }
  }
 ]
