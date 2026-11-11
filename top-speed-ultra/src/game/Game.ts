@@ -1324,7 +1324,7 @@ export class Game {
     // a venue's exit ramp, ARRIVE_M before it meets the street: the fade parks you there (street driving isn't built)
     if (this.venueAllowed) { const vr = this.vramps().get(this.path); if (vr && toStreet(this.vramps(), vr, p.s) <= ARRIVE_M) { this.arriveVenue(vr); return; } }
     // the end of the road: turned around or put back on, and the route planned again from there
-    if (!this.path.next && p.s > this.path.len - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
+    if (!this.path.next && p.s > this.path.end - 30 && p.vx > 0.5) { this.rejoin(); this.route = []; this.followRoute(this.path, this.phys.s); }
     // a missed hand-off on this road: plan again from here (four times a second)
     if (!this.attract && !this.over && this.steps % 30 === 0 && this.missedHandOff()) { this.reroutes++; this.replan(); }
     this.car.snapshot(p);
