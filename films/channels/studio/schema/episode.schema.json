@@ -131,10 +131,10 @@
           "type": "array",
           "prefixItems": [ { "type": "number", "exclusiveMinimum": 0 }, { "type": "number", "exclusiveMinimum": 0 } ],
           "items": false, "minItems": 2, "maxItems": 2,
-          "description": "[shortest, longest] allowed length in seconds for this format on this channel."
+          "description": "[shortest, longest] allowed length in seconds for this format on this channel, copied from the channel identity. validate.py fails a window wider than the identity's."
         },
         "targetS": { "type": "number", "exclusiveMinimum": 0, "description": "The length the plan aims for, in seconds." },
-        "durationForced": { "type": "boolean", "description": "True when the target was accepted outside durationS on purpose (new_episode.py --force). validate.py then warns instead of failing. A long video under 510 s still fails." },
+        "durationForced": { "type": "boolean", "description": "True when the target was accepted outside durationS on purpose (new_episode.py --force). It covers planning only: validate.py warns instead of failing until stage 'editing', and fails from then on. A long video under 510 s and a premium lesson under 60 s fail even when forced." },
         "deliveries": {
           "type": "array",
           "items": {
@@ -191,10 +191,10 @@
         "wpm": { "type": "number", "minimum": 40, "maximum": 220, "description": "The voice's reading pace in words a minute, as the channel identity and films/channels/voice-scripts/make_recording_script.py use it. Word budget = runtime in minutes x wpm x talkShare." },
         "talkShare": { "type": "number", "exclusiveMinimum": 0, "maximum": 1, "description": "The share of the runtime the voice is speaking. 1 for shorts and parts (kits/cinema/script/lint.py estimates length the same way); lower for ASMR lessons and long films, which leave picture-only time." },
         "name": { "type": "string", "description": "The speaker's name, when they are credited." },
-        "synthetic": { "type": "boolean", "description": "True when the audio is generated, including a clone of the owner's own voice. Then disclosures.aiVoice must be true." },
+        "synthetic": { "type": "boolean", "description": "True when the audio is generated, including a clone of the owner's own voice. Then disclosures.aiVoice must be true. Never true for a guest: a guest's voice is never synthesised." },
         "standIn": { "type": "string", "description": "The synthetic voice used for drafts until the recording arrives. Always labelled as AI." },
         "source": { "type": "string", "description": "Where the recording lives." },
-        "consent": { "type": "string", "description": "For a guest or a cloned voice: where the written OK is recorded, or a TODO for the owner." }
+        "consent": { "type": "string", "description": "For a guest or a cloned voice: where the written OK is recorded, or a TODO for the owner. An owner's cloned voice cannot reach export while this holds a TODO." }
       }
     },
     "look": {
@@ -223,7 +223,7 @@
       "type": "object",
       "required": ["id", "purpose", "seconds"],
       "properties": {
-        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "The beat's heading in script.md." },
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "The beat's heading in script.md. Letters, digits and underscores only, no hyphen: Prism's importer reads the heading as \\w+ (prism-studio/scripts/import-episodes.ts) and drops a beat it cannot read." },
         "purpose": { "type": "string", "minLength": 3, "description": "The beat's job in the story." },
         "seconds": { "$ref": "#/$defs/window" },
         "words": { "type": "integer", "minimum": 0, "description": "Word budget for the beat at the voice's pace." },
@@ -271,7 +271,7 @@
           "description": "ok only when a person has opened every source in claims.json. A search excerpt is not enough."
         },
         "title": { "enum": ["working", "chosen"], "description": "chosen when the owner has picked the packaging winner." },
-        "recording": { "enum": ["not needed", "waiting", "received"], "description": "For an owner or guest voice: whether the real recording has arrived." },
+        "recording": { "enum": ["not needed", "waiting", "received"], "description": "For an owner or guest voice: whether the real recording has arrived. A guest-voiced episode needs 'received' from stage 'editing' on." },
         "notes": { "type": "string" }
       }
     }

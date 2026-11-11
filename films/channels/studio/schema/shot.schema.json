@@ -42,7 +42,7 @@
       ],
       "properties": {
         "id": { "type": "string", "pattern": "^S[0-9]{2,3}[a-z]?$", "description": "S01, S02 ... in order. A shot added later between two takes a letter: S04a." },
-        "beat": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "description": "Optional. The story beat (script.md heading) this shot belongs to." },
+        "beat": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "Optional. The story beat (script.md heading) this shot belongs to. Letters, digits and underscores only, as in episode.json." },
         "purpose": { "type": "string", "minLength": 8, "description": "Why the shot exists: what the viewer must understand or feel by its last frame. A shot with no purpose is cut." },
         "seconds": {
           "type": "array",
