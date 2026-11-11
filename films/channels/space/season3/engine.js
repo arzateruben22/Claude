@@ -19,7 +19,7 @@ function beats() {
 function dCount(t) { const d = dCount0(t), b = beats(); if (!b || t < b.only.t0) return d; const tick = sm((t - b.only.t0) / 5.0), gp = clamp01((Math.log(D0) - Math.log(d)) / (Math.log(D0) - Math.log(288300))); return d * (1 - 0.0086 * tick * (1 - gp)); }
 function dCount0(t) { const k = TL.km; if (t <= k[0][0]) return k[0][1]; for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const a = k[i - 1], b = k[i]; if (a[1] === b[1]) return a[1]; const g0 = Math.max(a[0], b[0] - 8.0); return t < g0 ? a[1] : Math.exp(lerp(Math.log(a[1]), Math.log(b[1]), sm((t - g0) / (b[0] - g0)))); } return k[k.length - 1][1]; }
 function geom() {
-  if (MODE === "land") return { r0: 69 / 941 * H, cx0: 0.68 * W, cy0: 312 / 941 * H, cx1: 0.553 * W, yb1: 0.774 * H, horizon: 0.715 * H, shore: 0.80 * H, plate: "plate-beach", flood: "flood-clean" };
+  if (MODE === "land") return { r0: 69 / 941 * H, cx0: 0.68 * W, cy0: 312 / 941 * H, cx1: 0.553 * W, yb1: 0.774 * H, horizon: 0.715 * H, shore: 0.80 * H, plate: "beach-clean", flood: "flood-clean" };
   return { r0: 73, cx0: 0.62 * W, cy0: 807, cx1: 0.553 * W, yb1: 1450, horizon: 1414, shore: 1535, plate: "beach-clean-9x16", flood: "flood-clean-9x16" };
 }
 function camT(cam, ox, oy) { ctx.translate(W / 2 + ox, H * 0.72 + oy); ctx.scale(cam, cam); ctx.translate(-W / 2, -H * 0.72); }
@@ -62,7 +62,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   }
   ctx.save(); camT(cam, ox, oy); ctx.drawImage(IM[MODE === "land" ? "figure-layer" : "figure-layer-9x16"], 0, 0, W, H); ctx.restore();   // the small figure stays upright on top of the moving sea
   // moonlight on the water: the silver road, wider and brighter as the light grows; the wet sand and the headland lit
-  const bright = clamp01(0.13 * Math.log2(lightx)), roadW = Math.min(W * 0.5, mo.r * 0.9 + 90 * U);
+  const bright = Math.max(clamp01(0.13 * Math.log2(lightx)), 0.07), roadW = Math.min(W * 0.5, mo.r * 0.9 + 90 * U);
   if (bright > 0.01 && moonAlpha > 0.01) {
     ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.filter = `blur(${22 * U}px)`; const rg = ctx.createLinearGradient(0, G.horizon, 0, H); rg.addColorStop(0, `rgba(170,235,230,${0.6 * bright * moonAlpha})`); rg.addColorStop(1, `rgba(90,170,190,${0.25 * bright * moonAlpha})`);
     ctx.fillStyle = rg; ctx.beginPath(); ctx.moveTo(mo.cx - roadW * 0.12, G.horizon); ctx.lineTo(mo.cx + roadW * 0.12, G.horizon); ctx.lineTo(mo.cx + roadW * 0.5 + 40 * Math.sin(t * 0.8), H); ctx.lineTo(mo.cx - roadW * 0.5 + 40 * Math.sin(t * 0.8), H); ctx.fill(); ctx.filter = "none";

@@ -70,3 +70,15 @@ def eclipse_sprite(n, out):
     arr = np.asarray(sp).copy(); arr[..., 3] = (arr[..., 3] * al).astype("uint8"); base = Image.open(f"{ART}/eclipse-code.png").convert("RGBA")
     base.alpha_composite(Image.fromarray(arr, "RGBA")); base.save(out); return cx, cy, r
 print("eclipse 6:", eclipse_sprite(6, f"{ART}/eclipse.png"), "eclipse 7:", eclipse_sprite(7, f"{ART}/eclipse-9x16.png"))
+
+# the code-made 16:9 beach has a painted moonglint on the water at the old Moon position: patch it out (the engine draws the glitter path under the Moon wherever it is)
+bch = Image.open(f"{ART}/plate-beach.png").convert("RGB"); a = np.asarray(bch).astype(float); W2, H2 = bch.size
+def patch_region(a, fx0, fx1, fy0, fy1, shift_frac, feather=14, match=0.6):
+    x0, x1, y0, y1 = int(fx0 * W2), int(fx1 * W2), int(fy0 * H2), int(fy1 * H2); w = x1 - x0; dx = int(shift_frac * W2) if shift_frac else w + 40
+    patch = np.roll(a, -dx, axis=1); m = np.zeros(a.shape[:2]); m[y0:y1, x0:x1] = 1; m = ndi.gaussian_filter(m, feather)[..., None]
+    for y in range(y0, y1):
+        ref = a[y, [x0 - 30, x0 - 20, x1 + 20, x1 + 30]].mean(axis=0); got = patch[y, [x0 - 30, x0 - 20, x1 + 20, x1 + 30]].mean(axis=0); patch[y, x0 - 30:x1 + 30] += (ref - got) * match
+    return a * (1 - m) + patch * m
+a = patch_region(a, 0.60, 0.775, 0.70, 0.975, 0)                  # the moonglint on the water
+a = patch_region(a, 0.55, 0.77, 0.10, 0.46, -0.30, 40, 0.9)       # the faint ghost of the painted-out Moon (copy sky from the left)
+Image.fromarray(np.clip(a, 0, 255).astype("uint8")).save(f"{ART}/beach-clean.png"); print("beach-clean written")
