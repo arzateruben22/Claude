@@ -242,7 +242,7 @@
  "cam": {},
  "cams": [
   {
-   "t0": 13.65,
+   "t0": 0.0,
    "mode": "ground"
   },
   {
@@ -255,6 +255,11 @@
   }
  ],
  "fx": {},
+ "hook": {
+  "text": "A day as long as a movie",
+  "t0": 0.1,
+  "t1": 2.4
+ },
  "captions": [
   {
    "t0": 0.135,

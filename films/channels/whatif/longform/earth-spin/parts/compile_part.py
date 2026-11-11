@@ -112,6 +112,7 @@ def numerals_pass(pages):
             out[flat[k][2]].append([tok, times[0] if isinstance(times, list) and times else times]); k += len(times) if isinstance(times, list) and times else 1
         pg["lines"] = [ln for ln in out if ln]
     return pages
+HOOK = {7: "A day as long as a movie", 8: "A 90-minute day"}      # Parts 7-8: a short hook in the top third for the first 2 s (no card, no logo)
 BADGES = [{"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": round(f.duration - 0.2, 4), "slot": "bl"}]
 PART_TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up with the ground", "The oceans slide toward the equator", "Storms and the six hour day",
                "The year gets thousands of days", "A day as long as a movie", "The ninety minute day"]
@@ -122,13 +123,13 @@ dummy = [999.0, 1000.0]
 # camera moves (scene.mjs blends each in over 1.6 s) and visual aids, per part: (fraction of the runtime, pose) snapped to the nearest beat start
 CAM_PLAN = {2: [(.2, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")], 3: [(.18, "ground"), (.5, "push"), (.72, "wide"), (.86, "base")],
             4: [(.2, "wide"), (.44, "ground"), (.66, "push"), (.82, "wide")], 5: [(.2, "wide"), (.5, "ground"), (.72, "push"), (.86, "base")],
-            6: [(.2, "ground"), (.55, "wide"), (.8, "push")], 7: [(.2, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")], 8: [(.2, "wide"), (.45, "ground"), (.68, "push"), (.84, "base")]}
+            6: [(.2, "ground"), (.55, "wide"), (.8, "push")], 7: [(0, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")], 8: [(0, "ground"), (.45, "wide"), (.68, "push"), (.84, "base")]}
 FX_PLAN = {3: ("wind", .18, .72), 4: ("ocean", .1, .92)}
 _starts = [b["t0"] for b in BEATS if b["id"] not in ("open", "cta", "cliff", "tease") and b["t0"] > 6]
 def _snap(x): return round(min(_starts, key=lambda v: abs(v - x * t_end)), 4) if _starts else round(x * t_end, 4)
 CAMS = []
 for fr, m in CAM_PLAN.get(N, []):
-    t0 = _snap(fr)
+    t0 = 0.0 if fr == 0 else _snap(fr)
     if not CAMS or t0 >= CAMS[-1]["t0"] + 6: CAMS.append({"t0": t0, "mode": m})
 FX = {}
 if N in FX_PLAN:
@@ -137,7 +138,7 @@ CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dum
 film = {"id": f"possibility-lab-earth-spin-part{N}", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4),
         "shots": SHOTS, "beats": BEATS, "world": {"cycleS": 16.0, "keys": KEYS, "dry": DRY, "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
-        "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {}, "cams": CAMS, "fx": FX,
+        "disclosures": {"aiVoice": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {}, "cams": CAMS, "fx": FX, "hook": ({"text": HOOK[N], "t0": 0.1, "t1": 2.4} if N in HOOK else None),
         "captions": [p for p in numerals_pass(lead(f.captions(max_chars=26, balance=True))) if p["t0"] < t_end - 0.3],
         "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]

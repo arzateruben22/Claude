@@ -211,12 +211,12 @@
  "cam": {},
  "cams": [
   {
-   "t0": 11.4,
-   "mode": "wide"
+   "t0": 0.0,
+   "mode": "ground"
   },
   {
    "t0": 26.7,
-   "mode": "ground"
+   "mode": "wide"
   },
   {
    "t0": 38.85,
@@ -224,6 +224,11 @@
   }
  ],
  "fx": {},
+ "hook": {
+  "text": "A 90-minute day",
+  "t0": 0.1,
+  "t1": 2.4
+ },
  "captions": [
   {
    "t0": 0.085,
