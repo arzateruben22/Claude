@@ -1,0 +1,103 @@
+{
+ "about": "Skin Sense ep13 ASMR foley, timed to set/shiver3d.js t2 anchors (endings, pulse, vessels, tremble, the hair muscle). See set/foley.py.",
+ "cues": [
+  {
+   "at": "start:vo02+1.6",
+   "kind": "tile",
+   "note": 8,
+   "repeat": 7,
+   "every": 0.09,
+   "step": 1,
+   "pan": -0.15,
+   "gain": -1,
+   "seed": 10
+  },
+  {
+   "at": "start:vo02+2.7",
+   "until": "end:vo02+3.0",
+   "kind": "glide",
+   "note": 10,
+   "down": true,
+   "pan": -0.25,
+   "gain": 3,
+   "seed": 11
+  },
+  {
+   "at": "start:vo04+1.0",
+   "until": "start:vo04+4.2",
+   "kind": "squeeze",
+   "pan": 0.1,
+   "gain": 8,
+   "seed": 20
+  },
+  {
+   "at": "start:vo04+1.2",
+   "kind": "pinch",
+   "repeat": 3,
+   "every": 0.95,
+   "pan": 0.3,
+   "gain": 0,
+   "seed": 21
+  },
+  {
+   "at": "start:vo05+2.2",
+   "until": "start:vo05+9.0",
+   "kind": "tremble",
+   "rate": 15,
+   "pan": 0.0,
+   "gain": 7,
+   "seed": 30
+  },
+  {
+   "at": "start:vo06+0.0",
+   "until": "start:vo06+6.0",
+   "kind": "tremble",
+   "rate": 13,
+   "pan": 0.0,
+   "gain": 3,
+   "seed": 31
+  },
+  {
+   "at": "start:vo07+1.8",
+   "until": "start:vo07+4.6",
+   "kind": "creak",
+   "pan": 0.2,
+   "gain": 3,
+   "seed": 40
+  },
+  {
+   "at": "start:vo07+2.4",
+   "kind": "tile",
+   "note": 6,
+   "repeat": 6,
+   "every": 0.28,
+   "step": 1,
+   "pan": 0.2,
+   "gain": 0,
+   "seed": 41
+  },
+  {
+   "at": "start:vo07+4.6",
+   "kind": "pinch",
+   "pan": 0.25,
+   "gain": 4,
+   "seed": 42
+  },
+  {
+   "at": "start:vo08+1.0",
+   "kind": "tile",
+   "note": 5,
+   "pan": 0.0,
+   "gain": -2,
+   "seed": 50
+  },
+  {
+   "at": "start:vo08+1.5",
+   "kind": "tile",
+   "note": 9,
+   "pan": 0.0,
+   "gain": -3,
+   "seed": 51
+  }
+ ]
+}

@@ -1,0 +1,499 @@
+{
+ "about": "Skin Sense ep14 ASMR foley, timed to set/cells3d.js (HK conveyor steps, the hero cell's flattening, bricks, water beads, peel and dust). See set/foley.py.",
+ "cues": [
+  {
+   "at": [
+    "0",
+    "start:vo01+0.2",
+    0.55
+   ],
+   "kind": "pop",
+   "f0": 520,
+   "pan": 0.0,
+   "gain": -2
+  },
+  {
+   "at": [
+    "0",
+    "start:vo01+0.2",
+    0.55
+   ],
+   "kind": "tile",
+   "note": 2,
+   "pan": 0.0,
+   "gain": -3
+  },
+  {
+   "at": [
+    "0",
+    "start:vo01+0.2",
+    0.62
+   ],
+   "kind": "squish",
+   "dur": 0.3,
+   "pan": 0.1,
+   "gain": -5
+  },
+  {
+   "at": [
+    "start:vo02+0.6",
+    "end:vo02+0.5",
+    0.4778
+   ],
+   "kind": "tile",
+   "note": 3,
+   "pan": -0.06,
+   "gain": -4,
+   "seed": 201
+  },
+  {
+   "at": [
+    "start:vo02+0.6",
+    "end:vo02+0.5",
+    0.4778
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.12,
+   "gain": -6,
+   "seed": 301
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.1523
+   ],
+   "kind": "tile",
+   "note": 4,
+   "pan": 0.06,
+   "gain": -2,
+   "seed": 202
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.1523
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": -0.12,
+   "gain": -6,
+   "seed": 302
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.4159
+   ],
+   "kind": "tile",
+   "note": 5,
+   "pan": 0.18,
+   "gain": -2,
+   "seed": 203
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.4159
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.24,
+   "gain": -6,
+   "seed": 303
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.6278
+   ],
+   "kind": "tile",
+   "note": 6,
+   "pan": -0.12,
+   "gain": -2,
+   "seed": 204
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    0.6278
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.0,
+   "gain": -6,
+   "seed": 304
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    1.0
+   ],
+   "kind": "tile",
+   "note": 7,
+   "pan": 0.0,
+   "gain": -2,
+   "seed": 205
+  },
+  {
+   "at": [
+    "end:vo02+0.5",
+    "start:vo03+3.0",
+    1.0
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": -0.24,
+   "gain": -3,
+   "seed": 305
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.3011
+   ],
+   "kind": "tile",
+   "note": 8,
+   "pan": 0.12,
+   "gain": -2,
+   "seed": 206
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.3011
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.12,
+   "gain": -3,
+   "seed": 306
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.4564
+   ],
+   "kind": "tile",
+   "note": 7,
+   "pan": -0.18,
+   "gain": -2,
+   "seed": 207
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.4564
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": -0.12,
+   "gain": -3,
+   "seed": 307
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.6029
+   ],
+   "kind": "tile",
+   "note": 8,
+   "pan": -0.06,
+   "gain": -2,
+   "seed": 208
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.6029
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.24,
+   "gain": -3,
+   "seed": 308
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.7737
+   ],
+   "kind": "tile",
+   "note": 9,
+   "pan": 0.06,
+   "gain": -2,
+   "seed": 209
+  },
+  {
+   "at": [
+    "start:vo03+3.0",
+    "end:vo03+0",
+    0.7737
+   ],
+   "kind": "squish",
+   "dur": 0.34,
+   "pan": 0.0,
+   "gain": -3,
+   "seed": 309
+  },
+  {
+   "at": [
+    "end:vo03+0",
+    "start:vo04+2.0",
+    0.3049
+   ],
+   "kind": "tile",
+   "note": 10,
+   "pan": 0.18,
+   "gain": -4,
+   "seed": 210
+  },
+  {
+   "at": [
+    "end:vo03+0",
+    "start:vo04+2.0",
+    0.6951
+   ],
+   "kind": "tile",
+   "note": 9,
+   "pan": -0.12,
+   "gain": -4,
+   "seed": 211
+  },
+  {
+   "at": [
+    "start:vo04+2.0",
+    "end:vo04+0",
+    0.3633
+   ],
+   "kind": "tile",
+   "note": 10,
+   "pan": 0.0,
+   "gain": -4,
+   "seed": 212
+  },
+  {
+   "at": [
+    "start:vo04+2.0",
+    "end:vo04+0",
+    0.7129
+   ],
+   "kind": "tile",
+   "note": 11,
+   "pan": 0.12,
+   "gain": -4,
+   "seed": 213
+  },
+  {
+   "at": [
+    "end:vo04+0",
+    "end:vo05+0",
+    0.4159
+   ],
+   "kind": "tile",
+   "note": 10,
+   "pan": -0.18,
+   "gain": -4,
+   "seed": 214
+  },
+  {
+   "at": [
+    "end:vo04+0",
+    "end:vo05+0",
+    1.0
+   ],
+   "kind": "tile",
+   "note": 11,
+   "pan": -0.06,
+   "gain": -4,
+   "seed": 215
+  },
+  {
+   "at": [
+    "end:vo05+0",
+    "end:vo06+0",
+    0.6884
+   ],
+   "kind": "tile",
+   "note": 12,
+   "pan": 0.06,
+   "gain": -4,
+   "seed": 216
+  },
+  {
+   "at": [
+    "end:vo06+0",
+    "end:vo07+0",
+    1.0
+   ],
+   "kind": "tile",
+   "note": 11,
+   "pan": 0.18,
+   "gain": -4,
+   "seed": 217
+  },
+  {
+   "at": [
+    "end:vo08+0",
+    "end:vo09+0",
+    0.3529
+   ],
+   "kind": "tile",
+   "note": 12,
+   "pan": -0.12,
+   "gain": -4,
+   "seed": 218
+  },
+  {
+   "at": [
+    "end:vo08+0",
+    "end:vo09+0",
+    1.0
+   ],
+   "kind": "tile",
+   "note": 13,
+   "pan": 0.0,
+   "gain": -4,
+   "seed": 219
+  },
+  {
+   "at": "word:flatter#1+0.12",
+   "kind": "squeeze",
+   "dur": 0.85,
+   "pan": -0.15,
+   "gain": 0,
+   "seed": 41
+  },
+  {
+   "at": "word:flatter#2+0.2",
+   "kind": "squeeze",
+   "dur": 1.05,
+   "pan": 0.15,
+   "gain": 1,
+   "seed": 42
+  },
+  {
+   "at": "word:flatter#2+0.95",
+   "kind": "pinch",
+   "pan": 0.2,
+   "gain": -6,
+   "seed": 43
+  },
+  {
+   "at": [
+    "end:vo03+0",
+    "start:vo04+2.0",
+    0.4629
+   ],
+   "kind": "pop",
+   "f0": 760,
+   "pan": 0.0,
+   "gain": -6
+  },
+  {
+   "at": [
+    "end:vo03+0",
+    "start:vo04+2.0",
+    0.4629
+   ],
+   "kind": "tile",
+   "note": 9,
+   "pan": 0.0,
+   "gain": -5,
+   "seed": 51
+  },
+  {
+   "at": [
+    "start:vo04+2.0",
+    "end:vo04+0",
+    0.3633
+   ],
+   "kind": "tile",
+   "note": 7,
+   "pan": 0.0,
+   "gain": -6,
+   "seed": 52
+  },
+  {
+   "at": "start:vo06-0.2",
+   "kind": "tap",
+   "repeat": 4,
+   "every": 0.32,
+   "pan": -0.3,
+   "gain": -2,
+   "seed": 60
+  },
+  {
+   "at": "start:vo06+1.1",
+   "kind": "pop",
+   "f0": 820,
+   "repeat": 3,
+   "every": 0.55,
+   "pan": 0.25,
+   "gain": -4,
+   "seed": 61
+  },
+  {
+   "at": "start:vo07+1.5",
+   "kind": "creak",
+   "dur": 2.0,
+   "pan": 0.0,
+   "gain": -6,
+   "seed": 70
+  },
+  {
+   "at": "start:vo08+0.6",
+   "kind": "peel",
+   "dur": 0.8,
+   "pan": -0.2,
+   "gain": -1,
+   "seed": 80
+  },
+  {
+   "at": "start:vo08+1.7",
+   "kind": "peel",
+   "dur": 0.6,
+   "pan": 0.25,
+   "gain": -4,
+   "seed": 81
+  },
+  {
+   "at": "start:vo08+2.5",
+   "kind": "rip",
+   "dur": 0.7,
+   "pan": 0.0,
+   "gain": -6,
+   "seed": 82
+  },
+  {
+   "at": "start:vo08+0.4",
+   "kind": "dust",
+   "dur": 9.0,
+   "pan": 0.0,
+   "gain": 0,
+   "seed": 83
+  },
+  {
+   "at": "start:vo09+0.5",
+   "kind": "pop",
+   "f0": 500,
+   "pan": 0.0,
+   "gain": -5,
+   "seed": 90
+  }
+ ]
+}

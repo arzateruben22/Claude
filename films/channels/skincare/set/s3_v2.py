@@ -2,7 +2,8 @@
   ~/.cache/cinema-voice/venv/bin/python -I films/channels/skincare/set/s3_build.py ep13
 Lines are laid on a timeline with their own (recorded) pauses inside them and a breath of silence between them (GAPS, config below);
 the like/follow line (vo09, 'follow'; the YouTube take 'subscribe') follows the payoff. Sound: her recording over a very quiet ASMR bed
-(low warm drone, soft air and brush swells, no hits), about -16 LUFS."""
+(low warm drone, soft air and brush swells, no hits), about -16 LUFS. If the episode has foley.json, close ASMR foley
+(set/foley.py: piano-tile notes, squeezes, pinches, peels, pops) is mixed in, timed to the scene's motion."""
 import json, subprocess, sys
 from pathlib import Path
 import numpy as np, soundfile as sf
@@ -53,7 +54,11 @@ def build(lines, words, suffix, cta_file):
         ins += ["-i", str(d / "vo" / (cta_file if L["id"] == lines[-1]["id"] and cta_file else L["file"]))]; ms = int(start_o[L["id"]] * 1000)
         fl.append(f"[{i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,loudnorm=I=-17:TP=-3:LRA=7,adelay={ms}|{ms}[v{i}]"); names.append(f"[v{i}]")
     fl.append("".join(names) + f"amix=inputs={len(lines)}:normalize=0,atrim=0:{dur_o},rubberband=tempo={PACE}:transients=smooth:detector=soft:formant=preserved[vm]")
-    fl.append(f"[b][vm]amix=inputs=2:normalize=0,atrim=0:{dur},loudnorm=I=-15.2:TP=-1.6:LRA=7,alimiter=limit=-1.6dB:level=disabled,atrim=0:{dur}[o]")
+    fj, tail = R / sys.argv[1] / "foley.json", "[b][vm]"
+    if fj.exists():                                       # ASMR foley that moves with the picture (set/foley.py), built on the delivered timeline
+        subprocess.run([sys.executable, "-I", str(Path(__file__).with_name("foley.py")), str(d), "--film", f"film{suffix}.json", "--cues", str(fj), "--out", str(d / f"foley{suffix}.wav")], check=True)
+        ins += ["-i", str(d / f"foley{suffix}.wav")]; fl.append(f"[{len(lines) + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo[f]"); tail += "[f]"
+    fl.append(f"{tail}amix=inputs={tail.count('[')}:normalize=0,atrim=0:{dur},loudnorm=I=-15.2:TP=-1.6:LRA=7,alimiter=limit=-1.6dB:level=disabled,atrim=0:{dur}[o]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", ";".join(fl), "-map", "[o]", "-ar", "48000", "-c:a", "aac", "-b:a", "256k", str(d / f"mix{suffix}.m4a")], check=True)
     print(sys.argv[1], suffix or "(follow)", "dur", dur, {k: v for k, v in film["lines"].items()})
 build(lines, words, "", None)
