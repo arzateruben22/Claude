@@ -1,6 +1,17 @@
 # Changelog
 
 ## Unreleased
+- **Instagram is off** (owner's decision, 12 Nov 2026: "Get rid of the uploaded to Instagram section for every channel,
+  and adjust accordingly to our videos that were uploaded to YouTube and TikTok"). One switch, `INSTAGRAM_ON = false` in
+  `src/domain/publications.ts`. An episode is uploaded once "Uploaded on YouTube & TikTok" stands, so season archiving,
+  video clearing (3 days after the later of YouTube and TikTok) and the Published tab follow from that button alone;
+  Instagram rows, planned or posted, never count. Gone while off: the "Uploaded on Instagram" button (Review, the
+  episode page, Upload Desk, `/m` cards), the Instagram switch and panel in Review, the episode page's Instagram
+  placement, each channel screen's shared-Instagram card, the wall's Instagram monitor (the four channels close in on
+  the pole, two a side; `/m/instagram` says Instagram is off), Instagram slots, planning, the "Instagram slot passed"
+  reminder, Instagram upload reminders, tasks, calendar rows and scheduled publishes. Nothing is deleted: Instagram
+  rows, exports and the account stay as they are, and analytics keep counting past posts. Setting the switch back to
+  true restores the two buttons and every Instagram screen.
 - A channel's **Published** tab, next to Overview (owner's request, 11 Nov 2026): an episode leaves the Episodes tab for
   Published once YouTube, TikTok and Instagram are all marked uploaded, or 24 hours after its first Uploaded press
   (`src/domain/published.ts`, from `publications.reported_at`; derived at read time, no job or migration, so an Undo

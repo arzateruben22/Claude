@@ -12,7 +12,7 @@ import { DomainError } from "../src/domain/core";
 import { slotsForDate } from "../src/domain/schedule";
 import { formatLocal, zonedTimeToUtc } from "../src/domain/time";
 import {
-  checkSubscription, dueUploads, endpointHash, listDevices, notifyDue, publishProblems, pushStatus, renewSubscription, resetPush,
+  checkSubscription, dueUploads, endpointHash, listDevices, notifyDue, publishProblems, pushCandidates, pushStatus, renewSubscription, resetPush,
   saveSubscription, sendTestNotification, unplannedInstagramSlots, vapidKeys, type PushSender,
 } from "../src/domain/push";
 import { seal } from "../src/lib/crypto";
@@ -261,30 +261,33 @@ describe("(b) a scheduled automatic publish that needs the owner", () => {
   });
 });
 
-describe("(c) an Instagram slot passes with nothing planned", () => {
-  const firstIgSlot = async (date: string) => (await slotsForDate(db, date)).filter((s) => s.kind === "instagram")[0];
-  const slotKeys = (list: { key: string }[]) => list.map((c) => c.key);
-
-  it("fires once the slot has passed and nothing is planned on it", async () => {
-    const slot = await firstIgSlot("2026-11-12");
-    const key = `instagram_unplanned:${slot.destinationId}:${slot.at.toISOString()}`;
-    expect(slotKeys(await unplannedInstagramSlots(db, new Date(+slot.at - 5 * MIN)))).not.toContain(key);   // not yet
-    const [c] = (await unplannedInstagramSlots(db, new Date(+slot.at + 10 * MIN))).filter((x) => x.key === key);
-    expect(c.title).toBe(`Instagram slot passed: nothing planned at ${formatLocal(slot.at, TZ, { hour: "numeric", minute: "2-digit" })}`);
-    expect(c.url).toBe("/calendar");
-    expect(slotKeys(await unplannedInstagramSlots(db, new Date(+slot.at + 4 * HOUR)))).not.toContain(key);   // past the lookback
+// (c) with the switch on (it fires once an Instagram slot passes with nothing planned) is in instagram-plan.test.ts
+describe("Instagram is off (owner, 12 Nov 2026): nothing reminds about Instagram", () => {
+  it("(c) never fires: there are no Instagram slots, so none can pass unplanned", async () => {
+    expect((await slotsForDate(db, "2026-11-10")).some((s) => s.kind === "instagram" || s.platform === "instagram")).toBe(false);
+    for (let h = 0; h < 48; h += 3) expect(await unplannedInstagramSlots(db, new Date(+NOW + h * HOUR))).toEqual([]);
+    expect((await pushCandidates(db, zonedTimeToUtc("2026-11-10", "21:00", TZ))).some((c) => c.kind === "instagram_unplanned")).toBe(false);
   });
 
-  it("stays quiet when a post was planned on the slot, or publishing is paused", async () => {
-    const slot = await firstIgSlot("2026-11-13");
-    const key = `instagram_unplanned:${slot.destinationId}:${slot.at.toISOString()}`;
-    const after = new Date(+slot.at + 10 * MIN);
-    await db.update(S.studioSettings).set({ globalPause: true }).where(eq(S.studioSettings.id, 1));
-    expect(slotKeys(await unplannedInstagramSlots(db, after))).not.toContain(key);
-    await db.update(S.studioSettings).set({ globalPause: false }).where(eq(S.studioSettings.id, 1));
-    const r = await renderedEpisode(db, "space", { title: "On the slot" });
-    await db.insert(S.publications).values({ episodeId: r.ep.id, destinationId: slot.destinationId, exportId: r.exports.instagram.id, kind: "instagram", status: "planned", scheduledFor: slot.at });
-    expect(slotKeys(await unplannedInstagramSlots(db, after))).not.toContain(key);
+  it("(a) skips an Instagram post planned before the switch, approved and due, and leaves its row as it is", async () => {
+    const r = await renderedEpisode(db, "space", { title: "Planned on Instagram" });
+    const at = new Date(+NOW + 20 * MIN);
+    const [ig] = await db.insert(S.publications).values({ episodeId: r.ep.id, destinationId: r.ig.id, exportId: r.exports.instagram.id, kind: "instagram", status: "ready", scheduledFor: at }).returning();
+    await approve(db, { exportId: r.exports.instagram.id, destinationId: r.ig.id });
+    const yt = await dueEpisode({ inMin: 20, slug: "space" });   // the same moment on YouTube still reminds
+    const fired = keysOf(await dueUploads(db, NOW));
+    expect(fired).not.toContain(ig.id);
+    expect(fired).toContain(yt.pub.id);
+    const [still] = await db.select().from(S.publications).where(eq(S.publications.id, ig.id));
+    expect(still).toMatchObject({ status: "ready", reportedAt: null });
+    expect(+still.scheduledFor!).toBe(+at);
+  });
+
+  it("(b) skips an Instagram publish that gave up", async () => {
+    const r = await renderedEpisode(db, "space", { title: "Instagram publish failed" });
+    const [ig] = await db.insert(S.publications).values({ episodeId: r.ep.id, destinationId: r.ig.id, exportId: r.exports.instagram.id, kind: "instagram", status: "ready" }).returning();
+    await db.insert(S.jobs).values({ type: "publish", status: "dead", payload: { publicationId: ig.id }, idempotencyKey: `publish:${ig.id}`, error: "boom", attempts: 3, updatedAt: new Date(+NOW - 10 * MIN) });
+    expect(keysOf(await publishProblems(db, NOW))).not.toContain(ig.id);
   });
 });
 

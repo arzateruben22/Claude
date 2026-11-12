@@ -4,70 +4,101 @@ import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { freshDb, renderedEpisode, and, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
-import { markEpisodeUploaded, undoEpisodeUploaded } from "../src/domain/publications";
+import { markEpisodeUploaded, markUploaded, undoEpisodeUploaded, uploadGroupsFor } from "../src/domain/publications";
 import {
   clearableEpisodeDir, clearedVideoDirs, clearUploadedVideos, enqueueVideoClear, groupUploadedAt, isClearableVideo, isClearedVideo,
   VIDEO_CLEAR_GRACE_DAYS, VIDEO_CLEAR_GRACE_MS, VIDEO_CLEAR_JOB, videoClearBlocker, videoClearDue, videoClearPlan, type PubForClear,
 } from "../src/domain/media-cleanup";
 
 const DAY = 24 * 60 * 60 * 1000;
+const ON = uploadGroupsFor(true);   // the switch flipped back on
 const at = (iso: string) => new Date(iso);
 const pub = (platform: PubForClear["platform"], reportedAt: string | null, o: Partial<PubForClear> = {}): PubForClear =>
   ({ platform, status: reportedAt ? "owner_reported" : "ready", simulated: false, reportedAt: reportedAt ? at(reportedAt) : null, ...o });
 
-describe("when an episode's video is due for erasing (pure rule, UTC)", () => {
-  const both = [pub("youtube", "2026-11-01T10:00:00Z"), pub("tiktok", "2026-11-01T10:00:00Z"), pub("instagram", "2026-11-02T18:30:00Z")];
+describe("when an episode's video is due for erasing (pure rule, UTC; Instagram off, owner 12 Nov 2026)", () => {
+  const ytTt = [pub("youtube", "2026-11-01T10:00:00Z"), pub("tiktok", "2026-11-02T08:00:00Z")];
 
   it("the grace period is a named 3 days", () => {
     expect(VIDEO_CLEAR_GRACE_DAYS).toBe(3);
     expect(VIDEO_CLEAR_GRACE_MS).toBe(3 * DAY);
   });
-  it("needs both groups: YouTube & TikTok alone, or Instagram alone, is never due", () => {
-    const late = at("2026-12-31T00:00:00Z");
-    expect(videoClearDue(both.slice(0, 2), late).due).toBe(false);
-    expect(videoClearDue(both.slice(2), late).due).toBe(false);
-    expect(videoClearDue([], late).due).toBe(false);
+  it("YouTube & TikTok alone is due, 3 days from the later of its rows, to the millisecond", () => {
+    const r = videoClearDue(ytTt, at("2026-11-05T07:59:59.999Z"));
+    expect(r.uploadedAt?.toISOString()).toBe("2026-11-02T08:00:00.000Z");
+    expect(r.dueAt?.toISOString()).toBe("2026-11-05T08:00:00.000Z");
+    expect(r.due).toBe(false);
+    expect(videoClearDue(ytTt, at("2026-11-05T08:00:00.000Z")).due).toBe(true);
+  });
+  it("ignores Instagram: a row still planned, ready, or posted later never holds it back or moves the date", () => {
+    const due = at("2026-11-05T08:00:00Z");
+    for (const ig of [pub("instagram", null, { status: "planned" }), pub("instagram", null), pub("instagram", "2026-11-04T18:30:00Z"),
+      pub("instagram", "2026-11-01T00:00:00Z", { status: "scheduled_on_platform", scheduledFor: at("2026-11-20T17:00:00Z") })]) {
+      const r = videoClearDue([...ytTt, ig], due);
+      expect(r).toMatchObject({ due: true });
+      expect(r.uploadedAt?.toISOString()).toBe("2026-11-02T08:00:00.000Z");
+    }
+  });
+  it("Instagram alone is never due, nor nothing at all", () => {
+    expect(videoClearDue([pub("instagram", "2026-10-01T00:00:00Z")], at("2026-12-31T00:00:00Z")).due).toBe(false);
+    expect(videoClearDue([], at("2026-12-31T00:00:00Z")).due).toBe(false);
   });
   it("the YouTube & TikTok group needs every one of its rows uploaded", () => {
     const half = [pub("youtube", "2026-11-01T10:00:00Z"), pub("tiktok", null), pub("instagram", "2026-11-01T10:00:00Z")];
     expect(groupUploadedAt(half, "youtube_tiktok")).toBeNull();
     expect(videoClearDue(half, at("2026-12-31T00:00:00Z")).due).toBe(false);
   });
-  it("counts 3 days from the later of the two groups, to the millisecond", () => {
-    const r = videoClearDue(both, at("2026-11-05T18:29:59.999Z"));
-    expect(r.uploadedAt?.toISOString()).toBe("2026-11-02T18:30:00.000Z");
-    expect(r.dueAt?.toISOString()).toBe("2026-11-05T18:30:00.000Z");
-    expect(r.due).toBe(false);
-    expect(videoClearDue(both, at("2026-11-05T18:30:00.000Z")).due).toBe(true);
-    // 3 days after the earlier group is not enough
-    expect(videoClearDue(both, at("2026-11-04T10:00:00Z")).due).toBe(false);
-  });
-  it("an undone group (rows back to ready, no report time) is not uploaded: nothing is due", () => {
-    const undone = [both[0], both[1], pub("instagram", null)];
-    expect(groupUploadedAt(undone, "instagram")).toBeNull();
+  it("an undone press (rows back to ready, no report time) is not uploaded; pressed again, the grace period starts over", () => {
+    const undone = [pub("youtube", null), pub("tiktok", null)];
     expect(videoClearDue(undone, at("2026-12-31T00:00:00Z")).due).toBe(false);
-  });
-  it("pressed again after an undo: the grace period starts over from the new press", () => {
-    const again = [both[0], both[1], pub("instagram", "2026-11-04T09:00:00Z")];
+    const again = [pub("youtube", "2026-11-04T09:00:00Z"), pub("tiktok", "2026-11-04T09:00:00Z")];
     expect(videoClearDue(again, at("2026-11-06T00:00:00Z")).due).toBe(false);
     expect(videoClearDue(again, at("2026-11-07T09:00:00Z")).due).toBe(true);
   });
   it("ignores simulated rows; a group with only simulated rows is not uploaded", () => {
-    const sim = [...both.slice(0, 2), pub("instagram", "2026-11-01T00:00:00Z", { simulated: true })];
-    expect(videoClearDue(sim, at("2026-12-31T00:00:00Z")).due).toBe(false);
-    const extra = [...both, pub("tiktok", null, { simulated: true })];
-    expect(videoClearDue(extra, at("2026-11-05T18:30:00Z")).due).toBe(true);
+    expect(videoClearDue([pub("youtube", "2026-11-01T00:00:00Z", { simulated: true })], at("2026-12-31T00:00:00Z")).due).toBe(false);
+    expect(videoClearDue([...ytTt, pub("tiktok", null, { simulated: true })], at("2026-11-05T08:00:00Z")).due).toBe(true);
   });
   it("a post scheduled on the platform counts from when it goes live, if later", () => {
-    const sched = [both[0], both[1], pub("instagram", "2026-11-01T10:00:00Z", { status: "scheduled_on_platform", scheduledFor: at("2026-11-10T17:00:00Z") })];
+    const sched = [ytTt[0], pub("tiktok", "2026-11-01T10:00:00Z", { status: "scheduled_on_platform", scheduledFor: at("2026-11-10T17:00:00Z") })];
     expect(videoClearDue(sched, at("2026-11-12T00:00:00Z")).due).toBe(false);
     expect(videoClearDue(sched, at("2026-11-13T17:00:00Z")).due).toBe(true);
   });
   it("a verified post counts; a posted row with no time recorded keeps the video", () => {
-    const verified = [pub("youtube", null, { status: "verified_published", verifiedAt: at("2026-11-01T00:00:00Z") }), both[1], both[2]];
-    expect(videoClearDue(verified, at("2026-11-05T18:30:00Z")).due).toBe(true);
-    const timeless = [pub("youtube", null, { status: "owner_reported" }), both[1], both[2]];
+    const verified = [pub("youtube", null, { status: "verified_published", verifiedAt: at("2026-11-01T00:00:00Z") }), ytTt[1]];
+    expect(videoClearDue(verified, at("2026-11-05T08:00:00Z")).due).toBe(true);
+    const timeless = [pub("youtube", null, { status: "owner_reported" }), ytTt[1]];
     expect(videoClearDue(timeless, at("2026-12-31T00:00:00Z")).due).toBe(false);
+  });
+});
+
+describe("the same rule with the switch on (both groups needed)", () => {
+  const both = [pub("youtube", "2026-11-01T10:00:00Z"), pub("tiktok", "2026-11-01T10:00:00Z"), pub("instagram", "2026-11-02T18:30:00Z")];
+  const due = (pubs: PubForClear[], now: Date) => videoClearDue(pubs, now, ON);
+
+  it("needs both groups: YouTube & TikTok alone, or Instagram alone, is never due", () => {
+    const late = at("2026-12-31T00:00:00Z");
+    expect(due(both.slice(0, 2), late).due).toBe(false);
+    expect(due(both.slice(2), late).due).toBe(false);
+    expect(due([], late).due).toBe(false);
+  });
+  it("counts 3 days from the later of the two groups, to the millisecond", () => {
+    const r = due(both, at("2026-11-05T18:29:59.999Z"));
+    expect(r.uploadedAt?.toISOString()).toBe("2026-11-02T18:30:00.000Z");
+    expect(r.dueAt?.toISOString()).toBe("2026-11-05T18:30:00.000Z");
+    expect(r.due).toBe(false);
+    expect(due(both, at("2026-11-05T18:30:00.000Z")).due).toBe(true);
+    expect(due(both, at("2026-11-04T10:00:00Z")).due).toBe(false);   // 3 days after the earlier group is not enough
+  });
+  it("an undone Instagram press is not uploaded: nothing is due", () => {
+    const undone = [both[0], both[1], pub("instagram", null)];
+    expect(groupUploadedAt(undone, "instagram")).toBeNull();
+    expect(due(undone, at("2026-12-31T00:00:00Z")).due).toBe(false);
+  });
+  it("an Instagram post scheduled on the platform counts from when it goes live", () => {
+    const sched = [both[0], both[1], pub("instagram", "2026-11-01T10:00:00Z", { status: "scheduled_on_platform", scheduledFor: at("2026-11-10T17:00:00Z") })];
+    expect(due(sched, at("2026-11-12T00:00:00Z")).due).toBe(false);
+    expect(due(sched, at("2026-11-13T17:00:00Z")).due).toBe(true);
   });
 });
 
@@ -126,19 +157,20 @@ function filmsRoot(...dirs: string[]) {
 }
 const has = (root: string, rel: string) => fs.existsSync(path.join(root, rel));
 
-/** An imported-looking episode posted on both groups, with both presses backdated to the given times. */
-async function postedEpisode(filmsPath: string, ytAt: Date, igAt: Date, title: string) {
+/** An imported-looking episode marked "Uploaded on YouTube & TikTok", its YouTube and TikTok reports backdated to the
+ *  given times, with an Instagram post still planned from before Instagram was switched off (it never counts). */
+async function postedEpisode(filmsPath: string, ytAt: Date, ttAt: Date, title: string) {
   const r = await renderedEpisode(db, "physics", { title });
   await db.update(S.episodes).set({ filmsPath }).where(eq(S.episodes.id, r.ep.id));
+  await db.insert(S.publications).values({ episodeId: r.ep.id, destinationId: r.ig.id, exportId: r.exports.instagram.id, kind: "instagram", status: "planned", scheduledFor: at("2027-01-01T19:30:00Z") });
   await markEpisodeUploaded(db, r.ep.id, "youtube_tiktok");
-  await markEpisodeUploaded(db, r.ep.id, "instagram");
-  await backdate(r.ep.id, ytAt, igAt);
+  await backdate(r.ep.id, ytAt, ttAt);
   return r;
 }
-async function backdate(episodeId: string, ytAt: Date, igAt: Date) {
+async function backdate(episodeId: string, ytAt: Date, ttAt: Date) {
   const rows = await db.select({ id: S.publications.id, platform: S.destinations.platform }).from(S.publications)
     .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId)).where(eq(S.publications.episodeId, episodeId));
-  for (const r of rows) await db.update(S.publications).set({ reportedAt: r.platform === "instagram" ? igAt : ytAt }).where(eq(S.publications.id, r.id));
+  for (const r of rows) if (r.platform !== "instagram") await db.update(S.publications).set({ reportedAt: r.platform === "tiktok" ? ttAt : ytAt }).where(eq(S.publications.id, r.id));
 }
 const episode = async (id: string) => (await db.select().from(S.episodes).where(eq(S.episodes.id, id)))[0];
 const clearAudits = async (id: string) => db.select().from(S.auditLog).where(and(eq(S.auditLog.entityId, id), eq(S.auditLog.action, "episode.video_cleared")));
@@ -177,7 +209,7 @@ describe("the cleanup job (cleanup_uploaded_media)", () => {
     expect(await clearAudits(ep.id)).toHaveLength(2);
   });
 
-  it("keeps the video inside the grace period, counted from the later press", async () => {
+  it("keeps the video inside the grace period, counted from the later of YouTube and TikTok", async () => {
     const dir = "films/channels/physics/ep03", root = filmsRoot(dir);
     const { ep } = await postedEpisode(dir, at("2026-11-01T00:00:00Z"), new Date(now.getTime() - 3 * DAY + 60_000), "Grace");
     expect(await clearUploadedVideos(db, root, now)).toMatchObject({ episodes: 0, files: 0 });
@@ -189,20 +221,24 @@ describe("the cleanup job (cleanup_uploaded_media)", () => {
   it("an upload undone before the grace period ends: nothing is erased, however late the job runs", async () => {
     const dir = "films/channels/physics/ep04", root = filmsRoot(dir);
     const { ep } = await postedEpisode(dir, at("2026-11-08T00:00:00Z"), at("2026-11-08T00:00:00Z"), "Undone");
-    expect(await undoEpisodeUploaded(db, ep.id, "instagram")).toBe(1);
+    expect(await undoEpisodeUploaded(db, ep.id, "youtube_tiktok")).toBe(2);
     expect(await clearUploadedVideos(db, root, at("2026-12-31T00:00:00Z"))).toMatchObject({ episodes: 0, files: 0 });
     expect(has(root, `${dir}/out/t-001-9x16.mp4`)).toBe(true);
     expect((await episode(ep.id)).videoClearedAt).toBeNull();
   });
 
-  it("a demo episode or one with only one group uploaded is never cleared", async () => {
+  it("a demo episode, one only on YouTube, or one only on Instagram is never cleared", async () => {
     const dir = "films/channels/physics/ep05", root = filmsRoot(dir);
-    const { ep } = await renderedEpisode(db, "physics", { title: "Half" });
+    const { ep, pubs, ig, exports } = await renderedEpisode(db, "physics", { title: "Half" });
     await db.update(S.episodes).set({ filmsPath: dir }).where(eq(S.episodes.id, ep.id));
-    await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
-    await backdate(ep.id, at("2026-10-01T00:00:00Z"), at("2026-10-01T00:00:00Z"));
+    // an Instagram post made before the switch, long ago, on its own: never enough
+    await db.insert(S.publications).values({ episodeId: ep.id, destinationId: ig.id, exportId: exports.instagram.id, kind: "instagram", status: "owner_reported", reportedAt: at("2026-09-01T00:00:00Z") });
     expect(await clearUploadedVideos(db, root, now)).toMatchObject({ episodes: 0, files: 0 });
-    await markEpisodeUploaded(db, ep.id, "instagram");
+    await markUploaded(db, pubs.youtube.id, {});
+    await backdate(ep.id, at("2026-10-01T00:00:00Z"), at("2026-10-01T00:00:00Z"));
+    await db.update(S.publications).set({ status: "ready", reportedAt: null }).where(eq(S.publications.id, pubs.tiktok.id));   // TikTok not up yet
+    expect(await clearUploadedVideos(db, root, now)).toMatchObject({ episodes: 0, files: 0 });
+    await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
     await backdate(ep.id, at("2026-10-01T00:00:00Z"), at("2026-10-01T00:00:00Z"));
     await db.update(S.episodes).set({ isDemo: true }).where(eq(S.episodes.id, ep.id));
     expect(await clearUploadedVideos(db, root, now)).toMatchObject({ episodes: 0, files: 0 });

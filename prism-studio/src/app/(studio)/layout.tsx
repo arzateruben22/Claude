@@ -3,6 +3,7 @@ import { db } from "@/db/client";
 import * as S from "@/db/schema";
 import { achievementOnActiveChannel, onActiveChannel } from "@/domain/channels";
 import { onWorkingSeason } from "@/domain/season-archive";
+import { onActivePlatform } from "@/domain/publications";
 import { workingSeasons } from "@/lib/data";
 import { Nav } from "@/components/Nav";
 import { CelebrationHost } from "@/components/CelebrationHost";
@@ -13,10 +14,12 @@ export const dynamic = "force-dynamic";
 export default async function StudioLayout({ children }: { children: React.ReactNode }) {
   const d = db();
   // badge counts are real work only: demo episodes never count, even when "Show demo data" is on; archived channels and
-  // archived (uploaded) seasons never
+  // archived (uploaded) seasons never, nor a post on a platform not in use (Instagram while it is off)
   const a = await workingSeasons();
   const [up] = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(and(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day' and not ${S.episodes.isDemo}`, onActiveChannel(S.episodes.channelId), onWorkingSeason(a, S.episodes.seasonId)));
+    .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+    .where(and(sql`${S.publications.status} in ('ready','handed_off') and ${S.publications.scheduledFor} is not null and ${S.publications.scheduledFor} < now() + interval '1 day' and not ${S.episodes.isDemo}`, onActiveChannel(S.episodes.channelId), onWorkingSeason(a, S.episodes.seasonId),
+      onActivePlatform(S.destinations.platform)));
   const [rv] = await d.select({ n: sql<number>`count(*)::int` }).from(S.episodes).where(and(inArray(S.episodes.state, ["ready_for_review", "correction_needed"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId), onWorkingSeason(a, S.episodes.seasonId)));
   const fresh = await d.select({ id: S.achievementEvents.id, title: S.milestoneRules.title, demo: S.achievementEvents.isDemo }).from(S.achievementEvents)
     .innerJoin(S.milestoneRules, eq(S.milestoneRules.id, S.achievementEvents.ruleId))

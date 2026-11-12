@@ -1,5 +1,6 @@
-// Home: the monitor wall. The New York night behind six monitors: Instagram in the middle, a monitor per channel
-// around it. Each monitor shows the next thing to post and opens its extension (/m/[slug]). Long videos not yet
+// Home: the monitor wall. The New York night behind the monitors: a monitor per channel (and, only while Instagram is
+// on, the shared Instagram in the middle; off since the owner's 12 Nov 2026 decision, the channels fill the wall). Each
+// monitor shows the next thing to post and opens its extension (/m/[slug]). Long videos not yet
 // recorded as uploaded get a small card above the wall with their "Uploaded on YouTube" buttons, newest season first;
 // one just recorded stays below them with its Undo for 24 hours, then moves to its channel's Published tab.
 import Link from "next/link";
@@ -25,10 +26,10 @@ export default async function Home() {
   const day = formatLocal(new Date(), v.tz, { weekday: "long", month: "long", day: "numeric" });
   const dayShort = formatLocal(new Date(), v.tz, { month: "short", day: "numeric" });
   // the day's one line, from the same data as the monitors: uploads due, then Instagram slots still to plan (the two
-  // a day), and "Nothing due today" only when neither is waiting
-  const ig = v.instagram, slots = `${ig.toPlan} Instagram slot${ig.toPlan === 1 ? "" : "s"} to plan${ig.day === "tomorrow" ? " for tomorrow" : ""}`;
+  // a day, only while Instagram is on), and "Nothing due today" only when neither is waiting
+  const ig = v.instagram, slots = ig ? `${ig.toPlan} Instagram slot${ig.toPlan === 1 ? "" : "s"} to plan${ig.day === "tomorrow" ? " for tomorrow" : ""}` : "";
   const first = v.dueToday ? <span>{v.dueToday} to upload today</span>
-    : ig.toPlan ? <span><Link href="/m/instagram">{slots}</Link></span>
+    : ig?.toPlan ? <span><Link href="/m/instagram">{slots}</Link></span>
     : <span className="quiet-bit">Nothing due today</span>;
   return (
     <div className="home">

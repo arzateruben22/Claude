@@ -295,7 +295,11 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .home-meta a { color: var(--text); text-decoration-color: var(--line-3); }
 .home-meta .day-long, .home-meta > .quiet-bit { display: none; }
 /* phones: the date on its own line, the day's status under it (no separator at the start of a line) */
-@media (max-width: 719px) { .home-meta > span:first-child { flex-basis: 100%; } .home-meta > span:nth-child(2)::before { content: none; } }
+@media (max-width: 719px) {
+  .home-meta > span:first-child { flex-basis: 100%; } .home-meta > span:nth-child(2)::before { content: none; }
+  /* "Nothing due today" is hidden here, so the part after it starts the line (now common: no Instagram slots to plan) */
+  .home-meta > .quiet-bit + span::before { content: none; }
+}
 @media (min-width: 720px) {
   .home-meta { letter-spacing: .14em; }
   .home-meta > span + span::before { margin: 0 .9em; }
@@ -385,7 +389,7 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
 .ig-time { font: 500 clamp(11px, 2.4cqi, 12.5px)/1 var(--mono); letter-spacing: .02em; color: #fff; white-space: nowrap; }
 .ig-note { font: 520 clamp(11px, 2.4cqi, 12.5px)/1.2 var(--ui); color: rgba(255, 255, 255, .82); }
 
-/* under 900 px: Instagram full width, the channels with something to show two by two, then the switched-off screens
+/* under 900 px: the centre screen (Instagram while it is on) full width, the channels with something to show two by two, then the switched-off screens
    in one compact row of three at the end (a channel moves up as soon as it has a cover) */
 @media (max-width: 899px) {
   .rig-stage { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px 12px; }
@@ -454,6 +458,20 @@ table.t td { padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-a
   .rig[data-no-top] .rig-arm { top: calc(15.4cqw - .36cqw); }
   .rig[data-no-top] .rig-joint { top: calc(15.4cqw - .8cqw); }
   .rig[data-no-top] .rig-base { top: 33.8cqw; }
+  /* Instagram off (owner, 12 Nov 2026) and an even number of channels: no centre screen either, so the two pairs close
+     in on the pole and grow to fill the wall (the outer pair still angled toward the middle); one clamp in each gap
+     between a pair, the pole carries the inner screens itself */
+  .rig[data-no-center] .mon[data-pos="innerLeft"] { left: 31cqw; width: 16.6cqw; }
+  .rig[data-no-center] .mon[data-pos="innerRight"] { left: 52.4cqw; width: 16.6cqw; }
+  .rig[data-no-center] .mon[data-pos="outerLeft"] { left: 14.2cqw; width: 13.6cqw; }
+  .rig[data-no-center] .mon[data-pos="outerRight"] { left: 72.2cqw; width: 13.6cqw; }
+  .rig[data-no-center] .rig-arm { left: 17cqw; right: 17cqw; }
+  .rig[data-no-center] .rig-joint.j1 { left: calc(29.4cqw - .6cqw); }
+  .rig[data-no-center] .rig-joint.j4 { left: calc(70.6cqw - .6cqw); }
+  .rig[data-no-center] .rig-joint.j2, .rig[data-no-center] .rig-joint.j3 { display: none; }
+  .rig[data-no-top][data-no-center] .rig-stage { height: 41cqw; }
+  .rig[data-no-top][data-no-center] .rig-pole { height: 30.8cqw; }
+  .rig[data-no-top][data-no-center] .rig-base { top: 38.8cqw; }
 }
 
 /* ── monitor extensions ("/m/[slug]") ──────────────────────────────────── */

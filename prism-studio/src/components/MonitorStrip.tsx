@@ -1,5 +1,6 @@
 // The monitors in miniature, laid out like the rig, at the top of every extension screen, each with its name:
-// jump to any other monitor directly; the current one is lit and underlined. The Instagram one shows its two posts.
+// jump to any other monitor directly; the current one is lit and underlined. The Instagram one (only while Instagram is
+// on) shows its two posts; with the middle empty (four channels, Instagram off) the two pairs sit side by side.
 // Under 720 px it becomes a scrolling row of labelled buttons.
 import Link from "next/link";
 import { coverOf, smallCover, type MonitorCard } from "@/lib/data";
@@ -38,13 +39,14 @@ function Thumb({ m, pos, current }: { m: MonitorCard; pos: RigPosition; current:
 export function MonitorStrip({ monitors, current }: { monitors: MonitorCard[]; current: string }) {
   const cell = (pos: RigPosition) => { const m = monitors.find((x) => x.pos === pos); return m ? <Thumb key={pos} m={m} pos={pos} current={m.slug === current} /> : null; };
   const [ol, il, top, center, ir, or] = RIG_ORDER;
+  const middle = [cell(top), cell(center)].filter(Boolean);
   return (
     <nav className="strip" aria-label="Monitors">
       <Link href="/" className="strip-back"><Icon name="back" size={18} /> <span className="strip-back-label">Wall</span></Link>
       <div className="strip-rig">
         {cell(ol)}
         {cell(il)}
-        <span className="strip-col">{cell(top)}{cell(center)}</span>
+        {middle.length ? <span className="strip-col">{middle}</span> : null}
         {cell(ir)}
         {cell(or)}
       </div>

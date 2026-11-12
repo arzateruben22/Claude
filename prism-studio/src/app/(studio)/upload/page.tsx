@@ -8,7 +8,8 @@ import { PlanWeek } from "@/components/PlanWeek";
 export const metadata: Metadata = { title: "Upload Desk" };
 
 // Every rendered episode that is not uploaded yet gets a full card, by when it is due (no approval step). You post it by
-// hand, then press "Uploaded on YouTube & TikTok" or "Uploaded on Instagram". A task with no current render is not listed.
+// hand, then press "Uploaded on YouTube & TikTok" ("Uploaded on Instagram" too only while Instagram is on; off, owner
+// 12 Nov 2026, there are no Instagram tasks here). A task with no current render is not listed.
 export default async function UploadDesk() {
   const v = await uploadTasks();
   const card = (t: (typeof v.due)[number]) => <TaskCard key={t.p.id} t={t} tz={v.tz} stopExternal={v.stopExternal} connected={t.connected} />;

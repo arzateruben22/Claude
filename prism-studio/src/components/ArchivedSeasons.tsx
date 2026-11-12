@@ -4,6 +4,7 @@
 // one-line pointer the channel screens show.
 import Link from "next/link";
 import type { ArchivedSeason } from "@/domain/season-archive";
+import { UPLOADED_WHERE } from "@/domain/publications";
 import { formatLocal } from "@/domain/time";
 import { mediaUrl } from "@/lib/media";
 import { topicStyle } from "@/lib/format";
@@ -23,7 +24,7 @@ export function ArchivedSeasons({ groups, tz }: { groups: Group[]; tz: string })
   return (
     <section className="section archived-seasons" id="archived" aria-labelledby="archived-seasons-h">
       <div className="section-head"><h2 id="archived-seasons-h">Archived seasons</h2><span className="faint num">{plural(groups.reduce((n, g) => n + g.seasons.length, 0), "season")}</span></div>
-      <p className="muted">Every episode is uploaded on YouTube &amp; TikTok and on Instagram (and the long video, if the season has one), so these seasons are out of the working screens. Nothing is deleted and their numbers still count. To bring a season back, open an episode and undo its Uploaded button.</p>
+      <p className="muted">Every episode is uploaded on {UPLOADED_WHERE} (and the long video, if the season has one), so these seasons are out of the working screens. Nothing is deleted and their numbers still count. To bring a season back, open an episode and undo its Uploaded button.</p>
       {groups.map(({ channel: c, seasons }) => (
         <div key={c.id} id={`archived-${c.slug}`} className="archived-group" style={topicStyle(c)}>
           <h3 className="topic-text">{plain(c.name)}</h3>

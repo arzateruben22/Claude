@@ -1,16 +1,17 @@
 // The owner's "Uploaded" buttons. The owner posts by hand, then presses the one that matches where it went:
-// "Uploaded on YouTube & TikTok" or "Uploaded on Instagram" for an episode, "Uploaded on YouTube" for a long video.
+// "Uploaded on YouTube & TikTok" for an episode ("Uploaded on Instagram" too, only while Instagram is on: INSTAGRAM_ON in
+// publications.ts, off since the owner's 12 Nov 2026 decision), "Uploaded on YouTube" for a long video.
 // That records owner-reported posts (audit-logged, undoable); nothing posts by itself. Once pressed, the control shows
 // "✓ Uploaded on … · date" with a small Undo. One render (UploadedButton) for both, so they look and work alike.
 import type { ReactNode } from "react";
 import { lessonUploadedAction, undoLessonUploadedAction, undoUploadedAction, uploadedAction } from "@/app/actions";
 import { formatLocal } from "@/domain/time";
-import { allPosted, type UploadGroup } from "@/domain/publications";
+import { ACTIVE_UPLOAD_GROUPS, allPosted, UPLOAD_GROUP_LABEL, type UploadGroup } from "@/domain/publications";
 import { lessonUploadBlocker } from "@/domain/lessons";
 import { lessonUploaded } from "@/domain/season-archive";
 import { ActionForm } from "./ActionForm";
 
-export const GROUP_LABEL: Record<UploadGroup, string> = { youtube_tiktok: "YouTube & TikTok", instagram: "Instagram" };
+export const GROUP_LABEL: Record<UploadGroup, string> = UPLOAD_GROUP_LABEL;
 export const groupOf = (platform: string): UploadGroup => (platform === "instagram" ? "instagram" : "youtube_tiktok");
 type PubLite = { status: string; reportedAt: Date | null; simulated?: boolean } | null | undefined;
 
@@ -38,7 +39,9 @@ function UploadedButton({ label, done, at, tz, mark, undo, fields }: {
   return <ActionForm action={mark} submit={`Uploaded on ${label}`} submitClass="btn block">{fields}</ActionForm>;
 }
 
+/** One episode button. A group not in use (Instagram while it is off) has no button at all. */
 export function UploadedControl({ episodeId, group, pubs, tz }: { episodeId: string; group: UploadGroup; pubs: PubLite[]; tz: string }) {
+  if (!ACTIVE_UPLOAD_GROUPS.includes(group)) return null;
   const { done, at } = uploadedState(pubs);
   return (
     <UploadedButton label={GROUP_LABEL[group]} done={done} at={at} tz={tz} mark={uploadedAction} undo={undoUploadedAction}

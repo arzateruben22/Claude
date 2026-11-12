@@ -1,7 +1,8 @@
 // Archived seasons (owner's request, 10 Nov 2026: "as soon as season 1 is uploaded and checked off for each channel,
-// remove it"). A season is uploaded once every one of its real (non-demo) episodes stands on both Uploaded buttons
-// ("Uploaded on YouTube & TikTok" and "Uploaded on Instagram", episodeUploaded in publications.ts, the buttons' own
-// done state) and every built long video (lesson) of the season is marked uploaded too. An uploaded season is archived:
+// remove it"). A season is uploaded once every one of its real (non-demo) episodes stands on every Uploaded button in
+// use (episodeUploaded in publications.ts, the buttons' own done state: "Uploaded on YouTube & TikTok" alone while
+// Instagram is off, owner 12 Nov 2026, so Instagram rows still planned never hold a season back; that and "Uploaded on
+// Instagram" while it is on) and every built long video (lesson) of the season is marked uploaded too. An uploaded season is archived:
 // it leaves every working view (Home, Upload, Review, Calendar, the channel's seasons and lessons, the Library's main
 // list, /m pages, the long-video lists) for Library → Archived seasons, where every episode and long video still opens.
 // It is derived, never stored: undoing an Uploaded button brings the season straight back. Nothing is deleted, and
@@ -12,7 +13,7 @@ import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { destinations, episodes, lessonEpisodes, lessons, publications, seasons, series } from "../db/schema";
 import type { Conn } from "./core";
 import { onActiveChannel } from "./channels";
-import { episodeUploaded } from "./publications";
+import { ACTIVE_UPLOAD_GROUPS, episodeUploaded, platformsOf, type UploadGroup } from "./publications";
 import { seasonLabel } from "./season";
 
 /** Episodes that never count toward a season (the same ones season progress leaves out). */
@@ -29,11 +30,11 @@ export const lessonCounts = (l: RuleLesson): boolean => !l.isDemo && !l.isTestFi
 export const lessonUploaded = (l: { state: string }): boolean => l.state === "published";
 
 /** The rule. A season is uploaded when it has at least one real episode (cancelled and superseded ones aside), every
- *  one of them is uploaded on both buttons, and every built long video of the season is marked uploaded. A season with
- *  no real episodes is never uploaded. */
-export function seasonUploaded(eps: readonly RuleEpisode[], longs: readonly RuleLesson[] = []): boolean {
+ *  one of them is uploaded on every button in use (`groups`, ACTIVE_UPLOAD_GROUPS), and every built long video of the
+ *  season is marked uploaded. A season with no real episodes is never uploaded. */
+export function seasonUploaded(eps: readonly RuleEpisode[], longs: readonly RuleLesson[] = [], groups: readonly UploadGroup[] = ACTIVE_UPLOAD_GROUPS): boolean {
   const real = eps.filter((e) => !e.isDemo && !OUT.includes(e.state));
-  if (!real.length || !real.every((e) => episodeUploaded(e.pubs))) return false;
+  if (!real.length || !real.every((e) => episodeUploaded(e.pubs, groups))) return false;
   return longs.filter(lessonCounts).every(lessonUploaded);
 }
 
@@ -42,7 +43,7 @@ export type ArchivedLesson = {
   id: string; channelId: string; name: string; title: string; videoPath: string; thumbnailPath: string; postUrl: string; reportedAt: Date | null; isDemo: boolean;
   state: string; isTestFixture: boolean;
 };
-/** One season of an active channel and where it stands: how many real episodes are uploaded on both buttons, and which
+/** One season of an active channel and where it stands: how many real episodes are uploaded (every button in use), and which
  *  built long videos still wait for "Mark uploaded". */
 export type SeasonState = {
   id: string; seriesId: string; channelId: string; number: number; label: string; seriesTitle: string;
@@ -73,8 +74,11 @@ type PubRow = Pub & { episodeId: string };
 type LessonRow = ArchivedLesson & { seriesId: string | null };
 
 /** The archive from loaded rows (pure: seasonArchive loads them). A long video belongs to the seasons of the episodes
- *  it is linked to (lesson_episodes) and to its series' seasons. */
-export function archiveFrom(rows: { seasons: SeasonRow[]; episodes: EpisodeRow[]; pubs: PubRow[]; links: { lessonId: string; episodeId: string }[]; lessons: LessonRow[] }): SeasonArchive {
+ *  it is linked to (lesson_episodes) and to its series' seasons. When a season was uploaded is the latest press on a
+ *  button in use (an Instagram post made while Instagram is off doesn't move it). */
+export function archiveFrom(rows: { seasons: SeasonRow[]; episodes: EpisodeRow[]; pubs: PubRow[]; links: { lessonId: string; episodeId: string }[]; lessons: LessonRow[] },
+  groups: readonly UploadGroup[] = ACTIVE_UPLOAD_GROUPS): SeasonArchive {
+  const platforms: readonly string[] = platformsOf(groups);
   const seasonOfEpisode = new Map(rows.episodes.map((e) => [e.id, e.seasonId]));
   const lessonSeasons = new Map<string, Set<string>>();
   const add = (lessonId: string, seasonId: string | null | undefined) => {
@@ -89,15 +93,15 @@ export function archiveFrom(rows: { seasons: SeasonRow[]; episodes: EpisodeRow[]
     const longs = rows.lessons.filter((l) => lessonSeasons.get(l.id)?.has(s.id));
     const ruleEps = eps.map((e) => ({ ...e, pubs: rows.pubs.filter((p) => p.episodeId === e.id) }));
     const real = ruleEps.filter((e) => !e.isDemo && !OUT.includes(e.state));
-    const archived = seasonUploaded(ruleEps, longs);
+    const archived = seasonUploaded(ruleEps, longs, groups);
     const times = [
-      ...real.flatMap((e) => e.pubs.filter((p) => !p.simulated).map((p) => p.reportedAt ?? null)),
+      ...real.flatMap((e) => e.pubs.filter((p) => !p.simulated && platforms.includes(p.platform)).map((p) => p.reportedAt ?? null)),
       ...longs.filter(lessonCounts).map((l) => l.reportedAt),
     ].filter((t): t is Date => !!t);
     return {
       id: s.id, seriesId: s.seriesId, channelId: s.channelId, number: s.number, label: s.title || seasonLabel(s.seriesTitle), seriesTitle: s.seriesTitle,
       archived, uploadedAt: archived && times.length ? new Date(Math.max(...times.map(Number))) : null,
-      episodes: real.length, uploaded: real.filter((e) => episodeUploaded(e.pubs)).length,
+      episodes: real.length, uploaded: real.filter((e) => episodeUploaded(e.pubs, groups)).length,
       longVideosLeft: longs.filter((l) => lessonCounts(l) && !lessonUploaded(l)).map((l) => ({ id: l.id, name: l.name, title: l.title })),
       eps, longs,
     };

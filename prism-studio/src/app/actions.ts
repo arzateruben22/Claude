@@ -11,7 +11,7 @@ import * as S from "@/db/schema";
 import { audit, DomainError, settings } from "@/domain/core";
 import { editExport, transitionEpisode, type EpisodeState } from "@/domain/episodes";
 import { approve } from "@/domain/approvals";
-import { markEpisodeUploaded, markHandedOff, markUploaded, undoEpisodeUploaded, undoUploaded, type UploadGroup } from "@/domain/publications";
+import { markEpisodeUploaded, markHandedOff, markUploaded, undoEpisodeUploaded, undoUploaded, UPLOAD_GROUP_LABEL, type UploadGroup } from "@/domain/publications";
 import { addFunding, claimReward, recordMetric, releaseReward, setMonthlyCap } from "@/domain/rewards";
 import { chooseCosmetic, completeChallenge, evolve, markEvolutionSeen, onPublicationReported } from "@/domain/living";
 import { recordAccountMetrics, TT_METRICS, YT_METRICS } from "@/domain/earn";
@@ -182,13 +182,14 @@ export async function reportUploaded(_: Result, fd: FormData) {
 }
 
 const uploadGroup = z.enum(["youtube_tiktok", "instagram"]);
-const UPLOAD_LABEL: Record<UploadGroup, string> = { youtube_tiktok: "YouTube & TikTok", instagram: "Instagram" };
+const UPLOAD_LABEL: Record<UploadGroup, string> = UPLOAD_GROUP_LABEL;
 const refreshUploaded = (episodeId: string) => {
   refresh("/upload", "/calendar", "/analytics", "/review", "/m/instagram", `/episodes/${episodeId}`);
   revalidatePath("/m/[slug]", "page");
 };
 
-/** "Uploaded on YouTube & TikTok" / "Uploaded on Instagram": the owner posted by hand; record it (no approval needed). */
+/** "Uploaded on YouTube & TikTok" (and "Uploaded on Instagram" while Instagram is on): the owner posted by hand; record
+ *  it (no approval needed). A group not in use is refused by markEpisodeUploaded (a stale page can't record one). */
 export async function uploadedAction(_: Result, fd: FormData) {
   return run(async () => {
     const episodeId = z.string().uuid().parse(fd.get("episodeId"));

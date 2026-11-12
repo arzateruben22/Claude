@@ -1,15 +1,18 @@
 // The daily plan: which destinations are due when, in the studio timezone. A scheduled time on a manual
 // destination is an upload task due for the owner. Missed slots move to the next open slot (no catch-up burst).
+// While Instagram is off (INSTAGRAM_ON in publications.ts, owner 12 Nov 2026) there are no Instagram slots, nothing is
+// placed there, and a planned Instagram post is never moved: its row stays as it is.
 import { and, asc, desc, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import type { DB } from "../db/client";
 import { blackouts, destinations, episodes, platformExports, publications, publishingWindows, versions } from "../db/schema";
 import { audit, type Conn, settings } from "./core";
 import { activeChannels, onActiveChannel } from "./channels";
+import { INSTAGRAM_ON } from "./publications";
 import { onWorkingSeason, seasonArchive } from "./season-archive";
 import { addDays, localDate, zonedTimeToUtc } from "./time";
 
 // provisional defaults (not claimed to be optimal): one Short per channel per day on YouTube and TikTok,
-// staggered so the owner's upload tasks don't all land at once; Instagram twice a day
+// staggered so the owner's upload tasks don't all land at once; Instagram twice a day (while it is on)
 export const DEFAULT_WINDOWS: Record<"youtube" | "tiktok" | "instagram", string[]> = {
   youtube: ["09:00"], tiktok: ["12:00"], instagram: ["11:30", "18:30", "20:30"],
 };
@@ -34,12 +37,12 @@ export async function isBlackedOut(c: Conn, at: Date, channelId: string | null, 
 }
 
 /** The slots due on one local date: [{ destination, channel, at (UTC), kind }]. Paused or archived channels, paused
- *  destinations and blackouts are skipped. */
+ *  destinations and blackouts are skipped, and so is every Instagram destination while Instagram is off. */
 export async function slotsForDate(c: Conn, date: string) {
   const s = await settings(c);
   if (s.globalPause) return [];
   const chans = (await activeChannels(c)).filter((ch) => !ch.paused);
-  const dests = await c.select().from(destinations).where(eq(destinations.paused, false));
+  const dests = (await c.select().from(destinations).where(eq(destinations.paused, false))).filter((d) => INSTAGRAM_ON || d.platform !== "instagram");
   const out: { destinationId: string; channelId: string | null; platform: string; at: Date; kind: string }[] = [];
   for (const ch of chans) {
     for (const d of dests.filter((x) => x.channelId === ch.id)) {
@@ -68,8 +71,10 @@ export async function rescheduleMissed(d: DB, now = new Date(), graceHours = 6) 
   const s = await settings(d);
   if (s.missedSlotPolicy !== "reschedule") return 0;
   const late = (await d.select({ p: publications }).from(publications).innerJoin(episodes, eq(episodes.id, publications.episodeId))
+    .innerJoin(destinations, eq(destinations.id, publications.destinationId))
     .where(and(inArray(publications.status, ["planned", "ready", "handed_off"]), lt(publications.scheduledFor, new Date(+now - graceHours * 3_600_000)), eq(publications.simulated, false),
-      onActiveChannel(episodes.channelId)))).map((r) => r.p);   // an archived channel's posts stay where they were
+      onActiveChannel(episodes.channelId),   // an archived channel's posts stay where they were
+      INSTAGRAM_ON ? undefined : ne(destinations.platform, "instagram")))).map((r) => r.p);   // and, while Instagram is off, its planned posts
   let moved = 0;
   for (const p of late) {
     const taken = await d.select({ at: publications.scheduledFor }).from(publications).where(and(eq(publications.destinationId, p.destinationId), gte(publications.scheduledFor, now)));
@@ -95,8 +100,8 @@ export async function nextReadyEpisodes(c: Conn, channelId: string) {
 
 /**
  * Fill the next `days` local days' open slots. A channel's YouTube/TikTok slot takes that destination's next
- * unscheduled publication in episode order; the shared Instagram takes the next channel in turn that has an
- * Instagram export not yet placed there. Planning never approves anything: the Upload Desk still requires a
+ * unscheduled publication in episode order; the shared Instagram (only while Instagram is on: off, slotsForDate gives
+ * it no slots) takes the next channel in turn that has an Instagram export not yet placed there. Planning never approves anything: the Upload Desk still requires a
  * live approval of the exact export before a task can be marked uploaded. Returns how many were placed.
  */
 export async function planDays(d: DB, from: string, days: number, now = new Date()) {

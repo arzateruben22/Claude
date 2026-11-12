@@ -1,6 +1,7 @@
 // Freeing server disk once an episode is posted everywhere: the worker erases the episode's .mp4 files from the films
-// folder on the server (FILMS_REPO_ROOT/films/channels/<channel>/epNN/out) once both Uploaded buttons ("YouTube &
-// TikTok" and "Instagram") have stood for a grace period. The originals stay in the films repo on GitHub. Covers,
+// folder on the server (FILMS_REPO_ROOT/films/channels/<channel>/epNN/out) once every Uploaded button in use has stood
+// for a grace period: "YouTube & TikTok" alone while Instagram is off (owner, 12 Nov 2026; INSTAGRAM_ON in
+// publications.ts), that and "Instagram" while it is on. The originals stay in the films repo on GitHub. Covers,
 // thumbnails, captions, posting text, script, claims and film timings stay here, so the episode page keeps its cover
 // and captions. Only episode folders are touched: compilations (long videos) never are.
 import fs from "node:fs";
@@ -12,9 +13,9 @@ import { audit } from "./core";
 import { onActiveChannel } from "./channels";
 import { enqueue } from "./jobs";
 import { pushPath, pushPrefix } from "./media-push";
-import { groupUploaded, UPLOAD_GROUPS, type UploadGroup } from "./publications";
+import { ACTIVE_UPLOAD_GROUPS, groupUploaded, UPLOAD_GROUPS, type UploadGroup } from "./publications";
 
-/** How long both uploads must stand (not undone) before the server copy of the video is erased. */
+/** How long the uploads must stand (not undone) before the server copy of the video is erased. */
 export const VIDEO_CLEAR_GRACE_DAYS = 3;
 export const VIDEO_CLEAR_GRACE_MS = VIDEO_CLEAR_GRACE_DAYS * 24 * 60 * 60 * 1000;
 export const VIDEO_CLEAR_JOB = "cleanup_uploaded_media";
@@ -42,12 +43,13 @@ export function groupUploadedAt(pubs: PubForClear[], group: UploadGroup): Date |
   return latest;
 }
 
-/** Whether an episode's video files are due for erasing: both groups uploaded, neither undone, and the later of the
- *  two at least VIDEO_CLEAR_GRACE_DAYS ago. `dueAt` says when it will be (null while a group is not uploaded). */
-export function videoClearDue(pubs: PubForClear[], now: Date): { due: boolean; uploadedAt: Date | null; dueAt: Date | null } {
-  const a = groupUploadedAt(pubs, "youtube_tiktok"), b = groupUploadedAt(pubs, "instagram");
-  if (!a || !b) return { due: false, uploadedAt: null, dueAt: null };
-  const uploadedAt = a > b ? a : b, dueAt = new Date(uploadedAt.getTime() + VIDEO_CLEAR_GRACE_MS);
+/** Whether an episode's video files are due for erasing: every group in use uploaded (ACTIVE_UPLOAD_GROUPS: "YouTube &
+ *  TikTok" alone while Instagram is off, so its Instagram rows, planned or posted, are ignored), none undone, and the
+ *  latest of them at least VIDEO_CLEAR_GRACE_DAYS ago. `dueAt` says when it will be (null while a group is not uploaded). */
+export function videoClearDue(pubs: PubForClear[], now: Date, groups: readonly UploadGroup[] = ACTIVE_UPLOAD_GROUPS): { due: boolean; uploadedAt: Date | null; dueAt: Date | null } {
+  const times = groups.map((g) => groupUploadedAt(pubs, g));
+  if (!times.length || times.some((t) => !t)) return { due: false, uploadedAt: null, dueAt: null };
+  const uploadedAt = new Date(Math.max(...times.map((t) => t!.getTime()))), dueAt = new Date(uploadedAt.getTime() + VIDEO_CLEAR_GRACE_MS);
   return { due: now.getTime() >= dueAt.getTime(), uploadedAt, dueAt };
 }
 

@@ -9,11 +9,21 @@
 - **Publishing is manual.** Opening, downloading, sharing or copying never marks anything published; only
   the owner's "Uploaded" buttons (owner-reported) or a verified integration does. Nothing posts by itself; the buttons
   only record what the owner did. One publication record per destination.
-- **Uploaded buttons (owner's decision, 9 Nov 2026):** the owner posts by hand and presses "Uploaded on YouTube & TikTok" /
-  "Uploaded on Instagram"; that records owner-reported posts (audit-logged, undoable). Approvals are no longer part of the UI.
+- **Uploaded buttons (owner's decision, 9 Nov 2026):** the owner posts by hand and presses "Uploaded on YouTube & TikTok";
+  that records owner-reported posts (audit-logged, undoable). Approvals are no longer part of the UI.
   Long videos have the same button, "Uploaded on YouTube" (10 Nov 2026: `LessonUploadedControl`, `markLessonUploaded` /
   `undoLessonUploaded`): any real, built lesson, no approval; published = the owner pressed it; Undo → ready_for_review.
-- **Video clearing (owner's request):** once both Uploaded buttons have stood 3 days (`VIDEO_CLEAR_GRACE_DAYS`), the worker's
+- **Instagram is off (owner's decision, 12 Nov 2026):** one switch, `INSTAGRAM_ON = false` in `src/domain/publications.ts`,
+  with `ACTIVE_UPLOAD_GROUPS` / `ACTIVE_PLATFORMS` / `onActivePlatform` / `placementDestinations` derived from it. An episode
+  is uploaded once "Uploaded on YouTube & TikTok" stands (`episodeUploaded` over the active groups); its Instagram rows,
+  planned or posted, never count. No "Uploaded on Instagram" button (`markEpisodeUploaded` refuses it), no Instagram
+  tab, placement, `/m` block or wall monitor (`/m/instagram` says it is off; the channels fill the wall, `rigLayout`), no
+  Instagram slots, planning, reminders, tasks, calendar rows or scheduled publishes. Nothing is deleted: rows, exports
+  and the account stay, analytics keep counting past posts. Never test `platform === "instagram"` for this in a screen
+  or job: use the active groups/platforms. Setting it back to true restores the two-button rules (tests pass the groups
+  explicitly, and `tests/instagram-plan.test.ts` runs the planning and its reminder with the switch on).
+- **Video clearing (owner's request):** once every Uploaded button in use (today "YouTube & TikTok" alone) has stood 3 days
+  (`VIDEO_CLEAR_GRACE_DAYS`, from the latest of its rows), the worker's
   hourly `cleanup_uploaded_media` job erases that episode's `out/*.mp4` from the server and sets `episodes.video_cleared_at`
   (`src/domain/media-cleanup.ts`). Covers, captions and text stay; the importer keeps cleared episodes as they are;
   media-push skips their videos. Never inside a git checkout or a read-only mirror. Compilations are never touched.
@@ -25,7 +35,8 @@
   never un-archives; Settings → Archived channels → Restore (audit-logged) brings it back. Costs keep counting its real
   spend in the studio total (its entries stay listed, read-only). The wall re-balances (`rigLayout`, src/lib/rig.ts).
 - **Uploaded seasons are archived (owner's request, 10 Nov 2026):** a season is uploaded once every real (non-demo,
-  not cancelled) episode stands on both Uploaded buttons and every built long video of it is marked uploaded
+  not cancelled) episode stands on every Uploaded button in use (today "YouTube & TikTok" alone, so Instagram rows still
+  planned don't hold it back) and every built long video of it is marked uploaded
   (`src/domain/season-archive.ts`, using `episodeUploaded` from publications.ts, the buttons' one done test). Derived,
   never stored: an Undo brings it back. It leaves every working view for Library → Archived seasons (read-only; its
   episode pages say so) but keeps counting in analytics, totals, earnings and rewards. Never list a channel's episodes,

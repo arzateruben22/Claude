@@ -3,8 +3,9 @@
 // is done; its Episodes tab keeps the rest (ready for review, in progress, partly uploaded for under 24 hours).
 // Derived at read time from the report times the Uploaded buttons write (publications.reported_at, lessons.reported_at),
 // never stored and never run by a job: an Undo clears the report time, so the episode is straight back in Episodes.
-//  - An episode is done once YouTube, TikTok and Instagram each have a real (not simulated) publication marked uploaded
-//    (owner_reported, scheduled_on_platform or verified_published), or 24 hours after the first of its marks.
+//  - An episode is done once every platform it goes to (ACTIVE_PLATFORMS in publications.ts: YouTube and TikTok while
+//    Instagram is off, owner 12 Nov 2026; Instagram too while it is on) has a real (not simulated) publication marked
+//    uploaded (owner_reported, scheduled_on_platform or verified_published), or 24 hours after the first of those marks.
 //  - A long video is YouTube only (its "Uploaded on YouTube" button): it stays on Home's Long videos card, Undo and all,
 //    for 24 hours after the press, then it is done and shows in its channel's Published tab.
 // Archived seasons (season-archive.ts) are untouched: an uploaded season still leaves every working view, this tab too,
@@ -15,14 +16,14 @@
 import { eq, inArray } from "drizzle-orm";
 import { destinations, episodes, lessonEpisodes, publications, seasons, series } from "../db/schema";
 import type { Conn } from "./core";
-import { REPORTED } from "./publications";
+import { ACTIVE_PLATFORMS, REPORTED } from "./publications";
 import { lessonUploaded } from "./season-archive";
 
 /** How long after the first "Uploaded" press an episode (or a long video) moves to Published by itself. */
 export const PUBLISHED_AFTER_HOURS = 24;
 export const PUBLISHED_AFTER_MS = PUBLISHED_AFTER_HOURS * 60 * 60 * 1000;
 
-/** The three platforms an episode goes to, in the order the screens show them. */
+/** Every platform a short can go to, in the order the screens show them (the ones in use: ACTIVE_PLATFORMS). */
 export const SHORT_PLATFORMS = ["youtube", "tiktok", "instagram"] as const;
 export type ShortPlatform = (typeof SHORT_PLATFORMS)[number];
 
@@ -35,28 +36,30 @@ const earliest = (ts: readonly (Date | null)[]) => ts.filter((t): t is Date => !
 
 export type PublishedState = {
   done: boolean;
-  /** why it is done: every platform marked, or 24 hours since the first mark */
-  why: "all_three" | "day_passed" | null;
-  /** the first time any platform was marked uploaded (null: none yet) */
+  /** why it is done: every platform in use marked, or 24 hours since the first mark */
+  why: "all_platforms" | "day_passed" | null;
+  /** the first time a platform in use was marked uploaded (null: none yet) */
   firstAt: Date | null;
-  /** each platform, marked or not, with the time it was marked */
+  /** each platform in use, marked or not, with the time it was marked */
   platforms: { platform: ShortPlatform; uploaded: boolean; at: Date | null }[];
 };
 
-/** The rule for one episode, from its publication rows (with their destination's platform). A posted row with no time
- *  recorded counts toward "all three" but never starts the 24-hour clock (never guess a time). */
-export function episodePublishedState(pubs: readonly PubForPublished[], now: Date = new Date()): PublishedState {
-  const platforms = SHORT_PLATFORMS.map((platform) => {
+/** The rule for one episode, from its publication rows (with their destination's platform). Only the platforms in use
+ *  count (`platforms`, ACTIVE_PLATFORMS: an Instagram row is ignored while Instagram is off). A posted row with no time
+ *  recorded counts toward "every platform" but never starts the 24-hour clock (never guess a time). */
+export function episodePublishedState(pubs: readonly PubForPublished[], now: Date = new Date(), inUse: readonly ShortPlatform[] = ACTIVE_PLATFORMS): PublishedState {
+  const platforms = SHORT_PLATFORMS.filter((p) => inUse.includes(p)).map((platform) => {
     const rows = pubs.filter((p) => p.platform === platform && posted(p));
     return { platform, uploaded: rows.length > 0, at: earliest(rows.map(markedAt)) };
   });
   const firstAt = earliest(platforms.map((p) => p.at));
-  const allThree = platforms.every((p) => p.uploaded);
+  const all = platforms.length > 0 && platforms.every((p) => p.uploaded);
   const dayPassed = !!firstAt && now.getTime() - firstAt.getTime() >= PUBLISHED_AFTER_MS;
-  return { done: allThree || dayPassed, why: allThree ? "all_three" : dayPassed ? "day_passed" : null, firstAt, platforms };
+  return { done: all || dayPassed, why: all ? "all_platforms" : dayPassed ? "day_passed" : null, firstAt, platforms };
 }
 
-export const episodePublished = (pubs: readonly PubForPublished[], now: Date = new Date()): boolean => episodePublishedState(pubs, now).done;
+export const episodePublished = (pubs: readonly PubForPublished[], now: Date = new Date(), inUse: readonly ShortPlatform[] = ACTIVE_PLATFORMS): boolean =>
+  episodePublishedState(pubs, now, inUse).done;
 
 /** These episodes' publication rows with their destination's platform, for episodePublishedState. */
 export async function publishedPubs(c: Conn, episodeIds: readonly string[]) {

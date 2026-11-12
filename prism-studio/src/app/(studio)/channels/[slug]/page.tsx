@@ -20,6 +20,7 @@ import { ScrollTabs } from "@/components/ScrollTabs";
 import { ArchivedNote } from "@/components/ArchivedSeasons";
 import { inArchivedSeason, lessonOnWorkingSeason, seasonStateOfSeries, seriesOnWorkingSeason } from "@/domain/season-archive";
 import { episodePublishedState, episodeSeason, lessonPublishedState, lessonSeason, loadSeasonIndex, longVideoLabel, publishedPubs, seasonTag } from "@/domain/published";
+import { INSTAGRAM_ON, UPLOADED_WHERE } from "@/domain/publications";
 
 const TABS = [["overview", "Overview"], ["published", "Published"], ["episodes", "Episodes"], ["lessons", "Lessons"], ["series", "Series"], ["accounts", "Accounts"], ["editorial", "Editorial"]] as const;
 
@@ -49,7 +50,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
     costTotals(db(), [month]), canUsePaidGeneration(db(), c.id, 1),
   ]);
   const eps = allEps.filter((e) => !inArchivedSeason(a, e));
-  // Published (src/domain/published.ts): an episode on all three platforms, or 24 h past its first Uploaded press, leaves
+  // Published (src/domain/published.ts): an episode on every platform in use, or 24 h past its first Uploaded press, leaves
   // the Episodes tab for Published; a long video 24 h after its press. Worked out now, from the report times.
   const now = new Date();
   const [pubRows, seasonIdx] = await Promise.all([publishedPubs(db(), eps.map((e) => e.id)), loadSeasonIndex(db(), [c.id])]);
@@ -150,7 +151,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
             ))}
           </ul>
           {!published.length ? <p className="muted">Nothing published yet.</p> : null}
-          <p className="faint published-note">An episode moves here once it is marked uploaded on YouTube, TikTok and Instagram, or 24 hours after its first Uploaded button; a long video 24 hours after its button. Undo brings it back to its tab.</p>
+          <p className="faint published-note">An episode moves here once it is marked uploaded on {UPLOADED_WHERE}, or 24 hours after its first Uploaded press; a long video 24 hours after its button. Undo brings it back to its tab.</p>
           <ArchivedNote slug={slug} seasons={archived} />
         </div>
       ) : null}
@@ -183,7 +184,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
           {ser.map((x) => {
             const parts = eps.filter((e) => e.seriesId === x.id);
             const done = parts.filter((e) => !e.isDemo && ["published", "analytics"].includes(e.state)).length;
-            // how far this season is from Archived seasons: every episode on both Uploaded buttons, its long video uploaded
+            // how far this season is from Archived seasons: every episode on every Uploaded button in use, its long video uploaded
             const st = seasonStateOfSeries(a, x.id);
             const left = st?.longVideosLeft ?? [];
             return (
@@ -195,7 +196,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
                 {st?.episodes ? (
                   <div className="faint">{st.uploaded === st.episodes && left.length
                     ? <>Every episode is uploaded. Press &ldquo;Uploaded on YouTube&rdquo; for the long video {left.map((l) => `“${l.title}”`).join(", ")} in <Link href={`/channels/${slug}?tab=lessons`}>Lessons</Link> and this season moves to Archived seasons.</>
-                    : <>{st.uploaded} of {st.episodes} episodes uploaded on YouTube &amp; TikTok and Instagram. Once all are{left.length ? `, and ${left.length === 1 ? "its long video" : "its long videos"} too` : ""}, this season moves to Archived seasons.</>}</div>
+                    : <>{st.uploaded} of {st.episodes} episodes uploaded on {UPLOADED_WHERE}. Once all are{left.length ? `, and ${left.length === 1 ? "its long video" : "its long videos"} too` : ""}, this season moves to Archived seasons.</>}</div>
                 ) : null}
                 <ol style={{ margin: 0, paddingLeft: 20 }}>{parts.sort((a, b) => (a.seriesOrder ?? 0) - (b.seriesOrder ?? 0)).map((e) => <li key={e.id}><Link href={`/episodes/${e.id}`}>{e.title}</Link>{e.isDemo ? <> <span className="demo-tag">DEMO</span></> : null} <span className="faint">· {STATE_LABEL[e.state]}</span></li>)}</ol>
               </div>
@@ -216,7 +217,7 @@ export default async function ChannelPage({ params, searchParams }: { params: Pr
               <Link href={`/connections#dest-${d.id}`} className="btn ghost small" style={{ justifySelf: "start" }}>Edit in Accounts</Link>
             </div>
           ))}
-          <div className="card flat note-row"><p className="muted">Instagram is one account shared by every channel: set it up in Accounts.</p><Link href="/connections" className="btn ghost small">Accounts</Link></div>
+          {INSTAGRAM_ON ? <div className="card flat note-row"><p className="muted">Instagram is one account shared by every channel: set it up in Accounts.</p><Link href="/connections" className="btn ghost small">Accounts</Link></div> : null}
         </div>
       ) : null}
 

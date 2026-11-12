@@ -1,5 +1,6 @@
-// Published (src/domain/published.ts): an episode moves from the Episodes tab to Published once YouTube, TikTok and
-// Instagram are all marked uploaded, or 24 hours after the first Uploaded press (worked out at read time from the report
+// Published (src/domain/published.ts): an episode moves from the Episodes tab to Published once every platform in use is
+// marked uploaded (YouTube and TikTok while Instagram is off, owner 12 Nov 2026; all three with the switch on), or 24
+// hours after the first Uploaded press (worked out at read time from the report
 // times, so an Undo brings it back); a long video 24 hours after its "Uploaded on YouTube" press. And the season numbers
 // shown with them: "S3 · E1" ahead of "No. 013", "S3" (or "Vol 1") for a long video.
 import fs from "node:fs";
@@ -12,7 +13,7 @@ import {
   episodePublished, episodePublishedState, episodeSeason, lessonPublished, lessonPublishedState, lessonSeason, lessonSeasons, loadSeasonIndex, longVideoLabel,
   oneSeason, PUBLISHED_AFTER_MS, publishedPubs, seasonFromTitle, seasonIndexFrom, seasonTag,
 } from "../src/domain/published";
-import { markEpisodeUploaded, undoEpisodeUploaded } from "../src/domain/publications";
+import { markEpisodeUploaded, platformsOf, undoEpisodeUploaded, uploadGroupsFor } from "../src/domain/publications";
 import { markLessonUploaded, undoLessonUploaded } from "../src/domain/lessons";
 
 // the importer reads FILMS_REPO_ROOT when it loads: point it at this file's own folder first
@@ -24,39 +25,43 @@ const NOW = new Date("2026-11-11T20:00:00Z");
 const hoursAgo = (h: number) => new Date(NOW.getTime() - h * 60 * 60 * 1000);
 const pub = (platform: string, at: Date | null = hoursAgo(1), status = "owner_reported", simulated = false) => ({ platform, status, simulated, reportedAt: at });
 
-// ── the rule, on plain rows ──────────────────────────────────────────────────────────────────────────────────────
+// ── the rule, on plain rows (Instagram off, owner 12 Nov 2026: YouTube and TikTok are the platforms in use) ─────────
+const ALL3 = platformsOf(uploadGroupsFor(true));   // the switch flipped back on
+
 describe("an episode is published", () => {
-  it("once all three platforms are marked uploaded, right away", () => {
-    const st = episodePublishedState([pub("youtube", hoursAgo(0.1)), pub("tiktok", hoursAgo(0.1)), pub("instagram", hoursAgo(0.05))], NOW);
-    expect(st).toMatchObject({ done: true, why: "all_three" });
+  it("once YouTube and TikTok are marked uploaded, right away, whatever its Instagram rows say", () => {
+    const st = episodePublishedState([pub("youtube", hoursAgo(0.1)), pub("tiktok", hoursAgo(0.05))], NOW);
+    expect(st).toMatchObject({ done: true, why: "all_platforms" });
     expect(st.firstAt).toEqual(hoursAgo(0.1));
-    expect(st.platforms.map((p) => [p.platform, p.uploaded])).toEqual([["youtube", true], ["tiktok", true], ["instagram", true]]);
+    expect(st.platforms.map((p) => [p.platform, p.uploaded])).toEqual([["youtube", true], ["tiktok", true]]);
+    expect(episodePublishedState([pub("youtube", hoursAgo(0.1)), pub("tiktok", hoursAgo(0.1)), pub("instagram", null, "planned")], NOW)).toMatchObject({ done: true, why: "all_platforms" });
   });
 
   it("24 hours after the first mark, even with a platform missing: one marked 25 h ago is done", () => {
     const st = episodePublishedState([pub("youtube", hoursAgo(25)), pub("tiktok", null, "ready"), pub("instagram", null, "planned")], NOW);
     expect(st).toMatchObject({ done: true, why: "day_passed" });
-    expect(st.platforms.map((p) => p.uploaded)).toEqual([true, false, false]);
+    expect(st.platforms.map((p) => p.uploaded)).toEqual([true, false]);
   });
 
   it("not while the first mark is under 24 hours old: one marked 2 h ago stays in Episodes", () => {
-    expect(episodePublishedState([pub("youtube", hoursAgo(2)), pub("tiktok", hoursAgo(2)), pub("instagram", null, "ready")], NOW)).toMatchObject({ done: false, why: null });
+    expect(episodePublishedState([pub("youtube", hoursAgo(2)), pub("tiktok", null, "ready"), pub("instagram", hoursAgo(2))], NOW)).toMatchObject({ done: false, why: null });
     expect(episodePublished([pub("youtube", hoursAgo(2))], NOW)).toBe(false);
   });
 
-  it("never with nothing marked", () => {
+  it("never with nothing marked, and never from Instagram alone (it neither counts nor starts the clock)", () => {
     expect(episodePublishedState([], NOW)).toMatchObject({ done: false, firstAt: null });
     expect(episodePublished([pub("youtube", null, "planned"), pub("tiktok", null, "ready"), pub("instagram", null, "handed_off")], NOW)).toBe(false);
+    expect(episodePublishedState([pub("youtube", null, "ready"), pub("tiktok", null, "ready"), pub("instagram", hoursAgo(48))], NOW)).toMatchObject({ done: false, firstAt: null });
   });
 
   it("counts the clock from the first mark, not the latest one", () => {
-    expect(episodePublished([pub("youtube", hoursAgo(24)), pub("tiktok", hoursAgo(24)), pub("instagram", null, "ready")], NOW)).toBe(true);   // exactly 24 h
-    expect(episodePublished([pub("youtube", hoursAgo(23.9)), pub("tiktok", hoursAgo(23.9))], NOW)).toBe(false);
-    expect(episodePublished([pub("youtube", hoursAgo(30)), pub("instagram", hoursAgo(1))], NOW)).toBe(true);
+    expect(episodePublished([pub("youtube", hoursAgo(24)), pub("tiktok", null, "ready")], NOW)).toBe(true);   // exactly 24 h
+    expect(episodePublished([pub("youtube", hoursAgo(23.9)), pub("tiktok", null, "ready")], NOW)).toBe(false);
+    expect(episodePublished([pub("youtube", hoursAgo(30)), pub("tiktok", null, "ready"), pub("instagram", hoursAgo(1))], NOW)).toBe(true);
   });
 
   it("takes every posted status, and a verification's time when no report time is recorded", () => {
-    expect(episodePublished([pub("youtube", hoursAgo(1), "verified_published"), pub("tiktok", hoursAgo(1), "scheduled_on_platform"), pub("instagram")], NOW)).toBe(true);
+    expect(episodePublished([pub("youtube", hoursAgo(1), "verified_published"), pub("tiktok", hoursAgo(1), "scheduled_on_platform")], NOW)).toBe(true);
     expect(episodePublished([{ platform: "youtube", status: "verified_published", reportedAt: null, verifiedAt: hoursAgo(26) }], NOW)).toBe(true);
   });
 
@@ -65,13 +70,21 @@ describe("an episode is published", () => {
     expect(episodePublished([pub("youtube", hoursAgo(48), "verified_published", true)], NOW)).toBe(false);
   });
 
-  it("a posted row with no time counts toward all three but never starts the clock (never guess a time)", () => {
+  it("a posted row with no time counts toward every platform but never starts the clock (never guess a time)", () => {
     expect(episodePublished([pub("youtube", null)], NOW)).toBe(false);
-    expect(episodePublished([pub("youtube", null), pub("tiktok", null), pub("instagram", null)], NOW)).toBe(true);
+    expect(episodePublished([pub("youtube", null), pub("tiktok", null)], NOW)).toBe(true);
   });
 
   it("is back in Episodes after an Undo (the rows go back to ready with no report time)", () => {
     expect(episodePublished([pub("youtube", null, "ready"), pub("tiktok", null, "ready")], NOW)).toBe(false);
+  });
+
+  it("with the switch on, waits for all three (or the day)", () => {
+    const st = episodePublishedState([pub("youtube", hoursAgo(0.1)), pub("tiktok", hoursAgo(0.1)), pub("instagram", hoursAgo(0.05))], NOW, ALL3);
+    expect(st).toMatchObject({ done: true, why: "all_platforms" });
+    expect(st.platforms.map((p) => p.platform)).toEqual(["youtube", "tiktok", "instagram"]);
+    expect(episodePublished([pub("youtube", hoursAgo(2)), pub("tiktok", hoursAgo(2)), pub("instagram", null, "ready")], NOW, ALL3)).toBe(false);
+    expect(episodePublished([pub("youtube", hoursAgo(30)), pub("instagram", hoursAgo(1))], NOW, ALL3)).toBe(true);
   });
 });
 
@@ -164,21 +177,17 @@ describe("on the database", () => {
     expect([tag(1), tag(6), tag(7), tag(12), tag(13), tag(18)]).toEqual(["S1 · E1", "S1 · E6", "S2 · E1", "S2 · E6", "S3 · E1", "S3 · E6"]);
   });
 
-  it("follows the Uploaded buttons: partly uploaded waits 24 h, all three moves it now, Undo brings it back", async () => {
-    const { ep } = await renderedEpisode(db);
+  it("follows the Uploaded button: YouTube & TikTok moves it now (its Instagram row still planned), Undo brings it back", async () => {
+    const { ep, ig, exports } = await renderedEpisode(db);
+    await db.insert(S.publications).values({ episodeId: ep.id, destinationId: ig.id, exportId: exports.instagram.id, kind: "instagram", status: "planned" });
     const state = async (now = new Date()) => episodePublishedState(await publishedPubs(db, [ep.id]), now);
     expect((await state()).done).toBe(false);
 
     await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
-    const partly = await state();
-    expect(partly).toMatchObject({ done: false });
-    expect(partly.platforms.map((p) => p.uploaded)).toEqual([true, true, false]);
-    expect((await state(new Date(partly.firstAt!.getTime() + PUBLISHED_AFTER_MS))).done).toBe(true);   // a day later, by itself
+    const done = await state();
+    expect(done).toMatchObject({ done: true, why: "all_platforms" });
+    expect(done.platforms.map((p) => [p.platform, p.uploaded])).toEqual([["youtube", true], ["tiktok", true]]);
 
-    await markEpisodeUploaded(db, ep.id, "instagram");
-    expect(await state()).toMatchObject({ done: true, why: "all_three" });
-
-    await undoEpisodeUploaded(db, ep.id, "instagram");
     await undoEpisodeUploaded(db, ep.id, "youtube_tiktok");
     expect(await state(new Date(Date.now() + 2 * PUBLISHED_AFTER_MS))).toMatchObject({ done: false, firstAt: null });
   });

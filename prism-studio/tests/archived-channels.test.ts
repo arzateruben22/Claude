@@ -99,8 +99,9 @@ describe("nothing automatic touches an archived channel", () => {
     const today = localDate(new Date(), "America/Los_Angeles");
     const slots = await slotsForDate(db, addDays(today, 1));
     expect(slots.some((s) => s.channelId === b.id)).toBe(false);
-    expect(slots.some((s) => s.kind === "instagram")).toBe(true);
-    // an Instagram-ready Body episode is never rotated onto the shared Instagram, and its own posts stay unplanned
+    expect(slots.some((s) => s.channelId !== null)).toBe(true);   // the active channels keep theirs
+    // its own posts stay unplanned, and nothing of it reaches the shared Instagram (with the switch on, the rotation
+    // skips it too: instagram-plan.test.ts)
     const r = await renderedEpisode(db, "body", { title: "Archived body episode" });
     await planDays(db, addDays(today, 1), 2);
     const own = await db.select().from(S.publications).where(eq(S.publications.episodeId, r.ep.id));
@@ -146,18 +147,46 @@ describe("Restore", () => {
   });
 });
 
-describe("the wall's layout", () => {
+describe("the wall's layout, Instagram in the centre (the switch on)", () => {
   it("five channels sit on their own screens", () => {
-    const l = rigLayout(["skincare", "physics", "body", "space", "whatif"]);
+    const l = rigLayout(["skincare", "physics", "body", "space", "whatif"], true);
     expect(Object.fromEntries([...l].map(([slug, pos]) => [pos, slug]))).toEqual(RIG);
   });
   it("four channels sit two a side, with no top screen", () => {
-    const l = rigLayout(["skincare", "physics", "space", "whatif"]);
+    const l = rigLayout(["skincare", "physics", "space", "whatif"], true);
     expect(Object.fromEntries(l)).toEqual({ physics: "innerLeft", space: "innerRight", skincare: "outerRight", whatif: "outerLeft" });
     expect([...l.values()]).not.toContain("top");
   });
   it("fewer channels stay balanced", () => {
-    expect([...rigLayout(["physics", "space", "whatif"]).values()].sort()).toEqual(["innerLeft", "innerRight", "top"]);
-    expect([...rigLayout(["skincare", "whatif"]).values()].sort()).toEqual(["innerLeft", "innerRight"]);
+    expect([...rigLayout(["physics", "space", "whatif"], true).values()].sort()).toEqual(["innerLeft", "innerRight", "top"]);
+    expect([...rigLayout(["skincare", "whatif"], true).values()].sort()).toEqual(["innerLeft", "innerRight"]);
+  });
+  it("never puts a channel in the centre", () => {
+    for (let n = 1; n <= 6; n++) expect([...rigLayout(["skincare", "physics", "body", "space", "whatif", "extra"].slice(0, n), true).values()]).not.toContain("center");
+  });
+});
+
+describe("the wall's layout with Instagram off (owner, 12 Nov 2026): the channels fill the wall", () => {
+  it("four channels (today's wall) sit two a side, with no top and no centre screen", () => {
+    const l = rigLayout(["skincare", "physics", "space", "whatif"], false);
+    expect(Object.fromEntries(l)).toEqual({ physics: "innerLeft", space: "innerRight", skincare: "outerRight", whatif: "outerLeft" });
+    expect([...l.values()]).not.toContain("top");
+    expect([...l.values()]).not.toContain("center");
+  });
+  it("an odd one out takes the centre instead of the top screen", () => {
+    const five = rigLayout(["skincare", "physics", "body", "space", "whatif"], false);
+    expect(Object.fromEntries(five)).toEqual({ skincare: "outerRight", physics: "innerLeft", body: "outerLeft", space: "innerRight", whatif: "center" });
+    expect([...rigLayout(["physics", "space", "whatif"], false).values()].sort()).toEqual(["center", "innerLeft", "innerRight"]);
+    expect([...rigLayout(["skincare"], false).values()]).toEqual(["center"]);
+  });
+  it("even counts stay symmetric around the pole", () => {
+    expect([...rigLayout(["skincare", "whatif"], false).values()].sort()).toEqual(["innerLeft", "innerRight"]);
+  });
+  it("every channel gets its own screen, never two on one", () => {
+    for (let n = 0; n <= 5; n++) {
+      const l = rigLayout(["skincare", "physics", "body", "space", "whatif"].slice(0, n), false);
+      expect(l.size).toBe(n);
+      expect(new Set(l.values()).size).toBe(n);
+    }
   });
 });

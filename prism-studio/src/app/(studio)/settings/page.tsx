@@ -5,6 +5,7 @@ import { resetPushKeys, restoreArchivedChannel, saveSettings, sendTestPush, sign
 import { ActionForm } from "@/components/ActionForm";
 import { PushDevices } from "@/components/PushDevices";
 import { topicStyle } from "@/lib/format";
+import { INSTAGRAM_ON } from "@/domain/publications";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -21,7 +22,10 @@ export default async function Settings() {
           <label className="field">Timezone <span className="hint">Every time in the app is shown in this zone (stored in UTC).</span><input name="timezone" defaultValue={s.timezone} /></label>
           <div className="grid3">
             <label className="field">Shorts per channel a day <input name="shortsPerChannelDaily" type="number" min={0} max={3} defaultValue={s.shortsPerChannelDaily} /></label>
-            <label className="field">Instagram posts a day <input name="instagramDaily" type="number" min={0} max={3} defaultValue={s.instagramDaily} /></label>
+            {/* Instagram is off (INSTAGRAM_ON): its setting is kept as it is, not shown */}
+            {INSTAGRAM_ON
+              ? <label className="field">Instagram posts a day <input name="instagramDaily" type="number" min={0} max={3} defaultValue={s.instagramDaily} /></label>
+              : <input type="hidden" name="instagramDaily" value={s.instagramDaily} />}
             <label className="field">Buffer days <input name="bufferDays" type="number" min={0} max={30} defaultValue={s.bufferDays} /></label>
           </div>
         </section>
@@ -48,7 +52,7 @@ export default async function Settings() {
       <section id="notifications" className="card stack push-card" aria-labelledby="push-h">
         <div className="stack-sm">
           <h3 id="push-h">Notifications</h3>
-          <p className="muted" style={{ margin: 0 }}>Prism notifies the devices you turn on here when an upload is due (30 minutes before a manual slot whose post is approved and ready), when a scheduled automatic publish fails or needs you to finish it, and when an Instagram slot passes with nothing planned. Each event notifies once; demo posts never do.</p>
+          <p className="muted" style={{ margin: 0 }}>Prism notifies the devices you turn on here when an upload is due (30 minutes before a manual slot whose post is approved and ready), when a scheduled automatic publish fails or needs you to finish it{INSTAGRAM_ON ? ", and when an Instagram slot passes with nothing planned" : ""}. Each event notifies once; demo posts never do.</p>
         </div>
         {push.status.problem ? <div className={`notice${push.status.keys === "unreadable" ? " bad" : ""}`}>{push.status.problem}</div> : null}
         {push.status.keys === "unreadable" ? (

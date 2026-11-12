@@ -12,6 +12,8 @@
 //   (c) an Instagram slot that passed with nothing planned on it.
 //   Never for demo or simulated posts, nor an archived channel's. Pause publishing silences (a) and (c); Stop external actions silences (a)
 //   (the desk's hand-off is off then). Nothing is computed while no device is registered.
+//   While Instagram is off (INSTAGRAM_ON in publications.ts, owner 12 Nov 2026) nothing is about Instagram: (c) never
+//   fires, and (a) and (b) skip Instagram posts (their rows stay as they are).
 import { createHash } from "node:crypto";
 import { and, count, desc, eq, gte, inArray, isNull, lte, ne, notLike, sql } from "drizzle-orm";
 import webpush from "web-push";
@@ -20,6 +22,7 @@ import { channels, connections, destinations, episodes, jobs, platformExports, p
 import { audit, type Conn, DomainError, settings } from "./core";
 import { onActiveChannel } from "./channels";
 import { currentApproval } from "./approvals";
+import { INSTAGRAM_ON } from "./publications";
 import { slotsForDate } from "./schedule";
 import { addDays, formatLocal, localDate } from "./time";
 import { type Env, integrationsConfigured, keyFor, keyFrom, type KeySource, sealWithKey, unsealWithKey } from "../lib/crypto";
@@ -259,7 +262,8 @@ export async function dueUploads(c: Conn, now = new Date()): Promise<PushCandida
     .leftJoin(connections, eq(connections.destinationId, destinations.id))
     .where(and(inArray(publications.status, ["planned", "ready", "handed_off"]), isNull(publications.reportedAt), eq(publications.simulated, false),
       gte(publications.scheduledFor, new Date(+now - UPLOAD_GRACE_MIN * MIN)), lte(publications.scheduledFor, new Date(+now + UPLOAD_LEAD_MIN * MIN)),
-      eq(episodes.isDemo, false), eq(channels.paused, false), eq(destinations.paused, false), eq(versions.superseded, false), onActiveChannel(episodes.channelId)));
+      eq(episodes.isDemo, false), eq(channels.paused, false), eq(destinations.paused, false), eq(versions.superseded, false), onActiveChannel(episodes.channelId),
+      INSTAGRAM_ON ? undefined : ne(destinations.platform, "instagram")));
   const out: PushCandidate[] = [];
   for (const r of rows) {
     // the worker publishes these itself (scheduled publishing on a connected account): not the owner's upload
@@ -302,6 +306,7 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
     if (!pj || pj.payload.manual === true) continue;   // the owner pressed Publish now: they're in the app
     const r = await pubInfo(publicationId);
     if (!r || r.e.isDemo || r.p.simulated || POSTED.includes(r.p.status) || r.p.status === "cancelled" || r.archived) continue;
+    if (!INSTAGRAM_ON && r.dest.platform === "instagram") continue;
     const platform = PLATFORM[r.dest.platform];
     const why = j.type === "publish_status" ? `${platform} never finished processing it` : firstSentence(j.error) || "the upload failed";
     out.push({
@@ -315,7 +320,8 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
   const handed = await c.select({ p: publications, e: episodes, dest: destinations }).from(publications)
     .innerJoin(episodes, eq(episodes.id, publications.episodeId)).innerJoin(destinations, eq(destinations.id, publications.destinationId))
     .where(and(eq(publications.status, "handed_off"), eq(publications.method, "api"), gte(publications.handedOffAt, since),
-      notLike(publications.note, "processing:%"), eq(publications.simulated, false), eq(episodes.isDemo, false), onActiveChannel(episodes.channelId)));
+      notLike(publications.note, "processing:%"), eq(publications.simulated, false), eq(episodes.isDemo, false), onActiveChannel(episodes.channelId),
+      INSTAGRAM_ON ? undefined : ne(destinations.platform, "instagram")));
   for (const r of handed) {
     const pj = await publishJob(c, r.p.id);
     if (!pj || pj.payload.manual === true) continue;
@@ -332,8 +338,9 @@ export async function publishProblems(c: Conn, now = new Date()): Promise<PushCa
   return out;
 }
 
-/** (c) Instagram slots that passed in the last few hours with nothing planned on them. */
+/** (c) Instagram slots that passed in the last few hours with nothing planned on them. None while Instagram is off. */
 export async function unplannedInstagramSlots(c: Conn, now = new Date()): Promise<PushCandidate[]> {
+  if (!INSTAGRAM_ON) return [];
   const s = await settings(c);
   const today = localDate(now, s.timezone);
   const slots = [...(await slotsForDate(c, addDays(today, -1))), ...(await slotsForDate(c, today))]

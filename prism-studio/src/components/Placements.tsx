@@ -1,7 +1,9 @@
 // Per-account text: each destination's exact export (title, caption, hashtags, disclosures), copyable and editable,
-// and the owner's two "Uploaded" buttons (YouTube & TikTok, Instagram). There is no approval step.
+// and the owner's "Uploaded" button(s): "YouTube & TikTok" (and "Instagram" only while Instagram is on; off, owner
+// 12 Nov 2026, episodeFull has no Instagram placement either). There is no approval step.
 import Link from "next/link";
 import { regenerateText, saveExport } from "@/app/actions";
+import { ACTIVE_UPLOAD_GROUPS } from "@/domain/publications";
 import type { episodeFull } from "@/lib/data";
 import { composePostText } from "@/domain/metadata";
 import { PLATFORM_LABEL, qaFails } from "@/lib/format";
@@ -25,11 +27,11 @@ export function Placements({ full, tz }: { full: Full; tz: string }) {
       <div className="uploaded-panel stack-sm">
         <div className="label">After you post it by hand</div>
         <div className="uploaded-bar">
-          {(["youtube_tiktok", "instagram"] as const).map((g) => (
+          {ACTIVE_UPLOAD_GROUPS.map((g) => (
             <UploadedControl key={g} episodeId={full.ep.id} group={g} tz={tz} pubs={full.placements.filter((p) => groupOf(p.dest.platform) === g).map((p) => p.publication)} />
           ))}
         </div>
-        <p className="faint" style={{ margin: 0, fontSize: 13 }}>Nothing posts by itself: these buttons only record what you did.</p>
+        <p className="faint" style={{ margin: 0, fontSize: 13 }}>Nothing posts by itself: {ACTIVE_UPLOAD_GROUPS.length === 1 ? "this button only records" : "these buttons only record"} what you did.</p>
       </div>
       {full.placements.map(({ dest, export: x, publication }) => (
         <div key={dest.id} className="card flat stack-sm">

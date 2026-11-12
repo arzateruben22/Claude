@@ -1,6 +1,7 @@
 // Prism Studio worker: claims jobs from the Postgres queue (fair per channel, leased, heartbeated), runs them,
 // and does the periodic housekeeping: recover expired leases, move missed uploads, queue due analytics pulls, and
-// notify the owner's devices (upload due, a scheduled publish that needs them, an empty Instagram slot), and queue
+// notify the owner's devices (upload due, a scheduled publish that needs them, an empty Instagram slot while Instagram
+// is on), and queue
 // erasing the videos of episodes posted everywhere (cleanup_uploaded_media, at most hourly).
 // Run alongside the web app: `npm run worker`. Stops cleanly on SIGINT/SIGTERM (the current job finishes).
 import os from "node:os";

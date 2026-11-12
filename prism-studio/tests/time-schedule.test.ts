@@ -29,9 +29,10 @@ describe("schedule", () => {
   beforeAll(async () => ({ db, end } = await freshDb()));
   afterAll(() => end());
 
-  it("one Short per channel per platform a day, staggered, plus two Instagram posts", async () => {
+  it("one Short per channel per platform a day, staggered, and no Instagram slot while Instagram is off", async () => {
     const slots = await slotsForDate(db, "2026-11-10");
-    expect(slots).toHaveLength(5 * 2 + 2);
+    expect(slots).toHaveLength(5 * 2);   // with the switch on, plus two Instagram posts (instagram-plan.test.ts)
+    expect(slots.some((s) => s.platform === "instagram" || s.kind === "instagram")).toBe(false);
     const yt = slots.filter((s) => s.platform === "youtube").map((s) => s.at.toISOString());
     expect(new Set(yt).size).toBe(5);   // staggered, not all at once
   });
@@ -65,5 +66,19 @@ describe("schedule", () => {
     const days = rows.filter((r) => [x.pubs.youtube.id, y.pubs.youtube.id].includes(r.id)).map((r) => localDate(r.scheduledFor!, LA)).sort();
     expect(days).toEqual(["2026-12-02", "2026-12-03"]);
     expect(rows.find((r) => r.id === x.pubs.youtube.id)!.originalSlot?.toISOString()).toBe(past.toISOString());
+  });
+  it("Instagram off (owner, 12 Nov 2026): planning places nothing there, and a planned or missed Instagram post stays as it is", async () => {
+    const r = await renderedEpisode(db, "space", { title: "Instagram-ready" });   // an Instagram export, never placed
+    const missed = zonedTimeToUtc("2026-12-01", "11:30", LA);
+    const [late] = await db.insert(S.publications).values({ episodeId: r.ep.id, destinationId: r.ig.id, exportId: r.exports.instagram.id, kind: "instagram", status: "planned", scheduledFor: missed }).returning();
+    const other = await renderedEpisode(db, "whatif", { title: "Never on Instagram" });
+    const now = zonedTimeToUtc("2026-12-10", "00:00", LA);
+    await planDays(db, "2026-12-10", 7, now);
+    await rescheduleMissed(db, now);
+    const onIg = await db.select().from(S.publications).where(eq(S.publications.destinationId, r.ig.id));
+    expect(onIg.map((p) => p.id)).toEqual([late.id]);                                    // no new Instagram row for either episode
+    expect(onIg[0]).toEqual(late);                                                       // and the old one never moved
+    const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, other.pubs.youtube.id));
+    expect(yt.scheduledFor).not.toBeNull();                                              // YouTube and TikTok still plan as usual
   });
 });

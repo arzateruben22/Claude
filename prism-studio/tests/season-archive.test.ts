@@ -1,6 +1,8 @@
-// Archived seasons (src/domain/season-archive.ts): a season is uploaded once every real episode stands on both Uploaded
-// buttons and every built long video of it is marked uploaded; then it leaves every working list (derived, so an Undo
-// brings it straight back), keeps counting in analytics, is never planned, and the importer never brings it back.
+// Archived seasons (src/domain/season-archive.ts): a season is uploaded once every real episode stands on every Uploaded
+// button in use ("Uploaded on YouTube & TikTok" alone while Instagram is off, owner 12 Nov 2026; that and "Uploaded on
+// Instagram" with the switch on) and every built long video of it is marked uploaded; then it leaves every working list
+// (derived, so an Undo brings it straight back), keeps counting in analytics, is never planned, and the importer never
+// brings it back.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -8,9 +10,9 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { and, eq, freshDb, S, sql } from "./helpers";
 import type { DB } from "../src/db/client";
 import {
-  archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seasonUploaded, seriesOnWorkingSeason,
+  archiveFrom, archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seasonUploaded, seriesOnWorkingSeason,
 } from "../src/domain/season-archive";
-import { allPosted, episodeUploaded, groupUploaded, markEpisodeUploaded, undoEpisodeUploaded } from "../src/domain/publications";
+import { allPosted, episodeUploaded, groupUploaded, INSTAGRAM_ON, markEpisodeUploaded, markUploaded, undoEpisodeUploaded, uploadGroupsFor } from "../src/domain/publications";
 import { availableForLesson, markLessonUploaded, undoLessonUploaded } from "../src/domain/lessons";
 import { analyticsTotals } from "../src/domain/analytics";
 import { planDays, slotsForDate } from "../src/domain/schedule";
@@ -22,11 +24,16 @@ import { addDays, localDate } from "../src/domain/time";
 // ── the rule, on plain rows ──────────────────────────────────────────────────────────────────────────────────────
 const pub = (platform: string, status = "owner_reported", simulated = false) => ({ platform, status, simulated });
 const all = () => [pub("youtube"), pub("tiktok"), pub("instagram")];
+const ytTt = () => [pub("youtube"), pub("tiktok")];
 const ep = (pubs = all(), o: { isDemo?: boolean; state?: string } = {}) => ({ isDemo: o.isDemo ?? false, state: o.state ?? "published", pubs });
 const long = (o: { state?: string; videoPath?: string; isDemo?: boolean; isTestFixture?: boolean } = {}) =>
   ({ state: o.state ?? "published", videoPath: o.videoPath ?? "films:films/channels/physics/compilations/s1/s1-16x9.mp4", isDemo: o.isDemo ?? false, isTestFixture: o.isTestFixture ?? false });
+const ON = uploadGroupsFor(true);   // the switch flipped back on: both buttons, both needed
 
 describe("the Uploaded buttons' done state (one test, shared)", () => {
+  it("is off for Instagram (owner, 12 Nov 2026)", () => {
+    expect(INSTAGRAM_ON).toBe(false);
+  });
   it("needs real rows, every one posted", () => {
     expect(allPosted([])).toBe(false);
     expect(allPosted([pub("youtube"), pub("tiktok", "ready")])).toBe(false);
@@ -35,22 +42,41 @@ describe("the Uploaded buttons' done state (one test, shared)", () => {
     expect(allPosted([pub("youtube"), pub("tiktok", "planned", true)])).toBe(true);   // a simulated row never counts
     expect(groupUploaded([pub("youtube"), pub("tiktok")], "youtube_tiktok")).toBe(true);
     expect(groupUploaded([pub("youtube"), pub("tiktok")], "instagram")).toBe(false);
+  });
+  it("Instagram off: an episode is uploaded once YouTube & TikTok stands, whatever its Instagram rows say", () => {
+    expect(episodeUploaded(ytTt())).toBe(true);                                                  // never had an Instagram row
+    expect(episodeUploaded([pub("youtube"), pub("tiktok"), pub("instagram", "planned")])).toBe(true);   // still planned there
+    expect(episodeUploaded([pub("youtube"), pub("tiktok"), pub("instagram", "ready")])).toBe(true);
     expect(episodeUploaded(all())).toBe(true);
-    expect(episodeUploaded([pub("youtube"), pub("tiktok"), pub("instagram", "ready")])).toBe(false);
+    expect(episodeUploaded([pub("youtube"), pub("tiktok", "ready"), pub("instagram")])).toBe(false);   // TikTok not yet
+    expect(episodeUploaded([pub("youtube", "planned"), pub("tiktok", "planned"), pub("instagram")])).toBe(false);
+    expect(episodeUploaded([pub("instagram")])).toBe(false);                                      // Instagram alone never counts
+    expect(episodeUploaded([])).toBe(false);
+  });
+  it("Instagram on: both buttons are needed", () => {
+    expect(episodeUploaded(all(), ON)).toBe(true);
+    expect(episodeUploaded(ytTt(), ON)).toBe(false);
+    expect(episodeUploaded([pub("youtube"), pub("tiktok"), pub("instagram", "ready")], ON)).toBe(false);
   });
 });
 
 describe("seasonUploaded", () => {
-  it("is true once every real episode is uploaded on both buttons", () => {
+  it("is true once every real episode is uploaded on YouTube & TikTok, Instagram rows planned or not", () => {
     expect(seasonUploaded([ep(), ep()])).toBe(true);
+    expect(seasonUploaded([ep(ytTt()), ep([pub("youtube"), pub("tiktok"), pub("instagram", "planned")])])).toBe(true);
   });
-  it("is false while one episode misses a button (incomplete)", () => {
-    expect(seasonUploaded([ep(), ep([pub("youtube"), pub("tiktok")])])).toBe(false);                    // no Instagram row yet
+  it("is false while one episode misses YouTube or TikTok (incomplete)", () => {
     expect(seasonUploaded([ep(), ep([pub("youtube"), pub("tiktok", "ready"), pub("instagram")])])).toBe(false);
+    expect(seasonUploaded([ep(), ep([pub("instagram")])])).toBe(false);                          // only Instagram: not uploaded
     expect(seasonUploaded([ep(), ep([], { state: "idea" })])).toBe(false);                               // still an idea
   });
   it("is false again after an Undo (the rows go back to ready)", () => {
-    expect(seasonUploaded([ep(), ep([pub("youtube"), pub("tiktok"), pub("instagram", "ready")])])).toBe(false);
+    expect(seasonUploaded([ep(), ep([pub("youtube", "ready"), pub("tiktok", "ready"), pub("instagram")])])).toBe(false);
+  });
+  it("with the switch on, waits for Instagram too", () => {
+    expect(seasonUploaded([ep(), ep()], [], ON)).toBe(true);
+    expect(seasonUploaded([ep(), ep(ytTt())], [], ON)).toBe(false);                                    // no Instagram row yet
+    expect(seasonUploaded([ep(), ep([pub("youtube"), pub("tiktok"), pub("instagram", "ready")])], [], ON)).toBe(false);
   });
   it("ignores demo episodes, and cancelled or superseded ones", () => {
     expect(seasonUploaded([ep(), ep([], { isDemo: true })])).toBe(true);
@@ -86,7 +112,11 @@ let physics: typeof S.channels.$inferSelect;
 let s1: { seasonId: string; seriesId: string; eps: (typeof S.episodes.$inferSelect)[] };
 let s2: { seasonId: string; seriesId: string; eps: (typeof S.episodes.$inferSelect)[] };
 const archive = () => seasonArchive(db);
-const both = async (id: string) => { await markEpisodeUploaded(db, id, "youtube_tiktok"); await markEpisodeUploaded(db, id, "instagram"); };
+const uploaded = (id: string) => markEpisodeUploaded(db, id, "youtube_tiktok");
+/** Season 1's Instagram rows, planned before Instagram was switched off (the calendar made them): they stay as they are. */
+const igRows = () => db.select({ id: S.publications.id, status: S.publications.status, scheduledFor: S.publications.scheduledFor }).from(S.publications)
+  .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+  .where(and(eq(S.destinations.platform, "instagram"), sql`${S.publications.episodeId} in ${s1.eps.map((e) => e.id)}`)).orderBy(S.publications.id);
 
 beforeAll(async () => {
   ({ db, end } = await freshDb());
@@ -101,6 +131,14 @@ beforeAll(async () => {
     return { seasonId: row.id, seriesId: row.seriesId, eps };
   };
   s1 = await season(1); s2 = await season(2);
+  // every Season 1 episode already has an Instagram post on the calendar, never posted (as the live data may have)
+  const [ig] = await db.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  for (const [i, e] of s1.eps.entries()) {
+    const [x] = await db.select({ id: S.platformExports.id }).from(S.platformExports).innerJoin(S.versions, eq(S.versions.id, S.platformExports.versionId))
+      .where(and(eq(S.versions.episodeId, e.id), eq(S.platformExports.platform, "instagram")));
+    await db.insert(S.publications).values({ episodeId: e.id, destinationId: ig.id, exportId: x.id, kind: "instagram", status: i % 2 ? "ready" : "planned",
+      scheduledFor: new Date(Date.UTC(2027, 0, 10 + i, 19, 30)) });
+  }
 });
 afterAll(async () => { await end(); fs.rmSync(ROOT, { recursive: true, force: true }); });
 
@@ -114,17 +152,23 @@ describe("seasonArchive (derived from the publication records)", () => {
     expect(st).toMatchObject({ archived: false, episodes: 6, uploaded: 0, label: "Season 1", channelId: physics.id });
   });
 
-  it("an incomplete season stays: five episodes on both buttons, the sixth only on YouTube & TikTok", async () => {
-    for (const e of s1.eps.slice(0, 5)) await both(e.id);
-    await markEpisodeUploaded(db, s1.eps[5].id, "youtube_tiktok");
+  it("an incomplete season stays: five episodes uploaded on YouTube & TikTok, the sixth only on YouTube", async () => {
+    for (const e of s1.eps.slice(0, 5)) await uploaded(e.id);
+    const [yt6] = await db.select({ id: S.publications.id }).from(S.publications).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+      .where(and(eq(S.publications.episodeId, s1.eps[5].id), eq(S.destinations.platform, "youtube")));
+    await markUploaded(db, yt6.id, {});
     const a = await archive();
     expect(a.seasonIds.has(s1.seasonId)).toBe(false);
     expect(a.seasons.find((x) => x.id === s1.seasonId)).toMatchObject({ episodes: 6, uploaded: 5 });
   });
 
-  it("the last Uploaded press archives it: its season, series and every episode", async () => {
-    await markEpisodeUploaded(db, s1.eps[5].id, "instagram");
+  it("the last YouTube & TikTok press archives it, with its Instagram rows still planned: its season, series and every episode", async () => {
+    const igBefore = await igRows();
+    expect(igBefore).toHaveLength(6);
+    expect(igBefore.every((p) => ["planned", "ready"].includes(p.status))).toBe(true);
+    await uploaded(s1.eps[5].id);
     const a = await archive();
+    expect(await igRows()).toEqual(igBefore);   // the Instagram rows are untouched (nothing is deleted or changed)
     expect([...a.seasonIds]).toEqual([s1.seasonId]);
     expect([...a.seriesIds]).toEqual([s1.seriesId]);
     expect(s1.eps.every((e) => a.episodeIds.has(e.id))).toBe(true);
@@ -138,10 +182,22 @@ describe("seasonArchive (derived from the publication records)", () => {
   });
 
   it("Undo brings the season straight back, and pressing again archives it again", async () => {
-    expect(await undoEpisodeUploaded(db, s1.eps[2].id, "instagram")).toBe(1);
+    expect(await undoEpisodeUploaded(db, s1.eps[2].id, "youtube_tiktok")).toBe(2);
     expect((await archive()).seasonIds.size).toBe(0);
-    await markEpisodeUploaded(db, s1.eps[2].id, "instagram");
+    await uploaded(s1.eps[2].id);
     expect((await archive()).seasonIds.has(s1.seasonId)).toBe(true);
+  });
+
+  it("with the switch on, the same rows would hold it back (its Instagram rows were never posted)", async () => {
+    const pubs = await db.select({ episodeId: S.publications.episodeId, platform: S.destinations.platform, status: S.publications.status, simulated: S.publications.simulated, reportedAt: S.publications.reportedAt })
+      .from(S.publications).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId)).where(sql`${S.publications.episodeId} in ${s1.eps.map((e) => e.id)}`);
+    const rows = {
+      seasons: [{ id: s1.seasonId, seriesId: s1.seriesId, number: 1, title: "", seriesTitle: "Season 1", channelId: physics.id }],
+      episodes: s1.eps.map((e) => ({ id: e.id, seasonId: s1.seasonId, state: "published", number: e.number, title: e.title, seriesOrder: e.seriesOrder, isDemo: false, videoClearedAt: null })),
+      pubs, links: [], lessons: [],
+    };
+    expect(archiveFrom(rows).seasonIds.has(s1.seasonId)).toBe(true);
+    expect(archiveFrom(rows, ON).seasonIds.has(s1.seasonId)).toBe(false);
   });
 
   it("a demo episode in the season neither blocks it nor stays behind", async () => {
@@ -234,7 +290,7 @@ describe("archived seasons keep counting", () => {
     const r = await db.execute(sql`select count(*)::int as n from publications p join episodes e on e.id = p.episode_id
       where p.status in ('owner_reported','scheduled_on_platform','verified_published') and not p.simulated and not e.is_demo`);
     const posted = (r.rows[0] as { n: number }).n;
-    expect(posted).toBe(18);   // six episodes × YouTube, TikTok, Instagram
+    expect(posted).toBe(12);   // six episodes × YouTube, TikTok (their Instagram rows were never posted)
     expect((await analyticsTotals(db)).posts).toBe(posted);
   });
 });

@@ -1,6 +1,7 @@
-// A monitor's extension: the full screen for one channel (its YouTube and TikTok) or for the shared Instagram.
-// Top to bottom: the six monitors in miniature, the next post for each account, then the queue and the series
-// (channels) or today's slots, the rotation and the never-repeats ledger (Instagram).
+// A monitor's extension: the full screen for one channel (its YouTube and TikTok) or, while Instagram is on, for the
+// shared Instagram. Top to bottom: the monitors in miniature, the next post for each account, then the queue and the
+// series (channels) or today's slots, the rotation and the never-repeats ledger (Instagram). With Instagram off
+// (INSTAGRAM_ON, owner 12 Nov 2026) a channel has no shared-Instagram block, and /m/instagram only says Instagram is off.
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PlanWeek } from "@/components/PlanWeek";
@@ -25,6 +26,9 @@ import { SeasonBar } from "@/components/SeasonBar";
 import { seasonLabel } from "@/domain/season";
 import { ArchivedNote } from "@/components/ArchivedSeasons";
 import { LessonUploadedPanel } from "@/components/UploadedControl";
+import { INSTAGRAM_ON, UPLOADED_WHERE } from "@/domain/publications";
+
+const IG_LOOK = { ["--topic" as string]: "#C9CED6", ["--topic-ink" as string]: "#E4E7EC" };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -36,11 +40,35 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function Extension({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const rig = await rigView();
-  if (!rig.monitors.some((m) => m.slug === slug)) notFound();
+  const igOff = slug === INSTAGRAM_SLUG && !INSTAGRAM_ON;   // an old link or bookmark: say so instead of a 404
+  if (!igOff && !rig.monitors.some((m) => m.slug === slug)) notFound();
   return (
     <div className="ext">
       <MonitorStrip monitors={rig.monitors} current={slug} />
-      {slug === INSTAGRAM_SLUG ? <InstagramScreen /> : <ChannelScreen slug={slug} />}
+      {igOff ? <InstagramOff /> : slug === INSTAGRAM_SLUG ? <InstagramScreen /> : <ChannelScreen slug={slug} />}
+    </div>
+  );
+}
+
+/** /m/instagram while Instagram is off: what that means, and where things are now. Nothing here posts or plans. */
+function InstagramOff() {
+  return (
+    <div style={IG_LOOK}>
+      <header className="ext-head">
+        <div className="kicker">Shared account · off</div>
+        <h1>Instagram is off</h1>
+        <p className="lede">Nothing goes to Instagram any more: no slots, plans, reminders or upload tasks, and no &ldquo;Uploaded on Instagram&rdquo; button. An episode counts as uploaded once &ldquo;Uploaded on {UPLOADED_WHERE}&rdquo; is pressed.</p>
+        <div className="ext-links">
+          <Link href="/" className="btn ghost small">The wall</Link>
+          <Link href="/upload" className="btn ghost small">Upload Desk</Link>
+          <Link href="/analytics" className="btn ghost small">Analytics</Link>
+        </div>
+      </header>
+      <section className="section">
+        <div className="card">
+          <p className="muted" style={{ margin: 0 }}>Nothing was deleted: posts already made on Instagram keep their numbers in Analytics, and the account stays listed in Accounts.</p>
+        </div>
+      </section>
     </div>
   );
 }
@@ -149,7 +177,7 @@ async function ChannelScreen({ slug }: { slug: string }) {
         <section className="section">
           <div className="card empty-state">
             <h2>All caught up</h2>
-            <p className="muted">Every season of {name} is uploaded on YouTube &amp; TikTok and Instagram, so it&apos;s archived. The next season shows here once its first film is imported.</p>
+            <p className="muted">Every season of {name} is uploaded on {UPLOADED_WHERE}, so it&apos;s archived. The next season shows here once its first film is imported.</p>
             <ArchivedNote slug={c.slug} seasons={v.archived} />
           </div>
         </section>
@@ -268,9 +296,8 @@ const SLOT_TONE = { posted: "good", ready: "good", not_ready: "warn", unplanned:
 
 async function InstagramScreen() {
   const v = await instagramExtension();
-  const IG = { ["--topic" as string]: "#C9CED6", ["--topic-ink" as string]: "#E4E7EC" };
   return (
-    <div style={IG}>
+    <div style={IG_LOOK}>
       <header className="ext-head">
         <div className="kicker">Shared account · every series · {v.daily} a day</div>
         <h1>Instagram</h1>

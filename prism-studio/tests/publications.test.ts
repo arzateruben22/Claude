@@ -1,9 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { freshDb, renderedEpisode, and, eq, S } from "./helpers";
 import type { DB } from "../src/db/client";
-import { backfillPosted, markEpisodeUploaded, markHandedOff, markUploaded, mayAutoPublish, parsePostUrl, undoEpisodeUploaded, undoUploaded } from "../src/domain/publications";
+import {
+  ACTIVE_PLATFORMS, ACTIVE_UPLOAD_GROUPS, backfillPosted, INSTAGRAM_ON, markEpisodeUploaded, markHandedOff, markUploaded, mayAutoPublish, onActivePlatform, parsePostUrl,
+  placementDestinations, platformActive, platformsOf, undoEpisodeUploaded, undoUploaded, UPLOADED_WHERE, uploadGroupsFor,
+} from "../src/domain/publications";
+import { publishPublication } from "../src/domain/publish";
 import { onPublicationReported, channelXp } from "../src/domain/living";
 import { approve } from "../src/domain/approvals";
+
+const ON = uploadGroupsFor(true);   // the switch flipped back on: both buttons
 
 let db: DB, end: () => Promise<void>;
 beforeAll(async () => ({ db, end } = await freshDb()));
@@ -115,9 +121,19 @@ describe("Uploaded buttons (markEpisodeUploaded)", () => {
     const igRows = await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.kind, "instagram")));
     expect(igRows).toHaveLength(0);
   });
-  it("Instagram: creates the shared row when missing and marks it", async () => {
+  it("Instagram is off (owner, 12 Nov 2026): its button records nothing, creates no row and leaves a planned one as it is", async () => {
+    expect(ACTIVE_UPLOAD_GROUPS).toEqual(["youtube_tiktok"]);
+    const { ep, ig, exports } = await renderedEpisode(db, "whatif", { title: "Instagram off" });
+    await expect(markEpisodeUploaded(db, ep.id, "instagram")).rejects.toMatchObject({ code: "group_off" });
+    expect(await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.destinationId, ig.id)))).toHaveLength(0);
+    const [planned] = await db.insert(S.publications).values({ episodeId: ep.id, destinationId: ig.id, exportId: exports.instagram.id, kind: "instagram", status: "planned" }).returning();
+    await expect(markEpisodeUploaded(db, ep.id, "instagram")).rejects.toMatchObject({ code: "group_off" });
+    const [still] = await db.select().from(S.publications).where(eq(S.publications.id, planned.id));
+    expect(still).toMatchObject({ status: "planned", reportedAt: null });
+  });
+  it("Instagram with the switch on: creates the shared row when missing and marks it", async () => {
     const { ep, ig } = await renderedEpisode(db, "whatif", { title: "Instagram row" });
-    const r = await markEpisodeUploaded(db, ep.id, "instagram");
+    const r = await markEpisodeUploaded(db, ep.id, "instagram", undefined, ON);
     expect(r[0].outcome).toBe("marked");
     const [row] = await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.destinationId, ig.id)));
     expect(row.status).toBe("owner_reported");
@@ -140,10 +156,10 @@ describe("Uploaded buttons (markEpisodeUploaded)", () => {
     const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
     expect(yt.status).toBe("planned");
   });
-  it("undo puts the rows back, and removes an Instagram row the button created", async () => {
+  it("undo puts the rows back, and removes an Instagram row the button created (made with the switch on)", async () => {
     const { ep, pubs, ig } = await renderedEpisode(db, "physics", { title: "Undo me" });
     await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
-    await markEpisodeUploaded(db, ep.id, "instagram");
+    await markEpisodeUploaded(db, ep.id, "instagram", undefined, ON);
     expect(await undoEpisodeUploaded(db, ep.id, "youtube_tiktok")).toBe(2);
     const [yt] = await db.select().from(S.publications).where(eq(S.publications.id, pubs.youtube.id));
     expect(yt.status).toBe("ready");
@@ -152,5 +168,39 @@ describe("Uploaded buttons (markEpisodeUploaded)", () => {
     const [e2] = await db.select().from(S.episodes).where(eq(S.episodes.id, ep.id));
     expect(e2.state).toBe("ready_for_review");
     expect(await db.select().from(S.publications).where(and(eq(S.publications.episodeId, ep.id), eq(S.publications.destinationId, ig.id)))).toHaveLength(0);
+  });
+});
+
+describe("Instagram off (owner, 12 Nov 2026): the screens' accounts and lists", () => {
+  it("one button, YouTube & TikTok, and Instagram is not a platform in use", () => {
+    expect(INSTAGRAM_ON).toBe(false);
+    expect(ACTIVE_PLATFORMS).toEqual(["youtube", "tiktok"]);
+    expect(platformActive("instagram")).toBe(false);
+    expect(UPLOADED_WHERE).toBe("YouTube & TikTok");
+    expect(platformsOf(ON)).toEqual(["youtube", "tiktok", "instagram"]);
+  });
+
+  it("the review placements (episodeFull) are the channel's YouTube and TikTok, without the shared Instagram", async () => {
+    const { c, yt, tt, ig } = await renderedEpisode(db, "space", { title: "Placements" });
+    expect((await placementDestinations(db, c.id)).map((d) => d.id)).toEqual([yt.id, tt.id]);
+    expect((await placementDestinations(db, c.id, platformsOf(ON))).map((d) => d.id)).toEqual([yt.id, tt.id, ig.id]);   // the switch on
+  });
+
+  it("working lists (onActivePlatform) leave a planned or ready Instagram post out, and its row is unchanged", async () => {
+    const { ep, ig, exports, pubs } = await renderedEpisode(db, "space", { title: "Listed" });
+    const [igRow] = await db.insert(S.publications).values({ episodeId: ep.id, destinationId: ig.id, exportId: exports.instagram.id, kind: "instagram", status: "ready", scheduledFor: new Date("2026-11-20T19:30:00Z") }).returning();
+    const listed = await db.select({ id: S.publications.id }).from(S.publications).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+      .where(and(eq(S.publications.episodeId, ep.id), onActivePlatform(S.destinations.platform)));
+    expect(listed.map((r) => r.id).sort()).toEqual([pubs.youtube.id, pubs.tiktok.id].sort());
+    const [still] = await db.select().from(S.publications).where(eq(S.publications.id, igRow.id));
+    expect(still).toEqual(igRow);
+  });
+
+  it("a scheduled publish never posts to Instagram", async () => {
+    const { ep, ig, exports } = await renderedEpisode(db, "space", { title: "No Instagram publish" });
+    const [igRow] = await db.insert(S.publications).values({ episodeId: ep.id, destinationId: ig.id, exportId: exports.instagram.id, kind: "instagram", status: "ready" }).returning();
+    expect(await publishPublication(db, igRow.id, { manual: true })).toMatchObject({ outcome: "skipped", note: "instagram is off" });
+    const [still] = await db.select().from(S.publications).where(eq(S.publications.id, igRow.id));
+    expect(still.status).toBe("ready");
   });
 });

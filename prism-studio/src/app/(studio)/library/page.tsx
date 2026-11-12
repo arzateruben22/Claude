@@ -10,6 +10,7 @@ import { Icon } from "@/components/Icon";
 import { VideoCleared } from "@/components/VideoCleared";
 import { ArchivedSeasons } from "@/components/ArchivedSeasons";
 import { LessonUploadedControl } from "@/components/UploadedControl";
+import { INSTAGRAM_ON } from "@/domain/publications";
 
 export const metadata: Metadata = { title: "Library" };
 
@@ -24,7 +25,7 @@ export default async function Library() {
     <div>
       <div className="kicker">Every finished video</div>
       <h1>Library</h1>
-      <p className="lede">{v.count} video{v.count === 1 ? "" : "s"}, {mb(v.bytes)}. <b>Download</b> gets the full-quality file (1080×1920, for TikTok and Instagram; on iPhone: Files → Downloads, then Share → Save Video). <b>YouTube 1440p</b> is the same video upscaled for YouTube, which gives 1440p uploads its sharper encoding; the upload tasks hand it to YouTube on their own. The episode page has each platform&apos;s title, caption and sources. Downloading never marks anything as posted.</p>
+      <p className="lede">{v.count} video{v.count === 1 ? "" : "s"}, {mb(v.bytes)}. <b>Download</b> gets the full-quality file (1080×1920, for TikTok{INSTAGRAM_ON ? " and Instagram" : ""}; on iPhone: Files → Downloads, then Share → Save Video). <b>YouTube 1440p</b> is the same video upscaled for YouTube, which gives 1440p uploads its sharper encoding; the upload tasks hand it to YouTube on their own. The episode page has each platform&apos;s title, caption and sources. Downloading never marks anything as posted.</p>
       {shown.length ? shown.map(({ channel: c, episodes, longs }) => (
         <section key={c.id} className="section lib-channel" style={topicStyle(c)}>
           <div className="section-head"><h2>{plain(c.name)}</h2><span className="faint num">{episodes.length} short{episodes.length === 1 ? "" : "s"}{longs.length ? ` · ${longs.length} long` : ""}</span></div>

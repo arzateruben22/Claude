@@ -1,7 +1,7 @@
 // The Upload Desk's tasks: every rendered episode that is not uploaded yet gets the full card (no approval needed): the
 // account it goes to, the exact video and words (PostFields), the files, the hand-off buttons and the owner's Uploaded
-// button for the platform ("Uploaded on YouTube & TikTok" / "Uploaded on Instagram"). Done tasks show the done state
-// with Undo.
+// button for the platform ("Uploaded on YouTube & TikTok"; "Uploaded on Instagram" only while Instagram is on: off,
+// owner 12 Nov 2026, loadTasks lists no Instagram task). Done tasks show the done state with Undo.
 import Link from "next/link";
 import { coverOf, isReady, uploadUrlFor, type UploadTask } from "@/lib/data";
 import { publishNow } from "@/app/actions";

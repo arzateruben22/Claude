@@ -246,8 +246,7 @@ describe("registerCompilation", () => {
     for (const title of ["Done one", "Done two"]) {
       const e = (await renderedEpisode(db, "body", { title })).ep;
       await db.update(S.episodes).set({ seasonId: sn.id, seriesId: se.id }).where(eq(S.episodes.id, e.id));
-      await markEpisodeUploaded(db, e.id, "youtube_tiktok");
-      await markEpisodeUploaded(db, e.id, "instagram");
+      await markEpisodeUploaded(db, e.id, "youtube_tiktok");   // uploaded: the one button in use (Instagram is off)
       done.push(e.id);
     }
     expect((await seasonArchive(db)).seasonIds.has(sn.id)).toBe(true);

@@ -10,7 +10,7 @@ import { audit, DomainError, settings } from "./core";
 import { isArchived, onActiveChannel } from "./channels";
 import { currentApproval } from "./approvals";
 import { freshTokens, markConnectionError } from "./connections";
-import { mayAutoPublish } from "./publications";
+import { mayAutoPublish, onActivePlatform, platformActive } from "./publications";
 import { onPublicationReported } from "./living";
 import { enqueue } from "./jobs";
 import { resolveMedia } from "../lib/media";
@@ -35,6 +35,8 @@ export async function publishPublication(d: DB, publicationId: string, o: { manu
   const { p, dest, ep, ch, x } = await load(d, publicationId);
   // an archived channel is never published, by a schedule or by hand (a job queued before it was archived ends here)
   if (isArchived(ch)) return { outcome: "skipped", note: "this channel is archived" };
+  // a platform not in use (Instagram while it is off, publications.ts INSTAGRAM_ON) is never posted to
+  if (!platformActive(dest.platform)) return { outcome: "skipped", note: `${dest.platform} is off` };
   const gate = mayAutoPublish({ ...p, method: dest.publishMethod }, s.stopExternalActions);
   if (!gate.ok) {
     if (gate.reason === "external actions are stopped") throw new DomainError("stopped", "External actions are stopped in Settings.");
@@ -102,7 +104,7 @@ export async function finalizeProcessing(d: DB, publicationId: string, deps: Pub
 }
 
 /** Scheduled publishing: every due, approved publication on a connected destination of an "approved"-mode channel
- *  (never a paused or archived one). */
+ *  (never a paused or archived one, nor a platform not in use: Instagram while it is off). */
 export async function enqueueDuePublishes(d: DB, now = new Date()): Promise<number> {
   const s = await settings(d);
   if (s.globalPause || s.stopExternalActions) return 0;
@@ -112,7 +114,7 @@ export async function enqueueDuePublishes(d: DB, now = new Date()): Promise<numb
     .innerJoin(connections, and(eq(connections.destinationId, destinations.id), eq(connections.status, "connected")))
     .where(and(lte(publications.scheduledFor, now), inArray(publications.status, ["planned", "ready"]), eq(publications.simulated, false), isNull(publications.reportedAt),
       eq(destinations.publishMethod, "api"), eq(destinations.paused, false), eq(channels.automationMode, "approved"), eq(channels.paused, false), eq(episodes.isDemo, false),
-      onActiveChannel(episodes.channelId)));
+      onActiveChannel(episodes.channelId), onActivePlatform(destinations.platform)));
   let n = 0;
   for (const r of rows) {
     if (!r.p.exportId || !(await currentApproval(d, r.p.exportId, r.dest.id))) continue;

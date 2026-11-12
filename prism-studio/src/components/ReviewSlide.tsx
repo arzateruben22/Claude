@@ -1,11 +1,13 @@
 // One episode in Review, phone-first: on a phone it fills the screen as a vertical player (the video, then a sticky
-// thumb bar with the platform switches, the two Uploaded buttons, then the title, the chosen platform's text and the sources
+// thumb bar with the platform switches, the Uploaded button(s), then the title, the chosen platform's text and the sources
 // below); on a desktop it is a card with the video beside the same parts. The switches are radio inputs and the
 // panels follow them in CSS (:has), so it works without JavaScript and in the static preview. The Uploaded buttons record the owner's manual posts
-// (markEpisodeUploaded): no approval step. Once the video was cleared from the server after posting, the poster and a
-// note stand where the player was.
+// (markEpisodeUploaded): no approval step. With Instagram off (INSTAGRAM_ON, owner 12 Nov 2026) there is one button,
+// "Uploaded on YouTube & TikTok", and no Instagram switch or panel (episodeFull leaves the shared Instagram out of the
+// placements). Once the video was cleared from the server after posting, the poster and a note stand where the player was.
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ACTIVE_UPLOAD_GROUPS } from "@/domain/publications";
 import { episodeCover, type episodeFull } from "@/lib/data";
 import { mediaUrl } from "@/lib/media";
 import { PLATFORM_LABEL, pubTone, qaFails, topicStyle } from "@/lib/format";
@@ -74,7 +76,7 @@ export function ReviewSlide({ full, tz, head, prev, next, position, back, source
         <div className="bar-actions">
           {prev ? <a href={prev.href} className="btn ghost step" data-step="prev" aria-label={`Previous: ${prev.label}`}><Icon name="back" /></a> : <span className="btn ghost step" data-step="prev" aria-disabled="true" aria-hidden><Icon name="back" /></span>}
           <div className="uploaded-bar">
-            {(["youtube_tiktok", "instagram"] as const).map((g) => (
+            {ACTIVE_UPLOAD_GROUPS.map((g) => (
               <UploadedControl key={g} episodeId={ep.id} group={g} tz={tz} pubs={placements.filter((p) => groupOf(p.dest.platform) === g).map((p) => p.publication)} />
             ))}
           </div>

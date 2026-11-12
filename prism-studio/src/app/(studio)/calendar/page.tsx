@@ -3,6 +3,7 @@ import Link from "next/link";
 import { calendar } from "@/lib/data";
 import { formatLocal, localDate, zonedTimeToUtc } from "@/domain/time";
 import { DEFAULT_WINDOWS } from "@/domain/schedule";
+import { INSTAGRAM_ON } from "@/domain/publications";
 import { PLATFORM_LABEL, PUB_LABEL, pubTone, topicStyle } from "@/lib/format";
 import { addBlackout, planWeek, unplan } from "@/app/actions";
 import { ActionForm } from "@/components/ActionForm";
@@ -15,7 +16,7 @@ export default async function Calendar() {
     <div>
       <div className="kicker">Times in {v.tz.replace("_", " ")}</div>
       <h1>Calendar</h1>
-      <p className="lede">One Short per channel a day on YouTube and TikTok, staggered so uploads don&apos;t pile up, and {v.settings.instagramDaily} a day on the shared Instagram. A missed upload moves to the next free day: never a catch-up burst.</p>
+      <p className="lede">One Short per channel a day on YouTube and TikTok, staggered so uploads don&apos;t pile up{INSTAGRAM_ON ? <>, and {v.settings.instagramDaily} a day on the shared Instagram</> : null}. A missed upload moves to the next free day: never a catch-up burst.</p>
       <div className="grid2" style={{ marginBottom: 10 }}>
         <ActionForm action={planWeek} className="card stack-sm" submit="Plan the next 7 days" submitClass="btn">
           <input type="hidden" name="days" value="7" />
@@ -63,7 +64,7 @@ export default async function Calendar() {
           );
         })}
       </div>
-      <p className="faint" style={{ fontSize: 13, marginTop: 18 }}>Default windows (provisional, not claimed to be optimal): YouTube {DEFAULT_WINDOWS.youtube.join(", ")}, TikTok {DEFAULT_WINDOWS.tiktok.join(", ")}, Instagram {DEFAULT_WINDOWS.instagram.slice(0, v.settings.instagramDaily).join(", ")}; channels stagger by 20 minutes. Analytics will tell us better times.</p>
+      <p className="faint" style={{ fontSize: 13, marginTop: 18 }}>Default windows (provisional, not claimed to be optimal): YouTube {DEFAULT_WINDOWS.youtube.join(", ")}, TikTok {DEFAULT_WINDOWS.tiktok.join(", ")}{INSTAGRAM_ON ? `, Instagram ${DEFAULT_WINDOWS.instagram.slice(0, v.settings.instagramDaily).join(", ")}` : ""}; channels stagger by 20 minutes. Analytics will tell us better times.</p>
     </div>
   );
 }

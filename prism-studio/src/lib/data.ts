@@ -21,6 +21,7 @@ import {
   archivedSeasonOf, inArchivedSeason, lessonOnWorkingSeason, onWorkingSeason, seasonArchive, seriesOnWorkingSeason, type ArchivedSeason, type SeasonArchive,
 } from "@/domain/season-archive";
 import { slotsForDate } from "@/domain/schedule";
+import { INSTAGRAM_ON, onActivePlatform, placementDestinations, platformActive } from "@/domain/publications";
 import { lessonPublished, lessonSeasons, loadSeasonIndex, longVideoLabel, PUBLISHED_AFTER_MS } from "@/domain/published";
 import { addDays, formatLocal, localDate, localMonth, zonedTimeToUtc } from "@/domain/time";
 import { INSTAGRAM_SLUG, rigLayout, type RigPosition } from "@/lib/rig";
@@ -81,10 +82,12 @@ export async function episodeFull(id: string) {
   const vers = await d.select().from(S.versions).where(eq(S.versions.episodeId, id)).orderBy(desc(S.versions.versionNo));
   const current = vers.find((v) => !v.superseded) ?? null;
   const exports = current ? await d.select().from(S.platformExports).where(eq(S.platformExports.versionId, current.id)) : [];
-  const dests = await d.select().from(S.destinations).where(or(eq(S.destinations.channelId, ep.channelId), eq(S.destinations.shared, true)));
+  // the channel's accounts, and the shared Instagram only while it is on (placementDestinations): off, the episode has
+  // no Instagram placement, tab or button (its Instagram export and any publication row stay in the database as they are)
+  const dests = await placementDestinations(d, ep.channelId);
   const pubs = await d.select().from(S.publications).where(eq(S.publications.episodeId, id));
   const approvalsAll = await d.select().from(S.approvals).where(eq(S.approvals.episodeId, id)).orderBy(desc(S.approvals.approvedAt));
-  const placements = await Promise.all(dests.sort((a, b) => ["youtube", "tiktok", "instagram"].indexOf(a.platform) - ["youtube", "tiktok", "instagram"].indexOf(b.platform)).map(async (dest) => {
+  const placements = await Promise.all(dests.map(async (dest) => {
     const x = exports.find((e) => e.platform === dest.platform) ?? null;
     const live = x ? await currentApproval(d, x.id, dest.id) : null;
     const lastRevoked = approvalsAll.find((a) => a.destinationId === dest.id && a.revokedAt) ?? null;
@@ -119,7 +122,8 @@ export async function reviewOrder() {
 const OPEN_STATUSES = ["planned", "ready", "handed_off"] as const;
 
 /** Publications with everything a task needs: the episode, account, export, live approval, render and channel.
- *  Never an archived channel's, nor (unless `keepArchivedSeasons`) an archived season's. */
+ *  Never an archived channel's, nor (unless `keepArchivedSeasons`) an archived season's, nor one on a platform not in
+ *  use (Instagram while it is off: its planned or ready rows drop off every task list, unchanged). */
 async function loadTasks(d: DB, where: SQL | undefined, o: { keepArchivedSeasons?: boolean } = {}) {
   const seasonsWhere = o.keepArchivedSeasons ? undefined : onWorkingSeason(await workingSeasons(), S.episodes.seasonId);
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations, x: S.platformExports })
@@ -127,7 +131,7 @@ async function loadTasks(d: DB, where: SQL | undefined, o: { keepArchivedSeasons
     .innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
     .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
     .leftJoin(S.platformExports, eq(S.platformExports.id, S.publications.exportId))
-    .where(and(where, onActiveChannel(S.episodes.channelId), seasonsWhere))
+    .where(and(where, onActiveChannel(S.episodes.channelId), seasonsWhere, onActivePlatform(S.destinations.platform)))
     .orderBy(asc(S.publications.scheduledFor), asc(S.episodes.number));
   const chans = await activeChannels(d);
   const conns = await d.select({ destinationId: S.connections.destinationId, status: S.connections.status }).from(S.connections);
@@ -167,17 +171,20 @@ export async function calendar(days = 7) {
   const s = await settings(d);
   const today = localDate(new Date(), s.timezone);
   const start = zonedTimeToUtc(today, "00:00", s.timezone), end = zonedTimeToUtc(addDays(today, days), "00:00", s.timezone);
-  // an uploaded (archived) season's posts are off the calendar; planning treats a slot one of them holds as free
+  // an uploaded (archived) season's posts are off the calendar; planning treats a slot one of them holds as free. A post
+  // on a platform not in use (Instagram while it is off) is off it too.
   const arch = await workingSeasons();
   const rows = await d.select({ p: S.publications, e: S.episodes, dest: S.destinations })
     .from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId)).innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
     .where(and(isNotNull(S.publications.scheduledFor), gte(S.publications.scheduledFor, start), lt(S.publications.scheduledFor, end), ne(S.publications.status, "cancelled"), demoFilter(s.showDemo, S.episodes.isDemo), onActiveChannel(S.episodes.channelId),
-      onWorkingSeason(arch, S.episodes.seasonId)))
+      onWorkingSeason(arch, S.episodes.seasonId), onActivePlatform(S.destinations.platform)))
     .orderBy(asc(S.publications.scheduledFor));
   const chans = await activeChannels(d);
   // the backlog planning would fill: real episodes only (planning never places demo ones)
   const backlog = await d.select({ n: sql<number>`count(*)::int` }).from(S.publications).innerJoin(S.episodes, eq(S.episodes.id, S.publications.episodeId))
-    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId), onWorkingSeason(arch, S.episodes.seasonId)));
+    .innerJoin(S.destinations, eq(S.destinations.id, S.publications.destinationId))
+    .where(and(isNull(S.publications.scheduledFor), inArray(S.publications.status, ["planned", "ready"]), eq(S.episodes.isDemo, false), onActiveChannel(S.episodes.channelId), onWorkingSeason(arch, S.episodes.seasonId),
+      onActivePlatform(S.destinations.platform)));
   const bl = await d.select().from(S.blackouts).where(gte(S.blackouts.endsAt, start)).orderBy(asc(S.blackouts.startsAt));
   return { tz: s.timezone, today, days: Array.from({ length: days }, (_, i) => addDays(today, i)), rows: rows.map((r) => ({ ...r, channel: chans.find((c) => c.id === r.e.channelId)! })), backlog: backlog[0]?.n ?? 0, blackouts: bl, settings: s };
 }
@@ -467,15 +474,15 @@ async function instagramToday(d: DB, ig: Destination | undefined, tz: string, to
   return { slots, rotation, day };
 }
 
-/** The monitors (Instagram and one per active channel, placed by rigLayout): each one's cover, one status line and its
- *  status light. */
+/** The monitors (one per active channel, and the shared Instagram's in the centre while Instagram is on; placed by
+ *  rigLayout): each one's cover, one status line and its status light. With Instagram off there is no Instagram monitor
+ *  and the channels fill the wall (rigLayout). */
 export async function rigView() {
   const d = db();
   const s = await settings(d);
   const tz = s.timezone, today = localDate(new Date(), tz);
   const endOfToday = zonedTimeToUtc(addDays(today, 1), "00:00", tz);
   const chans = await activeChannels(d);
-  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
   const tasks = (await loadTasks(d, inArray(S.publications.status, [...OPEN_STATUSES]))).filter((t) => !t.e.isDemo && !t.p.simulated);
   const arch = await workingSeasons();
   const eps = await d.select({ id: S.episodes.id, channelId: S.episodes.channelId, state: S.episodes.state, number: S.episodes.number }).from(S.episodes)
@@ -483,7 +490,7 @@ export async function rigView() {
   const renders = [...await currentExports(d, "youtube"), ...await currentExports(d, "tiktok")];
   const when = (at: Date) => formatLocal(at, tz, at < endOfToday ? { hour: "numeric", minute: "2-digit" } : { weekday: "short", hour: "numeric", minute: "2-digit" });
   const seasons = await currentSeasons(d, chans);
-  const layout = rigLayout(chans.map((c) => c.slug));
+  const layout = rigLayout(chans.map((c) => c.slug), INSTAGRAM_ON);
 
   const monitors: MonitorCard[] = chans.filter((c) => layout.has(c.slug)).map((c) => {
     const mine = tasks.filter((t) => t.channel.id === c.id && !t.dest.shared);
@@ -515,20 +522,9 @@ export async function rigView() {
     };
   });
 
-  const { slots, day } = await instagramToday(d, ig, tz, today);
-  const posted = slots.filter((x) => x.state === "posted").length, ready = slots.filter((x) => x.state === "ready").length;
-  const waiting = slots.filter((x) => x.state === "not_ready").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
-  const igStatus = !ig ? "Instagram isn't set up" : s.globalPause ? "Publishing is paused" : !slots.length ? "No Instagram slots today"
-    : posted === slots.length ? `${day === "today" ? "Today" : "Tomorrow"}'s ${slots.length} posted`
-    : ready ? `${ready} ready to post ${day}${posted ? ` · ${posted} posted` : ""}`
-    : waiting ? `${waiting} ${waiting === 1 ? "has" : "have"} no render`
-    : unplanned ? `Plan ${day}'s ${unplanned === 1 ? "post" : `${unplanned} posts`}` : "Nothing in rotation yet";
-  const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
-  monitors.push({
-    slug: INSTAGRAM_SLUG, kind: "instagram", pos: "center", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
-    cover: slots.map((x) => (x.item ? coverOf(x.item) : null)).find(Boolean) ?? null, status: igStatus, led: igLed,
-    ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
-  });
+  // the shared Instagram's monitor, in the centre, only while Instagram is on
+  const instagram = INSTAGRAM_ON ? await instagramMonitor(d, s, today) : null;
+  if (instagram) monitors.push(instagram.monitor);
   const reviewCount = eps.filter((e) => e.state === "ready_for_review").length;
   // built long videos (lessons) not recorded as uploaded on YouTube yet, newest season first ("S3" above "S2" above
   // "Vol 1"), and below them those recorded in the last 24 hours, so a mis-press can be undone right there; after that
@@ -554,10 +550,31 @@ export async function rigView() {
     .where(and(isNull(S.achievementEvents.seenAt), achievementOnActiveChannel(S.achievementEvents.scopeKey, S.achievementEvents.channelId)));
   return {
     tz, today, monitors, reviewCount, longVideos, longToUpload, longJustUploaded, unseenEvolutions, unseenAchievements, dueToday: tasks.filter((t) => t.p.scheduledFor && t.p.scheduledFor < endOfToday).length,
-    instagram: { toPlan: s.globalPause ? 0 : unplanned, day }, paused: s.globalPause, stopExternal: s.stopExternalActions,
+    // Instagram slots still to plan (null while Instagram is off: no slots, nothing to plan)
+    instagram: instagram ? { toPlan: s.globalPause ? 0 : instagram.unplanned, day: instagram.day } : null, paused: s.globalPause, stopExternal: s.stopExternalActions,
   };
 }
 export type RigView = Awaited<ReturnType<typeof rigView>>;
+
+/** The shared Instagram's monitor for the wall (only while Instagram is on): today's slots, one status line and its light. */
+async function instagramMonitor(d: DB, s: Awaited<ReturnType<typeof settings>>, today: string) {
+  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  const { slots, day } = await instagramToday(d, ig, s.timezone, today);
+  const posted = slots.filter((x) => x.state === "posted").length, ready = slots.filter((x) => x.state === "ready").length;
+  const waiting = slots.filter((x) => x.state === "not_ready").length, unplanned = slots.filter((x) => x.state === "unplanned").length;
+  const igStatus = !ig ? "Instagram isn't set up" : s.globalPause ? "Publishing is paused" : !slots.length ? "No Instagram slots today"
+    : posted === slots.length ? `${day === "today" ? "Today" : "Tomorrow"}'s ${slots.length} posted`
+    : ready ? `${ready} ready to post ${day}${posted ? ` · ${posted} posted` : ""}`
+    : waiting ? `${waiting} ${waiting === 1 ? "has" : "have"} no render`
+    : unplanned ? `Plan ${day}'s ${unplanned === 1 ? "post" : `${unplanned} posts`}` : "Nothing in rotation yet";
+  const igLed: Led = ready ? "ready" : waiting ? "review" : "off";
+  const monitor: MonitorCard = {
+    slug: INSTAGRAM_SLUG, kind: "instagram", pos: "center", href: `/m/${INSTAGRAM_SLUG}`, name: "Instagram", ...INSTAGRAM_LOOK,
+    cover: slots.map((x) => (x.item ? coverOf(x.item) : null)).find(Boolean) ?? null, status: igStatus, led: igLed,
+    ledLabel: igLed === "ready" ? "ready to post today" : igLed === "review" ? "needs a render" : "nothing queued today", slots,
+  };
+  return { monitor, unplanned, day };
+}
 
 /** A channel's extension: its accounts' next posts, its queue, its series. */
 export async function channelExtension(slug: string) {
@@ -565,15 +582,16 @@ export async function channelExtension(slug: string) {
   const s = await settings(d);
   const c = await channelBySlug(slug);
   if (!c) return null;
-  const dests = (await d.select().from(S.destinations).where(eq(S.destinations.channelId, c.id)))
+  const dests = (await d.select().from(S.destinations).where(eq(S.destinations.channelId, c.id))).filter((x) => platformActive(x.platform))
     .sort((a, b) => ["youtube", "tiktok"].indexOf(a.platform) - ["youtube", "tiktok"].indexOf(b.platform));
-  const [ig] = await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true)));
+  // the shared Instagram's block only while Instagram is on (INSTAGRAM_ON): off, the channel shows its YouTube and TikTok
+  const [ig] = INSTAGRAM_ON ? await d.select().from(S.destinations).where(and(eq(S.destinations.platform, "instagram"), eq(S.destinations.shared, true))) : [];
   const tasks = (await loadTasks(d, and(inArray(S.publications.status, [...OPEN_STATUSES]), eq(S.episodes.channelId, c.id), demoFilter(s.showDemo, S.episodes.isDemo)))).filter((t) => !t.p.simulated);
-  // the channel's own YouTube and TikTok, then the shared Instagram's next post from this channel, side by side
+  // the channel's own YouTube and TikTok, then (while Instagram is on) the shared Instagram's next post from this channel, side by side
   const accounts = [...dests, ...(ig ? [ig] : [])].map((dest) => ({ dest, uploadUrl: uploadUrlFor(dest), next: (tasks.find((t) => t.dest.id === dest.id) ?? null) as PostItem | null }));
   // when nothing is planned for Instagram from this channel: its oldest episode not yet on Instagram, caption ready to copy
   const igPubs = ig ? await d.select({ episodeId: S.publications.episodeId }).from(S.publications).where(eq(S.publications.destinationId, ig.id)) : [];
-  const igNext = (await currentExports(d, "instagram", { channelIds: [c.id] })).find((r) => !igPubs.some((p) => p.episodeId === r.e.id)) ?? null;
+  const igNext = ig ? (await currentExports(d, "instagram", { channelIds: [c.id] })).find((r) => !igPubs.some((p) => p.episodeId === r.e.id)) ?? null : null;
   // an uploaded (archived) season leaves the seasons, episodes and long videos here for Library → Archived seasons
   const arch = await workingSeasons();
   const eps = (await episodesFor(c.id, s.showDemo)).filter((e) => !inArchivedSeason(arch, e));

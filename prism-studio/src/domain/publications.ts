@@ -1,7 +1,10 @@
 // One publication record per (episode, destination). Statuses move independently per destination:
 // a YouTube upload never marks TikTok or Instagram. Opening a link, downloading, copying or sharing is never proof
 // of publication: only "Mark uploaded" (owner-reported) or an integration's verification is.
-import { and, eq, inArray } from "drizzle-orm";
+// The Uploaded buttons in use follow one switch, INSTAGRAM_ON (below): off, an episode has the one button
+// "Uploaded on YouTube & TikTok" and is uploaded once it stands.
+import { and, eq, inArray, or, sql, type SQL } from "drizzle-orm";
+import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import type { DB } from "../db/client";
 import { destinations, episodes, metricSnapshots, platformExports, publications, versions } from "../db/schema";
 import { audit, type Conn, DomainError } from "./core";
@@ -111,11 +114,48 @@ export async function backfillPosted(d: DB, episodeId: string, platforms: ("yout
   return result;
 }
 
-/** The two "Uploaded" buttons: the owner posts by hand, then says where. "youtube_tiktok" covers both of the channel's
- *  accounts, "instagram" the shared Instagram. */
+/** Instagram is off (owner's decision, 12 Nov 2026: "Get rid of the uploaded to Instagram section for every channel, and
+ *  adjust accordingly to our videos that were uploaded to YouTube and TikTok."). The owner no longer posts there. While
+ *  off: no "Uploaded on Instagram" button, no Instagram tab, placement, screen or monitor; planning makes no Instagram
+ *  slots and places nothing there; no reminder, task or scheduled publish is about an Instagram post; and an episode is
+ *  uploaded once "Uploaded on YouTube & TikTok" stands, so season archiving, video clearing and Published follow from
+ *  that one button. Nothing is deleted: the shared account, its exports and its publication rows stay as they are, and
+ *  analytics keep counting what was posted there. Set it back to true and every rule and screen works as before (two
+ *  buttons, both needed). */
+export const INSTAGRAM_ON: boolean = false;
+
+/** The "Uploaded" buttons: the owner posts by hand, then says where. "youtube_tiktok" covers both of the channel's
+ *  accounts, "instagram" the shared Instagram (only while INSTAGRAM_ON). */
 export const UPLOAD_GROUPS = { youtube_tiktok: ["youtube", "tiktok"], instagram: ["instagram"] } as const;
 export type UploadGroup = keyof typeof UPLOAD_GROUPS;
+export type UploadPlatform = (typeof UPLOAD_GROUPS)[UploadGroup][number];
+export const UPLOAD_GROUP_LABEL: Record<UploadGroup, string> = { youtube_tiktok: "YouTube & TikTok", instagram: "Instagram" };
 export const UPLOADED_NOTE = "Marked uploaded by the owner (Uploaded button).";
+
+/** The buttons in use with Instagram on or off, in the order the screens show them. */
+export const uploadGroupsFor = (instagram: boolean): readonly UploadGroup[] => (instagram ? ["youtube_tiktok", "instagram"] : ["youtube_tiktok"]);
+/** The buttons in use now (INSTAGRAM_ON): "YouTube & TikTok", and "Instagram" only while it is on. Every rule that asks
+ *  "is this episode uploaded?" takes these by default. */
+export const ACTIVE_UPLOAD_GROUPS: readonly UploadGroup[] = uploadGroupsFor(INSTAGRAM_ON);
+/** The platforms some groups cover ("youtube", "tiktok", and "instagram" with its group). */
+export const platformsOf = (groups: readonly UploadGroup[]): readonly UploadPlatform[] => groups.flatMap((g) => [...UPLOAD_GROUPS[g]]);
+/** The platforms an episode goes to now: YouTube and TikTok, and Instagram while it is on. */
+export const ACTIVE_PLATFORMS: readonly UploadPlatform[] = platformsOf(ACTIVE_UPLOAD_GROUPS);
+export const platformActive = (platform: string): boolean => (ACTIVE_PLATFORMS as readonly string[]).includes(platform);
+/** Where an uploaded episode is, in words: "YouTube & TikTok" (with Instagram on: "YouTube & TikTok and Instagram"). */
+export const UPLOADED_WHERE = ACTIVE_UPLOAD_GROUPS.map((g) => UPLOAD_GROUP_LABEL[g]).join(" and ");
+/** The where-clause for a destination's platform (destinations.platform): an inactive platform's rows (Instagram while
+ *  off) are left out of working lists, plans, reminders and scheduled publishes. Their rows stay as they are. */
+export const onActivePlatform = (platform: AnyPgColumn | SQL): SQL => sql`${platform} in ${[...ACTIVE_PLATFORMS]}`;
+
+/** The accounts an episode's placements show (Review's platform switches, panels and buttons, the episode page's
+ *  "Accounts and text"), in screen order: its channel's YouTube and TikTok, and the shared Instagram only while
+ *  Instagram is on. Its Instagram export and any Instagram publication row stay in the database either way. */
+export async function placementDestinations(c: Conn, channelId: string, platforms: readonly string[] = ACTIVE_PLATFORMS) {
+  const order = (p: string) => ["youtube", "tiktok", "instagram"].indexOf(p);
+  const rows = await c.select().from(destinations).where(or(eq(destinations.channelId, channelId), eq(destinations.shared, true)));
+  return rows.filter((d) => platforms.includes(d.platform)).sort((a, b) => order(a.platform) - order(b.platform));
+}
 
 /** The Uploaded buttons' done state, the one test for it (the button itself, video clearing and season archiving all
  *  use it): a set of publication rows is uploaded when it has real (not simulated) rows and every one is posted. An
@@ -129,17 +169,19 @@ export function allPosted(rows: readonly { status: string; simulated?: boolean }
 export const groupUploaded = (pubs: readonly { platform: string; status: string; simulated?: boolean }[], group: UploadGroup): boolean =>
   allPosted(pubs.filter((p) => (UPLOAD_GROUPS[group] as readonly string[]).includes(p.platform)));
 
-/** Both buttons stand for this episode: "Uploaded on YouTube & TikTok" and "Uploaded on Instagram". */
-export const episodeUploaded = (pubs: readonly { platform: string; status: string; simulated?: boolean }[]): boolean =>
-  groupUploaded(pubs, "youtube_tiktok") && groupUploaded(pubs, "instagram");
+/** Every button in use stands for this episode: with Instagram off, "Uploaded on YouTube & TikTok" alone (its Instagram
+ *  rows, planned or posted, don't matter); with it on, that and "Uploaded on Instagram". */
+export const episodeUploaded = (pubs: readonly { platform: string; status: string; simulated?: boolean }[], groups: readonly UploadGroup[] = ACTIVE_UPLOAD_GROUPS): boolean =>
+  groups.length > 0 && groups.every((g) => groupUploaded(pubs, g));
 
-/** "Uploaded on YouTube & TikTok" / "Uploaded on Instagram": records the owner's own manual posts for one episode.
- *  Needs no approval (the post already happened). Owner-reported only (never "verified"); creates the shared
- *  Instagram row when missing; skips simulated rows and rows already reported; writes the audit log and runs the
- *  rewards hook once per row it marks. */
-export async function markEpisodeUploaded(d: DB, episodeId: string, group: UploadGroup, note?: string) {
+/** "Uploaded on YouTube & TikTok" (and, while Instagram is on, "Uploaded on Instagram"): records the owner's own manual
+ *  posts for one episode. Needs no approval (the post already happened). Owner-reported only (never "verified");
+ *  creates the shared Instagram row when missing; skips simulated rows and rows already reported; writes the audit log
+ *  and runs the rewards hook once per row it marks. A button not in use (Instagram while off) records nothing. */
+export async function markEpisodeUploaded(d: DB, episodeId: string, group: UploadGroup, note?: string, groups: readonly UploadGroup[] = ACTIVE_UPLOAD_GROUPS) {
   const platforms = [...(UPLOAD_GROUPS[group] ?? [])];
   if (!platforms.length) throw new DomainError("bad_group", "unknown upload group");
+  if (!groups.includes(group)) throw new DomainError("group_off", `${UPLOAD_GROUP_LABEL[group]} is off: there is nothing to record there.`);
   const result = await backfillPosted(d, episodeId, platforms, note?.trim() || UPLOADED_NOTE);
   for (const r of result) if (r.outcome === "marked") await onPublicationReported(d, r.publicationId!);
   await audit(d, "owner", "episode.uploaded", "episode", episodeId, { group, outcomes: result.map((r) => `${r.platform}:${r.outcome}`) });

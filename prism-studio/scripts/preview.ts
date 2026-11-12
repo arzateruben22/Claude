@@ -12,7 +12,8 @@ import path from "node:path";
 import { spawn, spawnSync, execSync, type ChildProcess } from "node:child_process";
 import { createRequire } from "node:module";
 import pg from "pg";
-import { INSTAGRAM_SLUG, rigLayout, type ChannelPosition } from "../src/lib/rig";
+import { INSTAGRAM_SLUG, rigLayout, type RigPosition as ChannelPosition } from "../src/lib/rig";
+import { INSTAGRAM_ON } from "../src/domain/publications";
 import { loadEnv } from "./env";
 
 const ROOT = path.resolve(new URL("..", import.meta.url).pathname);
@@ -251,7 +252,7 @@ async function main() {
 
   const { tz, chans } = await studioFacts();
   const names: Names = Object.fromEntries(chans.map((c) => [c.slug, c.name]));
-  const layout = rigLayout(chans.map((c) => c.slug));
+  const layout = rigLayout(chans.map((c) => c.slug), INSTAGRAM_ON);
   // the channel screen: --channel, else the first rig screen (inner pair first) whose channel has a render
   const prefer = (["innerRight", "innerLeft", "top", "outerLeft", "outerRight"] as const).map((p) => at(layout, p)).filter((s): s is string => !!s);
   const slug = opt("channel") ?? prefer.find((s) => chans.find((c) => c.slug === s)?.has_render) ?? prefer[0];

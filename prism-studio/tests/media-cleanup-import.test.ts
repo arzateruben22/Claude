@@ -43,8 +43,7 @@ describe("importing an episode whose video was cleared", () => {
     const [ep] = await db.select().from(S.episodes).where(and(eq(S.episodes.channelId, ch.id), eq(S.episodes.number, 1)));
     expect(ep.filmsPath).toBe(DIR);
 
-    await markEpisodeUploaded(db, ep.id, "youtube_tiktok");
-    await markEpisodeUploaded(db, ep.id, "instagram");
+    await markEpisodeUploaded(db, ep.id, "youtube_tiktok");   // the one button in use (Instagram is off)
     await db.update(S.publications).set({ reportedAt: new Date("2026-11-02T00:00:00Z") }).where(eq(S.publications.episodeId, ep.id));
     const snapshot = async () => {
       const [e] = await db.select().from(S.episodes).where(eq(S.episodes.id, ep.id));
@@ -59,8 +58,8 @@ describe("importing an episode whose video was cleared", () => {
     };
     const before = await snapshot();
     expect(before.versions).toHaveLength(1);
-    expect(before.exports).toHaveLength(3);
-    expect(before.pubs).toHaveLength(3);
+    expect(before.exports).toHaveLength(3);   // the Instagram export stays too, though Instagram is off
+    expect(before.pubs).toHaveLength(2);      // YouTube and TikTok
 
     const r = await clearUploadedVideos(db, ROOT, new Date("2026-11-09T12:00:00Z"));
     expect(r).toMatchObject({ episodes: 1, files: 2, failed: [] });

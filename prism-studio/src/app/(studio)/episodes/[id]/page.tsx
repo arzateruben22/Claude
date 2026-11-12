@@ -14,6 +14,7 @@ import { ReviewSlide } from "@/components/ReviewSlide";
 import { ReelNav } from "@/components/ReelNav";
 import { MetricChips, MetricHistory, PullLine, ViewsFigure } from "@/components/PostNumbers";
 import { PackagingCard } from "@/components/PackagingCard";
+import { UPLOADED_WHERE } from "@/domain/publications";
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const f = /^[0-9a-f-]{36}$/.test((await params).id) ? await episodeFull((await params).id) : null;
@@ -57,7 +58,7 @@ export default async function Episode({ params }: { params: Promise<{ id: string
         head={<>
           {archived ? (
             <div className="notice info" role="note">
-              <b>{archived.label} is archived:</b> every episode is uploaded on YouTube &amp; TikTok and Instagram, so it&apos;s out of the working screens and kept in <Link href={`/library#archived-${channel.slug}`}>Library → Archived seasons</Link>. Undo an Uploaded button below to bring the season back.
+              <b>{archived.label} is archived:</b> every episode is uploaded on {UPLOADED_WHERE}, so it&apos;s out of the working screens and kept in <Link href={`/library#archived-${channel.slug}`}>Library → Archived seasons</Link>. Undo an Uploaded button below to bring the season back.
             </div>
           ) : null}
           <h1 className="slide-title">{ep.title}</h1>

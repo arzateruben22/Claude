@@ -1,8 +1,9 @@
 // One account's next post on a monitor extension: the cover (download), the exact words with copy buttons (PostFields),
 // then what to do next: Download / Share and the account's official upload page (and Publish now when the account is
-// connected), then the owner's Uploaded button for this card's platform ("Uploaded on YouTube & TikTok" or "Uploaded on
-// Instagram"). No approval is needed. Opening, downloading or copying never counts as posted; only the owner's Uploaded
-// button or a verified integration does.
+// connected), then the owner's Uploaded button for this card's platform ("Uploaded on YouTube & TikTok"; "Uploaded on
+// Instagram" only while Instagram is on: off, owner 12 Nov 2026, no Instagram card reaches here and UploadedControl
+// draws no Instagram button). No approval is needed. Opening, downloading or copying never counts as posted; only the
+// owner's Uploaded button or a verified integration does.
 import Link from "next/link";
 import { publishNow } from "@/app/actions";
 import { coverOf, isReady, uploadUrlFor, type PostItem } from "@/lib/data";
