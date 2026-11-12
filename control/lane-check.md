@@ -55,3 +55,11 @@ QUEUED (owner, 4:22 PM PT): unique ChatGPT emblems per exclusive hypercar replac
 CAST A PAUSED 00:42 UTC Nov 12 (weekly budget: seven_day 0.69 at 00:41, about 9 %/h; protecting v16, S4 and the hub+dash before the 0.90 guard). Its work on disk in tsu-cast is snapshotted to origin/claude/wip-cast. RESUME it (Workflow scriptPath oc-finish-lane.js, args-cast.json, resumeFromRunId wf_f9b1afed-68d, or fresh with the same args if resume replays nothing) after the weekly reset (Sun Nov 15 22:00 UTC = 2 PM PT) or earlier if seven_day allows after DROP 2/3 land. Owner told.
 STATE 01:04 UTC: DROP 2 still merging/proving (wbisfsjvg); HUB+DASH building; S4 in repair1; cast paused. seven_day 0.70 at 00:58 (burn slowed to about 3-4 %/h after pausing cast).
 QUEUED (owner 5:10 PM PT): HYPERCAR IDENTITY lane (wheel restyle to scratchpad/owner/hyper-wheel refs + the new abstract emblem) after the hub+dash lane lands and the owner sends the emblem picks; weekly budget permitting.
+STATE 01:26 UTC: DROP 2 merger still proving (running its long groups); HUB+DASH building; S4 repair1; cast paused. seven_day 0.71 at 01:22.
+
+=== CONTAINER RESTART 01:33 UTC Nov 12 === (files survived; only processes died). Relaunched 01:36 UTC:
+- DROP 2 (v16, debris): NEW task w1aecqbez, run wf_e62fb5d1-c5e (oc-final-live-3.js with args.resumed: the merge commit f2e8e67 is already made with follow-up edits on disk; the merger continues and re-runs the proof). When KEPT: push claude/final-live, fast-forward local/live-preview 5cf7212 -> new head, build, boot test, publish v16, message the other session, owner message with the Disney/Katella before/after.
+- S4 SECOND PASS resumed: task w6dz5273h, run wf_ed08bcea-b27 (repair1 re-runs from the edits on disk).
+- HUB+DASH resumed: task w9ust3zpf, run wf_341a0d11-90c (build re-runs from the edits on disk).
+- CAST A stays PAUSED (args-cast.json now also asks for the Character entry ON THE MAIN MENU, owner 5:35 PM PT). ETA told: resumes at the weekly reset Sun Nov 15 2 PM PT unless the owner frees budget; live about Sun night to Mon midday.
+- Re-run the Playwright symlink fix only if /opt/pw-browsers/chromium_headless_shell-1194 is missing (it survived).
