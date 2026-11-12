@@ -6,6 +6,37 @@ venues' people; a future two-character pack prepared but not sold; and (5:45 PM)
 the first-person view with the arms look as good as possible and run smoothly. This file is the catalog, the asset
 status, what lane "cast A" changed and how it was checked. The progress log has the dated entry.
 
+## Graphics pass log: done / in progress / next
+
+(One lane: the two pack characters first, then the graphics pass on the six. Nothing here is committed: HEAD is
+`440e96e`, and everything after it is in the working tree for the judges. An Opus continuation starts from "Next".)
+
+**Done (stage 1, the Chad package, 2026-11-12):**
+- Chad and Chadaline are in the cast catalog (`cast.ts` `CAST_PACK.identities`, unlock `pack`), with portraits.
+- The builder has what they need, additive only: `curlsMedium` and `longWaves` hair, lighter hair tips, fuller brows,
+  light stubble, a jaw-softening face value, a double-breasted jacket with peak lapels and a padded shoulder, a
+  collared shirt with its top buttons undone, straight suit trousers, lace-up shoes, a bodycon strap dress, a fur
+  shrug, pointed stilettos with plain black soles, small hoops, rings, a right-wrist watch, a pocket square, buttons.
+- The picker shows the pack locked ("Chad & Chadaline pack: coming soon, $22.22, 18+"), with a labelled TEST switch
+  in test-mode builds. The lock is one rule in `src/game/castPack.ts`.
+- They are the driver (a jacket sleeve over a white cuff; a fur sleeve from mid forearm with the gold watch) and the
+  on-foot avatar in both venues, and never in the crowd.
+- The store entry is 2222 cents, 18+, `available: false`.
+- Regression groups `cast-pack`, `cast-pack-seat`, `cast-pack-seat-phone` and `cast-pack-venues`.
+
+**In progress:** nothing half-built. See "What is still short" under the pack section for the look.
+
+**Next (in order):**
+1. Stage 2, the shared face work: the full-beard box at yaw 45 degrees and more; the grey-beard speckle at game
+   distance. Not started.
+2. Stage 3, the six against their sheets: faces, hair (Leila's waves, Danny's side part), beards, Marcus's scar,
+   bodies, cloth, shoes. Not started. The pack's new pieces can be reused: `suitTrousers`' straight leg for the
+   six's trousers, the jacket's shoulder pad for the sloping shoulders, `jawSoft` and the hair taper and fringe.
+3. Stage 4: the `hands-acc.ts` options for the six (work-jacket cuff, blazer cuff, short sleeve, bomber cuff, hair
+   tie). Not started. The pack's `jacket` sleeve is close to what Leila's blazer needs.
+4. Stage 5: the alternating perf pairs against a clean `5cf7212` build, the phone group on that base worktree, the
+   final renders of the six, the full suite. Not started.
+
 Honest scope: the six are stylised real-time 3D built by our procedural people builder, for a phone browser. They
 are matched to the sheets as closely as the builder's shapes allow. They are not photoreal and not imported models.
 
@@ -129,14 +160,54 @@ All of them build from `crowdPerson(seed, slot)` or `staffPerson(seed, slot, uni
 
 The "Simulated crowd" labels stay.
 
-## The future two-character pack (scaffold only)
+## The Chad & Chadaline pack (built 2026-11-12, locked, not on sale)
 
-- **The store entry.** `src/store/catalog.json` has `cast-pack-duo`, a pair (one man, one woman). It is
-  `available: false`, with one configurable `price_cents` (500, a placeholder). Its caveat says the final price is
-  undecided ($5 or $10 for the pair). It is synced to the server catalog.
-- **The cast catalog.** `CAST_PACK` in `cast.ts` has the `pack` unlock category and no identities.
-- **Kept out of play.** `pickable()` adds pack identities only when owned. The crowd takes only `base`.
-- **The store stays in test mode.**
+The owner's premium pair: "Chad" and "Chadaline" (working names; the ids `chad` and `chadaline` stay if they are
+renamed). They are our own fictional adults in the game's stylised 3D look, built from the owner's sheets
+(`owner/pack/chad`, `owner/pack/chadaline`; not shipped, only a portrait crop of each is).
+
+| Ref | Name | Age, height | Hair, defining features | Outfit (as drawn) |
+| --- | --- | --- | --- | --- |
+| P01 | Chad | 28, 188 cm, tall and athletic | Dark-brown medium curls with lighter tips, strong brows, light stubble, brown eyes, stud earrings | Black double-breasted peak-lapel jacket, white pocket square, white shirt with the collar open, black suit trousers, black lace-up shoes |
+| P02 | Chadaline | 27, 168 cm, hourglass | Long dark hair with brown ends, full brows, brown eyes, small gold hoops, gold watch, rings | Black strap mini dress cut close, cream faux-fur shrug off the shoulders, black pointed stilettos with plain black soles |
+
+- **The lock** is one rule, `src/game/castPack.ts` `packUnlocked`:
+  - the store's entitlement `cast-pack-duo-characters`, which nothing sells today; or
+  - in a test-mode build only, the picker's switch labelled "TEST: try the pack" (`Settings.packTest`). It is not a
+    purchase: no entitlement, no receipt. A live build ignores it.
+- **Locked:** the picker shows both cards, the preview and the turntable, and the button reads "Chad & Chadaline
+  pack: coming soon, $22.22, 18+". A save that names a pack character plays the look without a character.
+- **Unlocked:** they work everywhere the six do: the cockpit arms (`Game.configureCar`), the on-foot avatar in both
+  venues (`lot57/driver.ts`; on the standalone pages `?char=chad&pack=test`), the picker and the menu.
+- **Never in the crowd:** `crowdPerson` and `staffPerson` draw only on `CAST`, the six.
+- **The store:** `cast-pack-duo` is 2222 cents, `min_age: 18`, `available: false`. It grants the two characters and
+  `cast-pack-duo-scarlatta`, the Rossini Scarlatta, which is reserved and not built on this branch. The checker
+  takes $22.22 as the owner's second price exception. Before it can be sold it needs the car, and an 18+ check at
+  checkout: the store's rule today is 13+ with a guardian's OK.
+- **Recorded, not blended:**
+  - The sheet's red shoe soles are a real brand's trademark. Ours are plain black.
+  - Her watch is drawn on her right wrist. On foot it is there. The cockpit hands only wear a watch on the left.
+  - The jacket's flap pockets and the trousers' pressed crease are not built.
+
+### What the pack added to the people builder (additive only)
+
+Every existing preset, default and the public API build as before. New values only:
+
+- `params.ts`: hair `curlsMedium`, `longWaves`; facial hair `lightStubble`; `Look.hairTips`, `Look.browThick`;
+  `FaceShape.jawSoft`; fabric `fur`; garments `suitJacket`, `suitTrousers`, `shrug`, `stilettos`, `oxfords`;
+  `Garment.fit: 'body'`, `Garment.unbutton`; accessories `hoopSize`, `watchRight`, `rings`, `pocketSquare`, `buttons`.
+- `hair.ts`: the two styles; a tapered edge and a fringe (no ledge at the hairline); a curtain that fills out below the
+  ears, with waves; a narrower face opening; lighter streaks. `masks.ts` gains `hairlineDepth`. `cards.ts` takes `tips`.
+- `garments.ts`: the jacket (peak lapels as a lofted strip, a shoulder pad), the straight trouser leg, the shrug's
+  rolls, the bodycon drape and thin straps, the pointed toe, the pump's heel counter, the lace-up shoe's low heel.
+- `person.ts`: under a closed suit jacket the shirt's hidden triangles are left out. Two shells 7 mm apart crossed in
+  the armpit and the shirt showed through.
+- `face.ts` (brow fullness), `head.ts` (`jawSoft`), `cloth.ts` (fur), `acc.ts` (the new accessories).
+- `src/preview/hands-acc.ts` (agreed with its owner, additive): outfits `jacket` and `fur`.
+
+### What is still short of the sheets (honest)
+
+__SHORT__
 
 ## What lane "cast A" changed (files)
 

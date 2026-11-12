@@ -16,7 +16,7 @@ import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
 import { CastPicker, PORTRAITS } from './CastPicker';
-import { castById } from '../onfoot/cast';
+import { playableCharacter } from '../game/castPack';
 import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
 import { GLACIER_SILVER, FOUNDER_ICE, plaqueNumber, founderWindowText } from '../game/founder';
 import { HUD, HudHandle } from './HUD';
@@ -157,8 +157,8 @@ export function App() {
     game.current = g;
     (window as unknown as { __game: Game }).__game = g;
     // the cast's budget check (tests/regression.mjs 'cast'): the people builder loads only when asked
-    (window as unknown as { __castBudget: () => Promise<unknown> }).__castBudget = () => import('./castStage').then((m) => m.castBudget());
-    (window as unknown as { __castInfo: () => Promise<unknown> }).__castInfo = () => import('./castStage').then((m) => m.castInfo());
+    (window as unknown as { __castBudget: () => Promise<unknown> }).__castBudget = (pack?: boolean) => import('./castStage').then((m) => m.castBudget([2, 1, 0], pack === true));
+    (window as unknown as { __castInfo: () => Promise<unknown> }).__castInfo = () => import('./castStage').then((m) => { let s = {}; try { s = JSON.parse(localStorage.getItem('tsu.settings') ?? '{}') ?? {}; } catch { /* no save */ } return m.castInfo(s); });
     g.init().then(() => setScreen('menu'), (e) => setError(String(e)));
     return () => { g.dispose(); game.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -263,7 +263,7 @@ export function App() {
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   const driver = DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0];
-  const castNow = castById(settings.character);
+  const castNow = playableCharacter(settings);   // (a pack character only while the pack is unlocked)
   const car = carById(game.current?.carId ?? 'rossini-gt');
   // the drive HUD's chips under the speed: the driving profile the handling slider sits on (settings.ts PROFILES, or
   // Custom between them) and the assists the physics runs at every setting (ABS and traction control). While the
@@ -945,7 +945,7 @@ function GaragePanel({ game, settings, update, onClose, onPick, onCharacter }: {
     {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     {/* (cast, 2026-11-11) who drives: the character picker from the garage too */}
-    {(() => { const ch = castById(settings.character); return (
+    {(() => { const ch = playableCharacter(settings); return (
       <button type="button" className="pick cast-row garage-cast" onClick={onCharacter}>
         {ch ? <img src={PORTRAITS[ch.id]} alt="" width={40} height={50} /> : <span className="swatch" style={{ background: '#' + SKINS[Math.max(0, Math.min(SKINS.length - 1, settings.skin))].toString(16).padStart(6, '0') }} aria-hidden="true" />}
         <small>Character</small><b>{ch ? ch.name : 'Choose a character'}</b><i aria-hidden="true">›</i>

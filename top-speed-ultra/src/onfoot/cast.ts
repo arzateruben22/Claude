@@ -17,15 +17,18 @@
 import type { PersonOptions, Garment, Accessories, Look, BodyShape, FaceShape, AnimName } from './people';
 import { baseBody, baseLook, defaultFace } from './people/params';
 
-export type CastId = 'mateo-reyes' | 'danny-tran' | 'marcus-bell' | 'leila-farahani' | 'jas-cruz' | 'kate-morgan';
+export type BaseCastId = 'mateo-reyes' | 'danny-tran' | 'marcus-bell' | 'leila-farahani' | 'jas-cruz' | 'kate-morgan';
+/** (2026-11-12) the pack's two characters, working names (the owner may rename them; the ids stay) */
+export type PackCastId = 'chad' | 'chadaline';
+export type CastId = BaseCastId | PackCastId;
 export type Unlock = 'base' | 'pack';
-export type ArmsOutfit = 'shirt' | 'suit' | 'work';
+export type ArmsOutfit = 'shirt' | 'suit' | 'work' | 'jacket' | 'fur';
 
 /** the wardrobe as slots: what the player sees and what the crowd's variations swap */
 export interface Wardrobe {
   top: Garment;
   outer: Garment | null;
-  bottom: Garment;
+  bottom: Garment | null;      // null: a dress (the top) is the whole outfit
   shoes: Garment;
   acc: Partial<Accessories>;
 }
@@ -33,7 +36,9 @@ export interface Wardrobe {
 export interface ArmsLook {
   sleeve: number;              // the sleeve colour the hands draw
   outfit: ArmsOutfit;          // the closest sleeve the hands have: 'shirt' a buttoned cuff at the wrist, 'suit' a ribbed
-                               // knit cuff, 'work' rolled up past the forearm (forearms bare)
+                               // knit cuff, 'work' rolled up past the forearm (forearms bare); (pack) 'jacket' a suit
+                               // jacket's sleeve over a sliver of shirt cuff, 'fur' a shrug's sleeve from mid forearm up
+  cuff?: number;               // (pack) the shirt cuff's colour under a 'jacket' sleeve
   watch: 'gold' | 'steel' | 'smart' | null;
   bracelet: boolean;           // the hands' right-wrist bangle
   ring: boolean;
@@ -56,7 +61,7 @@ export interface CrowdVariety {
 }
 export interface CastEntry {
   id: CastId;
-  ref: 'M01' | 'M02' | 'M03' | 'F01' | 'F02' | 'F03';
+  ref: 'M01' | 'M02' | 'M03' | 'F01' | 'F02' | 'F03' | 'P01' | 'P02';
   name: string;
   first: string;
   presentation: 'm' | 'f';
@@ -194,27 +199,78 @@ export const CAST: CastEntry[] = [
 ];
 
 export const CAST_IDS = CAST.map((c) => c.id);
-export const castById = (id: string | null | undefined): CastEntry | null => CAST.find((c) => c.id === id) ?? null;
-export const isCastId = (v: unknown): v is CastId => typeof v === 'string' && CAST_IDS.includes(v as CastId);
+/** any character of the catalog, the pack's included (whether a save may PLAY a pack character is `playable`) */
+export const castById = (id: string | null | undefined): CastEntry | null => CAST.find((c) => c.id === id) ?? CAST_PACK.identities.find((c) => c.id === id) ?? null;
+export const isCastId = (v: unknown): v is CastId => typeof v === 'string' && castById(v) !== null;
 
-// ------------------------------------------------------------------------------------------------ the future pack
-// A future two-character cosmetic pack (one man, one woman), sold together; its price is undecided ($5 or $10 for the
-// pair, one configurable price in src/store/catalog.json, where the SKU is available: false). The 'pack' unlock
-// category exists so the picker and the save can take more identities later; NO identities ship now, and nothing from
-// the pack ever joins the crowd's pool (the crowd draws only on unlock 'base').
-export const CAST_PACK = { sku: 'cast-pack-duo', unlock: 'pack' as const, identities: [] as CastEntry[], planned: { men: 1, women: 1 } };
-/** the identities a player may pick: the six base characters, plus a pack's when it exists and is owned (none today) */
+// ------------------------------------------------------------------------------------------------ the pack
+// The two-character pack (owner, 2026-11-11/12): "Chad" and "Chadaline" (working names), the male and female versions
+// of each other, sold together with the Rossini Scarlatta for $22.22 (src/store/catalog.json 'cast-pack-duo',
+// price_cents 2222, an 18+ purchase, available: false: nothing is on sale and the store stays in test mode). Both are
+// our own original, fictional adults in the game's stylised 3D look (no likeness of anyone real), built by the same
+// people builder from the owner's reference sheets (owner/pack/chad, owner/pack/chadaline; not shipped).
+// They are playable only with the pack's entitlement (src/game/castPack.ts packUnlocked: the store's entitlement, or
+// in a test-mode build the labelled TEST unlock), and they NEVER join the crowd: the crowd draws only on CAST (the
+// six, unlock 'base').
+const PACK_SHEETS = (dir: string, ext: string) => ({ body: `owner/pack/${dir}/body-sheet.${ext}`, face: `owner/pack/${dir}/face-sheet.${ext}` });
+const INK = 0x111113, CREAM_FUR = 0xe8dcc6, WHITE = 0xf4f4f1;
+const PACK_IDENTITIES: CastEntry[] = [
+  {
+    id: 'chad', ref: 'P01', name: 'Chad', first: 'Chad', presentation: 'm', age: 28, heightCm: 188, build: 'tall, athletic',
+    from: 'Newport Beach; pack character (working name)', unlock: 'pack', portrait: 'cast/chad.webp', sheets: PACK_SHEETS('chad', 'png'),
+    body: { ...baseBody('m'), age: 28, height: 1.88, heads: 7.5, fat: 0.27, muscle: 0.55, apple: 0, shoulders: 0.6, hips: -0.1, waist: -0.2, legs: 0.2, soft: 0.03 },
+    face: { ...defaultFace('m'), jaw: 0.97, chin: 1.0, chinLen: 1.0, cheekbones: 1.06, cheeks: 1.2, noseLen: 1.03, noseW: 1.0, noseBridge: 1.1, lipUpper: 1.1, lipLower: 1.16, eyeTilt: 0.05, hooded: 0.2, brow: 1.3, earSize: 0.92, earOut: -0.3, jawSoft: 1 },
+    look: { ...baseLook(), skin: 0xc79370, iris: 0x4b2e17, hair: 'curlsMedium', hairColor: 0x1d130d, hairTips: 0x4e3521, facialHair: 'lightStubble', browThick: 1.3 },
+    wardrobe: {
+      // (the builder's 'fitted' shell with a collar, the top buttons undone: its looser 'shirt' drape would push through the jacket)
+      top: { kind: 'fitted', color: WHITE, fabric: 'cotton', sleeve: 1, neck: 'collar', unbutton: 1.15 },
+      outer: { kind: 'suitJacket', color: INK, fabric: 'wool', sleeve: 0.945, neck: 'v' },
+      bottom: { kind: 'suitTrousers', color: INK, fabric: 'wool' },
+      shoes: { kind: 'oxfords', color: 0x0c0c0d, fabric: 'leather' },
+      acc: { studs: 0xe9eef3, pocketSquare: 0xf6f6f3, buttons: 0x0b0b0c },
+    },
+    anim: { walkSpeed: 1.42, idles: ['idle', 'talk', 'laugh'], gait: 'easy' },
+    arms: { sleeve: INK, outfit: 'jacket', cuff: WHITE, watch: null, bracelet: false, ring: false, nails: null, missing: null },
+    crowd: { tops: [WHITE], outers: [INK], bottoms: [INK], shoes: [0x0c0c0d], dropOuter: false, optional: [] },
+    notes: ['A working name: the owner may rename him; the id stays.', 'The jacket\'s flap pockets and the trousers\' pressed crease are not built.'],
+  },
+  {
+    id: 'chadaline', ref: 'P02', name: 'Chadaline', first: 'Chadaline', presentation: 'f', age: 27, heightCm: 168, build: 'curvy, hourglass',
+    from: 'Newport Beach; pack character (working name)', unlock: 'pack', portrait: 'cast/chadaline.webp', sheets: PACK_SHEETS('chadaline', 'webp'),
+    body: { ...baseBody('f'), age: 27, height: 1.68, heads: 7.6, fat: 0.4, muscle: 0.4, apple: -0.5, bust: 0.7, shoulders: 0, hips: 0.55, waist: -0.85, legs: 0.15, soft: 0.18 },
+    face: { ...defaultFace('f'), jaw: 0.86, chin: 0.9, cheekbones: 1.12, cheeks: 1.14, noseLen: 0.96, noseW: 0.94, noseTip: 0.98, lipUpper: 1.26, lipLower: 1.3, mouthW: 1.03, eyeSize: 1.08, eyeTilt: 0.42, brow: 0.74, jawSoft: 0.9 },
+    look: { ...baseLook(), skin: 0xc48a63, iris: 0x5a3a1e, hair: 'longWaves', hairColor: 0x18100c, hairTips: 0x4a2c1a, liner: 0.9, blush: 0.3, lipstick: 0xa5665c, nails: 0xe8cfc4, browThick: 1.3 },
+    wardrobe: {
+      top: { kind: 'dress', color: 0x101011, fabric: 'knit', length: 0.27, neck: 'strap', sleeve: 0, fit: 'body' },
+      outer: { kind: 'shrug', color: CREAM_FUR, fabric: 'fur' },
+      bottom: null,
+      // (plain black soles: the sheet's red soles are a real fashion brand's trademark and are not copied)
+      shoes: { kind: 'stilettos', color: 0x0d0d0e, fabric: 'leather' },
+      acc: { hoops: GOLD, hoopSize: 0.5, watch: GOLD, watchRight: true, rings: GOLD },
+    },
+    anim: { walkSpeed: 1.22, idles: ['idle', 'talk', 'laugh'], gait: 'light' },
+    arms: { sleeve: CREAM_FUR, outfit: 'fur', watch: 'gold', bracelet: false, ring: true, nails: 0xe8cfc4, missing: 'the watch is drawn on her right wrist (built there on foot); the cockpit hands wear a watch on the left wrist only' },
+    crowd: { tops: [0x101011], outers: [CREAM_FUR], bottoms: [], shoes: [0x0d0d0e], dropOuter: false, optional: [] },
+    notes: ['A working name: the owner may rename her; the id stays.', 'The sheet\'s red shoe soles are a real brand\'s trademark: the soles are plain black.', 'Nails: a pale nude polish, as the sheet shows.'],
+  },
+];
+export const CAST_PACK = { sku: 'cast-pack-duo', unlock: 'pack' as const, entitlement: 'cast-pack-duo-characters', identities: PACK_IDENTITIES, planned: { men: 1, women: 1 } };
+export const isPackId = (v: unknown): v is PackCastId => typeof v === 'string' && CAST_PACK.identities.some((c) => c.id === v);
+/** the identities a player may pick: the six base characters, plus the pack's two when the pack is unlocked */
 export const pickable = (ownsPack = false) => [...CAST.filter((c) => c.unlock === 'base'), ...(ownsPack ? CAST_PACK.identities : [])];
+/** the character a save may play as: a base character always; a pack character only while the pack is unlocked (else
+ *  null, and the caller falls back to the look without a character) */
+export const playable = (id: string | null | undefined, packUnlocked: boolean): CastEntry | null => { const c = castById(id); return c && (c.unlock === 'base' || packUnlocked) ? c : null; };
 
 // ------------------------------------------------------------------------------------------------ building them
 const clone = (g: Garment): Garment => ({ ...g });
 function outfitOf(w: Wardrobe): Garment[] {
-  return [clone(w.top), ...(w.outer ? [clone(w.outer)] : []), clone(w.bottom), clone(w.shoes)];
+  return [clone(w.top), ...(w.outer ? [clone(w.outer)] : []), ...(w.bottom ? [clone(w.bottom)] : []), clone(w.shoes)];
 }
 function accOf(a: Partial<Accessories>): Accessories {
-  return { hoops: null, studs: null, chain: null, watch: null, bracelet: null, ring: null, bag: 'none', bagColor: 0x111111, sunglassesUp: null, hairTie: null, ...a };
+  return { hoops: null, studs: null, chain: null, watch: null, bracelet: null, ring: null, bag: 'none', bagColor: 0x111111, sunglassesUp: null, hairTie: null, rings: null, pocketSquare: null, buttons: null, ...a };
 }
-const SEED: Record<CastId, number> = { 'mateo-reyes': 7101, 'danny-tran': 7102, 'marcus-bell': 7103, 'leila-farahani': 7104, 'jas-cruz': 7105, 'kate-morgan': 7106 };
+const SEED: Record<CastId, number> = { 'mateo-reyes': 7101, 'danny-tran': 7102, 'marcus-bell': 7103, 'leila-farahani': 7104, 'jas-cruz': 7105, 'kate-morgan': 7106, chad: 7201, chadaline: 7202 };
 
 /** a character exactly as on the sheets (the player, the picker) */
 export function castPerson(id: CastId, seed = SEED[id]): PersonOptions {
@@ -222,7 +278,7 @@ export function castPerson(id: CastId, seed = SEED[id]): PersonOptions {
   return { seed, name: 'cast:' + c.id, body: { ...c.body }, face: { ...c.face }, look: { ...c.look }, outfit: outfitOf(c.wardrobe), acc: accOf(c.wardrobe.acc) };
 }
 /** the slot for one of the six by id (for crowdPerson and staffPerson) */
-export const slotOf = (id: CastId) => CAST.findIndex((c) => c.id === id);
+export const slotOf = (id: BaseCastId) => CAST.findIndex((c) => c.id === id);
 /** which of the six a person's options were built from (null: not from the cast) */
 export function castOf(o: Pick<PersonOptions, 'name'>): CastId | null {
   const m = /^cast:([a-z-]+)/.exec(o.name ?? '');
@@ -250,7 +306,8 @@ export function crowdPerson(seed: number, slot: number): PersonOptions {
   const v = base.crowd, w = base.wardrobe;
   const outfit: Garment[] = [{ ...w.top, color: pick(r, v.tops) }];
   if (w.outer && !(v.dropOuter && r() < 0.35)) outfit.push({ ...w.outer, color: v.outers.length ? pick(r, v.outers) : w.outer.color, accent: undefined });
-  outfit.push({ ...w.bottom, color: pick(r, v.bottoms), accent: undefined }, { ...w.shoes, color: pick(r, v.shoes) });
+  if (w.bottom) outfit.push({ ...w.bottom, color: pick(r, v.bottoms), accent: undefined });
+  outfit.push({ ...w.shoes, color: pick(r, v.shoes) });
   // a roll's accent follows the new colour
   for (const g of outfit) if (g.roll) g.accent = shade(g.color, 0.9);
   const acc = { ...o.acc };

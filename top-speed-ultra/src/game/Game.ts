@@ -34,6 +34,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, characterLook } from './drivers';
+import { playableCharacter } from './castPack';
 import { CARS, carById, applyCar, paintFor, wheelFor, earnCapFor, tuneFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
@@ -464,7 +465,7 @@ export class Game {
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
-    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin || s.character !== this.settings.character;
+    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin || s.character !== this.settings.character || s.packTest !== this.settings.packTest;
     const owner = s.owner !== this.settings.owner;
     const cur = carById(this.driving);
     const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
@@ -638,7 +639,8 @@ export class Game {
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     // the chosen character's appearance (cast.ts) on the archetype's pose; no character yet: the archetype's look
-    const { look, presentation } = characterLook(d.id, s.character, s.presentation, s.skin);
+    // (a pack character only while the pack is unlocked: castPack.ts; else the look without a character)
+    const { look, presentation } = characterLook(d.id, playableCharacter(s)?.id ?? '', s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
     this.car.configure({

@@ -86,7 +86,8 @@ export function buildPerson(o: PersonOptions): Person {
   const t0 = performance.now();
   const shoes = o.outfit.find((g) => isShoe(g.kind));
   // (the cast's low heels lift 4.5 cm; every other shoe as before)
-  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : shoes?.kind === 'lowHeels' ? 0.045 * (o.body.height / 1.65) : 0;
+  // (the pack's stilettos lift 9.5 cm; its lace-up shoes have a 2 cm heel)
+  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : shoes?.kind === 'lowHeels' ? 0.045 * (o.body.height / 1.65) : shoes?.kind === 'stilettos' ? 0.095 * (o.body.height / 1.65) : shoes?.kind === 'oxfords' ? 0.02 * (o.body.height / 1.75) : 0;
   const rig = buildRig(o.body, o.face, heel);
   const sk = makeSkeleton(rig);
   const group = new THREE.Group();
@@ -102,7 +103,7 @@ export function buildPerson(o: PersonOptions): Person {
   const hf = rig.head;
   const male = o.body.sex === 'm';
   const fh = o.look.facialHair;
-  const beardAmt = !male ? 0 : fh === 'beard' || fh === 'fullBeard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? 0.75 : 0.22;
+  const beardAmt = !male ? 0 : fh === 'beard' || fh === 'fullBeard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? 0.75 : fh === 'lightStubble' ? 0.42 : 0.22;
   const skinLook = { tone: o.look.skin, lipstick: o.look.lipstick, blush: o.look.blush, beard: beardAmt, beardColor: o.look.hairColor, liner: o.look.liner, hairColor: o.look.hairColor, freckles: o.look.freckles, age: o.body.age, male };
   let bodyMat: SkinMaterial | null = null, faceMat: SkinMaterial | null = null;
   const mats: THREE.Material[] = [];
@@ -200,6 +201,17 @@ export function buildPerson(o: PersonOptions): Person {
         aFold[v * 4] += f.ax[0] * w; aFold[v * 4 + 1] += f.ax[1] * w; aFold[v * 4 + 2] += f.ax[2] * w;
       }
     }
+    // (pack, 2026-11-12) under a closed suit jacket: the shirt's triangles well inside the jacket's region are left
+    // out. Two shells 7 mm apart, each meshed at about a centimetre, cross in the armpit's crease, and the shirt showed
+    // through the jacket there; what the jacket's openings show (the collar, the cuffs, the hem) stays
+    if (gb.layer < 3 && !isShoe(gb.g.kind) && !isBottom(gb.g.kind)) {
+      const over = getGarments().find((x) => x.g.kind === 'suitJacket');
+      if (over) {
+        const gone = new Uint8Array(nv);
+        for (let v = 0; v < nv; v++) gone[v] = over.keep(P[v * 3], P[v * 3 + 1], P[v * 3 + 2]) < -0.018 ? 1 : 0;
+        idx = dropTris(idx, gone);
+      }
+    }
     const geo = buildGeometry(P, NR, idx, si, sw, { aCloth: { a: aCloth, n: 4 }, aFold: { a: aFold, n: 4 } });
     const sole = lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
     const mat = clothMaterial(gb.g.color, gb.g.fabric, quality, isShoe(gb.g.kind) ? sole : (gb.g.accent ?? gb.g.color));
@@ -244,7 +256,7 @@ export function buildPerson(o: PersonOptions): Person {
     const hb = getHair();
     if (!hb) return [];
     const th = performance.now();
-    const h = quality === 'high' ? 0.0042 : 0.0068;
+    const h = (quality === 'high' ? 0.0042 : 0.0068) * (hb.sp.meshK ?? 1);
     const { mesh } = meshPart(hb.sdf, aabbBox(hb.box[0], hb.box[1], h), h);
     const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => hb.sdf.keep(x, y, z));
     const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
@@ -275,7 +287,7 @@ export function buildPerson(o: PersonOptions): Person {
     const cw = hairWeights(hb, cards.pos);
     cg.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(cw.si, 4));
     cg.setAttribute('skinWeight', new THREE.BufferAttribute(cw.sw, 4));
-    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : 1 });
+    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : 1, tips: o.look.hairTips ?? null });
     mats.push(cmat);
     const cm = new THREE.SkinnedMesh(cg, cmat);
     cm.name = 'hair-cards';
@@ -362,7 +374,12 @@ export function buildPerson(o: PersonOptions): Person {
     for (const gb of getGarments()) {
       const m = clothMesh(gb);
       G.add(m);
-      if (gb.collar) G.add(collarMesh(gb, m.material as THREE.Material));
+      if (gb.collar && gb.g.kind === 'suitJacket') {
+        // (pack) the lapels in the jacket's own cloth, a shade lighter: black on black they did not read at all
+        const lm = clothMaterial(new THREE.Color(gb.g.color).lerp(new THREE.Color(0xffffff), 0.028).getHex(), gb.g.fabric, quality, gb.g.color);
+        mats.push(lm);
+        G.add(collarMesh(gb, lm));
+      } else if (gb.collar) G.add(collarMesh(gb, m.material as THREE.Material));
     }
     buildMs.clothes0 = Math.round(performance.now() - tc);
     // ---- hands

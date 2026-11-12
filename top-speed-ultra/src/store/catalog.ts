@@ -31,6 +31,7 @@ export interface Sku {
   available: boolean;
   unavailable_reason?: string;     // why it can't be sold yet, in words the store shows
   caveat?: string;                 // a note for the owner (not shown in the store)
+  min_age?: 18;                    // an 18+ purchase (the owner's rule for the Chad & Chadaline pack); unset: the store's 13+ rule
 }
 
 export interface Swatch { name: string; hex: string }
