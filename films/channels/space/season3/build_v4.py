@@ -43,6 +43,13 @@ def build(use_closer):
     tracks = {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}
     dur0 = t + 0.6
     nclips, ncaps, nkm, ntr, beats, (dur, cta_n) = insert_beats(clips, caps, kk, tracks, items, [dur0, cta_t])
+    # the voice goes where its captions are: a clip that starts just before a beat boundary must move with its first sentence (a clip whose t falls a hair before T is not shifted by the warp)
+    for c in nclips:
+        for sn in lines[c["id"]]["sentences"]:
+            if sn["t0"] >= c["from"] - 0.01 and sn["t1"] <= c["from"] + c["dur"] + 0.02:
+                cp = next((x for x in ncaps if x["line"] == c["id"] and x["text"] == sn["text"]), None)
+                if cp is not None: c["t"] = round(cp["t0"] - (sn["t0"] - c["from"]), 3)
+                break
     # chips from the words, at the final clip positions
     chips = []
     for (word, text, d, occ) in PART["chips"]:
