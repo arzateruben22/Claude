@@ -1,6 +1,7 @@
 // Player settings and the graphics quality presets. Saved to localStorage when it's available.
 
 import { CONFIG } from '../store/config';
+import { isCastId } from '../onfoot/cast';
 
 export const VERSION = '0.1.0';   // keep in step with package.json; shown in feedback reports
 
@@ -38,6 +39,10 @@ export interface Settings {
   driver: 'closer' | 'ace' | 'wrench';
   presentation: 'm' | 'f';
   skin: number;             // index into drivers.SKINS
+  // the chosen character (src/onfoot/cast.ts id), '' until the player picks one: then the driver's appearance is the
+  // old presentation and skin above, exactly as before (2026-11-11). Picked, it is the driver everywhere: the cockpit
+  // arms, the on-foot avatar in both venues. The archetype (driver) stays the gameplay choice.
+  character: string;
   music: number;            // radio volume
   ultra: boolean;           // Ultra Realism (opens at level 5), and its three parts
   ultraTunnel: boolean;
@@ -149,7 +154,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, character: '', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
@@ -201,6 +206,7 @@ function readSettings(): Settings {
       driver: v.driver === 'ace' || v.driver === 'wrench' ? v.driver : 'closer',
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
+      character: isCastId(v.character) ? v.character : '',
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,

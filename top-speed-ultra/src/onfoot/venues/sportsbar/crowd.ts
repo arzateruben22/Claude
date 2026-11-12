@@ -16,7 +16,8 @@
 //   - moods on bodies (walk speed, a slump when Low, the clips) and the crowd's reactions to the screens.
 // Nothing here is live and nobody is a real person: the crowd is simulated from the clock and seeds.
 import * as THREE from 'three';
-import { buildPerson, randomPerson } from '../../people';
+import { buildPerson } from '../../people';
+import { crowdPerson, castOf, CAST } from '../../cast';
 import type { Person, PersonOptions } from '../../people';
 import type { P2, VisState } from '../../engine/venue-def';
 import type { Quality } from '../../engine/mats';
@@ -124,6 +125,11 @@ export interface CrowdReport { [k: string]: unknown }
 
 export class Crowd {
   npcs: Npc[] = [];
+  /** (cast) which of the six each person here is built from: guests, spares, the staff and the house player */
+  castPool() {
+    const staff = [...this.bartenders, ...this.servers, this.host, this.barback, this.life.house as unknown as { p?: Person } | undefined].filter((x) => !!x?.p).map((x) => x!.p!.options);
+    return [...this.npcs.map((n) => n.opts), ...this.spares.map((s) => s.opts), ...staff].map((o) => castOf(o));
+  }
   byKey = new Map<string, Npc>();
   parties: Party[] = [];
   fillers = new Map<string, Filler>();
@@ -334,7 +340,14 @@ export class Crowd {
   private newNpc(party: Party, o: { regular?: Regular; opts?: PersonOptions; t: number }): Npc {
     const id = this.nextId++, r = mulberry(hash32('npc', this.seedN, id));
     const reg = o.regular ?? null;
-    const opts = o.opts ?? (reg ? randomPerson(reg.seed % 100000) : randomPerson(hash32('walkin', this.seedN, id) % 100000));
+    // everyone is one of the six (the cast, 2026-11-11): a regular is always the same character (by its seed) unless
+    // their party already has that one; a walk-in's by the party and their place in it; nobody in a party is another
+    // member's double
+    const seedP = reg ? reg.seed % 100000 : hash32('walkin', this.seedN, id) % 100000;
+    let slot = reg ? reg.seed % 6 : party.id * 2 + party.members.length;
+    const taken = new Set(party.members.map((m) => castOf(m.opts)));
+    for (let k = 0; k < 6 && taken.has(CAST[((slot % 6) + 6) % 6].id); k++) slot++;
+    const opts = o.opts ?? crowdPerson(seedP, slot);
     const featured = this.life.tv.featured(fromAbs(o.t / SECS).week, fromAbs(o.t / SECS).day);
     const n: Npc = {
       id, key: `n${id}`, name: reg ? reg.name : FIRST_NAMES[Math.floor(r() * FIRST_NAMES.length)], regular: reg ? reg.key : null,
@@ -1286,7 +1299,7 @@ export class Crowd {
   private staffLod1Job(s: StaffRec): BuildJob { return { who: s.id, level: 1, quality: this.pq, reason: 'fill', run: () => { const was = s.body.p.stats().lod; s.body.p.setLod(1); s.body.p.setLod(was as 1 | 2); s.lod1 = true; this.noCast(s.body.p); } }; }
   private spareJob(reason: BuildReason): BuildJob {
     const k = hash32('spare', this.seedN, this.nextId++);
-    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = randomPerson(k % 100000); const p = buildPerson({ ...opts, quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
+    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = crowdPerson(k % 100000, k % 6); const p = buildPerson({ ...opts, quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
   }
   /** the next build in the plan's order: everyone live not yet built (LOD 2, nearest the camera first); then the casters'
    *  LOD 1; then the drawn LOD 1 count's, nearest first; then the 6 spares. A tap puts that person's LOD 1 first. The LOD 1

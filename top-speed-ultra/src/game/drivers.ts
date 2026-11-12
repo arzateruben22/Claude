@@ -1,6 +1,11 @@
 // Three drivers, each in a male or female presentation (cosmetic only: hands, sleeves, what's on the wrist), each
-// with one ability on a cooldown. The abilities change the world, not the scoring rules: Speed Survival still
-// counts every pass and every crash the same way.
+// with one ability on a cooldown. (2026-11-11) The driver's APPEARANCE now comes from the chosen character
+// (src/onfoot/cast.ts, Settings.character) when the player has picked one: characterLook below. The archetype
+// (DRIVERS) stays a separate gameplay choice: its ability, its off-wheel pose and its signature colour.
+// The abilities change the world, not the scoring rules: Speed Survival still counts every pass and every crash the
+// same way.
+
+import { castById, CastEntry } from '../onfoot/cast';
 
 export type AbilityId = 'clear' | 'focus' | 'grip';
 export type DriverId = 'closer' | 'ace' | 'wrench';
@@ -44,6 +49,35 @@ export function lookFor(id: DriverId, pres: Presentation, skinIdx: number): Driv
   if (id === 'closer') return { skin, sleeve: pres === 'f' ? 0xe9e4da : 0xf2f2f0, gloves: null, watch: 'gold', ring: true, bracelet: pres === 'f', scale, pose: 'watch', outfit: 'shirt', accent: 0xffd166, nails: pres === 'f' ? 0xb4111c : null };
   if (id === 'ace') return { skin, sleeve: 0x1b1b1d, gloves: 0x121214, watch: null, ring: false, bracelet: false, scale, pose: 'wave', outfit: 'suit', accent: 0xb9a6ff, nails: null };
   return { skin, sleeve: null, gloves: null, watch: 'smart', ring: pres === 'f', bracelet: false, scale, pose: 'knee', outfit: 'work', accent: 0x7dffa8, nails: null };
+}
+
+// A bought driver style (src/store/cosmetics.json, type 'style': Night Shift, Golden Hour, Canyon Run), as the parts
+// it overrides. The rule (2026-11-11): a style, when one is equipped, applies ON TOP of the character's own arms: its
+// gloves, its watch and its sleeve (colour and end: 'knit' a ribbed cuff, 'cuff' a buttoned cuff) replace the
+// character's, and its nail colour applies to a female presentation only; the skin tone and the hand shape stay the
+// character's. (No equip slot for styles exists yet: their status is 'hook'. This is the function it will call.)
+export interface DriverStyle { gloves: number | null; watch: 'gold' | 'steel' | 'smart' | null; sleeve: number; end: 'knit' | 'cuff'; nails: number | null }
+export function withStyle(look: DriverLook, style: DriverStyle | null, pres: Presentation): DriverLook {
+  if (!style) return look;
+  return { ...look, gloves: style.gloves, watch: style.watch, sleeve: style.sleeve, outfit: style.end === 'knit' ? 'suit' : 'shirt', nails: pres === 'f' ? style.nails : look.nails };
+}
+
+/**
+ * The driver's look with a character chosen: the character's skin tone, sleeves (colour and the closest sleeve the
+ * hands have), watch, wrist and nails (cast.ts CastEntry.arms), on the archetype's pose (the ability's animation) and
+ * its signature colour. No gloves: the six drive bare-handed. Without a character (an old save, or a new player who
+ * hasn't picked one), it is lookFor's archetype look, exactly as before.
+ */
+export function characterLook(id: DriverId, character: string, pres: Presentation, skinIdx: number, style: DriverStyle | null = null): { look: DriverLook; presentation: Presentation; cast: CastEntry | null } {
+  const c = castById(character);
+  const base = lookFor(id, pres, skinIdx);
+  if (!c) return { look: withStyle(base, style, pres), presentation: pres, cast: null };
+  const a = c.arms, p = c.presentation;
+  const look: DriverLook = {
+    skin: c.look.skin, sleeve: a.sleeve, gloves: null, watch: a.watch, ring: a.ring, bracelet: a.bracelet, scale: p === 'f' ? 0.9 : 1,
+    pose: base.pose, outfit: a.outfit, accent: base.accent, nails: a.nails,
+  };
+  return { look: withStyle(look, style, p), presentation: p, cast: c };
 }
 
 // one ability's clock: active for `duration`, then cooling down

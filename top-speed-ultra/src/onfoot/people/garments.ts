@@ -12,9 +12,13 @@ import { V3, clamp, lerp, mirror, norm, smooth, DEG } from './math';
 
 export type Region = (x: number, y: number, z: number) => number;   // < 0 inside (kept)
 
-const SHOES: GarmentKind[] = ['sneakers', 'boots', 'heels', 'loafers', 'flats'];
-const BOTTOMS: GarmentKind[] = ['jeans', 'trousers', 'skirt', 'shorts'];
-const OUTER: GarmentKind[] = ['jacket', 'leather', 'blazer', 'cardigan'];
+// (the cast's kinds, 2026-11-11, are appended: sandals .. workBoots, cargo .. workPants, bomber .. workJacket)
+const SHOES: GarmentKind[] = ['sneakers', 'boots', 'heels', 'loafers', 'flats', 'sandals', 'deckShoes', 'lowHeels', 'chunkySneakers', 'workBoots'];
+const BOTTOMS: GarmentKind[] = ['jeans', 'trousers', 'skirt', 'shorts', 'cargo', 'chinoShorts', 'workPants'];
+const OUTER: GarmentKind[] = ['jacket', 'leather', 'blazer', 'cardigan', 'bomber', 'overshirt', 'workJacket'];
+export const isBottom = (k: GarmentKind) => BOTTOMS.includes(k);
+/** a shoe with a light sole in its accent colour (the others' soles are a darker shade of the upper) */
+export const lightSole = (k: GarmentKind) => k === 'sneakers' || k === 'chunkySneakers' || k === 'deckShoes';
 export const isShoe = (k: GarmentKind) => SHOES.includes(k);
 
 /** a hanging profile: superellipse slices (centre z, half depth, half width) stacked in y */
@@ -274,10 +278,14 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
     if (isShoe(k)) { out.push(shoe(rig, g)); continue; }
     if (BOTTOMS.includes(k)) {
       const top = k === 'skirt' ? D.waistY + 0.01 * s : D.hipY + (body.sex === 'm' ? 0.05 : 0.06) * s;
-      const t = k === 'jeans' ? 0.003 : k === 'trousers' ? 0.0045 : 0.0035;
+      const t = k === 'jeans' ? 0.003 : k === 'trousers' ? 0.0045 : k === 'workPants' ? 0.011 : k === 'cargo' ? 0.0095 : k === 'chinoShorts' ? 0.0048 : 0.0035;
+      const shortLeg = k === 'shorts' || k === 'chinoShorts';
+      // (cast) a cropped leg: g.length < 1 lifts the hem up the shin; a roll shows at the hem in the accent colour
+      const lift = k !== 'skirt' && !shortLeg && g.length !== undefined && g.length < 1 ? (1 - g.length) * (D.kneeY - D.ankleY) : 0;
       const bones = bonesOf(['hips', 'spine', 'thighL', 'thighR', 'shinL', 'shinR']);
       const A = sub_(bonesOf(['hips', 'spine', 'thighL', 'thighR', 'shinL', 'shinR']));
       let keep: Region, drape: Drape | null = null, yLo: number;
+      let legAccent: Region | null = null;
       const legFrac = g.length ?? 1;
       if (k === 'skirt') {
         const hem = D.hipY - legFrac * (D.hipY - D.ankleY);
@@ -287,13 +295,14 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
       } else {
         const legCut = (sg: number): Region => {
           const ax = sg > 0 ? L.dL : mirror(L.dL);
-          const c = k === 'shorts' ? (sg > 0 ? L.hip : mirror(L.hip)).map((v, i) => v + ax[i] * (D.thigh * 0.62)) as V3
-            : (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - ax[i] * (k === 'jeans' ? 0.03 : 0.022) * s) as V3;
+          const c = shortLeg ? (sg > 0 ? L.hip : mirror(L.hip)).map((v, i) => v + ax[i] * (D.thigh * (k === 'chinoShorts' ? 0.86 : 0.62))) as V3
+            : (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - ax[i] * ((k === 'jeans' ? 0.03 : 0.022) * s + lift)) as V3;
           const [c0, c1, c2] = c, [x0, x1, x2] = ax;
           return (x, y, z) => (x - c0) * x0 + (y - c1) * x1 + (z - c2) * x2;
         };
         keep = inter(below(top), lr(legCut));
-        yLo = k === 'shorts' ? D.kneeY : D.ankleY - 0.02;
+        yLo = shortLeg ? D.kneeY : D.ankleY - 0.02;
+        if (g.roll) { const band = 0.042 * s; legAccent = (x, y, z) => (lr(legCut)(x, y, z) > -band ? 1 : 0); }
       }
       const folds = [...knees(k === 'jeans' ? 0.8 : 0.6), ...hipCrease(0.6)];
       if (k === 'jeans' || k === 'trousers') for (const sg of [1, -1]) folds.push({ c: (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - (sg > 0 ? L.dL : mirror(L.dL))[i] * 0.06 * s) as V3, ax: sg > 0 ? L.dL : mirror(L.dL), r: 0.05 * s, w: k === 'jeans' ? 0.9 : 0.5 });
@@ -304,20 +313,34 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
         const knee = Math.exp(-(((p[1] - D.kneeY) / 0.05) ** 2));
         return clamp(front * (0.8 * thigh + 0.6 * knee));
       } : null;
-      out.push({ g, layer: 1, sdf: new GarmentSdf(A, t, drape, 0.03 * s, keep), keep, bones, box: [[-0.6, yLo, -0.5], [0.6, top + 0.02, 0.5]], sigma: k === 'skirt' ? 2.2 : 1.3, accent: null, folds, wear, h: 0.013 });
+      // (cast) cargo trousers: a bellows pocket on the outside of each thigh
+      let pockets: Region | null = null;
+      if (k === 'cargo') {
+        const pk = (sg: number): Region => {
+          const hp = sg > 0 ? L.hip : mirror(L.hip), kn = sg > 0 ? L.knee : mirror(L.knee);
+          const c: V3 = [lerp(hp[0], kn[0], 0.55) + sg * (D.thighR * 0.62 + 0.006), lerp(hp[1], kn[1], 0.55), lerp(hp[2], kn[2], 0.55) + 0.004];
+          const hx = 0.014, hy = 0.07 * s, hz = 0.06 * s, r = 0.008;
+          return (x, y, z) => {
+            const qx = Math.abs(x - c[0]) - hx + r, qy = Math.abs(y - c[1]) - hy + r, qz = Math.abs(z - c[2]) - hz + r;
+            return Math.hypot(Math.max(qx, 0), Math.max(qy, 0), Math.max(qz, 0)) + Math.min(Math.max(qx, qy, qz), 0) - r;
+          };
+        };
+        pockets = lr(pk);
+      }
+      out.push({ g, layer: 1, sdf: new GarmentSdf(A, t, drape, 0.03 * s, keep, null, 0.006 * s, pockets), keep, bones, box: [[-0.6, yLo, -0.5], [0.6, top + 0.02, 0.5]], sigma: k === 'skirt' ? 2.2 : 1.3, accent: legAccent, folds, wear, h: 0.013 });
       continue;
     }
     // ---- tops, dresses, outer layers
     const outer = OUTER.includes(k);
     const dress = k === 'dress';
     const sleeve = g.sleeve ?? (outer ? 1 : 0.25);
-    const neck = g.neck ?? (k === 'shirt' || k === 'polo' ? 'collar' : 'crew');
+    const neck = g.neck ?? (k === 'shirt' || k === 'polo' || k === 'overshirt' || k === 'workJacket' ? 'collar' : 'crew');
     const strap = neck === 'strap';
-    const t = outer ? (k === 'cardigan' ? 0.011 : k === 'leather' ? 0.013 : 0.015) : dress ? (g.fabric === 'satin' ? 0.003 : 0.004) : k === 'fitted' || k === 'tank' ? 0.0055 : 0.0065;
+    const t = outer ? (k === 'cardigan' ? 0.011 : k === 'leather' ? 0.013 : k === 'overshirt' ? 0.0095 : k === 'bomber' ? 0.016 : 0.015) : dress ? (g.fabric === 'satin' ? 0.003 : 0.004) : k === 'fitted' || k === 'tank' ? 0.0055 : 0.0065;
     const drapeAmt = outer ? 0.9 : dress ? (g.fabric === 'satin' ? 0.3 : 0.45) : k === 'fitted' || k === 'tank' ? 0.22 : k === 'blouse' ? 0.6 : k === 'shirt' ? 0.75 : 0.7;
     let hem: number;
     if (dress) hem = D.hipY - (g.length ?? 0.4) * (D.hipY - D.ankleY);
-    else if (outer) hem = k === 'leather' ? D.hipY + 0.005 * s : k === 'blazer' ? D.crotchY + 0.01 * s : D.hipY - 0.05 * s;
+    else if (outer) hem = k === 'leather' ? D.hipY + 0.005 * s : k === 'blazer' ? D.crotchY + 0.01 * s : k === 'bomber' ? D.waistY - 0.035 * s : k === 'workJacket' ? D.hipY + 0.012 * s : k === 'overshirt' ? D.hipY - 0.06 * s : D.hipY - 0.05 * s;
     else hem = k === 'fitted' || k === 'tank' || k === 'blouse' ? D.hipY - 0.005 * s : k === 'shirt' ? D.hipY - 0.055 * s : D.hipY - 0.035 * s;
     if (!dress && !hasBottom) hem = Math.min(hem, D.crotchY - 0.05);
     const armDist = strap || k === 'tank' ? -0.035 * s : sleeve <= 0 ? -0.012 * s : sleeve * Larm - (sleeve >= 0.95 ? 0.022 * s : 0);
@@ -337,6 +360,18 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
     const sdf = new GarmentSdf(A, t, drape, 0.035 * s, keep);
     const gb: GarmentBuild = { g, layer: outer ? 3 : 2, sdf, keep, bones, box: [[-0.75, drapeLo, -0.5], [0.75, jug + 0.1 * s, 0.5]], sigma: dress ? 1.8 : outer ? 1.6 : 1.4, accent: null, folds, wear: null, h: dress || strap ? 0.008 : 0.0105 };
     if (collarOn) gb.collar = collarLoft(rig, sdf, !!g.open, k === 'polo');
+    // (cast) trim in the accent colour: a henley's placket; a bomber's ribbed hem, cuffs and collar; a rolled sleeve's roll
+    const A0 = armpitL, onArm: Region = lr((sg) => (x, y, z) => { const a = sg > 0 ? A0 : mirror(A0), n: V3 = sg > 0 ? nPit : [-nPit[0], nPit[1], 0]; return (x - a[0]) * n[0] + (y - a[1]) * n[1] + (z - a[2]) * n[2]; });
+    const trims: Region[] = [];
+    if (k === 'henley') trims.push((x, y, z) => (Math.abs(x) < 0.011 * ws && z > 0 && y > jug - 0.115 * s && y < jug + 0.01 * s ? 1 : 0));
+    if (k === 'bomber' && armDist > 0) {
+      const band = 0.05 * s, cuff = sleeveKeep(armDist - band);
+      trims.push((x, y, z) => (onArm(x, y, z) > 0 ? (cuff(x, y, z) > 0 ? 1 : 0) : (y < hem + band || y > jug - 0.012 * s ? 1 : 0)));
+    } else if (g.roll && armDist > 0) {
+      const band = 0.045 * s, cuff = sleeveKeep(armDist - band);
+      trims.push((x, y, z) => (onArm(x, y, z) > 0 && cuff(x, y, z) > 0 ? 1 : 0));
+    }
+    if (trims.length) gb.accent = (x, y, z) => { let a = 0; for (const f of trims) a = Math.max(a, f(x, y, z)); return a; };
     out.push(gb);
   }
   return out;
@@ -346,8 +381,9 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
 function shoe(rig: Rig, g: Garment): GarmentBuild {
   const s = rig.s, L = rig.limb, F = rig.field, k = g.kind;
   const A = F.subset((i) => [B.footL, B.toeL, B.footR, B.toeR, B.shinL, B.shinR].includes(F.bone[i]));
-  const t = k === 'boots' ? 0.0045 : 0.0035;
-  const soleT = (k === 'sneakers' ? 0.024 : k === 'boots' ? 0.014 : k === 'loafers' ? 0.011 : 0.006) * s;
+  const t = k === 'boots' || k === 'workBoots' ? 0.0045 : 0.0035;
+  const soleT = (k === 'sneakers' ? 0.024 : k === 'chunkySneakers' ? 0.036 : k === 'boots' ? 0.014 : k === 'workBoots' ? 0.02 : k === 'loafers' ? 0.011 : k === 'deckShoes' ? 0.012 : k === 'sandals' ? 0.014 : 0.006) * s;
+  const wide = k === 'chunkySneakers' ? 0.006 : k === 'workBoots' ? 0.004 : 0;
   // body point -> the foot's own frame (unpitched, in units of s); the right foot mirrored onto the left
   const an = L.ankle, cp = Math.cos(-rig.pitch), spn = Math.sin(-rig.pitch), Q: V3 = [0, 0, 0];
   const local = (x: number, y: number, z: number): V3 => {
@@ -358,7 +394,7 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
   // the sole: a rounded slab under the foot's outline, in the foot's own (unpitched) frame
   const sole: Region = (x, y, z) => {
     const q = local(x, y, z);
-    const zz = clamp(q[2], -0.055, 0.2), w = 0.038 + 0.012 * smooth(-0.04, 0.12, zz) - 0.012 * smooth(0.17, 0.215, q[2]);
+    const zz = clamp(q[2], -0.055, 0.2), w = 0.038 + wide + 0.012 * smooth(-0.04, 0.12, zz) - 0.012 * smooth(0.17, 0.215, q[2]);
     const lx = Math.abs(q[0] - 0.004) - w, lz = Math.max(-0.062 - q[2], q[2] - 0.205);
     const yb = -0.079 - soleT / s, yt = -0.07;
     const ly = Math.max(yb - q[1], q[1] - yt);
@@ -366,7 +402,8 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
     return e * s - 0.004;
   };
   // heels: a block (or a slim heel) from under the heel to the ground
-  const extra: Region | null = k === 'heels' || k === 'boots' ? (() => {
+  const heelish = k === 'heels' || k === 'lowHeels';
+  const extra: Region | null = heelish || k === 'boots' || k === 'workBoots' ? (() => {
     const heelTop = (sg: number): V3 => {
       // the heel's bottom in body coords: the foot frame point (footX, -0.079 - sole, -0.04) pitched back
       const pL: V3 = [L.ankle[0], 0, 0];
@@ -375,27 +412,35 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
       return sg > 0 ? p : mirror(p);
     };
     const ground = -rig.heel * 0.92 + 0.002;
-    const rTop = (k === 'boots' ? 0.022 : 0.011) * s, rBot = (k === 'boots' ? 0.02 : 0.0055) * s;
+    const rTop = (k === 'boots' || k === 'workBoots' ? 0.022 : k === 'lowHeels' ? 0.013 : 0.011) * s, rBot = (k === 'boots' || k === 'workBoots' ? 0.02 : k === 'lowHeels' ? 0.0085 : 0.0055) * s;
     return (x: number, y: number, z: number) => {
-      const top = heelTop(x >= 0 ? 1 : -1), bot: V3 = [top[0], ground, top[2] - (k === 'heels' ? 0.006 : 0)];
+      const top = heelTop(x >= 0 ? 1 : -1), bot: V3 = [top[0], ground, top[2] - (heelish ? 0.006 : 0)];
       if (y > top[1] + 0.01) return y - top[1];
       const t2 = clamp((top[1] - y) / Math.max(0.005, top[1] - bot[1]));
       const c: V3 = [lerp(top[0], bot[0], t2), y, lerp(top[2], bot[2], t2)], r = lerp(rTop, rBot, t2);
-      const d = Math.hypot(x - c[0], (z - c[2]) * (k === 'heels' ? 1 : 0.8)) - r;
+      const d = Math.hypot(x - c[0], (z - c[2]) * (heelish ? 1 : 0.8)) - r;
       return Math.max(d, bot[1] - y);
     };
   })() : null;
   // the upper's cut, in the foot frame
   const keepUpper: Region = (() => {
     if (k === 'boots') return (_x: number, y: number) => y - (rig.dims.kneeY - 0.13 * s);
-    if (k === 'heels' || k === 'flats') return (x: number, y: number, z: number) => {
+    // (cast) lace-up work boots to just above the ankle bone
+    if (k === 'workBoots') return (_x: number, y: number) => y - (rig.dims.ankleY + 0.075 * s);
+    // (cast) sandals: two broad straps across the instep over the footbed; the toes and heel bare
+    if (k === 'sandals') return (x: number, y: number, z: number) => {
+      const q = local(x, y, z);
+      const strap = Math.min(Math.abs(q[2] - 0.045) - 0.017, Math.abs(q[2] - 0.098) - 0.016);
+      return Math.max(strap, -0.06 - q[1]) * s;
+    };
+    if (k === 'heels' || k === 'flats' || k === 'lowHeels') return (x: number, y: number, z: number) => {
       const q = local(x, y, z);
       const cup = Math.max(q[1] - lerp(-0.038, -0.058, smooth(-0.05, 0.08, q[2])), q[2] - 0.11);
       const toe = Math.max(0.098 - q[2], q[1] + 0.035);
       return Math.min(cup, toe) * s;
     };
-    const collarY = k === 'loafers' ? -0.03 : -0.016;
-    return (x: number, y: number, z: number) => { const q = local(x, y, z); return (q[1] - (collarY + 0.026 * smooth(-0.01, 0.06, q[2]) * (k === 'sneakers' ? 1 : 0.4))) * s; };
+    const collarY = k === 'loafers' || k === 'deckShoes' ? -0.03 : -0.016;
+    return (x: number, y: number, z: number) => { const q = local(x, y, z); return (q[1] - (collarY + 0.026 * smooth(-0.01, 0.06, q[2]) * (k === 'sneakers' || k === 'chunkySneakers' ? 1 : 0.4))) * s; };
   })();
   const keep: Region = keepUpper;
   const sdf = new GarmentSdf(A, t, null, 0.004, keep, null, 0.006 * s, extra ? (x, y, z) => Math.min(sole(x, y, z), extra(x, y, z)) : sole);
@@ -405,6 +450,6 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
   };
   return {
     g, layer: 0, sdf, keep: (x, y, z) => Math.min(keep(x, y, z), sole(x, y, z)), bones: new Set([B.footL, B.toeL, B.footR, B.toeR]),
-    box: [[-0.4, -rig.heel - 0.03, -0.3], [0.4, k === 'boots' ? rig.dims.kneeY : rig.dims.ankleY + 0.06, 0.45]], sigma: 1, accent, folds: [], wear: null, h: 0.0075,
+    box: [[-0.4, -rig.heel - 0.03, -0.3], [0.4, k === 'boots' ? rig.dims.kneeY : k === 'workBoots' ? rig.dims.ankleY + 0.12 * s : rig.dims.ankleY + 0.06, 0.45]], sigma: 1, accent, folds: [], wear: null, h: 0.0075,
   };
 }
