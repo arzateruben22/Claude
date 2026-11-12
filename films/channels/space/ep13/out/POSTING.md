@@ -9,7 +9,7 @@ Part 1 of the Moon film: where the Moon really is, and the one number that will 
 
 Part 1 of 8. Full video on YouTube: How Close Can the Moon Get Before It Breaks?
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 #Shorts #space #moon #astronomy
 
@@ -23,9 +23,9 @@ Part 1 of the Moon film: where the Moon really is, and the one number that will 
 
 Part 1 of 8. Full video on YouTube (link in bio).
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 ## Pinned comment
-Part 1 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Part 1 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 Post the long film first, then one part a day.

@@ -12,13 +12,13 @@ CLAIMS = {1: {"c1": "Right now it's about three hundred eighty-four thousand kil
 BODY = {1: ["L1", "L2", "L3", "L4", "L5"], 2: ["L6", "L7", "L8"]}[n]; HOOK = {1: "B1", 2: "B3"}[n]; CL = f"C{n}"; CTA = "D1" if n == 1 else "D3"; CTA_YT = "D2" if n == 1 else "D4"
 shutil.copy(f"{O}/v4-part{n}.mp4", f"{out}/{name}-9x16.mp4")
 yt = f"{O}/v4-part{n}-yt.mp4"
-if os.path.exists(yt):
+if os.path.exists(yt) and not os.environ.get("SKIP_YT"):
     T_ = tempfile.mkdtemp(); os.makedirs(f"{T_}/ep/out"); shutil.copy(yt, f"{T_}/ep/out/{name}-9x16.mp4")
     subprocess.run(["flock", "-x", "/tmp/heavy.lock", "python3", "-I", f"{ROOT}/kits/cinema/film/youtube1440.py", f"{T_}/ep", "--force"], check=True, capture_output=True)
     shutil.copy(f"{T_}/ep/out/{name}-9x16-youtube.mp4", f"{out}/{name}-9x16-youtube.mp4"); shutil.rmtree(T_)
 for suf in ("cover.jpg", "cover-480.jpg", "cover-grid-3x4.jpg"):
     s = f"{src_ep}/out/one-more-orbit-s3-part{src_n}-{suf}"
-    if os.path.exists(s): shutil.copy(s, f"{out}/{name}-{suf}")
+    if os.path.exists(s) and os.path.abspath(s) != os.path.abspath(f"{out}/{name}-{suf}"): shutil.copy(s, f"{out}/{name}-{suf}")
 sp = lambda i: " ".join(x["text"] for x in lines[i]["sentences"])
 body = (f"# One More Orbit · Season 3 · Part {n} of 8: \"{title}\"\n\nv4, in the creator's own voice (recorded 12 Nov 2026): picture-led, {tl['dur']:.0f} s, 9:16. The 'Thought experiment' tag shows for the first 5 s.\n"
         f"Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part{n}.json.\n\n## opening\nvo: {sp(HOOK)}\n\n## body\n" + "\n".join(f"vo: {sp(i)}" for i in BODY[:-1]) +
@@ -37,7 +37,7 @@ def fix(s):
     return s
 for f in ("packaging.json", "posting.json", "POSTING.md"):
     p = f"{src_ep}/out/{f}"
-    if os.path.exists(p): open(f"{out}/{f}", "w").write(fix(open(p).read()))
+    if os.path.exists(p): txt = fix(open(p).read()); open(f"{out}/{f}", "w").write(txt)
 if True:
     po = json.load(open(f"{out}/posting.json")); po["length_s"] = round(tl["dur"], 1); po["cta_at"] = tl["cta_frac"]; json.dump(po, open(f"{out}/posting.json", "w"), indent=1, ensure_ascii=False)
 print("packaged", ep)

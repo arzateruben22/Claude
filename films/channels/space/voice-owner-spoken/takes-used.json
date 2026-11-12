@@ -88,18 +88,18 @@
  "L5": {
   "segments": [
    [
-    48.64,
+    47.95,
     52.79
    ]
   ],
   "why": "one read",
   "breaths_lowered": [
    [
-    3.93,
-    4.14
+    4.65,
+    4.83
    ]
   ],
-  "heard": "the distance and the water starts to climb.",
+  "heard": "Half the distance and the water starts to climb.",
   "not_heard": [
    "Halve"
   ]

@@ -1,0 +1,237 @@
+{
+ "name": "v4-part2-yt",
+ "mode": "port",
+ "dur": 55.945,
+ "clips": [
+  {
+   "id": "B3",
+   "file": "voice5/wav/B3.wav",
+   "t": 0.15,
+   "dur": 3.29,
+   "from": 0.0
+  },
+  {
+   "id": "L6",
+   "file": "voice5/wav/L6.wav",
+   "t": 9.79,
+   "dur": 5.515,
+   "from": 0.0
+  },
+  {
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 15.655,
+   "dur": 0.115,
+   "from": 0.0
+  },
+  {
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 26.77,
+   "dur": 1.31,
+   "from": 0.115
+  },
+  {
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 33.08,
+   "dur": 5.705,
+   "from": 1.425
+  },
+  {
+   "id": "D4",
+   "file": "voice5/wav/D4.wav",
+   "t": 45.135,
+   "dur": 3.55,
+   "from": 0.0
+  },
+  {
+   "id": "L8",
+   "file": "voice5/wav/L8.wav",
+   "t": 48.985,
+   "dur": 3.31,
+   "from": 0.0
+  },
+  {
+   "id": "C2",
+   "file": "voice5/wav/C2.wav",
+   "t": 52.645,
+   "dur": 2.4,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.36,
+   "t1": 1.485,
+   "text": "Half the distance.",
+   "line": "B3",
+   "spoken": "Half the distance."
+  },
+  {
+   "t0": 1.505,
+   "t1": 3.44,
+   "text": "Now the ocean climbs.",
+   "line": "B3",
+   "spoken": "Now the ocean climbs."
+  },
+  {
+   "t0": 9.91,
+   "t1": 11.78,
+   "text": "Half the distance.",
+   "line": "L6",
+   "spoken": "Half the distance."
+  },
+  {
+   "t0": 11.8,
+   "t1": 13.72,
+   "text": "Twice as wide.",
+   "line": "L6",
+   "spoken": "Twice as wide."
+  },
+  {
+   "t0": 13.83,
+   "t1": 15.54,
+   "text": "8× the tidal pull.",
+   "line": "L6",
+   "spoken": "Eight times the tidal pull."
+  },
+  {
+   "t0": 27.0,
+   "t1": 28.05,
+   "text": "Not a measured height.",
+   "line": "L7",
+   "spoken": "Not a measured height."
+  },
+  {
+   "t0": 33.1,
+   "t1": 38.465,
+   "text": "Just the idea: the whole ocean, lifted from above.",
+   "line": "L7",
+   "spoken": "Just the idea: the whole ocean, lifted from above."
+  },
+  {
+   "t0": 45.34,
+   "t1": 46.515,
+   "text": "Still looking up?",
+   "line": "D4",
+   "spoken": "Still looking up?"
+  },
+  {
+   "t0": 46.535,
+   "t1": 48.665,
+   "text": "Tap like and subscribe.",
+   "line": "D4",
+   "spoken": "Tap like and subscribe."
+  },
+  {
+   "t0": 49.075,
+   "t1": 52.275,
+   "text": "And the night is about to change.",
+   "line": "L8",
+   "spoken": "And the night is about to change."
+  },
+  {
+   "t0": 52.845,
+   "t1": 53.785,
+   "text": "Part 2 of 8.",
+   "line": "C2",
+   "spoken": "Part two of eight."
+  },
+  {
+   "t0": 53.805,
+   "t1": 55.215,
+   "text": "Full video on YouTube.",
+   "line": "C2",
+   "spoken": "Full video on YouTube."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   288300
+  ],
+  [
+   0.0,
+   288300
+  ],
+  [
+   9.675,
+   192200,
+   6.0
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 3.675,
+   "t1": 9.675,
+   "kind": "approach"
+  },
+  {
+   "t0": 15.77,
+   "t1": 26.77,
+   "kind": "climb"
+  },
+  {
+   "t0": 28.08,
+   "t1": 33.08,
+   "kind": "tide"
+  },
+  {
+   "t0": 38.902,
+   "t1": 44.902,
+   "kind": "pull"
+  }
+ ],
+ "chips": [
+  {
+   "t0": 11.8,
+   "t1": 13.7,
+   "text": "2× wider"
+  },
+  {
+   "t0": 13.83,
+   "t1": 19.83,
+   "text": "8× the pull"
+  }
+ ],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "cta_at": 45.135,
+ "cta_frac": 0.807,
+ "cliff": "L8"
+}

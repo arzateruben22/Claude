@@ -24,6 +24,7 @@ CH = {"L1": (1.76, "two clean reads; the first is steadier (level spread 5.2 vs 
       "B3": (245.92, "one read"), "B4": (249.0, "one read"), "B5": (251.56, "one read"), "B6": (254.2, "one read"), "B7": (257.4, "one read"), "B8": (259.72, "two clean reads; the first is steadier (4.5 vs 6.2 dB)"),
       "D1": (268.36, "one read"), "D2": (272.0, "one read"), "D3": (275.28, "one read"), "D4": (278.24, "one read")}
 SPLICE = {"L12": [(94.5, 102.35), (119.0, 123.3)]}     # first half from the clean first read; the tail exists only in the later read (the 2nd read of the first half has 'and eclipses and eclipses ... come come far far')
+START = {"L5": 48.24}     # the whole-file recogniser spells "Halve" as "Half", so the take matcher began the line at "the" (48.64) and the cut clipped the first word; the word starts at 48.24
 CUTWORD = {"L21": ("far", 197.2, 197.4)}
 Hz = sr; ENV = 0.005
 def env(x): h = int(ENV * Hz); n = len(x) // h; return 20 * np.log10(np.sqrt((x[: n * h].reshape(n, h) ** 2).mean(1)) + 1e-9)
@@ -42,7 +43,7 @@ for lid, t in text.items():
         segs = [edges(*s) for s in SPLICE[lid]]; parts = [fade(a[int(s * sr): int(e * sr)]) for s, e in segs]; gap = np.zeros(int(0.32 * sr), np.float32)
         x = np.concatenate([parts[0], gap, parts[1]]); why = "spliced at the phrase boundary 'often.' | 'Not every month': first half from the first read, tail from the later read"; used[lid] = {"segments": [[round(s, 2), round(e, 2)] for s, e in segs], "why": why}
     else:
-        t0c = CH[lid][0]; c = [y for y in cand[lid] if abs(y["t0"] - t0c) < 0.01][0]; s, e = edges(c["t0"], c["t1"]); x = a[int(s * sr): int(e * sr)].copy()
+        t0c = CH[lid][0]; c = [y for y in cand[lid] if abs(y["t0"] - t0c) < 0.01][0]; s, e = edges(START.get(lid, c["t0"]), c["t1"]); x = a[int(s * sr): int(e * sr)].copy()
         if lid in CUTWORD:                                      # find 'far' with the aligner (script text with 'far' put back), then cut exactly that word and crossfade 12 ms across the join
             wd = CUTWORD[lid][0]; t_with = t.replace("more than", wd + " more than", 1); ww, _ = align.line_words(rec, x, sr, t_with); fw = next(w for w in ww if w["w"].lower().strip(",.") == wd); nx = ww[ww.index(fw) + 1]
             import difflib; best = None

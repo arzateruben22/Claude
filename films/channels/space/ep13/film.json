@@ -5,129 +5,123 @@
   "series": "One More Orbit · Season 3 · Part 1 of 8"
  },
  "disclosures": {
-  "aiVoice": true,
+  "realVoice": true,
+  "aiVoice": false,
   "aiVisuals": true
  },
- "dur": 69.561,
+ "dur": 69.675,
  "fps": 30,
  "captions": [
   {
-   "t0": 0.245,
-   "t1": 2.64,
-   "text": "Imagine the Moon never stopped coming.",
-   "line": "ch1_hook",
-   "spoken": "Imagine the Moon never stopped coming."
+   "t0": 0.35,
+   "t1": 1.16,
+   "text": "Watch the Moon.",
+   "line": "B1",
+   "spoken": "Watch the Moon."
   },
   {
-   "t0": 2.767,
-   "t1": 6.542,
-   "text": "The sea is calm, and the Moon hangs over the water.",
-   "line": "ch1_vo",
-   "spoken": "The sea is calm, and the Moon hangs over the water."
+   "t0": 1.18,
+   "t1": 2.8,
+   "text": "It's coming closer.",
+   "line": "B1",
+   "spoken": "It's coming closer."
   },
   {
-   "t0": 6.562,
-   "t1": 12.052,
-   "text": "Right now, it is drifting away from you, about 3.8 cm a year.",
-   "line": "ch1_vo",
-   "spoken": "Right now, it is drifting away from you, about three point eight centimeters a year."
+   "t0": 6.535,
+   "t1": 9.53,
+   "text": "Tonight, the Moon starts coming closer.",
+   "line": "L1",
+   "spoken": "Tonight, the Moon starts coming closer."
   },
   {
-   "t0": 15.102,
-   "t1": 17.887,
-   "text": "Tonight, imagine it reverses.",
-   "line": "ch1_vo",
-   "spoken": "Tonight, imagine it reverses."
+   "t0": 9.635,
+   "t1": 11.93,
+   "text": "And it never stops.",
+   "line": "L1",
+   "spoken": "And it never stops."
   },
   {
-   "t0": 17.907,
-   "t1": 21.002,
-   "text": "It starts coming closer, and it never stops.",
-   "line": "ch1_vo",
-   "spoken": "It starts coming closer, and it never stops."
+   "t0": 12.715,
+   "t1": 20.49,
+   "text": "Right now it's about 384,000 km away, drifting off 3.8 cm a year.",
+   "line": "L2",
+   "spoken": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year."
   },
   {
-   "t0": 21.022,
-   "t1": 24.682,
-   "text": "This is a thought experiment, built from real physics.",
-   "line": "ch1_vo",
-   "spoken": "This is a thought experiment, built from real physics."
+   "t0": 24.54,
+   "t1": 26.445,
+   "text": "Tonight, it reverses.",
+   "line": "L2",
+   "spoken": "Tonight, it reverses."
   },
   {
-   "t0": 24.702,
-   "t1": 30.077,
-   "text": "On average, the Moon is about 384,000 km away.",
-   "line": "ch1_vo",
-   "spoken": "On average, the Moon is about three hundred eighty-four thousand kilometers away."
+   "t0": 26.555,
+   "t1": 29.645,
+   "text": "A thought experiment, built from real physics.",
+   "line": "L2",
+   "spoken": "A thought experiment, built from real physics."
   },
   {
-   "t0": 30.097,
-   "t1": 33.502,
-   "text": "From the beach, it looks about half a degree wide.",
-   "line": "ch1_vo",
-   "spoken": "From the beach, it looks about half a degree wide."
+   "t0": 30.525,
+   "t1": 31.745,
+   "text": "Watch the number.",
+   "line": "L3",
+   "spoken": "Watch the number."
   },
   {
-   "t0": 33.522,
-   "t1": 35.912,
-   "text": "About the same size as the Sun.",
-   "line": "ch1_vo",
-   "spoken": "About the same size as the Sun."
+   "t0": 31.765,
+   "t1": 33.775,
+   "text": "It only goes down.",
+   "line": "L3",
+   "spoken": "It only goes down."
   },
   {
-   "t0": 38.462,
-   "t1": 41.912,
-   "text": "Its light takes about a second and a quarter to reach you.",
-   "line": "ch1_vo",
-   "spoken": "Its light takes about a second and a quarter to reach you."
+   "t0": 42.8,
+   "t1": 45.035,
+   "text": "288,000.",
+   "line": "L4",
+   "spoken": "Two hundred eighty-eight thousand."
   },
   {
-   "t0": 41.932,
-   "t1": 45.927,
-   "text": "Moonlight is just sunlight, bounced off grey rock.",
-   "line": "ch1_vo",
-   "spoken": "Moonlight is just sunlight, bounced off grey rock."
+   "t0": 45.055,
+   "t1": 47.23,
+   "text": "A third wider.",
+   "line": "L4",
+   "spoken": "A third wider."
   },
   {
-   "t0": 48.977,
-   "t1": 51.737,
-   "text": "Keep an eye on the number in the corner.",
-   "line": "ch1_vo",
-   "spoken": "Keep an eye on the number in the corner."
+   "t0": 50.28,
+   "t1": 53.86,
+   "text": "And the sea already feels it: more than twice the tidal pull.",
+   "line": "L4",
+   "spoken": "And the sea already feels it: more than twice the tidal pull."
   },
   {
-   "t0": 51.86,
-   "t1": 56.17,
-   "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
-   "line": "cta1_follow",
-   "spoken": "Quick thing: if that made the sky feel bigger, tap like and follow."
+   "t0": 57.87,
+   "t1": 60.57,
+   "text": "If that made the sky feel bigger, tap like and follow.",
+   "line": "D1",
+   "spoken": "If that made the sky feel bigger, tap like and follow."
   },
   {
-   "t0": 56.31,
-   "t1": 58.135,
-   "text": "It only ever goes down.",
-   "line": "ch1_vo",
-   "spoken": "It only ever goes down."
+   "t0": 60.765,
+   "t1": 65.495,
+   "text": "Halve the distance, and the water starts to climb.",
+   "line": "L5",
+   "spoken": "Halve the distance, and the water starts to climb."
   },
   {
-   "t0": 61.885,
-   "t1": 65.645,
-   "text": "And the first thing that changes is not what you'd expect.",
-   "line": "ch1_loop",
-   "spoken": "And the first thing that changes is not what you'd expect."
-  },
-  {
-   "t0": 65.791,
-   "t1": 67.016,
+   "t0": 66.075,
+   "t1": 66.97,
    "text": "Part 1 of 8.",
-   "line": "closer1",
+   "line": "C1",
    "spoken": "Part one of eight."
   },
   {
-   "t0": 67.036,
-   "t1": 68.821,
+   "t0": 66.99,
+   "t1": 68.765,
    "text": "Full video on YouTube.",
-   "line": "closer1",
+   "line": "C1",
    "spoken": "Full video on YouTube."
   }
  ],
@@ -135,6 +129,15 @@
   [
    0.0,
    384400
+  ],
+  [
+   0.0,
+   384400
+  ],
+  [
+   41.288,
+   288300,
+   6.0
   ]
  ],
  "tracks": {
@@ -171,68 +174,110 @@
  },
  "clips": [
   {
-   "id": "ch1_hook",
-   "file": "voice/wav/02.wav",
+   "id": "B1",
+   "file": "voice5/wav/B1.wav",
    "t": 0.15,
-   "dur": 2.247,
+   "dur": 2.66,
    "from": 0.0
   },
   {
-   "id": "ch1_vo",
-   "file": "voice/wav/03.wav",
-   "t": 2.747,
-   "dur": 9.335,
+   "id": "L1",
+   "file": "voice5/wav/L1.wav",
+   "t": 6.16,
+   "dur": 5.765,
    "from": 0.0
   },
   {
-   "id": "ch1_vo",
-   "file": "voice/wav/03.wav",
-   "t": 15.082,
-   "dur": 20.86,
-   "from": 9.335
-  },
-  {
-   "id": "ch1_vo",
-   "file": "voice/wav/03.wav",
-   "t": 38.442,
-   "dur": 7.515,
-   "from": 30.195
-  },
-  {
-   "id": "ch1_vo",
-   "file": "voice/wav/03.wav",
-   "t": 48.957,
-   "dur": 2.583,
-   "from": 37.71
-  },
-  {
-   "id": "cta1_follow",
-   "file": "voice/wav/36.wav",
-   "t": 51.84,
-   "dur": 4.118,
+   "id": "L2",
+   "file": "voice5/wav/L2.wav",
+   "t": 12.275,
+   "dur": 8.245,
    "from": 0.0
   },
   {
-   "id": "ch1_vo",
-   "file": "voice/wav/03.wav",
-   "t": 56.258,
-   "dur": 1.687,
-   "from": 40.293
+   "id": "L2",
+   "file": "voice5/wav/L2.wav",
+   "t": 24.52,
+   "dur": 5.455,
+   "from": 8.245
   },
   {
-   "id": "ch1_loop",
-   "file": "voice/wav/04.wav",
-   "t": 61.795,
-   "dur": 3.626,
+   "id": "L3",
+   "file": "voice5/wav/L3.wav",
+   "t": 30.325,
+   "dur": 4.963,
    "from": 0.0
   },
   {
-   "id": "closer1",
-   "file": "voice/wav/28.wav",
-   "t": 65.771,
-   "dur": 2.84,
+   "id": "L3",
+   "file": "voice5/wav/L3.wav",
+   "t": 41.288,
+   "dur": 1.072,
+   "from": 4.963
+  },
+  {
+   "id": "L4",
+   "file": "voice5/wav/L4.wav",
+   "t": 42.71,
+   "dur": 4.55,
+   "from": 0.0
+  },
+  {
+   "id": "L4",
+   "file": "voice5/wav/L4.wav",
+   "t": 50.26,
+   "dur": 3.33,
+   "from": 4.55
+  },
+  {
+   "id": "D1",
+   "file": "voice5/wav/D1.wav",
+   "t": 53.94,
+   "dur": 0.175,
+   "from": 0.0
+  },
+  {
+   "id": "D1",
+   "file": "voice5/wav/D1.wav",
+   "t": 57.615,
+   "dur": 2.77,
+   "from": 0.175
+  },
+  {
+   "id": "L5",
+   "file": "voice5/wav/L5.wav",
+   "t": 60.685,
+   "dur": 4.84,
+   "from": 0.0
+  },
+  {
+   "id": "C1",
+   "file": "voice5/wav/C1.wav",
+   "t": 65.875,
+   "dur": 2.9,
    "from": 0.0
   }
  ],
- "source": "season3/engine.js via long01/out/part1.json"
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "chips": [
+  {
+   "t0": 18.785,
+   "t1": 21.185,
+   "text": "3.8 cm a year"
+  },
+  {
+   "t0": 45.7,
+   "t1": 47.7,
+   "text": "1.33× wider"
+  },
+  {
+   "t0": 52.305,
+   "t1": 54.905,
+   "text": "2× tidal pull"
+  }
+ ],
+ "source": "season3/engine.js via long01/out/v4-part1.json"
 }

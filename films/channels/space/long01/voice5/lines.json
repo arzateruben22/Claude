@@ -426,60 +426,60 @@
    "id": "L5",
    "text": "Halve the distance, and the water starts to climb.",
    "file": "voice5/wav/L5.wav",
-   "dur": 4.15,
+   "dur": 4.84,
    "sentences": [
     {
      "text": "Halve the distance, and the water starts to climb.",
-     "t0": 0.005,
-     "t1": 3.84,
+     "t0": 0.08,
+     "t1": 4.56,
      "claims": []
     }
    ],
    "words": [
     {
      "w": "Halve",
-     "start": 0.005,
-     "end": 0.16
+     "start": 0.08,
+     "end": 0.72
     },
     {
      "w": "the",
-     "start": 0.115,
-     "end": 0.32
-    },
-    {
-     "w": "distance,",
-     "start": 0.355,
+     "start": 0.69,
      "end": 0.88
     },
     {
+     "w": "distance,",
+     "start": 0.805,
+     "end": 1.44
+    },
+    {
      "w": "and",
-     "start": 0.935,
-     "end": 1.12
+     "start": 1.625,
+     "end": 1.84
     },
     {
      "w": "the",
-     "start": 1.04,
-     "end": 1.28
+     "start": 1.73,
+     "end": 2.0
     },
     {
      "w": "water",
-     "start": 1.285,
-     "end": 1.76
+     "start": 1.975,
+     "end": 2.48
     },
     {
      "w": "starts",
-     "start": 1.71,
-     "end": 2.24
+     "start": 2.4,
+     "end": 2.88
     },
     {
      "w": "to",
-     "start": 2.335,
-     "end": 2.56
+     "start": 2.905,
+     "end": 3.12
     },
     {
      "w": "climb.",
-     "start": 2.655,
-     "end": 3.84
+     "start": 3.035,
+     "end": 4.56
     }
    ]
   },
