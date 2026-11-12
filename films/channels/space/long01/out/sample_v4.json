@@ -1,0 +1,149 @@
+{
+ "name": "sample_v4",
+ "mode": "land",
+ "dur": 26.159,
+ "clips": [
+  {
+   "id": "L5",
+   "file": "voice4/wav/05.wav",
+   "t": 0.6,
+   "dur": 3.11
+  },
+  {
+   "id": "L6",
+   "file": "voice4/wav/06.wav",
+   "t": 7.01,
+   "dur": 4.279
+  },
+  {
+   "id": "L7",
+   "file": "voice4/wav/07.wav",
+   "t": 16.989,
+   "dur": 5.138
+  },
+  {
+   "id": "L8",
+   "file": "voice4/wav/08.wav",
+   "t": 22.477,
+   "dur": 2.082
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.645,
+   "t1": 3.89,
+   "text": "Halve the distance, and the water starts to climb.",
+   "spoken": "Halve the distance, and the water starts to climb.",
+   "line": "L5"
+  },
+  {
+   "t0": 7.07,
+   "t1": 8.46,
+   "text": "Half the distance.",
+   "spoken": "Half the distance.",
+   "line": "L6"
+  },
+  {
+   "t0": 8.22,
+   "t1": 9.74,
+   "text": "Twice as wide.",
+   "spoken": "Twice as wide.",
+   "line": "L6"
+  },
+  {
+   "t0": 9.555,
+   "t1": 11.5,
+   "text": "8 times the tidal pull.",
+   "spoken": "Eight times the tidal pull.",
+   "line": "L6"
+  },
+  {
+   "t0": 17.009,
+   "t1": 18.839,
+   "text": "Not a measured height.",
+   "spoken": "Not a measured height.",
+   "line": "L7"
+  },
+  {
+   "t0": 18.634,
+   "t1": 22.359,
+   "text": "Just the idea: the whole ocean, lifted from above.",
+   "spoken": "Just the idea: the whole ocean, lifted from above.",
+   "line": "L7"
+  },
+  {
+   "t0": 22.567,
+   "t1": 24.727,
+   "text": "And the night is about to change.",
+   "spoken": "And the night is about to change.",
+   "line": "L8"
+  }
+ ],
+ "chips": [
+  {
+   "t0": 8.22,
+   "t1": 10.12,
+   "text": "2× wider"
+  },
+  {
+   "t0": 9.555,
+   "t1": 19.055,
+   "text": "8× pull"
+  }
+ ],
+ "beats": [
+  {
+   "kind": "approach",
+   "t0": 3.81,
+   "t1": 7.01
+  },
+  {
+   "kind": "climb",
+   "t0": 11.489,
+   "t1": 16.989
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   288300
+  ],
+  [
+   7.01,
+   192200,
+   3.2
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ }
+}

@@ -39,7 +39,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   const cam = 1.06 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 12 * U * Math.sin(t * 0.43), oy = 9 * U * Math.sin(t * 0.31 + 1);   // overscan (>= 2.9%) is always larger than the largest pan, so the painting's edge never shows
   const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
   ctx.save(); ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
-  drawPlateWaves(IM[G.plate], 1, t, G, cam, ox, oy);
+  drawPlateWaves(IM[G.plate], 1, lapse(t), G, cam, ox, oy);
   // stars twinkle in the plate's sky (a few more than the painting has)
   const sr = rnd(5); ctx.save(); for (let i = 0; i < 160; i++) { const x = sr() * W, y = sr() * G.horizon * 0.85, p = sr() * 6.28, s = (0.8 + sr() * 1.8) * U; ctx.globalAlpha = (0.12 + 0.7 * (0.5 + 0.5 * Math.sin(t * (1.2 + 2 * sr()) + p))) * (1 - ecl * 0.3); ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x, y, s, 0, 6.283); ctx.fill(); } ctx.restore();
   ctx.save(); ctx.globalCompositeOperation = "screen"; const cr = rnd(21); for (let i = 0; i < 5; i++) { const y = (0.12 + 0.5 * cr()) * G.horizon, sp = (12 + 20 * cr()) * U, x = (((cr() * (W + 1200 * U) - t * sp) % (W + 1200 * U)) + (W + 1200 * U)) % (W + 1200 * U) - 600 * U, wd = (500 + 500 * cr()) * U;
@@ -58,7 +58,7 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
   if (tide > 0.01) {
     const yTop = lerp(G.shore - 10 * U, H + 40 * U, tide), amp = (10 + 22 * tide) * U; ctx.save(); ctx.beginPath(); ctx.moveTo(-10, H + 10);
     for (let x = -10; x <= W + 10; x += 20) { const w = Math.sin(x / (230 * U) + t * 0.9) * amp * 0.5 + Math.sin(x / (97 * U) - t * 1.4) * amp * 0.25 + (1 - x / W) * 60 * U * (1 - tide); ctx.lineTo(x, yTop + w); }
-    ctx.lineTo(W + 10, H + 10); ctx.closePath(); ctx.clip(); camT(cam, ox, oy); drawPlateWavesNoState(IM[G.flood], t, G); ctx.restore();
+    ctx.lineTo(W + 10, H + 10); ctx.closePath(); ctx.clip(); camT(cam, ox, oy); drawPlateWavesNoState(IM[G.flood], lapse(t), G); ctx.restore();
     ctx.save(); ctx.strokeStyle = "rgba(200,240,240,.55)"; ctx.lineWidth = 4 * U; ctx.beginPath(); for (let x = -10; x <= W + 10; x += 20) { const w = Math.sin(x / (230 * U) + t * 0.9) * amp * 0.5 + Math.sin(x / (97 * U) - t * 1.4) * amp * 0.25 + (1 - x / W) * 60 * U * (1 - tide); x === -10 ? ctx.moveTo(x, yTop + w) : ctx.lineTo(x, yTop + w); } ctx.stroke(); ctx.restore();
   }
   ctx.save(); camT(cam, ox, oy); ctx.drawImage(IM[MODE === "land" ? "figure-layer" : "figure-layer-9x16"], 0, 0, W, H); ctx.restore();   // the small figure stays upright on top of the moving sea
@@ -81,6 +81,9 @@ function viewShift(t) {
   const mx = 16 * U * A + 9 * U * SH + 0.006 * W, my = 8 * U * A + 6 * U * SH + 0.006 * H, sc = 1 + Math.max(2 * mx / W, 2 * my / H);
   return { on: true, dx, dy, sc };
 }
+
+// time-lapse: during a 'climb' beat the sea's own motion runs 6x faster (the phase stays continuous afterwards)
+function lapse(t) { let e = 0; for (const b of (TL.beats || [])) if (b.kind === "climb") e += 5 * Math.max(0, Math.min(t, b.t1) - b.t0); return t + e; }
 function zoomParams(t, G) {   // the camera at time t: a zoom of s about the world point F, anchored at screen point (tx, ty); null = identity
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; let z = null;
   if (inCh1) { const mo0 = moonState(384400, G), zs = zoomState(t, b, mo0); z = { s: zs.s, F: zs.F, k: zs.k }; } else { const mv = movesState(t, G); if (mv) z = mv; }
@@ -97,7 +100,7 @@ function moonScreen(t) {   // where the Moon is on the screen at time t (centre 
 // the caption pill keeps clear of the Moon: the first slot whose rectangle misses the Moon (plus a margin) at the start, middle and end of the line
 function placeCaption(cap, el, t) {
   const b = beats(), land = MODE === "land", w = el.offsetWidth, h = el.offsetHeight;
-  const first = land ? (b && t < b.end + 0.5 ? [250, 84, 440, 600] : [84, 250, 440, 600]) : [390, 1180, 1000, 640, 1290];
+  const first = land ? (b && t < b.end + 0.5 ? [250, 84, 440, 600] : [84, 250, 440, 600]) : (TL.chips ? [450, 1180, 1000, 640, 1290] : [390, 1180, 1000, 640, 1290]);
   const extra = land ? [120, 340, 520, 700] : [440, 520, 760, 880, 1100, 1380, 1480, 1560];
   const cs = [cap.t0, (cap.t0 + cap.t1) / 2, cap.t1 - 0.05].map(moonScreen).filter((m) => m.vis > 0.3);
   const clearance = (v) => { const px = v * U, x0 = (W - w) / 2, x1 = (W + w) / 2, y0 = land ? H - px - h : px, y1 = y0 + h;
@@ -106,10 +109,13 @@ function placeCaption(cap, el, t) {
   if (pick === undefined) pick = first.concat(extra).reduce((best, v) => (clearance(v) > clearance(best) ? v : best), first[0]);   // the Moon fills the frame: the slot that overlaps it least
   if (land) { el.style.bottom = `calc(${pick} * var(--u))`; } else { el.style.top = `calc(${pick} * var(--u))`; }
 }
+
+// small comparison chips at each stop ("2x wider", "8x pull"): timeline.chips [{t0, t1, text}]
+function chips(t) { const c = (TL.chips || []).find((q) => t >= q.t0 && t < q.t1), el = document.getElementById("chip"); if (!el) return; if (c) { el.textContent = c.text; el.style.opacity = Math.min(1, (t - c.t0) / 0.25, (c.t1 - t) / 0.25); } else el.style.opacity = 0; }
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");
   document.getElementById("num").textContent = fmt(d) + " km"; document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
-  const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap");
+  chips(t); const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap");
   if (cap) { el.textContent = cap.text; el.style.opacity = 1; placeCaption(cap, el, t); } else el.style.opacity = 0;
 }
 window.setup = async (tl, assets, mode, w, h) => {
@@ -135,15 +141,17 @@ const MOVES = {
 };
 
 // picture-led beats (timeline.beats: [{t0, t1, kind}]): a silent stretch where the idea plays out on the painting
-const BK = { approach: ["moon", 1.35], grow: ["moon", 1.5], tide: ["fig", 1.6], pull: ["moon", 1.2], bright: ["moon", 1.35], eclipse: ["moon", 1.5], flex: ["fig", 1.7], rise: ["moon", 1.25], slide: ["moon", 1.3], strain: ["moon", 1.15], stretch: ["moon", 1.0], band: ["moon", 1.0], ring: ["fig", 1.0], drift: ["moon", 1.0], sun: ["moon", 1.0], sunbeam: ["moon", 1.0], tick: ["moon", 1.0] };
+const BK = { climb: ["fig", 1.55],  approach: ["moon", 1.35], grow: ["moon", 1.5], tide: ["fig", 1.6], pull: ["moon", 1.2], bright: ["moon", 1.35], eclipse: ["moon", 1.5], flex: ["fig", 1.7], rise: ["moon", 1.25], slide: ["moon", 1.3], strain: ["moon", 1.15], stretch: ["moon", 1.0], band: ["moon", 1.0], ring: ["fig", 1.0], drift: ["moon", 1.0], sun: ["moon", 1.0], sunbeam: ["moon", 1.0], tick: ["moon", 1.0] };
 const beatPhase = (t, kind, tail) => { let v = 0; for (const b of (TL.beats || [])) if (b.kind === kind) { if (t >= b.t0 && t < b.t1) v = Math.max(v, sm((t - b.t0) / (b.t1 - b.t0))); else if (t >= b.t1 && t < b.t1 + tail) v = Math.max(v, 1 - sm((t - b.t1) / tail)); } return v; };
-const tideBoost = (t) => 0.13 * beatPhase(t, "tide", 2.5);
+const tideBoost = (t) => 0.13 * beatPhase(t, "tide", 2.5) + 0.28 * beatPhase(t, "climb", 6.0);
 const flareBoost = (t) => beatPhase(t, "bright", 2.0);
 const slideOff = (t) => -0.30 * W * beatPhase(t, "slide", 3.0);
 const shakeAmp = (t) => Math.max(beatPhase(t, "flex", 0.8), 0.45 * beatPhase(t, "strain", 0.8));
 function beatKeys() {
   if (TL._bk !== undefined) return TL._bk; const bs = TL.beats || []; if (!bs.length) return (TL._bk = null); const keys = [];
-  for (const b of bs) { const [pv, sc] = BK[b.kind] || ["moon", 1.0]; if (sc <= 1.0) continue; keys.push({ t: b.t0 - 0.1, s: sc, pv }); keys.push({ t: b.t1 + 0.2, s: 1.0, pv }); }
+  for (const b of bs) { const [pv, sc] = BK[b.kind] || ["moon", 1.0]; if (sc <= 1.0) continue; keys.push({ t: b.t0 - 0.1, s: sc, pv });
+    if (b.kind === "climb") keys.push({ t: b.t0 + 0.62 * (b.t1 - b.t0), s: 1.25, pv: "moon" });   // the camera tilts up as the Moon fills the sky
+    keys.push({ t: b.t1 + 0.2, s: 1.0, pv: b.kind === "climb" ? "moon" : pv }); }
   keys.sort((a, c) => a.t - c.t); return (TL._bk = keys.length ? keys : null);
 }
 function partKeys() {

@@ -12,7 +12,7 @@ def beat_events(beats):
     for b in beats:
         t0, t1, k = b["t0"], b["t1"], b["kind"]
         if k in ("approach", "grow", "pull", "strain", "stretch", "band"): ev += [{"t": t0, "kind": "swell", "t1": t1}, {"t": t0, "kind": "scale.jump", "t1": t1}]
-        elif k in ("tide", "flex", "drift", "sunbeam", "sun", "ring"): ev += [{"t": t0, "kind": "swell", "t1": t1}]
+        elif k in ("tide", "flex", "drift", "sunbeam", "sun", "ring", "climb"): ev += [{"t": t0, "kind": "swell", "t1": t1}]
         elif k == "bright": ev += [{"t": t0, "kind": "light.front", "t1": t1}, {"t": t0, "kind": "swell", "t1": t1}]
         elif k == "eclipse": ev += [{"t": t0, "kind": "body.vanish", "t1": t1}]
         elif k in ("rise", "slide"): ev += [{"t": t0, "kind": "swell", "t1": t1}, {"t": t0 + 0.3, "kind": "orbit.pass"}, {"t": t1 - 0.6, "kind": "orbit.pass"}]
