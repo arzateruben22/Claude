@@ -182,6 +182,13 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     mb.setColor(acc.bracelet); mb.metal = 1; mb.rough = 0.2;
     mb.tube(W.ring.map((p) => add(p, mul(W.ax, -0.01))), () => 0.0016, 8, true);
   }
+  // (cast, 2026-11-11) an elastic hair tie on the right wrist, a little up from the bangle's place: matte, not metal
+  if (acc.hairTie != null) {
+    const W = wrist(-1, 0.0026);
+    mb.bones = [B.foreR, B.handR]; mb.w2 = 0.2;
+    mb.setColor(acc.hairTie); mb.metal = 0; mb.rough = 0.7; mb.quilt = 0;
+    mb.tube(W.ring.map((p) => add(p, mul(W.ax, -0.024))), () => 0.0024, 6, true);
+  }
   // ---- bags
   const D = rig.dims;
   if (acc.bag !== 'none') {
@@ -263,6 +270,47 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     lenses = new THREE.SkinnedMesh(lg, lm);
     lenses.name = 'lenses'; lenses.renderOrder = 3;
   }
+  // ---- (cast, 2026-11-11) sunglasses pushed up onto the top of the head: the frame tilted back over the crown, the
+  // temples down the sides of the head toward the ears, dark lenses
+  let shades: THREE.SkinnedMesh | null = null;
+  if (acc.sunglassesUp != null) {
+    mb.bones = [B.head, B.head]; mb.w2 = 0;
+    mb.setColor(acc.sunglassesUp); mb.metal = 0; mb.rough = 0.3; mb.quilt = 0;
+    const rw = 0.027, rh = 0.02, th = -64 * DEG, c = Math.cos(th), sn = Math.sin(th);
+    // the front's plane, then turned back about x and lifted to rest on the crown's front
+    const place = (x: number, y: number, z: number): V3 => { const y2 = y * c - z * sn, z2 = y * sn + z * c; return hf.toBody([x, 0.104 + y2, 0.022 + z2]); };
+    const surf = (p: V3, off: number) => (outer(p[0], p[1], p[2]) < off ? onSurface(outer, p, off) : p);
+    const rim = (sg: number) => {
+      const pts: V3[] = [];
+      for (let i = 0; i < 32; i++) {
+        const a = (i / 32) * Math.PI * 2, cx = Math.cos(a), sy = Math.sin(a);
+        pts.push(surf(place(sg * (0.033 + rw * Math.sign(cx) * Math.pow(Math.abs(cx), 0.6)), rh * Math.sign(sy) * Math.pow(Math.abs(sy), 0.7), 0), 0.004));
+      }
+      return pts;
+    };
+    const rims = [rim(1), rim(-1)];
+    for (const r of rims) mb.tube(r, () => 0.0026, 6, true);
+    mb.tube([place(0.008, 0.008, 0), place(0, 0.009, 0.001), place(-0.008, 0.008, 0)].map((p) => surf(p, 0.004)), () => 0.0022, 6, false);
+    for (const sg of [1, -1]) {
+      const path: V3[] = [place(sg * (0.033 + rw), 0.004, 0), hf.toBody([sg * 0.07, 0.07, 0.0]), hf.toBody([sg * 0.077, 0.035, -0.045]), hf.toBody([sg * 0.075, 0.005, -0.075])].map((p) => surf(p, 0.003));
+      mb.tube(path, () => 0.002, 5, false);
+    }
+    const lg = new THREE.BufferGeometry(), lp: number[] = [], li: number[] = [];
+    for (const r of rims) {
+      const cc = r.reduce((a, p) => add(a, mul(p, 1 / r.length)), [0, 0, 0] as V3), b = lp.length / 3;
+      lp.push(...cc);
+      for (const p of r) lp.push(...add(p, mul(sub(cc, p), 0.04)));
+      for (let i = 0; i < r.length; i++) li.push(b, b + 1 + i, b + 1 + ((i + 1) % r.length));
+    }
+    lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
+    lg.setIndex(li); lg.computeVertexNormals();
+    const n = lp.length / 3, si = new Uint16Array(n * 4), sw = new Float32Array(n * 4);
+    for (let i = 0; i < n; i++) { si[i * 4] = B.head; sw[i * 4] = 1; }
+    lg.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(si, 4)); lg.setAttribute('skinWeight', new THREE.BufferAttribute(sw, 4));
+    const sm = new THREE.MeshPhysicalMaterial({ color: 0x14161a, roughness: 0.08, metalness: 0.2, transparent: true, opacity: 0.88, envMapIntensity: 1.3, side: THREE.DoubleSide });
+    shades = new THREE.SkinnedMesh(lg, sm);
+    shades.name = 'sunglasses'; shades.renderOrder = 3;
+  }
   if (!mb.idx.length) return { meshes: [] as THREE.SkinnedMesh[], mats: [] as THREE.Material[] };
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(mb.pos, 3));
@@ -279,5 +327,6 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
   const meshes: THREE.SkinnedMesh[] = [mesh];
   const mats: THREE.Material[] = [mat];
   if (lenses) { meshes.push(lenses); mats.push(lenses.material as THREE.Material); }
+  if (shades) { meshes.push(shades); mats.push(shades.material as THREE.Material); }
   return { meshes, mats };
 }

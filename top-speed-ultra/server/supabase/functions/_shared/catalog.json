@@ -327,6 +327,20 @@
       "while_subscribed": []
     },
     {
+      "sku": "cast-pack-duo",
+      "name": "Character Pack (two drivers)",
+      "kind": "pack",
+      "price_cents": 500,
+      "currency": "usd",
+      "mode": "payment",
+      "grants": [
+        "cast-pack-duo-characters"
+      ],
+      "available": false,
+      "grants_ready": false,
+      "while_subscribed": []
+    },
+    {
       "sku": "club-monthly",
       "name": "OC Ultra Club (monthly)",
       "kind": "club",
