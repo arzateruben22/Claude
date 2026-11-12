@@ -1,0 +1,1 @@
+Land mask: Natural Earth 50m land (public domain), https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_50m_land.geojson, rasterised to 4096x2048 equirectangular (parts/ not needed). Used by set/earth-land.js.

@@ -111,22 +111,25 @@ const globe = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 72), new THREE.Shad
 
 // the high-tech Earth (v2): a glossy, glowing deep-blue ocean with flowing currents, grey relief land, a faint graticule, a glowing magenta equator with ticks and two ring arcs, a cyan rim and an atmosphere shell
 const GVS2 = `varying vec3 vN, vO, vW; void main() { vO = normalize(normal); vN = normalize(mat3(modelMatrix) * normal); vW = (modelMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-const GFS2 = `precision highp float; uniform vec3 uLight; uniform float uExposure, uSpin, uDry, uT, uGlow; uniform sampler2D uMap; varying vec3 vN, vO, vW;
+const GFS2 = `precision highp float; uniform vec3 uLight; uniform float uExposure, uSpin, uDry, uT, uGlow; uniform sampler2D uMap, uMask; varying vec3 vN, vO, vW;
 ${ACES_INV_GLSL}
 float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), f.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), f.x), f.y); }
 void main() {
   vec3 n = normalize(vN), L = normalize(uLight), V = normalize(cameraPosition - vW); float lam = clamp(0.5 + 0.5 * dot(n, L), 0.0, 1.0);
   vec3 o = normalize(vO); float lon = atan(o.x, o.z) + uSpin, lat = asin(clamp(o.y, -1.0, 1.0));
-  vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb;
-  float water = step(tx.r + 0.04, tx.b); float dry = step(uDry * 0.0174533, abs(lat)) * water; water *= (1.0 - dry);
-  // ocean: deep luminous blue with flowing current streaks
+  vec2 muv = vec2(fract(lon / 6.2831853 + 0.5), lat / 3.1415927 + 0.5); float Lm = texture2D(uMask, muv).r;
+  float Lb = 0.25 * (texture2D(uMask, muv + vec2(0.0024, 0.0)).r + texture2D(uMask, muv - vec2(0.0024, 0.0)).r + texture2D(uMask, muv + vec2(0.0, 0.0024)).r + texture2D(uMask, muv - vec2(0.0, 0.0024)).r);
+  float water = 1.0 - smoothstep(0.35, 0.65, Lm); float dry = step(uDry * 0.0174533, abs(lat)) * water; water *= (1.0 - dry);
   vec2 uv = vec2(lon * 2.6, lat * 4.2); float f1 = vn(uv * 1.7 + vec2(uT * 0.04, 0.0)), f2 = vn(uv * 3.9 - vec2(uT * 0.06, uT * 0.02));
   float streak = smoothstep(0.35, 0.95, 0.5 + 0.5 * sin(lat * 26.0 + f1 * 7.0 + f2 * 3.0 + uT * 0.25));
   vec3 ocean = mix(vec3(0.01, 0.04, 0.2), vec3(0.02, 0.26, 0.78), 0.2 + 0.65 * streak * (0.4 + 0.6 * lam));
-  // land: grey relief, lit
-  float relief = tx.g * 0.8 + tx.r * 0.4; float rough = vn(uv * 9.0) * 0.5 + vn(uv * 22.0) * 0.3; vec3 land = mix(vec3(0.13, 0.15, 0.19), vec3(0.5, 0.52, 0.56), clamp(relief * 0.7 + rough * 0.6, 0.0, 1.0)) * (0.3 + 0.75 * lam);
-  vec3 seabed = vec3(0.30, 0.26, 0.20) * (0.35 + 0.7 * lam);
+  float dl = 0.0157; float latc = (floor(lat / dl) + 0.5) * dl; float lstep = dl / max(0.22, cos(latc)); float lonc = (floor(lon / lstep) + 0.5) * lstep;
+  float Lc = texture2D(uMask, vec2(fract(lonc / 6.2831853 + 0.5), latc / 3.1415927 + 0.5)).r;
+  float dd = length(vec2((lon - lonc) * cos(lat), lat - latc)); float dot_ = (1.0 - smoothstep(dl * 0.22, dl * 0.4, dd)) * smoothstep(0.4, 0.7, Lc);
+  float coast = smoothstep(0.08, 0.45, Lb) * (1.0 - smoothstep(0.55, 0.92, Lb));
+  vec3 land = vec3(0.045, 0.07, 0.13) * (0.7 + 0.6 * lam) + vec3(0.35, 0.85, 1.0) * dot_ * (0.55 + 0.6 * lam) + vec3(0.3, 0.9, 1.0) * coast * 0.9;
+  vec3 seabed = vec3(0.12, 0.1, 0.08) * (0.4 + 0.6 * lam);
   vec3 col = mix(land, ocean * (0.5 + 0.6 * lam) + vec3(0.0, 0.03, 0.14), water); col = mix(col, seabed, dry);
   // glossy: a sharp highlight on water
   vec3 Hh = normalize(L + V); float spec = pow(max(dot(n, Hh), 0.0), 90.0) * (0.25 + 0.75 * water) * 1.1; col += vec3(0.7, 0.85, 1.0) * spec * 0.8;
@@ -144,6 +147,9 @@ void main() {
   #include <colorspace_fragment>
 }`;
 gU.uT = { value: 0 }; gU.uGlow = { value: 1 };
+import landURL from "../../set/earth-land.js";
+const landTex = await new Promise((res) => { const im = new Image(); im.onload = () => { const t = new THREE.Texture(im); t.needsUpdate = true; t.wrapS = THREE.RepeatWrapping; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.generateMipmaps = false; res(t); }; im.src = landURL; });
+gU.uMask = { value: landTex };
 const AVS = `varying vec3 vNv; void main() { vNv = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 const AFS = `precision highp float; varying vec3 vNv; ${ACES_INV_GLSL} void main() { float i = pow(clamp(0.74 - dot(vNv, vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 3.2); vec3 c = vec3(0.2, 0.55, 1.0) * i * 2.2; gl_FragColor = vec4(acesInv(srgbToLinear(clamp(c, 0.0, 1.0)), 1.0), 1.0); #include <tonemapping_fragment>
  #include <colorspace_fragment>
@@ -161,7 +167,7 @@ planetG.add(globe, water, markers, arrows, storms, debris, eqGlow);
 if (V2) { globe.material = new THREE.ShaderMaterial({ uniforms: gU, vertexShader: GVS2, fragmentShader: GFS2 });
   atmos = new THREE.Mesh(new THREE.SphereGeometry(1.075, 64, 48), new THREE.ShaderMaterial({ vertexShader: AVS, fragmentShader: AFS, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
   atmos.renderOrder = 2; atmos.frustumCulled = false; atmos.userData.noProbe = true; planetG.add(atmos); }
-planetG.rotation.z = -Math.PI / 2;                              // the pole axis is horizontal: the figure on the top is ON the equator
+planetG.rotation.order = V2 ? "YXZ" : "XYZ"; planetG.rotation.z = -Math.PI / 2; if (V2) planetG.rotation.y = 0.95;      // v2: tipped about 24 degrees toward the camera so the equator arcs across the face of the globe                              // the pole axis is horizontal: the figure on the top is ON the equator
 
 // ── the tower: all the spin energy, then and now ────────────────────────────
 const TW = 6, TH = 58, tower = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), basic(ANCH, 0.85, false)); tower.renderOrder = 5; tower.userData.noProbe = true; tower.visible = false; scene.add(tower);
@@ -246,7 +252,7 @@ window.seek = function (t) {
     pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
   } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
   planetG.position.set(pcx, pcy, 0); planetG.scale.setScalar(1);
-  gU.uT.value = t; if (V2) gU.uGlow.value = 0.55 + 0.45 * amp;
+  gU.uT.value = t * (0.6 + 3.0 * spinU); if (V2) gU.uGlow.value = 0.55 + 0.45 * amp;
   if (FILM.figOnly) { sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = false;       // the capsule figure alone on a flat black or white backdrop (matted into an alpha PNG for the cover variants)
     if (!window.__bgPlane) { window.__bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), basic(FILM.figOnly.bg ? "#999999" : "#000000", 1, true)); window.__bgPlane.position.set(0, 0, -30); window.__bgPlane.userData.noProbe = true; scene.add(window.__bgPlane); } }
   window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
@@ -270,7 +276,7 @@ window.seek = function (t) {
 
   // the globe (planet shots): flattening, drying poles, storms, markers, debris
   globe.visible = sp && !FILM.figOnly;
-  const f = 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
+  const f = V2 ? 0.004 + 0.22 * Math.pow(spinU, 1.8) : 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
   if (atmos) { atmos.visible = sp; atmos.scale.set(1, 1 - f, 1); }
   globe.scale.set(1, 1 - f, 1); const ow = fxw0("ocean"); water.visible = ow > 0.01; water.scale.set(1 + 0.07 * ow, (1 - f) * 1.003, 1 + 0.07 * ow); gU.uSpin.value = FILM.thumb ? 0.6 : gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
   if (gl) {
