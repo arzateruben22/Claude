@@ -60,6 +60,11 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
   --aspect 9x16|16x9           one per run (default 9x16)
   --fps N                      the delivery rate (default film.json fps, else 30): the final tier's rate and every tier's shutter
   --from S --to S              part of the film, in seconds · --times S,S,...  single frames (stills)
+  --size WxH                   a native size beyond the tier's, for the whole film (1440x2560) or stills (2160x3840 for a
+                               sharp cover, 2160x2200 for a cover-shaped hero); the camera keeps its vertical field of
+                               view. Build folder <tier>-W (9:16 sizes, as Skin Sense's copy names it) or <tier>-WxH
+  --clean                      stills only (with --times): no page overlay (captions, labels, counters, title), the 3-D
+                               picture alone, for covers and thumbnails; its own <...>-clean folder; PNGs kept
   --chunk S                    chunk length in seconds (default 10)
   --resume                     keep finished frames (PNG + log line + matching sha256), render the rest
   --fresh                      discard every chunk the range touches, then render them
@@ -77,7 +82,7 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
   --where                      print this run's build folder
   --delivery-crf N             with --assemble: x264 CRF of the delivery file (default 15; lower is finer)`;
 const SPEC = { film: 1, tier: 1, aspect: 1, fps: 1, from: 1, to: 1, times: 1, chunk: 1, build: 1, out: 1, name: 1, audio: 1, poster: 1,
-  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
+  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, size: 1, clean: 0, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
   "fallback-fonts": 0 };
 const A = {};
 {
@@ -97,6 +102,9 @@ const A = {};
   if (!A.film) bad("--film <dir> is required (the episode folder holding film.json and scene.mjs)");
   if (A.resume && A.fresh) bad("--resume keeps finished frames and --fresh discards them: pick one");
   if (A.times && (A.from !== undefined || A.to !== undefined)) bad("--times or --from/--to, not both");
+  if (A.clean && !A.times) bad("--clean makes stills: give --times S,S,...");
+  if (A.clean && (A.assemble || A.cues)) bad("--clean is for stills, not --assemble or --cues");
+  if (A.size && !/^\d{2,4}x\d{2,4}$/.test(A.size)) bad(`--size is WxH in pixels, e.g. 2160x3840, not "${A.size}"`);
 }
 const num = (k, d) => { if (A[k] === undefined) return d; const x = Number(A[k]); if (!Number.isFinite(x)) die(2, `--${k} must be a number, not "${A[k]}"`); return x; };
 
@@ -125,15 +133,18 @@ const tier = A.tier || "final", aspect = A.aspect || "9x16";
 if (!TIERS[tier]) die(2, `--tier is final, draft or animatic, not "${tier}"`);
 if (!TIERS[tier].size[aspect]) die(2, `--aspect is 9x16 or 16x9, one per run, not "${aspect}"`);
 const deliveryFps = num("fps", FILM.fps || 30);
-const [W, H] = TIERS[tier].size[aspect];
+const [W, H] = A.size ? A.size.split("x").map(Number) : TIERS[tier].size[aspect];
+if (A.size && (W > 8192 || H > 8192 || W % 2 || H % 2)) die(2, `--size ${A.size}: each side even and at most 8192`);
+const stills = !!A.times && !!(A.size || A.clean);       // cover stills: their PNGs are the output
 const fps = TIERS[tier].fps || deliveryFps;
 const plain = TIERS[tier].plain || A.plain === true;     // no finish: the scene's own renderer, as written
 const kMax = plain ? null : TIERS[tier].kMax;
-const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "");
+const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "")
+  + (A.size ? (W * 16 === H * 9 || W * 9 === H * 16 ? `-${W}` : `-${W}x${H}`) : "") + (A.clean ? "-clean" : "");
 const buildRoot = path.resolve(A.build || path.join(filmDir, "build"));
 const base = path.join(buildRoot, tierDir, aspect);
 if (A.where) { console.log(base); process.exit(0); }
-const keepPng = A["keep-png"] === true, forceMixed = A["force-mixed"] === true;
+const keepPng = A["keep-png"] === true || stills, forceMixed = A["force-mixed"] === true;
 const pageFrames = Math.max(1, Math.round(num("page-frames", 300)));
 const frameTimeout = num("frame-timeout", 600) * 1000;
 const CHROMIUM = process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined);
@@ -411,6 +422,9 @@ const openPage = () => withTimeout((async () => {
     await pg.waitForFunction(() => typeof window.seek === "function", null, { timeout: 30000 }).catch(() => {});
     await pg.evaluate(() => window.SCENE_READY || null);              // a scene that loads something async sets this promise
     await pg.evaluate(() => document.fonts.ready.then(() => document.fonts.status));
+    // --clean: the overlay (captions, labels, counters, the title) is DOM above the canvas: fade all of it out, with
+    // !important so a scene's own inline opacity or visibility can't bring an element back
+    if (A.clean) await pg.addStyleTag({ content: "#stage > :not(#gl), body > :not(#stage) { opacity: 0 !important; }" });
     if (Q.errors.length || !(await pg.evaluate(() => typeof window.seek === "function"))) throw new SceneError(`the scene page failed to load: ${Q.errors.join(" | ") || "no seek()"}`);
     if (!plain && !(await pg.evaluate(() => typeof window.cinemaFrame === "function"))) throw new SceneError("the cinema finish did not load (no window.cinemaFrame)");
     if (kMax != null) await pg.evaluate((k) => { if (window.CINEMA) window.CINEMA.kMax = k; }, kMax);
@@ -639,7 +653,9 @@ const render = async () => {
   for (const w of warnings) warn(w);
   const notEncoded = planChunks.filter((k) => !encodedOk(k));
   const allDone = chunksOnDisk().length && Array.from({ length: nChunks }, (_, k) => k).every((k) => encodedOk(k));
-  if (notEncoded.length) log(`not encoded: chunk(s) ${notEncoded.map(c3).join(", ")} (the range stops inside them${encodeFailures.length ? ", or their encode failed" : ""})`);
+  if (stills) for (const f of planFrames) log(`still t ${(f / fps).toFixed(2)} s → ${rel(pngOf(f))}`);
+  if (stills) { /* stills: the PNGs above are the output; chunks don't apply */ }
+  else if (notEncoded.length) log(`not encoded: chunk(s) ${notEncoded.map(c3).join(", ")} (the range stops inside them${encodeFailures.length ? ", or their encode failed" : ""})`);
   else log(`all ${planChunks.length} chunk(s) of the range are encoded${allDone ? "; the whole film is ready for --assemble" : ""}`);
   endRun(encodeFailures.length ? "encode failed" : "done", { rendered, renderSecPerFrame: rendered ? +(renderMs / rendered / 1000).toFixed(3) : null, wallSec: Math.round(wall), warnings: warnings.length });
   if (encodeFailures.length) throw new Stop(4, `chunk(s) ${encodeFailures.map(c3).join(", ")} failed to encode (see above); their PNGs are kept and --resume encodes them again`);
