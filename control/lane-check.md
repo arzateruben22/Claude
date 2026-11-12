@@ -87,3 +87,9 @@ FAST SETTINGS also takes the owner's 2026-10-27 'make it quicker to load the gra
 STATE 03:11 UTC: all four still running (drop 2 merger proving; S4 repair1; hub build; cast build).
 
 QUEUED (owner ~7:20 PM PT): GO PUBLIC + LIVE PRESENCE (100 cap, live count, players on the map) + ANAHEIM PLATINUM TRIANGLE streets: scratchpad/owner/live/plan.md. Needs the owner's domain/Cloudflare account first; after the Sunday reset.
+
+MASTER QUEUE (owner ~7:45 PM PT: "okay lets incorporate all that with the new updates and ill provide the chad images"):
+ 1. v16 = debris (DROP 2, merging).  2. DROP 3 = S4 + dashboard/wheel centre + hypercar $9.99.  3. DROP 4 = the six characters + main-menu Character entry + driver match + crowds from the six + the pack scaffold at $22.22.
+ 4. FAST SETTINGS lane (graphics switching speed + progress overlay + sharper seat view on phones + HUD off the wheel + arm smoothing with 637aa19 reuse).  5. COLOUR STUDIO lane ($4.99, 9+9, paint packs removed).
+ 6. GO-PUBLIC PREP lane (deploy script to Cloudflare Pages, security headers/CSP, rollback, safe mode, privacy/terms drafts, the 18+ venue age check): can be built before the owner's domain/Cloudflare account exist; going live needs them.
+ After the Sun Nov 15 weekly reset (or earlier if the weekly allows): ANAHEIM PLATINUM TRIANGLE streets (Phase 3, first), LIVE PRESENCE (Phase 2: 100 cap, live count, map dots), HYPERCAR IDENTITY (needs the emblem picks), ROSSINI SCARLATTA + CHAD/CHADALINE PACK (Chadaline sheets in; Chad's coming), CAST B (the full loop polish). Run lanes 4-6 as slots free (max 4 workflows at once on this machine), weekly guard 0.97.
