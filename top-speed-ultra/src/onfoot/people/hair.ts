@@ -9,7 +9,7 @@ import { Rig, B } from './body';
 import { HeadFrame } from './head';
 import { HairStyle, Look, Quality } from './params';
 import { V3, clamp, smooth, norm, cross, dot, rng, lerp } from './math';
-import { scalpCover, faceMasks } from './masks';
+import { scalpCover, faceMasks, hairlineDepth } from './masks';
 import { NOISE } from './skin';
 import { hairLights } from './cards';
 
@@ -25,6 +25,14 @@ export interface HairSpec {
   cut?: number;                               // clipped sides: head-local y below which the volume is cut away
   sweep?: boolean;                            // the top swept over sideways from the parting (a side part)
   cardLen?: number;                           // how far strand cards grow (m), when the style needs longer ones
+  // (pack styles, 2026-11-12; unset on every other style)
+  taper?: number;                             // the volume grows from nothing at the hairline to full over this far above it (m): no ledge, no gap under the edge
+  fringe?: number;                            // the hairline lowered this far (m) at the front and over the ear tops, the volume hanging over it: curls on the forehead
+  vol?: number;                               // a hanging curtain's swell toward its ends (0.06 when unset)
+  wave?: number;                              // a hanging curtain's waves: their depth as a share of its radius
+  faceW?: number;                             // the face opening's half width at the jaw (m; it is 0.074 at the eyes and, unset, all the way down)
+  front?: number;                             // the curtain is cut away in front of this head-local z (beside the face it otherwise comes forward past the nose)
+  meshK?: number;                             // the cap's meshing step as a multiple of the usual one (a long curtain is a large, smooth surface)
 }
 
 export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
@@ -44,6 +52,11 @@ export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
     case 'fade': return S({ top: 0.022, side: 0.004, back: 0.004, curl: 0.35, cut: 0.03, cards: 200, cardW: 0.012, tex: 'curl', part: 0, cardLen: 0.03 });
     case 'sidePart': return S({ top: 0.024, side: 0.005, back: 0.005, cut: 0.032, sweep: true, part: -0.034, cards: 280, cardW: 0.013, cardLen: 0.09 });
     case 'waves': return S({ top: 0.012, side: 0.012, back: 0.014, hang: -0.2, curl: 0.22, cards: 480, cardW: 0.016, tex: 'wavy', part: 0.032 });
+    // ---- the pack's styles (cast.ts CAST_PACK, 2026-11-12)
+    // medium curls: a deep, lumpy mass on top and round the sides and back, the curl cards standing off it
+    case 'curlsMedium': return S({ top: 0.034, side: 0.024, back: 0.028, curl: 1.35, cards: 760, cardW: 0.024, tex: 'curl', part: 0, cardLen: 0.055, taper: 0.03, fringe: 0.024 });
+    // long, loosely waved hair from a centre parting, down the back to under the shoulder blades
+    case 'longWaves': return S({ top: 0.014, side: 0.02, back: 0.024, hang: -0.43, cards: 400, cardW: 0.034, meshK: 1.55, tex: 'wavy', part: 0.0, vol: 0.26, wave: 0.045, faceW: 0.064, front: 0.08, taper: 0.02 });   // (cardW 0.034, was 0.025, the same number of cards; front 0.08, was 0.024: the curtain comes forward past the ears beside the face, so the cards there have dark hair behind them, not the background)
   }
 }
 
@@ -85,6 +98,8 @@ function flowAt(sp: HairSpec, l: V3): V3 {
   }
   // short styles: front to back on top, down and back at the sides
   const side = smooth(0.035, 0.07, Math.abs(x));
+  // (pack) a fringe: over the front of the head the hair falls forward and down instead of back
+  if (sp.fringe) { const fr = smooth(-0.07, -0.02, z); return norm([0.35 * Math.sign(x) * (side + 0.3 * fr), -0.25 - side * 0.9 - 0.45 * fr - smooth(-0.03, -0.09, z) * 0.6 * (1 - fr), lerp(-(1 - side * 0.55), 0.85, fr)]); }
   return norm([0.3 * Math.sign(x) * side, -0.2 - side * 0.9 - smooth(-0.03, -0.09, z) * 0.6, -(1 - side * 0.55)]);
 }
 
@@ -110,24 +125,35 @@ export class HairSdf implements Sdf {
     this.n = H.n + C.n + 1; this.maxK = Math.max(H.maxK, C.maxK, 0.02);
     this.bufH = new Int32Array(H.n); this.bufC = new Int32Array(C.n);
   }
-  thick(l: V3) {
+  /** (pack) the point the scalp is tested at: with a fringe, a little higher than the point itself at the front and
+   *  over the ear tops, which lowers the hairline there (unevenly: locks); without one, the point */
+  fr(l: V3): V3 {
+    const f = this.sp.fringe;
+    if (!f) return l;
+    const lock = 0.5 + 0.5 * clumps(l[0] * 60 + 3, 1.7, l[2] * 60);
+    return [l[0], l[1] + f * lock * Math.max(smooth(-0.075, -0.015, l[2]), 0.7 * smooth(0.05, 0.066, Math.abs(l[0])) * smooth(-0.115, -0.06, l[2])), l[2]];
+  }
+  thick(lIn: V3) {
+    const l = lIn, lc = this.fr(lIn);
     const sp = this.sp, top = smooth(-0.005, 0.07, l[1]), back = smooth(-0.04, -0.1, l[2]);
     let t = lerp(lerp(sp.side, sp.back, back), sp.top, top);
     // thinning to nothing at the hairline, so the hair grows out of the scalp instead of sitting on it like a cap
-    t *= (sp.bun || sp.tail ? 0.04 : 0.2) + (sp.bun || sp.tail ? 0.96 : 0.8) * smooth(0.45, 0.98, scalpCover(this.style, l, 35 + 40 * this.hf.old, this.hf.male));   // pulled back: no ledge at the hairline
+    t *= (sp.bun || sp.tail ? 0.04 : 0.2) + (sp.bun || sp.tail ? 0.96 : 0.8) * smooth(0.45, 0.98, scalpCover(this.style, lc, 35 + 40 * this.hf.old, this.hf.male));   // pulled back: no ledge at the hairline
     // pulled-back styles: combed sections (soft ridges running back to the bun or the tie) and a lifted crown
     if (sp.bun || sp.tail) {
       const phi = Math.atan2(l[0], l[1] + 0.02), ridge = Math.sin(phi * 11 + 1.7 * Math.sin(l[2] * 40)) * Math.sin(phi * 5 + 0.6);
-      t += (0.0018 * ridge + 0.0035 * smooth(0.0, 0.06, l[1]) * smooth(0.03, -0.04, l[2])) * smooth(0.6, 0.95, scalpCover(this.style, l, 35 + 40 * this.hf.old, this.hf.male));
+      t += (0.0018 * ridge + 0.0035 * smooth(0.0, 0.06, l[1]) * smooth(0.03, -0.04, l[2])) * smooth(0.6, 0.95, scalpCover(this.style, lc, 35 + 40 * this.hf.old, this.hf.male));
     }
     else {
       const lump = Math.sin(l[0] * 95 + 2.1 * Math.sin(l[2] * 60)) * Math.sin(l[2] * 70 + 1.3 * Math.sin(l[0] * 80)) + 0.5 * Math.sin(l[0] * 210 + l[2] * 50);
-      t += 0.0016 * lump * smooth(0.02, 0.07, l[1]) * smooth(0.6, 0.95, scalpCover(this.style, l, 35 + 40 * this.hf.old, this.hf.male));
+      t += 0.0016 * lump * smooth(0.02, 0.07, l[1]) * smooth(0.6, 0.95, scalpCover(this.style, lc, 35 + 40 * this.hf.old, this.hf.male));
     }
     if (sp.curl > 0) t += sp.curl * 0.009 * (clumps(l[0] * 70, l[1] * 70, l[2] * 70) - 0.45);
     // clipped sides (fade, side part): the volume thins to nothing toward the cut, so the top sits on a short-clipped
     // scalp (the skin shader's hair-coloured scalp) instead of ending in a ledge
     if (sp.cut !== undefined) t *= smooth(sp.cut - 0.004, sp.cut + 0.04, l[1]);
+    // (pack) a tapered edge: full only where the scalp a few centimetres further down is covered too
+    if (sp.taper) t *= 0.05 + 0.95 * smooth(0.0, sp.taper, hairlineDepth(this.style, this.fr(l), 35 + 40 * this.hf.old, this.hf.male));
     return t;
   }
   extra(l: V3) {
@@ -167,7 +193,7 @@ export class HairSdf implements Sdf {
   /** the scalp under the hairline only (< 0 where hair grows) */
   capKeep(x: number, y: number, z: number) {
     const hf = this.hf, o = hf.o, l: V3 = [(x - o[0]) / hf.sx, (y - o[1]) / hf.sy, (z - o[2]) / hf.sz];
-    return (0.5 - scalpCover(this.style, l, 35 + 40 * hf.old, hf.male)) * 0.03;
+    return (0.5 - scalpCover(this.style, this.fr(l), 35 + 40 * hf.old, hf.male)) * 0.03;
   }
   /** what is added to the shell: the curtain, a bun, a tail (body coordinates) */
   extraAt(x: number, y: number, z: number) {
@@ -180,7 +206,7 @@ export class HairSdf implements Sdf {
   keep(x: number, y: number, z: number) {
     const hf = this.hf, l = hf.toLocal([x, y, z]), sp = this.sp;
     const male = hf.male;
-    const c = scalpCover(this.style, l, 35 + 40 * hf.old, male);
+    const c = scalpCover(this.style, this.fr(l), 35 + 40 * hf.old, male);
     let k = (0.5 - c) * 0.03;
     // (the cast's tails: a deeper margin, so the tail's own surface reads as well inside the region: the cap shader's
     // edge fade and the cards' roots both go by it)
@@ -188,10 +214,11 @@ export class HairSdf implements Sdf {
     if (sp.cut !== undefined) k = Math.max(k, (sp.cut - 0.002 - l[1]) * 0.5);
     if (sp.hang !== null) {
       // the face: an oval column in front (hair frames it round its edge, never crosses it)
-      const zc = 0.03, fx = Math.abs(l[0]) / 0.074;
+      const zc = 0.03, fx = Math.abs(l[0]) / (sp.faceW ? lerp(0.074, sp.faceW, smooth(-0.005, -0.075, l[1])) : 0.074);
       const face = Math.max((l[2] > zc ? fx - 1 : Math.hypot(fx, (l[2] - zc) / 0.068) - 1) * 0.07, l[1] - 0.074);
       const end = sp.hang - 0.025 * smooth(0.04, -0.08, l[2]) - l[1];       // longer at the back
-      k = Math.min(k, Math.max(-face, end));
+      // (front: beside the face the curtain stops there, a little further forward toward its ends)
+      k = Math.min(k, sp.front !== undefined ? Math.max(-face, end, l[2] - sp.front - 0.02 * smooth(-0.05, -0.2, l[1])) : Math.max(-face, end));
     }
     return k;
   }
@@ -214,8 +241,9 @@ export function buildHairVolume(rig: Rig, look: Look): HairBuild | null {
     const curl = sp.tex === 'curl';
     hang = (x, y, z) => {
       const t = clamp((yTop - y) / span, 0, 1.2);
-      const swell = curl ? 1 + 0.14 * Math.sin(Math.PI * Math.min(1, t * 0.9)) : 1 + 0.06 * t;
-      const under = curl ? 1 - 0.55 * smooth(0.45, 1.1, t) ** 1.5 : 1 - 0.12 * smooth(0.82, 1.05, t);   // the ends turn under; curls round off into a mass
+      const swell = curl ? 1 + 0.14 * Math.sin(Math.PI * Math.min(1, t * 0.9)) : (1 + (sp.vol ?? 0.06) * t) * (sp.wave ? 1 + sp.wave * smooth(0.12, 0.4, t) * Math.sin(Math.atan2(x, z - c[2]) * 8 + (yTop - y) * 34 + 1.3 * Math.sin((yTop - y) * 11)) : 1);
+      // (vol: the curtain lies close to the head at its top and fills out below the ears, so its top is no brim)
+      const under = (curl ? 1 - 0.55 * smooth(0.45, 1.1, t) ** 1.5 : 1 - 0.12 * smooth(0.82, 1.05, t)) * (sp.vol ? lerp(0.84, 1, smooth(0.02, 0.3, t)) : 1);   // the ends turn under; curls round off into a mass
       const fx = rx0 * swell * under, fz = rz0 * swell * under;
       const r = Math.hypot(x / fx, (z - c[2]) / fz);
       return Math.max((r - 1) * Math.min(fx, fz), y - yTop - 0.03);
@@ -252,7 +280,8 @@ export function growCards(hb: HairBuild, roots: V3[], quality: Quality, seed: nu
     const maxLen = sp.cardLen !== undefined ? sp.cardLen * (0.6 + 0.4 * r.next()) : sp.hang !== null ? 0.6 : sp.tail ? 0.05 + r.next() * 0.04 : sp.bun ? 0.08 + r.next() * 0.08 : sp.curl ? 0.035 + r.next() * 0.03 : 0.05 + r.next() * 0.04;
     const w = sp.cardW * (0.7 + 0.6 * r.next());
     const pts: { p: V3; s: V3; n: V3 }[] = [];
-    let len = 0;
+    let len = 0, over = 0;
+    const overMax = sp.fringe ? 0.014 * r.next() : 0;
     for (let k = 0; k < 64 && len < maxLen; k++) {
       const nn = grad(p);
       let d = hb.flow(p);
@@ -260,10 +289,11 @@ export function growCards(hb: HairBuild, roots: V3[], quality: Quality, seed: nu
       d = norm([d[0] - nn[0] * dot(d, nn), d[1] - nn[1] * dot(d, nn), d[2] - nn[2] * dot(d, nn)]);
       const sd = norm(cross(nn, d));
       pts.push({ p: p.slice() as V3, s: sd, n: nn });
-      if (sdf.keep(p[0], p[1], p[2]) > 0.004 && k > 0) break;
+      // (a fringe carries on past the hairline for a little, standing a few millimetres off the skin)
+      if (sdf.keep(p[0], p[1], p[2]) > 0.004 && k > 0) { if (over >= overMax) break; over += step; }
       p = [p[0] + d[0] * step, p[1] + d[1] * step, p[2] + d[2] * step];
       // back onto the surface (at the card's own depth)
-      for (let it = 0; it < 2; it++) { const f = sdf.eval(p[0], p[1], p[2], null, 0) - off, g = grad(p); p = [p[0] - g[0] * f, p[1] - g[1] * f, p[2] - g[2] * f]; }
+      for (let it = 0; it < 2; it++) { const f = sdf.eval(p[0], p[1], p[2], null, 0) - off - (over > 0 ? 0.0035 : 0), g = grad(p); p = [p[0] - g[0] * f, p[1] - g[1] * f, p[2] - g[2] * f]; }
       len += step;
     }
     if (pts.length < 2) continue;
@@ -331,7 +361,9 @@ export function growCards(hb: HairBuild, roots: V3[], quality: Quality, seed: nu
 /** the cap's material: hair colour with streaks along the flow and Kajiya-Kay highlights along it */
 export function hairCapMaterial(look: Look, quality: Quality) {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85, metalness: 0, alphaTest: 0.5, envMapIntensity: 0.35 });
-  const u = { uCol: { value: new THREE.Color(look.hairColor) }, uGrey: { value: look.grey }, uGreyCol: { value: new THREE.Color(0xc4c0b8) }, uCurl: { value: look.hair === 'curly' ? 1 : 0 } };
+  const u = { uCol: { value: new THREE.Color(look.hairColor) }, uGrey: { value: look.grey }, uGreyCol: { value: new THREE.Color(0xc4c0b8) }, uCurl: { value: look.hair === 'curly' || look.hair === 'curlsMedium' ? 1 : 0 },
+    // (pack) lighter streaks toward the ends; uTip 0 (no hairTips): one colour, exactly as before
+    uTipCol: { value: new THREE.Color(look.hairTips ?? look.hairColor) }, uTip: { value: look.hairTips != null ? 1 : 0 } };
   m.customProgramCacheKey = () => 'haircap-' + quality;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
@@ -344,7 +376,7 @@ flowO = ( skinMatrix * vec4( aFlow, 0.0 ) ).xyz;
 #endif
 vFlowV = normalize( normalMatrix * flowO ); vFlowR = aFlow; vRest = aRest; vAo = aAo; vEdge = aEdge;`);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', `#include <common>\nvarying vec3 vRest; varying vec3 vFlowR; varying vec3 vFlowV; varying float vAo; varying float vEdge;\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uCurl;\nfloat gS1 = 0.5, gS3 = 0.5;\n${NOISE}`)
+      .replace('#include <common>', `#include <common>\nvarying vec3 vRest; varying vec3 vFlowR; varying vec3 vFlowV; varying float vAo; varying float vEdge;\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uCurl; uniform vec3 uTipCol; uniform float uTip;\nfloat gS1 = 0.5, gS3 = 0.5;\n${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', hairLights(0.7))   // 1.3 summed over a patio's many string lights into a pale sheen
       .replace('#include <color_fragment>', `#include <color_fragment>
 vec3 hp = vRest * 1000.0, f = normalize(vFlowR);
@@ -352,9 +384,14 @@ vec3 q = hp - f * dot(hp, f) * 0.97;          // squash the noise along the flow
 float s1 = vnoise(q * 1.1), s2 = vnoise(q * 0.35 + 4.0), s3 = vnoise(q * 3.0 + 9.0);
 float strand = 0.4 + 0.45 * s1 + 0.3 * s2 + 0.2 * s3;
 gS1 = s1; gS3 = s3;
-vec3 c = uCol * strand;
-float g = step(1.0 - uGrey, vnoise(q * 0.9 + 17.0));
-c = mix(c, uGreyCol * (0.75 + 0.3 * s1), g);
+vec3 c = mix(uCol, uTipCol, uTip * smoothstep(0.42, 0.8, s2) * (0.35 + 0.65 * s1)) * strand;
+// greying (2026-11-12): fine grey strands, the noise at strand scale along the flow, softened at its threshold, and
+// their mean share where they are smaller than a pixel. (A hard step on a coarse noise drew 3 mm black and white
+// patches: a zebra at close range and a speckle at game distance.) With no grey it adds nothing, as before
+float gn = vnoise(q * 2.6 + 17.0);
+float gSel = smoothstep(1.0 - uGrey - 0.12, 1.0 - uGrey + 0.12, gn);
+gSel = mix(gSel, uGrey, smoothstep(0.35, 1.2, length(fwidth(q * 2.6))));
+c = mix(c, uGreyCol * (0.75 + 0.3 * s1), gSel * step(0.001, uGrey));
 c *= 0.55 + 0.45 * vAo;
 diffuseColor.rgb = c;
 // the hairline: thinning strands, cut on strand-shaped noise (a hard edge in streaks, not a dither) and lighter

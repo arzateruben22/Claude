@@ -306,7 +306,8 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
  *  the same mesh, so it shares the brows' material, draw call and morph deltas */
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
-  const thick = m ? 1.12 : 0.86, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
+  // (look.browThick, pack 2026-11-12: fuller brows; unset is 1, as before)
+  const thick = (m ? 1.12 : 0.86) * (look.browThick ?? 1), arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
   const n = 16;
   const project = (pl: V3, off: number): V3 => {
@@ -325,7 +326,9 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
       const u = i / (n - 1);
       const x = lerp(0.011, 0.054, u) * (0.97 + 0.03 * F.eyeSpacing);
       const yMid = 0.0175 + low + arch * Math.sin(Math.PI * Math.min(1, u / 0.72) * 0.5) * (u < 0.72 ? 1 : 1) - (u > 0.72 ? (u - 0.72) * 0.012 : 0);
-      const hw = (u < 0.15 ? 0.0042 + 0.004 * (u / 0.15) : 0.0082 * (1 - 0.62 * (u - 0.15) / 0.85)) * thick;
+      // (look.scar 'browR', 2026-11-12: the right brow parted where the scar crosses it, about 40 % of the way out)
+      const gap = look.scar === 'browR' && side < 0 ? 1 - 0.97 * Math.exp(-(((u - 0.4) / 0.045) ** 2)) : 1;
+      const hw = (u < 0.15 ? 0.0042 + 0.004 * (u / 0.15) : 0.0082 * (1 - 0.62 * (u - 0.15) / 0.85)) * thick * gap;
       for (let j = 0; j < 3; j++) {
         const y = yMid + (j - 1) * hw * 0.62;
         rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0)));

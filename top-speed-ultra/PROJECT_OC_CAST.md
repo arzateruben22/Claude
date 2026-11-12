@@ -6,6 +6,72 @@ venues' people; a future two-character pack prepared but not sold; and (5:45 PM)
 the first-person view with the arms look as good as possible and run smoothly. This file is the catalog, the asset
 status, what lane "cast A" changed and how it was checked. The progress log has the dated entry.
 
+## Graphics pass log: done / in progress / next
+
+(One lane: the two pack characters first, then the graphics pass on the six. Nothing here is committed: HEAD is
+`440e96e`, and everything after it is in the working tree for the judges. An Opus continuation starts from "Next".)
+
+**Done (stage 1, the Chad package, 2026-11-12):**
+- Chad and Chadaline are in the cast catalog (`cast.ts` `CAST_PACK.identities`, unlock `pack`), with portraits.
+- The builder has what they need, additive only: `curlsMedium` and `longWaves` hair, lighter hair tips, fuller brows,
+  light stubble, a jaw-softening face value, a double-breasted jacket with peak lapels and a padded shoulder, a
+  collared shirt with its top buttons undone, straight suit trousers, lace-up shoes, a bodycon strap dress, a fur
+  shrug, pointed stilettos with plain black soles, small hoops, rings, a right-wrist watch, a pocket square, buttons.
+- The picker shows the pack locked ("Chad & Chadaline pack: coming soon, $22.22, 18+"), with a labelled TEST switch
+  in test-mode builds. The lock is one rule in `src/game/castPack.ts`.
+- They are the driver (a jacket sleeve over a white cuff; a fur sleeve from mid forearm with the gold watch) and the
+  on-foot avatar in both venues, and never in the crowd.
+- The store entry is 2222 cents, 18+, `available: false`.
+- Regression groups `cast-pack`, `cast-pack-seat`, `cast-pack-seat-phone` and `cast-pack-venues`.
+
+**Opus continuation (2026-11-12, from 08:50 UTC; the Fable builder stopped at the owner's 92 % rule):**
+- **Stage 1, repaired:**
+  - The pack check "the TEST switch unlocks both ..." failed. The cause was the test, not the game: Chromium lost the
+    localStorage write (the save and the `tsu.test.keep` flag) when the page reloaded straight after it. The suite now
+    waits 3 s before such a reload (`settleStorage` in `tests/regression.mjs`).
+  - The looks were tuned:
+    - Chad: a smaller shoulder pad, a 9.5 mm jacket shell, 7.5 heads, muscle 0.55, shoulders 0.6.
+    - Chadaline: the hair curtain comes forward past the ears, with wider cards.
+    - The shrug's rolls are blended into one fluffy sleeve.
+  - The `__SHORT__` placeholder below is filled in.
+  - `cast-pack`, `cast-pack-seat` and `cast-pack-seat-phone`: 14 of 14 pass.
+- **Stage 2, done:**
+  - The full-beard box. The six's `fullBeard` was a solid 4 mm shell: the hard dark box at yaw 45 degrees and more.
+    Mateo and Marcus now use the face work's strand-card `beard`. The beard mask's cheek line now fades over 14 mm (it
+    was 8 mm), and its back edge over 10 mm (it was 5 mm), full only a centimetre ahead of the ear (`masks.ts`
+    `beardAt`).
+  - The grey speckle:
+    - The cards' per-strand grey turns into its mean share where a strand is under a pixel (`cards.ts`).
+    - The hair cap's grey is now fine strands with a soft threshold, the mean at a distance (`hair.ts`). It was a
+      hard step on 3 mm noise: a zebra up close and a speckle at game distance.
+  - Before: `tests/out/cast/stage2-before.png`. After: `stage2-after.png` and `game45-zoom-before-after.png`. The
+    preset `casual` (beard, black hair) is the regression head, with and without grey 0.5.
+- **Stage 3, partly done:**
+  - Done:
+    - Marcus's scar on his RIGHT eyebrow: `Look.scar 'browR'` draws a skin line, and the right brow is parted where it
+      crosses (`skin.ts`, `face.ts`, `person.ts` through the unused `uFaceP.w`).
+    - Straight and relaxed trouser legs: `Garment.leg`, the pack's tube, for Danny, Leila, Jas (straight) and Mateo,
+      Kate (relaxed). Kate's cargo pockets sit out on the fuller leg.
+    - Marcus's beard is now greyer (grey 0.3).
+  - Not done: see "Next".
+- **Stage 4, done (code; frames from cast-seat):** `hands-acc.ts` gains the outfits `workcuff` (Mateo), `blazer`
+  (Leila), `short` (Marcus), `bomber` (Jas) and `look.hairTie` (Jas, on the right wrist), behind new values only. The
+  six are wired to them through the catalog. The regression check asserts each.
+
+**In progress:** nothing is half-built.
+
+**Next (in order), as of the Opus continuation:**
+1. **Stage 3, still open:** these need the builder's geometry (`head.ts`, `hair.ts`, `body.ts`, `garments.ts`), which
+   is Fable-class work.
+   - The faces' own shapes against the sheets (Mateo's broad jaw, Danny's slim face, Jas's youthful face).
+   - The cheek and jaw hollows that shade as smudges.
+   - Leila's waves and Danny's side part as layered locks, not a helmet. Chadaline's long hair, and Chad's curls.
+   - The shoulders' slope, the ballooning outer sleeves, and Marcus's muscle (he is at the parameters' maximum).
+   - Collars and lapels on the six. Mateo's jacket worn zipped.
+   - Shoes that read from the front.
+2. **Stage 5:** the results are in the progress log entry "2026-11-12: The cast graphics pass (Opus continuation)":
+   the perf pairs, the base's phone group and the suite lines.
+
 Honest scope: the six are stylised real-time 3D built by our procedural people builder, for a phone browser. They
 are matched to the sheets as closely as the builder's shapes allow. They are not photoreal and not imported models.
 
@@ -47,20 +113,17 @@ The saved choice is `Settings.character` (`src/game/settings.ts`). It is `''` un
   and `character_roster.json` were not attached. Only the brief came, plus a body sheet and a face sheet for each of
   the six, which were used.
 - **Missing views or parts:**
-  - Marcus's eyebrow scar. It needs a mark in `face.ts` or `skin.ts`, and another branch changes those files.
-  - The hands (`src/preview/hands*`, another session's) have no:
-    - canvas work-jacket cuff (Mateo; the shirt cuff stands in and shows a cufflink),
-    - blazer cuff without a shirt cuff (Leila),
-    - short sleeve ending above the elbow (Marcus; the rolled work sleeve stands in, and the forearms are bare as drawn),
-    - bomber's ribbed cuff on a plain sleeve (Jas; the suit sleeve stands in, ribbed all along with a small R patch),
-    - elastic hair tie on the wrist (Jas; the metal bangle stands in).
+  - (2026-11-12) Marcus's eyebrow scar is now built (`Look.scar 'browR'`). The hands' missing sleeves are now added
+    in `hands-acc.ts`, additively, as agreed with its owner: `workcuff`, `blazer`, `short`, `bomber` and
+    `look.hairTie`.
   - There is no driver head or torso model in the car. From the hood and chase cameras, only the arms show through
     the glass.
 
 ### Mismatches (recorded, not blended)
 
-- **Marcus's scar** is on his right eyebrow in both images. The brief's text says left. We follow the images. The
-  scar isn't built yet (see above).
+- **Marcus's scar** is on his right eyebrow in both images. The brief's text says left. We follow the images. Built
+  2026-11-12 as a pale line up through the right brow. The front face sheet also shows a fainter mark above the left
+  brow, which is not built.
 - **Mateo's jacket** is drawn zip-front. The brief's text says open. It is built as drawn and worn open.
 - **Leila's nails:** a muted nude polish is our provisional choice. The sheets don't show her nails clearly.
 
@@ -129,14 +192,76 @@ All of them build from `crowdPerson(seed, slot)` or `staffPerson(seed, slot, uni
 
 The "Simulated crowd" labels stay.
 
-## The future two-character pack (scaffold only)
+## The Chad & Chadaline pack (built 2026-11-12, locked, not on sale)
 
-- **The store entry.** `src/store/catalog.json` has `cast-pack-duo`, a pair (one man, one woman). It is
-  `available: false`, with one configurable `price_cents` (500, a placeholder). Its caveat says the final price is
-  undecided ($5 or $10 for the pair). It is synced to the server catalog.
-- **The cast catalog.** `CAST_PACK` in `cast.ts` has the `pack` unlock category and no identities.
-- **Kept out of play.** `pickable()` adds pack identities only when owned. The crowd takes only `base`.
-- **The store stays in test mode.**
+The owner's premium pair: "Chad" and "Chadaline" (working names; the ids `chad` and `chadaline` stay if they are
+renamed). They are our own fictional adults in the game's stylised 3D look, built from the owner's sheets
+(`owner/pack/chad`, `owner/pack/chadaline`; not shipped, only a portrait crop of each is).
+
+| Ref | Name | Age, height | Hair, defining features | Outfit (as drawn) |
+| --- | --- | --- | --- | --- |
+| P01 | Chad | 28, 188 cm, tall and athletic | Dark-brown medium curls with lighter tips, strong brows, light stubble, brown eyes, stud earrings | Black double-breasted peak-lapel jacket, white pocket square, white shirt with the collar open, black suit trousers, black lace-up shoes |
+| P02 | Chadaline | 27, 168 cm, hourglass | Long dark hair with brown ends, full brows, brown eyes, small gold hoops, gold watch, rings | Black strap mini dress cut close, cream faux-fur shrug off the shoulders, black pointed stilettos with plain black soles |
+
+- **The lock** is one rule, `src/game/castPack.ts` `packUnlocked`:
+  - the store's entitlement `cast-pack-duo-characters`, which nothing sells today; or
+  - in a test-mode build only, the picker's switch labelled "TEST: try the pack" (`Settings.packTest`). It is not a
+    purchase: no entitlement, no receipt. A live build ignores it.
+- **Locked:** the picker shows both cards, the preview and the turntable, and the button reads "Chad & Chadaline
+  pack: coming soon, $22.22, 18+". A save that names a pack character plays the look without a character.
+- **Unlocked:** they work everywhere the six do: the cockpit arms (`Game.configureCar`), the on-foot avatar in both
+  venues (`lot57/driver.ts`; on the standalone pages `?char=chad&pack=test`), the picker and the menu.
+- **Never in the crowd:** `crowdPerson` and `staffPerson` draw only on `CAST`, the six.
+- **The store:** `cast-pack-duo` is 2222 cents, `min_age: 18`, `available: false`. It grants the two characters and
+  `cast-pack-duo-scarlatta`, the Rossini Scarlatta, which is reserved and not built on this branch. The checker
+  takes $22.22 as the owner's second price exception. Before it can be sold it needs the car, and an 18+ check at
+  checkout: the store's rule today is 13+ with a guardian's OK.
+- **Recorded, not blended:**
+  - The sheet's red shoe soles are a real brand's trademark. Ours are plain black.
+  - Her watch is drawn on her right wrist. On foot it is there. The cockpit hands only wear a watch on the left.
+  - The jacket's flap pockets and the trousers' pressed crease are not built.
+
+### What the pack added to the people builder (additive only)
+
+Every existing preset, default and the public API build as before. New values only:
+
+- `params.ts`: hair `curlsMedium`, `longWaves`; facial hair `lightStubble`; `Look.hairTips`, `Look.browThick`;
+  `FaceShape.jawSoft`; fabric `fur`; garments `suitJacket`, `suitTrousers`, `shrug`, `stilettos`, `oxfords`;
+  `Garment.fit: 'body'`, `Garment.unbutton`; accessories `hoopSize`, `watchRight`, `rings`, `pocketSquare`, `buttons`.
+- `hair.ts`: the two styles; a tapered edge and a fringe (no ledge at the hairline); a curtain that fills out below the
+  ears, with waves; a narrower face opening; lighter streaks. `masks.ts` gains `hairlineDepth`. `cards.ts` takes `tips`.
+- `garments.ts`: the jacket (peak lapels as a lofted strip, a shoulder pad), the straight trouser leg, the shrug's
+  rolls, the bodycon drape and thin straps, the pointed toe, the pump's heel counter, the lace-up shoe's low heel.
+- `person.ts`: under a closed suit jacket the shirt's hidden triangles are left out. Two shells 7 mm apart crossed in
+  the armpit and the shirt showed through.
+- `face.ts` (brow fullness), `head.ts` (`jawSoft`), `cloth.ts` (fur), `acc.ts` (the new accessories).
+- `src/preview/hands-acc.ts` (agreed with its owner, additive): outfits `jacket` and `fur`.
+
+### What is still short of the sheets (honest)
+
+Seen in `tests/out/cast/pack-chad-*-fx.png` and `pack-chadaline-*-fx.png` (2026-11-12, after the Opus pass):
+
+- **Not yet the best-looking characters in the game.** They read as their outfits at a distance, but up close they are
+  the builder's stylised faces, not the sheets' people.
+- **Chad:**
+  - The jacket's sleeves are still fuller than the sheet's tailored sleeve. Two changes made them a little slimmer: a
+    smaller shoulder pad that stops at the shoulder point, and a jacket shell of 9.5 mm instead of 12.5 mm.
+  - His head is still small for the shoulders, at 7.5 heads (it was 7.8).
+  - The curls are a dense, rounded mass with a ragged lower edge over the forehead. They don't yet show the sheet's
+    loose, lighter-tipped curls.
+- **Chadaline:**
+  - Her hair is the weakest part:
+    - the long hair is a cap with a hanging curtain;
+    - beside her face, thin strand cards still let the background through in places;
+    - the top is flat, and the waves and volume of the sheet aren't there.
+  - The curtain now comes forward past the ears (`front` 0.08), and the cards are wider (0.034 m) with the same card
+    count, so the gaps are fewer. Her LOD 0 is close to the budget (89,325 of 90,000 triangles), so more cards are not
+    an option without a cheaper curtain.
+  - The fur shrug now reads as one fluffy sleeve with soft tiers (rolls 3.8 cm apart, blended), not a stack of tyres.
+    The band across the back still shows separate rolls.
+  - The stilettos read as stilettos from the side. From the front they read as low pumps.
+- **Both:** the shared face defects of the six apply to them too: generic face shapes, and the shading of the cheek and
+  jaw hollows.
 
 ## What lane "cast A" changed (files)
 
@@ -232,30 +357,41 @@ The results with the exact suite lines are in the progress log entry of 2026-11-
 - **The beard shell:** `beard-fullBeard-vs-beard.png` (the shell against the builder's own beard shading) and
   `beard-before-after.png` (the shell thinned).
 
-## Highest-impact remaining visual defects (honest)
+## Highest-impact remaining visual defects (honest, updated 2026-11-12 after the graphics pass)
 
-1. **The faces are far from the sheets.** The builder's faces are generic: flat eyes and dark smudges over the cheeks
-   and jaw on every character. Leila's and Danny's hair reads as a helmet. Bodies are sloping-shouldered, sleeves
-   balloon, and Marcus doesn't read as muscular. Straight jeans and trousers render skin-tight, and the
-   bomber's ribbed hem doesn't read. This is the people builder's geometry and shading
-   (`face.ts`, `skin.ts`, `masks.ts`, `body.ts`). Those belong to another branch and are Fable-class work.
-2. **The full beard (Marcus, Mateo) is a solid 4 mm shell.** The edges are hard and there are tabs at the ears in
-   profile. It reads as a beard at a distance, and as a mask up close. The builder's own `beard` shading is almost
-   invisible (`beard-fullBeard-vs-beard.png`). A beard needs strand cards with a soft alpha edge.
-3. **Marcus's scar** isn't built (it needs `face.ts` or `skin.ts`).
-4. **The hands' missing sleeves and accessories,** listed below.
+1. **The faces are still far from the sheets.**
+   - The builder's faces are generic.
+   - Shading in the cheek and jaw hollows reads as dark smudges, on the women too (Kate's
+     `compare-kate-morgan-head-fx.png`). It is the head's geometry and lighting, not a mask (`head.ts`, `skin.ts`),
+     and is Fable-class work.
+2. **The hair.** Leila's and Danny's hair still reads as a helmet. Chadaline's long hair is a cap with a curtain. Chad's
+   curls are a dense mass.
+3. **The bodies.**
+   - The shoulders slope.
+   - The sleeves balloon on the outer layers (Mateo's jacket, Chad's suit jacket, Kate's shirt).
+   - Marcus doesn't read as clearly muscular: he is at the builder's maximum muscle and shoulders, so this is
+     `body.ts`.
+4. **The shoes** are flat slippers from the front (Mateo's boots, Kate's deck shoes, Chadaline's stilettos from the
+   front).
 5. **No driver body in the car.** The hood and chase cameras show only the arms.
 
-## For the session that owns `src/preview/hands*` (not edited here)
+Fixed in this pass:
+- the full-beard box (now strand-card beards);
+- the grey speckle;
+- Marcus's scar;
+- the leggings look of the trousers (`Garment.leg`);
+- the hands' sleeves.
+
+## For the session that owns `src/preview/hands*` (only `hands-acc.ts` edited, additively, as agreed)
 
 - **Hand-over-hand at full lock.** The hands turn rigidly with the rim and read right only to about ±1 rad.
   `PlayerCar` now limits the drawn wheel to 1.05 rad. A shuffle would let it turn to the real lock (±2.2 rad).
-- **Sleeves and wrist pieces the six need:**
-  - a canvas work-jacket cuff with a plain button (Mateo),
-  - a blazer cuff with no shirt cuff showing (Leila),
-  - a short sleeve ending above the elbow (Marcus),
-  - a bomber's ribbed cuff on a plain sleeve, with no patch (Jas),
-  - an elastic hair tie on the right wrist (Jas).
+- **The six's sleeves and wrist pieces** were added in `hands-acc.ts` on 2026-11-12, behind new option values only:
+  `workcuff`, `blazer`, `short` and `bomber`, and `look.hairTie`. The existing outfits, the defaults and every other
+  `hands*` file are unchanged. Two notes for that session:
+  - Marcus's short sleeve shows the forearm above `rollAt`. The skin's tan line (`hands-skin.ts`, which wasn't
+    edited) sits there, faint on his dark skin.
+  - The hair tie sits 8 mm up the wrist, below a bomber's cuff.
 
 ## Next task (cast B)
 

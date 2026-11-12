@@ -522,6 +522,12 @@ If Fable is unavailable, run it on Opus with a design judge pair before any buil
 
 ### Fable prompt: the six characters' graphics pass (people builder), queued 2026-11-12
 
+**TAKEN (2026-11-12) by the cast lane's graphics pass** (branch `claude/cast`, uncommitted for the judges). A Fable
+builder ran it until the owner's 92 % rule, and then an Opus continuation. What is done and what is still open:
+`PROJECT_OC_CAST.md`, "Graphics pass log". Still open there: the faces' own shapes, the helmet hair (Leila, Danny),
+the sloping shoulders, the ballooning sleeves, Marcus's muscle, and the shoes. They need the builder's geometry
+(`body.ts`, `head.ts`, `hair.ts`) and are Fable-class.
+
 **The ask.** The owner (2026-11-11) wants the characters' graphics "insane". Lane cast A's renders show the people
 builder's limits on the six (`src/onfoot/cast.ts`). The comparisons are made by `node tests/cast-shoot.mjs`, then
 `python3 tests/cast-sheets.py <sheets folder>`, into `tests/out/cast/compare-<id>-body.png` and `-head.png`. The
