@@ -58,7 +58,7 @@ ${A.brief}
 Task: REPAIR this work in ${A.wt} exactly as the reviewers asked, keeping what they accepted (edits on disk; read git diff HEAD first). Do not commit.
 Reviewers: ${v.reason.slice(0, 5000)}
 Fixes: ${(v.fixes || []).join(' | ').slice(0, 4000)}
-Re-run the proof where your change touches it (frames with -r${round} names, tsc, the build, the affected test groups). Report as before.`, { label: `repair${round}:${A.id}`, model: A.buildModel || 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
+Re-run the proof where your change touches it (frames with -r${round} names, tsc, the build, the affected test groups). Report as before.`, { label: `repair${round}:${A.id}`, model: A.repairModel || A.buildModel || 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
   if (!f2 || !f2.done) break
   f = { ...f2, files: Array.from(new Set([...(f.files || []), ...(f2.files || [])])) }
   phase('Verify')
