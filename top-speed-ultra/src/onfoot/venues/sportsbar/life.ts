@@ -13,7 +13,8 @@ import { ColliderSet, isTall } from '../../engine/collide';
 import type { Hud } from '../../engine/hud';
 import type { Seat } from '../../engine/venue-types';
 import type { Person } from '../../people';
-import { buildPerson, randomPerson } from '../../people';
+import { buildPerson } from '../../people';
+import { crowdPerson } from '../../cast';
 import type { Quality } from '../../engine/mats';
 import * as C from '../../engine/clock';
 import { Needs, Traits, AVERAGE, AVERAGE_START, SHOWN, ShownNeed, rates, advance, bump, Doing, FunKind, moodOf, moodLabel, needsAverage, Moodlets, emotionOf, Need, needWord, MOODLETS } from '../../engine/sim/needs';
@@ -1393,7 +1394,7 @@ export class BarLife {
        *  weight and how far it turned the bones from the builder's own pose */
       clipTest(levels: (0 | 1 | 2)[] = [2, 1, 0]) {
         const out: Record<string, unknown>[] = [];
-        const p = buildPerson({ ...randomPerson(5150), quality: 'phone', lod: 2 });
+        const p = buildPerson({ ...crowdPerson(5150, 0), quality: 'phone', lod: 2 });
         for (const lod of levels) {
           const t0 = performance.now(); p.setLod(lod); const ms = performance.now() - t0;
           // S2a's clips at 1.0 s as before; S2b's game clips in their swing (the shot, the throw and the push at 0.4 s)

@@ -27,6 +27,7 @@ import { Player, STEP, View, Goal } from './lot57/player';
 import { Input, Action } from './lot57/input';
 import { Hud, loading, doneLoading } from './lot57/hud';
 import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
+import { castOf } from './cast';
 import * as C from './lot57/clock';
 import { ORIGIN, EDGE, PLAN, inVenue, inShed, toLocal, toGame } from './lot57/coords';
 import { Items, ItemId, MENUS, formOf } from './lot57/items';
@@ -718,6 +719,8 @@ async function main() {
     ready: false,
     frames: 0,
     buildMs: 0,
+    /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
+    cast() { const pool = crowd.castPool(); return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: crowd.npcs.filter((n) => n.rep !== 'off').map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts) })) }; },
     attribution: DATA_ATTRIBUTION,
     /** set the simulated clock: day 0-6 (Sunday 0) or a name, hour 0-24; `ms` is how long setting it took (the crowd
      *  settling, posed at once) */
