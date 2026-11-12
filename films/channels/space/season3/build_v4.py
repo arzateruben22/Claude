@@ -10,7 +10,7 @@ lines = {x["id"]: x for x in json.load(open(L1 + "/voice5/lines.json"))["lines"]
 N = int(sys.argv[1]); YT = "--yt" in sys.argv; PRE = float(sys.argv[sys.argv.index("--preview") + 1]) if "--preview" in sys.argv else None
 G = 0.35; CTA = ("D2" if N % 2 == 1 else "D4") if YT else ("D1" if N % 2 == 1 else "D3"); NAME = f"v4-part{N}" + ("-yt" if YT else "") + ("-preview" if PRE else "")
 PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1",
-            "beats": [("__hook__", 3.0, "grow"), ("a year", 4.0, "drift"), ("only goes down", 6.0, "approach"), ("A third wider", 3.0, "grow"), ("tidal pull", 3.5, "tide")],
+            "beats": [("__hook__", 3.0, "grow"), ("only goes down", 6.0, "approach"), ("A third wider", 3.0, "grow"), ("tidal pull", 3.5, "tide")],
             "chips": [("centimeters", "3.8 cm a year", 2.4, 1), ("wider", "1.33× wider", 2.0, 1), ("twice", "2× tidal pull", 2.6, 1)], "km": [288300]},
         2: {"hook": "B3", "body": ["L6", "L7", "L8"], "closer": "C2",
             "beats": [("__hook__", 6.0, "approach"), ("the tidal pull", 11.0, "climb"), ("Not a measured height", 5.0, "tide"), ("lifted from above", 6.0, "pull")],
@@ -62,7 +62,14 @@ def build(use_closer):
     for c in ncaps: c["spoken"] = c["text"]; c["text"] = to_display(c["text"])
     tl = {"name": NAME, "mode": "port", "dur": round(dur, 3), "clips": nclips, "captions": split_caps(ncaps, 68), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
           "badge": {"t": 5.0, "fade": 0.3}, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
-    if N == 1: tl["stars"] = [{"t0": 0.35, "dur": 0.9, "x0": 0.06, "y0": 0.31, "x1": 0.58, "y1": 0.385}]
+    if N == 1:   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
+        cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]
+        tl["drift"] = {"a": round(l2 - 0.2, 3), "b": round(rv, 3), "c": round(rv + 1.4, 3)}
+        tl["camera"] = [{"t": round(l1 + 0.3, 3), "s": 1.18, "pv": "moon"}, {"t": round(rv, 3), "s": 1.0, "pv": "moon"}, {"t": round(rv + 2.0, 3), "s": 1.12, "pv": "moon"}]
+        for k in tl["km"]:
+            if k[1] == 288300: k[:] = [k[0], 288300, round(k[0] - rv, 3)]     # one long glide that begins on the reverse line
+        tl["stars"] = [{"t0": 0.35, "dur": 0.9, "x0": 0.06, "y0": 0.31, "x1": 0.58, "y1": 0.385}, {"t0": round(l2 + 4.5, 3), "dur": 0.9, "x0": 0.04, "y0": 0.30, "x1": 0.46, "y1": 0.37}]
+    if N == 1 and False: tl["stars"] = [{"t0": 0.35, "dur": 0.9, "x0": 0.06, "y0": 0.31, "x1": 0.58, "y1": 0.385}]
     return tl
 use_closer = "C%d" % N in lines
 tl = build(use_closer)
@@ -84,6 +91,12 @@ for b in tl["beats"]:
     elif k == "sunbeam": cue(t0, "shimmer", dur=d, gain=-3)
     elif k == "drift": cue(t0, "tick", gain=-3, repeat=int(d / 0.5), every=0.5)
     elif k == "tick": cue(t0, "tick", gain=-2, repeat=max(2, int(d / 0.5)), every=0.5)
+if N == 1:
+    D = tl["drift"]; l1 = next(c for c in tl["captions"] if c["text"].startswith("Tonight, the Moon starts"))["t0"]
+    cue(l1 - 0.2, "mass", dur=6.0, gain=-3, f0=40)                                  # L1: a low mass swell under the push toward the Moon
+    cue(D["a"] + 4.3, "shooting_star", dur=1.2, pan=[-0.8, 0.0], gain=-3)          # the second star
+    cue(D["b"] - 0.9, "riser", dur=0.9, gain=0); cue(D["b"], "whoosh", dur=1.4, pan=[0.6, -0.6], gain=0); cue(D["b"] + 0.05, "boom", dur=2.5, gain=-3); cue(D["b"] + 0.05, "tick", gain=-1)   # the reversal
+    cue(D["b"] + 0.2, "mass", dur=12.0, gain=-4, f0=38); cue(D["b"] + 1.4, "tick", gain=-4, repeat=14, every=0.7)   # the counter falling
 for c in tl["chips"]: cue(c["t0"], "tick", gain=-1); cue(c["t0"], "boom", dur=1.8, gain=-7)
 cues.append({"at": f"cap:{cliff}-1.4", "kind": "riser", "until": f"capend:{cliff}+0.1", "gain": 2, "seed": N * 100 + 90}); cues.append({"at": f"capend:{cliff}+0.1", "kind": "boom", "dur": 3.0, "gain": 0, "seed": N * 100 + 91})
 if "--yt" not in sys.argv:

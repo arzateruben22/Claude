@@ -34,7 +34,20 @@ function drawPlateWaves(img, a, t, G, cam, ox, oy) {
 }
 function drawPlateWavesNoState(img, t, G) { const hz = Math.floor(G.horizon), sh = img.height / H, STEP = Math.max(3, Math.round(4 * U)); ctx.drawImage(img, 0, hz * sh, img.width, img.height - hz * sh, 0, hz, W, H - hz); for (let y = hz; y < H; y += STEP) { const f = (y - hz) / (H - hz), amp = (3 + 30 * f) * U, dx = amp * Math.sin(y / (24 * U) * (1 + f) - t * (1.0 + 0.6 * f)) + 0.45 * amp * Math.sin(y / (8 * U) + t * 1.9); ctx.drawImage(img, 0, y * sh, img.width, STEP * sh, dx, y, W, STEP + 0.6); } }
 function drawPlate(img, a, scale = 1, ox = 0, oy = 0) { if (a <= 0) return; ctx.save(); ctx.globalAlpha = a; ctx.translate(W / 2 + ox, H * 0.72 + oy); ctx.scale(scale, scale); ctx.translate(-W / 2, -H * 0.72); ctx.drawImage(img, 0, 0, W, H); ctx.restore(); }
-function moonState(d, G) { const m = sizeX(d), r = G.r0 * m, u = sm((m - 1) / 8.5), yb = lerp(G.cy0 + G.r0, G.yb1, u), cx = lerp(G.cx0, G.cx1, sm((m - 1) / 6)); return { m, r, cx, cy: yb - r }; }
+let TNOW = 0;
+// 'drifting off' (timeline.drift {a, b, c}): from a to b the Moon eases a touch smaller and out along its orbit (exaggerated), then from b to c it snaps back as the distance starts to fall
+function driftF(t) { const D = TL.drift; if (!D) return 0; return sm((t - D.a) / (D.b - D.a)) * (1 - sm((t - D.b) / (D.c - D.b))); }
+function moonState(d, G) { const m = sizeX(d), u = sm((m - 1) / 8.5), f = driftF(TNOW), r = G.r0 * m * (1 - 0.10 * f), yb = lerp(G.cy0 + G.r0, G.yb1, u), cx = lerp(G.cx0, G.cx1, sm((m - 1) / 6)) + 0.13 * W * f; return { m, r, cx, cy: yb - r - 0.035 * H * f }; }
+function driftOverlay(t, G) {
+  const D = TL.drift; if (!D || t < D.a - 0.2 || t > D.c + 0.8) return; const f = driftF(t), mo = moonState(Math.max(dVis(t), 17000), G); TNOW = t; const a = Math.min(sm((t - D.a) / 1.2), 1 - sm((t - D.c) / 0.7));
+  const base = (() => { const k = TNOW; TNOW = -1e9; const b0 = moonState(Math.max(dVis(t), 17000), G); TNOW = k; return b0; })(), ang = Math.atan2(mo.cy - base.cy, mo.cx - base.cx) || -0.3;
+  ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.lineCap = "round"; const pulse = 0.75 + 0.25 * Math.sin(t * 3.1);
+  for (let i = 0; i < 3; i++) { const rr = mo.r * (1.9 + 1.5 * i + 2.6 * f * (1 + 0.5 * i)), span = 0.75 - 0.12 * i;
+    ctx.globalAlpha = a * pulse * (0.55 - 0.14 * i); ctx.strokeStyle = i === 0 ? "rgba(170,245,235,1)" : "rgba(140,200,255,1)"; ctx.lineWidth = (3.2 - 0.7 * i) * U; ctx.filter = `blur(${1.2 * U}px)`; ctx.setLineDash(i === 1 ? [18 * U, 12 * U] : []);
+    ctx.beginPath(); ctx.arc(mo.cx, mo.cy, rr, ang - span, ang + span); ctx.stroke(); }
+  ctx.setLineDash([]); ctx.filter = "none"; ctx.globalAlpha = a * 0.5 * Math.min(1, f * 3); ctx.strokeStyle = "rgba(170,245,235,1)"; ctx.lineWidth = 2 * U; ctx.beginPath(); ctx.moveTo(base.cx, base.cy); ctx.lineTo(mo.cx, mo.cy); ctx.stroke();   // the path it has drifted along
+  ctx.restore();
+}
 function sceneComposite(t, d, ecl, moonAlpha, G) {
   const cam = 1.06 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 12 * U * Math.sin(t * 0.43), oy = 9 * U * Math.sin(t * 0.31 + 1);   // overscan (>= 2.9%) is always larger than the largest pan, so the painting's edge never shows
   const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
@@ -99,7 +112,7 @@ function zoomParams(t, G) {   // the camera at time t: a zoom of s about the wor
   return { tx, ty, s: z.s, Fx: z.F.x, Fy: z.F.y };
 }
 function moonScreen(t) {   // where the Moon is on the screen at time t (centre and radius in canvas px), through the shake, the sway and the camera
-  const G = geom(), mo = moonState(Math.max(dVis(t), 17000), G); mo.cx += slideOff(t); let x = mo.cx, y = mo.cy, r = mo.r; const zp = zoomParams(t, G);
+  TNOW = t; const G = geom(), mo = moonState(Math.max(dVis(t), 17000), G); mo.cx += slideOff(t); let x = mo.cx, y = mo.cy, r = mo.r; const zp = zoomParams(t, G);
   if (zp) { x = zp.tx + (x - zp.Fx) * zp.s; y = zp.ty + (y - zp.Fy) * zp.s; r *= zp.s; }
   const v = viewShift(t); if (v.on) { x = W / 2 + v.dx + (x - W / 2) * v.sc; y = H / 2 + v.dy + (y - H / 2) * v.sc; r *= v.sc; }
   return { x, y, r, vis: track(TL.tracks.moon, t) };
@@ -160,6 +173,7 @@ const slideOff = (t) => -0.30 * W * beatPhase(t, "slide", 3.0);
 const shakeAmp = (t) => Math.max(beatPhase(t, "flex", 0.8), 0.45 * beatPhase(t, "strain", 0.8));
 function beatKeys() {
   if (TL._bk !== undefined) return TL._bk; const bs = TL.beats || []; if (!bs.length) return (TL._bk = null); const keys = [];
+  for (const k of (TL.camera || [])) keys.push({ t: k.t, s: k.s, pv: k.pv || "moon" });   // timeline.camera: [{t, s, pv}] extra camera keys (a push while the voice talks, a pull-back on a reversal)
   for (const b of bs) { const [pv, sc] = BK[b.kind] || ["moon", 1.0]; if (sc <= 1.0) continue; keys.push({ t: b.t0 - 0.1, s: sc, pv });
     if (b.kind === "climb") keys.push({ t: b.t0 + 0.62 * (b.t1 - b.t0), s: 1.25, pv: "moon" });   // the camera tilts up as the Moon fills the sky
     keys.push({ t: b.t1 + 0.2, s: 1.0, pv: b.kind === "climb" ? "moon" : pv }); }
@@ -214,12 +228,13 @@ function ch1Overlays(t, b, mo, G) {
   ctx.restore();
 }
 window.renderAt = (t) => {
+  TNOW = t;
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
   const A = swayAmp(t), SH = shakeAmp(t); ctx.save(); { const v = viewShift(t); if (v.on) { ctx.translate(W / 2 + v.dx, H / 2 + v.dy); ctx.scale(v.sc, v.sc); ctx.translate(-W / 2, -H / 2); } }
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   const zp = zoomParams(t, G); if (zp) { ctx.translate(zp.tx, zp.ty); ctx.scale(zp.s, zp.s); ctx.translate(-zp.Fx, -zp.Fy); }
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
-  shootingStars(t);
+  shootingStars(t); driftOverlay(t, G);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
   if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }

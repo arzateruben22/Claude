@@ -1,7 +1,7 @@
 {
  "name": "v4-part1-yt",
  "mode": "port",
- "dur": 70.15,
+ "dur": 66.15,
  "clips": [
   {
    "id": "B1",
@@ -21,69 +21,62 @@
    "id": "L2",
    "file": "voice5/wav/L2.wav",
    "t": 12.275,
-   "dur": 8.245,
+   "dur": 13.7,
    "from": 0.0
-  },
-  {
-   "id": "L2",
-   "file": "voice5/wav/L2.wav",
-   "t": 24.52,
-   "dur": 5.455,
-   "from": 8.245
   },
   {
    "id": "L3",
    "file": "voice5/wav/L3.wav",
-   "t": 30.325,
+   "t": 26.325,
    "dur": 4.963,
    "from": 0.0
   },
   {
    "id": "L3",
    "file": "voice5/wav/L3.wav",
-   "t": 41.288,
+   "t": 37.288,
    "dur": 1.072,
    "from": 4.963
   },
   {
    "id": "L4",
    "file": "voice5/wav/L4.wav",
-   "t": 42.71,
+   "t": 38.71,
    "dur": 4.55,
    "from": 0.0
   },
   {
    "id": "L4",
    "file": "voice5/wav/L4.wav",
-   "t": 50.26,
+   "t": 46.26,
    "dur": 3.33,
    "from": 4.55
   },
   {
    "id": "D2",
    "file": "voice5/wav/D2.wav",
-   "t": 53.94,
+   "t": 49.94,
    "dur": 0.06,
    "from": 0.0
   },
   {
    "id": "D2",
    "file": "voice5/wav/D2.wav",
-   "t": 57.5,
+   "t": 53.5,
    "dur": 3.36,
    "from": 0.06
   },
   {
    "id": "L5",
    "file": "voice5/wav/L5.wav",
-   "t": 61.16,
+   "t": 57.16,
    "dur": 4.84,
    "from": 0.0
   },
   {
    "id": "C1",
    "file": "voice5/wav/C1.wav",
-   "t": 66.35,
+   "t": 62.35,
    "dur": 2.9,
    "from": 0.0
   }
@@ -119,84 +112,84 @@
   },
   {
    "t0": 12.715,
-   "t1": 20.49,
+   "t1": 20.52,
    "text": "Right now it's about 384,000 km away, drifting off 3.8 cm a year.",
    "line": "L2",
    "spoken": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year."
   },
   {
-   "t0": 24.54,
-   "t1": 26.445,
+   "t0": 20.54,
+   "t1": 22.445,
    "text": "Tonight, it reverses.",
    "line": "L2",
    "spoken": "Tonight, it reverses."
   },
   {
-   "t0": 26.555,
-   "t1": 29.645,
+   "t0": 22.555,
+   "t1": 25.645,
    "text": "A thought experiment, built from real physics.",
    "line": "L2",
    "spoken": "A thought experiment, built from real physics."
   },
   {
-   "t0": 30.525,
-   "t1": 31.745,
+   "t0": 26.525,
+   "t1": 27.745,
    "text": "Watch the number.",
    "line": "L3",
    "spoken": "Watch the number."
   },
   {
-   "t0": 31.765,
-   "t1": 33.775,
+   "t0": 27.765,
+   "t1": 29.775,
    "text": "It only goes down.",
    "line": "L3",
    "spoken": "It only goes down."
   },
   {
-   "t0": 42.8,
-   "t1": 45.035,
+   "t0": 38.8,
+   "t1": 41.035,
    "text": "288,000.",
    "line": "L4",
    "spoken": "Two hundred eighty-eight thousand."
   },
   {
-   "t0": 45.055,
-   "t1": 47.23,
+   "t0": 41.055,
+   "t1": 43.23,
    "text": "A third wider.",
    "line": "L4",
    "spoken": "A third wider."
   },
   {
-   "t0": 50.28,
-   "t1": 53.86,
+   "t0": 46.28,
+   "t1": 49.86,
    "text": "And the sea already feels it: more than twice the tidal pull.",
    "line": "L4",
    "spoken": "And the sea already feels it: more than twice the tidal pull."
   },
   {
-   "t0": 57.64,
-   "t1": 60.81,
+   "t0": 53.64,
+   "t1": 56.81,
    "text": "If that made the sky feel bigger, tap like and subscribe.",
    "line": "D2",
    "spoken": "If that made the sky feel bigger, tap like and subscribe."
   },
   {
-   "t0": 61.24,
-   "t1": 65.97,
+   "t0": 57.24,
+   "t1": 61.97,
    "text": "Halve the distance, and the water starts to climb.",
    "line": "L5",
    "spoken": "Halve the distance, and the water starts to climb."
   },
   {
-   "t0": 66.55,
-   "t1": 67.445,
+   "t0": 62.55,
+   "t1": 63.445,
    "text": "Part 1 of 8.",
    "line": "C1",
    "spoken": "Part one of eight."
   },
   {
-   "t0": 67.465,
-   "t1": 69.24,
+   "t0": 63.465,
+   "t1": 65.24,
    "text": "Full video on YouTube.",
    "line": "C1",
    "spoken": "Full video on YouTube."
@@ -212,9 +205,9 @@
    384400
   ],
   [
-   41.288,
+   37.288,
    288300,
-   6.0
+   16.748
   ]
  ],
  "tracks": {
@@ -256,23 +249,18 @@
    "kind": "grow"
   },
   {
-   "t0": 20.52,
-   "t1": 24.52,
-   "kind": "drift"
-  },
-  {
-   "t0": 35.288,
-   "t1": 41.288,
+   "t0": 31.288,
+   "t1": 37.288,
    "kind": "approach"
   },
   {
-   "t0": 47.26,
-   "t1": 50.26,
+   "t0": 43.26,
+   "t1": 46.26,
    "kind": "grow"
   },
   {
-   "t0": 54.0,
-   "t1": 57.5,
+   "t0": 50.0,
+   "t1": 53.5,
    "kind": "tide"
   }
  ],
@@ -283,13 +271,13 @@
    "text": "3.8 cm a year"
   },
   {
-   "t0": 45.7,
-   "t1": 47.7,
+   "t0": 41.7,
+   "t1": 43.7,
    "text": "1.33× wider"
   },
   {
-   "t0": 52.305,
-   "t1": 54.905,
+   "t0": 48.305,
+   "t1": 50.905,
    "text": "2× tidal pull"
   }
  ],
@@ -297,9 +285,31 @@
   "t": 5.0,
   "fade": 0.3
  },
- "cta_at": 53.94,
- "cta_frac": 0.769,
+ "cta_at": 49.94,
+ "cta_frac": 0.755,
  "cliff": "L5",
+ "drift": {
+  "a": 12.515,
+  "b": 20.54,
+  "c": 21.94
+ },
+ "camera": [
+  {
+   "t": 6.835,
+   "s": 1.18,
+   "pv": "moon"
+  },
+  {
+   "t": 20.54,
+   "s": 1.0,
+   "pv": "moon"
+  },
+  {
+   "t": 22.54,
+   "s": 1.12,
+   "pv": "moon"
+  }
+ ],
  "stars": [
   {
    "t0": 0.35,
@@ -308,6 +318,14 @@
    "y0": 0.31,
    "x1": 0.58,
    "y1": 0.385
+  },
+  {
+   "t0": 17.215,
+   "dur": 0.9,
+   "x0": 0.04,
+   "y0": 0.3,
+   "x1": 0.46,
+   "y1": 0.37
   }
  ]
 }
