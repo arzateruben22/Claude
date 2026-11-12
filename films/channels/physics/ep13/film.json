@@ -319,8 +319,8 @@
    "id": "code-p0",
    "kind": "tag",
    "text": "Kitchen: AI illustration · bird drawn by code",
-   "t0": 0.6,
-   "t1": 53.2333,
+   "t0": 1.0,
+   "t1": 6.0,
    "slot": "tl"
   },
   {
@@ -336,7 +336,7 @@
    "kind": "tag",
    "text": "Kitchen: AI illustration · fly drawn by code",
    "t0": 53.6333,
-   "t1": 58.8833,
+   "t1": 56.6333,
    "slot": "tl"
   }
  ],

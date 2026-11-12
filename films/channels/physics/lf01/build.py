@@ -395,6 +395,11 @@ def _retag():
         out += segs or [b]
     BADGES = out
 _retag()
+if PART:   # the label rule: 5 s at the start (1 s to 6 s), then 3 s at each cut between the plate and the code kitchen
+    BADGES = sorted(BADGES, key=lambda b: b["t0"])
+    for k, b in enumerate(BADGES):
+        if k == 0: b["t0"], b["t1"] = 1.0, min(b["t1"], 6.0)
+        else: b["t1"] = R(min(b["t1"], b["t0"] + 3.0))
 
 film = {
     "id": f"reality-rulebook-s3p{PART}" if PART else "reality-rulebook-lf01", "fps": FPS, "bpm": BPM, "dur": DUR, "poster": 0.0,

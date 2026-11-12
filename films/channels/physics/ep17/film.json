@@ -288,8 +288,8 @@
    "id": "code-s0",
    "kind": "tag",
    "text": "Drawn by code · model",
-   "t0": 0.6,
-   "t1": 20.0333,
+   "t0": 1.0,
+   "t1": 6.0,
    "slot": "tl"
   },
   {
@@ -297,7 +297,7 @@
    "kind": "tag",
    "text": "Kitchen: AI illustration · bullet and apple drawn by code",
    "t0": 20.0333,
-   "t1": 37.1333,
+   "t1": 23.0333,
    "slot": "tl"
   },
   {
@@ -305,7 +305,7 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 37.1333,
-   "t1": 57.55,
+   "t1": 40.1333,
    "slot": "tl"
   }
  ],

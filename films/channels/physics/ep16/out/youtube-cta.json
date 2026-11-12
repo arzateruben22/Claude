@@ -1,0 +1,19 @@
+{
+ "caption": [
+  55.182,
+  57.552
+ ],
+ "line": "vo03",
+ "was": "Real quick: like and follow.",
+ "now": "Real quick: like and subscribe.",
+ "slot_s": [
+  26.795,
+  29.23
+ ],
+ "stretch": 0.911,
+ "asr_check": {
+  "caption_words": "Real quick: like and subscribe.",
+  "not_heard": [],
+  "pass": true
+ }
+}

@@ -1,4 +1,8 @@
 {
+ "caption": [
+  49.992,
+  51.507
+ ],
  "line": "vo03",
  "was": "Quick pause: if that one got you, tap like and follow.",
  "now": "Quick pause: if that one got you, tap like and subscribe.",
@@ -6,5 +10,10 @@
   16.64,
   20.11
  ],
- "stretch": 1.123
+ "stretch": 1.123,
+ "asr_check": {
+  "caption_words": "tap like and subscribe.",
+  "not_heard": [],
+  "pass": true
+ }
 }
