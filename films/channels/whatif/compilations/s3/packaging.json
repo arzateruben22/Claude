@@ -1,0 +1,129 @@
+{
+ "version": 1,
+ "format": "long",
+ "channel": "Possibility Lab",
+ "video": "compilations/s3",
+ "hook": "Shorten the day to about 1 h 24 min and the ground at the equator moves at orbital speed: you weigh nothing.",
+ "titles": [
+  {
+   "text": "What If Earth Spun Faster and Couldn't Stop?",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "How Fast Can the Earth Spin Before You Float?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "Spin Earth Faster and the Poles Run Dry",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "A Day Only 84 Minutes Long: What Would It Do to You?",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "How Fast Are You Moving Right Now?",
+   "mechanism": "personal relevance"
+  }
+ ],
+ "thumbnails": [
+  {
+   "id": "A",
+   "subject": "the blue figure close to the camera on its toes at the equator, the Sun a huge streak across a low horizon, a pale ring of dust lifting at its feet",
+   "composition": "figure large on the left third at about 55% of the frame height, a low curving horizon, a huge sun streak on the right, a big empty sky",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent; a magenta rim light on the figure",
+   "trigger": "a tiny 'you' on tiptoe; the goal is the racing Sun and no answer is shown",
+   "text": "",
+   "complements": "the title asks the question; the picture shows the setup"
+  },
+  {
+   "id": "B",
+   "subject": "the Earth with a band of ocean gathered round the equator and bare grey poles",
+   "composition": "globe large centre-left",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "scale shock",
+   "text": "",
+   "complements": "adds a second consequence"
+  },
+  {
+   "id": "C",
+   "subject": "the figure standing small on a plain with several Suns ghosted across the sky",
+   "composition": "figure lower left, Suns arcing",
+   "lighting": "the film's own look: a deep slate background (#171A1E), a glossy blue mannequin figure with no face standing on a dark graph-paper plain, soft cool key light, magenta (#EB63FF) accent",
+   "trigger": "visual paradox",
+   "text": "",
+   "complements": "silent picture of a day lasting minutes"
+  }
+ ],
+ "pairings": [
+  {
+   "title": 0,
+   "thumbnail": "A",
+   "scores": {
+    "scroll": 88,
+    "curiosity": 90,
+    "clarity": 86,
+    "synergy": 90,
+    "originality": 80,
+    "accuracy": 92,
+    "mobile": 86,
+    "satisfaction": 92
+   },
+   "note": "premise in the title, the setup in the picture"
+  },
+  {
+   "title": 1,
+   "thumbnail": "B",
+   "scores": {
+    "scroll": 82,
+    "curiosity": 84,
+    "clarity": 74,
+    "synergy": 72,
+    "originality": 84,
+    "accuracy": 86,
+    "mobile": 72,
+    "satisfaction": 85
+   },
+   "note": "two hooks dilute each other"
+  },
+  {
+   "title": 3,
+   "thumbnail": "C",
+   "scores": {
+    "scroll": 74,
+    "curiosity": 76,
+    "clarity": 70,
+    "synergy": 68,
+    "originality": 72,
+    "accuracy": 90,
+    "mobile": 70,
+    "satisfaction": 82
+   },
+   "note": "a number in the title gives the answer away"
+  }
+ ],
+ "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+ "winner": {
+  "title": "What If Earth Spun Faster and Couldn't Stop?",
+  "thumbnail": "D",
+  "thumbnailText": "90-MINUTE DAY",
+  "why": "The owner's illustration of the figure under a streaking Sun, with our visor robot in awe, and the day length in big words; it shows the setup, not the answer."
+ },
+ "testAndCompare": [
+  "A",
+  "B"
+ ],
+ "checks": {
+  "halfSecond": true,
+  "curiosity": true,
+  "duplication": true,
+  "competition": true,
+  "truth": true,
+  "satisfaction": true,
+  "originality": true
+ },
+ "checksNote": "My own creative judgments, not measured. truth: the cover is a frame of the film; the figure on tiptoe is the 1 h 30 beat.",
+ "thumbnailFile": "thumbnail.jpg",
+ "chatgptPrompt": "Create a YouTube thumbnail, 16:9 (1920x1080).\nSubject: a smooth, glossy blue mannequin-style figure (simple rounded head and body, no facial features), seen from behind and slightly to the side, standing on tiptoe on a dark ground plane covered in a faint glowing grid, a few small glowing specks lifting off the ground around its feet.\nComposition: low camera close behind the figure; the figure fills the left third, about 55% of the frame height; the grid ground recedes to a low, gently curved horizon, with a large empty sky on the right.\nLighting and treatment: a huge low sun just above the horizon on the right, stretched into a short bright streak as if racing across the sky; a deep blue-violet sky fading to near-black at the top; a magenta (#EB63FF) rim light on the figure and a cool blue glow under its feet; clean, minimal, high contrast, stylised 3-D render.\nMood: disbelief: is it about to float?\nText: No text.\nScientific accuracy: the figure is only a little lighter, standing, not flying; it shows the setup only, never the answer.\nAvoid: no arrows, circles, faces, realistic people, logos, watermarks, extra text, spaceships, explosions.\nStyle: premium, art-directed, minimal 3-D science illustration that matches a clean code-rendered animation; not photorealistic, not generic AI art.",
+ "aiIllustration": true
+}

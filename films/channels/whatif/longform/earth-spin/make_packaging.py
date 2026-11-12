@@ -2,7 +2,7 @@
 figure doing the action, the goal in frame, the setup never the answer). Run after the film is final to fix frameSeconds; the text is final now.
 Part titles = the chapter titles in the long video's description, character for character (Prism links parts to the film by them)."""
 import json
-COVER = {1: (None, "17 SUNRISES A DAY"), 2: (None, "Sunset in 6 hours"), 3: (None, "1,670 km/h wind"), 4: (None, "Seas pile up here"), 5: (None, "Calm afternoons end"), 6: (None, "6,000 days a year"), 7: (None, "Sunset in 1 hour"), 8: (None, "Jump 4 meters high")}      # part -> (frame second, cover words that add a new layer; never the title); None = made from the owner's AI illustration
+COVER = {8: (None, "Jump 4 meters high"), 7: (16, "Sunset in 1 hour"), 6: (13, "6,000 days a year"), 1: (None, "17 SUNRISES A DAY"), 2: (None, "Sunset in 6 hours"), 3: (None, "1,670 km/h wind"), 4: (None, "Seas pile up here"), 5: (None, "Calm afternoons end"), 6: (None, "6,000 days a year"), 7: (None, "Sunset in 1 hour"), 8: (None, "Jump 4 meters high")}      # part -> (frame second, cover words that add a new layer; never the title); None = made from the owner's AI illustration
 
 from pathlib import Path
 HERE = Path(__file__).resolve().parent

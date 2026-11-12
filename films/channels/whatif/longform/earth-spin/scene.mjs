@@ -196,7 +196,7 @@ window.seek = function (t) {
   } else if (!gl) {
     pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
   } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
-  planetG.position.set(pcx, pcy, 0);
+  planetG.position.set(pcx, pcy, 0); planetG.scale.setScalar(1);
   if (FILM.figOnly) { sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = false;       // the capsule figure alone on a flat black or white backdrop (matted into an alpha PNG for the cover variants)
     if (!window.__bgPlane) { window.__bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), basic(FILM.figOnly.bg ? "#999999" : "#000000", 1, true)); window.__bgPlane.position.set(0, 0, -30); window.__bgPlane.userData.noProbe = true; scene.add(window.__bgPlane); } }
   window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
@@ -251,7 +251,8 @@ window.seek = function (t) {
   const tw = shot === "tower";
   tower.visible = towerE.visible = slice.visible = tw;
   if (tw) { const g = E.inout2(seg(t, CUE.cost[0] + 6, CUE.cost[0] + 17)), h = Math.max(0.01, TH * g);
-    camera.fov = 30; camera.position.set(0, TH * 0.44, 150 - 6 * seg(t, CUE.cost[0], CUE.cost[1])); camera.lookAt(0, TH * 0.44, 0);
+    camera.fov = 30; { const cp = seg(t, CUE.cost[0], CUE.cost[1]), az = -0.4 + 0.8 * cp, r = 150 - 40 * cp; camera.position.set(r * Math.sin(az), TH * (0.34 + 0.16 * cp), r * Math.cos(az)); camera.lookAt(0, TH * 0.44, 0); }   // a slow orbit and push-in all through the beat (the bars no longer sit still)
+    planetG.position.set(-80, TH * 0.5, -75); planetG.scale.setScalar(54); globe.visible = true; globe.scale.set(1, 0.72, 1); gU.uSpin.value = 0.9 * t; gU.uExposure.value = 0.7; gU.uLight.value.set(0.6, 0.4, 0.7);   // the spinning Earth the energy is for, big and dim beside the bars (moves across the whole left half of the frame)
     tower.scale.set(TW * 0.96, h, TW * 0.96); tower.position.set(4.5, h / 2, 0); towerE.position.set(4.5, TH / 2, 0); slice.scale.set(TW * 0.96, Math.max(0.3, TH / 290), TW * 0.96); slice.position.set(-4.5, Math.max(0.3, TH / 290) / 2, 0); }
 
   camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
