@@ -19,7 +19,12 @@
     "utilities_operations": "Utilities & operations",
     "plumbing_pipefitting": "Plumbing & pipefitting",
     "construction_office": "Construction office",
-    "other_trade": "Other trade"
+    "other_trade": "Other trade",
+    "dispatch_scheduling": "Dispatch & field scheduling",
+    "project_coordination": "Project coordination",
+    "safety_compliance": "Safety & compliance",
+    "operations_logistics": "Operations & logistics",
+    "executive_admin": "Executive & office administration"
   },
   "payRule": {
     "baseHourly": 35,
@@ -243,6 +248,7 @@
       "list": "best_fit",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Six Flags Magic Mountain Maintenance Hiring Team,\n\nI am applying for the Full-Time Ride Mechanic Technician position in Valencia. I live in the west San Fernando Valley and am building a long-term career in hands-on mechanical maintenance. Preventative maintenance, repair and overhaul of rides is the work I want to do every day.\n\nMy most relevant experience is [your most relevant hands-on mechanical experience], where I [specific tasks you actually performed, such as inspections, part replacement or troubleshooting]. I work with [hand and power tools you actually use] and own a basic set of hand tools [confirm before sending]. I keep accurate records: in [role], I completed [logs, checklists or work orders you actually filled out]. [Vocational or technical training or certification, only if you hold it.]\n\nI have a [high school diploma or GED] and [a valid California driver's license, only if true]. I am available for weekends, nights and holidays, and I understand the position is covered by the agreement with IAM District Lodge No. 947.\n\nI would welcome the chance to show my mechanical aptitude in an interview or hands-on assessment.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -442,6 +448,7 @@
       "list": "best_fit",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Six Flags Magic Mountain Maintenance Hiring Team,\n\nI am applying for the Full-Time Ride Mechanic Technician (Cycle Shop) position in Valencia. Your posting says the Maintenance Division is seeking someone to be trained as a Cycle Shop Mechanic. I am changing careers into the skilled trades and want to build a long-term career in hands-on mechanical maintenance, so that is the start I am looking for.\n\nI hold a [high school diploma or GED]. My most relevant hands-on experience is [your most relevant mechanical or hands-on experience: tools used, equipment repaired, where]. [If true: I have completed (vocational or technical coursework or safety training, name it).] In my previous work at [employer], I [one true example of following procedures, keeping accurate records, or reliable attendance over (years)].\n\nI live in the west San Fernando Valley and can work the varied shifts the posting describes, including nights, weekends and holidays. I am prepared for physical work, including climbing and working at heights on ride structures, and I follow written procedures and safety checks carefully.\n\nI would welcome the chance to discuss the role and can be reached at [phone] or [email].\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     }
@@ -639,6 +646,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": false,
+      "fitBasis": "goals",
       "letterDraft": "Dear City of Los Angeles Personnel Department and LADWP Power System hiring team,\n\nI am applying for Electric Distribution Mechanic (E) (3879) (Trainee). I live in the west San Fernando Valley and want to build a long-term career in electrical line and cable work with the utility that serves my own neighborhood.\n\nI qualify under the bulletin through [the one qualifying option you actually meet, for example: certificate of completion from the Powerline Mechanic-Trainee Program at Los Angeles Trade-Technical College, completed on (date)]. The supporting document is attached to this application.\n\nMy background includes [your most relevant hands-on experience: outdoor, physical, at-height, electrical or crew work] over [years]. In that work I [one true example of following safety procedures or showing up reliably for a crew].\n\nI understand the training period can last up to 54 months, combining classroom instruction with on-the-job training as a cable splicer and line mechanic, and that I must pass the multiple-choice and performance tests. I hold [a valid Class C driver's license, only if true] and understand a Class A license is required within six months of starting the program.\n\nI am ready for outdoor, physical work and [overtime or emergency call-outs, if you are able], and I would welcome the chance to test.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -822,6 +830,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Marathon Petroleum Los Angeles Refinery Hiring Team,\n\nI am applying for the Refinery Operator Trainee position (requisition 00024620) at the Carson and Wilmington sites. I live in the Los Angeles area and want to build a long-term career in hands-on, on-site industrial work, starting with your operator qualification training.\n\nI hold a [high school diploma / GED] and [the qualifying item you actually hold from the posting's list: associate's degree in a technical field, four-year STEM degree, years of refining or petrochemical experience, or military service]. My most relevant experience is [your most relevant hands-on experience], where I [specific tasks, for example following written procedures, working around equipment, working outdoors].\n\nI understand what the job requires and am prepared for it: 12-hour rotating day and night shifts, overtime, the pre-employment assessment, medical and background screening, and ongoing random drug and alcohol testing. [State that you hold a valid driver's license only if that is true.] [One example of reliability: attendance record, shift work, or safety record.]\n\nI take procedures and safety rules seriously and want to learn the units properly from experienced operators. I would welcome the chance to take the assessment.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -1005,6 +1014,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear LA Metro Talent Acquisition,\n\nI am applying for the Facilities Systems Technician position (Job Number 2400085-3). I live in the San Fernando Valley and am building a long-term career in hands-on facilities, mechanical and electrical maintenance. Keeping Metro's bus and rail facilities and the Gateway headquarters building running is the kind of work I want to do every day.\n\nMy background includes [years] years of [your most relevant hands-on experience: construction, masonry, mechanical, electrical or facilities maintenance work] at [employer or setting]. In that work I [specific equipment or systems you actually repaired or maintained, for example motors, controls, pneumatic or hydraulic equipment, only if true]. [Trade school or apprenticeship program you completed, with its length, only if completed.] [Safety training you hold, only if you hold it.]\n\nI understand the role includes written and performance exams and responding to emergencies at any hour and in any weather, and I am ready for physical, on-site work on that basis. [State your driver's license class and status accurately.] [Confirm you have your own tools of the trade, only if true.]\n\nI would welcome the opportunity to test and interview. I can be reached at [phone] or [email].\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -1191,6 +1201,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Six Flags Magic Mountain Maintenance Hiring Team,\n\nI am applying for the Facilities Electrician position in Valencia listed on the Six Flags careers site. I live in the west San Fernando Valley, within commuting distance of the park, and my goal is a long-term career in the electrical trade in Los Angeles County.\n\nMy background includes [your most relevant hands-on electrical or maintenance experience, with years]. I have worked with [tools, test equipment or systems you have actually used] and completed [trade school program or safety training, only if you hold it]. [If true: I am studying the National Electrical Code and arc flash safety practices.]\n\nI understand the role calls for accurate record keeping, clear written communication and basic Word and Excel use; [say where you have done this]. I am available for varied shifts, including weekends and holidays, and ready for physical, on-site work across the park's buildings and grounds.\n\nIf my experience falls short of what this position requires, I would welcome consideration for a maintenance helper or trainee opening on the same team.\n\nThank you for your time.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -1358,6 +1369,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": false,
+      "fitBasis": "goals",
       "letterDraft": "Dear Cedars-Sinai Marina Hospital Plant Maintenance hiring team,\n\nI am applying for the Maintenance Tech (Hospital/Facilities Engineer) position, Req ID 20389, at Cedars-Sinai Marina Hospital. I am building a long-term career in building engineering and want to do that work in a hospital, where plumbing, electrical and HVAC systems have to stay reliable for patient care and meet regulatory standards.\n\nMy background includes [your most relevant hands-on maintenance or repair experience, with employer and dates]. In that work I [specific tasks you actually performed, for example preventive maintenance, basic electrical or plumbing repairs, completing work orders]. [If true: I have [years] of experience as a maintenance technician in a hospital or healthcare setting.] [Only if you hold it: I hold an EPA certification / a vocational or technical diploma in [field].]\n\nI live in the Los Angeles area, I am available for full-time work with variable hours, and I am ready for physical, on-site work. For reliability and safety, I can point to [one true example: attendance record, on-call work, safety training].\n\nI would welcome the chance to discuss how I can support the Plant Maintenance team.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -1519,6 +1531,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": false,
+      "fitBasis": "goals",
       "letterDraft": "Dear CoreSite Hiring Team,\n\nI am applying for the Critical Operations Engineer I (LA2) (Swing) position at your 900 N. Alameda Street data center. I am building a long-term career in electrical and mechanical plant operations, and I want to do that work on-site, in a facility where uptime depends on procedures being followed exactly.\n\nMy background includes [your most relevant hands-on experience with electrical or mechanical equipment, stated plainly]. In that work I [specific task: for example rounds, readings, preventive maintenance, troubleshooting, lockout/tagout], and I [evidence of reliability: attendance record, shift work, on-call coverage]. I hold [certification or safety training, only if you hold it].\n\nI understand this role involves operating, monitoring and maintaining power, cooling and fire/life-safety systems, and that CoreSite trains and advances engineers through its qualification program. I am ready to work the swing shift, including weekends, holidays and call-outs when needed, and to learn your methods of procedure and qualification cards step by step.\n\nI live in the Los Angeles area and can start [date]. I would welcome the chance to walk through my experience and answer any technical questions.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -1728,6 +1741,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Equinix Hiring Team,\n\nI am applying for the Data Center Critical Facilities IV position at your El Segundo site (JR-160701). I live in the Los Angeles area and am building a long-term career in electrical and facilities work. I want to do that work on site, with my hands, in a facility where uptime matters.\n\nMy most relevant experience is [your most relevant hands-on experience with electrical, mechanical, HVAC or building systems, and where you did it]. In that work I [specific tasks you performed, such as preventive maintenance, troubleshooting, rounds and readings, or escorting contractors], and I followed [safety procedures you were actually trained in, such as lockout/tagout, only if true]. I hold [certification, only if you hold it].\n\nI understand this role covers UPS, switchgear, generators, battery systems, cooling and fire/life-safety equipment, and that it requires shift work, on-call rotations and after-hours maintenance. I am available for those schedules. [If your experience is below what this posting describes, say so plainly here and ask to be considered for a more junior critical facilities opening in the Los Angeles area.]\n\nThank you for your time.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -1904,6 +1918,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Disneyland Resort Hiring Team,\n\nI am applying for the Maintenance Mechanic (Outside Machinist - Non-Automotive) - Full Time position in Anaheim (Job ID 1365253BR). I live in the Los Angeles area and am building a long-term career in industrial maintenance, where the work is hands-on, on-site and held to strict safety standards.\n\nMy background includes [years] years of [your directly related maintenance mechanic experience, naming the industrial or production facility, only if true]. There I [describe the troubleshooting, repair or overhaul work you actually performed]. I have used [the precision measuring tools you have actually used, such as micrometers, calipers or dial indicators] and [the machinist or hand tools you have actually used]. [Add hydraulic, pneumatic or blueprint-reading experience, only if you have it.]\n\nI understand these shifts are typically at night and that the role requires availability for any shift, including holidays and any days off. I am prepared for that schedule and for the physical demands of working on attractions and ride vehicles, [including work at heights, only if you are comfortable with it].\n\nI would welcome the chance to discuss how my experience fits your maintenance team.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -2075,6 +2090,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Equinix Hiring Team,\n\nI am applying for the Data Center Critical Facilities Engineer position (JR-163012) at your Torrance site on Francisco Street. I am moving my career into hands-on facilities and electrical work, and I want to build it in an environment where uptime and safe procedure come first.\n\nMy background is in [your current or most recent field], where I [your most relevant hands-on experience: maintenance, repair, equipment operation or troubleshooting]. I have [years] of work experience and hold a [high school diploma or GED]. [Certification or safety training, only if you hold it.] I follow written procedures, log my work accurately, and ask before acting on equipment I have not been trained on.\n\nI understand this role involves working with a team to resolve facility incidents, supporting maintenance, and tracking critical spare parts. I am ready for physical, on-site work in Torrance and for [shift, weekend or on-call schedules, if the role requires them]. If my experience better fits a technician-level opening on the same team, I would welcome that conversation.\n\nI live in the Los Angeles area and can start [date]. Thank you for your consideration.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -2260,6 +2276,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Irvine Ranch Water District Hiring Team,\n\nI am applying for the Maintenance Mechanic position in the Mechanical Services Department. I am changing careers into the skilled trades and want a long-term career maintaining water and wastewater equipment.\n\nThe bulletin describes planned, preventive and predictive maintenance on pumps, motors, air compressors, engines and gear drives. My closest hands-on background is [your most relevant mechanical or electrical experience, with employer and dates], where I [tasks you actually performed and tools you used]. My safety training includes [training you completed, only if true].\n\nI understand the District prefers two years of apprentice-level experience and values a formal apprenticeship and the CWEA Grade I Plant Maintenance Technologist certificate. I have [years] of related experience and [coursework or certificate, only if you hold it], and I plan to pursue the CWEA Grade I certificate [your actual timeline].\n\n[I hold a valid California Class C driver's license. Include only if true.] I live in the Los Angeles area and am ready for physical, on-site work in Irvine, including [standby or overtime availability you can truthfully offer].\n\nThank you for considering my application.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -2434,6 +2451,7 @@
       "list": "stretch",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Morrow-Meadows Hiring Team,\n\nI am applying for the Estimator position in your Electrical Division in City of Industry. I am changing careers into electrical construction and want to build a long-term career in estimating, starting with takeoffs and bid support and learning your process.\n\nYour posting asks for Microsoft Office proficiency, math or accounting skills, and some commercial and industrial electrical knowledge. I use [the Office programs you actually use, and for what]. I have worked with numbers in [your true experience with budgets, quantities, pricing or accounting]. My exposure to electrical or construction work so far is [your most relevant hands-on or classroom experience; if you are new, say so and name what you are studying]. [Mention Bluebeam, Accubid, Revit or CAD only if you have used them.]\n\nI live in the Los Angeles area and am available for full-time, on-site work at your City of Industry office. [One true example of accuracy, deadline work or reliability.] [Your availability for job walks and pre-bid meetings, stated only as it is true for you.]\n\nI would welcome a conversation about where an entry-level estimator could be useful to your team.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     }
@@ -2619,6 +2637,7 @@
       "list": "below_pay",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear IBEW Local 18 and LADWP UPCT Screening Team,\n\nI am writing about the Utility Pre-Craft Trainee program. I signed the UPCT book on [date] and will re-sign every quarter. I live in [your city], in Los Angeles County, and I am changing careers to build a long-term future in utility and electrical work.\n\nI am a beginner in the trades and will not claim craft experience I do not have. What I can offer is [your most relevant hands-on experience, such as physical, outdoor, mechanical or repair work], [number] years at [employer or type of work], and [specific evidence of reliability, such as attendance or length of service]. [Safety training, only if you hold it.] [Valid California driver's license showing my Los Angeles County address, only if true.]\n\nThe on-the-job training across LADWP work groups is the reason I am applying: I want to learn the work from the ground up, qualify for a civil service class, and follow the electrical path over time. I am ready for physical, outdoor, on-site work and early or changing shifts.\n\nYou can reach me at [phone] or [email].\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -2791,6 +2810,7 @@
       "list": "below_pay",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Members of the Joint Apprenticeship Committee,\n\nI am applying for the Plumber / Steamfitter-Pipefitter apprenticeship with UA Local 398. I live in [your city] and am changing careers to build a long-term future in the pipe trades. I want hands-on, on-site work that is held to a licensed standard, and I understand the program combines full-time jobsite work with required classroom instruction for the length of the apprenticeship.\n\nI hold a [high school diploma / GED]. My work history is in [your current or most recent field], where I [your most relevant hands-on experience: tools used, physical work, measuring, working to a schedule]. [One true example of reliability, such as attendance or time with one employer.]\n\nI have no prior plumbing or pipefitting experience and am not claiming any. I can offer steady attendance, willingness to start at the first-period apprentice rate, and readiness for early starts and physical work at jobsites in the local's jurisdiction. [State your transportation and driver's license situation truthfully here.]\n\nI will bring the required documents to my application appointment and am available for any test and interview dates you set.\n\nSincerely,\n[Your name] | [Phone] | [Email]",
       "letterIsGeneric": false
     },
@@ -2958,6 +2978,7 @@
       "list": "below_pay",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Morrow-Meadows Hiring Team,\n\nI am applying for the Field Engineer position in City of Industry. I am changing careers into electrical construction and want to build a long-term career on the project side of the trade, starting with the jobsite support work this role describes.\n\nI understand the Field Engineer keeps a foreman's paperwork moving: maintaining as-built drawings, processing new-hire paperwork, tracking tool orders and keeping journeymen's license records current. That is the careful, detail-driven work I want to be doing. In [your most recent role] at [employer], I [a true example of tracking records, orders or schedules for other people]. I use Microsoft [Excel / Word / Outlook, only the programs you actually use] for [what you actually do with them].\n\n[If true: I am new to the electrical trade and say so plainly.] What I offer is [a true reliability example, such as an attendance record or years in one job], readiness to work on site every day, and a willingness to learn drawings and field procedures from the people who do the work.\n\nI live in [your city] in the LA/Orange County area and can start [date]. Thank you for your time.\n\nSincerely,\n[Your name]",
       "letterIsGeneric": false
     },
@@ -3134,6 +3155,7 @@
       "list": "below_pay",
       "ruledOutReason": null,
       "needsOpenCheck": true,
+      "fitBasis": "goals",
       "letterDraft": "Dear Morrow-Meadows Hiring Team,\n\nI am applying for the Project Engineer position in your Electrical Division in City of Industry. I am changing careers into electrical construction and want to build a long-term career in it, starting with the project support work this posting describes: tracking submittals, helping with RFIs and change orders, reviewing schedules and maintaining drawing sets.\n\nMy background is in [your current or most recent field], where I [your most relevant true experience with documents, deadlines, coordination or hands-on work]. I use Microsoft [Excel / Word / Outlook: list only what you actually use] for [what you use it for].\n\nI do not yet have electrical project experience. What I bring is [one concrete piece of evidence of dependability, such as tenure or attendance], clear written and spoken communication, and a readiness to learn your systems and the trade from the people who do the work. [One sentence on your ability to travel to jobsites across Los Angeles, Orange County and the Inland Empire, only if true for you.]\n\nI live in the Los Angeles area and can start [date]. Thank you for considering my application.\n\nSincerely,\n[Your name]\n[Phone] | [Email]",
       "letterIsGeneric": false
     }
