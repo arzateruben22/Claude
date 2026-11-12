@@ -60,11 +60,11 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
   --aspect 9x16|16x9           one per run (default 9x16)
   --fps N                      the delivery rate (default film.json fps, else 30): the final tier's rate and every tier's shutter
   --from S --to S              part of the film, in seconds · --times S,S,...  single frames (stills)
-  --size WxH                   with --times: stills at this size instead of the tier's (e.g. 2160x3840 for a sharp cover, or
-                               2160x2200 for a cover-shaped hero); the camera keeps its vertical field of view
-  --clean                      with --times: stills without the page's overlay (captions, labels, counters, title): the
-                               3-D picture alone, for covers and thumbnails. Stills from --size/--clean go to their own
-                               folder (<tier>-stills-WxH[-clean]) and keep their PNGs, so they never mix with the film
+  --size WxH                   a native size beyond the tier's, for the whole film (1440x2560) or stills (2160x3840 for a
+                               sharp cover, 2160x2200 for a cover-shaped hero); the camera keeps its vertical field of
+                               view. Build folder <tier>-W (9:16 sizes, as Skin Sense's copy names it) or <tier>-WxH
+  --clean                      stills only (with --times): no page overlay (captions, labels, counters, title), the 3-D
+                               picture alone, for covers and thumbnails; its own <...>-clean folder; PNGs kept
   --chunk S                    chunk length in seconds (default 10)
   --resume                     keep finished frames (PNG + log line + matching sha256), render the rest
   --fresh                      discard every chunk the range touches, then render them
@@ -102,8 +102,8 @@ const A = {};
   if (!A.film) bad("--film <dir> is required (the episode folder holding film.json and scene.mjs)");
   if (A.resume && A.fresh) bad("--resume keeps finished frames and --fresh discards them: pick one");
   if (A.times && (A.from !== undefined || A.to !== undefined)) bad("--times or --from/--to, not both");
-  if ((A.size || A.clean) && !A.times) bad("--size and --clean make stills: give --times S,S,...");
-  if ((A.size || A.clean) && (A.assemble || A.cues)) bad("--size and --clean are for stills, not --assemble or --cues");
+  if (A.clean && !A.times) bad("--clean makes stills: give --times S,S,...");
+  if (A.clean && (A.assemble || A.cues)) bad("--clean is for stills, not --assemble or --cues");
   if (A.size && !/^\d{2,4}x\d{2,4}$/.test(A.size)) bad(`--size is WxH in pixels, e.g. 2160x3840, not "${A.size}"`);
 }
 const num = (k, d) => { if (A[k] === undefined) return d; const x = Number(A[k]); if (!Number.isFinite(x)) die(2, `--${k} must be a number, not "${A[k]}"`); return x; };
@@ -135,11 +135,12 @@ if (!TIERS[tier].size[aspect]) die(2, `--aspect is 9x16 or 16x9, one per run, no
 const deliveryFps = num("fps", FILM.fps || 30);
 const [W, H] = A.size ? A.size.split("x").map(Number) : TIERS[tier].size[aspect];
 if (A.size && (W > 8192 || H > 8192 || W % 2 || H % 2)) die(2, `--size ${A.size}: each side even and at most 8192`);
-const stills = !!(A.size || A.clean);
+const stills = !!A.times && !!(A.size || A.clean);       // cover stills: their PNGs are the output
 const fps = TIERS[tier].fps || deliveryFps;
 const plain = TIERS[tier].plain || A.plain === true;     // no finish: the scene's own renderer, as written
 const kMax = plain ? null : TIERS[tier].kMax;
-const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "") + (stills ? `-stills-${W}x${H}${A.clean ? "-clean" : ""}` : "");
+const tierDir = tier + (A.plain && !TIERS[tier].plain ? "-plain" : "")
+  + (A.size ? (W * 16 === H * 9 || W * 9 === H * 16 ? `-${W}` : `-${W}x${H}`) : "") + (A.clean ? "-clean" : "");
 const buildRoot = path.resolve(A.build || path.join(filmDir, "build"));
 const base = path.join(buildRoot, tierDir, aspect);
 if (A.where) { console.log(base); process.exit(0); }

@@ -106,17 +106,18 @@ and a hand-drawn hook on it. Two tools:
 ```
 # 1. the picture: a clean still from the film's own scene, sharp enough to zoom into
 node kits/cinema/film/render.mjs --film <ep> --tier final --times 38 --size 2160x3840 --clean
-#    → <ep>/build/final-stills-2160x3840-clean/9x16/frames/<chunk>/<frame>.png (the log prints the path)
+#    → <ep>/build/final-2160-clean/9x16/frames/<chunk>/<frame>.png (the log prints the path)
 # 2. the hook: a marker circle and/or arrow at the one surprising thing, and a 1-3 word question
 python3 -I kits/cinema/film/hook.py hero.png hero-hook.png --font <hand.ttf> --color "#E862FF" \
     --note "that's|it?!" --note-at 44,640 --note-size 150 --circle 190,470,120,114 --arrow 400,680:320,500:60 \
     --glow 190,470,68:#4682FF
 ```
 
-- `--clean` fades out the page's overlay (captions, labels, counters, the title): the 3-D picture alone. `--size`
-  renders stills at any size; the camera keeps its vertical field of view, so 2160x3840 is the same frame at 2x
-  and 2160x2200 is a cover-shaped hero with more room at the sides. Both need `--times`, write to their own
-  `<tier>-stills-WxH[-clean]` folder and keep their PNGs, so they never mix with the film's frames.
+- `--clean` (stills only, with `--times`) fades out the page's overlay (captions, labels, counters, the title):
+  the 3-D picture alone, in its own `<tier>[-W]-clean` folder, PNGs kept. `--size` renders at any size, stills or
+  a whole film (the same flag as Skin Sense's copy: `final-1440` for 1440x2560); the camera keeps its vertical
+  field of view, so 2160x3840 is the same frame at 2x and 2160x2200 (folder `final-2160x2200`) is a cover-shaped
+  hero with more room at the sides.
 - For a still only, a scene may be staged for the cover without touching the film: a camera placed for the
   picture (film.json `cam` keys), a secondary object hidden, a procedural texture generated larger (an
   `earthSurface({ width: 4096 })` instead of 1024, so coastlines stay smooth at cover size), a material pushed
