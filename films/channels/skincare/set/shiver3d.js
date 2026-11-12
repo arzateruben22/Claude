@@ -51,11 +51,14 @@ export async function create(args) {
   // ── the nerve: a round glowing fibre, fine branching endings, a small bright teal pulse with a soft trail ────────────────────
   const NSEG = 140, ng = new THREE.TubeGeometry(nerve, NSEG, 0.05, 8, false), ncol = new Float32Array(ng.attributes.position.count * 3); ng.setAttribute("color", new THREE.BufferAttribute(ncol, 3));
   scene.add(new THREE.Mesh(ng, new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false })));
-  const tipM = new THREE.MeshBasicMaterial({ color: 0x2fa89a, toneMapped: false }), tips = [[-1.0, -1.4, -1.55, -0.75], [-1.0, -1.4, -1.25, -0.55], [-1.0, -1.4, -0.95, -0.55], [-1.0, -1.4, -0.45, -0.75], [-1.0, -1.4, -0.2, -1.05], [-1.3, -0.65, -1.7, -0.3], [-0.45, -0.75, -0.2, -0.4]];
-  tips.forEach(([a, b, c, d]) => { scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(a, b, -0.25), new THREE.Vector3(c, d, -0.25)]), 6, 0.022, 6, false), tipM)); const bb = new THREE.Mesh(new THREE.SphereGeometry(0.045, 8, 6), tipM); bb.position.set(c, d, -0.25); scene.add(bb); });
+  // endings: fine fibres that taper to nothing as they thread up between the cells (lit, no ball tips); they light softly, tip first, as the cool is felt
+  const ENDS = [[-1.0, -1.4, -1.55, -0.75], [-1.0, -1.4, -1.25, -0.55], [-1.0, -1.4, -0.95, -0.55], [-1.0, -1.4, -0.45, -0.75], [-1.0, -1.4, -0.2, -1.05], [-1.3, -0.65, -1.7, -0.3], [-0.45, -0.75, -0.2, -0.4]];
+  const endM = ENDS.map(([a, b, c, d], k) => { const m = new THREE.MeshStandardMaterial({ color: 0x174f49, roughness: 0.42, emissive: 0x2fa89a, emissiveIntensity: 0.55 }), tb = makeTube(18, 6, m, false), pts = [], rad = [];
+    for (let i = 0; i <= 18; i++) { const v = i / 18, w = 0.06 * Math.sin(v * Math.PI * 2 + k * 1.7) * Math.sin(v * Math.PI); pts.push([lerp(a, c, v) + w, lerp(b, d, v) - 0.6 * w, -0.25 + 0.1 * Math.sin(v * Math.PI + k)]); rad.push(lerp(k > 4 ? 0.02 : 0.03, 0.004, Math.pow(v, 0.8))); }
+    tb.set(pts, rad); return m; });
   scene.add(new THREE.Mesh(new THREE.TubeGeometry(nerve, 50, 0.15, 8, false), new THREE.MeshBasicMaterial({ color: 0x3fbfae, transparent: true, opacity: 0.035, depthWrite: false, blending: THREE.AdditiveBlending })));
   const gcv = mkCanvas(128, 128), gx = gcv.getContext("2d"); { const g = gx.createRadialGradient(64, 64, 0, 64, 64, 64); g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.25, "rgba(255,255,255,.55)"); g.addColorStop(1, "rgba(255,255,255,0)"); gx.fillStyle = g; gx.fillRect(0, 0, 128, 128); }
-  const gtex = new THREE.CanvasTexture(gcv), pulse = [0xeafffb, 0x3fbfae, 0x2fa89a].map((c) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: gtex, color: c, transparent: true, opacity: 0, depthWrite: false, depthTest: false, fog: false })); sp.renderOrder = 10; scene.add(sp); return sp; });
+  const gtex = new THREE.CanvasTexture(gcv), pulse = [0x9ff3e6, 0x3fbfae, 0x2fa89a].map((c) => { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: gtex, color: c, transparent: true, opacity: 0, depthWrite: false, depthTest: false, fog: false, blending: THREE.AdditiveBlending })); sp.renderOrder = 10; scene.add(sp); return sp; });   // a small teal light inside the fibre (additive, no white disc)
   const cool = mkGlow(30, 0xbfeee6); cool.forEach((s, i) => { s.material.fog = false; s.userData = { y: -0.2 + hash(i * 3.3) * 3.0, z: -7 + hash(i * 5.7) * 7, sp: 1.3 + hash(i * 7.9) * 1.1, x0: -16 + hash(i * 2.3) * 22 }; scene.add(s); });
   const nBase = new THREE.Color(0.01, 0.12, 0.105), nPeak = new THREE.Color(0.25, 1.15, 1.0), cc = new THREE.Color(), np = ng.attributes.position, nuv = ng.attributes.uv;
 
@@ -89,7 +92,8 @@ export async function create(args) {
       const u = eio(seg(t, t2.pS, t2.pE)), act = seg(t, t2.pS - 0.2, t2.pS + 0.3) * (1 - sm(seg(t, t2.pE - 0.3, t2.pE + 1.2)));
       for (let i = 0; i < np.count; i++) { const uu = nuv.getY(i), d = uu - u, g = Math.exp(-(d * d) / (2 * 0.04 * 0.04)) * act, tail = d < 0 && d > -0.3 ? Math.exp(d * 10) * 0.28 * act : 0; cc.copy(nBase).lerp(nPeak, clamp(g + tail)); ncol[i * 3] = cc.r; ncol[i * 3 + 1] = cc.g; ncol[i * 3 + 2] = cc.b; }
       ng.attributes.color.needsUpdate = true;
-      pulse.forEach((s, i) => { s.position.copy(nerve.getPoint(clamp(u - i * 0.025))); s.position.z += 0.25; s.scale.setScalar([0.5, 0.95, 1.4][i]); s.material.opacity = act * [1, 0.55, 0.22][i]; });
+      pulse.forEach((s, i) => { s.position.copy(nerve.getPoint(clamp(u - i * 0.03))); s.position.z += 0.08; s.scale.setScalar([0.2, 0.42, 0.8][i]); s.material.opacity = act * [0.85, 0.4, 0.14][i]; });
+      endM.forEach((m, k) => { const e = sm(seg(t, t2.pS - 1.1 + 0.09 * k, t2.pS - 0.35 + 0.09 * k)) * (1 - sm(seg(t, t2.pS + 0.6, t2.pS + 2.0))); m.emissiveIntensity = 0.55 + 1.25 * e; });   // the endings feel the cool first
       cool.forEach((s, i) => { const U = s.userData, x = U.x0 + ((t * U.sp * 2.2) % 26) - 5; s.position.set(x, U.y, U.z); s.scale.set(3.2, 0.16, 1); s.material.opacity = 0.11 * (1 - sm(seg(t, S("vo03", 0), S("vo03", 3)))) * sm(seg(t, 0.6, 2.4)); });
       // vessels
       const narrow = sm(seg(t, t2.nar, t2.narE)), vr = lerp(0.34, 0.15, narrow), rr = vPts.map(() => vr), ripple = 1 + 0.03 * Math.sin(t * 2.4);
