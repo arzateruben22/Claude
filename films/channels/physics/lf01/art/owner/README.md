@@ -23,10 +23,10 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 | 01 | wide kitchen from the doorway (stove left, sink right, window centre, table and four chairs) | the sound wave crossing the room (Part 4, film sound chapter); establishing shots | `plate-01-wide-16x9.png` | to come |
 | 02 | window with a red hummingbird feeder hanging inside it, centre; trees beyond, counter below, blue mug right | the wing slowed 10x (Part 1) | `plate-02-feeder-16x9.png` | to come |
 | 03 | the tap and the blue mug, close: a drop forming at the tap lip, the mug full to the brim below it, sink and window behind | the drop and the crown splash (Part 2) | `plate-03-tap-mug-16x9.png` | to come |
-| 04 | stove pan from above | the popcorn pop (Part 3) | to come | to come |
+| 04 | black pan on the gas stove from directly above, a few kernels, oak counter and a striped towel at the left | the popcorn pop (Part 3) | `plate-04-pan-16x9.png` | `plate-04-pan-9x16.png` (panel cut from the owner's triptych, 529x941) |
 | 05 | the farmhouse sink and tap at eye level under the window, empty air above; blue mug left, blue towel right | the soap bubble (Part 3) | `plate-05-sink-16x9.png` | to come |
 | 06 | one red apple on the oak counter, low angle, clear space left and right, backsplash and window soft behind | the bullet (Part 5) | `plate-06-apple-16x9.png` | to come |
-| 07 | window at dusk, storm | lightning (Part 6) | to come | to come |
+| 07 | the kitchen window at dusk under storm clouds (casement open), blue mug and checked towel on the counter, sink right | lightning (Part 6) | `plate-07-storm-16x9.png` | `plate-07-storm-9x16.png` (triptych panel, window closed; separate composition) |
 | 08 | table in near-darkness | optional now: plate 09 covers Parts 7 and 8 (use a tighter crop of 09 for variety) | optional | optional |
 | 09 | the whole kitchen at night from the doorway: one warm under-cabinet light on the left, blue window, table centre | light crawling (Parts 7 and 8): the lamp switches on and its light front crawls across the room | `plate-09-night-16x9.png` | to come |
 
@@ -35,3 +35,5 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 Still missing: 03 tap+mug 9:16 (crop the 16:9 until it arrives), 04 stove pan from above, 07 storm window at dusk.
 Cover heroes (covers/), AI illustrations, disclose "Thumbnail illustration made with AI": p1 hummingbird (9:16, alt, 16:9),
 p2 crown (+ alt), p3 popcorn (+ alt), p4 clap (+ alt), p5 apple (+ alt). Original file names are in the commit message.
+
+Upload of 12 Nov 2026 16:40 PT (c6b5b984): pan and storm plates; ChatGPT returned two triptychs instead of a tall mug image. Their panels give 9:16 pan and storm plates. The third panel (mug under the tap) is lit at DUSK, so it does not match the daylight plate 03: it is kept as plate-03-tap-mug-9x16-dusk.png and Part 2 keeps cropping the daylight 16:9 until a daylight tall version arrives.
