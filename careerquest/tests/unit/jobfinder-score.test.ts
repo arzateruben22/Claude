@@ -154,6 +154,12 @@ describe("scoreRow", () => {
     expect(degree.list).toBe("ruled_out");
     expect(degree.ruledOutReason).toMatch(/credential/);
     expect(scoreRow(row({ verdict: verdict({}) })).fitBasis).toBe("goals");
+    // Preferred items alone do not demote a job whose every stated minimum the resume shows.
+    const preferredOnly = scoreRow(row({ verdict: verdict({ resumeFit: 0.88, gapsForApplicant: ["SOFT: Bachelor's degree is preferred", "SOFT: 3 years of program coordination is preferred", "SOFT: health care setting experience is preferred"] }) }));
+    expect(preferredOnly.list).toBe("best_fit");
+    expect(preferredOnly.gaps.preferred).toHaveLength(3);
+    expect(preferredOnly.breakdown.access.note).toMatch(/every posted minimum.*3 preferred items/);
+    expect(preferredOnly.breakdown.access.value).toBeCloseTo(0.9);
   });
   it("treats legal eligibility as something to confirm, never as a gap or a block", () => {
     const g = parseGaps([

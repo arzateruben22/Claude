@@ -308,8 +308,16 @@ export function scoreRow(input: RawRow): ScoredJob {
   const payMinHourly = (row.payMinAnnual ?? row.payMaxAnnual) ? Math.round(((row.payMinAnnual ?? row.payMaxAnnual)! / PAY_RULE.fullTimeHours) * 100) / 100 : null;
   // A second pass that could not run only speculates about gaps, so reach is judged from the first
   // pass's reading of the posted minimums (its tier) instead of counting those unverified notes.
+  // Against a real resume, "preferred" items are not unmet requirements: they trim the score a
+  // little and are named, but they do not count as gaps. Without a resume, a pile of preferred
+  // experience is the best available sign that a beginner would struggle, so it counts as one.
+  const resumeBasis = fitBasis === "resume";
+  const manyPreferred = gaps.preferred.length >= 2;
+  const checkedAccess = accessFactor(gaps.soft.length + (!resumeBasis && manyPreferred ? 1 : 0), gaps.hard.length, fitBasis);
   const access = checked
-    ? accessFactor(gaps.soft.length + (gaps.preferred.length >= 2 ? 1 : 0), gaps.hard.length, fitBasis)
+    ? resumeBasis && manyPreferred && checkedAccess.value > 0
+      ? { value: checkedAccess.value * 0.9, note: `${checkedAccess.note}; ${gaps.preferred.length} preferred items are not on your resume` }
+      : checkedAccess
     : gaps.hard.length > 0
       ? accessFactor(0, gaps.hard.length)
       : row.tier === "best_fit"
@@ -361,7 +369,8 @@ export function scoreRow(input: RawRow): ScoredJob {
   // A stretch is a posting that asks for experience the applicant has not shown: it says so in as
   // many words, lists years as preferred, or piles up three or more knowledge gaps. Once a posting
   // has been checked, that reading replaces the first pass's guess at the tier.
-  else if (needsExperience(gaps) || gaps.soft.length >= 3) list = "stretch";
+  // With a resume the test is direct: any posted minimum the resume does not show makes it a stretch.
+  else if (resumeBasis ? gaps.soft.length >= 1 : needsExperience(gaps) || gaps.soft.length >= 3) list = "stretch";
 
   return {
     ...row,
