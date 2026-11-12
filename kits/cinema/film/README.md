@@ -117,7 +117,9 @@ python3 -I kits/cinema/film/hook.py hero.png hero-hook.png --font <hand.ttf> --c
   the 3-D picture alone, in its own `<tier>[-W]-clean` folder, PNGs kept. `--size` renders at any size, stills or
   a whole film (the same flag as Skin Sense's copy: `final-1440` for 1440x2560); the camera keeps its vertical
   field of view, so 2160x3840 is the same frame at 2x and 2160x2200 (folder `final-2160x2200`) is a cover-shaped
-  hero with more room at the sides.
+  hero with more room at the sides. `--keep SELECTOR` (with `--clean`) keeps the overlay children of `#hud` that
+  match it: a scene that draws part of its picture in 2-D on the overlay (One More Orbit S2E01's tree dots and
+  stick people are a `<canvas>` in `#hud`) needs `--clean --keep canvas`, or that drawing goes with the captions.
 - For a still only, a scene may be staged for the cover without touching the film: a camera placed for the
   picture (film.json `cam` keys), a secondary object hidden, a procedural texture generated larger (an
   `earthSurface({ width: 4096 })` instead of 1024, so coastlines stay smooth at cover size), a material pushed
