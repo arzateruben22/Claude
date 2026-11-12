@@ -306,7 +306,8 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
  *  the same mesh, so it shares the brows' material, draw call and morph deltas */
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
-  const thick = m ? 1.12 : 0.86, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
+  // (look.browThick, pack 2026-11-12: fuller brows; unset is 1, as before)
+  const thick = (m ? 1.12 : 0.86) * (look.browThick ?? 1), arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
   const n = 16;
   const project = (pl: V3, off: number): V3 => {

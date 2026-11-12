@@ -6,6 +6,7 @@
 import * as THREE from 'three';
 import { buildPerson, Person } from '../onfoot/people';
 import { castPerson, CastId, CAST_IDS, CAST, CAST_PACK } from '../onfoot/cast';
+import { packUnlocked, packOwned, packTestOffered, packOffer } from '../game/castPack';
 import { saleState, skuById, forSale } from '../store/catalog';
 
 export interface Stage { show(id: CastId): void; dispose(): void; readonly state: { id: string | null; lod: number; tris: number; ms: number } }
@@ -77,8 +78,9 @@ export function castStage(canvas: HTMLCanvasElement, quality: 'phone' | 'high' =
 
 /** the regression check's budget run (tests/regression.mjs, group 'cast'): each of the six built at the far, patio and
  *  close-up levels in the builder's phone quality, with its triangles, draw calls and build time at each */
-export function castBudget(levels: (0 | 1 | 2)[] = [2, 1, 0]) {
-  return CAST_IDS.map((id) => {
+export function castBudget(levels: (0 | 1 | 2)[] = [2, 1, 0], pack = false) {
+  // (pack: the two pack characters instead of the six)
+  return (pack ? CAST_PACK.identities.map((c) => c.id) : CAST_IDS).map((id) => {
     const t0 = performance.now();
     const p = buildPerson({ ...castPerson(id), quality: 'phone', lod: levels[0] });
     const rows: Record<string, { tris: number; calls: number; ms: number }> = {};
@@ -90,4 +92,5 @@ export function castBudget(levels: (0 | 1 | 2)[] = [2, 1, 0]) {
 }
 const pick = (s: { tris: number; calls: number }) => ({ tris: s.tris, calls: s.calls });
 /** the catalog as the checks see it: each character's id, unlock category, skin and arms; the future pack's scaffold */
-export const castInfo = () => ({ cast: CAST.map((c) => ({ id: c.id, ref: c.ref, unlock: c.unlock, presentation: c.presentation, skin: c.look.skin, arms: c.arms, height: c.body.height })), pack: { ...CAST_PACK, identities: CAST_PACK.identities.map((c) => c.id), inCatalog: !!skuById(CAST_PACK.sku), onSale: saleState(skuById(CAST_PACK.sku)!).ok, listed: forSale().some((s) => s.sku === CAST_PACK.sku) } });
+/** (the pack: its identities, its store entry, and its lock as the saved settings `s` see it) */
+export const castInfo = (s: { packTest?: boolean } = {}) => ({ packIds: CAST_PACK.identities.map((c) => ({ id: c.id, ref: c.ref, unlock: c.unlock, presentation: c.presentation, skin: c.look.skin, arms: c.arms, height: c.body.height })), lock: { unlocked: packUnlocked(s), owned: packOwned(), testOffered: packTestOffered(), offer: packOffer(), price_cents: skuById(CAST_PACK.sku)?.price_cents ?? null }, cast: CAST.map((c) => ({ id: c.id, ref: c.ref, unlock: c.unlock, presentation: c.presentation, skin: c.look.skin, arms: c.arms, height: c.body.height })), pack: { ...CAST_PACK, identities: CAST_PACK.identities.map((c) => c.id), inCatalog: !!skuById(CAST_PACK.sku), onSale: saleState(skuById(CAST_PACK.sku)!).ok, listed: forSale().some((s) => s.sku === CAST_PACK.sku) } });

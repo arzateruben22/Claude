@@ -4,12 +4,18 @@ then render) and compare-<id>-head.png (front, profile, three-quarter: sheet the
   python3 tests/cast-sheets.py <folder with the 0N-name/ sheet folders> [suffix]
 With a suffix (e.g. -r2) it reads the renders <id>-<view><suffix>.png (cast-shoot.mjs --suffix=) and writes
 compare-<id>-body<suffix>.png and compare-<id>-head<suffix>.png.
-The sheets are not part of the repository (the owner's reference images); the folder is given on the command line."""
+The sheets are not part of the repository (the owner's reference images); the folder is given on the command line.
+  python3 tests/cast-sheets.py --pack <folder with chad/ and chadaline/> [suffix]
+The pack's two (2026-11-12): writes pack-<id>-body<suffix>.png (front, side, back) and pack-<id>-head<suffix>.png (front,
+three-quarter, profile: the sheet's 2x2 face grid beside the renders yaw0, yaw45 or yaw-45, and yaw90 of
+cast-shoot.mjs --views=front,side,back,yaw0,yaw45,yaw-45,yaw90)."""
 import sys, os
 from PIL import Image, ImageDraw
 
-SRC = sys.argv[1]
-SUF = sys.argv[2] if len(sys.argv) > 2 else ''
+PACK = len(sys.argv) > 1 and sys.argv[1] == '--pack'
+ARGS = sys.argv[2:] if PACK else sys.argv[1:]
+SRC = ARGS[0]
+SUF = ARGS[1] if len(ARGS) > 1 else ''
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'cast')
 CAST = [('01-mateo-reyes', 'mateo-reyes'), ('02-danny-tran', 'danny-tran'), ('03-marcus-bell', 'marcus-bell'),
         ('04-leila-farahani', 'leila-farahani'), ('05-jas-cruz', 'jas-cruz'), ('06-kate-morgan', 'kate-morgan')]
@@ -40,6 +46,20 @@ def strip(pairs, h, label):
         x += t.width + 8
     ImageDraw.Draw(out).text((W - 260, 6), label, fill=(160, 200, 255))
     return out
+
+# the pack's face sheets are a 2x2 grid of 768x512 cells: front, three-quarter / near profile, profile
+PACK_CAST = [('chad', 'png', 'yaw-45'), ('chadaline', 'webp', 'yaw45')]   # (his three-quarter is from his left, hers from her right)
+if PACK:
+    for cid, ext, three in PACK_CAST:
+        bs = Image.open(os.path.join(SRC, cid, 'body-sheet.' + ext)).convert('RGB')
+        fs = Image.open(os.path.join(SRC, cid, 'face-sheet.' + ext)).convert('RGB')
+        body = [(bs.crop((x0, 0, x1, 1024)), crop_render(os.path.join(OUT, f'{cid}-{v}{SUF}.png'), True)) for v, (x0, x1) in BODY.items()]
+        cells = {'yaw0': (0, 0, 768, 512), three: (768, 0, 1536, 512), 'yaw90': (768, 512, 1536, 1024)}
+        head = [(fs.crop(box), crop_render(os.path.join(OUT, f'{cid}-{v}{SUF}.png'), False)) for v, box in cells.items()]
+        strip(body, 620, cid + ': front, side, back').save(os.path.join(OUT, f'pack-{cid}-body{SUF}.png'))
+        strip(head, 420, cid + ': front, 3/4, profile').save(os.path.join(OUT, f'pack-{cid}-head{SUF}.png'))
+        print('wrote pack', cid)
+    sys.exit(0)
 
 for d, cid in CAST:
     bs = Image.open(os.path.join(SRC, d, 'body-sheet.webp')).convert('RGB')

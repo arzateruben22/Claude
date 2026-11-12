@@ -26,7 +26,9 @@ export interface DriverLook {
   skin: number; sleeve: number | null; gloves: number | null;
   watch: 'gold' | 'steel' | 'smart' | null; ring: boolean; bracelet: boolean; scale: number;
   pose: 'watch' | 'wave' | 'knee';                  // what the left hand does when the ability fires
-  outfit?: 'shirt' | 'suit' | 'work';               // the sleeves: a pressed shirt's cuffs, a fire suit, a work shirt rolled up
+  outfit?: 'shirt' | 'suit' | 'work'                // the sleeves: a pressed shirt's cuffs, a fire suit, a work shirt rolled up
+    | 'jacket' | 'fur';                             // (pack, 2026-11-12) a suit jacket's sleeve over a sliver of shirt cuff; a fur shrug's sleeve from mid forearm (hands-acc.ts)
+  cuff?: number;                                    // (pack) the shirt cuff's colour under a 'jacket' sleeve
   accent?: number;                                  // the driver's signature colour (the UI's --drv), for the trim
   nails?: number | null;                            // the female presentation's polish (null: natural); unset: the caller's choice
 }
@@ -76,6 +78,7 @@ export function characterLook(id: DriverId, character: string, pres: Presentatio
   const look: DriverLook = {
     skin: c.look.skin, sleeve: a.sleeve, gloves: null, watch: a.watch, ring: a.ring, bracelet: a.bracelet, scale: p === 'f' ? 0.9 : 1,
     pose: base.pose, outfit: a.outfit, accent: base.accent, nails: a.nails,
+    ...(a.cuff !== undefined ? { cuff: a.cuff } : {}),
   };
   return { look: withStyle(look, style, p), presentation: p, cast: c };
 }

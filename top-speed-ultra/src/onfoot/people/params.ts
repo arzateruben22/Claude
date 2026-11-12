@@ -33,6 +33,9 @@ export interface FaceShape {
   eyeSize: number; eyeSpacing: number; eyeTilt: number; hooded: number;
   brow: number; forehead: number;         // brow ridge; forehead slope back
   earSize: number; earOut: number;
+  /** (pack, 2026-11-12) soft tissue over the jaw: fills the hollow between the cheek, the jaw's body and the chin, so a
+   *  lean face's jaw is one line instead of a ridge with a notch beside the chin. 0 or unset: as before; about 1 */
+  jawSoft?: number;
 }
 
 export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | 'bald' | 'ponytail' | 'receding'
@@ -41,11 +44,17 @@ export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | '
   | 'lowPonytail'      // a low, loose tail at the nape, with loose face-framing strands
   | 'fade'             // a skin fade: the sides and back clipped to the scalp, a textured (curly) top
   | 'sidePart'         // a side-parted undercut: clipped sides, the top long and swept over from the parting
-  | 'waves';           // shoulder-length waves from a side parting
+  | 'waves'            // shoulder-length waves from a side parting
+  // (added 2026-11-12 for the pack characters, cast.ts CAST_PACK: new values only)
+  | 'curlsMedium'      // medium-length loose curls: full on top and at the sides, over the tops of the ears, to the nape
+  | 'longWaves';       // long, loosely waved hair from a centre parting, down the back to the shoulder blades
 export type FacialHair = 'none' | 'stubble' | 'beard' | 'moustache' | 'goatee'
   // (cast, 2026-11-11) a short full beard with volume: the beard's shading plus a short hair shell over it (hair.ts
   // buildBeardVolume), so it reads at a distance and on dark skin. 'beard' is unchanged
-  | 'fullBeard';
+  | 'fullBeard'
+  // (pack, 2026-11-12) a day's growth: the stubble's shading at about half its strength, so it reads as a shadow and
+  // fine dots rather than a dark patch. 'stubble' is unchanged
+  | 'lightStubble';
 
 export interface Look {
   skin: number;               // sRGB hex
@@ -61,9 +70,16 @@ export interface Look {
   freckles: number;           // 0..1
   tattoo: 'none' | 'sleeveL' | 'forearmR' | 'forearmL';
   nails: number | null;       // painted nails
+  // (added 2026-11-12 for the pack characters: optional, so every existing look builds exactly as before)
+  /** a lighter colour toward the hair's tips (sun-lightened ends); unset or null: one colour, as before */
+  hairTips?: number | null;
+  /** brow fullness: a multiplier on the brow's width (1 as before; 1.3 strong, full brows) */
+  browThick?: number;
 }
 
-export type Fabric = 'satin' | 'cotton' | 'denim' | 'leather' | 'knit' | 'wool' | 'linen';
+export type Fabric = 'satin' | 'cotton' | 'denim' | 'leather' | 'knit' | 'wool' | 'linen'
+  // (pack, 2026-11-12) faux fur: a deep soft pile (cloth.ts); nothing else uses it
+  | 'fur';
 export type GarmentKind =
   | 'dress' | 'tee' | 'fitted' | 'tank' | 'shirt' | 'blouse' | 'polo'
   | 'jeans' | 'trousers' | 'skirt' | 'shorts'
@@ -73,7 +89,12 @@ export type GarmentKind =
   | 'bomber' | 'overshirt' | 'workJacket'            // outer layers: a cropped bomber with ribbed hem and cuffs, an open overshirt, a canvas work jacket
   | 'henley'                                         // a tee with a short buttoned placket
   | 'cargo' | 'chinoShorts' | 'workPants'            // trousers with side pockets, shorts just above the knee, straight work trousers
-  | 'sandals' | 'deckShoes' | 'lowHeels' | 'chunkySneakers' | 'workBoots';
+  | 'sandals' | 'deckShoes' | 'lowHeels' | 'chunkySneakers' | 'workBoots'
+  // (added 2026-11-12 for the pack characters: new values only)
+  | 'suitJacket'                                     // a closed double-breasted jacket with peak lapels (the buttons and pocket square are Accessories)
+  | 'suitTrousers'                                   // tailored trousers with a straight leg
+  | 'shrug'                                          // an off-the-shoulder shrug: sleeves from below the shoulder to the forearm, joined across the back
+  | 'stilettos' | 'oxfords';                         // pointed-toe pumps on a high slim heel (sole in the upper's own colour); lace-up shoes with a low heel
 
 export interface Garment {
   kind: GarmentKind;
@@ -87,6 +108,12 @@ export interface Garment {
   /** (cast, 2026-11-11) a turned-up roll at the sleeve's or the trouser leg's end, shown in the accent colour.
    *  Unset: no roll, as before */
   roll?: boolean;
+  /** (pack, 2026-11-12) a dress cut close to the body (a bodycon knit: little ease, no hanging drape below the hip, thin
+   *  straps). Unset: the dress hangs as before */
+  fit?: 'body';
+  /** (pack, 2026-11-12) a collared shirt worn with its top buttons undone: a narrow V below the collar, this deep as a
+   *  share of a V neck's depth (1 is about 10 cm), the collar spread. Unset: buttoned to the collar, as before */
+  unbutton?: number;
 }
 
 export interface Accessories {
@@ -103,6 +130,17 @@ export interface Accessories {
   sunglassesUp?: number | null;
   /** an elastic hair tie worn on the right wrist (its colour) */
   hairTie?: number | null;
+  // (added 2026-11-12 for the pack characters: optional, so every existing preset and caller builds as before)
+  /** the hoops' size as a share of the standard hoop (0.5: small hoops); unset: 1 */
+  hoopSize?: number;
+  /** the watch on the right wrist instead of the left */
+  watchRight?: boolean;
+  /** several plain bands on the fingers of both hands (their colour); unset or null: none */
+  rings?: number | null;
+  /** a folded pocket square showing above the left breast pocket of the outer layer (its colour) */
+  pocketSquare?: number | null;
+  /** a double-breasted jacket's six front buttons, and three on each cuff (their colour) */
+  buttons?: number | null;
 }
 
 export interface PersonOptions {

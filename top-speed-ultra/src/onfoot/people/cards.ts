@@ -113,11 +113,12 @@ export function hairLights(strength = 1) {
 export interface CardMaterial extends THREE.MeshStandardMaterial { uniformsRef: Record<string, THREE.IUniform> }
 
 /** strand-card material; `grey` mixes grey strands in by a per-strand hash */
-export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number } = {}): CardMaterial {
+export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number; /** (pack) a lighter colour toward the tips; null or unset: none */ tips?: number | null } = {}): CardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, envMapIntensity: 0.35, side: THREE.DoubleSide, alphaTest: o.alphaTest ?? 0.42, transparent: false }) as CardMaterial;
   m.map = tex;
   const u: Record<string, THREE.IUniform> = {
     uCol: { value: new THREE.Color(color) }, uGrey: { value: o.grey ?? 0 }, uGreyCol: { value: new THREE.Color(o.greyColor ?? 0xbdb9b2) }, uShift: { value: o.shift ?? 0 },
+    uTipCol: { value: new THREE.Color(o.tips ?? color) }, uTip: { value: o.tips != null ? 1 : 0 },
   };
   m.uniformsRef = u;
   m.alphaToCoverage = quality === 'high';
@@ -126,12 +127,13 @@ export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uShift;')
+      .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uShift; uniform vec3 uTipCol; uniform float uTip;')
       .replace('#include <lights_physical_pars_fragment>', kk ? hairLights(0.8) : THREE.ShaderChunk.lights_physical_pars_fragment)
       .replace('#include <map_fragment>', /* glsl */ `
 vec4 st = texture2D( map, vMapUv );
 float hsh = fract(sin(floor(vMapUv.x * 220.0) * 12.9898) * 43758.5453);
-vec3 hc = pow(uCol, vec3(1.0)) * (0.55 + 0.6 * st.r);
+// (uTip 0: one colour, exactly as before; 1: the strand lightens toward its tip, some strands more than others)
+vec3 hc = mix(uCol, uTipCol, uTip * smoothstep(0.3, 0.95, vMapUv.y) * (0.45 + 0.55 * hsh)) * (0.55 + 0.6 * st.r);
 hc = mix(hc, uGreyCol * (0.7 + 0.4 * st.r), step(1.0 - uGrey, hsh));
 // darker toward the roots
 hc *= 0.7 + 0.3 * smoothstep(0.0, 0.35, vMapUv.y);
