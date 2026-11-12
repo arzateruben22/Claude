@@ -1,0 +1,330 @@
+{
+ "id": "possibility-lab-earth-spin-part1",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 9.4,
+ "poster": 30.0,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "shoulder",
+   "beat": "hook"
+  },
+  {
+   "at": 9.45,
+   "name": "globe",
+   "beat": "premise"
+  },
+  {
+   "at": 26.25,
+   "name": "eye",
+   "beat": "today"
+  },
+  {
+   "at": 60.1,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 3.3,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "hook-1",
+   "t0": 3.3,
+   "t1": 9.45,
+   "line": "vo02",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    43.59,
+    23.934
+   ],
+   [
+    46.0567,
+    20.0
+   ],
+   [
+    64.2,
+    19.7896
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    64.2,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": [
+   [
+    36.0934,
+    42.99
+   ]
+  ]
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 60.1,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 9.200000000000001,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "What If Earth Spun Faster?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 9999.0,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster\u2026*",
+  "follow": "Possibility Lab \u00b7 Part 1 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [],
+ "fx": {},
+ "hook": null,
+ "captions": [
+  {
+   "t0": 0.155,
+   "t1": 2.62,
+   "lines": [
+    [
+     [
+      "What",
+      0.295
+     ],
+     [
+      "if",
+      0.325
+     ],
+     [
+      "Earth",
+      0.5
+     ],
+     [
+      "spun",
+      0.875
+     ],
+     [
+      "faster,",
+      1.06
+     ]
+    ],
+    [
+     [
+      "and",
+      1.535
+     ],
+     [
+      "couldn't",
+      1.565
+     ],
+     [
+      "stop?",
+      1.87
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 3.308,
+   "t1": 4.883,
+   "lines": [
+    [
+     [
+      "You're",
+      3.448
+     ],
+     [
+      "standing",
+      3.598
+     ]
+    ],
+    [
+     [
+      "on",
+      3.953
+     ],
+     [
+      "the",
+      3.983
+     ],
+     [
+      "equator,",
+      4.193
+     ],
+     [
+      "and",
+      4.633
+     ],
+     [
+      "you'll",
+      4.663
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.883,
+   "t1": 6.613,
+   "lines": [
+    [
+     [
+      "watch",
+      4.883
+     ],
+     [
+      "what",
+      5.078
+     ],
+     [
+      "happens",
+      5.433
+     ]
+    ],
+    [
+     [
+      "minute",
+      5.753
+     ],
+     [
+      "by",
+      6.048
+     ],
+     [
+      "minute,",
+      6.233
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.613,
+   "t1": 8.718,
+   "lines": [
+    [
+     [
+      "until",
+      6.613
+     ],
+     [
+      "the",
+      7.018
+     ],
+     [
+      "planet",
+      7.048
+     ]
+    ],
+    [
+     [
+      "can't",
+      7.423
+     ],
+     [
+      "take",
+      7.718
+     ],
+     [
+      "it",
+      7.873
+     ],
+     [
+      "anymore.",
+      7.968
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 2.15,
+   "file": "vo/01.wav",
+   "text": "What if Earth spun faster, and couldn't stop?"
+  },
+  {
+   "id": "vo02",
+   "t": 3.3333333333333335,
+   "dur": 5.25,
+   "file": "vo/02.wav",
+   "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore."
+  }
+ ]
+}
