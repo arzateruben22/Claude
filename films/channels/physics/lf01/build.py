@@ -299,6 +299,12 @@ _p09 = {"id": "night", "file": PLATE09, "file9": PLATE09, "push": 0.05, "paralla
         "p9": {"native9": True, "shift9": {"x": 0, "y": 0, "ppm": 1}, "file": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png", "file9": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png", "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.183, -1], "fov": 95.7},
                "night": {"orig": "../lf01/art/owner/plates/plate-09-night-9x16.png", "pitch": True, "fg": [], "lamp": [-1.18, 1.17, -2.58], "room": {"x0": -1.23, "x1": 1.18, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.79, "x1": 0.79, "z0": -2.98, "z1": -1.17}}},
                "anchor": {"night": True}}}
+# plate-10: the sunny windowsill (9:16 only), Part 2's first half: the fly and the mosquito circle in the air above the sill. 2350 px per metre at 1 m (as the other 9:16 pictures); the fly is drawn about 5 mm of body
+PLATE10 = "../lf01/art/owner/plates/plate-10-windowsill-9x16.png"
+_p10 = {"id": "sill", "file": PLATE10, "file9": PLATE10, "push": 0.1, "parallax": 0, "fade": 0.3, "native9": True,
+        "shift": {"x": 0.0, "y": 0.0, "ppm": 2350}, "shift9": {"x": 0.0, "y": 0.0, "ppm": 2350},
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 38.9},
+        "anchor": {"fly": {"c": _w9(470, 800), "rx": 0.075, "ry": 0.02, "rz": 0.05, "scale": 0.013}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -311,6 +317,8 @@ if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
 elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
     PLATES = [dict(_p03, t0=R(EV["tapdrop"][0] - 1.0), t1=R(EV["tapdrop"][2] + 11.0), swap={"t": R(EV["tapdrop"][1]), "file": PLATE03C, "file9": PLATE03C})]
+    if (HERE / "art/owner/plates/plate-10-windowsill-9x16.png").exists():
+        PLATES.insert(0, dict(_p10, t0=R(EV["fly100"][0] - 0.8), t1=R(EV["tapdrop"][0] - 1.0)))
 elif PART == 3 and (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
     PLATES = [dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5))]
 elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
@@ -340,7 +348,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))

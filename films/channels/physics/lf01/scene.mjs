@@ -188,7 +188,6 @@ const mkFlyer = (scale, body, wingCol, kind = "fly") => {      // a fly or a mos
 const poseFlyer = (fl, hz, tReal, blur, amp = 1.0) => {                                 // blur: 0 = one crisp pose, 1 = many poses of one beat, faint
   for (const w of fl.wings) {
     const on = blur > 0.01 || w.i === 0; w.hinge.visible = on; if (!on) continue;
-    w.tip.visible = blur <= 0.01;
     const ph = hz * tReal + (blur > 0.01 ? w.i / GHOSTS : 0);
     const a = Math.sin(ph * Math.PI * 2) * 1.0 * amp, fl2 = Math.cos(ph * Math.PI * 2);
     w.hinge.rotation.set(w.side * fl2 * 0.7, 0, 0); w.hinge.rotation.y = -a * 0.9 * w.side * 0 + 0; w.hinge.rotation.z = 0;
@@ -505,9 +504,12 @@ window.seek = function (t) {
     if (blurMix <= 0.01) poseBird(hum, CAL.hz.hum, r, 0);
     void fr;
   }
-  if (t >= EV.cupfly[0] && t < EV.cupfly[1]) { const a = t * 0.9; place(flyC, CUPX + 0.1 + 0.07 * Math.cos(a), TOP + 0.2 + 0.015 * Math.sin(a * 2), CUPZ + 0.12 * Math.sin(a), -a + Math.PI * 0.5); poseFlyer(flyC, CAL.hz.fly, (t - EV.cupfly[0]) / F, F < 50 ? 1 : 0, 1.0); }
-  if (t >= EV.fly100[0] && t < EV.fly100[1]) { const a = t * 0.9; place(flyC, CUPX + 0.1 + 0.07 * Math.cos(a), TOP + 0.2 + 0.015 * Math.sin(a * 2), CUPZ + 0.12 * Math.sin(a), -a + Math.PI * 0.5); poseFlyer(flyC, CAL.hz.fly, (t - EV.fly100[0]) / F, 0, 1.0); }
-  if (t >= EV.mosq[0] && t < EV.mosq[1]) { const a = t * 0.8 + 2; place(mosq, CUPX - 0.06 + 0.06 * Math.cos(a), TOP + 0.18 + 0.02 * Math.sin(a * 2), CUPZ + 0.1 * Math.sin(a), -a + Math.PI * 0.5); poseFlyer(mosq, CAL.hz.mosq, (t - EV.mosq[0]) / F, 0, 1.0); }
+  // on a plate with a fly anchor (plate-10, the sunny sill) the fly and the mosquito circle in the plate's own frame, scaled to its pixels
+  const flyAn = (() => { const q = plates.anchor(t); return q && q.fly ? q.fly : null; })();
+  const flyAt = (k, a, ph) => { const f = flyAn, rx = f.rx * (k ? 0.8 : 1), cxo = k ? -f.rx * 0.9 : 0.0; return [f.c[0] + cxo + rx * Math.cos(a), f.c[1] + f.ry * Math.sin(a * 2 + ph), f.c[2] + f.rz * Math.sin(a)]; };
+  if (t >= EV.cupfly[0] && t < EV.cupfly[1]) { const a = t * 0.9; if (flyAn) { const [x, y, z] = flyAt(0, a, 0); place(flyC, x, y, z, -a + Math.PI * 0.5); flyC.g.scale.setScalar(flyAn.scale); } else { flyC.g.scale.setScalar(0.03); place(flyC, CUPX + 0.1 + 0.07 * Math.cos(a), TOP + 0.2 + 0.015 * Math.sin(a * 2), CUPZ + 0.12 * Math.sin(a), -a + Math.PI * 0.5); } poseFlyer(flyC, CAL.hz.fly, (t - EV.cupfly[0]) / F, F < 50 ? 1 : 0, 1.0); }
+  if (t >= EV.fly100[0] && t < EV.fly100[1]) { const a = t * 0.9; if (flyAn) { const [x, y, z] = flyAt(0, a, 0); place(flyC, x, y, z, -a + Math.PI * 0.5); flyC.g.scale.setScalar(flyAn.scale); } else { flyC.g.scale.setScalar(0.03); place(flyC, CUPX + 0.1 + 0.07 * Math.cos(a), TOP + 0.2 + 0.015 * Math.sin(a * 2), CUPZ + 0.12 * Math.sin(a), -a + Math.PI * 0.5); } poseFlyer(flyC, CAL.hz.fly, (t - EV.fly100[0]) / F, 0, 1.0); }
+  if (t >= EV.mosq[0] && t < EV.mosq[1]) { const a = t * 0.8 + 2; if (flyAn) { const [x, y, z] = flyAt(1, a, 1.3); place(mosq, x, y, z, -a + Math.PI * 0.5); mosq.g.scale.setScalar(flyAn.scale * 1.1); } else { mosq.g.scale.setScalar(0.034); place(mosq, CUPX - 0.06 + 0.06 * Math.cos(a), TOP + 0.18 + 0.02 * Math.sin(a * 2), CUPZ + 0.1 * Math.sin(a), -a + Math.PI * 0.5); } poseFlyer(mosq, CAL.hz.mosq, (t - EV.mosq[0]) / F, 0, 1.0); }
   // the tap drop, the crown
   const [d0, d1, d2] = EV.tapdrop; let hangV = false;
   if (t >= d0 && t < d2) { hangV = true; if (t < d1) { hang.position.set(CUPX, TAPY - 0.004 * E.in2(seg(t, d0, d1)), TAPZ); hang.scale.setScalar(2.5 * (0.3 + 0.7 * E.out2(seg(t, d0, d1 - 0.2)))); } else { const u = E.in2(seg(t, d1, d2)); hang.position.set(CUPX, lerp(TAPY - 0.004, TOP + 0.005 + surfY + 0.004, u), TAPZ); hang.scale.set(2.5, 2.5 * (1 + 0.4 * u), 2.5); } }

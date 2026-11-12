@@ -271,11 +271,19 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 23.0333,
+   "t1": 2.3333,
    "slot": "tl"
   },
   {
    "id": "code-p1",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · fly drawn by code",
+   "t0": 2.3333,
+   "t1": 23.0333,
+   "slot": "tl"
+  },
+  {
+   "id": "code-p2",
    "kind": "tag",
    "text": "Kitchen: AI illustration · splash drawn by code",
    "t0": 23.0333,
@@ -283,7 +291,7 @@
    "slot": "tl"
   },
   {
-   "id": "code-s2",
+   "id": "code-s3",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 41.3333,
@@ -304,6 +312,53 @@
  },
  "drifts": null,
  "plates": [
+  {
+   "id": "sill",
+   "file": "../lf01/art/owner/plates/plate-10-windowsill-9x16.png",
+   "file9": "../lf01/art/owner/plates/plate-10-windowsill-9x16.png",
+   "push": 0.1,
+   "parallax": 0,
+   "fade": 0.3,
+   "native9": true,
+   "shift": {
+    "x": 0.0,
+    "y": 0.0,
+    "ppm": 2350
+   },
+   "shift9": {
+    "x": 0.0,
+    "y": 0.0,
+    "ppm": 2350
+   },
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 38.9
+   },
+   "anchor": {
+    "fly": {
+     "c": [
+      -0.0002,
+      0.4153,
+      -1.0
+     ],
+     "rx": 0.075,
+     "ry": 0.02,
+     "rz": 0.05,
+     "scale": 0.013
+    }
+   },
+   "t0": 2.3333,
+   "t1": 23.0333
+  },
   {
    "id": "tapmug",
    "file": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
