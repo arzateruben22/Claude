@@ -36,42 +36,6 @@
   "derivation": "a Moon larger than the Sun in angular size covers it completely when they line up (NASA eclipse geometry); a closer Moon has a wider umbra on Earth. HEDGED in the film."
  },
  {
-  "id": "c16",
-  "sentence": "Today, a total solar eclipse happens somewhere on Earth about every year and a half.",
-  "claim": "A total solar eclipse can be seen somewhere on Earth roughly every year and a half.",
-  "source_url": "https://science.nasa.gov/eclipses/geometry",
-  "source_title": "Eclipse geometry (NASA Science)",
-  "accessed": "2026-11-09",
-  "note": "Looked 11 Nov: https://science.nasa.gov/eclipses/ and /future-eclipses/ list individual eclipses but do not state 'about every 18 months'; the eclipse-geometry page did not either. Not found on a readable NASA page; a person should open https://science.nasa.gov/eclipses/ and find or replace the source. OPEN.",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): search excerpt only, page not opened",
-   "quote": "",
-   "qualification": "Not yet read."
-  },
-  "derivation": "A total solar eclipse is visible somewhere on Earth about every 18 months."
- },
- {
-  "id": "c17",
-  "sentence": "Not every month, though, because the Moon's orbit is tilted by a few degrees.",
-  "claim": "The Moon's orbit is tilted about 5 degrees, so eclipses do not happen every month.",
-  "source_url": "https://science.nasa.gov/eclipses/geometry",
-  "source_title": "Why Do Eclipses Happen? (NASA Science); Moon Fact Sheet (NASA NSSDC): inclination to ecliptic 5.145 deg",
-  "accessed": "2026-11-09",
-  "note": "SOURCE-READ 11 Nov; the claim now rests on NASA's page, not only our inference.",
-  "verified_via": "page",
-  "status": "SOURCE-READ",
-  "source_read": {
-   "date": "2026-11-11",
-   "by": "builder (an AI), fetched the page with curl on 2026-11-11 and read it",
-   "quote": "Although a new moon happens about once a month, solar eclipses do not. ... Because the Moon's orbit is tilted ... (Moon Fact Sheet: Inclination to ecliptic 5.145 deg)",
-   "qualification": "A person still opens the page before OK."
-  },
-  "derivation": "the Moon's orbit is inclined about 5 deg to the ecliptic, so the alignment does not happen every new moon. The 5 deg figure comes from NASA's Moon fact sheet (orbit inclination)."
- },
- {
   "id": "c35",
   "sentence": "One hundred thousand kilometers.",
   "claim": "In our thought experiment the Moon is brought to 100,000 km.",

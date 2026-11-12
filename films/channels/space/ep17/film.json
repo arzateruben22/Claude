@@ -8,140 +8,120 @@
   "aiVoice": true,
   "aiVisuals": true
  },
- "dur": 63.303,
+ "dur": 61.205,
  "fps": 30,
  "captions": [
   {
    "t0": 0.17,
-   "t1": 2.8,
-   "text": "What happens when the Moon outgrows the Sun?",
-   "line": "ch5_hook"
+   "t1": 2.5,
+   "text": "Moon bigger than the Sun?",
+   "line": "ch5_hook",
+   "spoken": "Moon bigger than the Sun?"
   },
   {
-   "t0": 2.982,
-   "t1": 5.402,
-   "text": "One hundred thousand kilometers.",
-   "line": "ch5_vo"
+   "t0": 6.982,
+   "t1": 9.367,
+   "text": "100,000 km.",
+   "line": "ch5_vo",
+   "spoken": "One hundred thousand kilometers."
   },
   {
-   "t0": 5.422,
-   "t1": 8.912,
-   "text": "The Moon is nearly four times wider than tonight.",
-   "line": "ch5_vo"
+   "t0": 9.387,
+   "t1": 12.637,
+   "text": "The Moon is nearly 4 times wider than tonight.",
+   "line": "ch5_vo",
+   "spoken": "The Moon is nearly four times wider than tonight."
   },
   {
-   "t0": 8.932,
-   "t1": 13.157,
-   "text": "The Sun and the Moon look about the same size from Earth today.",
-   "line": "ch5_vo"
+   "t0": 12.657,
+   "t1": 16.167,
+   "text": "Today, the Sun and the Moon look about the same size.",
+   "line": "ch5_vo",
+   "spoken": "Today, the Sun and the Moon look about the same size."
   },
   {
-   "t0": 13.177,
-   "t1": 17.087,
-   "text": "That is why a total solar eclipse is possible at all.",
-   "line": "ch5_vo"
+   "t0": 16.187,
+   "t1": 19.267,
+   "text": "That is why total solar eclipses are possible.",
+   "line": "ch5_vo",
+   "spoken": "That is why total solar eclipses are possible."
   },
   {
-   "t0": 17.107,
-   "t1": 20.432,
-   "text": "Today, a total solar eclipse happens somewhere",
-   "line": "ch5_vo"
+   "t0": 22.817,
+   "t1": 25.379,
+   "text": "Now the Moon's shadow on Earth is wider,",
+   "line": "ch5_vo",
+   "spoken": "Now the Moon's shadow on Earth is wider, and eclipses would be far more common."
   },
   {
-   "t0": 20.452,
-   "t1": 23.142,
-   "text": "on Earth about every year and a half.",
-   "line": "ch5_vo"
+   "t0": 25.399,
+   "t1": 27.852,
+   "text": "and eclipses would be far more common.",
+   "line": "ch5_vo",
+   "spoken": "Now the Moon's shadow on Earth is wider, and eclipses would be far more common."
   },
   {
-   "t0": 23.162,
-   "t1": 26.922,
-   "text": "So when they line up, its shadow on Earth is wider.",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 26.942,
-   "t1": 29.597,
-   "text": "And eclipses would be far more common.",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 29.617,
-   "t1": 32.188,
-   "text": "Not every month, though, because the Moon's",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 32.208,
-   "t1": 34.197,
-   "text": "orbit is tilted by a few degrees.",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 34.217,
-   "t1": 35.417,
-   "text": "But often.",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 35.437,
-   "t1": 39.377,
+   "t0": 27.872,
+   "t1": 31.892,
    "text": "The sky goes dim, and the stars come out in the daytime.",
-   "line": "ch5_vo"
+   "line": "ch5_vo",
+   "spoken": "The sky goes dim, and the stars come out in the daytime."
   },
   {
-   "t0": 39.397,
-   "t1": 42.317,
-   "text": "The air cools, even if only a little.",
-   "line": "ch5_vo"
-  },
-  {
-   "t0": 42.337,
-   "t1": 47.692,
+   "t0": 36.442,
+   "t1": 41.692,
    "text": "A long dark noon, with a faint glow around a huge black disc.",
-   "line": "ch5_vo"
+   "line": "ch5_vo",
+   "spoken": "A long dark noon, with a faint glow around a huge black disc."
   },
   {
-   "t0": 47.765,
-   "t1": 52.075,
+   "t0": 45.799,
+   "t1": 50.109,
    "text": "Quick thing: if that made the sky feel bigger, tap like and follow.",
-   "line": "cta1_follow"
+   "line": "cta1_follow",
+   "spoken": "Quick thing: if that made the sky feel bigger, tap like and follow."
   },
   {
-   "t0": 52.165,
-   "t1": 55.05,
+   "t0": 50.235,
+   "t1": 52.97,
    "text": "And then you look at the Moon again, and it has moved.",
-   "line": "ch5_vo"
+   "line": "ch5_vo",
+   "spoken": "And then you look at the Moon again, and it has moved."
   },
   {
-   "t0": 55.255,
-   "t1": 55.88,
+   "t0": 53.157,
+   "t1": 53.782,
    "text": "Closer.",
-   "line": "ch5_loop"
+   "line": "ch5_loop",
+   "spoken": "Closer."
   },
   {
-   "t0": 55.9,
-   "t1": 56.87,
+   "t0": 53.802,
+   "t1": 54.772,
    "text": "Faster.",
-   "line": "ch5_loop"
+   "line": "ch5_loop",
+   "spoken": "Faster."
   },
   {
-   "t0": 56.89,
-   "t1": 59.31,
+   "t0": 54.792,
+   "t1": 57.212,
    "text": "And the ground under you is feeling it too.",
-   "line": "ch5_loop"
+   "line": "ch5_loop",
+   "spoken": "And the ground under you is feeling it too."
   },
   {
-   "t0": 59.461,
-   "t1": 60.766,
-   "text": "Part five of eight.",
-   "line": "closer5"
+   "t0": 57.363,
+   "t1": 58.668,
+   "text": "Part 5 of 8.",
+   "line": "closer5",
+   "spoken": "Part five of eight."
   },
   {
-   "t0": 60.786,
-   "t1": 62.571,
+   "t0": 58.688,
+   "t1": 60.473,
    "text": "Full video on YouTube.",
-   "line": "closer5"
+   "line": "closer5",
+   "spoken": "Full video on YouTube."
   }
  ],
  "km": [
@@ -154,8 +134,9 @@
    150000
   ],
   [
-   5.152,
-   100000
+   6.932,
+   100000,
+   4.0
   ]
  ],
  "tracks": {
@@ -165,19 +146,19 @@
     0
    ],
    [
-    35.236999999999995,
+    27.672,
     0
    ],
    [
-    37.037,
+    29.472,
     1
    ],
    [
-    52.065,
+    50.135,
     1
    ],
    [
-    53.765,
+    51.835,
     0
    ]
   ],
@@ -211,39 +192,57 @@
    "id": "ch5_hook",
    "file": "voice/wav/14.wav",
    "t": 0.15,
-   "dur": 2.462
+   "dur": 2.462,
+   "from": 0.0
   },
   {
    "id": "ch5_vo",
    "file": "voice/wav/15.wav",
-   "t": 2.962,
-   "dur": 44.483,
+   "t": 6.962,
+   "dur": 12.335,
    "from": 0.0
+  },
+  {
+   "id": "ch5_vo",
+   "file": "voice/wav/15.wav",
+   "t": 22.797,
+   "dur": 9.125,
+   "from": 12.335
+  },
+  {
+   "id": "ch5_vo",
+   "file": "voice/wav/15.wav",
+   "t": 36.422,
+   "dur": 5.057,
+   "from": 21.46
   },
   {
    "id": "cta1_follow",
    "file": "voice/wav/36.wav",
-   "t": 47.745,
-   "dur": 4.118
+   "t": 45.779,
+   "dur": 4.118,
+   "from": 0.0
   },
   {
    "id": "ch5_vo",
    "file": "voice/wav/15.wav",
-   "t": 52.163,
-   "dur": 2.707,
-   "from": 44.483
+   "t": 50.197,
+   "dur": 2.575,
+   "from": 26.517
   },
   {
    "id": "ch5_loop",
    "file": "voice/wav/16.wav",
-   "t": 55.22,
-   "dur": 3.871
+   "t": 53.122,
+   "dur": 3.871,
+   "from": 0.0
   },
   {
    "id": "closer5",
    "file": "voice/wav/32.wav",
-   "t": 59.441,
-   "dur": 2.912
+   "t": 57.343,
+   "dur": 2.912,
+   "from": 0.0
   }
  ],
  "source": "season3/engine.js via long01/out/part5.json"
