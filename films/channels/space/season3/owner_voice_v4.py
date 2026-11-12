@@ -1,12 +1,12 @@
 """owner_voice_v4.py: the owner's own recording (one 282 s take, many re-reads) -> one wav per v4 script line + words/sentences like make_voice_v4.py.
 For each line the take that reads the script exactly and is steadiest was chosen from the candidates (owner_takes.py); line 12 is spliced at a phrase boundary and 'far' is cut
-from line 21. Each cut starts and ends in the quietest frame beside its words; breaths in gaps of 0.3 s or more between aligned words are ducked by 14 dB (no expander).
+from line 21. Each cut starts and ends in the quietest frame beside its words; breaths between words are lowered by kits/cinema/voice/debreath.py (defaults, no split_long).
 Writes long01/voice5/{wav/<id>.wav, lines.json} and voice-owner-spoken/takes-used.json. usage: ~/.cache/cinema-voice/venv/bin/python -I owner_voice_v4.py"""
 import json, os, re, sys, wave
 from pathlib import Path
 import numpy as np, soundfile as sf
 ROOT = Path("/home/user/claude"); L1 = ROOT / "films/channels/space/long01"; V5 = L1 / "voice5"
-sys.path.insert(0, str(ROOT / "kits/cinema/voice")); import align; from scriptfile import spoken, SENTENCE_END
+sys.path.insert(0, str(ROOT / "kits/cinema/voice")); import align, debreath; from scriptfile import spoken, SENTENCE_END
 SRC = "/tmp/ovoice/oo-s3-owner-clean.flac"; a, sr = sf.read(SRC, dtype="float32"); a = a if a.ndim == 1 else a.mean(1)
 cand = json.load(open("/tmp/ovoice/candidates.json")); asr = json.load(open("/tmp/ovoice/asr_words.json"))
 text = {}
@@ -61,12 +61,9 @@ med = float(np.median([level(x) for _, _, x in out])); res = []
 (V5 / "wav").mkdir(parents=True, exist_ok=True)
 for lid, t, x in out:
     g = np.clip(med - level(x), -3, 3); x = x * 10 ** (g / 20); pk = np.abs(x).max(); x = x * (0.89 / pk) if pk > 0.89 else x
-    words, heard = align.line_words(rec, x, sr, t); gaps = []
-    for w0, w1 in zip(words, words[1:]):                              # duck breaths between aligned words: gaps of 0.3 s or more, -14 dB (soft 20 ms ramps)
-        if w1["start"] - w0["end"] >= 0.3: gaps.append((w0["end"] + 0.04, w1["start"] - 0.04))
-    for g0, g1 in gaps:
-        i0, i1 = int(g0 * sr), int(g1 * sr); r = int(0.02 * sr)
-        if i1 - i0 > 2 * r: env_g = np.ones(len(x)); env_g[i0:i1] = 10 ** (-14 / 20); env_g[i0 - r: i0] = np.linspace(1, 10 ** (-14 / 20), r); env_g[i1: i1 + r] = np.linspace(10 ** (-14 / 20), 1, r); x = x * env_g
+    words, heard = align.line_words(rec, x, sr, t)
+    x, found = debreath.debreath(x, sr, [{"w": w["w"], "start": w["start"], "end": w["end"]} for w in words])   # kits/cinema/voice/debreath.py (made-with-claude-film 6b84f6ef), defaults only, no split_long
+    used.setdefault(lid, {})["breaths_lowered"] = [list(b_) for b_ in found]
     f = V5 / "wav" / f"{lid}.wav"; sf.write(f, x, sr, subtype="PCM_24"); dur = len(x) / sr
     sents, pos = [], 0
     for m in re.finditer(r".+?" + SENTENCE_END.pattern, t.strip()):

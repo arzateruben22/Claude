@@ -7,6 +7,16 @@
    ]
   ],
   "why": "two clean reads; the first is steadier (level spread 5.2 vs 6.2 dB)",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.31
+   ],
+   [
+    3.28,
+    3.38
+   ]
+  ],
   "heard": "Tonight, the moon starts coming closer and it never stops.",
   "not_heard": []
  },
@@ -18,6 +28,16 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.38
+   ],
+   [
+    10.01,
+    10.09
+   ]
+  ],
   "heard": "Right now, it's about 384,000 kilometers away, drifting off 3.8 centimeters a year. Tonight, it reverses a thought experiment built from real physics.",
   "not_heard": [
    "three",
@@ -37,6 +57,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    5.78,
+    6.02
+   ]
+  ],
   "heard": "Watch the number. It only goes down.",
   "not_heard": []
  },
@@ -48,6 +74,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "288,000, a third wider. And the sea already fills it more than twice the tidal port.",
   "not_heard": [
    "Two",
@@ -66,6 +93,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    3.93,
+    4.14
+   ]
+  ],
   "heard": "the distance and the water starts to climb.",
   "not_heard": [
    "Halve"
@@ -79,6 +112,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    3.8,
+    3.98
+   ]
+  ],
   "heard": "Half the distance, twice as wide, eight times the tidal point.",
   "not_heard": [
    "pull."
@@ -92,6 +131,16 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.04,
+    0.28
+   ],
+   [
+    3.32,
+    3.44
+   ]
+  ],
   "heard": "Not a measured height, just the idea. The whole ocean lifted from above.",
   "not_heard": []
  },
@@ -103,6 +152,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    3.13,
+    3.26
+   ]
+  ],
   "heard": "And the night is about to change.",
   "not_heard": []
  },
@@ -114,6 +169,16 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.06,
+    0.14
+   ],
+   [
+    8.11,
+    8.85
+   ]
+  ],
   "heard": "150,6. Your shadow is sharp on the sand.",
   "not_heard": [
    "One",
@@ -137,6 +202,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "and it's faster. One lap takes about seven days, not twenty-seven.",
   "not_heard": []
  },
@@ -148,6 +214,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.23
+   ]
+  ],
   "heard": "It's bigger than the sun now. So what happens when they line up?",
   "not_heard": []
  },
@@ -163,6 +235,7 @@
    ]
   ],
   "why": "spliced at the phrase boundary 'often.' | 'Not every month': first half from the first read, tail from the later read",
+  "breaths_lowered": [],
   "heard": "one hundred thousand, nearly four times wider. Its shadow on earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted, but often.",
   "not_heard": []
  },
@@ -174,6 +247,16 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.07,
+    0.39
+   ],
+   [
+    5.13,
+    5.32
+   ]
+  ],
   "heard": "Closer, faster, and the ground fills it too.",
   "not_heard": [
    "feels"
@@ -187,6 +270,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    11.58,
+    11.66
+   ]
+  ],
   "heard": "70,000 more than 160 times today's tidal pool. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.",
   "not_heard": [
    "Seventy",
@@ -205,6 +294,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    4.49,
+    5.28
+   ]
+  ],
   "heard": "Soon, the moon rises on the wrong side of the sky.",
   "not_heard": []
  },
@@ -216,6 +311,16 @@
    ]
   ],
   "why": "two reads; the first matches every word (1.0 vs 0.95)",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.14
+   ],
+   [
+    8.49,
+    8.59
+   ]
+  ],
   "heard": "50,000, nearly eight times wider. One lap takes about a day and a quarter close to how fast the earth turns.",
   "not_heard": [
    "Fifty",
@@ -230,6 +335,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    3.53,
+    4.0
+   ]
+  ],
   "heard": "42,000. It hangs still.",
   "not_heard": [
    "Forty-two",
@@ -244,6 +355,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    3.86,
+    4.04
+   ]
+  ],
   "heard": "Then it slides the wrong way. It rises in the west.",
   "not_heard": []
  },
@@ -255,6 +372,16 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.12,
+    0.3
+   ],
+   [
+    2.4,
+    7.4
+   ]
+  ],
   "heard": "Thirty thousand twenty five twenty",
   "not_heard": [
    "Twenty-five."
@@ -268,6 +395,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "Around eighteen thousand kilometers is a Roche limit, where Earth's tides pull harder than the Moon's own gravity holds it together. That's it the Moon acts like a fluid. A perfectly rigged moon could come to about nine and a half thousand.",
   "not_heard": [
    "the",
@@ -283,6 +411,12 @@
    ]
   ],
   "why": "one read; 'far' cut; cut 'far' (197.11-197.44 s) with a 12 ms crossfade",
+  "breaths_lowered": [
+   [
+    2.6,
+    2.72
+   ]
+  ],
   "heard": "At 18,000, it's more than 20 times wider than tonight. A wall of gray straining.",
   "not_heard": [
    "eighteen",
@@ -298,6 +432,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    2.52,
+    2.7
+   ]
+  ],
   "heard": "And then it does something no moon should survive.",
   "not_heard": []
  },
@@ -309,6 +449,12 @@
    ]
   ],
   "why": "two reads; the first is steadier (6.1 vs 7.9 dB) and has no 'explosion, explosion' restart",
+  "breaths_lowered": [
+   [
+    3.69,
+    3.8
+   ]
+  ],
   "heard": "It comes apart, not an explosion, a stretch.",
   "not_heard": []
  },
@@ -320,6 +466,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    5.37,
+    5.55
+   ]
+  ],
   "heard": "The rock spreads along its old orbit and over time it could flatten into a ring.",
   "not_heard": [
    "can"
@@ -333,6 +485,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    4.65,
+    4.86
+   ]
+  ],
   "heard": "No moon, just a bright band, horizon to horizon.",
   "not_heard": []
  },
@@ -344,6 +502,16 @@
    ]
   ],
   "why": "two reads; the first says 'the real Moon' as scripted and is steadier",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.09
+   ],
+   [
+    6.41,
+    6.54
+   ]
+  ],
   "heard": "The real moon is still drifting away 3.8 centimeters a year. Tonight's moon is fine.",
   "not_heard": [
    "three",
@@ -359,6 +527,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    2.52,
+    2.65
+   ]
+  ],
   "heard": "Watch the moon, it's coming closer.",
   "not_heard": []
  },
@@ -370,6 +544,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "A quarter closer. What changes first?",
   "not_heard": []
  },
@@ -381,6 +556,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.01,
+    0.14
+   ]
+  ],
   "heard": "Half the distance, now the ocean climbs.",
   "not_heard": []
  },
@@ -392,6 +573,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "The night is getting too bright.",
   "not_heard": []
  },
@@ -403,6 +585,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    2.66,
+    2.75
+   ]
+  ],
   "heard": "What happens when the moon outgrows the sun?",
   "not_heard": []
  },
@@ -414,6 +602,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    2.98,
+    3.19
+   ]
+  ],
   "heard": "It's not just the sea. The ground moves too.",
   "not_heard": []
  },
@@ -425,6 +619,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "watch it rise in the wrong place.",
   "not_heard": []
  },
@@ -436,6 +631,7 @@
    ]
   ],
   "why": "two clean reads; the first is steadier (4.5 vs 6.2 dB)",
+  "breaths_lowered": [],
   "heard": "There's a distance. No one survives.",
   "not_heard": [
    "moon"
@@ -449,6 +645,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "If that made the sky feel bigger, tap like and follow.",
   "not_heard": []
  },
@@ -460,6 +657,7 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [],
   "heard": "If that made the sky feel bigger, tap like and subscribe.",
   "not_heard": []
  },
@@ -471,6 +669,12 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.8,
+    0.89
+   ]
+  ],
   "heard": "Still looking up, tap like and follow.",
   "not_heard": []
  },
@@ -482,7 +686,51 @@
    ]
   ],
   "why": "one read",
+  "breaths_lowered": [
+   [
+    0.96,
+    1.07
+   ]
+  ],
   "heard": "Still looking up? Tap like and subscribe.",
   "not_heard": []
+ },
+ "C1": {
+  "segments": [
+   [
+    65.9,
+    68.7
+   ]
+  ],
+  "source": "Possibility Lab recording 'Valerio St 3.m4a' (whatif-s2), Part C",
+  "why": "his own closer, reused; clarity --style normal --rumble, debreath defaults, level matched",
+  "heard": "Part 1 of 8. Full video on YouTube.",
+  "not_heard": [],
+  "breaths_lowered": [
+   [
+    0.01,
+    0.09
+   ]
+  ],
+  "level_gain_db": -2.86
+ },
+ "C2": {
+  "segments": [
+   [
+    69.7,
+    72.0
+   ]
+  ],
+  "source": "Possibility Lab recording 'Valerio St 3.m4a' (whatif-s2), Part C",
+  "why": "his own closer, reused; clarity --style normal --rumble, debreath defaults, level matched",
+  "heard": "Part 2 of 8. Full video on YouTube.",
+  "not_heard": [],
+  "breaths_lowered": [
+   [
+    0.01,
+    0.09
+   ]
+  ],
+  "level_gain_db": -2.7
  }
 }

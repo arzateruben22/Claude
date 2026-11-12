@@ -30,7 +30,7 @@ const V = ["-c:v", "libx264", "-preset", "slow", "-crf", "15", "-x264-params", "
 const ff = spawn("ffmpeg", ["-v", "error", "-y", "-f", "image2pipe", "-framerate", String(fps), "-c:v", "mjpeg", "-i", "-", "-an", ...V, outp], { stdio: ["pipe", "inherit", "inherit"] });
 const t_start = Date.now();
 for (let i = n0; i < n1; i++) {
-  await page.evaluate((t) => window.renderAt(t), i / fps); const buf = await page.screenshot({ type: "jpeg", quality: 94 });
+  await page.evaluate(([t, b]) => { window.renderAt(t); if (b) { const e = document.getElementById("badge"); e.style.opacity = t >= b.t ? 0 : Math.min(1, (b.t - t) / b.fade); } }, [i / fps, TL.badge || null]); const buf = await page.screenshot({ type: "jpeg", quality: 94 });
   if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once("drain", r));
   if ((i - n0) % 150 === 0) console.log(`frame ${i - n0}/${n1 - n0}  ${((Date.now() - t_start) / 1000 / Math.max(1, i - n0)).toFixed(2)} s/frame`);
 }

@@ -1,7 +1,7 @@
 #!/bin/bash
 # mix_sfx.sh <in.mp4> <film.json (timeline)> <sfx.json> <out.mp4>: the sound-effects stem (kits/cinema/sound/sfx.py) into the film's mix:
 # amix normalize=0 -> alimiter -1.5 dB -> gain to -14 LUFS -> alimiter again; video copied.
-set -e; IN=$1; FILM=$2; SFX=$3; OUT=$4; W=$(mktemp -d); SFXPY=${SFXPY:-/tmp/sfx_src/sfx.py}
+set -e; IN=$1; FILM=$2; SFX=$3; OUT=$4; W=$(mktemp -d); SFXPY=${SFXPY:-$(cd "$(dirname "$0")/../../../.." && pwd)/kits/cinema/sound/sfx.py}
 python3 -I $SFXPY $FILM $SFX $W/stem.wav > /dev/null
 ffmpeg -v error -y -i $IN -i $W/stem.wav -filter_complex "[0:a][1:a]amix=inputs=2:normalize=0:duration=first,alimiter=limit=-1.5dB:level=disabled[a]" -map "[a]" -c:a pcm_s24le $W/mix.wav
 I=$(ffmpeg -hide_banner -i $W/mix.wav -af ebur128 -f null - 2>&1 | grep -E "^\s+I:" | tail -1 | awk '{print $2}'); G=$(python3 -c "print(round(-14 - ($I), 2))")
