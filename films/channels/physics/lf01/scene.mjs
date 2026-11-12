@@ -280,9 +280,9 @@ waterMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, wU);
   vec3 col = bg * vec3(0.86, 0.94, 1.0); col = mix(col, vec3(0.62, 0.78, 1.0) * (0.35 + 0.5 * sky), fr * 0.6);
   col *= 1.0 - 0.55 * smoothstep(0.78, 0.98, 1.0 - ndv);
   outgoingLight = acesInv(clamp(col, 0.0, 1.0), 1.0) + vec3(1.0, 0.96, 0.88) * gl * 3.0 * (0.4 + 0.6 * fr);
-  diffuseColor.a = 1.0;
+  diffuseColor.a = opacity < 0.99 ? opacity * (0.45 + 0.55 * fr) : 1.0;
   #include <opaque_fragment>`); };
-const crownMat = waterMat, sheetMat = waterMat;
+const crownMat = waterMat, sheetMat = waterMat.clone(); sheetMat.onBeforeCompile = waterMat.onBeforeCompile; sheetMat.transparent = true; sheetMat.opacity = 0.7; sheetMat.depthWrite = false; sheetMat.needsUpdate = true;
 const spikes = [], tips = []; const NSP = 18; for (let i = 0; i < NSP; i++) { const tp = new THREE.Mesh(new THREE.SphereGeometry(0.0013, 12, 9), crownMat); crown.add(tp); tips.push(tp); const m = new THREE.Mesh(new THREE.ConeGeometry(0.0013, 1, 8), crownMat); m.userData.a = (i / NSP) * Math.PI * 2; crown.add(m); spikes.push(m); }
 const sheet = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8, 1, true), sheetMat); sheet.frustumCulled = false; crown.add(sheet); let sheetKey = "";
 const crater = new THREE.Mesh(new THREE.CircleGeometry(1, 64), new THREE.MeshBasicMaterial({ color: 0x14246A, transparent: true, opacity: 0.3, depthWrite: false })); crater.rotation.x = -Math.PI / 2; crater.position.y = 0.0004; crown.add(crater);   // the depressed ring of water the coronet stands on   // the thin water wall between the jets
@@ -510,7 +510,7 @@ window.seek = function (t) {
     const rgK = (() => { const q = plates.anchor(t); return q && q.rig ? q.rig : null; })(), grow = Math.min(1, rC / 0.04), Rc = (0.007 + 0.03 * Math.sqrt(grow)) * (rgK ? rgK.rad : 1), Hc = rC < 0.04 ? 0.026 * Math.sin(Math.min(1, rC / 0.034) * Math.PI * 0.5) : Math.max(0, 0.026 * (1 - (rC - 0.04) / 0.05));
     const flare = 0.5, Hs = Hc * 0.78, Rt = Rc + Hs * Math.tan(flare) * 0.9, vis = Hc > 0.001;
     crownRing.visible = false; crater.visible = vis; crater.scale.setScalar(Math.max(1e-4, Rc * 1.1)); crater.material.opacity = 0.3 * Math.min(1, Hc / 0.01);
-    sheet.visible = vis; { const key = Rc.toFixed(5) + "," + Hs.toFixed(5); if (vis && key !== sheetKey) { sheetKey = key; const pts = []; for (let k = 0; k <= 10; k++) { const u = k / 10; pts.push(new THREE.Vector2(Rc + (Rt - Rc) * Math.pow(u, 1.25), Hs * u)); } sheet.geometry.dispose(); sheet.geometry = new THREE.LatheGeometry(pts, 96); } }
+    sheet.visible = vis; { const key = Rc.toFixed(5) + "," + Hs.toFixed(5); if (vis && key !== sheetKey) { sheetKey = key; const pts = []; for (let k = 0; k <= 10; k++) { const u = k / 10; pts.push(new THREE.Vector2(Rc + (Rt - Rc) * Math.pow(u, 1.25), Hs * u)); } sheet.geometry.dispose(); const lg = new THREE.LatheGeometry(pts, 108), LP = lg.attributes.position; for (let k = 0; k < LP.count; k++) { const x = LP.getX(k), z = LP.getZ(k), y = LP.getY(k), u = Math.min(1, y / Math.max(1e-6, Hs)), sc = 0.5 + 0.5 * Math.cos(18 * Math.atan2(z, x)); LP.setY(k, y * (1 - 0.32 * u * u * (1 - sc))); } sheet.geometry = lg; } }   // a scalloped rim: it dips between the jets
     spikes.forEach((s, i) => { const a = s.userData.a, k = 0.5 + 0.5 * Math.abs(Math.sin(a * 2.0 + 0.7) * Math.cos(a * 3.0 + 1.0)), h = Hc * 0.14 + Hc * 0.34 * k + 0.0005, ca = Math.cos(a), sa = Math.sin(a), lean = flare * 0.8;
       s.visible = vis; tips[i].visible = vis; s.scale.set(1, h, 1);
       const bx = ca * Rt, bz = sa * Rt, dx = Math.sin(lean) * ca, dz = Math.sin(lean) * sa, dy = Math.cos(lean);   // each jet leans on along the flare
