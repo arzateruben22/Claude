@@ -18,6 +18,7 @@ import * as THREE from 'three';
 import { buildCar, carPaint, SWITCHED_LAMPS } from '../../preview/car';
 import type { PaintFinish } from '../../preview/car';
 import { buildCockpit, Cockpit } from '../../preview/cockpit';
+import type { DashReadout } from '../../preview/car-dash';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel, type WheelStyle } from '../../preview/car-wheel';
 import { Kit, mat } from '../../preview/car-kit';
@@ -48,7 +49,7 @@ export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | n
 // paused: the game is paused (the hands' off-wheel blend and wave hold still)
 // handling, tank and tcs feed the sport steering wheel's displays: the handling value (its profile on the left dial),
 // the hypercar's Thrust tank (0..1) and whether the traction control is on (the right dial)
-export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean; handling?: number; tank?: number; tcs?: boolean }
+export interface CockpitState { delta: number; rpm: number; gear: number; auto: boolean; limiter: boolean; speed: number; throttle: number; brake: number; paused?: boolean; handling?: number; tank?: number; tcs?: boolean; abs?: boolean; ax?: number; ay?: number }
 
 // the exterior's parts that only make sense from outside: the tinted glass and the dark cabin silhouette behind it
 const OUTSIDE_ONLY = ['glass', 'frit', 'interior', 'seatSil'];
@@ -58,6 +59,7 @@ const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
 // turn signals: 90 flashes a minute (1.5 Hz, lit for half of each), on while the car crosses toward the next lane
 // (sideways along the road faster than SIG_RATE m/s for SIG_ARM s, above SIG_MIN m/s) and SIG_HOLD s after; and
 // while steering hard (the front wheels past SIG_LOCK rad) below SIG_SLOW m/s, as for a turn
+const GEARS = ['N', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];   // gear words without a string a frame
 const SIG_HZ = 1.5, SIG_RATE = 0.6, SIG_ARM = 0.2, SIG_HOLD = 1.0, SIG_MIN = 6, SIG_LOCK = 0.12, SIG_SLOW = 12;
 
 function disposeGeometry(o: THREE.Object3D) {
@@ -456,18 +458,30 @@ export class PlayerCar {
   // what the lamps show this frame (for the tests): the signalling side, whether it is lit now, reversing, braking
   get lightState() { return { ...this.lit }; }
 
+  // the cluster's readout, filled in place (updateCockpit each frame, setDash ten times a second)
+  private inst: Partial<DashReadout> = { tcs: true, abs: true };
+  // the cluster's slower facts, from Game's HUD send (ten times a second): trip and top speed, the clock and the
+  // simulated temperature, the hypercar's tune and tank, and Go To's next turn and destination
+  setDash(d: Partial<DashReadout>) { this.interior?.setInstruments?.(d); }
   // the steering wheel, the hands on it, and the tachometer
   updateCockpit(dt: number, s: CockpitState) {
     const target = clamp(s.delta * SPEC.steerRatio, -2.2, 2.2);       // steering ratio, clamped so the hands stay on the rim
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;
-      // the tach's needle, and (the hypercar's live display only) the speed, the gear, the power in use (the throttle's
-      // share of the power the engine makes at these revs, a display figure) and the tune: Unleashed above 1 MW
-      const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1);
-      this.interior.setInstruments?.({ rpm: s.rpm, mph: s.speed * 2.236936, gear: s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : String(s.gear),
-        kw, kwMax, rpmFrac: s.rpm / SPEC.redline, mode: SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE',
-        profile: s.handling === undefined ? undefined : profileOf(s.handling), tank: s.tank, tcs: s.tcs });
+      // the tach's needle and every car's live cluster (cockpit.ts setInstruments): the speed, the gear, the revs, the
+      // power in use (the throttle's share of the power the engine makes at these revs, a display figure), the tune's
+      // word, the handling profile, TCS and ABS, and the body's acceleration in g (x right, y forward; the physics' ay is
+      // to the left). One object, filled in place each frame.
+      const kwMax = SPEC.power / 1000, kw = s.throttle * kwMax * clamp((s.rpm / SPEC.redline) * 1.25, 0.15, 1), d = this.inst;
+      d.rpm = s.rpm; d.mph = s.speed * 2.236936; d.gear = s.gear < 0 ? 'R' : s.gear === 0 ? 'N' : GEARS[s.gear] ?? String(s.gear);
+      d.kw = kw; d.kwMax = kwMax; d.rpmFrac = s.rpm / SPEC.redline; d.mode = SPEC.power >= 1e6 ? 'UNLEASHED' : 'RACE TUNE';
+      if (s.handling !== undefined) d.profile = profileOf(s.handling);
+      if (s.tank !== undefined) d.tank = s.tank;
+      if (s.tcs !== undefined) d.tcs = s.tcs;
+      if (s.abs !== undefined) d.abs = s.abs;
+      d.gx = -(s.ay ?? 0) / 9.81; d.gy = (s.ax ?? 0) / 9.81;
+      this.interior.setInstruments?.(d);
       this.interior.update?.(dt);
     }
     this.arms?.setWheelAngle(this.wheelAngle, s.paused ? 0 : dt);
