@@ -18,7 +18,7 @@ SPEC = {   # robot heights: P2 and the thumbnail small (about 18-22 %)
  2: ("sun", (455, 372, 565, 716), (510, 708), (350, -40, 910, 956), ["Sunset in", "6 hours"], dict(pose="lookUp", expr="awe"), 0.18, SUN, True),
  3: ("storm", (385, 455, 580, 625), (505, 614), (0, -250, 941, 1422), ["1,670 km/h", "wind"], dict(pose="lean", expr="squint"), 0.18, STORM, False),
  4: ("sea", None, (836, 38), (236, -900, 1436, 1233), ["Seas pile", "up here"], dict(pose="hips", expr="wide"), 0.14, STORM, False),
- 5: ("storm", (385, 455, 580, 625), (505, 614), (60, -260, 881, 1327), ["Calm afternoons", "end"], dict(pose="lean", expr="squint"), 0.19, STORM, False),
+ 5: ("storm", (385, 455, 580, 625), (505, 614), (60, -260, 881, 1327), ["Calm", "afternoons", "end"], dict(pose="lean", expr="squint"), 0.19, STORM, False),
  6: ("arc1", (488, 846, 560, 1022), (524, 1016), (103, 0, 947, 1500), ["6,000 days", "a year"], dict(pose="lookUp", expr="awe"), 0.17, ARC, True),
  7: ("arc2", (436, 905, 504, 1064), (470, 1058), (0, 0, 941, 1672), ["Sunset", "in 1 hour"], dict(pose="lookUp", expr="awe"), 0.17, ARC, True),
  8: ("float", (815, 70, 1215, 660), (990, 652), (536, -446, 1483, 1238), ["Jump 4", "meters high"], dict(pose="float", expr="happy"), 0.22, SUN, False),

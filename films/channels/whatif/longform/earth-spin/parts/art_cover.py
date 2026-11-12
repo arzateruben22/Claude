@@ -39,7 +39,7 @@ def save(im, *paths, q=92):
     for p in paths: Path(p).parent.mkdir(parents=True, exist_ok=True); im.save(p, quality=q, subsampling=0)
 S3 = W / "compilations/s3"
 # 9:16 covers (1080x1920) laid out for the 3:4 profile-grid crop (the centre 1080x1440, y 240-1680): the words in the upper half of that band, the subject inside it, the bottom of the band and the right edge clear
-FS = {3: 112, 5: 140}
+FS = {3: 112, 5: 120}
 def cover(n, im, box, lines, fs=None, ty=280, save_to=True):
     fs = fs or FS.get(n, 140)
     size = (1080, 1920); out = extend(im, box); out = finish(out, size)
