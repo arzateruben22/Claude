@@ -1,0 +1,158 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "What if Earth spun faster, and couldn't stop?",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.51,
+   "sha256": "209ecebc112234fdf15c0f216616445371fc5da8258606adeb4de6682870da1e"
+  },
+  {
+   "id": "vo02",
+   "beat": "s2",
+   "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 5.11,
+   "sha256": "ec15874242b45254e69214a9f25d6678a0f99a77290b2ee2c5daeb6476d76635"
+  },
+  {
+   "id": "vo03",
+   "beat": "s3",
+   "text": "The Earth keeps its size, its air and its water.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 2.76,
+   "sha256": "844db338411129c6e438e178fb82fb10479036ae72f935cb7e943f7a66b153b3"
+  },
+  {
+   "id": "vo04",
+   "beat": "s4",
+   "text": "Only the spin changes, and it only gets faster.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.38,
+   "sha256": "0bbedec77c87fd0645f3bb1c6de8da6535b1157a4e86be643fff75a12712bc1a"
+  },
+  {
+   "id": "vo05",
+   "beat": "s5",
+   "text": "One number matters: the length of a day.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 1.975,
+   "sha256": "f0cce87532a452367c266b0fef990ad250328517d11f5bac5b786a9e1109f783"
+  },
+  {
+   "id": "vo06",
+   "beat": "s6",
+   "text": "It starts at twenty-four hours and ends at about an hour and twenty-four minutes.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.58,
+   "sha256": "21f11aeb5fd9dbfcd6cafbbb9cd1dc8ab22be773140c1e091bc234b39c65f5f8"
+  },
+  {
+   "id": "vo07",
+   "beat": "s7",
+   "text": "Under it, how fast the ground moves under your feet.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 2.26,
+   "sha256": "fe8e20a3d739b399d84819e967771e44213ce28276690fd8bd0ecda52bdbc312"
+  },
+  {
+   "id": "vo08",
+   "beat": "s8",
+   "text": "Nothing resets.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 1.0,
+   "sha256": "1a1ac6a26cd92da76d894fa5a620f87bb939036f7e4344aafdcca376438de670"
+  },
+  {
+   "id": "vo09",
+   "beat": "s9",
+   "text": "Nothing slows.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 0.86,
+   "sha256": "f1acb813befaaf86ce143be0e83027b4266798e89f2919c1f450cbce83d5701d"
+  },
+  {
+   "id": "vo10",
+   "beat": "s10",
+   "text": "Treat every number as a first guess.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 1.65,
+   "sha256": "d50a1a59f3a02073f26ad5a11b4bbe11660be3cf041dac07e2e3348dd55c2c2a"
+  },
+  {
+   "id": "vo11",
+   "beat": "s11",
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 4.54,
+   "sha256": "a17c6dc84052400b28507ab35db978f3b22dcfb0d032121b05f806645e3feac3"
+  },
+  {
+   "id": "vo12",
+   "beat": "s12",
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 4.83,
+   "sha256": "3256b870d8c6489740d2c8ba9f8607a235db79fa84ec7a26e805516c9f2c3c3f"
+  },
+  {
+   "id": "vo13",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 5.11,
+   "sha256": "e4527cfda3ba53e27b28101ffb005b988c52d0b5303f8e46e603f9aa22aa6f3e"
+  },
+  {
+   "id": "vo14",
+   "beat": "cliff",
+   "text": "And then the spin has only just begun to speed up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 3.43,
+   "sha256": "56107facdd38922e10f1d7f0e50b0de27f03ac04d13759495380112647fbe01d"
+  },
+  {
+   "id": "vo15",
+   "beat": "tease",
+   "text": "Part one of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "15.wav",
+   "dur": 3.35,
+   "sha256": "c71dba491687572826e602bd15885c140034971e457c77314bc7c33cb7f3c7fd"
+  }
+ ]
+}

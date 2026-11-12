@@ -1,0 +1,1949 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "speed": null,
+ "lang": "en-us",
+ "style": "normal",
+ "source": [
+  "A-clean.wav"
+ ],
+ "source_sha256": [
+  "071c2b9accec008e82da23dd88cdcb70dc395d83edf22c96009fd6157b05b55b"
+ ],
+ "chain": "clarity.py --style normal --rumble (applied to the whole recording upstream)",
+ "made_by": "films/channels/whatif/voice-owner/cutS.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "L01",
+   "text": "What if the Earth spun faster every second, and nothing could stop it? You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 8.82,
+   "sha256": "fc22f490c992720b179bbbcce3456e5c63cd9286d447a0f237b964a1b8bebf61",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 3.59,
+     "text": "What if the Earth spun faster every second, and nothing could stop it?",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 3.71,
+     "t1": 8.82,
+     "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "beat": "L02",
+   "text": "The Earth keeps its size, its air and its water. Only the spin changes, and it only gets faster. One number matters: the length of a day. It starts at twenty-four hours and ends at about an hour and twenty-four minutes. Under it, how fast the ground moves under your feet. Nothing resets. Nothing slows. Treat every number as a first guess.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 18.225,
+   "sha256": "21e687acbe7fe730d2ee744e96680b9763b4e6fc1e0ad2cc0c94700517ae795b",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 2.76,
+     "text": "The Earth keeps its size, its air and its water.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 3.11,
+     "t1": 5.49,
+     "text": "Only the spin changes, and it only gets faster.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 5.84,
+     "t1": 7.815,
+     "text": "One number matters: the length of a day.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 7.935,
+     "t1": 11.515,
+     "text": "It starts at twenty-four hours and ends at about an hour and twenty-four minutes.",
+     "match": 0.93
+    },
+    {
+     "si": 4,
+     "t0": 11.635,
+     "t1": 13.895,
+     "text": "Under it, how fast the ground moves under your feet.",
+     "match": 1.0
+    },
+    {
+     "si": 5,
+     "t0": 14.015,
+     "t1": 15.015,
+     "text": "Nothing resets.",
+     "match": 1.0
+    },
+    {
+     "si": 6,
+     "t0": 15.365,
+     "t1": 16.225,
+     "text": "Nothing slows.",
+     "match": 1.0
+    },
+    {
+     "si": 7,
+     "t0": 16.575,
+     "t1": 18.225,
+     "text": "Treat every number as a first guess.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "beat": "L03",
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour. What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 9.72,
+   "sha256": "083733f7123ada21eb6046888277ee057fd9d82720c651a53ada6385d3f44898",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 4.54,
+     "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+     "match": 0.81
+    },
+    {
+     "si": 1,
+     "t0": 4.89,
+     "t1": 9.72,
+     "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "beat": "L04",
+   "text": "Now the spin speeds up. At twenty hours the shadows sweep. At sixteen, the Sun climbs like a slow elevator. A day only ever gets shorter, and you can't turn it back.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 9.38,
+   "sha256": "64836f16ef7314ef04f0fc9782b34bbf2a2cebba97e30cb3c49e156370c37e12",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.28,
+     "text": "Now the spin speeds up.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 1.64,
+     "t1": 3.29,
+     "text": "At twenty hours the shadows sweep.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 3.64,
+     "t1": 6.29,
+     "text": "At sixteen, the Sun climbs like a slow elevator.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 6.64,
+     "t1": 9.38,
+     "text": "A day only ever gets shorter, and you can't turn it back.",
+     "match": 0.92
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "beat": "L05",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours. The Sun moves as fast as a clock's hour hand. The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound. You are one point four percent lighter, four times what you feel today. Eight hours of sleep no longer fits inside one night.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 17.17,
+   "sha256": "9ae3e562cd6a1f431bfbd3e6fa243d3f6490c8c6497bc5b1cb643c884984c0d6",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 3.18,
+     "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 3.3,
+     "t1": 5.68,
+     "text": "The Sun moves as fast as a clock's hour hand.",
+     "match": 0.9
+    },
+    {
+     "si": 2,
+     "t0": 6.03,
+     "t1": 10.68,
+     "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+     "match": 0.94
+    },
+    {
+     "si": 3,
+     "t0": 11.03,
+     "t1": 14.43,
+     "text": "You are one point four percent lighter, four times what you feel today.",
+     "match": 0.87
+    },
+    {
+     "si": 4,
+     "t0": 14.8,
+     "t1": 17.17,
+     "text": "Eight hours of sleep no longer fits inside one night.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "beat": "L06",
+   "text": "But the air can't keep up. It is pulled along only by friction, so for the first hours it is left behind. The ground moves through it at about sixteen hundred and seventy kilometers an hour. The strongest gust ever measured was about four hundred and eight kilometers an hour. This wind would be four times faster, blowing from the east, because the ground is running ahead of the air. Winds like that would strip the surface, and they'd only be the beginning.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 23.28,
+   "sha256": "54daaea29d2646a86944f3fbb410a1c0ed43fbb5d3d603bf77610c1c150674dd",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.17,
+     "text": "But the air can't keep up.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 1.29,
+     "t1": 4.68,
+     "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+     "match": 0.93
+    },
+    {
+     "si": 2,
+     "t0": 4.8,
+     "t1": 8.47,
+     "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour.",
+     "match": 0.8
+    },
+    {
+     "si": 3,
+     "t0": 8.82,
+     "t1": 13.17,
+     "text": "The strongest gust ever measured was about four hundred and eight kilometers an hour.",
+     "match": 0.88
+    },
+    {
+     "si": 4,
+     "t0": 13.52,
+     "t1": 20.06,
+     "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air.",
+     "match": 1.0
+    },
+    {
+     "si": 5,
+     "t0": 20.23,
+     "t1": 23.28,
+     "text": "Winds like that would strip the surface, and they'd only be the beginning.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "beat": "L07",
+   "text": "Then the oceans move. A spinning planet pushes water outward, toward the equator, exactly as it pushes you. At a twelve hour day the sea wants to stand about thirty-three kilometers higher at the equator. The ocean is only about three point seven kilometers deep. So it drains toward a belt around the equator, and the poles dry out. A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 21.96,
+   "sha256": "429694775a7f4ba97517aa129acad01f3010381acc2d5ccc447f2ac7d67f6d6d",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.25,
+     "text": "Then the oceans move.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 1.6,
+     "t1": 5.83,
+     "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 5.96,
+     "t1": 10.54,
+     "text": "At a twelve hour day the sea wants to stand about thirty-three kilometers higher at the equator.",
+     "match": 0.94
+    },
+    {
+     "si": 3,
+     "t0": 10.66,
+     "t1": 13.2,
+     "text": "The ocean is only about three point seven kilometers deep.",
+     "match": 0.89
+    },
+    {
+     "si": 4,
+     "t0": 13.55,
+     "t1": 16.81,
+     "text": "So it drains toward a belt around the equator, and the poles dry out.",
+     "match": 0.93
+    },
+    {
+     "si": 5,
+     "t0": 16.94,
+     "t1": 21.96,
+     "text": "A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "beat": "L08",
+   "text": "Storms are steered by the spin, and that steering grows with the spin rate. At a six hour day it is four times stronger than today. At the edge of floating, seventeen times. The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 14.57,
+   "sha256": "12c2265091119c6f5fa5133b8e62e7810fefc0c185a96362e4208bb3a20055eb",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 3.79,
+     "text": "Storms are steered by the spin, and that steering grows with the spin rate.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 3.91,
+     "t1": 6.3,
+     "text": "At a six hour day it is four times stronger than today.",
+     "match": 0.96
+    },
+    {
+     "si": 2,
+     "t0": 6.87,
+     "t1": 9.04,
+     "text": "At the edge of floating, seventeen times.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 9.16,
+     "t1": 14.57,
+     "text": "The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "beat": "L09",
+   "text": "At a six hour day the Sun crosses from horizon to horizon in three hours. The equator moves at nearly seven thousand kilometers an hour. You are five and a half percent lighter. Jumping takes you higher than it should, and every step feels slightly wrong.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 16.8,
+   "sha256": "d37ca1cfd29a80c35b76998bb278c134f724799860aa2366688a5260e966a5bf",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 7.69,
+     "text": "At a six hour day the Sun crosses from horizon to horizon in three hours.",
+     "match": 0.84
+    },
+    {
+     "si": 1,
+     "t0": 7.81,
+     "t1": 10.82,
+     "text": "The equator moves at nearly seven thousand kilometers an hour.",
+     "match": 0.84
+    },
+    {
+     "si": 2,
+     "t0": 11.17,
+     "t1": 13.33,
+     "text": "You are five and a half percent lighter.",
+     "match": 0.62
+    },
+    {
+     "si": 3,
+     "t0": 13.68,
+     "t1": 16.8,
+     "text": "Jumping takes you higher than it should, and every step feels slightly wrong.",
+     "match": 0.96
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "beat": "L10",
+   "text": "The calendar breaks. At a six hour day, a year holds about fourteen hundred and sixty days. By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 10.555,
+   "sha256": "66e5540eb5d04ab38a14326a843e92bd82246fa0650c72ccfc031d8b6fea7a89",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 0.94,
+     "text": "The calendar breaks.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 1.06,
+     "t1": 4.325,
+     "text": "At a six hour day, a year holds about fourteen hundred and sixty days.",
+     "match": 0.72
+    },
+    {
+     "si": 2,
+     "t0": 4.675,
+     "t1": 10.555,
+     "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+     "match": 0.88
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "beat": "L11",
+   "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever. At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong. The farther from the equator, the longer you keep your weight. But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 86.34,
+   "sha256": "4e9c31427e2d36a5ce80f22892cd00c6f4a1012985a409e6e51f5292115440ac",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 3.65,
+     "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 3.77,
+     "t1": 8.47,
+     "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong.",
+     "match": 0.9
+    },
+    {
+     "si": 2,
+     "t0": 8.59,
+     "t1": 82.02,
+     "text": "The farther from the equator, the longer you keep your weight.",
+     "match": 0.82
+    },
+    {
+     "si": 3,
+     "t0": 82.37,
+     "t1": 86.34,
+     "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "beat": "L12",
+   "text": "At a three hour day the Sun crosses the sky in ninety minutes, sliding its own width every sixteen seconds. The ground moves at over thirteen thousand kilometers an hour. You weigh twenty-two percent less: seventy kilograms feels like fifty-five.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 12.66,
+   "sha256": "7bc4d64774dfba42a58a0eaff01d876fae73155829024227afc5a27fc7501dbd",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 5.39,
+     "text": "At a three hour day the Sun crosses the sky in ninety minutes, sliding its own width every sixteen seconds.",
+     "match": 0.97
+    },
+    {
+     "si": 1,
+     "t0": 5.74,
+     "t1": 8.73,
+     "text": "The ground moves at over thirteen thousand kilometers an hour.",
+     "match": 0.95
+    },
+    {
+     "si": 2,
+     "t0": 8.85,
+     "t1": 12.66,
+     "text": "You weigh twenty-two percent less: seventy kilograms feels like fifty-five.",
+     "match": 0.86
+    }
+   ]
+  },
+  {
+   "id": "vo13",
+   "beat": "L13",
+   "text": "At two hours, you weigh half. The jump that lifts you half a meter now lifts you about a meter. The Sun crosses the whole sky in an hour. Every object near the equator is half as heavy as it should be, and buildings, bridges and oceans must hold on with half the force.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 14.61,
+   "sha256": "79b7743445ed96c0b5c2c6210517b339030954443408867317d54ce36fa5ad79",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.24,
+     "text": "At two hours, you weigh half.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 1.59,
+     "t1": 5.11,
+     "text": "The jump that lifts you half a meter now lifts you about a meter.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 5.46,
+     "t1": 7.38,
+     "text": "The Sun crosses the whole sky in an hour.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 7.73,
+     "t1": 14.61,
+     "text": "Every object near the equator is half as heavy as it should be, and buildings, bridges and oceans must hold on with half the force.",
+     "match": 0.96
+    }
+   ]
+  },
+  {
+   "id": "vo14",
+   "beat": "L14",
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: seventy kilograms becomes eight. A half-meter jump carries you about four meters, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land. The Sun crosses the whole sky in forty-five minutes. One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 17.38,
+   "sha256": "c44e0b7c520348b978e5a16973e1647467f4f322d05f7744cd7557eda9520a2b",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 4.88,
+     "text": "At an hour and a half you are almost weightless, about one eighth of your weight: seventy kilograms becomes eight.",
+     "match": 0.97
+    },
+    {
+     "si": 1,
+     "t0": 5.0,
+     "t1": 12.14,
+     "text": "A half-meter jump carries you about four meters, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 12.49,
+     "t1": 15.01,
+     "text": "The Sun crosses the whole sky in forty-five minutes.",
+     "match": 0.95
+    },
+    {
+     "si": 3,
+     "t0": 15.13,
+     "t1": 17.38,
+     "text": "One more nudge, and something changes completely.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo15",
+   "beat": "L15",
+   "text": "At a day of an hour and twenty-four minutes, the ground moves at seven point nine kilometers a second, the speed of a satellite in low orbit. The push outward exactly cancels gravity. You weigh nothing. You are no longer standing on the Earth. You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "stars": [],
+   "phonemes": null,
+   "file": "15.wav",
+   "dur": 17.435,
+   "sha256": "0b63249fcb32d8af79f16973097d83ae78e5346e772a0e573eeb3439565ed67b",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 7.02,
+     "text": "At a day of an hour and twenty-four minutes, the ground moves at seven point nine kilometers a second, the speed of a satellite in low orbit.",
+     "match": 0.94
+    },
+    {
+     "si": 1,
+     "t0": 7.14,
+     "t1": 9.8,
+     "text": "The push outward exactly cancels gravity.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 10.15,
+     "t1": 10.89,
+     "text": "You weigh nothing.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 11.24,
+     "t1": 12.855,
+     "text": "You are no longer standing on the Earth.",
+     "match": 1.0
+    },
+    {
+     "si": 4,
+     "t0": 13.205,
+     "t1": 17.435,
+     "text": "You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo16",
+   "beat": "L16",
+   "text": "Past that point the equator can no longer keep its own rock. A simple sum can't say more, but the direction is clear: the spin tears the equator apart. First the loose things, then the sea, then the rock.",
+   "stars": [],
+   "phonemes": null,
+   "file": "16.wav",
+   "dur": 9.96,
+   "sha256": "b842ce2763d6c7bf97c6151fe2a348becdeff25bef5ee572c5145a95edbdb29e",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 2.62,
+     "text": "Past that point the equator can no longer keep its own rock.",
+     "match": 0.92
+    },
+    {
+     "si": 1,
+     "t0": 2.74,
+     "t1": 7.14,
+     "text": "A simple sum can't say more, but the direction is clear: the spin tears the equator apart.",
+     "match": 1.0
+    },
+    {
+     "si": 2,
+     "t0": 7.49,
+     "t1": 9.96,
+     "text": "First the loose things, then the sea, then the rock.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo17",
+   "beat": "L17",
+   "text": "Nothing in the real universe could do this. It would take about six times ten to the thirty-first joules, nearly three hundred times today's spin energy, or all the sunlight the Earth receives for about eleven million years.",
+   "stars": [],
+   "phonemes": null,
+   "file": "17.wav",
+   "dur": 11.18,
+   "sha256": "704172c0d66b8c255603f8169736bf14e18c4fc938916133efeb7400d2a499ad",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.71,
+     "text": "Nothing in the real universe could do this.",
+     "match": 1.0
+    },
+    {
+     "si": 1,
+     "t0": 2.06,
+     "t1": 11.18,
+     "text": "It would take about six times ten to the thirty-first joules, nearly three hundred times today's spin energy, or all the sunlight the Earth receives for about eleven million years.",
+     "match": 0.95
+    }
+   ]
+  },
+  {
+   "id": "vo18",
+   "beat": "L18",
+   "text": "So the next time you stand still, remember you're already moving at sixteen hundred kilometers an hour. Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind. That is the whole distance between standing and flying. Thanks for watching.",
+   "stars": [],
+   "phonemes": null,
+   "file": "18.wav",
+   "dur": 12.74,
+   "sha256": "250c3379258ead9c60f969b197390fefd714e66fc837b1729fc6f649eb29b6cd",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 4.06,
+     "text": "So the next time you stand still, remember you're already moving at sixteen hundred kilometers an hour.",
+     "match": 0.91
+    },
+    {
+     "si": 1,
+     "t0": 4.41,
+     "t1": 9.59,
+     "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind.",
+     "match": 0.97
+    },
+    {
+     "si": 2,
+     "t0": 9.71,
+     "t1": 11.86,
+     "text": "That is the whole distance between standing and flying.",
+     "match": 1.0
+    },
+    {
+     "si": 3,
+     "t0": 11.98,
+     "t1": 12.74,
+     "text": "Thanks for watching.",
+     "match": 1.0
+    }
+   ]
+  },
+  {
+   "id": "vo19",
+   "beat": "L19",
+   "text": "Subscribe, for the next what-if.",
+   "stars": [],
+   "phonemes": null,
+   "file": "19.wav",
+   "dur": 1.31,
+   "sha256": "0e63821e095dcdb2f9405cfa1befe31d925ff40c69da7f464387ce41c2a3f737",
+   "sentences": [
+    {
+     "si": 0,
+     "t0": 0.0,
+     "t1": 1.31,
+     "text": "Subscribe, for the next what-if.",
+     "match": 1.0
+    }
+   ]
+  }
+ ],
+ "sentence_files": [
+  {
+   "k": 1,
+   "line": 0,
+   "si": 0,
+   "text": "What if the Earth spun faster every second, and nothing could stop it?",
+   "heard": "What if the earth spun faster every second and nothing could stop it?",
+   "file": "s001.wav",
+   "dur": 3.59,
+   "src": [
+    0,
+    2.19,
+    6.02
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 2,
+   "line": 0,
+   "si": 1,
+   "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore.",
+   "heard": "You're standing on the equator and you'll watch what happens minute by minute until the planet can't take it anymore.",
+   "file": "s002.wav",
+   "dur": 5.11,
+   "src": [
+    0,
+    6.04,
+    11.7
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 3,
+   "line": 1,
+   "si": 0,
+   "text": "The Earth keeps its size, its air and its water.",
+   "heard": "The earth keeps its size, its air, and its water.",
+   "file": "s003.wav",
+   "dur": 2.76,
+   "src": [
+    0,
+    11.72,
+    14.53
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 4,
+   "line": 1,
+   "si": 1,
+   "text": "Only the spin changes, and it only gets faster.",
+   "heard": "Only the spin changes and it only gets faster.",
+   "file": "s004.wav",
+   "dur": 2.38,
+   "src": [
+    0,
+    17.5,
+    20.1
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 5,
+   "line": 1,
+   "si": 2,
+   "text": "One number matters: the length of a day.",
+   "heard": "One number matters, the length of a day.",
+   "file": "s005.wav",
+   "dur": 1.975,
+   "src": [
+    0,
+    20.09,
+    22.18
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 6,
+   "line": 1,
+   "si": 3,
+   "text": "It starts at twenty-four hours and ends at about an hour and twenty-four minutes.",
+   "heard": "It starts at 24 hours and ends at about an hour and 24 minutes.",
+   "file": "s006.wav",
+   "dur": 3.58,
+   "src": [
+    0,
+    22.27,
+    25.86
+   ],
+   "match": 0.93,
+   "takes": 1
+  },
+  {
+   "k": 7,
+   "line": 1,
+   "si": 4,
+   "text": "Under it, how fast the ground moves under your feet.",
+   "heard": "Under it, how fast the ground moves under your feet.",
+   "file": "s007.wav",
+   "dur": 2.26,
+   "src": [
+    0,
+    25.89,
+    28.58
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 8,
+   "line": 1,
+   "si": 5,
+   "text": "Nothing resets.",
+   "heard": "Nothing resets.",
+   "file": "s008.wav",
+   "dur": 1.0,
+   "src": [
+    0,
+    28.59,
+    29.78
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 9,
+   "line": 1,
+   "si": 6,
+   "text": "Nothing slows.",
+   "heard": "Nothing slows.",
+   "file": "s009.wav",
+   "dur": 0.86,
+   "src": [
+    0,
+    29.75,
+    30.66
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 10,
+   "line": 1,
+   "si": 7,
+   "text": "Treat every number as a first guess.",
+   "heard": "Treat every number as a first guess.",
+   "file": "s010.wav",
+   "dur": 1.65,
+   "src": [
+    0,
+    30.63,
+    33.55
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 11,
+   "line": 2,
+   "si": 0,
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+   "heard": "Right now, the ground carries you at about 1670 kilometers an hour.",
+   "file": "s011.wav",
+   "dur": 4.54,
+   "src": [
+    0,
+    34.25,
+    38.9
+   ],
+   "match": 0.81,
+   "takes": 1
+  },
+  {
+   "k": 12,
+   "line": 2,
+   "si": 1,
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+   "heard": "What you feel is a tiny push outward. The spin makes you about a third of a percent lighter.",
+   "file": "s012.wav",
+   "dur": 4.83,
+   "src": [
+    0,
+    38.88,
+    44.22
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 13,
+   "line": 3,
+   "si": 0,
+   "text": "Now the spin speeds up.",
+   "heard": "Now the spin speeds up.",
+   "file": "s013.wav",
+   "dur": 1.28,
+   "src": [
+    0,
+    44.25,
+    46.8
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 14,
+   "line": 3,
+   "si": 1,
+   "text": "At twenty hours the shadows sweep.",
+   "heard": "At 20 hours the shadows sweep.",
+   "file": "s014.wav",
+   "dur": 1.65,
+   "src": [
+    0,
+    47.16,
+    49.1
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 15,
+   "line": 3,
+   "si": 2,
+   "text": "At sixteen, the Sun climbs like a slow elevator.",
+   "heard": "At 16 the sun climbs like a slow elevator.",
+   "file": "s015.wav",
+   "dur": 2.65,
+   "src": [
+    0,
+    49.09,
+    51.82
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 16,
+   "line": 3,
+   "si": 3,
+   "text": "A day only ever gets shorter, and you can't turn it back.",
+   "heard": "A day only ever gets shorter and he can't turn it back.",
+   "file": "s016.wav",
+   "dur": 2.74,
+   "src": [
+    0,
+    51.81,
+    55.41
+   ],
+   "match": 0.92,
+   "takes": 1
+  },
+  {
+   "k": 17,
+   "line": 4,
+   "si": 0,
+   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+   "heard": "At a 12 hour day, sunrise to sunset takes six hours.",
+   "file": "s017.wav",
+   "dur": 3.18,
+   "src": [
+    0,
+    55.87,
+    59.18
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 18,
+   "line": 4,
+   "si": 1,
+   "text": "The Sun moves as fast as a clock's hour hand.",
+   "heard": "The sun moves as fast as the clock's hour hand.",
+   "file": "s018.wav",
+   "dur": 2.38,
+   "src": [
+    0,
+    59.19,
+    61.9
+   ],
+   "match": 0.9,
+   "takes": 1
+  },
+  {
+   "k": 19,
+   "line": 4,
+   "si": 2,
+   "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+   "heard": "The ground moves at about 33,000 kilometers an hour, nearly three times the speed of sound.",
+   "file": "s019.wav",
+   "dur": 4.65,
+   "src": [
+    0,
+    66.53,
+    71.66
+   ],
+   "match": 0.94,
+   "takes": 1
+  },
+  {
+   "k": 20,
+   "line": 4,
+   "si": 3,
+   "text": "You are one point four percent lighter, four times what you feel today.",
+   "heard": "You are 1.4% lighter, four times what you feel today.",
+   "file": "s020.wav",
+   "dur": 3.4,
+   "src": [
+    0,
+    71.64,
+    76.47
+   ],
+   "match": 0.87,
+   "takes": 1
+  },
+  {
+   "k": 21,
+   "line": 4,
+   "si": 4,
+   "text": "Eight hours of sleep no longer fits inside one night.",
+   "heard": "Eight hours of sleep no longer fits inside one night.",
+   "file": "s021.wav",
+   "dur": 2.37,
+   "src": [
+    0,
+    76.84,
+    79.67
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 22,
+   "line": 5,
+   "si": 0,
+   "text": "But the air can't keep up.",
+   "heard": "But the air can't keep up.",
+   "file": "s022.wav",
+   "dur": 1.17,
+   "src": [
+    0,
+    80.09,
+    81.59
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 23,
+   "line": 5,
+   "si": 1,
+   "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+   "heard": "It is pulled along only by friction, so the first hours is left behind.",
+   "file": "s023.wav",
+   "dur": 3.39,
+   "src": [
+    0,
+    81.6,
+    85.83
+   ],
+   "match": 0.93,
+   "takes": 1
+  },
+  {
+   "k": 24,
+   "line": 5,
+   "si": 2,
+   "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour.",
+   "heard": "The ground moves through it at about 1670 kilometers an hour.",
+   "file": "s024.wav",
+   "dur": 3.67,
+   "src": [
+    0,
+    85.85,
+    89.75
+   ],
+   "match": 0.8,
+   "takes": 1
+  },
+  {
+   "k": 25,
+   "line": 5,
+   "si": 3,
+   "text": "The strongest gust ever measured was about four hundred and eight kilometers an hour.",
+   "heard": "The strongest gust ever measured was about 418 kilometers an hour.",
+   "file": "s025.wav",
+   "dur": 4.35,
+   "src": [
+    0,
+    89.75,
+    94.96
+   ],
+   "match": 0.88,
+   "takes": 1
+  },
+  {
+   "k": 26,
+   "line": 5,
+   "si": 4,
+   "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air.",
+   "heard": "This wind would be four times faster blowing from the east because the ground is running ahead of the air.",
+   "file": "s026.wav",
+   "dur": 6.54,
+   "src": [
+    0,
+    94.96,
+    102.31
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 27,
+   "line": 5,
+   "si": 5,
+   "text": "Winds like that would strip the surface, and they'd only be the beginning.",
+   "heard": "Winds like that would strip the surface and they'd only be the beginning.",
+   "file": "s027.wav",
+   "dur": 3.05,
+   "src": [
+    0,
+    102.48,
+    107.28
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 28,
+   "line": 6,
+   "si": 0,
+   "text": "Then the oceans move.",
+   "heard": "Then the oceans move.",
+   "file": "s028.wav",
+   "dur": 1.25,
+   "src": [
+    0,
+    108.28,
+    109.92
+   ],
+   "match": 1.0,
+   "takes": 3
+  },
+  {
+   "k": 29,
+   "line": 6,
+   "si": 1,
+   "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
+   "heard": "A spinning planet pushes water outward toward the equator, exactly as it pushes you.",
+   "file": "s029.wav",
+   "dur": 4.23,
+   "src": [
+    0,
+    112.11,
+    116.79
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 30,
+   "line": 6,
+   "si": 2,
+   "text": "At a twelve hour day the sea wants to stand about thirty-three kilometers higher at the equator.",
+   "heard": "At a 12-hour day, the sea wants to stand about 33 kilometers higher at the equator.",
+   "file": "s030.wav",
+   "dur": 4.58,
+   "src": [
+    0,
+    116.92,
+    121.66
+   ],
+   "match": 0.94,
+   "takes": 1
+  },
+  {
+   "k": 31,
+   "line": 6,
+   "si": 3,
+   "text": "The ocean is only about three point seven kilometers deep.",
+   "heard": "The ocean is only about 3.7 kilometers deep,",
+   "file": "s031.wav",
+   "dur": 2.54,
+   "src": [
+    0,
+    121.7,
+    124.68
+   ],
+   "match": 0.89,
+   "takes": 1
+  },
+  {
+   "k": 32,
+   "line": 6,
+   "si": 4,
+   "text": "So it drains toward a belt around the equator, and the poles dry out.",
+   "heard": "so it drains towards a belt around the equator and the poles dry out.",
+   "file": "s032.wav",
+   "dur": 3.26,
+   "src": [
+    0,
+    124.67,
+    129.18
+   ],
+   "match": 0.93,
+   "takes": 1
+  },
+  {
+   "k": 33,
+   "line": 6,
+   "si": 5,
+   "text": "A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods.",
+   "heard": "A rough first guess, but the direction is certain. Land near the poles emerges and your own coast floods.",
+   "file": "s033.wav",
+   "dur": 5.02,
+   "src": [
+    0,
+    129.31,
+    135.74
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 34,
+   "line": 7,
+   "si": 0,
+   "text": "Storms are steered by the spin, and that steering grows with the spin rate.",
+   "heard": "Storms are steered by the spin, and that steering grows with the spin rate.",
+   "file": "s034.wav",
+   "dur": 3.79,
+   "src": [
+    0,
+    156.43,
+    160.68
+   ],
+   "match": 1.0,
+   "takes": 2
+  },
+  {
+   "k": 35,
+   "line": 7,
+   "si": 1,
+   "text": "At a six hour day it is four times stronger than today.",
+   "heard": "At a six-hour day, it is four times stronger than today.",
+   "file": "s035.wav",
+   "dur": 2.39,
+   "src": [
+    0,
+    160.78,
+    163.31
+   ],
+   "match": 0.96,
+   "takes": 1
+  },
+  {
+   "k": 36,
+   "line": 7,
+   "si": 2,
+   "text": "At the edge of floating, seventeen times.",
+   "heard": "At the edge of floating, 17 times.",
+   "file": "s036.wav",
+   "dur": 2.17,
+   "src": [
+    0,
+    163.88,
+    166.46
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 37,
+   "line": 7,
+   "si": 3,
+   "text": "The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this.",
+   "heard": "The calm of an ordinary afternoon would be gone, and nobody could forecast it because nobody has seen a planet like this.",
+   "file": "s037.wav",
+   "dur": 5.41,
+   "src": [
+    0,
+    166.56,
+    173.36
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 38,
+   "line": 8,
+   "si": 0,
+   "text": "At a six hour day the Sun crosses from horizon to horizon in three hours.",
+   "heard": "At a six-hour day, the sun comes from across from horizon to horizon in three hours.",
+   "file": "s038.wav",
+   "dur": 7.69,
+   "src": [
+    0,
+    173.51,
+    181.5
+   ],
+   "match": 0.84,
+   "takes": 1
+  },
+  {
+   "k": 39,
+   "line": 8,
+   "si": 1,
+   "text": "The equator moves at nearly seven thousand kilometers an hour.",
+   "heard": "The equator moves at nearly 70,000 kilometers an hour.",
+   "file": "s039.wav",
+   "dur": 3.01,
+   "src": [
+    0,
+    181.52,
+    185.6
+   ],
+   "match": 0.84,
+   "takes": 2
+  },
+  {
+   "k": 40,
+   "line": 8,
+   "si": 2,
+   "text": "You are five and a half percent lighter.",
+   "heard": "You are 5.5% lighter. Jumping",
+   "file": "s040.wav",
+   "dur": 2.16,
+   "src": [
+    0,
+    188.09,
+    190.29
+   ],
+   "match": 0.62,
+   "takes": 1
+  },
+  {
+   "k": 41,
+   "line": 8,
+   "si": 3,
+   "text": "Jumping takes you higher than it should, and every step feels slightly wrong.",
+   "heard": "Jumping takes you higher than it should and every step feels slightly",
+   "file": "s041.wav",
+   "dur": 3.12,
+   "src": [
+    0,
+    199.97,
+    203.44
+   ],
+   "match": 0.96,
+   "takes": 1
+  },
+  {
+   "k": 42,
+   "line": 9,
+   "si": 0,
+   "text": "The calendar breaks.",
+   "heard": "The calendar breaks.",
+   "file": "s042.wav",
+   "dur": 0.94,
+   "src": [
+    0,
+    219.07,
+    220.16
+   ],
+   "match": 1.0,
+   "takes": 2
+  },
+  {
+   "k": 43,
+   "line": 9,
+   "si": 1,
+   "text": "At a six hour day, a year holds about fourteen hundred and sixty days.",
+   "heard": "At a six-hour day, a year holds about 1,460 days. By",
+   "file": "s043.wav",
+   "dur": 3.265,
+   "src": [
+    0,
+    220.18,
+    223.44
+   ],
+   "match": 0.72,
+   "takes": 1
+  },
+  {
+   "k": 44,
+   "line": 9,
+   "si": 2,
+   "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+   "heard": "the end, over 6,000. With the sunrise every 84 minutes, and you'd be asked to sleep 8 times a day.",
+   "file": "s044.wav",
+   "dur": 5.88,
+   "src": [
+    0,
+    223.28,
+    230.27
+   ],
+   "match": 0.88,
+   "takes": 1
+  },
+  {
+   "k": 45,
+   "line": 10,
+   "si": 0,
+   "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+   "heard": "At the poles, the ground only turns on the spot, so people there would weigh the same as ever.",
+   "file": "s045.wav",
+   "dur": 3.65,
+   "src": [
+    0,
+    230.52,
+    234.64
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 46,
+   "line": 10,
+   "si": 1,
+   "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong.",
+   "heard": "At 45 degrees north, you move at 70% of the equator speed, and the push outward is half as strong.",
+   "file": "s046.wav",
+   "dur": 4.7,
+   "src": [
+    0,
+    234.69,
+    239.76
+   ],
+   "match": 0.9,
+   "takes": 1
+  },
+  {
+   "k": 47,
+   "line": 10,
+   "si": 2,
+   "text": "The farther from the equator, the longer you keep your weight.",
+   "heard": "The farther... The new grader, the longer you keep your weight.",
+   "file": "s047.wav",
+   "dur": 73.43,
+   "src": [
+    0,
+    239.8,
+    313.44
+   ],
+   "match": 0.82,
+   "takes": 1
+  },
+  {
+   "k": 48,
+   "line": 10,
+   "si": 3,
+   "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "heard": "but the water leaves the poles first, so the stillest place on earth would stand high and dry.",
+   "file": "s048.wav",
+   "dur": 3.97,
+   "src": [
+    0,
+    323.35,
+    328.19
+   ],
+   "match": 1.0,
+   "takes": 2
+  },
+  {
+   "k": 49,
+   "line": 11,
+   "si": 0,
+   "text": "At a three hour day the Sun crosses the sky in ninety minutes, sliding its own width every sixteen seconds.",
+   "heard": "At a three-hour day, the sun crosses the sky in 90 minutes, sliding its own width every 16 seconds.",
+   "file": "s049.wav",
+   "dur": 5.39,
+   "src": [
+    0,
+    328.27,
+    334.11
+   ],
+   "match": 0.97,
+   "takes": 1
+  },
+  {
+   "k": 50,
+   "line": 11,
+   "si": 1,
+   "text": "The ground moves at over thirteen thousand kilometers an hour.",
+   "heard": "the ground moves at over 13,000 kilometers an hour.",
+   "file": "s050.wav",
+   "dur": 2.99,
+   "src": [
+    0,
+    339.45,
+    342.91
+   ],
+   "match": 0.95,
+   "takes": 1
+  },
+  {
+   "k": 51,
+   "line": 11,
+   "si": 2,
+   "text": "You weigh twenty-two percent less: seventy kilograms feels like fifty-five.",
+   "heard": "You weigh 22% less. 70 kilograms feels like 55.",
+   "file": "s051.wav",
+   "dur": 3.81,
+   "src": [
+    0,
+    342.94,
+    347.7
+   ],
+   "match": 0.86,
+   "takes": 1
+  },
+  {
+   "k": 52,
+   "line": 12,
+   "si": 0,
+   "text": "At two hours, you weigh half.",
+   "heard": "At two hours you weigh half.",
+   "file": "s052.wav",
+   "dur": 1.24,
+   "src": [
+    0,
+    349.69,
+    351.15
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 53,
+   "line": 12,
+   "si": 1,
+   "text": "The jump that lifts you half a meter now lifts you about a meter.",
+   "heard": "The jump that lifts you half a meter now lifts you about a meter.",
+   "file": "s053.wav",
+   "dur": 3.52,
+   "src": [
+    0,
+    351.14,
+    355.05
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 54,
+   "line": 12,
+   "si": 2,
+   "text": "The Sun crosses the whole sky in an hour.",
+   "heard": "The sun crosses the whole sky in an hour.",
+   "file": "s054.wav",
+   "dur": 1.92,
+   "src": [
+    0,
+    355.05,
+    357.31
+   ],
+   "match": 1.0,
+   "takes": 2
+  },
+  {
+   "k": 55,
+   "line": 12,
+   "si": 3,
+   "text": "Every object near the equator is half as heavy as it should be, and buildings, bridges and oceans must hold on with half the force.",
+   "heard": "Every object near the equator is half as heavy as it should be, and building, bridges, and oceans must hold on with half the force.",
+   "file": "s055.wav",
+   "dur": 6.88,
+   "src": [
+    0,
+    371.29,
+    378.51
+   ],
+   "match": 0.96,
+   "takes": 2
+  },
+  {
+   "k": 56,
+   "line": 13,
+   "si": 0,
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: seventy kilograms becomes eight.",
+   "heard": "At an hour and a half you are almost weightless. About one-eighth of your weight. 70 kilograms becomes eight.",
+   "file": "s056.wav",
+   "dur": 4.88,
+   "src": [
+    0,
+    378.67,
+    384.01
+   ],
+   "match": 0.97,
+   "takes": 1
+  },
+  {
+   "k": 57,
+   "line": 13,
+   "si": 1,
+   "text": "A half-meter jump carries you about four meters, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+   "heard": "A half meter jump carries you about four meters, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+   "file": "s057.wav",
+   "dur": 7.14,
+   "src": [
+    0,
+    384.03,
+    391.42
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 58,
+   "line": 13,
+   "si": 2,
+   "text": "The Sun crosses the whole sky in forty-five minutes.",
+   "heard": "The sun crosses the whole sky in 45 minutes.",
+   "file": "s058.wav",
+   "dur": 2.52,
+   "src": [
+    0,
+    401.78,
+    404.54
+   ],
+   "match": 0.95,
+   "takes": 1
+  },
+  {
+   "k": 59,
+   "line": 13,
+   "si": 3,
+   "text": "One more nudge, and something changes completely.",
+   "heard": "One more nudge and something changes completely.",
+   "file": "s059.wav",
+   "dur": 2.25,
+   "src": [
+    0,
+    404.55,
+    408.25
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 60,
+   "line": 14,
+   "si": 0,
+   "text": "At a day of an hour and twenty-four minutes, the ground moves at seven point nine kilometers a second, the speed of a satellite in low orbit.",
+   "heard": "At a day of an hour and 24 minutes, the ground moves at 7.9 kilometers a second. The speed of a satellite in low orbit,",
+   "file": "s060.wav",
+   "dur": 7.02,
+   "src": [
+    0,
+    409.5,
+    416.78
+   ],
+   "match": 0.94,
+   "takes": 1
+  },
+  {
+   "k": 61,
+   "line": 14,
+   "si": 1,
+   "text": "The push outward exactly cancels gravity.",
+   "heard": "the push outward exactly cancels gravity.",
+   "file": "s061.wav",
+   "dur": 2.66,
+   "src": [
+    0,
+    416.79,
+    419.58
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 62,
+   "line": 14,
+   "si": 2,
+   "text": "You weigh nothing.",
+   "heard": "You weigh nothing.",
+   "file": "s062.wav",
+   "dur": 0.74,
+   "src": [
+    0,
+    419.56,
+    420.95
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 63,
+   "line": 14,
+   "si": 3,
+   "text": "You are no longer standing on the Earth.",
+   "heard": "You are no longer standing on the earth.",
+   "file": "s063.wav",
+   "dur": 1.615,
+   "src": [
+    0,
+    422.56,
+    424.31
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 64,
+   "line": 14,
+   "si": 4,
+   "text": "You are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "heard": "you are orbiting it, one stride above the surface, with the whole equator going by beneath you.",
+   "file": "s064.wav",
+   "dur": 4.23,
+   "src": [
+    0,
+    429.69,
+    434.81
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 65,
+   "line": 15,
+   "si": 0,
+   "text": "Past that point the equator can no longer keep its own rock.",
+   "heard": "Past the point, the equator can no longer keep its own rock.",
+   "file": "s065.wav",
+   "dur": 2.62,
+   "src": [
+    0,
+    434.84,
+    437.53
+   ],
+   "match": 0.92,
+   "takes": 1
+  },
+  {
+   "k": 66,
+   "line": 15,
+   "si": 1,
+   "text": "A simple sum can't say more, but the direction is clear: the spin tears the equator apart.",
+   "heard": "A simple sum can't say more, but the direction is clear: the spin tears the equator apart.",
+   "file": "s066.wav",
+   "dur": 4.4,
+   "src": [
+    0,
+    437.56,
+    442.76
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 67,
+   "line": 15,
+   "si": 2,
+   "text": "First the loose things, then the sea, then the rock.",
+   "heard": "First, the loose things, then the sea, then the rock.",
+   "file": "s067.wav",
+   "dur": 2.47,
+   "src": [
+    0,
+    447.4,
+    450.41
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 68,
+   "line": 16,
+   "si": 0,
+   "text": "Nothing in the real universe could do this.",
+   "heard": "Nothing in the real universe could do this.",
+   "file": "s068.wav",
+   "dur": 1.71,
+   "src": [
+    0,
+    450.47,
+    452.25
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 69,
+   "line": 16,
+   "si": 1,
+   "text": "It would take about six times ten to the thirty-first joules, nearly three hundred times today's spin energy, or all the sunlight the Earth receives for about eleven million years.",
+   "heard": "It would take about six times ten to the thirty-first joules, nearly three thousand times today's spin energy, or all the sunlight the Earth receives for about 11 million years.",
+   "file": "s069.wav",
+   "dur": 9.12,
+   "src": [
+    0,
+    452.23,
+    462.55
+   ],
+   "match": 0.95,
+   "takes": 1
+  },
+  {
+   "k": 70,
+   "line": 17,
+   "si": 0,
+   "text": "So the next time you stand still, remember you're already moving at sixteen hundred kilometers an hour.",
+   "heard": "So the next time you stand still, remember you're already moving at 1600 kilometers an hour,",
+   "file": "s070.wav",
+   "dur": 4.06,
+   "src": [
+    0,
+    463.88,
+    468.33
+   ],
+   "match": 0.91,
+   "takes": 1
+  },
+  {
+   "k": 71,
+   "line": 17,
+   "si": 1,
+   "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind.",
+   "heard": "only about 17 times faster. A day of an hour and twenty-four minutes, and you leave the ground behind.",
+   "file": "s071.wav",
+   "dur": 5.18,
+   "src": [
+    0,
+    468.31,
+    474.08
+   ],
+   "match": 0.97,
+   "takes": 1
+  },
+  {
+   "k": 72,
+   "line": 17,
+   "si": 2,
+   "text": "That is the whole distance between standing and flying.",
+   "heard": "That is the whole distance between standing and flying.",
+   "file": "s072.wav",
+   "dur": 2.15,
+   "src": [
+    0,
+    474.11,
+    476.56
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 73,
+   "line": 17,
+   "si": 3,
+   "text": "Thanks for watching.",
+   "heard": "Thanks for watching.",
+   "file": "s073.wav",
+   "dur": 0.76,
+   "src": [
+    0,
+    476.6,
+    478.07
+   ],
+   "match": 1.0,
+   "takes": 1
+  },
+  {
+   "k": 74,
+   "line": 18,
+   "si": 0,
+   "text": "Subscribe, for the next what-if.",
+   "heard": "Subscribe for the next what if.",
+   "file": "s074.wav",
+   "dur": 1.31,
+   "src": [
+    0,
+    478.48,
+    480.65
+   ],
+   "match": 1.0,
+   "takes": 1
+  }
+ ]
+}

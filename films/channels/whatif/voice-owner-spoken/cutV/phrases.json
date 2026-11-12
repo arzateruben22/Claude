@@ -1,0 +1,90 @@
+{
+ "p1_open": {
+  "text": "What if Earth spun faster, and couldn't stop?",
+  "file": "p1_open.wav",
+  "dur": 3.51,
+  "src": [
+   2.64,
+   6.15
+  ],
+  "take": 0,
+  "heard": "What if Earth spun faster and couldn't stop?"
+ },
+ "p1_cliff": {
+  "text": "And then the spin has only just begun to speed up.",
+  "file": "p1_cliff.wav",
+  "dur": 3.43,
+  "src": [
+   6.56,
+   9.99
+  ],
+  "take": 0,
+  "heard": "And then the spin has only just begun to speed up."
+ },
+ "p2_open": {
+  "text": "The day is now twelve hours long.",
+  "file": "p2_open.wav",
+  "dur": 3.03,
+  "src": [
+   10.08,
+   13.11
+  ],
+  "take": 0,
+  "heard": "The day is now 12 hours long."
+ },
+ "p2_cliff": {
+  "text": "And then the wind starts to blow.",
+  "file": "p2_cliff.wav",
+  "dur": 2.79,
+  "src": [
+   13.2,
+   15.99
+  ],
+  "take": 0,
+  "heard": "And then the wind starts to blow."
+ },
+ "c1": {
+  "text": "Part one of eight. Full video on YouTube.",
+  "file": "c1.wav",
+  "dur": 3.35,
+  "src": [
+   65.81,
+   69.16
+  ],
+  "take": 0,
+  "heard": "Part 1 of 8, full video on YouTube."
+ },
+ "c2": {
+  "text": "Part two of eight. Full video on YouTube.",
+  "file": "c2.wav",
+  "dur": 3.11,
+  "src": [
+   69.57,
+   72.68
+  ],
+  "take": 0,
+  "heard": "Part 2 of 8, full video on YouTube."
+ },
+ "cta_follow": {
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "file": "cta_follow.wav",
+  "dur": 5.11,
+  "src": [
+   101.2,
+   106.31
+  ],
+  "take": 0,
+  "heard": "Hang on, if you're enjoying this, tap like and follow. Okay, back to the math."
+ },
+ "cta_sub": {
+  "text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+  "file": "cta_sub.wav",
+  "dur": 5.11,
+  "src": [
+   107.92,
+   113.03
+  ],
+  "take": 0,
+  "heard": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math."
+ }
+}

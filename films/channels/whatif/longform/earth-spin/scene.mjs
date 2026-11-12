@@ -193,7 +193,7 @@ scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" 
 document.body.appendChild(scrim); document.body.appendChild(roEl);
 if (FILM.thumb) { roEl.style.display = "none"; scrim.style.display = "none"; }   // cover mode (film.json "thumb": true): the picture only, no readout
 // the hook: a few big words in the top third for the first seconds (film.json "hook": {text, t0, t1}); no card, no logo
-const hookEl = document.createElement("div"); hookEl.style.cssText = "position:absolute;left:6vw;right:6vw;top:" + (PORT ? "30vh" : "8vh") + ";z-index:6;pointer-events:none;color:#fff;font:800 " + (PORT ? "5.6vh" : "9vh") + "/1.04 var(--font-display);letter-spacing:-.01em;font-variation-settings:'wdth' 85;text-shadow:0 .3vmin 1.6vmin rgba(0,0,0,.85),0 0 .5vmin rgba(0,0,0,.9);opacity:0";
+const hookEl = document.createElement("div"); hookEl.style.cssText = "position:absolute;left:6vw;right:6vw;top:" + (FILM.v2 ? "9vh" : PORT ? "30vh" : "8vh") + ";z-index:6;pointer-events:none;color:#fff;font:800 " + (PORT ? "5.6vh" : "9vh") + "/1.04 var(--font-display);letter-spacing:-.01em;font-variation-settings:'wdth' 85;text-shadow:0 .3vmin 1.6vmin rgba(0,0,0,.85),0 0 .5vmin rgba(0,0,0,.9);opacity:0";
 if (FILM.hook) { hookEl.textContent = FILM.hook.text; document.body.appendChild(hookEl); }
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV"), roL2 = roEl.querySelector("#roL2");
 const WWINS = WD.weightWins || [], inWeight = (t) => WWINS.some(([a, b]) => t >= a && t < b);
@@ -313,7 +313,8 @@ window.seek = function (t) {
   camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
   // the end: the scene dims under the end card, the text goes, the dim lifts
   dimEl.style.opacity = String((0.86 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, FILM.dur - 0.75, FILM.dur - 0.05))).toFixed(3));
-  roEl.style.opacity = String((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)).toFixed(3)); scrim.style.opacity = roEl.style.opacity;
+  const hookA = (FILM.hook && FILM.v2) ? E.inout2(seg(t, FILM.hook.t0, FILM.hook.t0 + 0.25)) * (1 - E.inout2(seg(t, FILM.hook.t1 - 0.3, FILM.hook.t1))) : 0;
+  roEl.style.opacity = String(((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)) * (1 - hookA)).toFixed(3)); scrim.style.opacity = roEl.style.opacity;
   roT.textContent = fmtT(T); roV.textContent = Math.round(2 * Math.PI * R_EQ / (T * 3600) * 3.6 * 1000 / 1000 * 1000 / 1000).toLocaleString("en-US") + " km/h";
   if (inWeight(t)) { const w = Math.max(0, weightFrac(T)) * 100; roL2.textContent = "YOUR WEIGHT, VS A STILL EARTH"; roV.textContent = (w < 99.95 ? w.toFixed(w >= 99 ? 2 : 1) : "100") + " %"; }
   else roL2.textContent = "YOUR SPEED AT THE EQUATOR";

@@ -1,0 +1,125 @@
+[
+ {
+  "kind": "open",
+  "text": "What if Earth spun faster, and couldn't stop?",
+  "take": "V.p1_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.51
+ },
+ {
+  "kind": "sent",
+  "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore.",
+  "take": "A.s002",
+  "uid": "s2",
+  "vo": "vo02",
+  "dur": 5.11
+ },
+ {
+  "kind": "sent",
+  "text": "The Earth keeps its size, its air and its water.",
+  "take": "A.s003",
+  "uid": "s3",
+  "vo": "vo03",
+  "dur": 2.76
+ },
+ {
+  "kind": "sent",
+  "text": "Only the spin changes, and it only gets faster.",
+  "take": "A.s004",
+  "uid": "s4",
+  "vo": "vo04",
+  "dur": 2.38
+ },
+ {
+  "kind": "sent",
+  "text": "One number matters: the length of a day.",
+  "take": "A.s005",
+  "uid": "s5",
+  "vo": "vo05",
+  "dur": 1.975
+ },
+ {
+  "kind": "sent",
+  "text": "It starts at twenty-four hours and ends at about an hour and twenty-four minutes.",
+  "take": "A.s006",
+  "uid": "s6",
+  "vo": "vo06",
+  "dur": 3.58
+ },
+ {
+  "kind": "sent",
+  "text": "Under it, how fast the ground moves under your feet.",
+  "take": "A.s007",
+  "uid": "s7",
+  "vo": "vo07",
+  "dur": 2.26
+ },
+ {
+  "kind": "sent",
+  "text": "Nothing resets.",
+  "take": "A.s008",
+  "uid": "s8",
+  "vo": "vo08",
+  "dur": 1.0
+ },
+ {
+  "kind": "sent",
+  "text": "Nothing slows.",
+  "take": "A.s009",
+  "uid": "s9",
+  "vo": "vo09",
+  "dur": 0.86
+ },
+ {
+  "kind": "sent",
+  "text": "Treat every number as a first guess.",
+  "take": "A.s010",
+  "uid": "s10",
+  "vo": "vo10",
+  "dur": 1.65
+ },
+ {
+  "kind": "sent",
+  "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+  "take": "A.s011",
+  "uid": "s11",
+  "vo": "vo11",
+  "dur": 4.54
+ },
+ {
+  "kind": "sent",
+  "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+  "take": "A.s012",
+  "uid": "s12",
+  "vo": "vo12",
+  "dur": 4.83
+ },
+ {
+  "kind": "cta",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "take": "V.cta_follow",
+  "sub_file": "vo/13-sub.wav",
+  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+  "take_sub": "V.cta_sub",
+  "uid": "cta",
+  "vo": "vo13",
+  "dur": 5.11
+ },
+ {
+  "kind": "cliff",
+  "text": "And then the spin has only just begun to speed up.",
+  "take": "V.p1_cliff",
+  "uid": "cliff",
+  "vo": "vo14",
+  "dur": 3.43
+ },
+ {
+  "kind": "closer",
+  "text": "Part one of eight. Full video on YouTube.",
+  "take": "V.c1",
+  "uid": "tease",
+  "vo": "vo15",
+  "dur": 3.35
+ }
+]

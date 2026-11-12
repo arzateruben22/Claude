@@ -1,0 +1,168 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "The day is now twelve hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.03,
+   "sha256": "4c9e5d242ffcefcc88bb06714ad5cd2ba95937cd41e801a3e47c5cf734599515"
+  },
+  {
+   "id": "vo02",
+   "beat": "s13",
+   "text": "Now the spin speeds up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 1.28,
+   "sha256": "40564eae53bd86bf3c24041a080b62811936190319d412b689964676a7bae8fa"
+  },
+  {
+   "id": "vo03",
+   "beat": "s14",
+   "text": "At twenty hours the shadows sweep.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 1.65,
+   "sha256": "784718c8a4e5d996b3d0dcc927f7e307ba881078d4e6167228675aa6019b6dde"
+  },
+  {
+   "id": "vo04",
+   "beat": "s15",
+   "text": "At sixteen, the Sun climbs like a slow elevator.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.65,
+   "sha256": "d91d45c72e0c2d9f45ee30d0c32eb4b5428cec61dcee6a3828a93fbf764ddd84"
+  },
+  {
+   "id": "vo05",
+   "beat": "s16",
+   "text": "A day only ever gets shorter, and you can't turn it back.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 2.74,
+   "sha256": "3e7298e2cb1dbc60bc371e9cf6d7cd1752e7ad97d2c938e5403d41d647d2c633"
+  },
+  {
+   "id": "vo06",
+   "beat": "s17",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.18,
+   "sha256": "9836d470c6717e7a1f27ea609a94c58cd5e11ef59c6b4f804c0d7ea6b19b9d41"
+  },
+  {
+   "id": "vo07",
+   "beat": "s18",
+   "text": "The Sun moves as fast as a clock's hour hand.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 2.38,
+   "sha256": "95454a88cb5859c7f3cd8db2457f1a55cf9cf43d81d1c2c8c87c9e0875044772"
+  },
+  {
+   "id": "vo08",
+   "beat": "s19",
+   "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 4.65,
+   "sha256": "c52a7d36c3f026088724e99421db44a018f48b7f332347ab5e208b6b10b6d7bc"
+  },
+  {
+   "id": "vo09",
+   "beat": "s20",
+   "text": "You are one point four percent lighter, four times what you feel today.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.4,
+   "sha256": "6f35c92bcb914701eb0ad7c288067edac6169ec4eec440db9ddfda25c74e8b52"
+  },
+  {
+   "id": "vo10",
+   "beat": "s21",
+   "text": "Eight hours of sleep no longer fits inside one night.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 2.37,
+   "sha256": "84dd9a22d9ac3791eea11c19549e37dac5cecb996098c4247b58d3696739dd9a"
+  },
+  {
+   "id": "vo11",
+   "beat": "s22",
+   "text": "But the air can't keep up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 1.17,
+   "sha256": "7710ebecbf38f0097da414b00a4b2fb4d59299e83d2b17c4f6296ff282d0d00f"
+  },
+  {
+   "id": "vo12",
+   "beat": "s23",
+   "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+   "stars": [],
+   "phonemes": null,
+   "file": "12.wav",
+   "dur": 3.39,
+   "sha256": "28400160ce95793d134be04b20efb05084e10cb36488145434a9bac7bd734bba"
+  },
+  {
+   "id": "vo13",
+   "beat": "s24",
+   "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "13.wav",
+   "dur": 3.67,
+   "sha256": "c78622672c75acfa7f6896747f9582f11a1511688f1506b5284670a319f98738"
+  },
+  {
+   "id": "vo14",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "14.wav",
+   "dur": 5.11,
+   "sha256": "e4527cfda3ba53e27b28101ffb005b988c52d0b5303f8e46e603f9aa22aa6f3e"
+  },
+  {
+   "id": "vo15",
+   "beat": "cliff",
+   "text": "And then the wind starts to blow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "15.wav",
+   "dur": 2.79,
+   "sha256": "aa0e78e3da34ec549bfc624c2c0f9ef93025ec9fc84b1f1ec211ef4008ecab80"
+  },
+  {
+   "id": "vo16",
+   "beat": "tease",
+   "text": "Part two of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "16.wav",
+   "dur": 3.11,
+   "sha256": "ee0d9e39de8d7da5540d2f266e50849284db11bcbd50af82fa0bbf7fdb2cff27"
+  }
+ ]
+}

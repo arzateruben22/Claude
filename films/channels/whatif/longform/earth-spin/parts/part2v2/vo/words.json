@@ -1,0 +1,1113 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "The day is now twelve hours long.",
+   "heard": "The day is now 12 hours long.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.285,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.38,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.64,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.895,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 1.3,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 1.765,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Now the spin speeds up.",
+   "heard": "Now the spin speeds up.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.055,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.245,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 0.48,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "speeds",
+     "start": 0.76,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 0.95,
+     "end": 1.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "At twenty hours the shadows sweep.",
+   "heard": "At 20 hours the shadows sweep.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 0.18,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 0.565,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.74,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "shadows",
+     "start": 0.965,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "sweep.",
+     "start": 1.215,
+     "end": 1.52,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "At sixteen, the Sun climbs like a slow elevator.",
+   "heard": "At 16, the sun climbs like a slow elevator.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "sixteen,",
+     "start": 0.195,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.805,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.9,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "climbs",
+     "start": 1.055,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.5,
+     "end": 1.55,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.53,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "slow",
+     "start": 1.56,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "elevator.",
+     "start": 2.01,
+     "end": 2.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "A day only ever gets shorter, and you can't turn it back.",
+   "heard": "A day only ever gets shorter, and he can't turn it back.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.175,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 0.435,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "ever",
+     "start": 0.655,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 0.895,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "shorter,",
+     "start": 1.03,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.515,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.545,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "can't",
+     "start": 1.715,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "turn",
+     "start": 1.98,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.225,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 2.255,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+   "heard": "At a 12 hour day, sunrise to sunset takes 6 hours.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.09,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.22,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.65,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.68,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sunrise",
+     "start": 1.05,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.6,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "sunset",
+     "start": 1.735,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 2.19,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 2.36,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hours.",
+     "start": 2.805,
+     "end": 3.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "The Sun moves as fast as a clock's hour hand.",
+   "heard": "The sun moves as fast as a clock's hour hand.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.045,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.075,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 0.295,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.735,
+     "end": 0.785,
+     "heard": true
+    },
+    {
+     "w": "fast",
+     "start": 0.765,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.925,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.14,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "clock's",
+     "start": 1.17,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 1.68,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "hand.",
+     "start": 1.965,
+     "end": 2.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+   "heard": "The ground moves at about 33,000 kilometers an hour, nearly three times the speed of sound.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.145,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 0.34,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 0.555,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.785,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "thirty-three",
+     "start": 1.02,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.05,
+     "end": 1.84,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 1.795,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 2.6,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "hour,",
+     "start": 2.695,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "nearly",
+     "start": 3.285,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 3.49,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 3.655,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.88,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 4.03,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 4.11,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "sound.",
+     "start": 4.405,
+     "end": 4.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "You are one point four percent lighter, four times what you feel today.",
+   "heard": "You are 1.4% lighter, four times what you feel today.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.09,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.48,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 0.51,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "four",
+     "start": 0.54,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "percent",
+     "start": 0.57,
+     "end": 1.52,
+     "heard": false
+    },
+    {
+     "w": "lighter,",
+     "start": 1.47,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 2.16,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 2.36,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "what",
+     "start": 2.59,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.725,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 2.82,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "today.",
+     "start": 3.05,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Eight hours of sleep no longer fits inside one night.",
+   "heard": "Eight hours of sleep no longer fits inside one night.",
+   "words": [
+    {
+     "w": "Eight",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 0.18,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.395,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "sleep",
+     "start": 0.59,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 0.765,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "fits",
+     "start": 1.195,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 1.41,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.785,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "night.",
+     "start": 1.975,
+     "end": 2.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "But the air can't keep up.",
+   "heard": "But the air can't keep up.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.14,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 0.17,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "can't",
+     "start": 0.445,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 0.865,
+     "end": 1.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo12",
+   "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+   "heard": "It is pulled along only by friction, so the first hours is left behind.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.095,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "pulled",
+     "start": 0.27,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "along",
+     "start": 0.565,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "by",
+     "start": 1.04,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "friction,",
+     "start": 1.2,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 1.69,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 1.955,
+     "end": 2.005,
+     "heard": false
+    },
+    {
+     "w": "the",
+     "start": 1.985,
+     "end": 2.035,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 2.015,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "hours",
+     "start": 2.215,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 2.58,
+     "end": 2.64,
+     "heard": false
+    },
+    {
+     "w": "is",
+     "start": 2.61,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "left",
+     "start": 2.89,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "behind.",
+     "start": 2.995,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo13",
+   "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour.",
+   "heard": "The ground moves through it at about 1670 kilometers an hour.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.155,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "moves",
+     "start": 0.375,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "through",
+     "start": 0.77,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.8,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.11,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.18,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 1.335,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.365,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 1.395,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 1.425,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 2.54,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.095,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 3.325,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo14",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "heard": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "words": [
+    {
+     "w": "Hang",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "on.",
+     "start": 0.495,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.89,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "enjoying",
+     "start": 0.92,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 1.43,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.685,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.86,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.065,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 2.13,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 2.735,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.405,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.435,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.55,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "math.",
+     "start": 3.83,
+     "end": 4.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo15",
+   "text": "And then the wind starts to blow.",
+   "heard": "And then the wind starts to blow.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.025,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.21,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.505,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "wind",
+     "start": 0.71,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "starts",
+     "start": 1.135,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.405,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "blow.",
+     "start": 1.58,
+     "end": 2.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo16",
+   "text": "Part two of eight. Full video on YouTube.",
+   "heard": "Part 2 of 8. Full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.33,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 0.495,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.555,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.725,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.29,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.515,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.805,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.99,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

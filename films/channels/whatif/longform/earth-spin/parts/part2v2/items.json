@@ -1,0 +1,133 @@
+[
+ {
+  "kind": "open",
+  "text": "The day is now twelve hours long.",
+  "take": "V.p2_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.03
+ },
+ {
+  "kind": "sent",
+  "text": "Now the spin speeds up.",
+  "take": "A.s013",
+  "uid": "s13",
+  "vo": "vo02",
+  "dur": 1.28
+ },
+ {
+  "kind": "sent",
+  "text": "At twenty hours the shadows sweep.",
+  "take": "A.s014",
+  "uid": "s14",
+  "vo": "vo03",
+  "dur": 1.65
+ },
+ {
+  "kind": "sent",
+  "text": "At sixteen, the Sun climbs like a slow elevator.",
+  "take": "A.s015",
+  "uid": "s15",
+  "vo": "vo04",
+  "dur": 2.65
+ },
+ {
+  "kind": "sent",
+  "text": "A day only ever gets shorter, and you can't turn it back.",
+  "take": "A.s016",
+  "uid": "s16",
+  "vo": "vo05",
+  "dur": 2.74
+ },
+ {
+  "kind": "sent",
+  "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+  "take": "A.s017",
+  "uid": "s17",
+  "vo": "vo06",
+  "dur": 3.18
+ },
+ {
+  "kind": "sent",
+  "text": "The Sun moves as fast as a clock's hour hand.",
+  "take": "A.s018",
+  "uid": "s18",
+  "vo": "vo07",
+  "dur": 2.38
+ },
+ {
+  "kind": "sent",
+  "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound.",
+  "take": "A.s019",
+  "uid": "s19",
+  "vo": "vo08",
+  "dur": 4.65
+ },
+ {
+  "kind": "sent",
+  "text": "You are one point four percent lighter, four times what you feel today.",
+  "take": "A.s020",
+  "uid": "s20",
+  "vo": "vo09",
+  "dur": 3.4
+ },
+ {
+  "kind": "sent",
+  "text": "Eight hours of sleep no longer fits inside one night.",
+  "take": "A.s021",
+  "uid": "s21",
+  "vo": "vo10",
+  "dur": 2.37
+ },
+ {
+  "kind": "sent",
+  "text": "But the air can't keep up.",
+  "take": "A.s022",
+  "uid": "s22",
+  "vo": "vo11",
+  "dur": 1.17
+ },
+ {
+  "kind": "sent",
+  "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+  "take": "A.s023",
+  "uid": "s23",
+  "vo": "vo12",
+  "dur": 3.39
+ },
+ {
+  "kind": "sent",
+  "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour.",
+  "take": "A.s024",
+  "uid": "s24",
+  "vo": "vo13",
+  "dur": 3.67
+ },
+ {
+  "kind": "cta",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "take": "V.cta_follow",
+  "sub_file": "vo/14-sub.wav",
+  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+  "take_sub": "V.cta_sub",
+  "uid": "cta",
+  "vo": "vo14",
+  "dur": 5.11
+ },
+ {
+  "kind": "cliff",
+  "text": "And then the wind starts to blow.",
+  "take": "V.p2_cliff",
+  "uid": "cliff",
+  "vo": "vo15",
+  "dur": 2.79
+ },
+ {
+  "kind": "closer",
+  "text": "Part two of eight. Full video on YouTube.",
+  "take": "V.c2",
+  "uid": "tease",
+  "vo": "vo16",
+  "dur": 3.11
+ }
+]

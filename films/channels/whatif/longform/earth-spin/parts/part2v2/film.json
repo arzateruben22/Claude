@@ -1,0 +1,1303 @@
+{
+ "id": "possibility-lab-earth-spin-part2-v2",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 63.45,
+ "v2": true,
+ "poster": 29.4,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "open"
+  },
+  {
+   "at": 59.166666666666664,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.2,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "s13",
+   "t0": 4.2,
+   "t1": 6.45,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "s14",
+   "t0": 6.45,
+   "t1": 9.0,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "s15",
+   "t0": 9.0,
+   "t1": 12.6,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "s16",
+   "t0": 12.6,
+   "t1": 16.35,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "s17",
+   "t0": 16.35,
+   "t1": 20.55,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "s18",
+   "t0": 20.55,
+   "t1": 23.85,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "s19",
+   "t0": 23.85,
+   "t1": 29.4,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "s20",
+   "t0": 29.4,
+   "t1": 33.75,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "s21",
+   "t0": 33.75,
+   "t1": 37.05,
+   "line": "vo10",
+   "energy": 0.6
+  },
+  {
+   "id": "s22",
+   "t0": 37.05,
+   "t1": 39.15,
+   "line": "vo11",
+   "energy": 0.6
+  },
+  {
+   "id": "s23",
+   "t0": 39.15,
+   "t1": 43.5,
+   "line": "vo12",
+   "energy": 0.6
+  },
+  {
+   "id": "s24",
+   "t0": 43.5,
+   "t1": 48.15,
+   "line": "vo13",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 48.15,
+   "t1": 54.3,
+   "line": "vo14",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 54.3,
+   "t1": 58.05,
+   "line": "vo15",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 58.05,
+   "t1": 63.45,
+   "line": "vo16",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    4.3,
+    23.934
+   ],
+   [
+    7.1,
+    20.0
+   ],
+   [
+    9.7,
+    16.0
+   ],
+   [
+    17.2,
+    12.0
+   ],
+   [
+    63.45,
+    12.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    63.45,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": [
+   [
+    29.5,
+    32.9
+   ]
+  ]
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 59.166666666666664,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 63.25,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "The day is shrinking fast",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 59.166666666666664,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 2 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0.0,
+   "mode": "ground"
+  },
+  {
+   "t0": 12.7,
+   "mode": "wide"
+  },
+  {
+   "t0": 23.933,
+   "mode": "push"
+  },
+  {
+   "t0": 33.867,
+   "mode": "ground"
+  },
+  {
+   "t0": 43.6,
+   "mode": "base"
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0.0,
+   "pose": "lookUp",
+   "expr": "awe"
+  },
+  {
+   "t": 4.0,
+   "pose": "stand",
+   "expr": "neutral"
+  },
+  {
+   "t": 6.233,
+   "pose": "lookUp",
+   "expr": "wide"
+  },
+  {
+   "t": 8.8,
+   "pose": "lookUp",
+   "expr": "awe"
+  },
+  {
+   "t": 12.4,
+   "pose": "hips",
+   "expr": "neutral"
+  },
+  {
+   "t": 16.167,
+   "pose": "lookUp",
+   "expr": "wide"
+  },
+  {
+   "t": 20.367,
+   "pose": "lookUp",
+   "expr": "neutral"
+  },
+  {
+   "t": 23.633,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 29.2,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 33.567,
+   "pose": "hips",
+   "expr": "blink"
+  },
+  {
+   "t": 36.833,
+   "pose": "stand",
+   "expr": "neutral"
+  },
+  {
+   "t": 38.967,
+   "pose": "stand",
+   "expr": "neutral"
+  },
+  {
+   "t": 43.3,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 48.0,
+   "pose": "armsOut",
+   "expr": "happy"
+  },
+  {
+   "t": 54.1,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 57.767,
+   "pose": "stand",
+   "expr": "happy"
+  }
+ ],
+ "hook": {
+  "text": "The day is 12 hours long",
+  "t0": 0.1,
+  "t1": 2.4
+ },
+ "captions": [
+  {
+   "t0": 0.26,
+   "t1": 2.715,
+   "lines": [
+    [
+     [
+      "The",
+      0.4
+     ],
+     [
+      "day",
+      0.485
+     ],
+     [
+      "is",
+      0.58
+     ],
+     [
+      "now",
+      0.84
+     ]
+    ],
+    [
+     [
+      "12",
+      1.095
+     ],
+     [
+      "hours",
+      1.5
+     ],
+     [
+      "long.",
+      1.965
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.215,
+   "t1": 6.0,
+   "lines": [
+    [
+     [
+      "Now",
+      4.355
+     ],
+     [
+      "the",
+      4.545
+     ],
+     [
+      "spin",
+      4.78
+     ],
+     [
+      "speeds",
+      5.06
+     ],
+     [
+      "up.",
+      5.25
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.458,
+   "t1": 8.498,
+   "lines": [
+    [
+     [
+      "At",
+      6.598
+     ],
+     [
+      "20",
+      6.713
+     ],
+     [
+      "hours",
+      7.098
+     ]
+    ],
+    [
+     [
+      "the",
+      7.273
+     ],
+     [
+      "shadows",
+      7.498
+     ],
+     [
+      "sweep.",
+      7.748
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.025,
+   "t1": 11.86,
+   "lines": [
+    [
+     [
+      "At",
+      9.165
+     ],
+     [
+      "16,",
+      9.295
+     ],
+     [
+      "the",
+      9.905
+     ],
+     [
+      "Sun",
+      10.0
+     ],
+     [
+      "climbs",
+      10.155
+     ]
+    ],
+    [
+     [
+      "like",
+      10.6
+     ],
+     [
+      "a",
+      10.63
+     ],
+     [
+      "slow",
+      10.66
+     ],
+     [
+      "elevator.",
+      11.11
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 12.625,
+   "t1": 14.215,
+   "lines": [
+    [
+     [
+      "A",
+      12.765
+     ],
+     [
+      "day",
+      12.875
+     ],
+     [
+      "only",
+      13.135
+     ],
+     [
+      "ever",
+      13.355
+     ]
+    ],
+    [
+     [
+      "gets",
+      13.595
+     ],
+     [
+      "shorter,",
+      13.73
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 14.215,
+   "t1": 15.705,
+   "lines": [
+    [
+     [
+      "and",
+      14.215
+     ],
+     [
+      "you",
+      14.245
+     ],
+     [
+      "can't",
+      14.415
+     ],
+     [
+      "turn",
+      14.68
+     ]
+    ],
+    [
+     [
+      "it",
+      14.925
+     ],
+     [
+      "back.",
+      14.955
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.387,
+   "t1": 20.022,
+   "lines": [
+    [
+     [
+      "At",
+      16.527
+     ],
+     [
+      "a",
+      16.557
+     ],
+     [
+      "12",
+      16.687
+     ],
+     [
+      "hour",
+      17.117
+     ],
+     [
+      "day,",
+      17.147
+     ],
+     [
+      "sunrise",
+      17.517
+     ]
+    ],
+    [
+     [
+      "to",
+      18.067
+     ],
+     [
+      "sunset",
+      18.202
+     ],
+     [
+      "takes",
+      18.657
+     ],
+     [
+      "6",
+      18.827
+     ],
+     [
+      "hours.",
+      19.272
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.572,
+   "t1": 23.382,
+   "lines": [
+    [
+     [
+      "The",
+      20.712
+     ],
+     [
+      "Sun",
+      20.742
+     ],
+     [
+      "moves",
+      20.962
+     ],
+     [
+      "as",
+      21.402
+     ],
+     [
+      "fast",
+      21.432
+     ]
+    ],
+    [
+     [
+      "as",
+      21.592
+     ],
+     [
+      "a",
+      21.807
+     ],
+     [
+      "clock's",
+      21.837
+     ],
+     [
+      "hour",
+      22.347
+     ],
+     [
+      "hand.",
+      22.632
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 23.853,
+   "t1": 26.478,
+   "lines": [
+    [
+     [
+      "The",
+      23.993
+     ],
+     [
+      "ground",
+      24.078
+     ],
+     [
+      "moves",
+      24.273
+     ]
+    ],
+    [
+     [
+      "at",
+      24.488
+     ],
+     [
+      "about",
+      24.718
+     ],
+     [
+      "3,300 km",
+      24.953
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.533,
+   "t1": 29.088,
+   "lines": [
+    [
+     [
+      "an",
+      26.533
+     ],
+     [
+      "hour,",
+      26.628
+     ],
+     [
+      "nearly",
+      27.218
+     ],
+     [
+      "3",
+      27.423
+     ]
+    ],
+    [
+     [
+      "times",
+      27.588
+     ],
+     [
+      "the",
+      27.813
+     ],
+     [
+      "speed",
+      27.963
+     ],
+     [
+      "of",
+      28.043
+     ],
+     [
+      "sound.",
+      28.338
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.42,
+   "t1": 31.66,
+   "lines": [
+    [
+     [
+      "You",
+      29.56
+     ],
+     [
+      "are",
+      29.59
+     ],
+     [
+      "1.4%",
+      29.98
+     ]
+    ],
+    [
+     [
+      "lighter,",
+      30.97
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.66,
+   "t1": 33.3,
+   "lines": [
+    [
+     [
+      "4",
+      31.66
+     ],
+     [
+      "times",
+      31.86
+     ],
+     [
+      "what",
+      32.09
+     ],
+     [
+      "you",
+      32.225
+     ]
+    ],
+    [
+     [
+      "feel",
+      32.32
+     ],
+     [
+      "today.",
+      32.55
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.792,
+   "t1": 36.592,
+   "lines": [
+    [
+     [
+      "8",
+      33.932
+     ],
+     [
+      "hours",
+      34.047
+     ],
+     [
+      "of",
+      34.262
+     ],
+     [
+      "sleep",
+      34.457
+     ],
+     [
+      "no",
+      34.632
+     ],
+     [
+      "longer",
+      34.912
+     ]
+    ],
+    [
+     [
+      "fits",
+      35.062
+     ],
+     [
+      "inside",
+      35.277
+     ],
+     [
+      "one",
+      35.652
+     ],
+     [
+      "night.",
+      35.842
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 37.058,
+   "t1": 38.748,
+   "lines": [
+    [
+     [
+      "But",
+      37.198
+     ],
+     [
+      "the",
+      37.273
+     ],
+     [
+      "air",
+      37.303
+     ],
+     [
+      "can't",
+      37.578
+     ],
+     [
+      "keep",
+      37.948
+     ],
+     [
+      "up.",
+      37.998
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.192,
+   "t1": 40.957,
+   "lines": [
+    [
+     [
+      "It",
+      39.332
+     ],
+     [
+      "is",
+      39.362
+     ],
+     [
+      "pulled",
+      39.537
+     ],
+     [
+      "along",
+      39.832
+     ]
+    ],
+    [
+     [
+      "only",
+      40.097
+     ],
+     [
+      "by",
+      40.307
+     ],
+     [
+      "friction,",
+      40.467
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 40.957,
+   "t1": 43.012,
+   "lines": [
+    [
+     [
+      "so",
+      40.957
+     ],
+     [
+      "for",
+      41.222
+     ],
+     [
+      "the",
+      41.252
+     ],
+     [
+      "first",
+      41.282
+     ],
+     [
+      "hours",
+      41.482
+     ]
+    ],
+    [
+     [
+      "it",
+      41.847
+     ],
+     [
+      "is",
+      41.877
+     ],
+     [
+      "left",
+      42.157
+     ],
+     [
+      "behind.",
+      42.262
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 43.525,
+   "t1": 44.78,
+   "lines": [
+    [
+     [
+      "The",
+      43.665
+     ],
+     [
+      "ground",
+      43.755
+     ],
+     [
+      "moves",
+      43.975
+     ]
+    ],
+    [
+     [
+      "through",
+      44.37
+     ],
+     [
+      "it",
+      44.4
+     ],
+     [
+      "at",
+      44.71
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 44.78,
+   "t1": 47.675,
+   "lines": [
+    [
+     [
+      "about",
+      44.78
+     ],
+     [
+      "1,670 km/h.",
+      44.935
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 48.36,
+   "t1": 49.115,
+   "lines": [
+    [
+     [
+      "Hang",
+      48.5
+     ],
+     [
+      "on.",
+      48.795
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 49.115,
+   "t1": 51.035,
+   "lines": [
+    [
+     [
+      "If",
+      49.115
+     ],
+     [
+      "you're",
+      49.19
+     ],
+     [
+      "enjoying",
+      49.22
+     ],
+     [
+      "this,",
+      49.73
+     ]
+    ],
+    [
+     [
+      "tap",
+      49.985
+     ],
+     [
+      "like",
+      50.16
+     ],
+     [
+      "and",
+      50.365
+     ],
+     [
+      "follow.",
+      50.43
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 51.035,
+   "t1": 52.88,
+   "lines": [
+    [
+     [
+      "Okay,",
+      51.035
+     ],
+     [
+      "back",
+      51.705
+     ],
+     [
+      "to",
+      51.735
+     ],
+     [
+      "the",
+      51.85
+     ],
+     [
+      "math.",
+      52.13
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 54.285,
+   "t1": 56.73,
+   "lines": [
+    [
+     [
+      "And",
+      54.425
+     ],
+     [
+      "then",
+      54.61
+     ],
+     [
+      "the",
+      54.905
+     ],
+     [
+      "wind",
+      55.11
+     ]
+    ],
+    [
+     [
+      "starts",
+      55.535
+     ],
+     [
+      "to",
+      55.805
+     ],
+     [
+      "blow.",
+      55.98
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 58.257,
+   "t1": 59.357,
+   "lines": [
+    [
+     [
+      "Part",
+      58.397
+     ],
+     [
+      "2",
+      58.562
+     ],
+     [
+      "of",
+      58.622
+     ],
+     [
+      "8.",
+      58.792
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 3.03,
+   "file": "vo/01.wav",
+   "text": "The day is now twelve hours long."
+  },
+  {
+   "id": "vo02",
+   "t": 4.3,
+   "dur": 1.28,
+   "file": "vo/02.wav",
+   "text": "Now the spin speeds up."
+  },
+  {
+   "id": "vo03",
+   "t": 6.533333333333333,
+   "dur": 1.65,
+   "file": "vo/03.wav",
+   "text": "At twenty hours the shadows sweep."
+  },
+  {
+   "id": "vo04",
+   "t": 9.1,
+   "dur": 2.65,
+   "file": "vo/04.wav",
+   "text": "At sixteen, the Sun climbs like a slow elevator."
+  },
+  {
+   "id": "vo05",
+   "t": 12.7,
+   "dur": 2.74,
+   "file": "vo/05.wav",
+   "text": "A day only ever gets shorter, and you can't turn it back."
+  },
+  {
+   "id": "vo06",
+   "t": 16.466666666666665,
+   "dur": 3.18,
+   "file": "vo/06.wav",
+   "text": "At a twelve hour day, sunrise to sunset takes six hours."
+  },
+  {
+   "id": "vo07",
+   "t": 20.666666666666668,
+   "dur": 2.38,
+   "file": "vo/07.wav",
+   "text": "The Sun moves as fast as a clock's hour hand."
+  },
+  {
+   "id": "vo08",
+   "t": 23.933333333333334,
+   "dur": 4.65,
+   "file": "vo/08.wav",
+   "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound."
+  },
+  {
+   "id": "vo09",
+   "t": 29.5,
+   "dur": 3.4,
+   "file": "vo/09.wav",
+   "text": "You are one point four percent lighter, four times what you feel today."
+  },
+  {
+   "id": "vo10",
+   "t": 33.86666666666667,
+   "dur": 2.37,
+   "file": "vo/10.wav",
+   "text": "Eight hours of sleep no longer fits inside one night."
+  },
+  {
+   "id": "vo11",
+   "t": 37.13333333333333,
+   "dur": 1.17,
+   "file": "vo/11.wav",
+   "text": "But the air can't keep up."
+  },
+  {
+   "id": "vo12",
+   "t": 39.266666666666666,
+   "dur": 3.39,
+   "file": "vo/12.wav",
+   "text": "It is pulled along only by friction, so for the first hours it is left behind."
+  },
+  {
+   "id": "vo13",
+   "t": 43.6,
+   "dur": 3.67,
+   "file": "vo/13.wav",
+   "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour."
+  },
+  {
+   "id": "vo14",
+   "t": 48.3,
+   "dur": 5.11,
+   "file": "vo/14.wav",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "id": "vo15",
+   "t": 54.4,
+   "dur": 2.79,
+   "file": "vo/15.wav",
+   "text": "And then the wind starts to blow."
+  },
+  {
+   "id": "vo16",
+   "t": 58.06666666666667,
+   "dur": 3.11,
+   "file": "vo/16.wav",
+   "text": "Part two of eight. Full video on YouTube."
+  }
+ ]
+}

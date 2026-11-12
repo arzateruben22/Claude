@@ -1,0 +1,121 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p2_open",
+   "sub_take": null,
+   "text": "The day is now twelve hours long."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s013",
+   "sub_take": null,
+   "text": "Now the spin speeds up."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s014",
+   "sub_take": null,
+   "text": "At twenty hours the shadows sweep."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s015",
+   "sub_take": null,
+   "text": "At sixteen, the Sun climbs like a slow elevator."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s016",
+   "sub_take": null,
+   "text": "A day only ever gets shorter, and you can't turn it back."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s017",
+   "sub_take": null,
+   "text": "At a twelve hour day, sunrise to sunset takes six hours."
+  },
+  {
+   "line": "vo07",
+   "kind": "sent",
+   "take": "A.s018",
+   "sub_take": null,
+   "text": "The Sun moves as fast as a clock's hour hand."
+  },
+  {
+   "line": "vo08",
+   "kind": "sent",
+   "take": "A.s019",
+   "sub_take": null,
+   "text": "The ground moves at about thirty-three hundred kilometers an hour, nearly three times the speed of sound."
+  },
+  {
+   "line": "vo09",
+   "kind": "sent",
+   "take": "A.s020",
+   "sub_take": null,
+   "text": "You are one point four percent lighter, four times what you feel today."
+  },
+  {
+   "line": "vo10",
+   "kind": "sent",
+   "take": "A.s021",
+   "sub_take": null,
+   "text": "Eight hours of sleep no longer fits inside one night."
+  },
+  {
+   "line": "vo11",
+   "kind": "sent",
+   "take": "A.s022",
+   "sub_take": null,
+   "text": "But the air can't keep up."
+  },
+  {
+   "line": "vo12",
+   "kind": "sent",
+   "take": "A.s023",
+   "sub_take": null,
+   "text": "It is pulled along only by friction, so for the first hours it is left behind."
+  },
+  {
+   "line": "vo13",
+   "kind": "sent",
+   "take": "A.s024",
+   "sub_take": null,
+   "text": "The ground moves through it at about sixteen hundred and seventy kilometers an hour."
+  },
+  {
+   "line": "vo14",
+   "kind": "cta",
+   "take": "V.cta_follow",
+   "sub_take": "V.cta_sub",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "line": "vo15",
+   "kind": "cliff",
+   "take": "V.p2_cliff",
+   "sub_take": null,
+   "text": "And then the wind starts to blow."
+  },
+  {
+   "line": "vo16",
+   "kind": "closer",
+   "take": "V.c2",
+   "sub_take": null,
+   "text": "Part two of eight. Full video on YouTube."
+  }
+ ]
+}
