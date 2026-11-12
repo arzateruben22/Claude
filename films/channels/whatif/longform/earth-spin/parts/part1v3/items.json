@@ -1,0 +1,42 @@
+[
+ {
+  "kind": "open",
+  "text": "What if Earth spun faster, and couldn't stop?",
+  "take": "V.p1_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.51
+ },
+ {
+  "kind": "sent",
+  "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind.",
+  "take": "A.s071",
+  "uid": "s71",
+  "vo": "vo02",
+  "dur": 5.18
+ },
+ {
+  "kind": "sent",
+  "text": "That is the whole distance between standing and flying.",
+  "take": "A.s072",
+  "uid": "s72",
+  "vo": "vo03",
+  "dur": 2.15
+ },
+ {
+  "kind": "sent",
+  "text": "Only the spin changes, and it only gets faster.",
+  "take": "A.s004",
+  "uid": "s4",
+  "vo": "vo04",
+  "dur": 2.38
+ },
+ {
+  "kind": "sent",
+  "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+  "take": "A.s011",
+  "uid": "s11",
+  "vo": "vo05",
+  "dur": 4.54
+ }
+]
