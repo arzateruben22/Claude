@@ -4,6 +4,7 @@
  *   npx tsx scripts/jobfinder-resume-build.ts --journals <dir>[,<dir>] --date YYYY-MM-DD \
  *        --trade data/jobs/<date>.json --out <private>/resume-run.json --html <private>/jobfinder.html \
  *        [--leads <private>/leads.json] [--kits <dir>[,<dir>]] [--jobs-out <private>/top-jobs.json] [--top 10]
+ *        [--area LA|OC] [--nearest]
  *
  * Journals come from jobfinder/resume-sweep.workflow.js ("find:<slice>" / "verify:<slice>:<n>").
  * --kits points at jobfinder/apply-kit.workflow.js runs: only the publicly sourced contact research
@@ -83,9 +84,13 @@ export function cleanContact(c: ContactResearch | null): ContactResearch | null 
   return { ...c, contacts: (c.contacts ?? []).filter((x) => x && x.value && okUrl(x.sourceUrl) && !personal(x)).slice(0, 5) };
 }
 
-export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[]; label?: string } = {}) {
+export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[]; label?: string; area?: "LA" | "OC"; nearest?: boolean } = {}) {
   const { rows, searched, notFound, slices, verifyPending, watch } = readJournals(dirs, opts.leads ?? []);
-  const scored = rows.map(scoreRow);
+  const areaName = opts.area === "OC" ? "Orange County" : "Los Angeles County";
+  // "Strictly one county": anything elsewhere is ruled out with that reason, not silently dropped.
+  const scored = rows.map(scoreRow).map((j) =>
+    opts.area && j.area !== opts.area && j.list !== "ruled_out" ? { ...j, list: "ruled_out" as const, ruledOutReason: `It is outside ${areaName}, and you asked for ${areaName} only` } : j,
+  );
   const sel = select(scored, { best: 99, stretch: 99, maxPerEmployer: 2 });
   const top = opts.top ?? 10;
   // "Stop after N": best fits first, then stretch leads, each by score.
@@ -103,8 +108,11 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
     const k = kits.get(j.id);
     return { ...trimJob(j), extra, contact: cleanContact(k?.contact ?? null), kit: k ? { written: k.written, corrected: k.corrected } : null };
   };
-  const best = chosen.filter((j) => j.list === "best_fit");
-  const stretch = chosen.filter((j) => j.list === "stretch");
+  // Shown nearest first when asked; which ten are chosen is still decided by fit.
+  const byMiles = (a: ScoredJob, b: ScoredJob) => a.milesFromHome - b.milesFromHome || b.score - a.score;
+  const order = (list: ScoredJob[]) => (opts.nearest ? [...list].sort(byMiles) : list);
+  const best = order(chosen.filter((j) => j.list === "best_fit"));
+  const stretch = order(chosen.filter((j) => j.list === "stretch"));
   const unchecked = chosen.filter((j) => !j.checked).length;
   const inArea = (a: string) => chosen.filter((j) => j.area === a).length;
   const verdictCount = (v: string) => chosen.filter((j) => kits.get(j.id)?.contact?.outreachVerdict === v).length;
@@ -114,6 +122,8 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
   if (opts.tradeFile && existsSync(opts.tradeFile)) {
     const t = JSON.parse(readFileSync(opts.tradeFile, "utf8")) as { bestFit?: unknown[]; stretch?: unknown[]; belowPay?: unknown[] };
     tradeLeads = [...(t.bestFit ?? []), ...(t.stretch ?? []), ...(t.belowPay ?? [])];
+    if (opts.area) tradeLeads = (tradeLeads as { area?: string }[]).filter((j) => j.area === opts.area);
+    if (opts.nearest) tradeLeads = [...(tradeLeads as { milesFromHome?: number }[])].sort((a, b) => (a.milesFromHome ?? 0) - (b.milesFromHome ?? 0));
   }
 
   const notices: string[] = [];
@@ -149,7 +159,11 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
     fieldLabels: FIELD_LABELS,
     payRule: PAY_RULE,
     home: HOME.name,
-    lede: `${chosen.length} openings matched to your résumé (${best.length} best fit, ${stretch.length} stretch), ${inArea("LA")} in the Los Angeles area and ${inArea("OC")} in Orange County, each applied for directly with the employer. Pay target: about $${PAY_RULE.baseHourly} an hour near ${HOME.name}, rising with distance.`,
+    areaOnly: opts.area ?? null,
+    nearestFirst: Boolean(opts.nearest),
+    lede: opts.area
+      ? `${chosen.length} openings matched to your résumé (${best.length} best fit, ${stretch.length} stretch), all in ${areaName}${opts.nearest ? ` and listed nearest to ${HOME.name} first` : ""}, each applied for directly with the employer. Pay target: about $${PAY_RULE.baseHourly} an hour near ${HOME.name}, rising with distance.`
+      : `${chosen.length} openings matched to your résumé (${best.length} best fit, ${stretch.length} stretch), ${inArea("LA")} in the Los Angeles area and ${inArea("OC")} in Orange County, each applied for directly with the employer. Pay target: about $${PAY_RULE.baseHourly} an hour near ${HOME.name}, rising with distance.`,
     notices,
     methodNote: `Web search on ${label} covered ${new Set(slices).size} role families chosen from your résumé and surfaced ${rows.length} distinct postings with an employer-site link. A second, independent pass tries to disprove each one (that it exists on the employer's own site, is still open, is where it says and pays what it says) and then compares every posted minimum with your résumé. ${sel.ruledOut.length} were ruled out and ${sel.belowPay.length} pay below your target for their distance.`,
     assumptions: "",
@@ -181,7 +195,7 @@ function main() {
   const kitDirs = (arg("kits") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const leadsFile = arg("leads");
   const leads: Candidate[] = leadsFile && existsSync(leadsFile) ? JSON.parse(readFileSync(leadsFile, "utf8")) : [];
-  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads, label: arg("label") });
+  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads, label: arg("label"), area: arg("area") === "LA" || arg("area") === "OC" ? (arg("area") as "LA" | "OC") : undefined, nearest: process.argv.includes("--nearest") });
   const write = (file: string | undefined, text: string) => {
     if (!file) return;
     mkdirSync(path.dirname(file), { recursive: true });

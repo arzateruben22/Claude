@@ -383,6 +383,7 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     $("notice").innerHTML = n.join("");
   }
 
+  if (DATA.areaOnly) { var areaLabel = document.querySelector('label[for="f-area"]'); if (areaLabel) areaLabel.hidden = true; }
   function tabs() {
     var defs = [["best", "Best fit", DATA.bestFit.length], ["stretch", "Stretch", DATA.stretch.length + MORE.length], ["below", "Below your pay target", BELOW.length], ["trade", "Trade leads", TRADE.length], ["routes", "Apprenticeship routes", (DATA.programs || []).length], ["watch", "Watch list", (DATA.watch || []).reduce(function (a, g) { return a + g.items.length; }, 0)], ["ruled", "Ruled out", DATA.ruledOut.length]];
     // Tabs with nothing behind them in this run are left out, except the main three.
@@ -425,7 +426,8 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     h.push('<div class="facts"><div class="fact"><small>Pay as posted</small><p>' + esc(j.payText) + (annual ? "<span>" + esc(annual) + "</span>" : "") + "<em>Your target here: about $" + Number(j.targetHourly).toFixed(2) + "/hr · " + esc(j.milesFromHome) + " mi from " + esc(DATA.home) + (j.locationEstimated ? " (site not stated; assumes " + esc(j.placeName) + ")" : "") + "</em></p></div>");
     h.push('<div class="fact"><small>Dates</small><p>' + (j.closingDate ? "Closes " + esc(j.closingDate) : "No closing date listed") + "<span>" + (j.postedDate ? "Posted " + esc(j.postedDate) : "Posting date not shown") + "</span></p></div>");
     h.push('<div class="fact"><small>Driving</small><p>' + esc(j.drivingRequirement.charAt(0).toUpperCase() + j.drivingRequirement.slice(1)) + "</p></div></div>");
-    var chips = [chip(j.area === "OC" ? "Orange County" : "Los Angeles area"), chip(DATA.fieldLabels[j.field] || j.field)];
+    var chips = [chip(j.milesFromHome + " mi from " + DATA.home), chip(DATA.fieldLabels[j.field] || j.field)];
+    if (!DATA.areaOnly) chips.splice(1, 0, chip(j.area === "OC" ? "Orange County" : "Los Angeles area"));
     if (j.extra) chips.push(chip("Beyond the first 10"));
     if (j.fitBasis === "resume" && j.checked) chips.push(chip("Résumé match " + Math.round(j.breakdown.interest.value * 100) + "%"));
     if (ai) chips.push(chip(ai.charAt(0).toUpperCase() + ai.slice(1) + " AI exposure", ai === "low" ? "ok" : ai === "medium" ? "warn" : "bad"));
@@ -532,7 +534,8 @@ blockquote a, .sect a, .ruled a { color: var(--accent); overflow-wrap: anywhere;
     } else {
       var shown = src.filter(visible);
       html = view === "trade" ? '<p class="lede">Skilled-trade openings from the earlier search, kept in case you want the career change. They were scored for someone new to the trades, not against your résumé, and several pay below your rule.</p>' : view === "below" ? '<p class="lede">These pay less than your rule asks for at their distance from ' + esc(DATA.home) + ". They are listed so you can decide for yourself; some are paid training routes with a documented path to higher pay.</p>" : "";
-      [["LA", "Los Angeles area"], ["OC", "Orange County area"]].forEach(function (g) {
+      [["LA", DATA.areaOnly === "LA" ? "Los Angeles County" + (DATA.nearestFirst ? ", nearest to " + DATA.home + " first" : "") : "Los Angeles area"], ["OC", "Orange County area"]].forEach(function (g) {
+        if (DATA.areaOnly && DATA.areaOnly !== g[0]) return;
         if (fArea !== "all" && fArea !== g[0]) return;
         var inArea = shown.filter(function (j) { return j.area === g[0]; });
         html += '<h2 class="area-h">' + g[1] + " <span>" + inArea.length + "</span></h2>";
