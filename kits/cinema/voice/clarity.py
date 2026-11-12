@@ -11,6 +11,7 @@ Chain, in order:
   3. EQ: -2.5 dB at 220 Hz (mud), +2 dB at 4.5 kHz (presence), +2.5 dB shelf from 9 kHz (air)
   4. a light harmonic exciter from 9 kHz, which restores some air above the memo's 16 kHz cut-off
   5. de-esser, gentle 2:1 compression
+  0. whisper style (or --rumble): a steep 150 Hz high-pass for breath/wind rumble (see RUMBLE)
   6. whisper style only: a soft downward expander that lowers breaths and gaps by up to about 15 dB (never a hard gate)
   7. loudness to -16 LUFS / -1.5 dBTP (the ASMR target; the mix sets the final level)
 
@@ -33,6 +34,10 @@ CHAIN_COMMON = ("adeclip=threshold=10,highpass=f=80:poles=2,"
                 "aexciter=level_in=1:level_out=1:amount=1.2:drive=6:blend=0:freq=9000:ceil=20000:listen=0,"
                 "deesser=i=0.35:m=0.5:f=0.5,acompressor=threshold=-30dB:ratio=2:attack=8:release=180:makeup=2")
 EXPANDER = "agate=threshold=0.008:ratio=2:range=0.18:attack=15:release=220:knee=4"
+# Close-mic soft voice / whisper: breath blasts and handling put "wind" rumble at 40-160 Hz, 10-20 dB above the speech
+# band (measured on Evelyn's S3 memo, 12 Nov 2026; the owner heard it as "shakiness or wind"). A whisper has nothing
+# useful below 150 Hz, so whisper style adds a steep (48 dB/octave) high-pass there: -53 dB under 80 Hz, speech untouched.
+RUMBLE = ",".join(["highpass=f=150:poles=2"] * 4)
 LOUDNESS = "loudnorm=I=-16:TP=-1.5:LRA=9"
 
 
@@ -46,6 +51,7 @@ def main(argv):
     ap.add_argument("dst")
     ap.add_argument("--noise", default="0.2-2.9", help="room-tone span in seconds, e.g. 0.2-2.9")
     ap.add_argument("--style", choices=["whisper", "normal"], default="whisper")
+    ap.add_argument("--rumble", action="store_true", help="add the steep 150 Hz high-pass in normal style too (wind/breath rumble)")
     a = ap.parse_args(argv)
     import numpy as np
     import noisereduce as nr
@@ -73,7 +79,7 @@ def main(argv):
             y = nr.reduce_noise(y=x, sr=sr, y_noise=noise, stationary=True, prop_decrease=0.75,
                                 n_std_thresh_stationary=1.5, freq_mask_smooth_hz=300, time_mask_smooth_ms=60)
         sf.write(den, np.asarray(y, dtype="float32"), sr, subtype="FLOAT")
-        chain = ",".join([CHAIN_COMMON] + ([EXPANDER] if a.style == "whisper" else []) + [LOUDNESS])
+        chain = ",".join(([RUMBLE] if a.style == "whisper" or a.rumble else []) + [CHAIN_COMMON] + ([EXPANDER] if a.style == "whisper" else []) + [LOUDNESS])
         run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", str(den), "-af", chain, "-ar", "48000", "-c:a", "pcm_s24le", "-y", a.dst])
     print("wrote", a.dst)
 
