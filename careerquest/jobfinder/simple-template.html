@@ -419,7 +419,7 @@ a { color: inherit; }
       document.body.classList.remove("show-detail");
       var inTab = lists()[tab];
       if (fromNav && inTab.length && !inTab.some(function (j) { return j.id === current; })) current = inTab[0].id;
-      if (!current && JOBS[0]) current = JOBS[0].id;
+      if (!current && inTab[0]) current = inTab[0].id;
       render();
       if (showing && !wide.matches) window.scrollTo(0, listY);
     }
@@ -441,9 +441,15 @@ a { color: inherit; }
     if (t.hasAttribute("data-out-open")) { picking = j.id; render(); return; }
     if (t.hasAttribute("data-out-cancel")) { picking = null; render(); return; }
     if (t.dataset.out) {
-      var so = js(j.id);
+      // The job leaves the Jobs list and the screen: the next job in the list takes its place (on a phone, back to the list).
+      var at = lists().jobs.map(function (x) { return x.id; }).indexOf(j.id), so = js(j.id);
       so.status = "unavailable"; so.reason = REASONS.indexOf(t.dataset.out) >= 0 ? t.dataset.out : "Other reason"; so.markedOn = today(); so.appliedOn = "";
-      picking = null; persist(); render(); toast("Moved to Not available"); return;
+      picking = null; persist();
+      var left = lists().jobs, nxt = left[Math.max(at, 0)] || left[at - 1] || null;
+      current = nxt ? nxt.id : null; tab = "jobs";
+      toast("Moved to Not available");
+      if (location.hash !== "#jobs") location.hash = "jobs"; else route(false);
+      return;
     }
     if (t.hasAttribute("data-copy")) {
       var text = (docs[j.id] || {}).outreach || "";
