@@ -45,7 +45,7 @@ phase('Build')
 let f = await safe(`${COMMON}
 THE BRIEF (${A.title}):
 ${A.brief}
-Task: CONTINUE and FINISH this work in ${A.wt}. Read the restored diff first; keep what is sound, finish what is missing or half-done, fix what is wrong. Then prove it as the brief says. Do not commit. Report files, before and after image paths, the numbers, the exact suite lines, and anything still not right, plainly (list every brief item as done or not done).`, { label: `build:${A.id}`, model: 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
+Task: CONTINUE and FINISH this work in ${A.wt}. Read the restored diff first; keep what is sound, finish what is missing or half-done, fix what is wrong. Then prove it as the brief says. Do not commit. Report files, before and after image paths, the numbers, the exact suite lines, and anything still not right, plainly (list every brief item as done or not done).`, { label: `build:${A.id}`, model: A.buildModel || 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
 if (!f || !f.done) return { kept: false, stage: 'build', summary: f ? f.summary : 'builder failed' }
 
 phase('Verify')
@@ -58,7 +58,7 @@ ${A.brief}
 Task: REPAIR this work in ${A.wt} exactly as the reviewers asked, keeping what they accepted (edits on disk; read git diff HEAD first). Do not commit.
 Reviewers: ${v.reason.slice(0, 5000)}
 Fixes: ${(v.fixes || []).join(' | ').slice(0, 4000)}
-Re-run the proof where your change touches it (frames with -r${round} names, tsc, the build, the affected test groups). Report as before.`, { label: `repair${round}:${A.id}`, model: 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
+Re-run the proof where your change touches it (frames with -r${round} names, tsc, the build, the affected test groups). Report as before.`, { label: `repair${round}:${A.id}`, model: A.buildModel || 'opus', effort: 'high', phase: 'Build', schema: FIX_SCHEMA })
   if (!f2 || !f2.done) break
   f = { ...f2, files: Array.from(new Set([...(f.files || []), ...(f2.files || [])])) }
   phase('Verify')
