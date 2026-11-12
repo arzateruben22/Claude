@@ -13,7 +13,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const OUT = path.join(ROOT, 'tests', 'out', 'cast');
 mkdirSync(OUT, { recursive: true });
 const arg = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? `--${k}=${d}`).split('=')[1];
-const lod = arg('lod', '0'), quality = arg('quality', 'high'), view = arg('view', 'one'), fh = arg('fh', ''), hairQ = arg('hair', ''), views = arg('views', 'front,side,back,head,headSide,headThree').split(','), suffix = arg('suffix', '');
+const lod = arg('lod', '0'), quality = arg('quality', 'high'), view = arg('view', 'one'), fh = arg('fh', ''), hairQ = arg('hair', ''), grey = arg('grey', ''), views = arg('views', 'front,side,back,head,headSide,headThree').split(','), suffix = arg('suffix', '');
 const who = (process.argv.find((a, i) => i > 1 && !a.startsWith('--')) ?? 'mateo-reyes,danny-tran,marcus-bell,leila-farahani,jas-cruz,kate-morgan').split(',');
 
 const server = spawn(path.join(ROOT, 'node_modules', '.bin', 'vite'), ['--config', 'src/onfoot/vite.config.ts', '--port', '5761', '--strictPort'], { cwd: ROOT, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
@@ -36,11 +36,12 @@ try {
     page.setDefaultTimeout(900000);
     page.on('pageerror', (e) => console.log('pageerror', e.message));
     const t0 = Date.now();
-    await page.goto(`http://127.0.0.1:5761/test-cast.html?who=${id}&lod=${lod}&quality=${quality}${fh ? '&fh=' + fh : ''}${hairQ ? '&hair=' + hairQ : ''}`);
+    await page.goto(`http://127.0.0.1:5761/test-cast.html?who=${id}&lod=${lod}&quality=${quality}${fh ? '&fh=' + fh : ''}${hairQ ? '&hair=' + hairQ : ''}${grey ? '&grey=' + grey : ''}`);
     await page.waitForFunction(() => window.__cast?.ready || window.__cast?.error, null, { timeout: 900000 });
     const err = await page.evaluate(() => window.__cast.error); if (err) throw new Error(err);
     for (const a of views) {
-      if (a.startsWith('head')) await page.setViewportSize({ width: 600, height: 600 });
+      if (/^(head|yaw|game|shoe|bust)/.test(a)) await page.setViewportSize({ width: 600, height: 600 });
+      else await page.setViewportSize({ width: 600, height: 900 });
       await page.evaluate((a) => window.__cast.shot(a), a);
       await page.screenshot({ path: path.join(OUT, `${id}-${a}${suffix}.png`) });
     }

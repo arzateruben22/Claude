@@ -36,6 +36,14 @@ export function scalpCover(style: HairStyle, l: V3, age: number, male: boolean) 
   return c;
 }
 
+/** (pack, 2026-11-12) how far a head-local point is above the hairline of scalpCover (m; negative below it), for
+ *  hair that tapers into its edge. The same hairline and recession as scalpCover; the ears are not looked at */
+export function hairlineDepth(style: HairStyle, l: V3, age: number, male: boolean) {
+  const phi = Math.abs(Math.atan2(l[0], l[2] + 0.06));
+  const rec = style === 'receding' ? 1 : male ? clamp((age - 35) / 40) * 0.4 : 0;
+  return l[1] - hairlineY(phi, male) - rec * (0.022 * smooth(1.2, 0.0, phi) + 0.012 * Math.exp(-(((phi - 0.75) / 0.3) ** 2)));
+}
+
 export interface FaceMask { red: number; lip: number; thin: number; blush: number; beard: number; eyeA: number; mouth: number; scalp: number; wrink: number; freck: number }
 
 /** lips: the vermilion above and below the slit, plus their wet inner faces (faceMasks().lip) */
