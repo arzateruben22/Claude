@@ -1,156 +1,115 @@
 {
  "id": "one-more-orbit-s3-part2",
  "title": {
-  "title": "One Quarter Closer",
+  "title": "When the Ocean Starts to Climb",
   "series": "One More Orbit · Season 3 · Part 2 of 8"
  },
  "disclosures": {
-  "aiVoice": true,
+  "realVoice": true,
+  "aiVoice": false,
   "aiVisuals": true
  },
- "dur": 61.618,
+ "dur": 55.185,
  "fps": 30,
  "captions": [
   {
-   "t0": 0.175,
-   "t1": 1.61,
-   "text": "One quarter closer.",
-   "line": "ch2_hook",
-   "spoken": "One quarter closer."
+   "t0": 0.36,
+   "t1": 1.485,
+   "text": "Half the distance.",
+   "line": "B3",
+   "spoken": "Half the distance."
   },
   {
-   "t0": 1.63,
-   "t1": 3.04,
-   "text": "What changes first?",
-   "line": "ch2_hook",
-   "spoken": "What changes first?"
+   "t0": 1.505,
+   "t1": 3.44,
+   "text": "Now the ocean climbs.",
+   "line": "B3",
+   "spoken": "Now the ocean climbs."
   },
   {
-   "t0": 3.227,
-   "t1": 5.072,
-   "text": "One quarter of the way in.",
-   "line": "ch2_vo",
-   "spoken": "One quarter of the way in."
+   "t0": 9.91,
+   "t1": 11.78,
+   "text": "Half the distance.",
+   "line": "L6",
+   "spoken": "Half the distance."
   },
   {
-   "t0": 9.122,
-   "t1": 15.182,
-   "text": "3 quarters of today's distance: about 288,000 km.",
-   "line": "ch2_vo",
-   "spoken": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers."
+   "t0": 11.8,
+   "t1": 13.72,
+   "text": "Twice as wide.",
+   "line": "L6",
+   "spoken": "Twice as wide."
   },
   {
-   "t0": 15.202,
-   "t1": 18.642,
-   "text": "The Moon looks one and a third times wider.",
-   "line": "ch2_vo",
-   "spoken": "The Moon looks one and a third times wider."
+   "t0": 13.83,
+   "t1": 15.54,
+   "text": "8× the tidal pull.",
+   "line": "L6",
+   "spoken": "Eight times the tidal pull."
   },
   {
-   "t0": 22.192,
-   "t1": 25.407,
-   "text": "Its light now takes about a second to reach you.",
-   "line": "ch2_vo",
-   "spoken": "Its light now takes about a second to reach you."
+   "t0": 27.0,
+   "t1": 28.05,
+   "text": "Not a measured height.",
+   "line": "L7",
+   "spoken": "Not a measured height."
   },
   {
-   "t0": 25.427,
-   "t1": 29.287,
-   "text": "The Moon's pull on the Earth gets stronger as it comes in.",
-   "line": "ch2_vo",
-   "spoken": "The Moon's pull on the Earth gets stronger as it comes in."
+   "t0": 33.1,
+   "t1": 38.465,
+   "text": "Just the idea: the whole ocean, lifted from above.",
+   "line": "L7",
+   "spoken": "Just the idea: the whole ocean, lifted from above."
   },
   {
-   "t0": 29.307,
-   "t1": 31.532,
-   "text": "At this distance, its tidal pull",
-   "line": "ch2_vo",
-   "spoken": "At this distance, its tidal pull is more than twice what it is today."
-  },
-  {
-   "t0": 31.552,
-   "t1": 34.077,
-   "text": "is more than twice what it is today.",
-   "line": "ch2_vo",
-   "spoken": "At this distance, its tidal pull is more than twice what it is today."
-  },
-  {
-   "t0": 34.097,
-   "t1": 37.107,
-   "text": "Not enough to see on the beach, not yet.",
-   "line": "ch2_vo",
-   "spoken": "Not enough to see on the beach, not yet."
-  },
-  {
-   "t0": 40.657,
-   "t1": 45.657,
-   "text": "The Sun pulls on the tides too, with about half the Moon's effect.",
-   "line": "ch2_vo",
-   "spoken": "The Sun pulls on the tides too, with about half the Moon's effect."
-  },
-  {
-   "t0": 45.794,
-   "t1": 46.869,
+   "t0": 45.215,
+   "t1": 46.22,
    "text": "Still looking up?",
-   "line": "cta2_follow",
+   "line": "D3",
    "spoken": "Still looking up?"
   },
   {
-   "t0": 46.889,
-   "t1": 48.169,
+   "t0": 46.24,
+   "t1": 47.865,
    "text": "Tap like and follow.",
-   "line": "cta2_follow",
+   "line": "D3",
    "spoken": "Tap like and follow."
   },
   {
-   "t0": 48.189,
-   "t1": 49.779,
-   "text": "There's plenty more sky.",
-   "line": "cta2_follow",
-   "spoken": "There's plenty more sky."
+   "t0": 48.315,
+   "t1": 51.515,
+   "text": "And the night is about to change.",
+   "line": "L8",
+   "spoken": "And the night is about to change."
   },
   {
-   "t0": 49.928,
-   "t1": 54.053,
-   "text": "But the number keeps falling, and the sea is about to start to move.",
-   "line": "ch2_vo",
-   "spoken": "But the number keeps falling, and the sea is about to start to move."
-  },
-  {
-   "t0": 54.272,
-   "t1": 57.742,
-   "text": "Half the distance is where the water starts to climb.",
-   "line": "ch2_loop",
-   "spoken": "Half the distance is where the water starts to climb."
-  },
-  {
-   "t0": 57.873,
-   "t1": 59.078,
+   "t0": 52.085,
+   "t1": 53.025,
    "text": "Part 2 of 8.",
-   "line": "closer2",
+   "line": "C2",
    "spoken": "Part two of eight."
   },
   {
-   "t0": 59.098,
-   "t1": 60.903,
+   "t0": 53.045,
+   "t1": 54.455,
    "text": "Full video on YouTube.",
-   "line": "closer2",
+   "line": "C2",
    "spoken": "Full video on YouTube."
   }
  ],
  "km": [
   [
    0.0,
-   384400
+   288300
   ],
   [
    0.0,
-   384400
+   288300
   ],
   [
-   9.102,
-   288300,
-   4.0
+   9.675,
+   192200,
+   6.0
   ]
  ],
  "tracks": {
@@ -187,68 +146,77 @@
  },
  "clips": [
   {
-   "id": "ch2_hook",
-   "file": "voice/wav/05.wav",
+   "id": "B3",
+   "file": "voice5/wav/B3.wav",
    "t": 0.15,
-   "dur": 2.707,
+   "dur": 3.29,
    "from": 0.0
   },
   {
-   "id": "ch2_vo",
-   "file": "voice/wav/06.wav",
-   "t": 3.207,
-   "dur": 1.895,
+   "id": "L6",
+   "file": "voice5/wav/L6.wav",
+   "t": 9.79,
+   "dur": 5.515,
    "from": 0.0
   },
   {
-   "id": "ch2_vo",
-   "file": "voice/wav/06.wav",
-   "t": 9.102,
-   "dur": 9.57,
-   "from": 1.895
-  },
-  {
-   "id": "ch2_vo",
-   "file": "voice/wav/06.wav",
-   "t": 22.172,
-   "dur": 14.965,
-   "from": 11.465
-  },
-  {
-   "id": "ch2_vo",
-   "file": "voice/wav/06.wav",
-   "t": 40.637,
-   "dur": 4.832,
-   "from": 26.43
-  },
-  {
-   "id": "cta2_follow",
-   "file": "voice/wav/37.wav",
-   "t": 45.769,
-   "dur": 3.796,
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 15.655,
+   "dur": 0.115,
    "from": 0.0
   },
   {
-   "id": "ch2_vo",
-   "file": "voice/wav/06.wav",
-   "t": 49.865,
-   "dur": 3.997,
-   "from": 31.262
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 26.77,
+   "dur": 1.31,
+   "from": 0.115
   },
   {
-   "id": "ch2_loop",
-   "file": "voice/wav/07.wav",
-   "t": 54.212,
-   "dur": 3.291,
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 33.08,
+   "dur": 5.705,
+   "from": 1.425
+  },
+  {
+   "id": "D3",
+   "file": "voice5/wav/D3.wav",
+   "t": 45.135,
+   "dur": 2.79,
    "from": 0.0
   },
   {
-   "id": "closer2",
-   "file": "voice/wav/29.wav",
-   "t": 57.853,
-   "dur": 2.815,
+   "id": "L8",
+   "file": "voice5/wav/L8.wav",
+   "t": 48.225,
+   "dur": 3.31,
+   "from": 0.0
+  },
+  {
+   "id": "C2",
+   "file": "voice5/wav/C2.wav",
+   "t": 51.885,
+   "dur": 2.4,
    "from": 0.0
   }
  ],
- "source": "season3/engine.js via long01/out/part2.json"
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "chips": [
+  {
+   "t0": 11.8,
+   "t1": 13.7,
+   "text": "2× wider"
+  },
+  {
+   "t0": 13.83,
+   "t1": 19.83,
+   "text": "8× the pull"
+  }
+ ],
+ "source": "season3/engine.js via long01/out/v4-part2.json"
 }

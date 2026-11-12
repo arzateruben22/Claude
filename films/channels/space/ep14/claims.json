@@ -1,12 +1,12 @@
 [
  {
-  "id": "c5",
-  "sentence": "Three quarters of today's distance: about two hundred eighty-eight thousand kilometers.",
-  "claim": "A Moon at three quarters of today's distance would look about one and a third times wider.",
+  "id": "c6",
+  "sentence": "Half the distance.",
+  "claim": "Half of today's distance is about 192,000 km.",
   "source_url": "",
   "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "OWN INFERENCE (arithmetic): at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (our calculation).",
+  "note": "OWN INFERENCE (arithmetic): half of 384,400 km is 192,200 km.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
@@ -15,78 +15,42 @@
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "at 0.75 of today's distance (288,300 km) the Moon's width in the sky is 1.33x today's (calc.py)."
+  "derivation": "half of 384,400 km is 192,200 km."
  },
  {
-  "id": "c8",
-  "sentence": "The Moon's pull on the Earth gets stronger as it comes in.",
-  "claim": "Tides come from the difference in the Moon's pull across the Earth.",
-  "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
-  "source_title": "What causes tides? (NOAA Ocean Service)",
+  "id": "c7",
+  "sentence": "Twice as wide.",
+  "claim": "A Moon at half the distance would look about twice as wide.",
+  "source_url": "",
+  "source_title": "Our calculation (shown in the film)",
   "accessed": "2026-11-09",
-  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Source not readable from the build machine; a person should open https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html.",
+  "note": "OWN INFERENCE (arithmetic): at half the distance the Moon's angular width is about 2x today's (our calculation, small-angle ratio).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
    "date": "2026-11-09",
-   "by": "builder (an AI): search excerpt only, page not opened",
-   "quote": "",
-   "qualification": "Not yet read."
-  },
-  "derivation": "Tides come from the difference in the Moon's gravitational pull across the Earth (the tide-generating force)."
- },
- {
-  "id": "c29",
-  "sentence": "Its light takes about a second to reach you now.",
-  "claim": "At three quarters of the distance, moonlight would take about one second to arrive.",
-  "source_url": "",
-  "source_title": "Our calculation (shown in the film)",
-  "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-10",
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "At three quarters of today's distance (288,300 km) light takes 0.96 s, about a second (calc.py)."
+  "derivation": "at half the distance the Moon's angular width is about 2x today's (calc.py, small-angle ratio)."
  },
  {
-  "id": "c30",
-  "sentence": "At this distance, its tidal pull is more than twice what it is today.",
-  "claim": "At three quarters of the distance, the tidal pull would be more than twice today's.",
+  "id": "c10",
+  "sentence": "Eight times the tidal pull.",
+  "claim": "At half the distance, the Moon's tidal pull would be about eight times stronger.",
   "source_url": "",
   "source_title": "Our calculation (shown in the film)",
-  "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (arithmetic): with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
-   "date": "2026-11-10",
+   "date": "2026-11-09",
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "With tidal force ~ 1/d^3, three quarters of the distance gives (1/0.75)^3 = 2.37x the TIDAL pull, more than twice today's (calc.py). Plain gravity would be only (1/0.75)^2 = 1.78x, so the film says 'tidal pull'."
- },
- {
-  "id": "c42",
-  "sentence": "Today, the Sun pulls on the tides too, with about half the Moon's effect.",
-  "claim": "The Sun's tidal effect on Earth is roughly half the Moon's.",
-  "source_url": "https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html",
-  "source_title": "What causes tides? (NOAA Ocean Service)",
-  "accessed": "2026-11-11",
-  "note": "Source not readable from the build machine; a person should open https://oceanservice.noaa.gov/education/tutorial_tides/tides02_cause.html.",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-11",
-   "by": "builder (an AI): source not yet read",
-   "quote": "",
-   "qualification": "Not yet read."
-  },
-  "derivation": "The Sun's tidal effect is roughly half the Moon's."
+  "derivation": "with force ~ 1/d^3, half the distance gives 2^3 = 8x the tidal force (calc.py)."
  }
 ]

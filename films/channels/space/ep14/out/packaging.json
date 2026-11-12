@@ -1,55 +1,55 @@
 {
  "version": 1,
  "format": "short",
- "hook": "A quarter of the way closer, the Moon would look about a third wider and the tides would already be stronger.",
+ "hook": "Halve the Moon's distance and its tidal pull grows about eightfold; this is when the ocean starts to climb the beach.",
  "titles": [
   {
-   "text": "One Quarter Closer",
-   "mechanism": "unanswered question"
-  },
-  {
-   "text": "What If the Moon Came 25% Closer?",
-   "mechanism": "unanswered question"
-  },
-  {
-   "text": "A Moon One Third Wider Would Change the Tides",
-   "mechanism": "hidden mechanism"
-  },
-  {
-   "text": "How Much Bigger Is a Moon a Quarter Closer?",
-   "mechanism": "knowledge gap"
-  },
-  {
-   "text": "The First Thing a Closer Moon Changes",
+   "text": "When the Ocean Starts to Climb",
    "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "Half the Distance, Eight Times the Tide",
+   "mechanism": "scale shock"
+  },
+  {
+   "text": "What Happens to the Sea If the Moon Gets Closer?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Tide Line Climbs Past You",
+   "mechanism": "visual paradox"
+  },
+  {
+   "text": "Why a Closer Moon Pulls the Ocean Up the Beach",
+   "mechanism": "hidden mechanism"
   }
  ],
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a small figure on a night beach under a Moon one third wider than tonight",
+   "subject": "the waterline high on the sand, the figure standing back, a bigger Moon above",
    "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
    "lighting": "teal and violet night, silver road on the water",
    "trigger": "scale with a human anchor",
-   "text": "1.3x wider",
+   "text": "8x the tides",
    "complements": "the title states the idea; the picture shows it"
   },
   {
    "id": "B",
-   "subject": "two Moon discs side by side, today's and the closer one",
-   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
-   "lighting": "teal and violet night, silver road on the water",
-   "trigger": "scale with a human anchor",
-   "text": "1.3x",
-   "complements": "the title states the idea; the picture shows it"
-  },
-  {
-   "id": "C",
-   "subject": "the sea with a faint tide line climbing the sand under the Moon",
+   "subject": "the sea piled up against a big Moon, a wide dark sky",
    "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
    "lighting": "teal and violet night, silver road on the water",
    "trigger": "scale with a human anchor",
    "text": "",
+   "complements": "the title states the idea; the picture shows it"
+  },
+  {
+   "id": "C",
+   "subject": "a tide marker post with the water at the top",
+   "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
+   "lighting": "teal and violet night, silver road on the water",
+   "trigger": "scale with a human anchor",
+   "text": "8x",
    "complements": "the title states the idea; the picture shows it"
   }
  ],
@@ -58,7 +58,7 @@
    "title": 0,
    "thumbnail": "A",
    "scores": {
-    "scroll": 78,
+    "scroll": 76,
     "curiosity": 80,
     "clarity": 80,
     "synergy": 82,
@@ -67,7 +67,7 @@
     "mobile": 82,
     "satisfaction": 84
    },
-   "note": "A single clear number the viewer can picture, over the owner's beach."
+   "note": "Eight times is the whole story in two words and it is the true tide scaling at half the distance."
   },
   {
    "title": 1,
@@ -101,10 +101,10 @@
   }
  ],
  "winner": {
-  "title": "One Quarter Closer",
+  "title": "When the Ocean Starts to Climb",
   "thumbnail": "A",
-  "thumbnailText": "1.3× wider",
-  "why": "A single clear number the viewer can picture, over the owner's beach."
+  "thumbnailText": "8× the tides",
+  "why": "Eight times is the whole story in two words and it is the true tide scaling at half the distance."
  },
  "testAndCompare": [
   "A",
@@ -121,10 +121,10 @@
   "originality": true
  },
  "thumbnailFile": "one-more-orbit-s3-part2-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a small figure on a night beach under a Moon one third wider than tonight. Text: \"1.3× wider\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: the waterline high on the sand, the figure standing back, a bigger Moon above. Text: \"8× the tides\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
  "shortsCover": {
   "frameSeconds": 20,
-  "text": "1.3× wider"
+  "text": "8× the tides"
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }

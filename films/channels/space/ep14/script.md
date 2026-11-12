@@ -1,13 +1,18 @@
-# One More Orbit · Season 3 · Part 2 of 8: "One Quarter Closer"
+# One More Orbit · Season 3 · Part 2 of 8: "When the Ocean Starts to Climb"
 
-Part 2 of the Moon film "How Close Can the Moon Get Before It Breaks?" (the long film is the whole story; the ending stays there). 9:16, 62 s, synthetic AI voice (stand-in until the owner's recording).
-Badge "Thought experiment" throughout. Lines come from long01/script.md; timing from long01/voice/lines.json.
+v4, in the creator's own voice (recorded 12 Nov 2026): picture-led, 55 s, 9:16. The 'Thought experiment' tag shows for the first 5 s.
+Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part2.json.
 
-## hook {pre: 0.15 · the part's own 2 s opening}
-vo: One quarter closer. What changes first? {-}
+## opening
+vo: Half the distance. Now the ocean climbs.
 
-## body {the chapter · distance counter synced to the voice · one like/follow line at 74% of the runtime (rotation line 2)}
-vo: One quarter of the way in. {-} Three quarters of today's distance: about two hundred eighty-eight thousand kilometers. {c5} The Moon looks one and a third times wider. {c5} Its light now takes about a second to reach you. {c29} The Moon's pull on the Earth gets stronger as it comes in. {c8} At this distance, its tidal pull is more than twice what it is today. {c30} Not enough to see on the beach, not yet. {-} The Sun pulls on the tides too, with about half the Moon's effect. {c42} But the number keeps falling, and the sea is about to start to move. {-}
+## body
+vo: Half the distance. Twice as wide. Eight times the tidal pull.
+vo: Not a measured height. Just the idea: the whole ocean, lifted from above.
 
-## tease {the cliffhanger, then the closer}
-vo: Half the distance is where the water starts to climb. {-} Part two of eight. Full video on YouTube. {-}
+## like/follow (82% of the runtime)
+vo: Still looking up? Tap like and follow.  (YouTube file: Still looking up? Tap like and subscribe.)
+
+## cliffhanger and closer
+vo: And the night is about to change.
+vo: Part two of eight. Full video on YouTube.
