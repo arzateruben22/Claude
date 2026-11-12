@@ -486,6 +486,10 @@ await group('boot', async (use) => {
   // 175 m, the I-5 North's exit to Ball Road / Harbor Boulevard (a Stoppage Time exit).
   await check('no road structure inside the travel lanes of the 28 Go To exit ramps', async () => {
     const ids = [1142, 1264, 562, 471, 195, 372, 1199, 418, 995, 93, 683, 1054, 149, 842, 951, 1099, 30, 169, 124, 492, 972, 791, 573, 209, 215, 384, 959, 797];
+    // every exit ramp both venues' link files list (Lot 57's and the live game's Stoppage Time file) is among them
+    const listed = new Set(['freeway-link.json', 'sportsbar-freeway-link.json'].flatMap((f) => JSON.parse(readFileSync(path.join(ROOT, 'src/data/anaheim', f), 'utf8')).exits.flatMap((e) => e.ramp_paths)));
+    const missing = [...listed].filter((id) => !ids.includes(id));
+    expect(missing.length === 0 && listed.size === ids.length, `the link files list ramps ${missing.join(', ')} the check doesn't cover (${listed.size} listed, ${ids.length} checked)`);
     const loose = await game(page, (ids) => ids.filter((id) => !window.__game.net.paths[id].lanesClear || window.__game.net.paths[id].main), ids);
     expect(loose.length === 0, `ramps ${loose.join(', ')} aren't held clear (Path.lanesClear)`);
     const r = await game(page, LANES_SCAN, ids);
