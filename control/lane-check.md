@@ -106,3 +106,4 @@ STATE 05:33 UTC: DROP 2 merger on its last frames (garage); judges next (~1 h): 
 STATE 05:55 UTC: DROP 2 merger DONE; judges ours + theirs running (venues next). S4 repair2; hub and cast building.
 STATE 06:17 UTC: DROP 2 judges: ours KEPT; theirs and venues running. S4 repair2; hub and cast building.
 FAST SETTINGS lane EXTENDED (owner ~10:35 PM PT with scratchpad/owner/touch-controls-v15-phone.png): + sleek, bold, high-tech touch controls (GAS, BRAKE, STEER, ability hexes, pause/rail). Still after the characters per the PRIORITY CHANGE.
+FAST SETTINGS: + (7b) declutter the Thrust control (owner ~10:40 PM PT).
