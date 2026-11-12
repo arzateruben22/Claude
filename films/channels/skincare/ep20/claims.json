@@ -1,0 +1,178 @@
+[
+  {
+    "id": "c1",
+    "sentence": "The Celluma PRO uses three wavelengths: blue 465 nm, red 640 nm, near-infrared 880 nm.",
+    "claim": "Celluma PRO (Series 2) emits blue 465 nm, red 640 nm and near-infrared 880 nm.",
+    "source_title": "Celluma PRO product page (BioPhotas)",
+    "source_url": "https://www.celluma.com/products/celluma-pro",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "product page: 'Wavelengths: Blue: 465nm / Red: 640nm / Near-Infrared: 880nm'. Older US manual and K152280 list blue as 464 nm"
+  },
+  {
+    "id": "c2",
+    "sentence": "It has three programs, Acne, Wrinkles, and Aches and Pains, and each one runs for thirty minutes.",
+    "claim": "The PRO has three modes (Acne, Wrinkles, Aches & Pains); every program runs a fixed 30 minutes.",
+    "source_title": "Celluma Series 2 User Manual (EU) DOC-397 Rev D + Celluma PRO product page",
+    "source_url": "https://cdn.shopify.com/s/files/1/0536/5812/4442/files/DOC-397_Rev_D_Celluma_Series_2_User_Manual_Large_and_Small_Panels_EU_EN.pdf ; https://www.celluma.com/products/celluma-pro",
+    "accessed": "2026-11-12",
+    "verified_via": "research agent opened it (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "manual: 'All programs run for 30 minutes' (research agent opened); product page: '30 minutes per day for maximum benefits'"
+  },
+  {
+    "id": "c3",
+    "sentence": "Its FDA clearances cover blue light for mild to moderate inflammatory acne, and infrared heat for temporary relief of minor muscle and joint pain.",
+    "claim": "K152280: IR heat for temporary relief of minor muscle and joint pain, arthritis and muscle spasm; blue spectrum to reduce mild to moderate inflammatory acne vulgaris; red/IR for periorbital wrinkles. FDA's device database (GUDID) links the Series 2 PRO (CLP2-001) to K152280 and K171323.",
+    "source_title": "FDA 510(k) K152280, BioPhotas Celluma3 (2016-03-02), indications for use; openFDA GUDID record for catalog CLP2-001",
+    "source_url": "https://www.accessdata.fda.gov/cdrh_docs/pdf15/K152280.pdf ; https://api.fda.gov/device/udi.json?search=company_name:%22BioPhotas%22+AND+catalog_number:%22CLP2-001%22",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "PDF: 'The blue spectrum light is intended to reduce mild to moderate inflammatory acne vulgaris.' / 'for the temporary relief of minor muscle and joint pain, arthritis and muscle spasm'. GUDID: Series 2 PRO C/US, CLP2-001 → K152280, K171323; codes OLP, OHS, ILY"
+  },
+  {
+    "id": "c4",
+    "sentence": "Visible and infrared light for full-face wrinkles.",
+    "claim": "K171323 expanded the wrinkle indication from periorbital to full-face wrinkles.",
+    "source_title": "FDA 510(k) K171323, BioPhotas Celluma3 (2017-09-01), indications for use",
+    "source_url": "https://www.accessdata.fda.gov/cdrh_docs/pdf17/K171323.pdf",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "PDF: 'intended to emit energy in the visible and infrared region of the spectrum for use in the treatment of full face wrinkles'; 'only the indication for use has been revised to expand the treatment of periorbital wrinkles to include full face wrinkles'"
+  },
+  {
+    "id": "c5",
+    "sentence": "Cleared means the FDA found it substantially equivalent to devices already sold. It isn't the same as approved.",
+    "claim": "A 510(k) clearance means FDA found the device substantially equivalent to a legally marketed predicate; premarket approval (PMA) is a separate, stricter review.",
+    "source_title": "FDA, Is It Really 'FDA Approved'? + FDA, Premarket Notification 510(k)",
+    "source_url": "https://www.fda.gov/consumers/consumer-updates/it-really-fda-approved ; https://www.fda.gov/medical-devices/premarket-submissions-selecting-and-preparing-correct-submission/premarket-notification-510k",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "FDA page: Class II devices 'may market such devices pursuant to so-called 510(k) clearance ... substantially equivalent to a legally marketed predicate device that does not require premarket approval'"
+  },
+  {
+    "id": "c6",
+    "sentence": "The panel is flexible; it curves around the face and neck, an arm or the back, without being held, about an inch or less from bare skin.",
+    "claim": "Celluma describes the PRO as flexible, shape-taking and hands-free, to be contoured closely to the treatment area, 1 inch or less from the skin.",
+    "source_title": "Celluma PRO product page (BioPhotas) + Celluma Series 2 User Manual (EU)",
+    "source_url": "https://www.celluma.com/products/celluma-pro",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "product page: 'Contour closely to the area of treatment (1” or less)'; FAQ: 'flexible and shape-taking, without the need to hold it in place'; manual positions: face/neck/chest, shoulder, lower back (research agent opened)"
+  },
+  {
+    "id": "c7",
+    "sentence": "Results depend on how much light actually reaches the skin. / Wavelength alone doesn't tell you the dose.",
+    "claim": "Photobiomodulation outcomes depend on wavelength, energy, fluence, power, irradiance, pulse mode, treatment duration and repetition.",
+    "source_title": "Zein R et al., Review of light parameters and photobiomodulation efficacy. J Biomed Opt 2018",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/30550048/",
+    "accessed": "2026-11-12",
+    "verified_via": "research agent opened it (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "same source as episode 7 c16"
+  },
+  {
+    "id": "c8",
+    "sentence": "The Omnilux Contour Face mask uses red and near-infrared for ten minutes.",
+    "claim": "Omnilux Contour Face: 633 nm red + 830 nm near-infrared, 10-minute treatments, flexible mask.",
+    "source_title": "Omnilux Contour Face product page",
+    "source_url": "https://omniluxled.com/products/omnilux-contour-face",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "page: 'red wavelength (633nm)', 'near-infrared wavelength (830nm)', '10-minute LED treatment', 'flexible, portable home-use device'"
+  },
+  {
+    "id": "c9",
+    "sentence": "CurrentBody Series 2 uses red and near-infrared for ten minutes.",
+    "claim": "CurrentBody Skin LED Mask Series 2: red 633 nm, near-infrared 830 nm and 'deep near-infrared' 1072 nm; 10-minute sessions.",
+    "source_title": "CurrentBody Skin LED Mask Series 2 product page",
+    "source_url": "https://www.currentbody.us/products/currentbody-skin-led-light-therapy-mask-series-2",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "page: 'Red (633nm)... Near-Infrared (830nm)... Deep Near-Infrared (1072nm)'; '10-MINUTE SESSIONS'"
+  },
+  {
+    "id": "c10",
+    "sentence": "LightStim for Wrinkles is handheld, three minutes per area.",
+    "claim": "LightStim for Wrinkles: handheld; 'Use your Light 5-7 days a week, 3 minutes per area'.",
+    "source_title": "LightStim for Wrinkles product page",
+    "source_url": "https://lightstim.com/products/lightstim-for-wrinkles",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "page quote as in the claim"
+  },
+  {
+    "id": "c11",
+    "sentence": "Dermalux Flex MD is another flexible panel, with blue, red and near-infrared.",
+    "claim": "Dermalux Flex MD: 415, 633 and 830 nm; flexible LED array used in a base or on the body; recommended distance 1 inch.",
+    "source_title": "Dermalux Flex MD on CurrentBody (authorised retailer)",
+    "source_url": "https://www.currentbody.us/products/dermalux-flex-md",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "retailer page: 'Wavelengths: (+/- 2nm) 415nm, 633nm, 830nm'; 'recommended distance is 1 inch away from skin'. Maker's own manual not opened"
+  },
+  {
+    "id": "c12",
+    "sentence": "Brands publish their output in different ways, and the dose at the skin isn't published for the PRO.",
+    "claim": "Celluma's PRO page lists wavelengths and says 'Doses & wavelengths are treatment dependent' but gives no irradiance or dose at the skin; its EU manual gives output 'measured at source'. Omnilux lists about 30 mW/cm2 without a stated distance.",
+    "source_title": "Celluma PRO product page (BioPhotas) + Celluma EU manual + Omnilux Contour Face page",
+    "source_url": "https://www.celluma.com/products/celluma-pro ; https://omniluxled.com/products/omnilux-contour-face",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "product page: 'Doses & wavelengths are treatment dependent'; manual: 'Maximum Output of Optical Radiation Measured at Source' (research agent opened)"
+  },
+  {
+    "id": "c13",
+    "sentence": "Each of these devices has its own FDA clearance, and a clearance belongs to a specific model.",
+    "claim": "FDA 510(k) records: Omnilux Contour Face K191629; CurrentBody Series 2 K250966; LightStim for Wrinkles K120775; Dermalux K202028 and K212275; Celluma PRO K152280 + K171323. A 510(k) clears the device submitted.",
+    "source_title": "openFDA 510(k) and GUDID records + FDA Premarket Notification 510(k) page",
+    "source_url": "https://api.fda.gov/device/510k.json?search=k_number:K191629+K250966+K120775+K202028+K212275 ; https://www.fda.gov/medical-devices/premarket-submissions-selecting-and-preparing-correct-submission/premarket-notification-510k",
+    "accessed": "2026-11-12",
+    "verified_via": "research agent opened it (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "research agent opened the openFDA records; a person checks each K-number before the comparison card goes on screen. LightStim: which clearance covers today's model is unconfirmed (K120775 or K261482)"
+  },
+  {
+    "id": "c14",
+    "sentence": "We found no study comparing Celluma with another LED device.",
+    "claim": "A PubMed search for 'Celluma' returns 0 records; 'BioPhotas' returns 4, none a head-to-head comparison with another LED device.",
+    "source_title": "Our PubMed search (12 Nov 2026)",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/?term=Celluma ; https://pubmed.ncbi.nlm.nih.gov/?term=BioPhotas",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "coordinator ran both searches: 0 and 4 records"
+  },
+  {
+    "id": "c15",
+    "sentence": "The published Celluma studies are small.",
+    "claim": "Studies using BioPhotas/Celluma devices: Soliman 2024, 25 people, BioPhotas-funded, difference not statistically significant; Deda 2025, 15 people, no control group, combined with a gel.",
+    "source_title": "Soliman J et al., Lasers Med Sci 2024; Deda AE et al., Clin Cosmet Investig Dermatol 2025",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10965566/ ; https://doi.org/10.2147/CCID.S501140",
+    "accessed": "2026-11-12",
+    "verified_via": "research agent opened it (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "research agent opened both full texts; the model used is not named in either"
+  },
+  {
+    "id": "c16",
+    "sentence": "Its instructions describe thirty-minute sessions, about three times a week, for four weeks.",
+    "claim": "Celluma's manual: each mode '30-minute sessions, 3 times per week for 4-weeks'; its website says 2-3 times a week for four weeks.",
+    "source_title": "Celluma Series 2 User Manual (EU) + Celluma treatment protocols page",
+    "source_url": "https://cdn.shopify.com/s/files/1/0536/5812/4442/files/DOC-397_Rev_D_Celluma_Series_2_User_Manual_Large_and_Small_Panels_EU_EN.pdf ; https://www.celluma.com/pages/celluma-led-and-red-light-therapy-treatment-protocols",
+    "accessed": "2026-11-12",
+    "verified_via": "research agent opened it (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "manual and website differ slightly; the narration says 'about three times a week'"
+  }
+]
