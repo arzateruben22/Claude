@@ -3,3 +3,7 @@ __pycache__/
 los-gueros-preview.html
 films/*/build/
 films/*/motion/.tmp/
+
+# long-film build outputs and previews (too large for git; the master goes via claude/whatif-s3-masters)
+films/channels/whatif/longform/earth-spin/out/earth-spin-16x9.*
+films/channels/whatif/longform/earth-spin/parts/part1v3/out/
