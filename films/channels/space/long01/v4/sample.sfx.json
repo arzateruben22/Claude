@@ -1,0 +1,18 @@
+{"palette": "space", "cues": [
+ {"at": 0.1, "kind": "mass", "dur": 6.0, "gain": -3, "seed": 1},
+ {"at": 1.1, "kind": "shooting_star", "dur": 1.2, "pan": [0.0, 0.8], "gain": -2, "seed": 2},
+ {"at": "cap:L5", "kind": "riser", "until": "capend:L5+0.1", "gain": 0, "seed": 3},
+ {"at": 3.7, "kind": "mass", "dur": 5.0, "gain": -2, "f0": 41, "seed": 4},
+ {"at": 3.81, "kind": "whoosh", "dur": 3.2, "pan": [-0.4, 0.4], "gain": -2, "seed": 5},
+ {"at": 7.01, "kind": "boom", "dur": 2.5, "gain": -4, "seed": 6},
+ {"at": 7.01, "kind": "tick", "gain": -2, "seed": 7},
+ {"at": "word:twice", "kind": "tick", "gain": -3, "seed": 8},
+ {"at": "word:8", "kind": "tick", "gain": -2, "seed": 9},
+ {"at": "word:8", "kind": "boom", "dur": 2.0, "gain": -6, "seed": 10},
+ {"at": 11.49, "kind": "surge", "dur": 6.0, "gain": 2, "seed": 11},
+ {"at": 13.5, "kind": "wave", "dur": 2.6, "gain": 0, "seed": 12},
+ {"at": 11.6, "kind": "mass", "dur": 5.5, "gain": -1, "f0": 38, "seed": 13},
+ {"at": 14.8, "kind": "whoosh", "dur": 2.2, "pan": [0.0, 0.0], "gain": -2, "seed": 14},
+ {"at": "cap:L8-1.6", "kind": "riser", "until": "capend:L8+0.1", "gain": 2, "seed": 15},
+ {"at": "capend:L8+0.1", "kind": "boom", "dur": 3.0, "gain": 1, "seed": 16}
+]}

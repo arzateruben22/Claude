@@ -36,7 +36,7 @@ if name == "long":
     for i, (k, _) in enumerate(order): secs.append({"id": k, "t0": bounds[i], "t1": bounds[i + 1], "energy": round(0.30 + 0.06 * i, 2) if k != "close" else 0.62})
 else:
     secs = [{"id": name, "t0": 0.0, "t1": dur, "energy": 0.42}]
-sheet = {"duration": dur, "fps": 30, "preset": sheet0["preset"], "sections": secs, "events": [{"t": s["t0"], "kind": "section", "id": s["id"], "t1": s["t1"]} for s in secs] + beat_events(tl.get("beats", [])), "voice": voice}
+sheet = {"duration": dur, "fps": 30, "preset": sheet0["preset"], "sections": secs, "events": [{"t": s["t0"], "kind": "section", "id": s["id"], "t1": s["t1"]} for s in secs] + ([] if "--no-sfx" in sys.argv else beat_events(tl.get("beats", []))), "voice": voice}
 sp = f"{OUT}/{name}-sheet.json"; json.dump(sheet, open(sp, "w"), indent=1); ad = f"{OUT}/{name}-audio"
 r = subprocess.run(["python3", "-I", f"{ROOT}/kits/cinema/studio/render.py", "--root", L1, sp, ad], capture_output=True, text=True)
 assert os.path.exists(f"{ad}/mix.m4a"), r.stdout[-800:] + r.stderr[-800:]

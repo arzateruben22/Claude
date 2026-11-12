@@ -23,5 +23,5 @@ for w in lines["L6"]["words"]:
 t += 0.2; beat("climb", 5.5)                              # hours squeezed into seconds: the waterline climbs, then the camera tilts up
 say("L7"); say("L8", 0.0); dur = round(t + 1.6, 3)
 tl = {"name": "sample_v4", "mode": "land", "dur": dur, "clips": clips, "captions": caps, "chips": chips, "beats": beats,
-      "km": [[0.0, 288300], [round(t_ap, 3), 192200, 3.2]], "tracks": {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}}
+      "stars": [{"t0": 1.1, "dur": 0.9, "x0": 0.52, "y0": 0.07, "x1": 0.93, "y1": 0.3}], "km": [[0.0, 288300], [round(t_ap, 3), 192200, 3.2]], "tracks": {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}}
 json.dump(tl, open(L1 + "/out/sample_v4.json", "w"), indent=1, ensure_ascii=False); print("sample", dur, "s;", [(b["kind"], b["t0"], b["t1"]) for b in beats]); print([(c["t0"], c["text"]) for c in caps])

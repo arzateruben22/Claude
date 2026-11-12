@@ -84,6 +84,13 @@ function viewShift(t) {
 
 // time-lapse: during a 'climb' beat the sea's own motion runs 6x faster (the phase stays continuous afterwards)
 function lapse(t) { let e = 0; for (const b of (TL.beats || [])) if (b.kind === "climb") e += 5 * Math.max(0, Math.min(t, b.t1) - b.t0); return t + e; }
+
+// shooting stars (timeline.stars: [{t0, dur, x0, y0, x1, y1}] in fractions of the frame): a bright head with a fading tail, drawn in the sky
+function shootingStars(t) {
+  for (const st of (TL.stars || [])) { const u = (t - st.t0) / st.dur; if (u < 0 || u > 1.15) continue; const q = Math.min(u, 1), hx = lerp(st.x0, st.x1, q) * W, hy = lerp(st.y0, st.y1, q) * H, tq = Math.max(0, q - 0.22), tx = lerp(st.x0, st.x1, tq) * W, ty = lerp(st.y0, st.y1, tq) * H, a = u > 1 ? 1 - (u - 1) / 0.15 : Math.min(1, u / 0.1);
+    ctx.save(); ctx.globalCompositeOperation = "screen"; const g = ctx.createLinearGradient(tx, ty, hx, hy); g.addColorStop(0, "rgba(200,230,255,0)"); g.addColorStop(1, `rgba(235,248,255,${0.95 * a})`); ctx.strokeStyle = g; ctx.lineWidth = 3.2 * U; ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+    const hg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 14 * U); hg.addColorStop(0, `rgba(255,255,255,${a})`); hg.addColorStop(1, "rgba(180,220,255,0)"); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx, hy, 14 * U, 0, 6.283); ctx.fill(); ctx.restore(); }
+}
 function zoomParams(t, G) {   // the camera at time t: a zoom of s about the world point F, anchored at screen point (tx, ty); null = identity
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; let z = null;
   if (inCh1) { const mo0 = moonState(384400, G), zs = zoomState(t, b, mo0); z = { s: zs.s, F: zs.F, k: zs.k }; } else { const mv = movesState(t, G); if (mv) z = mv; }
@@ -208,6 +215,7 @@ window.renderAt = (t) => {
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   const zp = zoomParams(t, G); if (zp) { ctx.translate(zp.tx, zp.ty); ctx.scale(zp.s, zp.s); ctx.translate(-zp.Fx, -zp.Fy); }
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
+  shootingStars(t);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
   if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }
