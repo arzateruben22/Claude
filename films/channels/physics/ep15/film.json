@@ -289,11 +289,19 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 0.6,
-   "t1": 33.4667,
+   "t1": 6.0667,
    "slot": "tl"
   },
   {
    "id": "code-p1",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · popcorn drawn by code",
+   "t0": 6.0667,
+   "t1": 33.4667,
+   "slot": "tl"
+  },
+  {
+   "id": "code-p2",
    "kind": "tag",
    "text": "Kitchen: AI illustration · bubble drawn by code",
    "t0": 33.4667,
@@ -301,7 +309,7 @@
    "slot": "tl"
   },
   {
-   "id": "code-s2",
+   "id": "code-s3",
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 54.0667,
@@ -322,6 +330,89 @@
  },
  "drifts": null,
  "plates": [
+  {
+   "id": "pan",
+   "file": "../lf01/art/owner/plates/plate-04-pan-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-04-pan-9x16.png",
+   "push": 0.12,
+   "parallax": 0,
+   "fade": 0.3,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "shift": {
+    "x": -0.0587,
+    "y": 0.0372,
+    "ppm": 1790
+   },
+   "anchor": {
+    "rig": {
+     "kind": "pop",
+     "pos": [
+      -0.0587,
+      0.4372,
+      -1.0
+     ],
+     "scale": 0.86,
+     "rotX": 0
+    }
+   },
+   "p9": {
+    "native9": true,
+    "cam3": {
+     "pos": [
+      0,
+      0.4,
+      0
+     ],
+     "target": [
+      0,
+      0.396,
+      -1
+     ],
+     "fov": 40.1
+    },
+    "shift": {
+     "x": -0.0019,
+     "y": 0.0578,
+     "ppm": 1290
+    },
+    "shift9": {
+     "x": -0.0019,
+     "y": 0.0578,
+     "ppm": 1290
+    },
+    "anchor": {
+     "rig": {
+      "kind": "pop",
+      "pos": [
+       -0.0019,
+       0.4578,
+       -1.0
+      ],
+      "scale": 0.62,
+      "rotX": 0
+     }
+    }
+   },
+   "t0": 6.0667,
+   "t1": 33.4667,
+   "swap": {
+    "t": 6.9667,
+    "file": "../lf01/art/owner/plates/plate-04-pan-clean-16x9.png",
+    "file9": "../lf01/art/owner/plates/plate-04-pan-clean-9x16.png"
+   }
+  },
   {
    "id": "sink",
    "file": "../lf01/art/owner/plates/plate-05-sink-16x9.png",

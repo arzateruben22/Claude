@@ -532,6 +532,10 @@ window.seek = function (t) {
     if (rg) {
       plateRig.visible = true; plateRig.position.set(...rg.pos); plateRig.scale.setScalar(H > W && rg.scale9 ? rg.scale9 : rg.scale); plateRig.rotation.set(rg.rotX ?? 0, 0, 0);
       if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
+      else if (rg.kind === "pop") {   // plate-04, the pan from above: the kernel, its foam and hulls live in the rig, stood on the pan's plane (code up = toward the camera)
+        if (HERO.parent !== plateRig) { plateRig.add(HERO, foam, hullA, hullB); }
+        if (!foam.userData.warm) { foam.userData.warm = 1; foamBits.forEach((m) => { m.material.color.set(0xFFF4DC); m.material.emissive = new THREE.Color(0xE8D3A2); m.material.emissiveIntensity = 0.3; }); [hullA, hullB, HERO].forEach((m) => { m.material.emissive = new THREE.Color(0x8A5A10); m.material.emissiveIntensity = 0.35; }); }
+        plateRig.rotation.set(Math.PI / 2, 0, 0); for (const m of kernels) if (m !== HERO) m.visible = false; }
       else if (rg.kind === "apple") {
         if (appleP.parent !== plateRig) plateRig.add(appleP, bullet, cone, ...spray);
         appleUV(rg); if (rg.skin) flapU.uSkin.value.set(...rg.skin); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
@@ -540,7 +544,7 @@ window.seek = function (t) {
       if (!rg.kind) { const sf = plates.shiftPx ? plates.shiftPx(t) : [0, 0]; wU.uZS.value.set(plates.zoom(t), sf[0], sf[1], Math.max(W / 1672, H / 941)); if (!wU.uPlateR.value) { const im = plates.imageOf("tapmug"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; wU.uPlateR.value = tx; } } if (!wU.uPlateR.value) wU.uZS.value.w = -1; }
       if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
-    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts, cloudPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; cloudPts.visible = false; } }
+    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); } if (HERO.parent === plateRig) { pan.add(HERO, foam, hullA, hullB); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts, cloudPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; cloudPts.visible = false; } }
     hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
   if (!hang.visible) hang.visible = false;
   void 0;
@@ -550,7 +554,8 @@ window.seek = function (t) {
   const K = EV.kernel, rP = (t - K.pop) / 1000;
   kernels.forEach((m, i) => { m.visible = !(i === 0 && t >= K.pop - 0.2); });
   HERO.visible = t < K.pop - 0.2;
-  { const j = seg(t, K.jump, K.jump + 0.9); HERO.position.y = 0.0145 + 0.012 * 4 * j * (1 - j) * (t < K.pop - 0.2 ? 1 : 0); HERO.rotation.z = j * 1.2; }
+  if (HERO.parent === plateRig) { kernels.forEach((m) => { if (m !== HERO) m.visible = false; }); HERO.visible = t >= K.jump - 0.15 && t < K.pop - 0.2; }
+  { const j = seg(t, K.jump, K.jump + 0.9), pl = HERO.parent === plateRig; HERO.position.y = 0.0145 + (pl ? 0.06 : 0.012) * 4 * j * (1 - j) * (t < K.pop - 0.2 ? 1 : 0); HERO.rotation.z = j * 1.2; HERO.scale.set(1, 0.85, 1).multiplyScalar(pl ? 1 + 0.9 * 4 * j * (1 - j) : 1); }
   const popOn = t >= K.pop - 0.2 && t < K.foamEnd + 5;
   hullA.visible = hullB.visible = popOn && rP > 0; foam.visible = popOn && rP > -0.0002;
   if (popOn) {

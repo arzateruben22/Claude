@@ -305,6 +305,16 @@ _p10 = {"id": "sill", "file": PLATE10, "file9": PLATE10, "push": 0.1, "parallax"
         "shift": {"x": 0.0, "y": 0.0, "ppm": 2350}, "shift9": {"x": 0.0, "y": 0.0, "ppm": 2350},
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 38.9},
         "anchor": {"fly": {"c": _w9(470, 800), "rx": 0.075, "ry": 0.02, "rz": 0.05, "scale": 0.013}}}
+# plate-04: the black pan from above (Part 3's popcorn). The hero kernel is the one at (731, 404) of the 16:9 picture (26 px across, 1790 px per metre) and (262, 396) of the owner's 529 x 941 panel (22 px, 1290 px per metre);
+# the plate shows it until it jumps, then a copy of the plate without it takes over
+PLATE04 = "../lf01/art/owner/plates/plate-04-pan-16x9.png"; PLATE04C = "../lf01/art/owner/plates/plate-04-pan-clean-16x9.png"
+PLATE04_9 = "../lf01/art/owner/plates/plate-04-pan-9x16.png"; PLATE04C_9 = "../lf01/art/owner/plates/plate-04-pan-clean-9x16.png"
+_w4 = lambda px, py, z=-1.0: [round((px - 264.5) / 1290 * -z, 4), round(0.4 + (470.5 - py) / 1290 * -z, 4), z]
+_p04 = {"id": "pan", "file": PLATE04, "file9": PLATE04_9, "push": 0.12, "parallax": 0, "fade": 0.3,
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5}, "shift": {"x": round((731 - 836) / 1790, 4), "y": round((470.5 - 404) / 1790, 4), "ppm": 1790},
+        "anchor": {"rig": {"kind": "pop", "pos": _w(731, 404), "scale": 0.86, "rotX": 0}},
+        "p9": {"native9": True, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 40.1}, "shift": {"x": round((262 - 264.5) / 1290, 4), "y": round((470.5 - 396) / 1290, 4), "ppm": 1290}, "shift9": {"x": round((262 - 264.5) / 1290, 4), "y": round((470.5 - 396) / 1290, 4), "ppm": 1290},
+               "anchor": {"rig": {"kind": "pop", "pos": _w4(262, 396), "scale": 0.62, "rotX": 0}}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -321,6 +331,8 @@ elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").e
         PLATES.insert(0, dict(_p10, t0=R(EV["fly100"][0] - 0.8), t1=R(EV["tapdrop"][0] - 1.0)))
 elif PART == 3 and (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
     PLATES = [dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5))]
+    if (HERE / "art/owner/plates/plate-04-pan-clean-16x9.png").exists():
+        PLATES.insert(0, dict(_p04, t0=R(EV["kernel"]["jump"] - 1.0), t1=R(EV["bubble"]["in"] - 1.5), swap={"t": R(EV["kernel"]["jump"] - 0.1), "file": PLATE04C, "file9": PLATE04C_9}))
 elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
     PLATES = [dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0))]
 elif PART == 7 and (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
@@ -348,7 +360,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "pan": "popcorn", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))
