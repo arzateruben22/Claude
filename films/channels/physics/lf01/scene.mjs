@@ -334,7 +334,7 @@ const appleU = { uPlate: { value: null }, uExit: { value: 0 }, uEntry: { value: 
 const appleMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
 appleMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, appleU);
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nattribute vec2 uvRest; varying vec2 vPUV; varying vec3 vLoc; uniform float uExit, uEntry;")
-    .replace("#include <begin_vertex>", "vLoc = position; vPUV = uvRest; vec3 transformed = position; float yz2 = dot(position.yz, position.yz); transformed.x += exp(-yz2 / 0.00022) * step(0.0, position.x) * uExit * 0.018 + exp(-yz2 / 0.00002) * step(position.x, 0.0) * uEntry * 0.003;");
+    .replace("#include <begin_vertex>", "vLoc = position; vPUV = uvRest; vec3 transformed = position; float yz2 = dot(position.yz, position.yz); transformed.x += exp(-yz2 / 0.00022) * step(0.0, position.x) * uExit * 0.004 + exp(-yz2 / 0.00002) * step(position.x, 0.0) * uEntry * 0.003;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec2 vPUV; varying vec3 vLoc; uniform sampler2D uPlate; uniform float uExit, uEntry;\n" + ACES_INV_GLSL)
     .replace("#include <opaque_fragment>", `
   vec3 lin = texture2D(uPlate, vPUV).rgb;
@@ -362,9 +362,26 @@ const mistV = []; { const rq = rng(21); for (let i = 0; i < 520; i++) { const ba
 const mistGeo = new THREE.BufferGeometry(); mistGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(mistV.length * 3), 3));
 const mistTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 32; const c = cv.getContext("2d"), gr = c.createRadialGradient(16, 16, 1, 16, 16, 15); gr.addColorStop(0, "rgba(238,205,120,1)"); gr.addColorStop(1, "rgba(238,205,120,0)"); c.fillStyle = gr; c.fillRect(0, 0, 32, 32); return new THREE.CanvasTexture(cv); })();
 const mistPts = new THREE.Points(mistGeo, new THREE.PointsMaterial({ size: 0.0062, map: mistTex, transparent: true, depthWrite: false, opacity: 0.85, sizeAttenuation: true })); mistPts.frustumCulled = false; mistPts.visible = false; scene.add(mistPts);
-const petals = []; { const sh = new THREE.Shape(); sh.moveTo(-0.0036, 0); sh.lineTo(-0.0044, 0.006); sh.lineTo(-0.0022, 0.0074); sh.lineTo(-0.001, 0.0112); sh.lineTo(0.0008, 0.0082); sh.lineTo(0.0026, 0.0104); sh.lineTo(0.0042, 0.005); sh.lineTo(0.0036, 0); sh.closePath();
-  for (let i = 0; i < 14; i++) { const m = new THREE.Mesh(new THREE.ShapeGeometry(sh), new THREE.MeshStandardMaterial({ color: i % 2 ? 0xC4301F : 0xD6402A, roughness: 0.4, side: THREE.DoubleSide, emissive: 0x8A2014, emissiveIntensity: 0.7 })); m.userData = { a: (i / 14) * 6.2832 + 0.2, k: 0.8 + 0.5 * ((i * 5) % 7) / 7 }; m.visible = false; scene.add(m); petals.push(m); } }
-
+const cloudN = 60, cloudV = []; { const rc = rng(31); for (let i = 0; i < cloudN; i++) { const th = 0.5 * Math.pow(rc(), 0.9), ph = rc() * 6.2832; cloudV.push({ d: [Math.cos(th), Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph)], sp: 30 + 90 * rc() }); } }
+const cloudGeo = new THREE.BufferGeometry(); cloudGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(cloudN * 3), 3));
+const cloudTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const c = cv.getContext("2d"), gr = c.createRadialGradient(32, 32, 2, 32, 32, 31); gr.addColorStop(0, "rgba(236,220,170,0.55)"); gr.addColorStop(0.5, "rgba(232,212,158,0.22)"); gr.addColorStop(1, "rgba(230,210,155,0)"); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
+const cloudPts = new THREE.Points(cloudGeo, new THREE.PointsMaterial({ size: 0.024, map: cloudTex, transparent: true, depthWrite: false, opacity: 0.9, sizeAttenuation: true })); cloudPts.frustumCulled = false; cloudPts.visible = false; scene.add(cloudPts);   // the soft wet pulp cloud
+const flapU = { uPlate: appleU.uPlate };
+const flapMat = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });   // real skin on the outside (the plate's own apple skin pixels), wet cream flesh on the inside
+flapMat.onBeforeCompile = (sh) => { sh.uniforms.uPlate = flapU.uPlate;
+  sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec2 vFU;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvFU = uv;");
+  sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec2 vFU; uniform sampler2D uPlate;\n" + ACES_INV_GLSL)
+    .replace("#include <opaque_fragment>", `
+  float al = 1.0 - vFU.y; vec2 su = vec2(1120.0 / 1672.0 + vFU.x * 70.0 / 1672.0, 1.0 - (470.0 + al * 130.0) / 941.0);
+  vec3 sk = texture2D(uPlate, su).rgb * (0.8 + 0.3 * (1.0 - al)); vec3 cr = mix(vec3(0.88, 0.78, 0.5), vec3(0.97, 0.9, 0.7), al);
+  vec3 c = gl_FrontFacing ? cr : sk; c = mix(c, vec3(0.9, 0.82, 0.58), smoothstep(0.93, 0.99, al) * (gl_FrontFacing ? 0.0 : 0.8));
+  outgoingLight = acesInv(clamp(c, 0.0, 1.0), 1.0);
+  #include <opaque_fragment>`); };
+const petals = []; for (let i = 0; i < 6; i++) { const g = new THREE.PlaneGeometry(1, 1, 5, 6), m = new THREE.Mesh(g, flapMat); m.frustumCulled = false; m.userData = { a: (i / 6) * 6.2832 + 0.35 + 0.2 * Math.sin(i * 2.3), k: 0.8 + 0.5 * ((i * 5) % 7) / 7, w: 0.011 + 0.004 * ((i * 3) % 4) / 4, L: 0.015 + 0.007 * ((i * 7) % 5) / 5 }; m.visible = false; scene.add(m); petals.push(m); }
+const bendFlap = (m, bx, rE0, open) => { const u = m.userData, P = m.geometry.attributes.position, ca = Math.cos(u.a), sa = Math.sin(u.a), nx = 6, ny = 7;   // a thick skin flap curling outward and back around the exit hole
+  for (let jj = 0; jj < ny; jj++) { const sN = jj / (ny - 1); let ax = 0, ar = 0; const nst = jj; for (let q = 0; q < nst; q++) { const f = (q + 0.5) / (ny - 1), phi = 0.35 + (0.5 + 2.1 * f) * open * u.k; ar += Math.cos(phi) * u.L / (ny - 1); ax += Math.sin(phi) * u.L / (ny - 1); }
+    for (let ii = 0; ii < nx; ii++) { const w = (ii / (nx - 1) - 0.5) * u.w * (1 - 0.35 * sN), k = jj * nx + ii, rr = rE0 * 1.05 + ar; P.setXYZ(k, bx + ax, rr * ca - w * sa, rr * sa + w * ca); } }
+  P.needsUpdate = true; m.geometry.computeVertexNormals(); };
 // ── the storm: a leader tree in the window, a return stroke (drawn in the backdrop plane) ──
 const SL = FILM.ev.leader, LZ = -4.4, TOPY = 6.6, GROUNDY = 0.15, LX0 = -1.2;
 const mkSeg = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false })); scene.add(m); m.visible = false; return m; };
@@ -514,7 +531,7 @@ window.seek = function (t) {
       if (!rg.kind) { const sf = plates.shiftPx ? plates.shiftPx(t) : [0, 0]; wU.uZS.value.set(plates.zoom(t), sf[0], sf[1], Math.max(W / 1672, H / 941)); if (!wU.uPlateR.value) { const im = plates.imageOf("tapmug"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; wU.uPlateR.value = tx; } } if (!wU.uPlateR.value) wU.uZS.value.w = -1; }
       if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
-    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; } }
+    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts, cloudPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; cloudPts.visible = false; } }
     hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
   if (!hang.visible) hang.visible = false;
   void 0;
@@ -562,12 +579,12 @@ window.seek = function (t) {
     const dim = seg(t, Bt.enter - 3.0, Bt.enter - 0.2), shell = afterExit ? 0 : 1; apple.visible = true; apple.scale.set(1 - 0.12 * dim * (afterExit ? 0 : 1) - (afterExit ? 0.0 : 0), 1, 1 - 0.12 * dim); apple.scale.x = t >= Bt.enter + 70 ? 1 : afterExit ? Math.max(0.6, 1 - 0.4 * seg(t, Bt.enter + 0.08 / speed * 1e4, Bt.enter + 0.08 / speed * 1e4 + 2.0)) : 1 - 0.06 * dim; void shell;
     apple.position.set(APPX, APPY, CUPZ); stem.visible = !afterExit;
     if (appleP.parent === plateRig) { const tEx = Bt.enter + 0.08 / speed * 1e4, rEn = (t - Bt.enter) / 1e4;
-      if (petals[0].parent !== plateRig) plateRig.add(...petals, mistPts);
+      if (petals[0].parent !== plateRig) plateRig.add(...petals, mistPts, cloudPts);
       const open = seg(t, tEx - 0.02, tEx + 0.6), rE0 = 0.0125 * Math.min(1, seg(t, tEx - 0.05, tEx + 0.3) * 3.0);
-      petals.forEach((m) => { const u = m.userData, ca = Math.cos(u.a), sa = Math.sin(u.a), beta = 0.15 + 1.25 * open * u.k, d = new THREE.Vector3(Math.sin(beta), Math.cos(beta) * ca, Math.cos(beta) * sa), bx = Math.sqrt(Math.max(0, 0.0016 - rE0 * rE0)) * 1.0 + 0.0004;
-        m.visible = open > 0.02; m.position.set(bx, rE0 * ca * 1.05, rE0 * sa * 1.05); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d); m.scale.setScalar(0.8 + 0.5 * open); });
+      { const bx = 0.0395 * 0.998 * Math.sqrt(Math.max(0.05, 1 - (rE0 / 0.04) * (rE0 / 0.04))); petals.forEach((m) => { m.visible = open > 0.02; if (m.visible) bendFlap(m, bx, rE0, open); }); }
       { const P = mistGeo.attributes.position, rx = (t - tEx) / 1e4, rn = rEn - 0.08 / speed - 0.00003; mistPts.visible = rx > 0 || rEn > 0.08 / speed + 0.00001;
         for (let k = 0; k < mistV.length; k++) { const q = mistV[k], r0 = q.back ? Math.max(0, (t - Bt.enter - 0.0) / 1e4 - 0.0 ) : rx; const age = q.back ? Math.max(0, rEn - 0.0) * 0.18 : Math.max(0, rx); const kk = 4, ox = q.back ? -0.04 : 0.04 + 0.014; P.setXYZ(k, ox + q.d[0] * q.sp * age * kk, q.d[1] * q.sp * age * kk, q.d[2] * q.sp * age * kk); void r0; }
+        { const C = cloudGeo.attributes.position, age = Math.max(0, rx); cloudPts.visible = rx > 0; for (let k = 0; k < cloudN; k++) { const q = cloudV[k]; C.setXYZ(k, 0.05 + q.d[0] * q.sp * age * 3.2, q.d[1] * q.sp * age * 3.2, q.d[2] * q.sp * age * 3.2); } C.needsUpdate = true; cloudPts.material.size = 0.05 + 0.13 * Math.min(1, age / 0.0006); cloudPts.material.opacity = 0.9 * Math.max(0, 1 - age / 0.0011); }
         P.needsUpdate = true; mistPts.material.opacity = 0.85 * Math.max(0, 1 - Math.max(0, rx) / 0.0009); } appleP.position.set(0, 0, 0); appleU.uExit.value = seg(t, tEx - 0.05, tEx + 0.3); appleU.uEntry.value = seg(t, Bt.enter - 0.05, Bt.enter + 0.25); } }
   // the storm's leader: a step every 3 s (1 s of growth, then a skipped wait), branches, the return stroke
   { const Lt = SL.t0, ground = SL.ground, every = SL.stepEvery; let flashV = 0;
