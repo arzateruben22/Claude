@@ -1,0 +1,198 @@
+{
+ "palette": "earth",
+ "cues": [
+  {
+   "at": 0.05,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 1,
+   "dur": 2.6
+  },
+  {
+   "at": 3.51,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 2,
+   "dur": 2.0
+  },
+  {
+   "at": 4.733,
+   "kind": "whoosh",
+   "gain": -3,
+   "seed": 3,
+   "dur": 2.4,
+   "pan": [
+    -0.4,
+    0.4
+   ]
+  },
+  {
+   "at": 5.333,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 4,
+   "dur": 2.2
+  },
+  {
+   "at": 5.633,
+   "kind": "shimmer",
+   "gain": -5,
+   "seed": 5,
+   "dur": 2.4
+  },
+  {
+   "at": 6.2330000000000005,
+   "kind": "whoosh",
+   "gain": -3,
+   "seed": 6,
+   "dur": 1.8,
+   "pan": [
+    0.5,
+    -0.5
+   ]
+  },
+  {
+   "at": 11.213,
+   "kind": "boom",
+   "gain": -4,
+   "seed": 7,
+   "dur": 1.8
+  },
+  {
+   "at": 11.312999999999999,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 8
+  },
+  {
+   "at": 14.8,
+   "kind": "tick",
+   "gain": -4,
+   "seed": 9
+  },
+  {
+   "at": 17.48,
+   "kind": "rumble",
+   "gain": -5,
+   "seed": 10,
+   "dur": 3.2
+  },
+  {
+   "at": 17.58,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 11
+  },
+  {
+   "at": 18.18,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 12
+  },
+  {
+   "at": 19.03,
+   "kind": "whoosh",
+   "gain": -3,
+   "seed": 13,
+   "dur": 1.0
+  },
+  {
+   "at": 19.03,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 14
+  },
+  {
+   "at": 20.8,
+   "kind": "shimmer",
+   "gain": -6,
+   "seed": 15,
+   "dur": 2.6
+  },
+  {
+   "at": 22.4,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 16
+  },
+  {
+   "at": 26.633,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 17
+  },
+  {
+   "at": 26.533,
+   "kind": "whoosh",
+   "gain": -6,
+   "seed": 18,
+   "dur": 0.7
+  },
+  {
+   "at": 26.983,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 19
+  },
+  {
+   "at": 26.883,
+   "kind": "whoosh",
+   "gain": -6,
+   "seed": 20,
+   "dur": 0.7
+  },
+  {
+   "at": 27.333,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 21
+  },
+  {
+   "at": 27.233,
+   "kind": "whoosh",
+   "gain": -6,
+   "seed": 22,
+   "dur": 0.7
+  },
+  {
+   "at": 27.683,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 23
+  },
+  {
+   "at": 27.583,
+   "kind": "whoosh",
+   "gain": -6,
+   "seed": 24,
+   "dur": 0.7
+  },
+  {
+   "at": 28.667,
+   "kind": "whoosh",
+   "gain": -4,
+   "seed": 25,
+   "dur": 1.4
+  },
+  {
+   "at": 34.633,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 26,
+   "dur": 4.03
+  },
+  {
+   "at": 38.163,
+   "kind": "boom",
+   "gain": -4,
+   "seed": 27,
+   "dur": 2.2
+  },
+  {
+   "at": 40.0,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 28
+  }
+ ]
+}

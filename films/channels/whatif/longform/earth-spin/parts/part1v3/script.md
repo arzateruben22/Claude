@@ -12,6 +12,18 @@ vo: That is the whole distance between standing and flying. {-}
 ## s4 {shot: see v2.py · energy: 0.6} (__)
 vo: Only the spin changes, and it only gets faster. {-}
 
-## s11 {shot: see v2.py · energy: 0.6} (__)
-vo: Right now the ground carries you at about sixteen hundred and seventy kilometers an hour. {-}
+## s12 {shot: see v2.py · energy: 0.6} (__)
+vo: What you feel is a tiny push outward: the spin makes you about a third of a percent lighter. {-}
+
+## s13 {shot: see v2.py · energy: 0.6} (__)
+vo: Now the spin speeds up. {-}
+
+## cta {shot: see v2.py · energy: 0.6} (__)
+vo: Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. {-}
+
+## cliff {shot: see v2.py · energy: 0.6} (__)
+vo: And then the spin has only just begun to speed up. {-}
+
+## tease {shot: see v2.py · energy: 0.6} (__)
+vo: Part one of eight. Full video on YouTube. {-}
 

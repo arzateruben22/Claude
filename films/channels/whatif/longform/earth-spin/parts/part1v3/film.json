@@ -1,12 +1,12 @@
 {
- "id": "possibility-lab-earth-spin-part1-v3-preview",
+ "id": "possibility-lab-earth-spin-part1-v3",
  "theme": "../../../../theme.json",
  "scene": "../../scene.mjs",
  "fps": 30,
  "bpm": 50,
- "dur": 25.05,
+ "dur": 45.45,
  "v2": true,
- "poster": 10.8,
+ "poster": 20.4,
  "shots": [
   {
    "at": 0.0,
@@ -14,7 +14,7 @@
    "beat": "open"
   },
   {
-   "at": 30.05,
+   "at": 40.0,
    "name": "end",
    "beat": "tease"
   }
@@ -30,29 +30,57 @@
   {
    "id": "s71",
    "t0": 4.65,
-   "t1": 10.8,
+   "t1": 11.55,
    "line": "vo02",
    "energy": 0.6
   },
   {
    "id": "s72",
-   "t0": 10.8,
-   "t1": 13.95,
+   "t0": 11.55,
+   "t1": 14.7,
    "line": "vo03",
    "energy": 0.6
   },
   {
    "id": "s4",
-   "t0": 13.95,
-   "t1": 17.25,
+   "t0": 14.7,
+   "t1": 20.4,
    "line": "vo04",
    "energy": 0.6
   },
   {
-   "id": "s11",
-   "t0": 17.25,
-   "t1": 25.05,
+   "id": "s12",
+   "t0": 20.4,
+   "t1": 26.25,
    "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "s13",
+   "t0": 26.25,
+   "t1": 28.5,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 28.5,
+   "t1": 34.65,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 34.65,
+   "t1": 39.0,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 39.0,
+   "t1": 45.45,
+   "line": "vo09",
    "energy": 0.6
   }
  ],
@@ -64,8 +92,16 @@
     23.934
    ],
    [
-    25.05,
+    26.333,
     23.934
+   ],
+   [
+    27.733,
+    19.9
+   ],
+   [
+    45.45,
+    19.0
    ]
   ],
   "dry": [
@@ -74,7 +110,7 @@
     90.0
    ],
    [
-    25.05,
+    45.45,
     90.0
    ]
   ],
@@ -121,7 +157,7 @@
    999.0,
    1000.0
   ],
-  "end": 30.05,
+  "end": 40.0,
   "seed": 3
  },
  "badges": [
@@ -140,7 +176,7 @@
   "t1": -19.0,
   "sig": -18.0
  },
- "endCard": 30.05,
+ "endCard": 40.0,
  "end": {
   "title": "Full video on YouTube: *What If Earth Spun Faster…*",
   "follow": "Possibility Lab · Part 1 of 8",
@@ -160,12 +196,24 @@
    "mode": "push"
   },
   {
-   "t0": 8.313,
+   "t0": 4.833,
+   "mode": "lift"
+  },
+  {
+   "t0": 11.313,
+   "mode": "push"
+  },
+  {
+   "t0": 17.33,
+   "mode": "ground"
+  },
+  {
+   "t0": 28.467,
    "mode": "wide"
   },
   {
-   "t0": 13.85,
-   "mode": "ground"
+   "t0": 34.533,
+   "mode": "push"
   }
  ],
  "fx": {},
@@ -177,28 +225,48 @@
   },
   {
    "t": 4.433,
-   "pose": "lookUp",
-   "expr": "awe"
-  },
-  {
-   "t": 10.6,
    "pose": "float",
    "expr": "happy"
   },
   {
-   "t": 13.733,
+   "t": 11.263,
    "pose": "stand",
    "expr": "neutral"
   },
   {
-   "t": 17.033,
-   "pose": "hips",
+   "t": 11.333,
+   "pose": "stand",
+   "expr": "happy"
+  },
+  {
+   "t": 14.5,
+   "pose": "stand",
    "expr": "neutral"
   },
   {
-   "t": 13.950000000000001,
+   "t": 20.2,
    "pose": "stand",
-   "expr": "neutral"
+   "expr": "wide"
+  },
+  {
+   "t": 26.033,
+   "pose": "lookUp",
+   "expr": "awe"
+  },
+  {
+   "t": 28.367,
+   "pose": "armsOut",
+   "expr": "happy"
+  },
+  {
+   "t": 34.433,
+   "pose": "lookUp",
+   "expr": "awe"
+  },
+  {
+   "t": 38.7,
+   "pose": "stand",
+   "expr": "happy"
   }
  ],
  "hook": {
@@ -207,23 +275,28 @@
   "t1": 2.9
  },
  "hud3": {
-  "bar_t0": 13.65
+  "bar_t0": 11.313,
+  "weight_t0": 20.4,
+  "speed": {
+   "t0": 17.53,
+   "t1": 25.73
+  }
  },
  "chips": [
   {
-   "t0": 8.813,
-   "t1": 13.45,
-   "text": "17× faster = liftoff"
+   "t0": 19.03,
+   "t1": 20.83,
+   "text": "Already faster than sound (767 mph)"
   },
   {
-   "t0": 19.133,
-   "t1": 24.85,
-   "text": "Already faster than sound"
+   "t0": 22.4,
+   "t1": 25.83,
+   "text": "≈ a phone lighter"
   }
  ],
  "flash": {
-  "t0": 8.513,
-  "t1": 13.65
+  "t0": 5.133,
+  "t1": 11.213
  },
  "captions": [
   {
@@ -282,12 +355,8 @@
       4.988
      ],
      [
-      "17",
+      "17×",
       5.228
-     ],
-     [
-      "times",
-      5.753
      ]
     ],
     [
@@ -365,155 +434,389 @@
    ]
   },
   {
-   "t0": 10.825,
-   "t1": 11.845,
+   "t0": 11.558,
+   "t1": 12.578,
    "lines": [
     [
      [
       "That",
-      10.965
+      11.698
      ],
      [
       "is",
-      10.995
+      11.728
      ],
      [
       "the",
-      11.265
+      11.998
      ],
      [
       "whole",
-      11.295
+      12.028
      ],
      [
       "distance",
-      11.45
+      12.183
      ]
     ]
    ]
   },
   {
-   "t0": 11.845,
-   "t1": 13.425,
+   "t0": 12.578,
+   "t1": 14.158,
    "lines": [
     [
      [
       "between",
-      11.845
+      12.578
      ],
      [
       "standing",
-      12.265
+      12.998
      ]
     ],
     [
      [
       "and",
-      12.595
+      13.328
      ],
      [
       "flying.",
-      12.675
+      13.408
      ]
     ]
    ]
   },
   {
-   "t0": 13.958,
-   "t1": 16.578,
+   "t0": 14.725,
+   "t1": 17.345,
    "lines": [
     [
      [
       "Only",
-      14.098
+      14.865
      ],
      [
       "the",
-      14.348
+      15.115
      ],
      [
       "spin",
-      14.528
+      15.295
      ],
      [
       "changes,",
-      14.768
+      15.535
      ]
     ],
     [
      [
       "and",
-      15.208
+      15.975
      ],
      [
       "it",
-      15.463
+      16.23
      ],
      [
       "only",
-      15.493
+      16.26
      ],
      [
       "gets",
-      15.798
+      16.565
      ],
      [
       "faster.",
-      15.828
+      16.595
      ]
     ]
    ]
   },
   {
-   "t0": 17.258,
-   "t1": 19.093,
+   "t0": 20.415,
+   "t1": 23.475,
    "lines": [
     [
      [
-      "Right",
-      17.398
+      "What",
+      20.555
      ],
      [
-      "now",
-      17.573
+      "you",
+      20.845
      ],
      [
-      "the",
-      17.773
+      "feel",
+      20.875
      ],
      [
-      "ground",
-      17.883
+      "is",
+      21.155
+     ],
+     [
+      "a",
+      21.215
+     ],
+     [
+      "tiny",
+      21.245
      ]
     ],
     [
      [
-      "carries",
-      18.173
+      "push",
+      21.575
      ],
      [
-      "you",
-      18.913
+      "outward:",
+      21.91
+     ],
+     [
+      "the",
+      23.18
+     ],
+     [
+      "spin",
+      23.22
      ]
     ]
    ]
   },
   {
-   "t0": 19.093,
-   "t1": 22.123,
+   "t0": 23.475,
+   "t1": 25.615,
    "lines": [
     [
      [
-      "at",
-      19.093
+      "makes",
+      23.475
+     ],
+     [
+      "you",
+      23.67
      ],
      [
       "about",
-      19.173
+      23.895
      ],
      [
-      "1,670 km/h.",
-      19.333
+      "a",
+      24.105
+     ],
+     [
+      "third",
+      24.175
+     ]
+    ],
+    [
+     [
+      "of",
+      24.405
+     ],
+     [
+      "a",
+      24.48
+     ],
+     [
+      "percent",
+      24.51
+     ],
+     [
+      "lighter.",
+      24.865
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.248,
+   "t1": 28.033,
+   "lines": [
+    [
+     [
+      "Now",
+      26.388
+     ],
+     [
+      "the",
+      26.578
+     ],
+     [
+      "spin",
+      26.813
+     ],
+     [
+      "speeds",
+      27.093
+     ],
+     [
+      "up.",
+      27.283
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.727,
+   "t1": 29.482,
+   "lines": [
+    [
+     [
+      "Hang",
+      28.867
+     ],
+     [
+      "on.",
+      29.162
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.482,
+   "t1": 31.402,
+   "lines": [
+    [
+     [
+      "If",
+      29.482
+     ],
+     [
+      "you're",
+      29.557
+     ],
+     [
+      "enjoying",
+      29.587
+     ],
+     [
+      "this,",
+      30.097
+     ]
+    ],
+    [
+     [
+      "tap",
+      30.352
+     ],
+     [
+      "like",
+      30.527
+     ],
+     [
+      "and",
+      30.732
+     ],
+     [
+      "follow.",
+      30.797
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.402,
+   "t1": 33.247,
+   "lines": [
+    [
+     [
+      "Okay,",
+      31.402
+     ],
+     [
+      "back",
+      32.072
+     ],
+     [
+      "to",
+      32.102
+     ],
+     [
+      "the",
+      32.217
+     ],
+     [
+      "math.",
+      32.497
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.793,
+   "t1": 38.163,
+   "lines": [
+    [
+     [
+      "And",
+      34.933
+     ],
+     [
+      "then",
+      34.963
+     ],
+     [
+      "the",
+      35.308
+     ],
+     [
+      "spin",
+      35.453
+     ],
+     [
+      "has",
+      35.728
+     ],
+     [
+      "only",
+      35.758
+     ]
+    ],
+    [
+     [
+      "just",
+      36.048
+     ],
+     [
+      "begun",
+      36.338
+     ],
+     [
+      "to",
+      36.743
+     ],
+     [
+      "speed",
+      36.778
+     ],
+     [
+      "up.",
+      37.413
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 39.175,
+   "t1": 40.205,
+   "lines": [
+    [
+     [
+      "Part",
+      39.315
+     ],
+     [
+      "1",
+      39.485
+     ],
+     [
+      "of",
+      39.68
+     ],
+     [
+      "8.",
+      39.89
      ]
     ]
    ]
@@ -536,24 +839,52 @@
   },
   {
    "id": "vo03",
-   "t": 10.9,
+   "t": 11.633333333333333,
    "dur": 2.15,
    "file": "vo/03.wav",
    "text": "That is the whole distance between standing and flying."
   },
   {
    "id": "vo04",
-   "t": 14.033333333333333,
+   "t": 14.8,
    "dur": 2.38,
    "file": "vo/04.wav",
    "text": "Only the spin changes, and it only gets faster."
   },
   {
    "id": "vo05",
-   "t": 17.333333333333332,
-   "dur": 4.54,
+   "t": 20.5,
+   "dur": 4.83,
    "file": "vo/05.wav",
-   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour."
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter."
+  },
+  {
+   "id": "vo06",
+   "t": 26.333333333333332,
+   "dur": 1.28,
+   "file": "vo/06.wav",
+   "text": "Now the spin speeds up."
+  },
+  {
+   "id": "vo07",
+   "t": 28.666666666666668,
+   "dur": 5.11,
+   "file": "vo/07.wav",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "id": "vo08",
+   "t": 34.733333333333334,
+   "dur": 3.43,
+   "file": "vo/08.wav",
+   "text": "And then the spin has only just begun to speed up."
+  },
+  {
+   "id": "vo09",
+   "t": 39.0,
+   "dur": 3.35,
+   "file": "vo/09.wav",
+   "text": "Part one of eight. Full video on YouTube."
   }
  ]
 }

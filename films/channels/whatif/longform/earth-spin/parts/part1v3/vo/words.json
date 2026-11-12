@@ -301,97 +301,383 @@
   },
   {
    "id": "vo05",
-   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
-   "heard": "Right now the ground carries carries you at about 1670 kilometers an hour.",
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+   "heard": "what you feel is a tiny push outward. The spin makes you about a third of a percent lighter.",
    "words": [
     {
-     "w": "Right",
-     "start": 0.065,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "now",
-     "start": 0.24,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 0.44,
-     "end": 0.49,
-     "heard": true
-    },
-    {
-     "w": "ground",
-     "start": 0.55,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "carries",
-     "start": 0.84,
-     "end": 1.2,
+     "w": "What",
+     "start": 0.055,
+     "end": 0.16,
      "heard": true
     },
     {
      "w": "you",
-     "start": 1.58,
-     "end": 1.68,
+     "start": 0.345,
+     "end": 0.4,
      "heard": true
     },
     {
-     "w": "at",
-     "start": 1.76,
-     "end": 1.84,
+     "w": "feel",
+     "start": 0.375,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.655,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.715,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 0.745,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 1.075,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "outward:",
+     "start": 1.41,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.68,
+     "end": 2.73,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 2.72,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 2.975,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.17,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.84,
-     "end": 2.08,
+     "start": 3.395,
+     "end": 3.52,
      "heard": true
     },
     {
-     "w": "sixteen",
-     "start": 2.0,
-     "end": 3.28,
-     "heard": false
-    },
-    {
-     "w": "hundred",
-     "start": 2.03,
-     "end": 3.28,
-     "heard": false
-    },
-    {
-     "w": "and",
-     "start": 2.06,
-     "end": 3.28,
-     "heard": false
-    },
-    {
-     "w": "seventy",
-     "start": 2.175,
-     "end": 3.28,
-     "heard": false
-    },
-    {
-     "w": "kilometers",
-     "start": 3.245,
-     "end": 3.92,
+     "w": "a",
+     "start": 3.605,
+     "end": 3.655,
      "heard": true
     },
     {
-     "w": "an",
-     "start": 3.915,
+     "w": "third",
+     "start": 3.675,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 3.905,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.98,
      "end": 4.08,
      "heard": true
     },
     {
-     "w": "hour.",
-     "start": 4.04,
-     "end": 4.48,
+     "w": "percent",
+     "start": 4.01,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "lighter.",
+     "start": 4.365,
+     "end": 4.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Now the spin speeds up.",
+   "heard": "Now the spin speeds up.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.055,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.245,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 0.48,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "speeds",
+     "start": 0.76,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 0.95,
+     "end": 1.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "heard": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "words": [
+    {
+     "w": "Hang",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "on.",
+     "start": 0.495,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "If",
+     "start": 0.815,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.89,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "enjoying",
+     "start": 0.92,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "this,",
+     "start": 1.43,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.685,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.86,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.065,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 2.13,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "Okay,",
+     "start": 2.735,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "back",
+     "start": 3.405,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.435,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.55,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "math.",
+     "start": 3.83,
+     "end": 4.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "And then the spin has only just begun to speed up.",
+   "heard": "And then the spin has only just begun to speed up.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "then",
+     "start": 0.23,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.575,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 0.72,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.995,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 1.025,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 1.315,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "begun",
+     "start": 1.605,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 2.01,
+     "end": 2.06,
+     "heard": true
+    },
+    {
+     "w": "speed",
+     "start": 2.045,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "up.",
+     "start": 2.68,
+     "end": 3.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Part one of eight. Full video on YouTube.",
+   "heard": "Part one of a full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.315,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 0.485,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.68,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.89,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "Full",
+     "start": 1.205,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.32,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.815,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 2.0,
+     "end": 3.04,
      "heard": true
     }
    ]

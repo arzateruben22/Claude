@@ -1,0 +1,72 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p1_open",
+   "sub_take": null,
+   "text": "What if Earth spun faster, and couldn't stop?"
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s071",
+   "sub_take": null,
+   "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s072",
+   "sub_take": null,
+   "text": "That is the whole distance between standing and flying."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s004",
+   "sub_take": null,
+   "text": "Only the spin changes, and it only gets faster."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s012",
+   "sub_take": null,
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s013",
+   "sub_take": null,
+   "text": "Now the spin speeds up."
+  },
+  {
+   "line": "vo07",
+   "kind": "cta",
+   "take": "V.cta_follow",
+   "sub_take": "V.cta_sub",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "line": "vo08",
+   "kind": "cliff",
+   "take": "V.p1_cliff",
+   "sub_take": null,
+   "text": "And then the spin has only just begun to speed up."
+  },
+  {
+   "line": "vo09",
+   "kind": "closer",
+   "take": "V.c1",
+   "sub_take": null,
+   "text": "Part one of eight. Full video on YouTube."
+  }
+ ]
+}

@@ -46,13 +46,53 @@
   },
   {
    "id": "vo05",
-   "beat": "s11",
-   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+   "beat": "s12",
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 4.54,
-   "sha256": "a17c6dc84052400b28507ab35db978f3b22dcfb0d032121b05f806645e3feac3"
+   "dur": 4.83,
+   "sha256": "3256b870d8c6489740d2c8ba9f8607a235db79fa84ec7a26e805516c9f2c3c3f"
+  },
+  {
+   "id": "vo06",
+   "beat": "s13",
+   "text": "Now the spin speeds up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 1.28,
+   "sha256": "40564eae53bd86bf3c24041a080b62811936190319d412b689964676a7bae8fa"
+  },
+  {
+   "id": "vo07",
+   "beat": "cta",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 5.11,
+   "sha256": "e4527cfda3ba53e27b28101ffb005b988c52d0b5303f8e46e603f9aa22aa6f3e"
+  },
+  {
+   "id": "vo08",
+   "beat": "cliff",
+   "text": "And then the spin has only just begun to speed up.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 3.43,
+   "sha256": "56107facdd38922e10f1d7f0e50b0de27f03ac04d13759495380112647fbe01d"
+  },
+  {
+   "id": "vo09",
+   "beat": "tease",
+   "text": "Part one of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.35,
+   "sha256": "c71dba491687572826e602bd15885c140034971e457c77314bc7c33cb7f3c7fd"
   }
  ]
 }

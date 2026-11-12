@@ -33,10 +33,45 @@
  },
  {
   "kind": "sent",
-  "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
-  "take": "A.s011",
-  "uid": "s11",
+  "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter.",
+  "take": "A.s012",
+  "uid": "s12",
   "vo": "vo05",
-  "dur": 4.54
+  "dur": 4.83
+ },
+ {
+  "kind": "sent",
+  "text": "Now the spin speeds up.",
+  "take": "A.s013",
+  "uid": "s13",
+  "vo": "vo06",
+  "dur": 1.28
+ },
+ {
+  "kind": "cta",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "take": "V.cta_follow",
+  "sub_file": "vo/07-sub.wav",
+  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+  "take_sub": "V.cta_sub",
+  "uid": "cta",
+  "vo": "vo07",
+  "dur": 5.11
+ },
+ {
+  "kind": "cliff",
+  "text": "And then the spin has only just begun to speed up.",
+  "take": "V.p1_cliff",
+  "uid": "cliff",
+  "vo": "vo08",
+  "dur": 3.43
+ },
+ {
+  "kind": "closer",
+  "text": "Part one of eight. Full video on YouTube.",
+  "take": "V.c1",
+  "uid": "tease",
+  "vo": "vo09",
+  "dur": 3.35
  }
 ]

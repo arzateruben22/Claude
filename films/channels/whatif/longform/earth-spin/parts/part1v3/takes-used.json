@@ -36,9 +36,37 @@
   {
    "line": "vo05",
    "kind": "sent",
-   "take": "A.s011",
+   "take": "A.s012",
    "sub_take": null,
-   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour."
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s013",
+   "sub_take": null,
+   "text": "Now the spin speeds up."
+  },
+  {
+   "line": "vo07",
+   "kind": "cta",
+   "take": "V.cta_follow",
+   "sub_take": "V.cta_sub",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "line": "vo08",
+   "kind": "cliff",
+   "take": "V.p1_cliff",
+   "sub_take": null,
+   "text": "And then the spin has only just begun to speed up."
+  },
+  {
+   "line": "vo09",
+   "kind": "closer",
+   "take": "V.c1",
+   "sub_take": null,
+   "text": "Part one of eight. Full video on YouTube."
   }
  ]
 }
