@@ -6,8 +6,8 @@
 // through its exports only.
 import * as THREE from 'three';
 import { buildPerson, Person } from '../../people';
-import { baseBody, baseLook, defaultFace, HAIR_COLORS } from '../../people/params';
-import type { PersonOptions, Garment } from '../../people';
+import type { PersonOptions } from '../../people';
+import { staffPerson } from '../../cast';
 import type { Frame } from '../../engine/frame';
 import type { WalkGrid } from '../../engine/walkgrid';
 import type { P2 } from '../../engine/venue-def';
@@ -15,17 +15,10 @@ import { ClipLayer } from '../../engine/sim/clips';
 import { pathAt, pathLength } from './staff';
 import { LANE_PATH, HANDOFF, FN } from './layout';
 
-/** our uniform: a night-violet polo with a lime trim, dark trousers, black sneakers */
+/** our uniform: a night-violet polo with a lime trim, dark trousers, black sneakers, worn by one of the six (the cast,
+ *  src/onfoot/cast.ts, 2026-11-11): one of the three men or (f) the three women, by seed */
 export function staffOptions(seed: number, f: boolean): PersonOptions {
-  let s = seed >>> 0; const r = () => ((s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296);
-  const body = { ...baseBody(f ? 'f' : 'm'), age: 24 + Math.round(r() * 20), height: f ? 1.62 + r() * 0.08 : 1.72 + r() * 0.1, fat: 0.3 + r() * 0.25, muscle: 0.4 + r() * 0.2 };
-  const look = { ...baseLook(), skin: [0xeac0a4, 0xc99472, 0x9c6545, 0x65402f][Math.floor(r() * 4)], hair: (f ? 'ponytail' : r() < 0.5 ? 'short' : 'buzz') as PersonOptions['look']['hair'], hairColor: [HAIR_COLORS.black, HAIR_COLORS.darkBrown, HAIR_COLORS.brown][Math.floor(r() * 3)] };
-  const outfit: Garment[] = [
-    { kind: 'polo', color: 0x2c2758, fabric: 'cotton', sleeve: 0.25, neck: 'collar', accent: 0xc3f23a },
-    { kind: 'trousers', color: 0x1b1b20, fabric: 'cotton' },
-    { kind: 'sneakers', color: 0x161616, fabric: 'leather', accent: 0xf2f2f0 },
-  ];
-  return { seed, name: 'staff', body, face: defaultFace(f ? 'f' : 'm'), look, outfit, acc: { hoops: null, studs: null, chain: null, watch: null, bracelet: null, ring: null, bag: 'none', bagColor: 0x111111 } };
+  return staffPerson(seed, (f ? 3 : 0) + ((seed >>> 0) % 3), { kind: 'polo', color: 0x2c2758, sleeve: 0.25, neck: 'collar', accent: 0xc3f23a, trousers: 0x1b1b20 });
 }
 
 const FLOOR = 0.15;
