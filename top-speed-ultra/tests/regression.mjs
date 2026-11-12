@@ -4,7 +4,8 @@
 //   npm run build && npm test             every group
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
 //                                         progression, render, phone, nav-hud, launch, store, store-live, venues,
-//                                         venues-trips, cast, cast-seat, cast-seat-phone, cast-venues)
+//                                         venues-trips, cast, cast-seat, cast-seat-phone, cast-venues,
+//                                         cast-pack, cast-pack-seat, cast-pack-seat-phone, cast-pack-venues)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
 //                                         group's page-error check); the group still opens its page
@@ -91,6 +92,11 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
+// before a reload that must find what the page just saved: Chromium hands a page's localStorage writes on to its
+// storage service a moment later, and under this machine's load a reload straight after the write has lost it
+// (2026-11-12: the pack's TEST unlock and the tsu.test.keep flag were both gone after an immediate reload, and both
+// kept after a 3 s pause). A second page can't be used to watch for it: the group's init script would run there too.
+const settleStorage = (page) => page.waitForTimeout(3000);
 // after a page load: keep every result the game reports, so checks can read it; and the stopped-car helper below
 async function hook(page) {
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -3661,11 +3667,11 @@ const CAST_BUDGET = { 0: { tris: 90000, calls: 24 }, 1: { tris: 14000, calls: 2 
 await group('cast', async (use) => {
   const { page } = await use({ size: [1450, 767], settings: { presentation: 'f', skin: 0 } });
   let info = null;
-  await check('cast: the catalog has the six base characters (3 men, 3 women) and an empty pack', async () => {
+  await check('cast: the catalog has the six base characters (3 men, 3 women); the pack\'s two are apart from them', async () => {
     info = await game(page, () => window.__castInfo());
     const ids = info.cast.map((c) => c.id), men = info.cast.filter((c) => c.presentation === 'm').length;
     expect(ids.length === 6 && men === 3 && info.cast.every((c) => c.unlock === 'base'), JSON.stringify(ids));
-    expect(info.pack.unlock === 'pack' && info.pack.identities.length === 0, JSON.stringify(info.pack));
+    expect(info.pack.unlock === 'pack' && info.pack.identities.length === 2 && info.pack.identities.every((id) => !ids.includes(id)), JSON.stringify(info.pack));
     return `${ids.join(', ')}; pack '${info.pack.sku}' with ${info.pack.identities.length} identities`;
   });
   await check('cast: the six presets build within the phone budget (LOD 2, 1 and 0)', async () => {
@@ -3680,7 +3686,7 @@ await group('cast', async (use) => {
     await page.getByRole('button', { name: /^Character/ }).click();
     await page.waitForSelector('.cast-card');
     await page.waitForFunction(() => window.__castStage?.lod === 0, null, { timeout: 600000 });
-    const st = await game(page, () => ({ sel: document.querySelector('.cast-card.on b')?.textContent, closest: [...document.querySelectorAll('.cast-card')].find((c) => /Closest/.test(c.textContent))?.querySelector('b')?.textContent, cards: document.querySelectorAll('.cast-card').length, stage: window.__castStage, imgs: [...document.querySelectorAll('.cast-card img')].map((i) => i.naturalWidth) }));
+    const st = await game(page, () => ({ sel: document.querySelector('.cast-card.on b')?.textContent, closest: [...document.querySelectorAll('.cast-card')].find((c) => /Closest/.test(c.textContent))?.querySelector('b')?.textContent, cards: document.querySelectorAll('.cast-card:not(.pack)').length, stage: window.__castStage, imgs: [...document.querySelectorAll('.cast-card img')].map((i) => i.naturalWidth) }));
     await page.screenshot({ path: path.join(CAST_OUT, 'picker-1450x767.png') });
     await page.locator('.cast-card.on').scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(CAST_OUT, 'picker-1450x767-cards.png') });
@@ -3695,6 +3701,7 @@ await group('cast', async (use) => {
     const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings')).character);
     // the reload: the same page reloaded with the group's test settings no longer written over the save
     await game(page, () => localStorage.setItem('tsu.test.keep', '1'));
+    await settleStorage(page);
     await page.reload();
     await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
     await hook(page);
@@ -3708,23 +3715,28 @@ await group('cast', async (use) => {
     for (const c of info.cast) {
       const r = await game(page, (id) => { const g = window.__game; g.updateSettings({ ...g.settings, character: id }); return { arms: g.driverArms, ability: g.abilityId, driver: g.settings.driver }; }, c.id);
       const a = r.arms;
-      expect(a.skin === c.skin && a.tone === c.skin && a.presentation === c.presentation && a.sleeve === c.arms.sleeve && a.outfit === c.arms.outfit && a.watch === c.arms.watch && a.bracelet === c.arms.bracelet && a.gloves === null && a.nails === c.arms.nails, `${c.id}: ${JSON.stringify(a)}`);
+      expect(a.skin === c.skin && a.tone === c.skin && a.presentation === c.presentation && a.sleeve === c.arms.sleeve && a.outfit === c.arms.outfit && a.watch === c.arms.watch && a.bracelet === c.arms.bracelet && a.gloves === null && a.nails === c.arms.nails && (a.hairTie ?? null) === (c.arms.hairTie ?? null), `${c.id}: ${JSON.stringify(a)}`);
       expect(r.ability === ability0, `${c.id}: ability ${r.ability}, was ${ability0}`);
-      rows.push(`${c.id} #${a.tone.toString(16)} ${a.presentation} ${a.outfit} sleeve #${a.sleeve.toString(16)}${a.watch ? ' ' + a.watch + ' watch' : ''}${a.bracelet ? ' bangle' : ''}`);
+      rows.push(`${c.id} #${a.tone.toString(16)} ${a.presentation} ${a.outfit} sleeve #${a.sleeve.toString(16)}${a.watch ? ' ' + a.watch + ' watch' : ''}${a.bracelet ? ' bangle' : ''}${a.hairTie ? ' hair tie' : ''}`);
     }
+    // (2026-11-12) the six's own sleeves from hands-acc.ts' new options: Mateo's work-jacket cuff, Marcus's short sleeve,
+    // Leila's blazer cuff, Jas's bomber cuff and hair tie; Danny's and Kate's rolled sleeves as before
+    const want = { 'mateo-reyes': 'workcuff', 'danny-tran': 'work', 'marcus-bell': 'short', 'leila-farahani': 'blazer', 'jas-cruz': 'bomber', 'kate-morgan': 'work' };
+    for (const c of info.cast) expect(c.arms.outfit === want[c.id] && !c.arms.missing, `${c.id}: ${c.arms.outfit}, missing ${c.arms.missing}`);
+    expect(info.cast.find((c) => c.id === 'jas-cruz').arms.hairTie != null, 'Jas has no hair tie');
     // a tone change alone goes through setTone without a rebuild: the old look (no character), tone 1 to tone 3
     const t = await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, character: '', presentation: 'm', skin: 1 }); const a1 = g.driverArms; g.updateSettings({ ...g.settings, skin: 3 }); return { a1, a2: g.driverArms }; });
     expect(t.a2.tone === 0x8a5536 && t.a2.skin === 0x8a5536 && t.a1.tone === 0xd9a37f, JSON.stringify(t).slice(0, 300));
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, character: 'leila-farahani' }); });
     return rows.join('; ') + `; ability ${ability0} throughout; tone-only change set #${t.a2.tone.toString(16)}`;
   });
-  await check('cast: the two-character pack is in the catalog, not for sale, with one undecided price', async () => {
+  await check('cast: the two-character pack is in the catalog at 2222 cents, 18+, not for sale', async () => {
     const cat = JSON.parse(readFileSync(path.join(ROOT, 'src', 'store', 'catalog.json'), 'utf8')), sku = cat.find((x) => x.sku === 'cast-pack-duo');
-    expect(sku && sku.available === false && Number.isInteger(sku.price_cents) && /undecided/.test(sku.caveat) && /\$5 or \$10/.test(sku.caveat), JSON.stringify(sku));
+    expect(sku && sku.available === false && sku.price_cents === 2222 && sku.min_age === 18 && !('caveat' in sku) && sku.grants.includes('cast-pack-duo-characters') && sku.grants.includes('cast-pack-duo-scarlatta'), JSON.stringify(sku));
     // in the game: the store's own sale rule (src/store/catalog.ts saleState, forSale: what the store lists) says no
     const pk = (await game(page, () => window.__castInfo())).pack;
     expect(pk.inCatalog && !pk.onSale && !pk.listed, JSON.stringify(pk));
-    return `${sku.sku}: available ${sku.available}, ${sku.price_cents} cents (placeholder), "${sku.unavailable_reason}"`;
+    return `${sku.sku}: available ${sku.available}, ${sku.price_cents} cents, min_age ${sku.min_age}, "${sku.unavailable_reason}"`;
   });
 });
 await group('cast', async (use) => {
@@ -3736,17 +3748,17 @@ await group('cast', async (use) => {
     await page.screenshot({ path: path.join(CAST_OUT, 'picker-390x844.png') });
     await page.locator('.cast-card.on').scrollIntoViewIfNeeded();
     await page.screenshot({ path: path.join(CAST_OUT, 'picker-390x844-cards.png') });
-    const r = await game(page, () => { const b = [...document.querySelectorAll('.cast-card')].map((c) => c.getBoundingClientRect()); return { n: b.length, minW: Math.min(...b.map((x) => x.width)), minH: Math.min(...b.map((x) => x.height)), right: Math.max(...b.map((x) => x.right)), vw: innerWidth, mine: document.querySelector('.cast-card.mine b')?.textContent, stage: window.__castStage }; });
+    const r = await game(page, () => { const b = [...document.querySelectorAll('.cast-card:not(.pack)')].map((c) => c.getBoundingClientRect()); return { n: b.length, minW: Math.min(...b.map((x) => x.width)), minH: Math.min(...b.map((x) => x.height)), right: Math.max(...b.map((x) => x.right)), vw: innerWidth, mine: document.querySelector('.cast-card.mine b')?.textContent, stage: window.__castStage }; });
     expect(r.n === 6 && r.minW >= 44 && r.minH >= 44 && r.right <= r.vw && r.mine === 'Jas Cruz', JSON.stringify(r));
     return `6 cards, smallest ${Math.round(r.minW)}x${Math.round(r.minH)}; ${r.mine} marked; turntable LOD ${r.stage.lod} ${r.stage.tris} tris`;
   });
 });
 // the seat view of all six, Day, in the Rossini GT
-async function castSeat(page, tag) {
+async function castSeat(page, tag, pack = false) {
   await drive(page, 'Free Drive');
   const info = await game(page, () => window.__castInfo());
   const rows = [];
-  for (const c of info.cast) {
+  for (const c of pack ? info.packIds : info.cast) {
     await game(page, (id) => { const g = window.__game; g.updateSettings({ ...g.settings, character: id }); g.setCam('cockpit'); }, c.id);
     await frames(page, 4);
     await page.screenshot({ path: path.join(CAST_OUT, `seat-${c.id}-${tag}.png`) });
@@ -3756,7 +3768,7 @@ async function castSeat(page, tag) {
   }
   // from the hood and the chase camera: what of the driver shows there (the arms through the glass; there is no
   // driver's head or torso model)
-  if (tag === '1280x720') for (const cam of ['hood', 'chase']) {
+  if (tag === '1280x720' && !pack) for (const cam of ['hood', 'chase']) {
     await game(page, (cam) => window.__game.setCam(cam), cam);
     await frames(page, 4);
     await page.screenshot({ path: path.join(CAST_OUT, `seat-${cam}-${tag}.png`) });
@@ -3831,6 +3843,179 @@ await group('cast-venues', async (use) => {
       const cf = await crowdFrame(page, `venue-${tag}-crowd.png`);
       await driveByButton(page);
       return `avatar ${c.avatar} (#${c.skin.toString(16)}, ${c.hair}, ${c.height} m); ${c.people} people: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ')}; crowd frame of ${cf?.n ?? 0} people, looks ${cf?.looks?.join(', ')}`;
+    });
+  }
+});
+
+// The pack characters (PROJECT_OC_CAST.md, "The Chad & Chadaline pack"): cast.ts CAST_PACK's two identities. 'cast-pack':
+// both build within the people builder's phone budget; without the pack they are locked (the picker shows them locked
+// with the coming-soon line, a saved pack character is not played); the TEST switch of a test-mode build unlocks them
+// without granting the store's entitlement, the choice is saved and restored, and the cockpit arms follow (the suit
+// cuff over a white shirt cuff; the fur sleeve with the gold watch and ring); the store's entitlement unlocks them too;
+// the store entry is 2222 cents, 18+, not for sale. 'cast-pack-seat', 'cast-pack-seat-phone': the seat view of both
+// in the Rossini GT (Day), and full lock both ways. 'cast-pack-venues': each of the two on foot in Lot 57 and
+// Stoppage Time, and nobody in either crowd is a pack character.
+const PACK_BUDGET = CAST_BUDGET;
+await group('cast-pack', async (use) => {
+  const { page } = await use({ size: [1450, 767], settings: { character: 'chad', presentation: 'm', skin: 1 } });
+  let info = null;
+  await check('cast pack: the catalog has Chad and Chadaline in the pack category, not among the six', async () => {
+    info = await game(page, () => window.__castInfo());
+    const ids = info.packIds.map((c) => c.id);
+    expect(ids.join() === 'chad,chadaline' && info.packIds.every((c) => c.unlock === 'pack') && info.packIds[0].presentation === 'm' && info.packIds[1].presentation === 'f' && !info.cast.some((c) => ids.includes(c.id)), JSON.stringify(info.packIds).slice(0, 300));
+    return `${ids.join(', ')} (unlock pack); the six: ${info.cast.map((c) => c.id).join(', ')}`;
+  });
+  await check('cast pack: both build within the phone budget (LOD 2, 1 and 0)', async () => {
+    const rows = await game(page, () => window.__castBudget(true));
+    writeFileSync(path.join(CAST_OUT, 'budget-pack.json'), JSON.stringify(rows, null, 1));
+    for (const r of rows) for (const l of [0, 1, 2]) expect(r[l].tris <= PACK_BUDGET[l].tris && r[l].calls <= PACK_BUDGET[l].calls, `${r.id} LOD ${l}: ${JSON.stringify(r[l])} over ${JSON.stringify(PACK_BUDGET[l])}`);
+    return rows.map((r) => `${r.id} ${r[2].tris}/${r[1].tris}/${r[0].tris} tris, ${r[0].calls} calls, ${r[2].ms}+${r[1].ms}+${r[0].ms} ms`).join('; ');
+  });
+  await check('cast pack: locked without the pack: a saved pack character is not played, the picker shows the two locked with the coming-soon line', async () => {
+    const before = await game(page, () => ({ arms: window.__game.driverArms, s: JSON.parse(localStorage.getItem('tsu.settings')), menu: [...document.querySelectorAll('.pick')].map((p) => p.textContent).find((t) => /Character/.test(t)), lock: null }));
+    expect(info.lock.unlocked === false && info.lock.owned === false && info.lock.testOffered === true && info.lock.offer.price === '$22.22', JSON.stringify(info.lock));
+    // the save names chad, but the arms are the old look's (tone 1 of the old skin list, male) and the menu offers a choice
+    expect(before.s.character === 'chad' && before.arms.skin === 0xd9a37f && before.arms.outfit !== 'jacket' && /Choose/.test(before.menu), JSON.stringify(before).slice(0, 400));
+    await page.getByRole('button', { name: /^Character/ }).click();
+    await page.waitForSelector('.cast-card.pack');
+    await page.getByRole('radio', { name: /Chad\b/ }).click();
+    await page.waitForFunction(() => window.__castStage?.id === 'chad' && window.__castStage.lod === 0, null, { timeout: 600000 });
+    const st = await game(page, () => { const b = document.querySelector('.cast-pick ~ .row .btn.primary'); return { cards: document.querySelectorAll('.cast-card.pack').length, locked: document.querySelectorAll('.cast-card.pack.locked').length, six: document.querySelectorAll('.cast-card:not(.pack)').length, state: document.getElementById('cast-pack-state')?.textContent, btn: b.textContent, disabled: b.disabled, test: document.getElementById('cast-pack-test')?.textContent, stage: window.__castStage, imgs: [...document.querySelectorAll('.cast-card.pack img')].map((i) => i.naturalWidth) }; });
+    await page.locator('.cast-pack').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-locked-1450x767.png') });
+    expect(st.cards === 2 && st.locked === 2 && st.six === 6 && st.disabled === true && st.btn === 'Chad & Chadaline pack: coming soon, $22.22, 18+' && /Coming soon · \$22\.22 · 18\+/.test(st.state) && st.test === 'TEST: try the pack' && st.stage.id === 'chad' && st.imgs.every((w) => w > 0), JSON.stringify(st));
+    return `saved 'chad' not played (arms #${before.arms.skin.toString(16)}, menu "${before.menu}"); picker: 2 locked cards, button "${st.btn}" disabled; preview turntable of chad at LOD ${st.stage.lod}, ${st.stage.tris} tris`;
+  });
+  const owned0 = await game(page, () => localStorage.getItem('ocu.store.owned'));
+  await check('cast pack: the TEST switch unlocks both without a store entitlement; the choice is saved, restored on reload, and the arms follow', async () => {
+    await page.locator('#cast-pack-test').click();
+    await page.waitForFunction(() => document.querySelectorAll('.cast-card.pack.locked').length === 0);
+    const un = await game(page, () => ({ state: document.getElementById('cast-pack-state')?.textContent, chips: [...document.querySelectorAll('.cast-card.pack em.test')].length, test: document.getElementById('cast-pack-test')?.textContent, btn: document.querySelector('.cast-pick ~ .row .btn.primary').textContent }));
+    await page.locator('.cast-pack').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-test-1450x767.png') });
+    // (the save already named chad: once unlocked he is the one driving, so the button says so)
+    expect(/TEST unlock on/.test(un.state) && un.chips === 2 && un.test === 'TEST: lock the pack again' && /Chad/.test(un.btn), JSON.stringify(un));
+    await page.getByRole('radio', { name: /Chadaline/ }).click();
+    await page.waitForFunction(() => window.__castStage?.id === 'chadaline' && window.__castStage.lod === 0, null, { timeout: 600000 });
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-test-chadaline-1450x767.png') });
+    await page.getByRole('button', { name: 'Drive as Chadaline' }).click();
+    const lock = (await game(page, () => window.__castInfo())).lock, owned1 = await game(page, () => localStorage.getItem('ocu.store.owned'));
+    expect(lock.unlocked === true && lock.owned === false && owned1 === owned0, JSON.stringify({ lock, owned0, owned1 }));
+    await game(page, () => localStorage.setItem('tsu.test.keep', '1'));
+    await settleStorage(page);
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await hook(page);
+    const after = await game(page, () => ({ s: window.__game.settings.character, t: window.__game.settings.packTest, arms: window.__game.driverArms, menu: [...document.querySelectorAll('.pick')].map((p) => p.textContent).find((t) => /Character/.test(t)) }));
+    await game(page, () => localStorage.removeItem('tsu.test.keep'));
+    const f = info.packIds[1], a = after.arms;
+    expect(after.s === 'chadaline' && after.t === true && /Chadaline/.test(after.menu) && a.skin === f.skin && a.tone === f.skin && a.presentation === 'f' && a.outfit === 'fur' && a.sleeve === f.arms.sleeve && a.watch === 'gold' && a.ring === true && a.nails === f.arms.nails && a.gloves === null, JSON.stringify(after).slice(0, 500));
+    const m = info.packIds[0];
+    const r = await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, character: 'chad' }); return { arms: g.driverArms, ability: g.abilityId }; });
+    expect(r.arms.skin === m.skin && r.arms.tone === m.skin && r.arms.presentation === 'm' && r.arms.outfit === 'jacket' && r.arms.sleeve === m.arms.sleeve && r.arms.cuff === m.arms.cuff && r.arms.watch === null && r.arms.gloves === null, JSON.stringify(r).slice(0, 400));
+    // locked again (the switch off): the same save is not played
+    const off = await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, packTest: false }); return g.driverArms; });
+    expect(off.outfit !== 'jacket' && off.skin !== m.skin, JSON.stringify(off).slice(0, 200));
+    return `TEST unlock: state "${un.state}", store ledger unchanged (owned ${lock.owned}); reloaded as ${after.s} (menu "${after.menu}"): arms #${a.tone.toString(16)} f fur sleeve #${a.sleeve.toString(16)}, gold watch, ring, nails #${a.nails.toString(16)}; chad: #${r.arms.tone.toString(16)} m jacket #${r.arms.sleeve.toString(16)} over cuff #${r.arms.cuff.toString(16)}, ability ${r.ability}; switch off: back to the look without a character`;
+  });
+  await check('cast pack: the store\'s entitlement unlocks the pack (a test-mode ledger entry, as a purchase would write it)', async () => {
+    await game(page, () => {
+      const sess = { userId: 'test-pack-owner', email: 'pack-owner@example.test', test: true, since: Date.now() };
+      localStorage.setItem('ocu.store.session', JSON.stringify(sess));
+      localStorage.setItem('ocu.store.owned', JSON.stringify({ [sess.userId]: { items: [{ entitlement: 'cast-pack-duo-characters', sku: 'cast-pack-duo', granted_at: new Date().toISOString() }], at: Date.now() } }));
+      const s = JSON.parse(localStorage.getItem('tsu.settings')); s.packTest = false; s.character = 'chad'; localStorage.setItem('tsu.settings', JSON.stringify(s));
+      localStorage.setItem('tsu.test.keep', '1');
+    });
+    await settleStorage(page);
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await hook(page);
+    const r = await game(page, async () => ({ lock: (await window.__castInfo()).lock, arms: window.__game.driverArms, t: window.__game.settings.packTest }));
+    await game(page, () => { localStorage.removeItem('tsu.test.keep'); localStorage.removeItem('ocu.store.session'); localStorage.removeItem('ocu.store.owned'); });
+    expect(r.t === false && r.lock.owned === true && r.lock.unlocked === true && r.arms.outfit === 'jacket', JSON.stringify(r).slice(0, 400));
+    return `owned ${r.lock.owned}, unlocked ${r.lock.unlocked} with the TEST switch off; chad drives (jacket sleeve)`;
+  });
+  await check('cast pack: the store entry is 2222 cents, 18+, grants the two characters and the reserved car, and is not for sale', async () => {
+    const cat = JSON.parse(readFileSync(path.join(ROOT, 'src', 'store', 'catalog.json'), 'utf8')), sku = cat.find((x) => x.sku === 'cast-pack-duo');
+    const srv = JSON.parse(readFileSync(path.join(ROOT, 'server', 'supabase', 'functions', '_shared', 'catalog.json'), 'utf8'));
+    const ss = (Array.isArray(srv) ? srv : srv.skus ?? Object.values(srv)).find((x) => x.sku === 'cast-pack-duo');
+    expect(sku.price_cents === 2222 && sku.available === false && sku.min_age === 18 && sku.grants.join() === 'cast-pack-duo-characters,cast-pack-duo-scarlatta', JSON.stringify(sku));
+    expect(ss && ss.price_cents === 2222 && ss.available === false, JSON.stringify(ss ?? null).slice(0, 200));
+    const pk = (await game(page, () => window.__castInfo())).pack;
+    expect(pk.inCatalog && !pk.onSale && !pk.listed, JSON.stringify(pk));
+    return `client and server copies: ${sku.price_cents} cents, available ${sku.available}, min_age ${sku.min_age}; the store lists it: ${pk.listed}`;
+  });
+});
+await group('cast-pack', async (use) => {
+  const { page } = await use({ phone: true, settings: { character: 'jas-cruz' } });
+  await check('cast pack phone: the picker at 390x844, locked and with the TEST unlock', async () => {
+    await page.getByRole('button', { name: /^Character/ }).click();
+    await page.waitForSelector('.cast-card.pack');
+    await page.getByRole('radio', { name: /Chadaline/ }).click();
+    await page.waitForFunction(() => window.__castStage?.id === 'chadaline' && window.__castStage.lod === 0, null, { timeout: 600000 });
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-locked-390x844-top.png') });
+    await page.locator('.cast-pack').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-locked-390x844.png') });
+    const a = await game(page, () => { const b = [...document.querySelectorAll('.cast-card.pack')].map((c) => c.getBoundingClientRect()), t = document.getElementById('cast-pack-test').getBoundingClientRect(); return { n: b.length, locked: document.querySelectorAll('.cast-card.pack.locked').length, minW: Math.min(...b.map((x) => x.width)), minH: Math.min(...b.map((x) => x.height)), right: Math.max(...b.map((x) => x.right), t.right), vw: innerWidth, testH: t.height, btn: document.querySelector('.cast-pick ~ .row .btn.primary').textContent, dis: document.querySelector('.cast-pick ~ .row .btn.primary').disabled }; });
+    expect(a.n === 2 && a.locked === 2 && a.minW >= 44 && a.minH >= 44 && a.testH >= 40 && a.right <= a.vw && a.dis && /coming soon, \$22\.22, 18\+/.test(a.btn), JSON.stringify(a));
+    await page.locator('#cast-pack-test').click();
+    await page.waitForFunction(() => document.querySelectorAll('.cast-card.pack.locked').length === 0);
+    await page.locator('.cast-pack').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(CAST_OUT, 'pack-picker-test-390x844.png') });
+    const b = await game(page, () => ({ btn: document.querySelector('.cast-pick ~ .row .btn.primary').textContent, dis: document.querySelector('.cast-pick ~ .row .btn.primary').disabled, chips: document.querySelectorAll('.cast-card.pack em.test').length }));
+    expect(b.btn === 'Drive as Chadaline' && !b.dis && b.chips === 2, JSON.stringify(b));
+    return `locked: 2 cards (smallest ${Math.round(a.minW)}x${Math.round(a.minH)}), button "${a.btn}" disabled; after TEST: "${b.btn}" enabled, ${b.chips} TEST chips`;
+  });
+});
+async function packLock(page, id, tag) {
+  await game(page, (id) => { const g = window.__game; g.updateSettings({ ...g.settings, character: id }); g.setCam('cockpit'); }, id);
+  await page.keyboard.down('ArrowDown'); await frames(page, 10); await page.keyboard.up('ArrowDown');
+  const out = [];
+  for (const key of ['ArrowLeft', 'ArrowRight']) {
+    await page.keyboard.down(key); await frames(page, 12);
+    out.push(await game(page, () => ({ wheel: window.__game.car.wheelAngle, v: window.__game.phys.vx })));
+    await page.screenshot({ path: path.join(CAST_OUT, `pack-seat-${id}-lock-${key === 'ArrowLeft' ? 'left' : 'right'}-${tag}.png`) });
+    await page.keyboard.up(key); await frames(page, 6);
+  }
+  expect(out[0].wheel > 0.6 && out[0].wheel <= 1.05 && out[1].wheel < -0.6 && out[1].wheel >= -1.05, JSON.stringify(out));
+  return `${id}: ${out.map((o) => `${o.wheel.toFixed(3)} rad at ${o.v.toFixed(1)} m/s`).join(', ')}`;
+}
+await group('cast-pack-seat', async (use) => {
+  const { page } = await use({ size: [1280, 720], settings: { time: 'day', packTest: true } });
+  await check('cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 1280x720', async () => `${(await castSeat(page, '1280x720', true)).join(', ')}`);
+  await check('cast pack seat: full lock both ways with each (the drawn wheel inside the hands\' range)', async () => `${await packLock(page, 'chad', '1280x720')}; ${await packLock(page, 'chadaline', '1280x720')}`);
+});
+await group('cast-pack-seat-phone', async (use) => {
+  const { page } = await use({ phone: true, dpr: 3, settings: { time: 'day', packTest: true } });
+  await check('cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 390x844 at DPR 3', async () => `${(await castSeat(page, '390x844', true)).join(', ')}`);
+});
+for (const who of ['chad', 'chadaline']) await group('cast-pack-venues', async (use) => {
+  const { page } = await use({ size: [1280, 720], settings: { time: 'sunset', character: who, packTest: true } });
+  await drive(page, 'Free Drive');
+  const info = await game(page, () => window.__castInfo());
+  const base = new Set(info.cast.map((c) => c.id)), me = info.packIds.find((c) => c.id === who);
+  for (const [venue, tag] of [['Lot 57', 'lot57'], ['Stoppage Time', 'stoppage']]) {
+    await check(`cast pack venues: ${venue} as ${who}: the avatar is the pack character; nobody in the crowd is one`, async () => {
+      const r = await autoDriveTo(page, venue);
+      expect(r.venue?.phase === 'parked', JSON.stringify(r).slice(0, 200));
+      const out = await getOut(page);
+      expect(out.ok && out.ready, JSON.stringify(out));
+      if (venue === 'Lot 57') await game(page, () => { const o = window.__onfoot; o.peopleReady && o.sim(3, true, true); });
+      const c = await game(page, () => window.__onfoot.cast());
+      expect(c.avatar === who && c.choice === who && c.skin === me.skin, JSON.stringify({ avatar: c.avatar, choice: c.choice, skin: c.skin }));
+      expect(c.people > 0 && c.notCast === 0 && c.pool.every((x) => base.has(x)) && !c.pool.includes('chad') && !c.pool.includes('chadaline'), JSON.stringify(c.pool));
+      await game(page, () => { const o = window.__onfoot; o.view('third'); o.look(200, -10); });
+      for (let i = 0; i < 3; i++) await game(page, () => window.__onfoot.render?.());
+      await page.waitForTimeout(1500);
+      await page.screenshot({ path: path.join(CAST_OUT, `pack-venue-${tag}-${who}.png`) });
+      // and from the front (the camera turned round to face the avatar)
+      await game(page, () => { const o = window.__onfoot; o.look(20, -6); });
+      for (let i = 0; i < 3; i++) await game(page, () => window.__onfoot.render?.());
+      await page.waitForTimeout(1200);
+      await page.screenshot({ path: path.join(CAST_OUT, `pack-venue-${tag}-${who}-front.png`) });
+      await game(page, () => window.__onfoot.view('first'));
+      await driveByButton(page);
+      return `avatar ${c.avatar} (#${c.skin.toString(16)}, ${c.hair}, ${c.height} m); ${c.people} people, all from the six: ${[...new Set(c.pool)].join(', ')}`;
     });
   }
 });

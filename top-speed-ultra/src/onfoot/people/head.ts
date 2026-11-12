@@ -80,6 +80,12 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     // jowls with age and weight
     if (old + fat > 0.7) E([sg * 0.032, -0.088 - 0.004 * old, 0.0], 0.016, 0.014 + 0.008 * fat, 0.016 + 0.006 * fat, 0.02);
   }
+  // (FaceShape.jawSoft, pack 2026-11-12: unset for every other face, which builds exactly as before)
+  if (F.jawSoft) for (const sg of [1, -1]) {
+    const q = F.jawSoft;
+    E([sg * 0.0265, -0.08, 0.003], 0.0165 * q, 0.0165, 0.0165 * q, 0.02);
+    E([sg * 0.038 * Math.min(jw, 1.05), -0.066, -0.022], 0.0135 * q, 0.022, 0.026, 0.022);
+  }
   E([0, -0.07, -0.036], 0.032 * jw, 0.028, 0.04, 0.022);
   E([0, -0.069, 0.002], 0.029, 0.024, 0.019, 0.016);
   E([0, -0.0535, 0.0186], 0.0112, 0.0072, 0.0066, 0.006);
