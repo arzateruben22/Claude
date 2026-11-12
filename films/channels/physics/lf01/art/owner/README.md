@@ -29,3 +29,9 @@ Disclose as above. Files go in `plates/` as `plate-NN-<name>-16x9.png` / `-9x16.
 | 07 | window at dusk, storm | lightning (Part 6) | to come | to come |
 | 08 | table in near-darkness | optional now: plate 09 covers Parts 7 and 8 (use a tighter crop of 09 for variety) | optional | optional |
 | 09 | the whole kitchen at night from the doorway: one warm under-cabinet light on the left, blue window, table centre | light crawling (Parts 7 and 8): the lamp switches on and its light front crawls across the room | `plate-09-night-16x9.png` | to come |
+
+## Upload of 12 Nov 2026 (owner; arrived on claude/whatif-s2 80802854 by mistake, copied here)
+9:16 plates (plates/): 01 wide, 02 feeder, 05 sink (+ alt), 06 apple, 09 night, and a new 10 windowsill (for the fly in Part 2).
+Still missing: 03 tap+mug 9:16 (crop the 16:9 until it arrives), 04 stove pan from above, 07 storm window at dusk.
+Cover heroes (covers/), AI illustrations, disclose "Thumbnail illustration made with AI": p1 hummingbird (9:16, alt, 16:9),
+p2 crown (+ alt), p3 popcorn (+ alt), p4 clap (+ alt), p5 apple (+ alt). Original file names are in the commit message.
