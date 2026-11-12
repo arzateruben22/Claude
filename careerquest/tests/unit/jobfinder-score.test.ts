@@ -155,6 +155,16 @@ describe("scoreRow", () => {
     expect(degree.ruledOutReason).toMatch(/credential/);
     expect(scoreRow(row({ verdict: verdict({}) })).fitBasis).toBe("goals");
   });
+  it("treats legal eligibility as something to confirm, never as a gap or a block", () => {
+    const g = parseGaps([
+      "HARD: must meet export control compliance requirements (a legal eligibility condition, normally U.S. person status)",
+      "HARD: U.S. person eligibility for access to Controlled Data (ITAR) - status unknown",
+      "SOFT: authorized to work in the United States without sponsorship",
+    ]);
+    expect(g.confirm).toHaveLength(3);
+    expect(g.hard).toEqual([]);
+    expect(g.soft).toEqual([]);
+  });
   it("merges the same posting written two ways and prefers the checked copy", () => {
     const first = scoreRow(row({ employer: "Los Angeles Department of Water and Power (LADWP)", title: "Utility Pre-Craft Trainee (UPCT)", postingUrl: "https://example.org/a", verdict: null }));
     const second = scoreRow(row({ employer: "Los Angeles Department of Water and Power", title: "Utility Pre-Craft Trainee (UPCT) - Local 18 list", postingUrl: "https://example.org/b", verdict: verdict({ stillOpenConfidence: 0.4 }) }));

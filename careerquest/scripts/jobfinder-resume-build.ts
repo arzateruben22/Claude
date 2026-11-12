@@ -83,7 +83,7 @@ export function cleanContact(c: ContactResearch | null): ContactResearch | null 
   return { ...c, contacts: (c.contacts ?? []).filter((x) => x && x.value && okUrl(x.sourceUrl) && !personal(x)).slice(0, 5) };
 }
 
-export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[] } = {}) {
+export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[]; label?: string } = {}) {
   const { rows, searched, notFound, slices, verifyPending, watch } = readJournals(dirs, opts.leads ?? []);
   const scored = rows.map(scoreRow);
   const sel = select(scored, { best: 99, stretch: 99, maxPerEmployer: 2 });
@@ -97,7 +97,8 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
   const more = [...ranked.filter((j) => !chosenIds.has(j.id)), ...sel.bench];
   const kits = readKits(opts.kitDirs ?? []);
   const fmt = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-  const label = fmt(date);
+  // A run that spans more than one day says so instead of dating every check to the last day.
+  const label = opts.label ?? fmt(date);
   const page = (j: ScoredJob, extra = false) => {
     const k = kits.get(j.id);
     return { ...trimJob(j), extra, contact: cleanContact(k?.contact ?? null), kit: k ? { written: k.written, corrected: k.corrected } : null };
@@ -180,7 +181,7 @@ function main() {
   const kitDirs = (arg("kits") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const leadsFile = arg("leads");
   const leads: Candidate[] = leadsFile && existsSync(leadsFile) ? JSON.parse(readFileSync(leadsFile, "utf8")) : [];
-  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads });
+  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads, label: arg("label") });
   const write = (file: string | undefined, text: string) => {
     if (!file) return;
     mkdirSync(path.dirname(file), { recursive: true });

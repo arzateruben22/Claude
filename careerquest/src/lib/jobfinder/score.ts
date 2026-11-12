@@ -178,6 +178,9 @@ export type Gaps = {
   preferred: string[];
 };
 
+/** Legal eligibility (citizenship, export-control "U.S. person" status, clearance, work authorization): the
+ * applicant's status is never assumed, so these are things to confirm, not qualification gaps. */
+const ELIGIBILITY_RE = /export[- ]control|\bitar\b|u\.?s\.? person|citizenship|\bcitizen\b|security clearance|\bclearance\b|work authori[sz]ation|authori[sz]ed to work|sponsorship/i;
 const PREFERRED_RE = /\bprefer|\bdesir|\ba plus\b|nice to have/i;
 const CONDITION_RE =
   /\bshifts?\b|availab|overtime|on-call|holidays|weekends|\bnights?\b|physical|\bclimb|\blift|heights|hand tools|own tools|tools of the trade|\bdrug\b|screening|background check|medical|color vision|emergenc|re-sign|waiting list|assessment|\binterview|\bexam\b|\btests?\b|^timing|qualification training/i;
@@ -214,6 +217,7 @@ export function parseGaps(lines: string[] | undefined): Gaps {
     // "Preferred" is usually said in a bracket right after the requirement, so look a little further.
     const head = text.slice(0, 200);
     if (DRIVING_RE.test(lead)) gaps.driving.push(text);
+    else if (ELIGIBILITY_RE.test(head)) gaps.confirm.push(text); // head, not lead: "U.S." ends the leading clause early
     else if (PAPERWORK_RE.test(lead) && !isExperience) gaps.confirm.push(text);
     else if (labelledHard && CREDENTIAL_RE.test(lead) && !isExperience) gaps.hard.push(text);
     else if (NOT_A_GAP_RE.test(head)) continue;

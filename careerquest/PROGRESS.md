@@ -212,10 +212,14 @@ Requests **not** applied, and why (candidates for a later stage):
   and page were built outside the repository and published only to the private artifact; tailored documents
   are stored only in the applicant's private artifact records. The profile and role families are workflow
   arguments, not file contents.
-- Résumé-matched result: 9 role families searched, 19 postings found, 6 held up (all "stretch": each asks for
-  something the résumé does not show), 13 ruled out (closed, degree required, outside LA/OC, or under 35%
-  résumé match). Short of the 10 requested. Cause: web search surfaced about two usable employer postings per
-  twelve searches and the 200-call allowance ran out; job sites are not on the environment's allowed hosts.
+- Résumé-matched result over two days (2026-11-11 and 11-12): 15 role families searched, 33 postings found,
+  10 held up and were given application kits (all "stretch": each asks for something the résumé does not
+  show, stated on its card), the rest ruled out (closed, degree required with no alternative, outside LA/OC,
+  or under 35% résumé match). Single-employer queries worked far better than role-wide ones: web search
+  surfaced about two usable employer postings per twelve searches, and job sites are not on the
+  environment's allowed hosts, so every posting was read from search extracts, not from the live page.
+- Engine since: legal eligibility (citizenship, export control, clearance, work authorization) is listed
+  under "confirm", never assumed and never counted as a gap. 30 unit tests.
 - Next exact step when asked: re-run `jobfinder/sweep.workflow.js` with `leadIdx` for the listed leads to
   refresh open status (postings age quickly), plus finders for slices not yet covered (see the watch list in
   `data/jobs/2026-11-11.json`); rebuild with `--leads data/jobs/<date>.leads.json` and republish.
