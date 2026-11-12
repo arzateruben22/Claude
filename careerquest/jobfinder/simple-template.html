@@ -62,8 +62,8 @@ a { color: inherit; }
 .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 56px; align-items: start; }
 @media (min-width: 900px) { .split { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); } }
 .left { min-width: 0; }
-.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; margin-bottom: 12px; background: var(--fill); border-radius: 9px; }
-.seg a { display: block; text-align: center; padding: 7px 10px; border-radius: 7px; font: 500 14px/1.25 var(--font); text-decoration: none; color: var(--text); }
+.seg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.45fr); gap: 2px; padding: 2px; margin-bottom: 12px; background: var(--fill); border-radius: 9px; }
+.seg a { display: block; text-align: center; padding: 7px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius: 7px; font: 500 14px/1.25 var(--font); text-decoration: none; color: var(--text); }
 .seg a[aria-selected="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
 .seg span { margin-left: 4px; color: var(--text-2); font-weight: 500; font-variant-numeric: tabular-nums; }
 .empty { list-style: none; padding: 28px 18px; text-align: center; color: var(--text-2); background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; }
@@ -78,6 +78,7 @@ a { color: inherit; }
 .tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; background: var(--fill); font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .tag-strong { background: var(--ink); color: var(--on-ink); }
 .tag-ok { background: var(--ok-fill); color: var(--ok); }
+.tag-off { color: var(--text-2); }
 
 .detail { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 18px; padding: 28px; min-width: 0; }
 @media (min-width: 900px) {
@@ -99,6 +100,9 @@ a { color: inherit; }
 .files { margin-top: 10px; font-size: 12px; color: var(--text-3); overflow-wrap: anywhere; }
 .status-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); font-size: 15px; color: var(--text-2); }
 .status-row b { color: var(--ok); font-weight: 600; }
+.status-row b.off { color: var(--text); }
+.status-row .why { flex-basis: 100%; }
+.reasons { display: flex; flex-wrap: wrap; gap: 8px; flex-basis: 100%; }
 .good { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
 .good h3 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
 .good ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; }
@@ -139,6 +143,7 @@ a { color: inherit; }
       <nav class="seg" role="tablist" aria-label="Your jobs">
         <a href="#jobs" role="tab" id="tab-jobs">Jobs<span id="n-jobs"></span></a>
         <a href="#applied" role="tab" id="tab-applied">Applied<span id="n-applied"></span></a>
+        <a href="#unavailable" role="tab" id="tab-unavailable">Not available<span id="n-unavailable"></span></a>
       </nav>
       <ul class="results" id="results" aria-label="Jobs"></ul>
     </div>
@@ -167,6 +172,11 @@ a { color: inherit; }
   JOBS.forEach(function (j) { var st = state.jobs[j.id]; if (st && (st.resumeDoc || st.letter || st.outreach)) docs[j.id] = { resumeDoc: st.resumeDoc, letter: st.letter, outreach: st.outreach }; });
   var mainRef = null, saveTimer = null, saving = false, dirty = false;
   var downloads = null, dlChecked = false, current = null, listY = 0, busy = false, tab = "jobs";
+  // The three lists. "Not available" holds jobs you could not apply to, with the reason you picked.
+  var TAB_NAME = { jobs: "All jobs", applied: "Applied", unavailable: "Not available" };
+  var EMPTY = { jobs: "Nothing left here: every job is under Applied or Not available.", applied: "Jobs you mark as applied show up here, with the date you applied.", unavailable: "Jobs you couldn't apply to show up here, with the reason." };
+  var REASONS = ["Posting closed", "Not eligible", "Not interested", "Other reason"];
+  var picking = null;
   var wide = window.matchMedia ? window.matchMedia("(min-width: 900px)") : { matches: true };
 
   var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
@@ -351,12 +361,13 @@ a { color: inherit; }
       '<span class="job-title">' + esc(j.title) + "</span>" +
       '<span class="job-co">' + esc(j.company) + "</span>" +
       '<span class="job-loc">' + esc(j.city) + " · " + esc(away(j)) + "</span>" +
-      '<span class="tags"><span class="tag">' + esc(pay(j)) + "</span>" + (j.bestFit ? '<span class="tag tag-strong">Best fit</span>' : "") + (st.status === "applied" ? '<span class="tag tag-ok">Applied' + (st.appliedOn ? " " + esc(shortDate(st.appliedOn)) : "") + "</span>" : "") + "</span></a></li>";
+      '<span class="tags"><span class="tag">' + esc(pay(j)) + "</span>" + (j.bestFit ? '<span class="tag tag-strong">Best fit</span>' : "") + (st.status === "applied" ? '<span class="tag tag-ok">Applied' + (st.appliedOn ? " " + esc(shortDate(st.appliedOn)) : "") + "</span>" : "") +
+      (st.status === "unavailable" ? '<span class="tag tag-off">' + esc(st.reason || "Not available") + "</span>" : "") + "</span></a></li>";
   }
   function detail(j) {
     if (!j) return '<p class="hint">Pick a job from the list.</p>';
     var st = peek(j.id), url = safeUrl(j.url), d = docs[j.id] || {}, h = [];
-    h.push('<a class="back" href="#' + tab + '">' + (tab === "applied" ? "Applied" : "All jobs") + "</a>");
+    h.push('<a class="back" href="#' + tab + '">' + (TAB_NAME[tab] || "All jobs") + "</a>");
     h.push('<h2 class="d-title">' + esc(j.title) + '</h2><p class="d-co">' + esc(j.company) + '</p><p class="d-meta">' + esc(j.city) + " · " + esc(away(j)) + (j.posted ? " · Posted " + esc(j.posted) : "") + '</p><p class="d-pay">' + esc(pay(j)) + "</p>");
     h.push('<div class="d-actions">');
     if (url) h.push('<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Apply on company site</a>');
@@ -366,22 +377,29 @@ a { color: inherit; }
     else if (dlChecked) h.push('<p class="hint">Downloads work when this page is open in claude.ai.</p>');
     h.push('<div class="status-row">' + (st.status === "applied"
       ? "<b>Applied" + (st.appliedOn ? " " + esc(shortDate(st.appliedOn)) : "") + '</b><button type="button" class="btn btn-sm" data-applied="0">Undo</button>'
-      : '<button type="button" class="btn btn-sm" data-applied="1">Mark as applied</button><span>Keeps track of where you have applied.</span>') + "</div>");
+      : st.status === "unavailable"
+      ? '<b class="off">Not available · ' + esc(st.reason || "Other reason") + (st.markedOn ? " · " + esc(shortDate(st.markedOn)) : "") + '</b><button type="button" class="btn btn-sm" data-applied="0">Undo</button>'
+      : picking === j.id
+      ? '<span class="why">Why couldn\'t you apply?</span><div class="reasons">' + REASONS.map(function (r) { return '<button type="button" class="btn btn-sm" data-out="' + esc(r) + '">' + esc(r) + "</button>"; }).join("") + '<button type="button" class="btn btn-sm" data-out-cancel>Cancel</button></div>'
+      : '<button type="button" class="btn btn-sm" data-applied="1">Mark as applied</button><button type="button" class="btn btn-sm" data-out-open>Not available</button>') + "</div>");
     if ((j.notes || []).length) h.push('<div class="good"><h3>Good to know</h3><ul>' + j.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul></div>");
     if (d.outreach) h.push('<details class="fold"><summary>Message for the recruiter, after you apply</summary><p class="msg" id="msg-text">' + esc(d.outreach) + '</p><button type="button" class="btn btn-sm" data-copy>Copy message</button></details>');
     return h.join("");
   }
   var isApplied = function (j) { return peek(j.id).status === "applied"; };
+  var isOut = function (j) { return peek(j.id).status === "unavailable"; };
+  var newest = function (key) { return function (a, b) { return String(peek(b.id)[key] || "").localeCompare(String(peek(a.id)[key] || "")); }; };
   function lists() {
-    var applied = JOBS.filter(isApplied).sort(function (a, b) { return String(peek(b.id).appliedOn || "").localeCompare(String(peek(a.id).appliedOn || "")); });
-    return { jobs: JOBS.filter(function (j) { return !isApplied(j); }), applied: applied };
+    return {
+      jobs: JOBS.filter(function (j) { return !isApplied(j) && !isOut(j); }),
+      applied: JOBS.filter(isApplied).sort(newest("appliedOn")),
+      unavailable: JOBS.filter(isOut).sort(newest("markedOn"))
+    };
   }
   function render() {
     var L = lists(), shown = L[tab];
-    $("n-jobs").textContent = L.jobs.length; $("n-applied").textContent = L.applied.length;
-    $("tab-jobs").setAttribute("aria-selected", String(tab === "jobs"));
-    $("tab-applied").setAttribute("aria-selected", String(tab === "applied"));
-    $("results").innerHTML = shown.length ? shown.map(row).join("") : '<li class="empty">' + (tab === "applied" ? "Jobs you mark as applied show up here, with the date you applied." : "You've applied to every job on this list.") + "</li>";
+    Object.keys(TAB_NAME).forEach(function (k) { $("n-" + k).textContent = L[k].length; $("tab-" + k).setAttribute("aria-selected", String(tab === k)); });
+    $("results").innerHTML = shown.length ? shown.map(row).join("") : '<li class="empty">' + EMPTY[tab] + "</li>";
     $("detail").innerHTML = detail(BY[current]);
     $("dl-all").hidden = !downloads || !JOBS.some(function (j) { return resumeText(j); });
   }
@@ -397,7 +415,7 @@ a { color: inherit; }
       else if (fromNav) { var d = $("detail"); if (d) d.scrollTop = 0; }
     } else {
       var h = (location.hash || "").slice(1);
-      if (h === "applied" || h === "jobs") tab = h;
+      if (TAB_NAME[h]) tab = h;
       document.body.classList.remove("show-detail");
       var inTab = lists()[tab];
       if (fromNav && inTab.length && !inTab.some(function (j) { return j.id === current; })) current = inTab[0].id;
@@ -417,8 +435,15 @@ a { color: inherit; }
     if (t.dataset.applied != null) {
       var st = js(j.id);
       if (t.dataset.applied === "1") { st.status = "applied"; if (!st.appliedOn) st.appliedOn = today(); toast("Moved to Applied"); }
-      else { st.status = "todo"; st.appliedOn = ""; toast("Moved back to Jobs"); }
-      persist(); render(); return;
+      else { st.status = "todo"; st.appliedOn = ""; delete st.reason; delete st.markedOn; toast("Moved back to Jobs"); }
+      picking = null; persist(); render(); return;
+    }
+    if (t.hasAttribute("data-out-open")) { picking = j.id; render(); return; }
+    if (t.hasAttribute("data-out-cancel")) { picking = null; render(); return; }
+    if (t.dataset.out) {
+      var so = js(j.id);
+      so.status = "unavailable"; so.reason = REASONS.indexOf(t.dataset.out) >= 0 ? t.dataset.out : "Other reason"; so.markedOn = today(); so.appliedOn = "";
+      picking = null; persist(); render(); toast("Moved to Not available"); return;
     }
     if (t.hasAttribute("data-copy")) {
       var text = (docs[j.id] || {}).outreach || "";
