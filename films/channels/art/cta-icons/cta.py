@@ -214,12 +214,47 @@ def swoosh(path, sr=48000, dur=0.5):
         w.writeframes((out * 32767).astype(np.int16).tobytes())
 
 
+def auto_y(video, at, dur, W, H, L, default_y, lo=0.56, hi=0.86):
+    """Pick the clearest band for the pop-up: sample frames over its time on screen, score each candidate centre by the
+    busiest frame inside the group's box (local contrast + brightness: captions, the Moon, a subject), plus a small
+    pull toward the channel default. Returns a y fraction."""
+    w, h = 270, 480
+    frames = []
+    for i in range(6):
+        t = at + dur * i / 5.0
+        b = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-ss", f"{t:.3f}", "-i", video, "-frames:v", "1",
+                            "-vf", f"scale={w}:{h},format=gray", "-f", "rawvideo", "-"], capture_output=True).stdout
+        if len(b) == w * h:
+            frames.append(np.frombuffer(b, np.uint8).reshape(h, w).astype(np.float32))
+    if not frames:
+        return default_y
+    gx0 = int(L.x0 * w / W) - 4; gx1 = int((L.x0 + L.group_w) * w / W) + 4
+    bh = int(L.btn * 1.8 * h / H) // 2
+    best, best_y = None, default_y
+    for k in range(int(lo * 100), int(hi * 100) + 1):
+        y = k / 100.0; cy = int(y * h)
+        sc = 0.0
+        for f in frames:
+            box = f[max(0, cy - bh):cy + bh, max(0, gx0):min(w, gx1)]
+            if box.size == 0:
+                continue
+            gy, gxx = np.abs(np.diff(box, axis=0)).mean(), np.abs(np.diff(box, axis=1)).mean()
+            bright = float((box > 170).mean())
+            black = float((box < 14).mean())          # an eclipse disk or a dark subject, not empty sky
+            sc = max(sc, (gy + gxx) * 2.0 + bright * 60.0 + black * 25.0)
+        sc += abs(y - default_y) * 40.0
+        if best is None or sc < best:
+            best, best_y = sc, y
+    return best_y
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("--video", required=True); ap.add_argument("--channel", required=True, choices=STYLES)
     ap.add_argument("--at", type=float, required=True); ap.add_argument("--word", default="follow")
     ap.add_argument("--out", required=True); ap.add_argument("--y", type=float); ap.add_argument("--clip")
-    ap.add_argument("--crf", default="17")
+    ap.add_argument("--crf", default="17"); ap.add_argument("--preset", default="slow"); ap.add_argument("--auto-y", action="store_true")
+    ap.add_argument("--sfx", help="a sound-effects stem (sfx.py) mixed under the film's own audio, on the same timeline")
     a = ap.parse_args(argv)
     st = dict(STYLES[a.channel])
     if a.y:
@@ -228,6 +263,10 @@ def main(argv):
                                             "-of", "csv=p=0", a.video], capture_output=True, text=True).stdout.strip().split(",")]
     dur = 3.2 if st["soft"] else 2.6
     L = Layout(W, H, st, a.word)
+    if a.auto_y and not a.y:
+        st["y"] = auto_y(a.video, a.at, dur, W, H, L, st["y"])
+        L = Layout(W, H, st, a.word)
+        print("auto y", st["y"])
     with tempfile.TemporaryDirectory() as td:
         for i in range(int(dur * 30)):
             frame(L, i / 30, dur).save(os.path.join(td, f"{i:04d}.png"))
@@ -242,14 +281,20 @@ def main(argv):
         else:
             at_a = a.at
         cmd += ["-i", a.video, "-framerate", "30", "-i", os.path.join(td, "%04d.png")]
+        ins, amix = [], ["[0:a]aformat=sample_rates=48000:channel_layouts=stereo[a0]"]; parts = ["[a0]"]
         if not st["soft"]:
-            swoosh(sw)
-            cmd += ["-i", sw]
-            fc += f";[2:a]adelay={int(at_a * 1000)}|{int(at_a * 1000)},aformat=channel_layouts=stereo[s];[0:a][s]amix=inputs=2:normalize=0:duration=first[a]"
+            swoosh(sw); ins += ["-i", sw]
+            amix.append(f"[{2 + len(ins) // 2 - 1}:a]adelay={int(at_a * 1000)}|{int(at_a * 1000)},aformat=sample_rates=48000:channel_layouts=stereo[s]"); parts.append("[s]")
+        if a.sfx:
+            ins += (["-ss", str(s0)] if a.clip else []) + ["-i", a.sfx]
+            amix.append(f"[{2 + sum(1 for x in ins if x == '-i') - 1}:a]aformat=sample_rates=48000:channel_layouts=stereo[x]"); parts.append("[x]")
+        cmd += ins
+        if len(parts) > 1:
+            fc += ";" + ";".join(amix) + f";{''.join(parts)}amix=inputs={len(parts)}:normalize=0:duration=first" + (",alimiter=limit=-1.5dB:level=disabled" if a.sfx else "") + "[a]"
             maps = ["-map", "[v]", "-map", "[a]"]
         else:
             maps = ["-map", "[v]", "-map", "0:a"]
-        cmd += ["-filter_complex", fc] + maps + ["-c:v", "libx264", "-preset", "slow", "-crf", a.crf, "-pix_fmt", "yuv420p",
+        cmd += ["-filter_complex", fc] + maps + ["-c:v", "libx264", "-preset", a.preset, "-crf", a.crf, "-pix_fmt", "yuv420p",
                                                  "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", a.out]
         subprocess.run(cmd, check=True)
     print("wrote", a.out)
