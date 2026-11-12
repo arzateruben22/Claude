@@ -272,9 +272,10 @@ _p03 = {"id": "tapmug", "file": PLATE03, "file9": PLATE03, "push": 0.04, "parall
         "anchor": {"rig": {"pos": [round((863 - 836) / _PZ, 4), round(0.4 + (470.5 - 594) / _PZ, 4), _Z3], "scale": round(5240 / _PZ, 4), "rotX": 0.227, "tipY": round((594 - 368) / 5240, 4), "drop": 0.85, "rad": 0.62}}}   # the crown stands on the mug's water at the drop's x
 # plate-05: the farmhouse sink under the window (Part 3's soap bubble). The bubble (0.025 code-m of radius) is drawn 55 px in radius, 2200 px per code-metre, in the air left of the tap
 PLATE05 = "../lf01/art/owner/plates/plate-05-sink-16x9.png"
-_p05 = {"id": "sink", "file": PLATE05, "file9": PLATE05, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((640 - 836) / _PX, 4), "ppm": _PX},
+_p05 = {"id": "sink", "file": PLATE05, "file9": PLATE05, "push": 0.5, "parallax": 0, "fade": 0.3,
+        "shift": {"x": round((600 - 836) / _PX, 4), "y": round((470.5 - 440) / _PX, 4), "ppm": _PX}, "shift9": {"x": round((600 - 836) / _PX, 4), "y": round((470.5 - 440) / _PX, 4), "ppm": _PX},   # push in on the bubble: it fills about a quarter of the frame at the tear
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
-        "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(2200 / _PX, 4), "rotX": 0}}}
+        "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(3300 / _PX, 4), "rotX": 0}}}
 # plate-06: one red apple on the oak counter (Part 5). Its picture is projected onto an apple-shaped proxy mesh (pixel-identical before impact); the apple is 334 px wide, so 4175 px per code-metre
 PLATE06 = "../lf01/art/owner/plates/plate-06-apple-16x9.png"
 _p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1085 - 836) / _PX, 4), "ppm": _PX},

@@ -309,7 +309,10 @@
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": {
+  "9x16": 0.62,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 3 of 8",
   "title": "A popcorn pop, in slow motion"
@@ -323,11 +326,17 @@
    "id": "sink",
    "file": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
    "file9": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
-   "push": 0.04,
+   "push": 0.5,
    "parallax": 0,
    "fade": 0.3,
+   "shift": {
+    "x": -0.1318,
+    "y": 0.017,
+    "ppm": 1790.0
+   },
    "shift9": {
-    "x": -0.1095,
+    "x": -0.1318,
+    "y": 0.017,
     "ppm": 1790.0
    },
    "cam3": {
@@ -351,7 +360,7 @@
       0.417,
       -1.0
      ],
-     "scale": 1.2291,
+     "scale": 1.8436,
      "rotX": 0
     }
    },
