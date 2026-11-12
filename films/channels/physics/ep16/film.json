@@ -263,7 +263,10 @@
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": {
+  "9x16": 0.62,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 4 of 8",
   "title": "Watch sound cross a kitchen"
