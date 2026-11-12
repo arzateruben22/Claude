@@ -1,0 +1,411 @@
+<title>LA & OC Job Finder</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a results list on the left and the selected job on the right, like a job board; on a phone the
+   list and the job are two screens. White and silver with soft greys, Apple's system type, graphite pills. */
+:root {
+  --page: #f5f5f7;        /* soft grey page */
+  --surface: #ffffff;     /* white panels */
+  --line: #d2d2d7;        /* silver hairline */
+  --line-soft: #e5e5ea;
+  --text: #1d1d1f;        /* near-black ink */
+  --text-2: #6e6e73;      /* secondary grey */
+  --text-3: #86868b;
+  --fill: #e8e8ed;        /* silver button */
+  --fill-hover: #dcdce1;
+  --ink: #1d1d1f;         /* graphite primary button */
+  --ink-hover: #3a3a3c;
+  --on-ink: #ffffff;
+  --ok: #1d7a35;
+  --ok-fill: #e6f4ea;
+  --focus: #0071e3;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --bar-h: 52px;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { background: var(--page); }
+body { margin: 0; background: var(--page); color: var(--text); font-family: var(--font); font-size: 15px; line-height: 1.47; -webkit-font-smoothing: antialiased; letter-spacing: -0.01em; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: #fbfbfd; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-family: var(--font-display); }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1120px; margin-inline: auto; }
+
+/* Top bar */
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: rgba(251, 251, 253, 0.82); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line-soft); }
+.bar .wrap { height: var(--bar-h); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.logo { display: inline-flex; align-items: center; gap: 9px; font: 600 17px/1 var(--font-display); letter-spacing: -0.02em; text-decoration: none; white-space: nowrap; }
+.mark { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #ffffff 0%, #e3e3e8 38%, #a1a1a6 100%); box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.18); }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 18px; border: 0; border-radius: 980px; background: var(--fill); color: var(--text); font: 500 15px/1 var(--font); letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color .15s; }
+.btn:hover { background: var(--fill-hover); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-primary { background: var(--ink); color: var(--on-ink); }
+.btn-primary:hover { background: var(--ink-hover); }
+.btn-sm { height: 32px; padding: 0 14px; font-size: 14px; }
+
+/* Intro */
+.intro { padding-block: 36px 22px; display: grid; gap: 8px; }
+.intro h1 { font-size: clamp(28px, 4.5vw, 40px); line-height: 1.1; font-weight: 600; letter-spacing: -0.025em; }
+.intro .sub { font-size: 17px; color: var(--text-2); max-width: 42rem; }
+.intro .fine { font-size: 13px; color: var(--text-3); max-width: 42rem; }
+
+/* Results and the selected job */
+.split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 56px; align-items: start; }
+@media (min-width: 900px) { .split { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); } }
+.results { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.job { display: grid; gap: 2px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 14px; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
+.job:hover { border-color: var(--line); }
+.job[aria-current="true"] { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.job-title { font: 600 17px/1.3 var(--font-display); letter-spacing: -0.015em; overflow-wrap: anywhere; }
+.job-co { font-size: 15px; }
+.job-loc { font-size: 14px; color: var(--text-2); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { display: inline-flex; align-items: center; padding: 3px 8px; border-radius: 6px; background: var(--fill); font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tag-strong { background: var(--ink); color: var(--on-ink); }
+.tag-ok { background: var(--ok-fill); color: var(--ok); }
+
+.detail { background: var(--surface); border: 1px solid var(--line-soft); border-radius: 18px; padding: 28px; min-width: 0; }
+@media (min-width: 900px) {
+  .detail { position: sticky; top: calc(var(--bar-h) + 16px + env(safe-area-inset-top, 0px)); max-height: calc(100dvh - var(--bar-h) - 32px - env(safe-area-inset-top, 0px)); overflow: auto; }
+  .back { display: none !important; }
+}
+@media (max-width: 899px) {
+  .detail { display: none; padding: 22px 18px; }
+  .show-detail .results, .show-detail .intro { display: none; }
+  .show-detail .detail { display: block; }
+}
+.back { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 14px; font-size: 17px; color: var(--text); text-decoration: none; }
+.back::before { content: "\2039"; font-size: 24px; line-height: 0.8; }
+.d-title { font-size: 28px; line-height: 1.15; font-weight: 600; letter-spacing: -0.022em; overflow-wrap: anywhere; }
+.d-co { font-size: 17px; margin-top: 6px; }
+.d-meta { font-size: 15px; color: var(--text-2); margin-top: 2px; }
+.d-pay { font-size: 15px; font-weight: 600; margin-top: 10px; font-variant-numeric: tabular-nums; }
+.d-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.files { margin-top: 10px; font-size: 12px; color: var(--text-3); overflow-wrap: anywhere; }
+.status-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); font-size: 15px; color: var(--text-2); }
+.status-row b { color: var(--ok); font-weight: 600; }
+.good { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line-soft); }
+.good h3 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.good ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; }
+.good li { padding-block: 9px; border-bottom: 1px solid var(--line-soft); color: var(--text-2); }
+.good li:last-child { border-bottom: 0; }
+.fold { margin-top: 6px; border-top: 1px solid var(--line-soft); }
+.fold summary { cursor: pointer; list-style: none; padding-block: 16px; font-weight: 500; display: flex; justify-content: space-between; gap: 12px; }
+.fold summary::-webkit-details-marker { display: none; }
+.fold summary::after { content: "+"; color: var(--text-3); font-weight: 400; font-size: 20px; line-height: 1; }
+.fold[open] summary::after { content: "\2212"; }
+.msg { white-space: pre-wrap; font-size: 14px; color: var(--text); background: var(--page); border-radius: 12px; padding: 14px 16px; }
+.fold .btn { margin: 12px 0 16px; }
+.hint { margin-top: 10px; font-size: 13px; color: var(--text-2); }
+
+.foot { padding-block: 0 40px; font-size: 12px; color: var(--text-3); }
+
+/* A small confirmation after each save */
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 980px; background: rgba(29, 29, 31, 0.92); color: #ffffff; font-size: 14px; z-index: 20; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); overflow-wrap: anywhere; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<header class="bar">
+  <div class="wrap gutter">
+    <a class="logo" href="#jobs"><span class="mark" aria-hidden="true"></span>job finder</a>
+    <button type="button" class="btn btn-sm" id="dl-all" hidden>Download all</button>
+  </div>
+</header>
+
+<main class="wrap gutter" id="jobs">
+  <section class="intro">
+    <h1 id="headline"></h1>
+    <p class="sub">Nearest first. Each one is applied for on the company's own site, with a résumé and cover letter written for it.</p>
+    <p class="fine" id="fine"></p>
+  </section>
+  <div class="split">
+    <ul class="results" id="results" aria-label="Jobs"></ul>
+    <section class="detail" id="detail" aria-live="polite"></section>
+  </div>
+  <p class="foot">job finder · private to you · nothing is sent or submitted for you</p>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script id="jf-data" type="application/json">__DATA__</script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var DATA = JSON.parse($("jf-data").textContent);
+  var JOBS = DATA.jobs, BY = {};
+  JOBS.forEach(function (j) { BY[j.id] = j; });
+  var LS_KEY = "cq-jobfinder-v1", HEAVY = ["letter", "resumeDoc", "resumeNotes", "outreach"];
+  var DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+  // Saved progress: statuses and your details live in your private record; the tailored documents in one record per job.
+  var state = { v: 1, updatedAt: 0, jobs: {} };
+  try { var raw = localStorage.getItem(LS_KEY); if (raw) { var s = JSON.parse(raw); if (s && s.v === 1 && s.jobs) state = s; } } catch (e) {}
+  var docs = {};
+  JOBS.forEach(function (j) { var st = state.jobs[j.id]; if (st && (st.resumeDoc || st.letter || st.outreach)) docs[j.id] = { resumeDoc: st.resumeDoc, letter: st.letter, outreach: st.outreach }; });
+  var mainRef = null, saveTimer = null, saving = false, dirty = false;
+  var downloads = null, dlChecked = false, current = null, listY = 0, busy = false;
+  var wide = window.matchMedia ? window.matchMedia("(min-width: 900px)") : { matches: true };
+
+  var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var safeUrl = function (u) { try { var x = new URL(String(u)); return x.protocol === "https:" ? x.href : null; } catch (e) { return null; } };
+  var peek = function (id) { return state.jobs[id] || { status: "todo", appliedOn: "", checks: {} }; };
+  var js = function (id) { return state.jobs[id] || (state.jobs[id] = { status: "todo", appliedOn: "", checks: {} }); };
+  var today = function () { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  var shortDate = function (d) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d || ""); return m ? MON[Number(m[2]) - 1] + " " + Number(m[3]) : ""; };
+  var money = function (n) { return "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, ""); };
+  function pay(j) {
+    if (j.payMin != null && j.payMax != null) return (j.payMin === j.payMax ? money(j.payMax) : money(j.payMin) + "–" + money(j.payMax)) + " an hour";
+    return j.payText || "Pay not listed";
+  }
+  function away(j) { return j.miles < 1 ? "under a mile away" : j.miles + " mi away"; }
+  function name() { return ((state.profile || {}).name || "").trim(); }
+  function fill(text) {
+    var p = state.profile || {}, out = String(text || "");
+    if (p.name) out = out.replace(/\[your (full )?name\]/gi, p.name);
+    if (p.city) out = out.replace(/\[your city[^\]]*\]/gi, p.city);
+    if (p.phone) out = out.replace(/\[(your )?phone( number)?\]/gi, p.phone);
+    if (p.email) out = out.replace(/\[(your )?email( address)?\]/gi, p.email);
+    return out;
+  }
+  function fileName(kind, j) {
+    var n = name();
+    return ((kind === "resume" ? "Resume" : "Cover Letter") + (n ? " - " + n : "") + " - " + j.fileCompany).replace(/[\\/:*?"<>|]+/g, "-").replace(/\s+/g, " ").trim() + ".docx";
+  }
+  var resumeText = function (j) { return (docs[j.id] || {}).resumeDoc || ""; };
+  var letterText = function (j) { return (docs[j.id] || {}).letter || fill(j.letterDraft || ""); };
+
+  /* ---------- Word files (.docx), built in the page from the text ---------- */
+  var x = function (s) { return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F￾￿]/g, "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); };
+  function R(text, o) {
+    o = o || {};
+    var rp = (o.b ? "<w:b/>" : "") + (o.i ? "<w:i/>" : "") + (o.color ? '<w:color w:val="' + o.color + '"/>' : "") + (o.sz ? '<w:sz w:val="' + o.sz + '"/><w:szCs w:val="' + o.sz + '"/>' : "");
+    return "<w:r>" + (rp ? "<w:rPr>" + rp + "</w:rPr>" : "") + '<w:t xml:space="preserve">' + x(text) + "</w:t></w:r>";
+  }
+  var TAB = "<w:r><w:tab/></w:r>";
+  function P(runs, o) {
+    o = o || {};
+    var pp = (o.border ? '<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="1" w:color="A1A1A6"/></w:pBdr>' : "") +
+      (o.tab ? '<w:tabs><w:tab w:val="right" w:pos="10368"/></w:tabs>' : "") +
+      '<w:spacing w:before="' + (o.before || 0) + '" w:after="' + (o.after == null ? 60 : o.after) + '"/>' +
+      (o.ind ? '<w:ind w:left="' + o.ind + '" w:hanging="' + (o.hang || 0) + '"/>' : "") +
+      (o.jc ? '<w:jc w:val="' + o.jc + '"/>' : "");
+    return "<w:p><w:pPr>" + pp + "</w:pPr>" + runs.join("") + "</w:p>";
+  }
+  function resumeXml(text) {
+    var out = [], stage = 0, inExp = false, prevPipe = false;
+    text.replace(/\r/g, "").split("\n").forEach(function (raw) {
+      var t = raw.trim();
+      if (!t) { prevPipe = false; return; }
+      if (stage === 0) { out.push(P([R(t, { b: 1, sz: 32 })], { jc: "center", after: 40 })); stage = 1; return; }
+      if (stage === 1) { stage = 2; if (/@|\||\d{3}/.test(t)) { out.push(P([R(t, { sz: 19, color: "555555" })], { jc: "center", after: 120 })); return; } }
+      if (t === t.toUpperCase() && /[A-Z]{3}/.test(t) && t.length < 60 && !/^[-•*]/.test(t) && !/\d{3}/.test(t)) {
+        inExp = /EXPERIENCE/.test(t); prevPipe = false;
+        out.push(P([R(t, { b: 1, sz: 21 })], { before: 160, after: 60, border: true }));
+        return;
+      }
+      var b = /^[-•*]\s+(.*)$/.exec(t);
+      if (b) { prevPipe = false; out.push(P([R("•  " + b[1])], { ind: 360, hang: 200, after: 20 })); return; }
+      if (inExp && /\s\|\s/.test(t)) {
+        var k = t.lastIndexOf("|"), left = t.slice(0, k).trim(), right = t.slice(k + 1).trim();
+        out.push(P([R(left, prevPipe ? { i: 1 } : { b: 1 }), TAB, R(right, prevPipe ? { i: 1, color: "555555" } : {})], { tab: true, before: prevPipe ? 0 : 120, after: prevPipe ? 60 : 0 }));
+        prevPipe = true; return;
+      }
+      prevPipe = false;
+      var lab = /^([A-Z][^:]{1,60}):\s+(.*)$/.exec(t);
+      if (lab) { out.push(P([R(lab[1] + ":  ", { b: 1 }), R(lab[2])], { after: 60 })); return; }
+      out.push(P([R(t)], { after: 60 }));
+    });
+    return out.join("");
+  }
+  function letterXml(text) {
+    var out = [], first = true;
+    text.replace(/\r/g, "").split("\n").forEach(function (raw) {
+      var t = raw.replace(/\s+$/, "");
+      if (!t.trim()) { out.push(P([], { after: 0 })); return; }
+      out.push(P([R(t, first ? { b: 1 } : {})], { after: 0 }));
+      first = false;
+    });
+    return out.join("");
+  }
+  function docx(bodyXml, title, size) {
+    var X = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
+    var z = new window.JSZip();
+    z.file("[Content_Types].xml", X + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>');
+    z.file("_rels/.rels", X + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>');
+    z.file("word/_rels/document.xml.rels", X + '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>');
+    z.file("word/styles.xml", X + '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:eastAsia="Calibri" w:cs="Calibri"/><w:sz w:val="' + size + '"/><w:szCs w:val="' + size + '"/><w:lang w:val="en-US"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="252" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style></w:styles>');
+    z.file("docProps/core.xml", X + '<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>' + x(title) + "</dc:title><dc:creator>" + x(name() || "job finder") + "</dc:creator></cp:coreProperties>");
+    z.file("word/document.xml", X + '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + bodyXml + '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="864" w:right="936" w:bottom="864" w:left="936" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>');
+    return z;
+  }
+  function makeDoc(kind, j) {
+    return kind === "resume" ? docx(resumeXml(resumeText(j)), fileName("resume", j).replace(/\.docx$/, ""), 20) : docx(letterXml(letterText(j)), fileName("letter", j).replace(/\.docx$/, ""), 22);
+  }
+
+  /* ---------- Saving files ---------- */
+  var toastTimer = null;
+  function toast(t) { var el = $("toast"); el.textContent = t; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { el.hidden = true; }, 3200); }
+  function failed(e, what) {
+    var code = e && e.code;
+    if (code === "declined") return toast("Download cancelled.");
+    if (code === "rate_limited") return toast("Another download is waiting for your OK. Try again in a moment.");
+    if (code === "unavailable" || code === "not_granted" || code === "capability_disabled" || code === "capability_removed" || code === "extension_not_enabled") { downloads = null; render(); return toast("Downloads aren't available in this view."); }
+    toast("Couldn't save " + what + ". Try again.");
+  }
+  function saveBlob(filename, blob) {
+    return downloads.save({ filename: filename, data: blob }).then(function () { toast("Saved " + filename); });
+  }
+  function downloadOne(kind, j) {
+    if (busy || !downloads) return;
+    if (!window.JSZip) return toast("Couldn't build the file. Reload the page and try again.");
+    if (kind === "resume" && !resumeText(j)) return toast("This job has no tailored résumé yet.");
+    busy = true;
+    var fn = fileName(kind, j);
+    makeDoc(kind, j).generateAsync({ type: "blob", mimeType: DOCX, compression: "DEFLATE" })
+      .then(function (blob) { return saveBlob(fn, blob); })
+      .catch(function (e) { failed(e, fn); })
+      .then(function () { busy = false; });
+  }
+  function downloadAll() {
+    if (busy || !downloads) return;
+    if (!window.JSZip) return toast("Couldn't build the files. Reload the page and try again.");
+    busy = true;
+    var zip = new window.JSZip(), n = name(), jobs = JOBS.filter(function (j) { return resumeText(j); });
+    Promise.all(jobs.map(function (j) {
+      return Promise.all([makeDoc("resume", j), makeDoc("letter", j)].map(function (z) { return z.generateAsync({ type: "uint8array", compression: "DEFLATE" }); }))
+        .then(function (files) { zip.file(fileName("resume", j), files[0]); zip.file(fileName("letter", j), files[1]); });
+    })).then(function () {
+      return zip.generateAsync({ type: "blob", mimeType: "application/zip", compression: "DEFLATE" });
+    }).then(function (blob) {
+      return saveBlob(("Applications" + (n ? " - " + n : "")).replace(/[\\/:*?"<>|]+/g, "-") + ".zip", blob);
+    }).catch(function (e) { failed(e, "the files"); }).then(function () { busy = false; });
+  }
+
+  /* ---------- Saving progress ---------- */
+  function light() {
+    var out = JSON.parse(JSON.stringify(state));
+    Object.keys(out.jobs || {}).forEach(function (id) { HEAVY.forEach(function (k) { delete out.jobs[id][k]; }); });
+    return out;
+  }
+  function persist() {
+    state.updatedAt = Date.now();
+    try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+    if (mainRef) { dirty = true; clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700); }
+  }
+  function flush() {
+    if (!mainRef || saving || !dirty) return;
+    saving = true; dirty = false;
+    mainRef.set(light()).catch(function () {}).then(function () { saving = false; if (dirty) { clearTimeout(saveTimer); saveTimer = setTimeout(flush, 700); } });
+  }
+  function connect() {
+    if (!window.claude || typeof window.claude.use !== "function") { dlChecked = true; render(); return; }
+    window.claude.use("downloads").then(function (d) { downloads = d || null; dlChecked = true; render(); }, function () { dlChecked = true; render(); });
+    Promise.all([window.claude.use("db"), window.claude.use("user")]).then(function (caps) {
+      var db = caps[0], user = caps[1];
+      if (!db || !user) return;
+      return user.id().then(function (uid) {
+        if (!uid) return;
+        var col = db.collection("data/users/" + uid), ref = col.doc("jobfinder");
+        return ref.get().then(function (snap) {
+          var remote = snap && snap.exists ? snap.data() : null;
+          if (remote && remote.v === 1 && remote.jobs && (remote.updatedAt || 0) > (state.updatedAt || 0)) state = remote;
+          return Promise.all(JOBS.map(function (j) { return col.doc("jf-" + j.id).get().then(function (s) { return s && s.exists ? s.data() : null; }, function () { return null; }); }));
+        }).then(function (list) {
+          list.forEach(function (d, i) { if (d) docs[JOBS[i].id] = { resumeDoc: d.resumeDoc, letter: d.letter, outreach: d.outreach }; });
+          mainRef = ref;
+          try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) {}
+          render();
+        });
+      });
+    }).catch(function () {});
+  }
+
+  /* ---------- Screens ---------- */
+  function row(j) {
+    var st = peek(j.id), on = j.id === current;
+    return '<li><a class="job" href="#j-' + esc(j.id) + '" data-id="' + esc(j.id) + '"' + (on ? ' aria-current="true"' : "") + ">" +
+      '<span class="job-title">' + esc(j.title) + "</span>" +
+      '<span class="job-co">' + esc(j.company) + "</span>" +
+      '<span class="job-loc">' + esc(j.city) + " · " + esc(away(j)) + "</span>" +
+      '<span class="tags"><span class="tag">' + esc(pay(j)) + "</span>" + (j.bestFit ? '<span class="tag tag-strong">Best fit</span>' : "") + (st.status === "applied" ? '<span class="tag tag-ok">Applied</span>' : "") + "</span></a></li>";
+  }
+  function detail(j) {
+    if (!j) return '<p class="hint">Pick a job from the list.</p>';
+    var st = peek(j.id), url = safeUrl(j.url), d = docs[j.id] || {}, h = [];
+    h.push('<a class="back" href="#jobs">All jobs</a>');
+    h.push('<h2 class="d-title">' + esc(j.title) + '</h2><p class="d-co">' + esc(j.company) + '</p><p class="d-meta">' + esc(j.city) + " · " + esc(away(j)) + (j.posted ? " · Posted " + esc(j.posted) : "") + '</p><p class="d-pay">' + esc(pay(j)) + "</p>");
+    h.push('<div class="d-actions">');
+    if (url) h.push('<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Apply on company site</a>');
+    if (downloads) h.push('<button type="button" class="btn" data-dl="resume"' + (resumeText(j) ? "" : " disabled") + '>Résumé (.docx)</button><button type="button" class="btn" data-dl="letter">Cover letter (.docx)</button>');
+    h.push("</div>");
+    if (downloads) h.push('<p class="files">' + esc(fileName("resume", j)) + " · " + esc(fileName("letter", j)) + "</p>");
+    else if (dlChecked) h.push('<p class="hint">Downloads work when this page is open in claude.ai.</p>');
+    h.push('<div class="status-row">' + (st.status === "applied"
+      ? "<b>Applied" + (st.appliedOn ? " " + esc(shortDate(st.appliedOn)) : "") + '</b><button type="button" class="btn btn-sm" data-applied="0">Undo</button>'
+      : '<button type="button" class="btn btn-sm" data-applied="1">Mark as applied</button><span>Keeps track of where you have applied.</span>') + "</div>");
+    if ((j.notes || []).length) h.push('<div class="good"><h3>Good to know</h3><ul>' + j.notes.map(function (n) { return "<li>" + esc(n) + "</li>"; }).join("") + "</ul></div>");
+    if (d.outreach) h.push('<details class="fold"><summary>Message for the recruiter, after you apply</summary><p class="msg" id="msg-text">' + esc(d.outreach) + '</p><button type="button" class="btn btn-sm" data-copy>Copy message</button></details>');
+    return h.join("");
+  }
+  function render() {
+    $("results").innerHTML = JOBS.map(row).join("");
+    $("detail").innerHTML = detail(BY[current]);
+    $("dl-all").hidden = !downloads || !JOBS.some(function (j) { return resumeText(j); });
+  }
+  function route(fromNav) {
+    var m = /^j-([a-z0-9]+)$/.exec((location.hash || "").slice(1));
+    var showing = document.body.classList.contains("show-detail");
+    if (m && BY[m[1]]) {
+      if (!showing && !wide.matches) listY = window.scrollY;
+      current = m[1];
+      document.body.classList.add("show-detail");
+      render();
+      if (!wide.matches) window.scrollTo(0, 0);
+      else if (fromNav) { var d = $("detail"); if (d) d.scrollTop = 0; }
+    } else {
+      document.body.classList.remove("show-detail");
+      if (!current && JOBS[0]) current = JOBS[0].id;
+      render();
+      if (showing && !wide.matches) window.scrollTo(0, listY);
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target.closest ? e.target.closest("button") : null;
+    if (!t) return;
+    var j = BY[current];
+    if (t.id === "dl-all") { downloadAll(); return; }
+    if (!j) return;
+    if (t.dataset.dl) { downloadOne(t.dataset.dl, j); return; }
+    if (t.dataset.applied != null) {
+      var st = js(j.id);
+      if (t.dataset.applied === "1") { st.status = "applied"; if (!st.appliedOn) st.appliedOn = today(); } else { st.status = "todo"; st.appliedOn = ""; }
+      persist(); render(); return;
+    }
+    if (t.hasAttribute("data-copy")) {
+      var text = (docs[j.id] || {}).outreach || "";
+      var sel = function () { var el = $("msg-text"); if (!el) return; var r = document.createRange(); r.selectNodeContents(el); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); };
+      try { navigator.clipboard.writeText(text).then(function () { toast("Message copied"); }, function () { sel(); toast("Select the text and copy it"); }); } catch (err) { sel(); toast("Select the text and copy it"); }
+    }
+  });
+  window.addEventListener("hashchange", function () { route(true); });
+  if (wide.addEventListener) wide.addEventListener("change", function () { route(false); });
+
+  $("headline").textContent = JOBS.length + " jobs near " + DATA.home;
+  $("fine").textContent = DATA.area + " · checked " + DATA.generatedLabel + ". Open each posting to confirm it's still taking applications.";
+  route(false);
+  connect();
+})();
+</script>

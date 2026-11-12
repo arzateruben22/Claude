@@ -185,6 +185,74 @@ export function buildResume(dirs: string[], date: string, opts: { tradeFile?: st
   };
 }
 
+/** Employer as people say it: "L3Harris Technologies (Aerojet Rocketdyne)" becomes "L3Harris Technologies". */
+export function companyName(employer: string): string {
+  return employer.replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim();
+}
+const shortTitle = (title: string) => title.replace(/\s+-\s+.*$/, "").replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim();
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const dateLabel = (d?: string | null) => {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(d ?? "");
+  return m ? `${MONTHS[Number(m[2]) - 1]} ${Number(m[3])}, ${m[1]}` : null;
+};
+const firstClause = (s: string, max = 120) => {
+  const t = s.replace(/^(HARD|SOFT)[^:]{0,30}:\s*/i, "").replace(/\s*\([^)]*\)/g, "").split(/\s[-–]\s|;/)[0]!.trim().replace(/[.,]$/, "");
+  return t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t;
+};
+
+type PageJob = ReturnType<typeof trimJob> & { contact?: ContactResearch | null };
+
+/**
+ * The few facts the simple page shows per job, nothing more: where, pay, when it was posted, the apply
+ * link, up to three short notes and the starting letter. Résumé text is never embedded here; the
+ * page reads the applicant's tailored documents from their private records.
+ */
+export function simpleData(data: { generatedLabel: string; home: string; areaOnly?: string | null; bestFit: PageJob[]; stretch: PageJob[] }) {
+  const jobs = [...data.bestFit, ...data.stretch].sort((a, b) => a.milesFromHome - b.milesFromHome || b.score - a.score);
+  const count: Record<string, number> = {};
+  for (const j of jobs) count[companyName(j.employer)] = (count[companyName(j.employer)] ?? 0) + 1;
+  return {
+    generatedLabel: data.generatedLabel,
+    home: data.home,
+    area: data.areaOnly === "LA" ? "Los Angeles County" : data.areaOnly === "OC" ? "Orange County" : "Los Angeles and Orange counties",
+    jobs: jobs.map((j) => {
+      const company = companyName(j.employer);
+      const v = j.verdict;
+      const notes: string[] = [];
+      const rm = v?.requirementMatch ?? [];
+      if (j.list === "best_fit") {
+        notes.push("Your résumé shows every posted minimum.");
+        if (j.gaps.preferred[0]) notes.push(`Preferred, not required: ${firstClause(j.gaps.preferred[0])}.`);
+      } else if (rm.length) {
+        const met = rm.filter((m) => m.status === "met").length;
+        const partly = rm.filter((m) => m.status === "partly").length;
+        notes.push(`Your résumé shows ${met} of ${rm.length} listed requirements${partly ? `, and ${partly} in part` : ""}.`);
+      }
+      if (j.list !== "best_fit" && j.gaps.soft[0]) notes.push(`You may not meet: ${firstClause(j.gaps.soft[0])}.`);
+      const posted = dateLabel(j.postedDate);
+      if (j.breakdown.open.value < 0.6) notes.push(`${posted ? `Posted ${posted}. ` : ""}Open the posting to confirm it is still taking applications.`);
+      if (/licen[cs]e|cdl/i.test(j.drivingRequirement) && !/none stated/i.test(j.drivingRequirement)) notes.push("Asks for a valid driver's license.");
+      return {
+        id: j.id,
+        title: j.title.replace(/\s+-\s+\$[\d.,]+.*$/, ""),
+        company,
+        fileCompany: (count[company] ?? 0) > 1 ? `${company} (${shortTitle(j.title)})` : company,
+        city: j.placeName || j.city,
+        miles: j.milesFromHome,
+        payMin: j.payMinHourly,
+        payMax: j.payMaxHourly,
+        payText: j.payText,
+        posted,
+        url: j.postingUrl,
+        bestFit: j.list === "best_fit",
+        notes: notes.slice(0, 3),
+        outreach: j.contact?.outreachVerdict ?? null,
+        letterDraft: j.letterDraft,
+      };
+    }),
+  };
+}
+
 function main() {
   const journals = (arg("journals") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const date = arg("date") ?? new Date().toISOString().slice(0, 10);
@@ -208,6 +276,11 @@ function main() {
     const { searched: _s, notFound: _n, ...pageData } = data;
     void _s; void _n;
     write(html, template.replace("__DATA__", () => JSON.stringify(pageData).replace(/</g, "\\u003c")));
+  }
+  const simple = arg("simple");
+  if (simple) {
+    const template = readFileSync(path.join(__dirname, "..", "jobfinder", "simple-template.html"), "utf8");
+    write(simple, template.replace("__DATA__", () => JSON.stringify(simpleData(data as Parameters<typeof simpleData>[0])).replace(/</g, "\\u003c")));
   }
   // Input for jobfinder/apply-kit.workflow.js: what each writer and contact researcher needs to know.
   write(
