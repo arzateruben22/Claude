@@ -24,7 +24,7 @@ vo: At a twelve hour day, sunrise to sunset takes six hours. {c4} The Sun moves 
 **[beat 2.5 s: the Sun crosses the sky as a bright streak over the figure]**
 
 ## wind {shot: the air streaming past · energy: 0.7}
-vo: But the air can't keep up. {-} It is pulled along only by friction, so for the first hours it is left behind. {c7} The ground moves through it at about sixteen hundred and seventy kilometers an hour. {c23} The strongest gust ever measured was about four hundred and eight. {c24} This wind would be four times stronger, blowing from the east, because the ground is running ahead of the air. {c7} {c23}{c24} Winds like that would strip the surface, and they'd only be the beginning. {-}
+vo: But the air can't keep up. {-} It is pulled along only by friction, so for the first hours it is left behind. {c7} The ground moves through it at about sixteen hundred and seventy kilometers an hour. {c23} The strongest gust ever measured was about four hundred and eight. {c24} This wind would be four times faster, blowing from the east, because the ground is running ahead of the air. {c7} {c23}{c24} Winds like that would strip the surface, and they'd only be the beginning. {-}
 **[beat 3 s: wind streaks rip past the figure, dust and cloud streaming]**
 vo: Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math. {-}
 
