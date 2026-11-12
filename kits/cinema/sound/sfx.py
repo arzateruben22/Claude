@@ -26,8 +26,8 @@ import numpy as np, soundfile as sf
 
 SR = 48000
 SCALE = [220.0, 246.94, 277.18, 329.63, 369.99, 440.0, 493.88, 554.37, 659.26, 739.99, 880.0, 987.77, 1108.73, 1318.51, 1479.98, 1760.0]
-PALETTE = {"asmr": {"lowcut": 150, "duck": -5}, "space": {"lowcut": 32, "duck": -6}, "kitchen": {"lowcut": 40, "duck": -6},
-           "earth": {"lowcut": 32, "duck": -6}}
+PALETTE = {"asmr": {"lowcut": 150, "duck": -5, "trim": 0.0}, "space": {"lowcut": 32, "duck": -6, "trim": -2.5}, "kitchen": {"lowcut": 40, "duck": -6, "trim": -2.5},
+           "earth": {"lowcut": 32, "duck": -6, "trim": -2.5}}   # trim: the owner's "a tad" down (12 Nov) for the cinematic sets
 LEVEL = {  # loudness of each sound's loudest 0.4 s, in dBFS RMS, before the dip under the voice ("gain" moves it per cue)
     "tile": -22, "squeeze": -19, "squish": -21, "pinch": -23, "rip": -23, "peel": -22, "pop": -23, "tap": -23, "glide": -25,
     "tremble": -23, "creak": -23, "dust": -29, "shooting_star": -18, "mass": -17, "boom": -14, "whoosh": -19, "riser": -16,
@@ -392,7 +392,7 @@ def render(film, sheet):
             if c["kind"] != "tile" and "dur" in c: c["dur"] = c["dur"] / pace
             x = MAKERS[c["kind"]](rng, c); x = x if x.ndim == 2 else x[:, None]
             w = int(0.4 * SR); cs = np.concatenate([[0.0], np.cumsum((x ** 2).mean(1))]); e = (cs[w:] - cs[:-w]) / w if len(x) > w else np.array([(x ** 2).mean()])
-            x = x / (np.sqrt(e.max()) + 1e-12) * 10 ** ((LEVEL[c["kind"]] + float(c.get("gain", 0))) / 20)
+            x = x / (np.sqrt(e.max()) + 1e-12) * 10 ** ((LEVEL[c["kind"]] + pal.get("trim", 0.0) + float(c.get("gain", 0))) / 20)
             x = np.tanh(x / 0.7) * 0.7                                                       # gentle peak guard (about -3 dBFS)
             fade = min(576, len(x)); x[-fade:] *= np.linspace(1, 0, fade)[:, None]
             p = c.get("pan", 0); p0, p1 = (p if isinstance(p, list) else (p, p)); pan = np.clip(np.linspace(p0, p1, len(x)), -1, 1); th = (pan + 1) * np.pi / 4
