@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -325,7 +325,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple bits"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))

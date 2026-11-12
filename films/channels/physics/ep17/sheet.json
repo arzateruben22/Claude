@@ -50,7 +50,7 @@
   {
    "t": 0.6,
    "kind": "badge",
-   "tag": "code",
+   "tag": "code-s0",
    "text": "Drawn by code · model"
   },
   {
@@ -58,6 +58,12 @@
    "kind": "section",
    "id": "body",
    "t1": 30.4
+  },
+  {
+   "t": 20.0333,
+   "kind": "badge",
+   "tag": "code-p1",
+   "text": "Kitchen: AI illustration · bullet and apple drawn by code"
   },
   {
    "t": 30.4,
@@ -69,6 +75,12 @@
    "t": 31.1333,
    "kind": "contact",
    "tag": "bullet"
+  },
+  {
+   "t": 37.1333,
+   "kind": "badge",
+   "tag": "code-s2",
+   "text": "Drawn by code · model"
   },
   {
    "t": 57.8667,
