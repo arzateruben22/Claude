@@ -4,7 +4,7 @@
    "id": "vo01",
    "beat": "hook",
    "text": "Deep in your skin, right now, a new cell is being born.",
-   "a": 77.44,
+   "a": 77.36,
    "b": 82.0
   },
   {
@@ -19,7 +19,7 @@
    "beat": "change",
    "text": "As it climbs, it fills with a tough protein called keratin. It grows flatter… and flatter.",
    "a": 88.0,
-   "b": 95.76
+   "b": 96.08
   },
   {
    "id": "vo04",
@@ -47,13 +47,13 @@
    "beat": "whoa",
    "text": "The whole journey takes about a month.",
    "a": 123.44,
-   "b": 126.8
+   "b": 127.04
   },
   {
    "id": "vo08",
    "beat": "takeaway",
    "text": "Then, quietly, the top cells drift away, far too small to see. Some of the dust in your home… began as you.",
-   "a": 127.12,
+   "a": 127.04,
    "b": 137.04
   },
   {

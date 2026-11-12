@@ -54,8 +54,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 6.32,
-   "sha256": "7b204751930678b844a812dc4f151f0f4904fbab8328a84b038fded9b26d9fbb"
+   "dur": 8.16,
+   "sha256": "859828e04a94e29b57d2fd31c4206c958eff864d39e9c967148b3b2412d71ede"
   },
   {
    "id": "vo06",
@@ -64,8 +64,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 7.92,
-   "sha256": "19af3f1c00e5d4c50f36f932fcf57f91efa0e5270d9ac29b1129c6157a4c57ff"
+   "dur": 9.52,
+   "sha256": "2e147bdcea8b98247ebb6385a761a98a1ac126d1770ab07c2b47584dcbf4b148"
   },
   {
    "id": "vo07",
@@ -94,8 +94,8 @@
    "stars": [],
    "phonemes": null,
    "file": "09.wav",
-   "dur": 2.24,
-   "sha256": "fb0ef112da2036aaec641e3bb4fa2b0c45c0f085fe2b8ff54aa9711cd7053401"
+   "dur": 4.16,
+   "sha256": "1eb5a70bd3450e22eef5e79458126e65d746987f8a424aa830485fe4d33affc4"
   },
   {
    "id": "vo10",

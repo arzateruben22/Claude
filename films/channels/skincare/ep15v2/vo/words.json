@@ -326,11 +326,11 @@
   {
    "id": "vo05",
    "text": "Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
-   "heard": "Each one slowly fills with oil until the whole cell breaks down and becomes",
+   "heard": "Each one slowly fills with oil until the whole cell breaks down and becomes oil.",
    "words": [
     {
      "w": "Each",
-     "start": 0.285,
+     "start": 0.085,
      "end": 0.48,
      "heard": true
     },
@@ -361,7 +361,7 @@
     {
      "w": "oil…",
      "start": 2.3,
-     "end": 2.8,
+     "end": 2.96,
      "heard": true
     },
     {
@@ -391,49 +391,49 @@
     {
      "w": "breaks",
      "start": 4.7,
-     "end": 5.12,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "down",
-     "start": 5.08,
+     "start": 5.095,
      "end": 5.36,
      "heard": true
     },
     {
      "w": "and",
      "start": 5.355,
-     "end": 5.52,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "becomes",
-     "start": 5.525,
-     "end": 5.92,
+     "start": 5.67,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "oil.",
-     "start": 5.895,
-     "end": 6.22,
-     "heard": false
+     "start": 6.245,
+     "end": 7.52,
+     "heard": true
     }
    ]
   },
   {
    "id": "vo06",
    "text": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
-   "heard": "That oil is called sebum. It glides up along the hair and spreads over your skin in a thin, soft curl.",
+   "heard": "That oil is called sebum. It glides up along the hair and spreads over your skin in a thin, soft coat.",
    "words": [
     {
      "w": "That",
      "start": 0.18,
-     "end": 0.48,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "oil",
-     "start": 0.48,
+     "start": 0.45,
      "end": 0.96,
      "heard": true
     },
@@ -518,38 +518,38 @@
     {
      "w": "skin",
      "start": 6.005,
-     "end": 6.48,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "in",
-     "start": 6.47,
-     "end": 6.64,
+     "start": 6.635,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.635,
-     "end": 6.8,
+     "start": 6.925,
+     "end": 6.975,
      "heard": true
     },
     {
      "w": "thin,",
-     "start": 6.805,
-     "end": 7.28,
+     "start": 6.955,
+     "end": 7.36,
      "heard": true
     },
     {
      "w": "soft",
-     "start": 7.23,
-     "end": 7.6,
+     "start": 7.255,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "coat.",
-     "start": 7.72,
-     "end": 7.9,
-     "heard": false
+     "start": 7.9,
+     "end": 8.88,
+     "heard": true
     }
    ]
   },
@@ -714,37 +714,37 @@
   {
    "id": "vo09",
    "text": "Until… the doorway gets blocked.",
-   "heard": "Until the doorway gets",
+   "heard": "Until the doorway gets blocked.",
    "words": [
     {
      "w": "Until…",
-     "start": 0.33,
+     "start": 0.27,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "the",
      "start": 0.835,
-     "end": 1.04,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "doorway",
      "start": 1.195,
-     "end": 1.6,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "gets",
-     "start": 1.675,
-     "end": 1.84,
+     "start": 1.865,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "blocked.",
-     "start": 1.865,
-     "end": 2.14,
-     "heard": false
+     "start": 2.25,
+     "end": 3.52,
+     "heard": true
     }
    ]
   },

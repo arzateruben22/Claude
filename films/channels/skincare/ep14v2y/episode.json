@@ -1,0 +1,168 @@
+{
+ "title": "Where Do Your Skin Cells Go?",
+ "three": {
+  "module": "../set/cells3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.012,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   0.57,
+   2.625,
+   "Deep in your skin, right now,"
+  ],
+  [
+   2.595,
+   5.37,
+   "a new cell is being born."
+  ],
+  [
+   7.71,
+   10.35,
+   "It starts at the very bottom…"
+  ],
+  [
+   10.32,
+   13.37,
+   "and slowly begins to rise."
+  ],
+  [
+   15.815,
+   17.205,
+   "As it climbs,"
+  ],
+  [
+   17.175,
+   20.775,
+   "it fills with a tough protein called keratin."
+  ],
+  [
+   20.745,
+   23.61,
+   "It grows flatter… and flatter."
+  ],
+  [
+   26.335,
+   27.105,
+   "Near the top,"
+  ],
+  [
+   27.075,
+   29.85,
+   "it lets go of its nucleus…"
+  ],
+  [
+   30.305,
+   33.53,
+   "and its life gently ends."
+  ],
+  [
+   36.375,
+   42.41,
+   "So the skin you can touch right now is made of cells that have finished their lives."
+  ],
+  [
+   44.875,
+   46.79,
+   "Stacked like bricks,"
+  ],
+  [
+   46.76,
+   49.13,
+   "they seal in water."
+  ],
+  [
+   51.55,
+   55.21,
+   "The whole journey takes about a month."
+  ],
+  [
+   57.645,
+   61.375,
+   "Then, quietly, the top cells drift away,"
+  ],
+  [
+   61.345,
+   63.705,
+   "far too small to see."
+  ],
+  [
+   63.675,
+   65.475,
+   "Some of the dust in your home…"
+  ],
+  [
+   65.445,
+   67.85,
+   "began as you."
+  ],
+  [
+   70.235,
+   74.0,
+   "Underneath, new cells are already rising."
+  ],
+  [
+   73.97,
+   78.01,
+   "Always rebuilding… from the bottom up."
+  ],
+  [
+   80.99,
+   84.375,
+   "Your skin has plenty more quiet secrets."
+  ],
+  [
+   84.345,
+   85.85,
+   "Tap like and subscribe."
+  ]
+ ],
+ "hook": {
+  "text": "Your skin is renewing right now",
+  "t0": 0.0,
+  "t1": 3.0,
+  "size": 88,
+  "top": 300,
+  "grad": 0.75
+ }
+}

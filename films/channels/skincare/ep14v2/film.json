@@ -1,0 +1,981 @@
+{
+ "id": "skin-sense-014",
+ "title": {
+  "series": "Skin Sense \u00b7 Season 3",
+  "title": "Where Do Your Skin Cells Go?"
+ },
+ "fps": 30,
+ "dur": 89.2,
+ "poster": 22,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "qaProfile": "asmr",
+ "pace": 1.2,
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "Deep",
+   "t0": 0.62,
+   "t1": 0.92,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "in",
+   "t0": 0.835,
+   "t1": 1.08,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "your",
+   "t0": 0.975,
+   "t1": 1.24,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "skin,",
+   "t0": 1.37,
+   "t1": 1.96,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "right",
+   "t0": 1.875,
+   "t1": 2.2,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "now,",
+   "t0": 2.175,
+   "t1": 2.6,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "a",
+   "t0": 2.645,
+   "t1": 2.76,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "new",
+   "t0": 2.675,
+   "t1": 3.0,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "cell",
+   "t0": 2.96,
+   "t1": 3.48,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "is",
+   "t0": 3.63,
+   "t1": 3.72,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "being",
+   "t0": 3.71,
+   "t1": 3.96,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "born.",
+   "t0": 3.98,
+   "t1": 4.92,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "It",
+   "t0": 7.76,
+   "t1": 8.04,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "starts",
+   "t0": 8.08,
+   "t1": 8.52,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "at",
+   "t0": 8.585,
+   "t1": 8.76,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "the",
+   "t0": 8.735,
+   "t1": 8.92,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "very",
+   "t0": 8.855,
+   "t1": 9.24,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "bottom\u2026",
+   "t0": 9.265,
+   "t1": 10.04,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "and",
+   "t0": 10.37,
+   "t1": 10.44,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "slowly",
+   "t0": 10.425,
+   "t1": 11.0,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "begins",
+   "t0": 10.985,
+   "t1": 11.64,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "to",
+   "t0": 11.56,
+   "t1": 11.96,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "rise.",
+   "t0": 11.93,
+   "t1": 12.92,
+   "line": "vo02",
+   "beat": "normal"
+  },
+  {
+   "w": "As",
+   "t0": 15.865,
+   "t1": 16.04,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "it",
+   "t0": 16.015,
+   "t1": 16.28,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "climbs,",
+   "t0": 16.27,
+   "t1": 17.16,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "it",
+   "t0": 17.225,
+   "t1": 17.32,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "fills",
+   "t0": 17.47,
+   "t1": 17.8,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "with",
+   "t0": 17.83,
+   "t1": 17.96,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "a",
+   "t0": 18.135,
+   "t1": 18.185,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "tough",
+   "t0": 18.165,
+   "t1": 19.0,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "protein",
+   "t0": 18.195,
+   "t1": 19.0,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "called",
+   "t0": 18.885,
+   "t1": 19.16,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "keratin.",
+   "t0": 19.355,
+   "t1": 20.68,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "It",
+   "t0": 20.795,
+   "t1": 20.845,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "grows",
+   "t0": 20.955,
+   "t1": 21.32,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "flatter\u2026",
+   "t0": 21.345,
+   "t1": 21.8,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "and",
+   "t0": 22.075,
+   "t1": 22.2,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "flatter.",
+   "t0": 22.285,
+   "t1": 23.16,
+   "line": "vo03",
+   "beat": "change"
+  },
+  {
+   "w": "Near",
+   "t0": 26.385,
+   "t1": 26.68,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 26.775,
+   "t1": 26.84,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "top,",
+   "t0": 26.82,
+   "t1": 27.08,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "it",
+   "t0": 27.125,
+   "t1": 27.32,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "lets",
+   "t0": 27.285,
+   "t1": 27.72,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "go",
+   "t0": 27.7,
+   "t1": 27.88,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "of",
+   "t0": 27.88,
+   "t1": 28.04,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "its",
+   "t0": 28.18,
+   "t1": 28.28,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "nucleus\u2026",
+   "t0": 28.335,
+   "t1": 29.4,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 30.355,
+   "t1": 30.6,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "its",
+   "t0": 30.665,
+   "t1": 30.92,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "life",
+   "t0": 31.235,
+   "t1": 31.56,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "gently",
+   "t0": 31.875,
+   "t1": 32.36,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "ends.",
+   "t0": 32.455,
+   "t1": 33.08,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "So",
+   "t0": 36.425,
+   "t1": 36.52,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 36.505,
+   "t1": 36.68,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "skin",
+   "t0": 36.595,
+   "t1": 37.24,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "you",
+   "t0": 37.245,
+   "t1": 37.48,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "can",
+   "t0": 37.495,
+   "t1": 37.72,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "touch",
+   "t0": 37.69,
+   "t1": 38.12,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "right",
+   "t0": 38.105,
+   "t1": 38.36,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "now",
+   "t0": 38.345,
+   "t1": 38.6,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "is",
+   "t0": 38.735,
+   "t1": 38.92,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "made",
+   "t0": 38.945,
+   "t1": 39.16,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "of",
+   "t0": 39.215,
+   "t1": 39.32,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "cells",
+   "t0": 39.245,
+   "t1": 39.88,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "that",
+   "t0": 39.875,
+   "t1": 40.04,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "have",
+   "t0": 39.935,
+   "t1": 40.28,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "finished",
+   "t0": 40.275,
+   "t1": 40.84,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "their",
+   "t0": 40.865,
+   "t1": 41.08,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "lives.",
+   "t0": 41.045,
+   "t1": 41.96,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "Stacked",
+   "t0": 44.925,
+   "t1": 45.48,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "like",
+   "t0": 45.505,
+   "t1": 45.8,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "bricks,",
+   "t0": 45.82,
+   "t1": 46.76,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "they",
+   "t0": 46.81,
+   "t1": 47.0,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "seal",
+   "t0": 46.925,
+   "t1": 47.48,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "in",
+   "t0": 47.565,
+   "t1": 47.72,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "water.",
+   "t0": 47.635,
+   "t1": 48.68,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "The",
+   "t0": 51.6,
+   "t1": 51.65,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "whole",
+   "t0": 51.845,
+   "t1": 52.04,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "journey",
+   "t0": 52.125,
+   "t1": 52.6,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "takes",
+   "t0": 52.595,
+   "t1": 53.08,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "about",
+   "t0": 52.99,
+   "t1": 53.4,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "a",
+   "t0": 53.355,
+   "t1": 53.64,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "month.",
+   "t0": 53.555,
+   "t1": 54.76,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "Then,",
+   "t0": 57.695,
+   "t1": 57.96,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "quietly,",
+   "t0": 57.995,
+   "t1": 58.68,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 58.95,
+   "t1": 59.0,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "top",
+   "t0": 59.1,
+   "t1": 59.32,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "cells",
+   "t0": 59.375,
+   "t1": 59.88,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "drift",
+   "t0": 59.86,
+   "t1": 60.36,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "away,",
+   "t0": 60.24,
+   "t1": 61.4,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "far",
+   "t0": 61.395,
+   "t1": 61.8,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "too",
+   "t0": 61.83,
+   "t1": 62.04,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "small",
+   "t0": 62.17,
+   "t1": 62.52,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "to",
+   "t0": 62.51,
+   "t1": 62.76,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "see.",
+   "t0": 62.795,
+   "t1": 63.72,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Some",
+   "t0": 63.725,
+   "t1": 63.96,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "of",
+   "t0": 63.995,
+   "t1": 64.12,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 64.17,
+   "t1": 64.28,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "dust",
+   "t0": 64.335,
+   "t1": 64.68,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "in",
+   "t0": 64.68,
+   "t1": 64.84,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "your",
+   "t0": 64.795,
+   "t1": 65.0,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "home\u2026",
+   "t0": 65.06,
+   "t1": 65.32,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "began",
+   "t0": 65.495,
+   "t1": 65.96,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "as",
+   "t0": 66.28,
+   "t1": 66.52,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "you.",
+   "t0": 66.85,
+   "t1": 67.4,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Underneath,",
+   "t0": 70.285,
+   "t1": 70.92,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "new",
+   "t0": 70.91,
+   "t1": 71.24,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "cells",
+   "t0": 71.14,
+   "t1": 71.8,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "are",
+   "t0": 71.82,
+   "t1": 72.04,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "already",
+   "t0": 72.0,
+   "t1": 72.52,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "rising.",
+   "t0": 72.455,
+   "t1": 73.96,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Always",
+   "t0": 74.02,
+   "t1": 74.2,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "rebuilding\u2026",
+   "t0": 74.375,
+   "t1": 75.48,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "from",
+   "t0": 75.645,
+   "t1": 75.96,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "the",
+   "t0": 75.925,
+   "t1": 76.12,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "bottom",
+   "t0": 76.215,
+   "t1": 76.92,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "up.",
+   "t0": 77.09,
+   "t1": 77.56,
+   "line": "vo09",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Your",
+   "t0": 81.095,
+   "t1": 81.24,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "skin",
+   "t0": 81.335,
+   "t1": 81.64,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "has",
+   "t0": 81.735,
+   "t1": 81.8,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "plenty",
+   "t0": 81.825,
+   "t1": 82.12,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "more",
+   "t0": 82.11,
+   "t1": 82.36,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "quiet",
+   "t0": 82.395,
+   "t1": 82.76,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "secrets.",
+   "t0": 82.705,
+   "t1": 83.24,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "Tap",
+   "t0": 83.465,
+   "t1": 83.96,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "like",
+   "t0": 83.92,
+   "t1": 84.12,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "and",
+   "t0": 84.275,
+   "t1": 84.52,
+   "line": "vo10",
+   "beat": "cta"
+  },
+  {
+   "w": "follow.",
+   "t0": 84.615,
+   "t1": 85.08,
+   "line": "vo10",
+   "beat": "cta"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.36,
+   5.24,
+   "hook"
+  ],
+  "vo02": [
+   7.64,
+   13.24,
+   "normal"
+  ],
+  "vo03": [
+   15.64,
+   23.8,
+   "change"
+  ],
+  "vo04": [
+   26.2,
+   33.72,
+   "why"
+  ],
+  "vo05": [
+   36.12,
+   42.28,
+   "why"
+  ],
+  "vo06": [
+   44.68,
+   49.0,
+   "whoa"
+  ],
+  "vo07": [
+   51.4,
+   55.08,
+   "whoa"
+  ],
+  "vo08": [
+   57.48,
+   67.72,
+   "takeaway"
+  ],
+  "vo09": [
+   70.12,
+   78.2,
+   "takeaway"
+  ],
+  "vo10": [
+   81.0,
+   85.4,
+   "cta"
+  ]
+ }
+}

@@ -63,7 +63,7 @@ export async function create(args) {
 
   // ── timing and camera keys ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
   const T0 = { grow0: S("vo03", 0.4), grow1: E("vo03", 1.0), fill0: S("vo05", 0.8), fill1: E("vo05", -0.8), seb0: S("vo06", 0.3), seb1: E("vo06", 0.0), coat0: S("vo06", 4.0), coat1: E("vo06", 2.0), mic0: S("vo07", 0.2), blk0: S("vo09", 0.2), blk1: E("vo09", 1.2) };
-  const CK = [[0, [-5.5, 5.6, 10.5], [0.2, -0.6, -2.0], 32], [S("vo01", 4.0), [-3.5, 4.4, 9.5], [0.2, -0.7, -2.0], 32], [S("vo02", 0.3), [-1.5, 2.2, 10.5], [-0.3, -1.4, -0.6], 32], [S("vo02", 3.8), [-0.6, -2.6, 9.5], [-0.4, -3.0, -0.6], 30],
+  const CK = [[0, [1.0, -4.4, 27], [1.2, -4.6, -0.6], 32], [S("vo01", 4.0), [-3.5, 4.4, 9.5], [0.2, -0.7, -2.0], 32], [S("vo02", 0.3), [-1.5, 2.2, 10.5], [-0.3, -1.4, -0.6], 32], [S("vo02", 3.8), [-0.6, -2.6, 9.5], [-0.4, -3.0, -0.6], 30],
     [S("vo03", 0), [-0.6, -5.0, 9.0], [-0.4, -5.2, -0.8], 30], [E("vo03", 0), [-0.2, -6.6, 9.5], [-0.3, -6.4, -0.8], 30], [S("vo04", 0.5), [2.2, -5.6, 11.5], [2.4, -5.4, -0.6], 32], [S("vo05", 0), [4.6, -5.6, 9.2], [4.6, -5.6, -0.6], 30], [E("vo05", 0), [4.6, -5.6, 9.8], [4.6, -5.6, -0.6], 30],
     [S("vo06", 1.5), [1.4, -3.6, 10.0], [0.9, -3.8, -0.6], 30], [S("vo06", 5.5), [0.3, -0.8, 10.5], [0.3, -0.9, -0.6], 31], [E("vo06", 0), [-0.2, -1.8, 9.5], [0.0, -2.2, -0.7], 30], [S("vo07", 1.0), [-0.8, -2.8, 8.5], [-0.2, -2.8, -0.7], 30], [E("vo07", 0), [-0.6, -3.0, 9.0], [-0.2, -2.8, -0.7], 30],
     [S("vo08", 0.2), [0.5, -4.0, 14], [0.8, -4.2, -0.6], 32], [S("vo08", 4.0), [1.0, -4.4, 27], [1.2, -4.6, -0.6], 32], [E("vo08", 0), [1.2, -4.0, 25], [1.2, -4.4, -0.6], 32], [S("vo09", 1.0), [-1.6, 1.6, 11], [0.2, -0.7, -1.2], 32], [E("vo09", 0), [-1.2, 1.2, 11.5], [0.2, -0.8, -1.4], 32], [E("vo10", 20), [-1.0, 1.0, 11.6], [0.2, -0.8, -1.4], 32]];
@@ -73,22 +73,23 @@ export async function create(args) {
   return {
     renderer,
     seek(t) {
+      const tz = 1 - sm(seg(t, 0.9, S("vo01", 3.8)));   // v2 opening: the film starts on the payoff (the whole pore: gland full of oil, sebum flowing and coating, residents) and winds back to the surface
       const cam = { pos: keyed(1, t), look: keyed(2, t), fov: keyed(3, t), roll: 0, sc: "S" }; cam.pos[0] += 0.5 * Math.sin(t * 0.21); cam.pos[1] += 0.25 * Math.sin(t * 0.17 + 1); W3.camPose(t, cam);
       // hair growth: draw the tube up to its growing length
       const g = 0.62 + 0.38 * sm(seg(t, T0.grow0, T0.grow1)); hairGeo.setDrawRange(0, Math.floor(hairIdx * g / 3) * 3);
       // gland: cells fill with oil, then break down into oil
-      const dv = sm(seg(t, S("vo04", 1.0), S("vo04", 3.0))), fill = sm(seg(t, T0.fill0, T0.fill1)), glow = sm(seg(t, S("vo04", 0.5), S("vo05", 2))) * (1 - 0.5 * sm(seg(t, T0.seb0, T0.seb1 + 3)));
+      const dv = Math.max(tz, sm(seg(t, S("vo04", 1.0), S("vo04", 3.0)))), fill = Math.max(tz, sm(seg(t, T0.fill0, T0.fill1))), glow = Math.max(tz, sm(seg(t, S("vo04", 0.5), S("vo05", 2)))) * (1 - 0.5 * sm(seg(t, T0.seb0, T0.seb1 + 3)));
       let ci = 0; lobeC.forEach(([x, y, z], i) => { for (let k = 0; k < 14; k++) { const a = hash(i * 31 + k * 7) * 6.28, b = Math.acos(2 * hash(i * 17 + k * 3) - 1), r = 0.55 * Math.cbrt(hash(i * 13 + k)), px = x + r * Math.sin(b) * Math.cos(a), py = y + r * Math.sin(b) * Math.sin(a) * 0.9, pz = z + r * Math.cos(b) * 0.7;
           const ph = clamp(fill * 1.3 - hash(i * 5 + k) * 0.3), cell = (1 - sm(seg(ph, 0.55, 1.0))) * 0.34, oil = (sm(seg(ph, 0.1, 0.9)) * 0.26 + sm(seg(ph, 0.6, 1.0)) * 0.16);
           D.position.set(px, py, pz); D.rotation.set(0, 0, 0); D.scale.set(cell, cell, cell); D.updateMatrix(); cellI.setMatrixAt(ci, D.matrix); D.position.set(px, py, pz + 0.05); D.scale.set(oil, oil, oil); D.updateMatrix(); oilI.setMatrixAt(ci, D.matrix); ci++; } lobeGlow[i].material.opacity = 0.12 * glow; });
       cellI.instanceMatrix.needsUpdate = oilI.instanceMatrix.needsUpdate = true; lobeM.emissiveIntensity = 0.1 + 0.4 * fill; cellM.color.set(0xf0e0b8).lerp(new THREE.Color(0xf2b038), fill); cellM.emissive.set(0xb8863a).lerp(new THREE.Color(0xe08a10), fill); duct.material.opacity = 0.9 * dv; duct.visible = dv > 0.01; oilM.emissiveIntensity = 0.45 + 0.3 * Math.sin(t * 1.3);
       // sebum beads along the path, in a steady stream while it flows
-      const flow = sm(seg(t, T0.seb0 - 0.5, T0.seb0 + 1.5)) * (1 - 0.7 * sm(seg(t, E("vo07", 2), E("vo08", 0))));
-      for (let i = 0; i < NB; i++) { const k = ((t - T0.seb0) * 0.1 + i / NB) % 1, kk = (k + 1) % 1, u = clamp(kk), vis = flow * (t > T0.seb0 - 0.5 ? 1 : 0) * Math.min(1, u * 8) * Math.min(1, (1 - u) * 6); sebPath.getPoint(u, pt); D.position.set(pt.x + 0.12 * Math.sin(i * 2.3 + t), pt.y, pt.z + 0.12 * Math.cos(i * 1.7)); const sz = 0.2 * vis * (0.8 + 0.4 * hash(i)); D.scale.set(sz, sz, sz); D.updateMatrix(); bead.setMatrixAt(i, D.matrix); }
+      const flow = Math.max(tz, sm(seg(t, T0.seb0 - 0.5, T0.seb0 + 1.5))) * (1 - 0.7 * sm(seg(t, E("vo07", 2), E("vo08", 0))));
+      for (let i = 0; i < NB; i++) { const k = ((t - T0.seb0) * 0.1 + i / NB) % 1, kk = (k + 1) % 1, u = clamp(kk), vis = flow * ((t > T0.seb0 - 0.5 || tz > 0.001) ? 1 : 0) * Math.min(1, u * 8) * Math.min(1, (1 - u) * 6); sebPath.getPoint(u, pt); D.position.set(pt.x + 0.12 * Math.sin(i * 2.3 + t), pt.y, pt.z + 0.12 * Math.cos(i * 1.7)); const sz = 0.2 * vis * (0.8 + 0.4 * hash(i)); D.scale.set(sz, sz, sz); D.updateMatrix(); bead.setMatrixAt(i, D.matrix); }
       bead.instanceMatrix.needsUpdate = true;
-      const cs = sm(seg(t, T0.coat0, T0.coat1)); coat.scale.set(0.01 + 3.2 * cs, 0.02 + 0.09 * cs, 0.01 + 1.8 * cs);
+      const cs = Math.max(tz, sm(seg(t, T0.coat0, T0.coat1))); coat.scale.set(0.01 + 3.2 * cs, 0.02 + 0.09 * cs, 0.01 + 1.8 * cs);
       // microbes along the follicle wall, feeding (pulse) once line 7 begins
-      const mv = sm(seg(t, T0.mic0, T0.mic0 + 1.6)) * (1 - 0.3 * sm(seg(t, E("vo08", 0), E("vo09", 0))));
+      const mv = Math.max(tz, sm(seg(t, T0.mic0, T0.mic0 + 1.6))) * (1 - 0.3 * sm(seg(t, E("vo08", 0), E("vo09", 0))));
       for (let i = 0; i < NM; i++) { const y = -1.2 - 3.0 * hash(i * 3.1), side = i % 2 ? 1 : -1, x = (side > 0 ? 0.62 : -1.5) + 0.2 * hash(i * 7.7) + 0.08 * Math.sin(t * 1.6 + i * 2.1), z = -1.3 + 0.7 * hash(i * 9.3) + 0.06 * Math.cos(t * 1.3 + i), pulse = 1 + 0.18 * Math.sin(t * 3.2 + i * 1.7) * mv, sz = 0.2 * mv * pulse;
         D.position.set(x, y + 0.06 * Math.sin(t * 1.1 + i), z); D.rotation.set(0, 0, 0.6 * Math.sin(i)); D.scale.set(sz * 1.5, sz, sz); D.updateMatrix(); mic.setMatrixAt(i, D.matrix); } D.rotation.set(0, 0, 0); mic.instanceMatrix.needsUpdate = true; micM.emissiveIntensity = 0.45 + 0.25 * Math.sin(t * 2.2);
       // the doorway starts to close: a few flat cells slide into the mouth

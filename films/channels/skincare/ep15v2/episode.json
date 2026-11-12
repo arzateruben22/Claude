@@ -1,0 +1,163 @@
+{
+ "title": "What Is Actually Inside a Pore?",
+ "three": {
+  "module": "../set/pore3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.012,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   0.485,
+   3.06,
+   "Look closely at your skin."
+  ],
+  [
+   3.03,
+   6.49,
+   "Those tiny dots… are pores."
+  ],
+  [
+   8.91,
+   11.66,
+   "The pores you can see are little doorways,"
+  ],
+  [
+   11.63,
+   16.17,
+   "into narrow tunnels called hair follicles."
+  ],
+  [
+   18.415,
+   20.495,
+   "Even where you can't see one…"
+  ],
+  [
+   20.465,
+   24.57,
+   "a fine hair is usually growing inside."
+  ],
+  [
+   26.99,
+   30.385,
+   "Partway down sits a small oil gland."
+  ],
+  [
+   30.355,
+   33.29,
+   "Its cells do something strange."
+  ],
+  [
+   35.595,
+   38.85,
+   "Each one slowly fills with oil…"
+  ],
+  [
+   38.82,
+   43.53,
+   "until the whole cell breaks down and becomes oil."
+  ],
+  [
+   46.25,
+   48.705,
+   "That oil is called sebum."
+  ],
+  [
+   48.675,
+   50.96,
+   "It glides up along the hair,"
+  ],
+  [
+   50.93,
+   53.355,
+   "and spreads over your skin in a thin,"
+  ],
+  [
+   53.325,
+   55.45,
+   "soft coat."
+  ],
+  [
+   58.205,
+   61.565,
+   "Tiny microbes live in there too,"
+  ],
+  [
+   61.535,
+   64.73,
+   "quietly feeding on that oil."
+  ],
+  [
+   67.1,
+   70.94,
+   "That's a pore. A doorway. A hair."
+  ],
+  [
+   70.91,
+   74.31,
+   "A gland. And its tiny residents."
+  ],
+  [
+   77.22,
+   80.97,
+   "Until… the doorway gets blocked."
+  ],
+  [
+   84.15,
+   86.015,
+   "If you're feeling a little calmer,"
+  ],
+  [
+   85.985,
+   88.97,
+   "tap like and follow."
+  ]
+ ],
+ "hook": {
+  "text": "A pore is a tiny world",
+  "t0": 0.0,
+  "t1": 3.0,
+  "size": 88,
+  "top": 300,
+  "grad": 0.75
+ }
+}

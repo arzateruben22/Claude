@@ -43,12 +43,13 @@ export async function create(args) {
   const sH = (t) => { let i = 0; while (i < HK.length - 2 && t >= HK[i + 1][0]) i++; const a = HK[i], b = HK[i + 1]; return lerp(a[1], b[1], sm(seg(t, a[0], b[0]))) * 0.5 + lerp(a[1], b[1], seg(t, a[0], b[0])) * 0.5; };
   const CD = [[0, 8.5], [S("vo02", 0), 9.5], [S("vo03", 0), 11], [S("vo04", 0), 8.5], [S("vo05", 0), 13], [S("vo06", 0), 11.5], [S("vo07", 0), 12], [S("vo07", 2.2), 27], [S("vo08", 0), 26], [S("vo08", 2.5), 15], [E("vo08", 0), 15], [S("vo09", 0.5), 18], [E("vo09", 0), 19]];
   const keyed = (K, t) => { let i = 0; while (i < K.length - 2 && t >= K[i + 1][0]) i++; const a = K[i], b = K[i + 1]; return lerp(a[1], b[1], sm(seg(t, a[0], b[0]))); };
-  const G8 = (t) => sm(seg(t, S("vo08", 0.6), S("vo08", 3.6)));
+  const TZ = (t) => 1 - sm(seg(t, 0.9, S("vo01", 3.8)));   // v2 opening: the film starts on the payoff (the top cells lifting away as dust) and runs back down to the new cell being born
+  const G8 = (t) => Math.max(TZ(t), sm(seg(t, S("vo08", 0.6), S("vo08", 3.6))));
 
   return {
     renderer,
     seek(t) {
-      const sh = sH(t), fl = Math.floor(sh), fr = sh - fl, g8 = G8(t); let ci = 0, ni = 0, hx = 0, hy = Y(sh);
+      const tz = TZ(t), sh = lerp(sH(t), 18.0, tz), fl = Math.floor(sh), fr = sh - fl, g8 = G8(t); let ci = 0, ni = 0, hx = 0, hy = Y(sh);
       for (let c = -(NC >> 1); c <= (NC >> 1); c++) { const off = (c % 2 ? 0.5 : 0) + 0.13 * Math.sin(c * 2.3), colX = c * DX + 0.07 * Math.sin(c * 3.1);
         for (let m = -1; m < NK - 1; m++) { const s = m + fr + off, live = s > -1.0 && s < 20.5;
           for (let row = 0; row < 2; row++) { const idx = ci++; if (!live) { D.scale.set(0, 0, 0); D.position.set(0, -99, 0); D.updateMatrix(); cells.setMatrixAt(idx, D.matrix); if (row === 0) nuc.setMatrixAt(ni++, D.matrix); continue; }
@@ -63,7 +64,7 @@ export async function create(args) {
       // water beads below the bricks (line 6), dust over the top (line 8)
       const gw = sm(seg(t, S("vo06", -0.2), S("vo06", 0.8))) * (1 - sm(seg(t, E("vo07", -0.5), E("vo07", 1.5)))), yStop = Y(11.6) - 0.4;
       beads.forEach((b, i) => { const k = ((t * (0.12 + 0.08 * hash(i)) + hash(i * 7)) % 1), up = k < 0.55 ? eo(k / 0.55) : 1 - eo((k - 0.55) / 0.45) * 0.9; b.position.set((hash(i * 3) - 0.5) * 7.6, lerp(yStop - 3.2, yStop, up) + 0.05 * Math.sin(t * 5 + i), 0.9); b.scale.setScalar(0.22 + 0.1 * hash(i + 4)); b.material.opacity = gw * (0.55 * Math.sin(Math.PI * clamp(k * 1.05))); });
-      dust.forEach((b, i) => { const k = clamp((t - S("vo08", 0.4) - hash(i * 5) * 4.0) / 9.0); b.position.set((hash(i * 3) - 0.5) * 11 + 1.8 * k * Math.sin(i + t * 0.3), Y(18.5) + 0.2 + k * (4 + 4 * hash(i)), 0.4 + hash(i * 9) * 1.5 - 1); b.scale.setScalar(0.07 + 0.08 * hash(i + 2)); b.material.opacity = 0.5 * Math.sin(Math.PI * k) * (k > 0 ? 1 : 0) * (1 - sm(seg(t, E("vo09", 0), E("vo09", 3)))); });
+      dust.forEach((b, i) => { const k = tz > 0.001 ? (t * 0.13 + hash(i * 5)) % 1 : clamp((t - S("vo08", 0.4) - hash(i * 5) * 4.0) / 9.0); b.position.set((hash(i * 3) - 0.5) * 11 + 1.8 * k * Math.sin(i + t * 0.3), Y(18.5) + 0.2 + k * (4 + 4 * hash(i)), 0.4 + hash(i * 9) * 1.5 - 1); b.scale.setScalar(0.07 + 0.08 * hash(i + 2)); b.material.opacity = 0.5 * Math.sin(Math.PI * k) * (k > 0 ? 1 : 0) * (tz > 0.001 ? tz : 1) * (1 - sm(seg(t, E("vo09", 0), E("vo09", 3)))); });
       motes.forEach((s, i) => { s.position.set(-10 + hash(i * 3.3) * 20 + 0.4 * Math.sin(t * 0.2 + i), -14 + hash(i * 5.9) * 17 + ((t * 0.08 + hash(i * 1.7)) % 1) * 1.5, -2 + hash(i * 7.1) * 6); s.scale.setScalar(0.08 + 0.05 * hash(i)); s.material.opacity = 0.2 + 0.15 * Math.sin(t * 0.8 + i); });
       // camera: follow the hero, pull wide for the month, rise to the top for the drifting, then descend to the new cells at the bottom
       const dist = keyed(CD, t), top = sm(seg(t, S("vo07", 1.5), S("vo07", 3.5))), toBottom = sm(seg(t, S("vo09", 0.3), E("vo09", -0.8)));

@@ -33,21 +33,21 @@
    "beat": "why",
    "text": "Each one slowly fills with oil… until the whole cell breaks down and becomes oil.",
    "a": 179.12,
-   "b": 186.56
+   "b": 187.04
   },
   {
    "id": "vo06",
    "beat": "whoa",
    "text": "That oil is called sebum. It glides up along the hair, and spreads over your skin in a thin, soft coat.",
    "a": 190.56,
-   "b": 199.2
+   "b": 199.84
   },
   {
    "id": "vo07",
    "beat": "whoa",
    "text": "Tiny microbes live in there too, quietly feeding on that oil.",
    "a": 200.8,
-   "b": 207.2
+   "b": 207.12
   },
   {
    "id": "vo08",
@@ -61,7 +61,7 @@
    "beat": "takeaway",
    "text": "Until… the doorway gets blocked.",
    "a": 215.6,
-   "b": 219.2
+   "b": 219.52
   }
  ],
  "cta": {

@@ -4,78 +4,78 @@
   {
    "id": "vo01",
    "text": "Deep in your skin, right now, a new cell is being born.",
-   "heard": "In your skin, right now, a new cell is being born.",
+   "heard": "Deep in your skin, right now, a new cell is being born.",
    "words": [
     {
      "w": "Deep",
-     "start": 0.075,
-     "end": 0.24,
-     "heard": false
-    },
-    {
-     "w": "in",
-     "start": 0.195,
-     "end": 0.4,
-     "heard": true
-    },
-    {
-     "w": "your",
-     "start": 0.36,
+     "start": 0.26,
      "end": 0.56,
      "heard": true
     },
     {
+     "w": "in",
+     "start": 0.475,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.615,
+     "end": 0.88,
+     "heard": true
+    },
+    {
      "w": "skin,",
-     "start": 0.565,
-     "end": 1.2,
+     "start": 1.01,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "right",
-     "start": 1.115,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "now,",
-     "start": 1.415,
+     "start": 1.515,
      "end": 1.84,
      "heard": true
     },
     {
-     "w": "a",
-     "start": 1.885,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "new",
-     "start": 1.915,
+     "w": "now,",
+     "start": 1.815,
      "end": 2.24,
      "heard": true
     },
     {
+     "w": "a",
+     "start": 2.285,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "new",
+     "start": 2.315,
+     "end": 2.64,
+     "heard": true
+    },
+    {
      "w": "cell",
-     "start": 2.2,
-     "end": 2.72,
-     "heard": true
-    },
-    {
-     "w": "is",
-     "start": 2.87,
-     "end": 2.92,
-     "heard": true
-    },
-    {
-     "w": "being",
-     "start": 2.95,
+     "start": 2.6,
      "end": 3.12,
      "heard": true
     },
     {
+     "w": "is",
+     "start": 3.27,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "being",
+     "start": 3.35,
+     "end": 3.6,
+     "heard": true
+    },
+    {
      "w": "born.",
-     "start": 3.22,
-     "end": 4.16,
+     "start": 3.62,
+     "end": 4.56,
      "heard": true
     }
    ]
@@ -156,7 +156,7 @@
   {
    "id": "vo03",
    "text": "As it climbs, it fills with a tough protein called keratin. It grows flatter… and flatter.",
-   "heard": "As it climbs, it fills with a tough protein called keratin. It grows flatter and",
+   "heard": "As it climbs, it fills with a subprotein called keratin. It grows flatter and flatter.",
    "words": [
     {
      "w": "As",
@@ -203,14 +203,14 @@
     {
      "w": "tough",
      "start": 2.525,
-     "end": 2.8,
-     "heard": true
+     "end": 3.36,
+     "heard": false
     },
     {
      "w": "protein",
-     "start": 2.815,
+     "start": 2.555,
      "end": 3.36,
-     "heard": true
+     "heard": false
     },
     {
      "w": "called",
@@ -233,26 +233,26 @@
     {
      "w": "grows",
      "start": 5.315,
-     "end": 5.6,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "flatter…",
-     "start": 5.66,
-     "end": 6.0,
+     "start": 5.705,
+     "end": 6.16,
      "heard": true
     },
     {
      "w": "and",
      "start": 6.435,
-     "end": 6.485,
+     "end": 6.56,
      "heard": true
     },
     {
      "w": "flatter.",
-     "start": 6.465,
-     "end": 6.54,
-     "heard": false
+     "start": 6.645,
+     "end": 7.52,
+     "heard": true
     }
    ]
   },
@@ -518,38 +518,38 @@
     },
     {
      "w": "whole",
-     "start": 0.23,
+     "start": 0.445,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "journey",
      "start": 0.725,
-     "end": 1.12,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "takes",
      "start": 1.195,
-     "end": 1.44,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.36,
-     "end": 1.76,
+     "start": 1.59,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.86,
-     "end": 1.92,
+     "start": 1.955,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "month.",
-     "start": 1.955,
-     "end": 2.24,
+     "start": 2.155,
+     "end": 3.36,
      "heard": true
     }
    ]
@@ -557,138 +557,138 @@
   {
    "id": "vo08",
    "text": "Then, quietly, the top cells drift away, far too small to see. Some of the dust in your home… began as you.",
-   "heard": "And quietly the top cells drift away, far too small to see. Some of the dust in your home began as you.",
+   "heard": "Then quietly the top cells drift away, far too small to see. Some of the dust in your home began as you.",
    "words": [
     {
      "w": "Then,",
-     "start": 0.0,
-     "end": 0.32,
-     "heard": false
-    },
-    {
-     "w": "quietly,",
-     "start": 0.235,
-     "end": 0.88,
+     "start": 0.215,
+     "end": 0.48,
      "heard": true
     },
     {
-     "w": "the",
-     "start": 1.15,
+     "w": "quietly,",
+     "start": 0.515,
      "end": 1.2,
      "heard": true
     },
     {
-     "w": "top",
-     "start": 1.3,
+     "w": "the",
+     "start": 1.47,
      "end": 1.52,
      "heard": true
     },
     {
+     "w": "top",
+     "start": 1.62,
+     "end": 1.84,
+     "heard": true
+    },
+    {
      "w": "cells",
-     "start": 1.575,
-     "end": 2.08,
+     "start": 1.895,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "drift",
-     "start": 2.06,
-     "end": 2.56,
+     "start": 2.38,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "away,",
-     "start": 2.44,
-     "end": 3.6,
+     "start": 2.76,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "far",
-     "start": 3.595,
-     "end": 4.0,
+     "start": 3.915,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "too",
-     "start": 4.03,
-     "end": 4.24,
+     "start": 4.35,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "small",
-     "start": 4.37,
-     "end": 4.72,
+     "start": 4.69,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 4.71,
-     "end": 4.96,
+     "start": 5.03,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "see.",
-     "start": 4.995,
-     "end": 5.92,
+     "start": 5.315,
+     "end": 6.24,
      "heard": true
     },
     {
      "w": "Some",
-     "start": 5.925,
-     "end": 6.16,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 6.195,
-     "end": 6.32,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 6.37,
+     "start": 6.245,
      "end": 6.48,
      "heard": true
     },
     {
+     "w": "of",
+     "start": 6.515,
+     "end": 6.64,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 6.69,
+     "end": 6.8,
+     "heard": true
+    },
+    {
      "w": "dust",
-     "start": 6.535,
-     "end": 6.88,
-     "heard": true
-    },
-    {
-     "w": "in",
-     "start": 6.88,
-     "end": 7.04,
-     "heard": true
-    },
-    {
-     "w": "your",
-     "start": 6.995,
+     "start": 6.855,
      "end": 7.2,
      "heard": true
     },
     {
-     "w": "home…",
-     "start": 7.26,
+     "w": "in",
+     "start": 7.2,
+     "end": 7.36,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 7.315,
      "end": 7.52,
      "heard": true
     },
     {
+     "w": "home…",
+     "start": 7.58,
+     "end": 7.84,
+     "heard": true
+    },
+    {
      "w": "began",
-     "start": 7.695,
-     "end": 8.16,
+     "start": 8.015,
+     "end": 8.48,
      "heard": true
     },
     {
      "w": "as",
-     "start": 8.48,
-     "end": 8.72,
+     "start": 8.8,
+     "end": 9.04,
      "heard": true
     },
     {
      "w": "you.",
-     "start": 9.05,
-     "end": 9.6,
+     "start": 9.37,
+     "end": 9.92,
      "heard": true
     }
    ]
