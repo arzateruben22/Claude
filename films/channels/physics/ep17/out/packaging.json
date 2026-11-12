@@ -123,9 +123,14 @@
   "thumbnailFile": "reality-rulebook-s3p5-cover.jpg",
   "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a bullet entering a red apple, the skin dimpled around it, a narrow translucent blue shock cone trailing behind the bullet. Composition: apple large centre, bullet at the left edge of the apple, cone sweeping left. Lighting and treatment: warm side light, dark background; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: suspense. Text: \"ONE SECOND\" in a bold geometric sans, placed upper third. Scientific accuracy: the bullet in Edgerton's famous photograph flew about 850 m/s, Mach 2.5; the apple is about 8 cm; it crosses it in about 94 microseconds. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
   "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
-  "note": "Cover re-cut from a HUD-free render of the part itself; there is no hand or figure in the film, so the human-anchor idea from PACKAGING.md was skipped. Cover text does not repeat the title.",
+  "note": "Cover is the owner's AI illustration (whole 9:16 image) with the words added in code, both inside the centre 3:4 band; the words do not repeat the title.",
   "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
   "postingCopyLines": [
-    "Kitchen illustration made with AI. The apple's photo is an illustration; the bullet and the flying bits are drawn by code."
-  ]
+    "Kitchen illustration made with AI. The apple's photo is an illustration; the bullet and the flying bits are drawn by code.",
+    "Cover illustration made with AI."
+  ],
+  "shortsCover": {
+    "text": "10,000× slower",
+    "art": "lf01/art/owner/covers/p5-apple-9x16.png"
+  }
 }

@@ -124,12 +124,15 @@
   "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a hummingbird hovering beside a window feeder, one wing a crisp shape and the other a fan of faint ghost copies. Composition: centre-left, large, side profile, negative space above. Lighting and treatment: soft daylight from the window, cool sky behind; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: '50' very large in blue (#1F3BD1) above 'beats a second' in bold ink, lower left. Scientific accuracy: hummingbird wings beat about fifty times a second; the model wing sweeps forward, flips and sweeps back. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
   "shortsCover": {
     "frameSeconds": 18.0,
-    "text": "TEN TIMES SLOWER"
+    "text": "50 beats a second",
+    "art": "lf01/art/owner/covers/p1-hummingbird-9x16.png"
   },
   "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
-  "note": "Cover re-cut from a HUD-free render of the film at 33.4 s; no hand or figure exists in this part (the model bird is the human-anchor substitute).",
+  "note": "Cover is the owner's AI illustration (whole 9:16 image) with the words added in code, both inside the centre 3:4 band; the words do not repeat the title.",
   "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
   "postingCopyLines": [
-    "Kitchen illustration made with AI. The bird is drawn by code."
-  ]
+    "Kitchen illustration made with AI. The bird is drawn by code.",
+    "Cover illustration made with AI."
+  ],
+  "thumbnailFile16x9": "reality-rulebook-s3p1-thumb-16x9.jpg"
 }

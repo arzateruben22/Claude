@@ -123,10 +123,15 @@
   "thumbnailFile": "reality-rulebook-s3p3-cover.jpg",
   "chatgptPrompt": "Create a YouTube Shorts cover, 9:16 (1080x1920). Subject: a soap bubble about as wide as an egg with a round hole opening in its film, iridescent thin-film colours around the rim, dark kitchen cabinet behind. Composition: bubble large centre, hole at upper right, dark kitchen cabinet behind for contrast. Lighting and treatment: backlit, thin-film colours; palette cream #E9E3D3, ink #1B1E24, cobalt #2F5BFF; shallow depth of field, clean exact surfaces. Mood: wonder. Text: \"ELEVEN SECONDS\" in a bold geometric sans, placed upper third. Scientific accuracy: the hole in a bursting bubble opens at several meters per second; the whole egg-sized bubble is gone in about a hundredth of a second. Avoid: no arrows, circles, faces with exaggerated expressions, logos, watermarks, brand names, extra text, or anything that looks like a real news photo. Style: premium editorial science documentary, distinctive and art-directed, not generic AI art. Keep the focal point inside the centre safe area, clear of the bottom 25%.",
   "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
-  "note": "Cover is the owner's AI illustration fitted to the 9:16 width (whole image, soft blurred extension above and below) with words added in code; the words do not repeat the title.",
+  "note": "Cover is the owner's AI illustration (whole 9:16 image) with the words added in code, both inside the centre 3:4 band; the words do not repeat the title.",
   "thumbnailIllustration": "Thumbnail illustration made with AI (owner's ChatGPT art, lf01/art/owner/bubble-bursting.png); the film itself is code-drawn",
   "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
   "postingCopyLines": [
-    "Kitchen illustration made with AI. The soap bubble is drawn by code."
-  ]
+    "Kitchen illustration made with AI. The soap bubble is drawn by code.",
+    "Cover illustration made with AI."
+  ],
+  "shortsCover": {
+    "text": "1,000× slower",
+    "art": "lf01/art/owner/covers/p3-popcorn-9x16.png"
+  }
 }
