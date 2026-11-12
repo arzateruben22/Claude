@@ -1,0 +1,114 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p1_open",
+   "sub_take": null,
+   "text": "What if Earth spun faster, and couldn't stop?"
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s002",
+   "sub_take": null,
+   "text": "You're standing on the equator, and you'll watch what happens minute by minute, until the planet can't take it anymore."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s003",
+   "sub_take": null,
+   "text": "The Earth keeps its size, its air and its water."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s004",
+   "sub_take": null,
+   "text": "Only the spin changes, and it only gets faster."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s005",
+   "sub_take": null,
+   "text": "One number matters: the length of a day."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s006",
+   "sub_take": null,
+   "text": "It starts at twenty-four hours and ends at about an hour and twenty-four minutes."
+  },
+  {
+   "line": "vo07",
+   "kind": "sent",
+   "take": "A.s007",
+   "sub_take": null,
+   "text": "Under it, how fast the ground moves under your feet."
+  },
+  {
+   "line": "vo08",
+   "kind": "sent",
+   "take": "A.s008",
+   "sub_take": null,
+   "text": "Nothing resets."
+  },
+  {
+   "line": "vo09",
+   "kind": "sent",
+   "take": "A.s009",
+   "sub_take": null,
+   "text": "Nothing slows."
+  },
+  {
+   "line": "vo10",
+   "kind": "sent",
+   "take": "A.s010",
+   "sub_take": null,
+   "text": "Treat every number as a first guess."
+  },
+  {
+   "line": "vo11",
+   "kind": "sent",
+   "take": "A.s011",
+   "sub_take": null,
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour."
+  },
+  {
+   "line": "vo12",
+   "kind": "sent",
+   "take": "A.s012",
+   "sub_take": null,
+   "text": "What you feel is a tiny push outward: the spin makes you about a third of a percent lighter."
+  },
+  {
+   "line": "vo13",
+   "kind": "cta",
+   "take": "V.cta_follow",
+   "sub_take": "V.cta_sub",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "line": "vo14",
+   "kind": "cliff",
+   "take": "V.p1_cliff",
+   "sub_take": null,
+   "text": "And then the spin has only just begun to speed up."
+  },
+  {
+   "line": "vo15",
+   "kind": "closer",
+   "take": "V.c1",
+   "sub_take": null,
+   "text": "Part one of eight. Full video on YouTube."
+  }
+ ]
+}
