@@ -144,6 +144,12 @@
    "t1": 208.5333
   },
   {
+   "t": 156.9333,
+   "kind": "badge",
+   "tag": "code-p5",
+   "text": "Kitchen: AI illustration · popcorn drawn by code"
+  },
+  {
    "t": 172.7667,
    "kind": "contact",
    "tag": "pop"
@@ -151,19 +157,19 @@
   {
    "t": 184.1333,
    "kind": "badge",
-   "tag": "code-p5",
+   "tag": "code-p6",
    "text": "Kitchen: AI illustration · bubble drawn by code"
   },
   {
    "t": 204.5333,
    "kind": "badge",
-   "tag": "code-s6",
+   "tag": "code-s7",
    "text": "Drawn by code · model"
   },
   {
    "t": 208.5166,
    "kind": "badge",
-   "tag": "code-p7",
+   "tag": "code-p8",
    "text": "Kitchen: AI illustration · wave drawn by code"
   },
   {
@@ -180,7 +186,7 @@
   {
    "t": 265.85,
    "kind": "badge",
-   "tag": "code-s8",
+   "tag": "code-s9",
    "text": "Drawn by code · model"
   },
   {
@@ -192,8 +198,8 @@
   {
    "t": 288.3,
    "kind": "badge",
-   "tag": "code-p9",
-   "text": "Kitchen: AI illustration · bullet and apple bits drawn by code"
+   "tag": "code-p10",
+   "text": "Kitchen: AI illustration · bullet and apple drawn by code"
   },
   {
    "t": 298.8,
@@ -203,7 +209,7 @@
   {
    "t": 304.8,
    "kind": "badge",
-   "tag": "code-s10",
+   "tag": "code-s11",
    "text": "Drawn by code · model"
   },
   {
@@ -213,15 +219,33 @@
    "t1": 383.4667
   },
   {
+   "t": 342.9667,
+   "kind": "badge",
+   "tag": "code-p12",
+   "text": "Kitchen: AI illustration · lightning drawn by code"
+  },
+  {
    "t": 366.1333,
    "kind": "contact",
    "tag": "strike"
+  },
+  {
+   "t": 383.15,
+   "kind": "badge",
+   "tag": "code-p13",
+   "text": "Kitchen: AI illustration · light drawn by code"
   },
   {
    "t": 383.4667,
    "kind": "section",
    "id": "light",
    "t1": 440.5333
+  },
+  {
+   "t": 440.5166,
+   "kind": "badge",
+   "tag": "code-s14",
+   "text": "Drawn by code · model"
   },
   {
    "t": 440.5333,

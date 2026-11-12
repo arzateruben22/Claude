@@ -364,6 +364,12 @@ elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() an
         PLATES.append(dict(_p05, t0=R(EV["bubble"]["in"] - 1.5), t1=R(EV["bubble"]["pop"] + 11.5)))
     if (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
         PLATES.append(dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0)))
+    if (HERE / "art/owner/plates/plate-04-pan-clean-16x9.png").exists():
+        PLATES.append(dict(_p04, t0=R(EV["kernel"]["jump"] - 1.0), t1=R(EV["bubble"]["in"] - 1.5), swap={"t": R(EV["kernel"]["jump"] - 0.1), "file": PLATE04C, "file9": PLATE04C_9}))
+    if (HERE / "art/owner/plates/plate-07-storm-16x9.png").exists():
+        PLATES.append(dict(_p07, t0=R(EV["leader"]["t0"] - 5.0), t1=R(CUTS["light"] - 0.3)))
+    if (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
+        PLATES.append(dict(_p09, t0=R(CUTS["light"] - 0.3), t1=R(CUTS["still"])))
 else:
     PLATES = []
 # on plate shots the corner tag says what is illustration and what is code; the old tag stays on code-kitchen shots
