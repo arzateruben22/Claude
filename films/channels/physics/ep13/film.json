@@ -186,7 +186,9 @@
    1000000000.0
   ],
   "back": 1000000000.0,
-  "fades": [],
+  "fades": [
+   53.5833
+  ],
   "blur2": [
    0.0,
    9.8667
@@ -313,6 +315,14 @@
    "kind": "tag",
    "text": "Drawn by code · model",
    "t0": 53.2333,
+   "t1": 53.6333,
+   "slot": "tl"
+  },
+  {
+   "id": "code-p2",
+   "kind": "tag",
+   "text": "Kitchen: AI illustration · fly drawn by code",
+   "t0": 53.6333,
    "t1": 58.8833,
    "slot": "tl"
   }
@@ -432,6 +442,42 @@
    },
    "t0": 0.0,
    "t1": 53.2333
+  },
+  {
+   "id": "mug",
+   "file": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png",
+   "push": 0.1,
+   "parallax": 0,
+   "fade": 0.3,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "fly": {
+     "c": [
+      0.0151,
+      0.3807,
+      -1.0
+     ],
+     "rx": 0.05,
+     "ry": 0.008,
+     "rz": 0.035,
+     "scale": 0.0171
+    }
+   },
+   "t0": 53.6333,
+   "t1": 62.0
   }
  ],
  "captions": [

@@ -336,6 +336,10 @@ _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parall
                           "room": {"x0": -1.23, "x1": 1.18, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.79, "x1": 0.79, "z0": -2.98, "z1": -1.17}}}}}
 if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
+    if (HERE / "art/owner/plates/plate-03-tap-mug-16x9.png").exists() and EV["cupfly"][0] < 1e8:
+        # the closing teaser ("a fly by the cup") stands on plate 03, the blue mug under the tap, with the code fly circling it; a dip to dark joins the two
+        PLATES.append(dict(_p03, id="mug", t0=R(EV["cupfly"][0]), t1=R(ENDSHOW), push=0.1, fade=0.3, anchor={"fly": {"c": _w(863, 505), "rx": 0.05, "ry": 0.008, "rz": 0.035, "scale": 0.0171}}))
+        EV["fades"] = EV.get("fades", []) + [R(EV["cupfly"][0] - 0.05)]
 elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():
     PLATES = [dict(_p03, t0=R(EV["tapdrop"][0] - 1.0), t1=R(EV["tapdrop"][2] + 11.0), swap={"t": R(EV["tapdrop"][1]), "file": PLATE03C, "file9": PLATE03C})]
     if (HERE / "art/owner/plates/plate-10-windowsill-9x16.png").exists():
@@ -383,7 +387,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "pan": "popcorn", "storm": "lightning", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "mug": "fly", "pan": "popcorn", "storm": "lightning", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text=("Kitchen: AI illustration" if (p["id"] == "night" and (p.get("anchor") or {}).get("lampOn")) else "Kitchen: AI illustration \u00b7 %s drawn by code" % what), t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))
