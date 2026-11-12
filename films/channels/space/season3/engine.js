@@ -118,7 +118,11 @@ function placeCaption(cap, el, t) {
 }
 
 // small comparison chips at each stop ("2x wider", "8x pull"): timeline.chips [{t0, t1, text}]
-function chips(t) { const c = (TL.chips || []).find((q) => t >= q.t0 && t < q.t1), el = document.getElementById("chip"); if (!el) return; if (c) { el.textContent = c.text; el.style.opacity = Math.min(1, (t - c.t0) / 0.25, (c.t1 - t) / 0.25); } else el.style.opacity = 0; }
+function chips(t) {
+  const c = (TL.chips || []).find((q) => t >= q.t0 && t < q.t1), el = document.getElementById("chip"); if (!el) return;
+  if (c) { const u = t - c.t0, sc = u < 0.16 ? lerp(0.6, 1.1, sm(u / 0.16)) : u < 0.3 ? lerp(1.1, 1, sm((u - 0.16) / 0.14)) : 1;   // a small pop as the voice says it
+    el.textContent = c.text; el.style.opacity = Math.min(1, u / 0.1, (c.t1 - t) / 0.25); el.style.transform = (MODE === "land" ? "" : "translateX(-50%) ") + `scale(${sc.toFixed(3)})`; } else el.style.opacity = 0;
+}
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");
   document.getElementById("num").textContent = fmt(d) + " km"; document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));

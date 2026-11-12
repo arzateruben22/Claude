@@ -3,7 +3,7 @@ Writes long01/out/sample_v4.json; render with render_s3.mjs and mix with assembl
 import json, os, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 L1 = f"{ROOT}/films/channels/space/long01"; sys.path.insert(0, f"{ROOT}/kits/cinema/film"); from numerals import to_display
-lines = {x["id"]: x for x in json.load(open(L1 + "/voice4/lines.json"))["lines"]}
+lines = {x["id"]: x for x in json.load(open(L1 + "/voice5/lines.json"))["lines"]}
 clips, caps, chips, beats = [], [], [], []; t = 0.6
 def say(i, gap=0.35):
     global t
@@ -25,3 +25,12 @@ say("L7"); say("L8", 0.0); dur = round(t + 1.6, 3)
 tl = {"name": "sample_v4", "mode": "land", "dur": dur, "clips": clips, "captions": caps, "chips": chips, "beats": beats,
       "stars": [{"t0": 1.1, "dur": 0.9, "x0": 0.52, "y0": 0.07, "x1": 0.93, "y1": 0.3}], "km": [[0.0, 288300], [round(t_ap, 3), 192200, 3.2]], "tracks": {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}}
 json.dump(tl, open(L1 + "/out/sample_v4.json", "w"), indent=1, ensure_ascii=False); print("sample", dur, "s;", [(b["kind"], b["t0"], b["t1"]) for b in beats]); print([(c["t0"], c["text"]) for c in caps])
+# the sample's sound-effects sheet from the same timeline (seconds), including a soft tick on each chip as it pops in
+ap = beats[0]; cl = beats[1]; cues = []
+def cue(at, kind, **kw): cues.append({"at": at, "kind": kind, **kw, "seed": len(cues) + 1})
+cue(0.1, "mass", dur=6.0, gain=-3); cue(1.1, "shooting_star", dur=1.2, pan=[0.0, 0.8], gain=-2); cue("cap:L5-1.0", "riser", until="capend:L5+0.1", gain=0)
+cue(round(ap["t0"] - 0.1, 2), "mass", dur=5.0, gain=-2, f0=41); cue(ap["t0"], "whoosh", dur=round(ap["t1"] - ap["t0"], 2), pan=[-0.4, 0.4], gain=-2); cue(ap["t1"], "boom", dur=2.5, gain=-4); cue(ap["t1"], "tick", gain=-2)
+for c in chips: cue(c["t0"], "tick", gain=-1); cue(c["t0"], "boom", dur=1.8, gain=-7)
+cue(cl["t0"], "surge", dur=round(cl["t1"] - cl["t0"] + 0.5, 2), gain=2); cue(round(cl["t0"] + 2.2, 2), "wave", dur=2.6, gain=0); cue(cl["t0"] + 0.1, "mass", dur=round(cl["t1"] - cl["t0"], 2), gain=-1, f0=38)
+cue(round(cl["t0"] + 0.62 * (cl["t1"] - cl["t0"]), 2), "whoosh", dur=2.2, gain=-2); cue("cap:L8-1.6", "riser", until="capend:L8+0.1", gain=2); cue("capend:L8+0.1", "boom", dur=3.0, gain=1)
+json.dump({"palette": "space", "cues": cues}, open(L1 + "/v4/sample.sfx.json", "w"), indent=1)

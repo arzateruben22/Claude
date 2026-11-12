@@ -1,0 +1,488 @@
+{
+ "L1": {
+  "segments": [
+   [
+    1.5,
+    7.26
+   ]
+  ],
+  "why": "two clean reads; the first is steadier (level spread 5.2 vs 6.2 dB)",
+  "heard": "Tonight, the moon starts coming closer and it never stops.",
+  "not_heard": []
+ },
+ "L2": {
+  "segments": [
+   [
+    16.05,
+    29.75
+   ]
+  ],
+  "why": "one read",
+  "heard": "Right now, it's about 384,000 kilometers away, drifting off 3.8 centimeters a year. Tonight, it reverses a thought experiment built from real physics.",
+  "not_heard": [
+   "three",
+   "hundred",
+   "eighty-four",
+   "thousand",
+   "three",
+   "point",
+   "eight"
+  ]
+ },
+ "L3": {
+  "segments": [
+   [
+    30.64,
+    36.68
+   ]
+  ],
+  "why": "one read",
+  "heard": "Watch the number. It only goes down.",
+  "not_heard": []
+ },
+ "L4": {
+  "segments": [
+   [
+    36.68,
+    44.56
+   ]
+  ],
+  "why": "one read",
+  "heard": "288,000, a third wider. And the sea already fills it more than twice the tidal port.",
+  "not_heard": [
+   "Two",
+   "hundred",
+   "eighty-eight",
+   "thousand.",
+   "feels",
+   "pull."
+  ]
+ },
+ "L5": {
+  "segments": [
+   [
+    48.64,
+    52.79
+   ]
+  ],
+  "why": "one read",
+  "heard": "the distance and the water starts to climb.",
+  "not_heard": [
+   "Halve"
+  ]
+ },
+ "L6": {
+  "segments": [
+   [
+    53.75,
+    59.26
+   ]
+  ],
+  "why": "one read",
+  "heard": "Half the distance, twice as wide, eight times the tidal point.",
+  "not_heard": [
+   "pull."
+  ]
+ },
+ "L7": {
+  "segments": [
+   [
+    61.39,
+    68.52
+   ]
+  ],
+  "why": "one read",
+  "heard": "Not a measured height, just the idea. The whole ocean lifted from above.",
+  "not_heard": []
+ },
+ "L8": {
+  "segments": [
+   [
+    68.52,
+    71.83
+   ]
+  ],
+  "why": "one read",
+  "heard": "And the night is about to change.",
+  "not_heard": []
+ },
+ "L9": {
+  "segments": [
+   [
+    72.07,
+    81.52
+   ]
+  ],
+  "why": "one read",
+  "heard": "150,6. Your shadow is sharp on the sand.",
+  "not_heard": [
+   "One",
+   "hundred",
+   "fifty",
+   "thousand.",
+   "Six",
+   "and",
+   "a",
+   "half",
+   "times",
+   "the",
+   "moonlight."
+  ]
+ },
+ "L10": {
+  "segments": [
+   [
+    81.52,
+    87.42
+   ]
+  ],
+  "why": "one read",
+  "heard": "and it's faster. One lap takes about seven days, not twenty-seven.",
+  "not_heard": []
+ },
+ "L11": {
+  "segments": [
+   [
+    89.09,
+    94.18
+   ]
+  ],
+  "why": "one read",
+  "heard": "It's bigger than the sun now. So what happens when they line up?",
+  "not_heard": []
+ },
+ "L12": {
+  "segments": [
+   [
+    94.45,
+    102.41
+   ],
+   [
+    118.98,
+    123.57
+   ]
+  ],
+  "why": "spliced at the phrase boundary 'often.' | 'Not every month': first half from the first read, tail from the later read",
+  "heard": "one hundred thousand, nearly four times wider. Its shadow on earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted, but often.",
+  "not_heard": []
+ },
+ "L13": {
+  "segments": [
+   [
+    124.19,
+    129.52
+   ]
+  ],
+  "why": "one read",
+  "heard": "Closer, faster, and the ground fills it too.",
+  "not_heard": [
+   "feels"
+  ]
+ },
+ "L14": {
+  "segments": [
+   [
+    129.81,
+    142.48
+   ]
+  ],
+  "why": "one read",
+  "heard": "70,000 more than 160 times today's tidal pool. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.",
+  "not_heard": [
+   "Seventy",
+   "thousand.",
+   "a",
+   "hundred",
+   "sixty",
+   "pull."
+  ]
+ },
+ "L15": {
+  "segments": [
+   [
+    142.48,
+    147.77
+   ]
+  ],
+  "why": "one read",
+  "heard": "Soon, the moon rises on the wrong side of the sky.",
+  "not_heard": []
+ },
+ "L16": {
+  "segments": [
+   [
+    147.77,
+    156.44
+   ]
+  ],
+  "why": "two reads; the first matches every word (1.0 vs 0.95)",
+  "heard": "50,000, nearly eight times wider. One lap takes about a day and a quarter close to how fast the earth turns.",
+  "not_heard": [
+   "Fifty",
+   "thousand."
+  ]
+ },
+ "L17": {
+  "segments": [
+   [
+    165.0,
+    169.01
+   ]
+  ],
+  "why": "one read",
+  "heard": "42,000. It hangs still.",
+  "not_heard": [
+   "Forty-two",
+   "thousand."
+  ]
+ },
+ "L18": {
+  "segments": [
+   [
+    169.49,
+    173.74
+   ]
+  ],
+  "why": "one read",
+  "heard": "Then it slides the wrong way. It rises in the west.",
+  "not_heard": []
+ },
+ "L19": {
+  "segments": [
+   [
+    174.62,
+    182.04
+   ]
+  ],
+  "why": "one read",
+  "heard": "Thirty thousand twenty five twenty",
+  "not_heard": [
+   "Twenty-five."
+  ]
+ },
+ "L20": {
+  "segments": [
+   [
+    182.04,
+    195.53
+   ]
+  ],
+  "why": "one read",
+  "heard": "Around eighteen thousand kilometers is a Roche limit, where Earth's tides pull harder than the Moon's own gravity holds it together. That's it the Moon acts like a fluid. A perfectly rigged moon could come to about nine and a half thousand.",
+  "not_heard": [
+   "the",
+   "if",
+   "rigid"
+  ]
+ },
+ "L21": {
+  "segments": [
+   [
+    196.0,
+    203.29
+   ]
+  ],
+  "why": "one read; 'far' cut; cut 'far' (197.11-197.44 s) with a 12 ms crossfade",
+  "heard": "At 18,000, it's more than 20 times wider than tonight. A wall of gray straining.",
+  "not_heard": [
+   "eighteen",
+   "thousand,",
+   "grey,"
+  ]
+ },
+ "L22": {
+  "segments": [
+   [
+    203.29,
+    206.0
+   ]
+  ],
+  "why": "one read",
+  "heard": "And then it does something no moon should survive.",
+  "not_heard": []
+ },
+ "L23": {
+  "segments": [
+   [
+    206.0,
+    209.81
+   ]
+  ],
+  "why": "two reads; the first is steadier (6.1 vs 7.9 dB) and has no 'explosion, explosion' restart",
+  "heard": "It comes apart, not an explosion, a stretch.",
+  "not_heard": []
+ },
+ "L24": {
+  "segments": [
+   [
+    214.36,
+    219.92
+   ]
+  ],
+  "why": "one read",
+  "heard": "The rock spreads along its old orbit and over time it could flatten into a ring.",
+  "not_heard": [
+   "can"
+  ]
+ },
+ "L25": {
+  "segments": [
+   [
+    219.92,
+    224.8
+   ]
+  ],
+  "why": "one read",
+  "heard": "No moon, just a bright band, horizon to horizon.",
+  "not_heard": []
+ },
+ "L26": {
+  "segments": [
+   [
+    224.8,
+    231.7
+   ]
+  ],
+  "why": "two reads; the first says 'the real Moon' as scripted and is steadier",
+  "heard": "The real moon is still drifting away 3.8 centimeters a year. Tonight's moon is fine.",
+  "not_heard": [
+   "three",
+   "point",
+   "eight"
+  ]
+ },
+ "B1": {
+  "segments": [
+   [
+    240.38,
+    243.04
+   ]
+  ],
+  "why": "one read",
+  "heard": "Watch the moon, it's coming closer.",
+  "not_heard": []
+ },
+ "B2": {
+  "segments": [
+   [
+    243.04,
+    245.73
+   ]
+  ],
+  "why": "one read",
+  "heard": "A quarter closer. What changes first?",
+  "not_heard": []
+ },
+ "B3": {
+  "segments": [
+   [
+    245.73,
+    249.02
+   ]
+  ],
+  "why": "one read",
+  "heard": "Half the distance, now the ocean climbs.",
+  "not_heard": []
+ },
+ "B4": {
+  "segments": [
+   [
+    249.02,
+    251.44
+   ]
+  ],
+  "why": "one read",
+  "heard": "The night is getting too bright.",
+  "not_heard": []
+ },
+ "B5": {
+  "segments": [
+   [
+    251.44,
+    254.2
+   ]
+  ],
+  "why": "one read",
+  "heard": "What happens when the moon outgrows the sun?",
+  "not_heard": []
+ },
+ "B6": {
+  "segments": [
+   [
+    254.2,
+    257.4
+   ]
+  ],
+  "why": "one read",
+  "heard": "It's not just the sea. The ground moves too.",
+  "not_heard": []
+ },
+ "B7": {
+  "segments": [
+   [
+    257.4,
+    259.72
+   ]
+  ],
+  "why": "one read",
+  "heard": "watch it rise in the wrong place.",
+  "not_heard": []
+ },
+ "B8": {
+  "segments": [
+   [
+    259.72,
+    262.82
+   ]
+  ],
+  "why": "two clean reads; the first is steadier (4.5 vs 6.2 dB)",
+  "heard": "There's a distance. No one survives.",
+  "not_heard": [
+   "moon"
+  ]
+ },
+ "D1": {
+  "segments": [
+   [
+    268.14,
+    271.09
+   ]
+  ],
+  "why": "one read",
+  "heard": "If that made the sky feel bigger, tap like and follow.",
+  "not_heard": []
+ },
+ "D2": {
+  "segments": [
+   [
+    271.86,
+    275.28
+   ]
+  ],
+  "why": "one read",
+  "heard": "If that made the sky feel bigger, tap like and subscribe.",
+  "not_heard": []
+ },
+ "D3": {
+  "segments": [
+   [
+    275.28,
+    278.07
+   ]
+  ],
+  "why": "one read",
+  "heard": "Still looking up, tap like and follow.",
+  "not_heard": []
+ },
+ "D4": {
+  "segments": [
+   [
+    278.07,
+    281.62
+   ]
+  ],
+  "why": "one read",
+  "heard": "Still looking up? Tap like and subscribe.",
+  "not_heard": []
+ }
+}

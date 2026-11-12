@@ -1,0 +1,3225 @@
+{
+ "voice": "owner (recorded 12 Nov 2026)",
+ "speed": 1.0,
+ "lines": [
+  {
+   "id": "L1",
+   "text": "Tonight, the Moon starts coming closer. And it never stops.",
+   "file": "voice5/wav/L1.wav",
+   "dur": 5.765,
+   "sentences": [
+    {
+     "text": "Tonight, the Moon starts coming closer.",
+     "t0": 0.375,
+     "t1": 3.12,
+     "claims": []
+    },
+    {
+     "text": "And it never stops.",
+     "t0": 3.475,
+     "t1": 5.52,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Tonight,",
+     "start": 0.375,
+     "end": 1.28
+    },
+    {
+     "w": "the",
+     "start": 1.48,
+     "end": 1.53
+    },
+    {
+     "w": "Moon",
+     "start": 1.51,
+     "end": 1.84
+    },
+    {
+     "w": "starts",
+     "start": 1.875,
+     "end": 2.24
+    },
+    {
+     "w": "coming",
+     "start": 2.2,
+     "end": 2.56
+    },
+    {
+     "w": "closer.",
+     "start": 2.495,
+     "end": 3.12
+    },
+    {
+     "w": "And",
+     "start": 3.475,
+     "end": 3.6
+    },
+    {
+     "w": "it",
+     "start": 3.655,
+     "end": 3.76
+    },
+    {
+     "w": "never",
+     "start": 3.685,
+     "end": 4.0
+    },
+    {
+     "w": "stops.",
+     "start": 4.12,
+     "end": 5.52
+    }
+   ]
+  },
+  {
+   "id": "L2",
+   "text": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year. Tonight, it reverses. A thought experiment, built from real physics.",
+   "file": "voice5/wav/L2.wav",
+   "dur": 13.7,
+   "sentences": [
+    {
+     "text": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year.",
+     "t0": 0.44,
+     "t1": 8.24,
+     "claims": []
+    },
+    {
+     "text": "Tonight, it reverses.",
+     "t0": 8.265,
+     "t1": 9.92,
+     "claims": []
+    },
+    {
+     "text": "A thought experiment, built from real physics.",
+     "t0": 10.28,
+     "t1": 13.12,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Right",
+     "start": 0.44,
+     "end": 0.56
+    },
+    {
+     "w": "now",
+     "start": 0.47,
+     "end": 0.88
+    },
+    {
+     "w": "it's",
+     "start": 0.975,
+     "end": 1.2
+    },
+    {
+     "w": "about",
+     "start": 1.13,
+     "end": 1.44
+    },
+    {
+     "w": "three",
+     "start": 1.47,
+     "end": 3.2
+    },
+    {
+     "w": "hundred",
+     "start": 1.5,
+     "end": 3.2
+    },
+    {
+     "w": "eighty-four",
+     "start": 1.53,
+     "end": 3.2
+    },
+    {
+     "w": "thousand",
+     "start": 1.56,
+     "end": 3.2
+    },
+    {
+     "w": "kilometers",
+     "start": 3.285,
+     "end": 3.92
+    },
+    {
+     "w": "away,",
+     "start": 3.93,
+     "end": 4.96
+    },
+    {
+     "w": "drifting",
+     "start": 5.085,
+     "end": 5.36
+    },
+    {
+     "w": "off",
+     "start": 5.69,
+     "end": 5.84
+    },
+    {
+     "w": "three",
+     "start": 5.75,
+     "end": 6.48
+    },
+    {
+     "w": "point",
+     "start": 5.78,
+     "end": 6.48
+    },
+    {
+     "w": "eight",
+     "start": 5.81,
+     "end": 6.48
+    },
+    {
+     "w": "centimeters",
+     "start": 6.51,
+     "end": 7.28
+    },
+    {
+     "w": "a",
+     "start": 7.2,
+     "end": 7.6
+    },
+    {
+     "w": "year.",
+     "start": 7.8,
+     "end": 8.24
+    },
+    {
+     "w": "Tonight,",
+     "start": 8.265,
+     "end": 8.96
+    },
+    {
+     "w": "it",
+     "start": 9.1,
+     "end": 9.2
+    },
+    {
+     "w": "reverses.",
+     "start": 9.13,
+     "end": 9.92
+    },
+    {
+     "w": "A",
+     "start": 10.28,
+     "end": 10.4
+    },
+    {
+     "w": "thought",
+     "start": 10.46,
+     "end": 10.56
+    },
+    {
+     "w": "experiment,",
+     "start": 10.805,
+     "end": 11.28
+    },
+    {
+     "w": "built",
+     "start": 11.445,
+     "end": 11.68
+    },
+    {
+     "w": "from",
+     "start": 11.67,
+     "end": 11.84
+    },
+    {
+     "w": "real",
+     "start": 11.74,
+     "end": 12.0
+    },
+    {
+     "w": "physics.",
+     "start": 12.22,
+     "end": 13.12
+    }
+   ]
+  },
+  {
+   "id": "L3",
+   "text": "Watch the number. It only goes down.",
+   "file": "voice5/wav/L3.wav",
+   "dur": 6.035,
+   "sentences": [
+    {
+     "text": "Watch the number.",
+     "t0": 0.2,
+     "t1": 1.36,
+     "claims": []
+    },
+    {
+     "text": "It only goes down.",
+     "t0": 1.44,
+     "t1": 3.2,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.2,
+     "end": 0.48
+    },
+    {
+     "w": "the",
+     "start": 0.515,
+     "end": 0.8
+    },
+    {
+     "w": "number.",
+     "start": 0.845,
+     "end": 1.36
+    },
+    {
+     "w": "It",
+     "start": 1.44,
+     "end": 1.6
+    },
+    {
+     "w": "only",
+     "start": 1.48,
+     "end": 1.92
+    },
+    {
+     "w": "goes",
+     "start": 1.835,
+     "end": 2.56
+    },
+    {
+     "w": "down.",
+     "start": 2.76,
+     "end": 3.2
+    }
+   ]
+  },
+  {
+   "id": "L4",
+   "text": "Two hundred eighty-eight thousand. A third wider. And the sea already feels it: more than twice the tidal pull.",
+   "file": "voice5/wav/L4.wav",
+   "dur": 7.88,
+   "sentences": [
+    {
+     "text": "Two hundred eighty-eight thousand.",
+     "t0": 0.09,
+     "t1": 2.24,
+     "claims": []
+    },
+    {
+     "text": "A third wider.",
+     "t0": 2.345,
+     "t1": 4.56,
+     "claims": []
+    },
+    {
+     "text": "And the sea already feels it: more than twice the tidal pull.",
+     "t0": 4.57,
+     "t1": 7.9,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Two",
+     "start": 0.09,
+     "end": 2.24
+    },
+    {
+     "w": "hundred",
+     "start": 0.12,
+     "end": 2.24
+    },
+    {
+     "w": "eighty-eight",
+     "start": 0.15,
+     "end": 2.24
+    },
+    {
+     "w": "thousand.",
+     "start": 0.18,
+     "end": 2.24
+    },
+    {
+     "w": "A",
+     "start": 2.345,
+     "end": 2.48
+    },
+    {
+     "w": "third",
+     "start": 2.535,
+     "end": 2.96
+    },
+    {
+     "w": "wider.",
+     "start": 2.99,
+     "end": 4.56
+    },
+    {
+     "w": "And",
+     "start": 4.57,
+     "end": 4.72
+    },
+    {
+     "w": "the",
+     "start": 4.74,
+     "end": 4.88
+    },
+    {
+     "w": "sea",
+     "start": 4.77,
+     "end": 5.28
+    },
+    {
+     "w": "already",
+     "start": 5.345,
+     "end": 5.52
+    },
+    {
+     "w": "feels",
+     "start": 5.5,
+     "end": 5.84
+    },
+    {
+     "w": "it:",
+     "start": 5.905,
+     "end": 6.08
+    },
+    {
+     "w": "more",
+     "start": 6.165,
+     "end": 6.32
+    },
+    {
+     "w": "than",
+     "start": 6.215,
+     "end": 6.56
+    },
+    {
+     "w": "twice",
+     "start": 6.595,
+     "end": 7.04
+    },
+    {
+     "w": "the",
+     "start": 6.955,
+     "end": 7.2
+    },
+    {
+     "w": "tidal",
+     "start": 7.305,
+     "end": 7.6
+    },
+    {
+     "w": "pull.",
+     "start": 7.625,
+     "end": 7.9
+    }
+   ]
+  },
+  {
+   "id": "L5",
+   "text": "Halve the distance, and the water starts to climb.",
+   "file": "voice5/wav/L5.wav",
+   "dur": 4.15,
+   "sentences": [
+    {
+     "text": "Halve the distance, and the water starts to climb.",
+     "t0": 0.005,
+     "t1": 3.84,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Halve",
+     "start": 0.005,
+     "end": 0.16
+    },
+    {
+     "w": "the",
+     "start": 0.115,
+     "end": 0.32
+    },
+    {
+     "w": "distance,",
+     "start": 0.355,
+     "end": 0.88
+    },
+    {
+     "w": "and",
+     "start": 0.935,
+     "end": 1.12
+    },
+    {
+     "w": "the",
+     "start": 1.04,
+     "end": 1.28
+    },
+    {
+     "w": "water",
+     "start": 1.285,
+     "end": 1.76
+    },
+    {
+     "w": "starts",
+     "start": 1.71,
+     "end": 2.24
+    },
+    {
+     "w": "to",
+     "start": 2.335,
+     "end": 2.56
+    },
+    {
+     "w": "climb.",
+     "start": 2.655,
+     "end": 3.84
+    }
+   ]
+  },
+  {
+   "id": "L6",
+   "text": "Half the distance. Twice as wide. Eight times the tidal pull.",
+   "file": "voice5/wav/L6.wav",
+   "dur": 5.515,
+   "sentences": [
+    {
+     "text": "Half the distance.",
+     "t0": 0.12,
+     "t1": 1.92,
+     "claims": []
+    },
+    {
+     "text": "Twice as wide.",
+     "t0": 2.01,
+     "t1": 3.68,
+     "claims": []
+    },
+    {
+     "text": "Eight times the tidal pull.",
+     "t0": 4.04,
+     "t1": 5.5,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Half",
+     "start": 0.12,
+     "end": 0.56
+    },
+    {
+     "w": "the",
+     "start": 0.46,
+     "end": 0.72
+    },
+    {
+     "w": "distance.",
+     "start": 0.615,
+     "end": 1.92
+    },
+    {
+     "w": "Twice",
+     "start": 2.01,
+     "end": 2.4
+    },
+    {
+     "w": "as",
+     "start": 2.39,
+     "end": 2.64
+    },
+    {
+     "w": "wide.",
+     "start": 2.52,
+     "end": 3.68
+    },
+    {
+     "w": "Eight",
+     "start": 4.04,
+     "end": 4.4
+    },
+    {
+     "w": "times",
+     "start": 4.425,
+     "end": 4.72
+    },
+    {
+     "w": "the",
+     "start": 4.795,
+     "end": 4.88
+    },
+    {
+     "w": "tidal",
+     "start": 4.92,
+     "end": 5.2
+    },
+    {
+     "w": "pull.",
+     "start": 5.28,
+     "end": 5.5
+    }
+   ]
+  },
+  {
+   "id": "L7",
+   "text": "Not a measured height. Just the idea: the whole ocean, lifted from above.",
+   "file": "voice5/wav/L7.wav",
+   "dur": 7.13,
+   "sentences": [
+    {
+     "text": "Not a measured height.",
+     "t0": 0.345,
+     "t1": 1.52,
+     "claims": []
+    },
+    {
+     "text": "Just the idea: the whole ocean, lifted from above.",
+     "t0": 1.445,
+     "t1": 6.56,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Not",
+     "start": 0.345,
+     "end": 0.48
+    },
+    {
+     "w": "a",
+     "start": 0.375,
+     "end": 0.56
+    },
+    {
+     "w": "measured",
+     "start": 0.51,
+     "end": 1.04
+    },
+    {
+     "w": "height.",
+     "start": 0.925,
+     "end": 1.52
+    },
+    {
+     "w": "Just",
+     "start": 1.445,
+     "end": 1.76
+    },
+    {
+     "w": "the",
+     "start": 1.765,
+     "end": 2.0
+    },
+    {
+     "w": "idea:",
+     "start": 2.06,
+     "end": 3.12
+    },
+    {
+     "w": "the",
+     "start": 3.5,
+     "end": 3.6
+    },
+    {
+     "w": "whole",
+     "start": 3.6,
+     "end": 3.92
+    },
+    {
+     "w": "ocean,",
+     "start": 4.0,
+     "end": 4.48
+    },
+    {
+     "w": "lifted",
+     "start": 4.605,
+     "end": 5.2
+    },
+    {
+     "w": "from",
+     "start": 5.085,
+     "end": 5.44
+    },
+    {
+     "w": "above.",
+     "start": 5.4,
+     "end": 6.56
+    }
+   ]
+  },
+  {
+   "id": "L8",
+   "text": "And the night is about to change.",
+   "file": "voice5/wav/L8.wav",
+   "dur": 3.31,
+   "sentences": [
+    {
+     "text": "And the night is about to change.",
+     "t0": 0.09,
+     "t1": 3.04,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "And",
+     "start": 0.09,
+     "end": 0.32
+    },
+    {
+     "w": "the",
+     "start": 0.22,
+     "end": 0.48
+    },
+    {
+     "w": "night",
+     "start": 0.41,
+     "end": 1.04
+    },
+    {
+     "w": "is",
+     "start": 0.93,
+     "end": 1.36
+    },
+    {
+     "w": "about",
+     "start": 1.255,
+     "end": 1.68
+    },
+    {
+     "w": "to",
+     "start": 1.765,
+     "end": 2.0
+    },
+    {
+     "w": "change.",
+     "start": 2.01,
+     "end": 3.04
+    }
+   ]
+  },
+  {
+   "id": "L9",
+   "text": "One hundred fifty thousand. Six and a half times the moonlight. Your shadow is sharp on the sand.",
+   "file": "voice5/wav/L9.wav",
+   "dur": 9.45,
+   "sentences": [
+    {
+     "text": "One hundred fifty thousand.",
+     "t0": 0.2,
+     "t1": 4.8,
+     "claims": []
+    },
+    {
+     "text": "Six and a half times the moonlight.",
+     "t0": 0.32,
+     "t1": 4.8,
+     "claims": []
+    },
+    {
+     "text": "Your shadow is sharp on the sand.",
+     "t0": 4.88,
+     "t1": 7.92,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "One",
+     "start": 0.2,
+     "end": 4.8
+    },
+    {
+     "w": "hundred",
+     "start": 0.23,
+     "end": 4.8
+    },
+    {
+     "w": "fifty",
+     "start": 0.26,
+     "end": 4.8
+    },
+    {
+     "w": "thousand.",
+     "start": 0.29,
+     "end": 4.8
+    },
+    {
+     "w": "Six",
+     "start": 0.32,
+     "end": 4.8
+    },
+    {
+     "w": "and",
+     "start": 0.35,
+     "end": 4.8
+    },
+    {
+     "w": "a",
+     "start": 0.38,
+     "end": 4.8
+    },
+    {
+     "w": "half",
+     "start": 0.41,
+     "end": 4.8
+    },
+    {
+     "w": "times",
+     "start": 0.44,
+     "end": 4.8
+    },
+    {
+     "w": "the",
+     "start": 0.47,
+     "end": 4.8
+    },
+    {
+     "w": "moonlight.",
+     "start": 0.5,
+     "end": 4.8
+    },
+    {
+     "w": "Your",
+     "start": 4.88,
+     "end": 4.96
+    },
+    {
+     "w": "shadow",
+     "start": 5.16,
+     "end": 5.6
+    },
+    {
+     "w": "is",
+     "start": 5.71,
+     "end": 5.76
+    },
+    {
+     "w": "sharp",
+     "start": 5.74,
+     "end": 6.16
+    },
+    {
+     "w": "on",
+     "start": 6.105,
+     "end": 6.4
+    },
+    {
+     "w": "the",
+     "start": 6.405,
+     "end": 6.64
+    },
+    {
+     "w": "sand.",
+     "start": 6.735,
+     "end": 7.92
+    }
+   ]
+  },
+  {
+   "id": "L10",
+   "text": "And it's faster. One lap takes about seven days, not twenty-seven.",
+   "file": "voice5/wav/L10.wav",
+   "dur": 5.905,
+   "sentences": [
+    {
+     "text": "And it's faster.",
+     "t0": 0.16,
+     "t1": 1.92,
+     "claims": []
+    },
+    {
+     "text": "One lap takes about seven days, not twenty-seven.",
+     "t0": 2.12,
+     "t1": 5.6,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "And",
+     "start": 0.16,
+     "end": 0.24
+    },
+    {
+     "w": "it's",
+     "start": 0.34,
+     "end": 0.72
+    },
+    {
+     "w": "faster.",
+     "start": 0.6,
+     "end": 1.92
+    },
+    {
+     "w": "One",
+     "start": 2.12,
+     "end": 2.24
+    },
+    {
+     "w": "lap",
+     "start": 2.15,
+     "end": 2.64
+    },
+    {
+     "w": "takes",
+     "start": 2.54,
+     "end": 2.88
+    },
+    {
+     "w": "about",
+     "start": 2.965,
+     "end": 3.12
+    },
+    {
+     "w": "seven",
+     "start": 3.01,
+     "end": 3.44
+    },
+    {
+     "w": "days,",
+     "start": 3.37,
+     "end": 4.0
+    },
+    {
+     "w": "not",
+     "start": 4.07,
+     "end": 4.24
+    },
+    {
+     "w": "twenty-seven.",
+     "start": 4.285,
+     "end": 5.6
+    }
+   ]
+  },
+  {
+   "id": "L11",
+   "text": "It's bigger than the Sun now. So what happens when they line up?",
+   "file": "voice5/wav/L11.wav",
+   "dur": 5.09,
+   "sentences": [
+    {
+     "text": "It's bigger than the Sun now.",
+     "t0": 0.355,
+     "t1": 2.24,
+     "claims": []
+    },
+    {
+     "text": "So what happens when they line up?",
+     "t0": 2.35,
+     "t1": 4.48,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.355,
+     "end": 0.56
+    },
+    {
+     "w": "bigger",
+     "start": 0.63,
+     "end": 0.88
+    },
+    {
+     "w": "than",
+     "start": 0.89,
+     "end": 1.04
+    },
+    {
+     "w": "the",
+     "start": 1.105,
+     "end": 1.2
+    },
+    {
+     "w": "Sun",
+     "start": 1.225,
+     "end": 1.6
+    },
+    {
+     "w": "now.",
+     "start": 1.695,
+     "end": 2.24
+    },
+    {
+     "w": "So",
+     "start": 2.35,
+     "end": 2.48
+    },
+    {
+     "w": "what",
+     "start": 2.38,
+     "end": 2.72
+    },
+    {
+     "w": "happens",
+     "start": 2.815,
+     "end": 3.04
+    },
+    {
+     "w": "when",
+     "start": 3.03,
+     "end": 3.2
+    },
+    {
+     "w": "they",
+     "start": 3.255,
+     "end": 3.36
+    },
+    {
+     "w": "line",
+     "start": 3.285,
+     "end": 3.92
+    },
+    {
+     "w": "up?",
+     "start": 4.12,
+     "end": 4.48
+    }
+   ]
+  },
+  {
+   "id": "L12",
+   "text": "One hundred thousand. Nearly four times wider. Its shadow on Earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted. But often.",
+   "file": "voice5/wav/L12.wav",
+   "dur": 12.865,
+   "sentences": [
+    {
+     "text": "One hundred thousand.",
+     "t0": 0.21,
+     "t1": 1.36,
+     "claims": []
+    },
+    {
+     "text": "Nearly four times wider.",
+     "t0": 1.295,
+     "t1": 3.44,
+     "claims": []
+    },
+    {
+     "text": "Its shadow on Earth is wider, and eclipses come far more often.",
+     "t0": 3.595,
+     "t1": 8.24,
+     "claims": []
+    },
+    {
+     "text": "Not every month, because the orbit is tilted.",
+     "t0": 8.355,
+     "t1": 11.68,
+     "claims": []
+    },
+    {
+     "text": "But often.",
+     "t0": 11.73,
+     "t1": 12.56,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "One",
+     "start": 0.21,
+     "end": 0.32
+    },
+    {
+     "w": "hundred",
+     "start": 0.375,
+     "end": 0.72
+    },
+    {
+     "w": "thousand.",
+     "start": 0.66,
+     "end": 1.36
+    },
+    {
+     "w": "Nearly",
+     "start": 1.295,
+     "end": 1.76
+    },
+    {
+     "w": "four",
+     "start": 1.765,
+     "end": 2.08
+    },
+    {
+     "w": "times",
+     "start": 2.11,
+     "end": 2.48
+    },
+    {
+     "w": "wider.",
+     "start": 2.42,
+     "end": 3.44
+    },
+    {
+     "w": "Its",
+     "start": 3.595,
+     "end": 3.68
+    },
+    {
+     "w": "shadow",
+     "start": 3.67,
+     "end": 4.0
+    },
+    {
+     "w": "on",
+     "start": 4.085,
+     "end": 4.16
+    },
+    {
+     "w": "Earth",
+     "start": 4.115,
+     "end": 4.4
+    },
+    {
+     "w": "is",
+     "start": 4.355,
+     "end": 4.56
+    },
+    {
+     "w": "wider,",
+     "start": 4.505,
+     "end": 5.04
+    },
+    {
+     "w": "and",
+     "start": 5.105,
+     "end": 5.2
+    },
+    {
+     "w": "eclipses",
+     "start": 5.295,
+     "end": 6.0
+    },
+    {
+     "w": "come",
+     "start": 6.07,
+     "end": 6.32
+    },
+    {
+     "w": "far",
+     "start": 6.52,
+     "end": 6.8
+    },
+    {
+     "w": "more",
+     "start": 6.83,
+     "end": 7.04
+    },
+    {
+     "w": "often.",
+     "start": 6.97,
+     "end": 8.24
+    },
+    {
+     "w": "Not",
+     "start": 8.355,
+     "end": 8.56
+    },
+    {
+     "w": "every",
+     "start": 8.53,
+     "end": 8.8
+    },
+    {
+     "w": "month,",
+     "start": 8.745,
+     "end": 10.08
+    },
+    {
+     "w": "because",
+     "start": 10.16,
+     "end": 10.32
+    },
+    {
+     "w": "the",
+     "start": 10.225,
+     "end": 10.48
+    },
+    {
+     "w": "orbit",
+     "start": 10.495,
+     "end": 10.88
+    },
+    {
+     "w": "is",
+     "start": 10.81,
+     "end": 11.04
+    },
+    {
+     "w": "tilted.",
+     "start": 11.025,
+     "end": 11.68
+    },
+    {
+     "w": "But",
+     "start": 11.73,
+     "end": 11.92
+    },
+    {
+     "w": "often.",
+     "start": 12.015,
+     "end": 12.56
+    }
+   ]
+  },
+  {
+   "id": "L13",
+   "text": "Closer. Faster. And the ground feels it too.",
+   "file": "voice5/wav/L13.wav",
+   "dur": 5.325,
+   "sentences": [
+    {
+     "text": "Closer.",
+     "t0": 0.455,
+     "t1": 1.6,
+     "claims": []
+    },
+    {
+     "text": "Faster.",
+     "t0": 1.605,
+     "t1": 2.8,
+     "claims": []
+    },
+    {
+     "text": "And the ground feels it too.",
+     "t0": 3.0,
+     "t1": 5.04,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Closer.",
+     "start": 0.455,
+     "end": 1.6
+    },
+    {
+     "w": "Faster.",
+     "start": 1.605,
+     "end": 2.8
+    },
+    {
+     "w": "And",
+     "start": 3.0,
+     "end": 3.05
+    },
+    {
+     "w": "the",
+     "start": 3.03,
+     "end": 3.2
+    },
+    {
+     "w": "ground",
+     "start": 3.18,
+     "end": 3.52
+    },
+    {
+     "w": "feels",
+     "start": 3.49,
+     "end": 3.84
+    },
+    {
+     "w": "it",
+     "start": 3.905,
+     "end": 4.08
+    },
+    {
+     "w": "too.",
+     "start": 4.175,
+     "end": 5.04
+    }
+   ]
+  },
+  {
+   "id": "L14",
+   "text": "Seventy thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.",
+   "file": "voice5/wav/L14.wav",
+   "dur": 12.675,
+   "sentences": [
+    {
+     "text": "Seventy thousand.",
+     "t0": 0.08,
+     "t1": 2.08,
+     "claims": []
+    },
+    {
+     "text": "More than a hundred sixty times today's tidal pull.",
+     "t0": 2.21,
+     "t1": 5.44,
+     "claims": []
+    },
+    {
+     "text": "The solid ground already rises and falls tens of centimeters a day.",
+     "t0": 5.595,
+     "t1": 9.285,
+     "claims": []
+    },
+    {
+     "text": "Here, it would flex far more.",
+     "t0": 9.29,
+     "t1": 12.715,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Seventy",
+     "start": 0.08,
+     "end": 2.08
+    },
+    {
+     "w": "thousand.",
+     "start": 0.11,
+     "end": 2.08
+    },
+    {
+     "w": "More",
+     "start": 2.21,
+     "end": 2.26
+    },
+    {
+     "w": "than",
+     "start": 2.24,
+     "end": 2.48
+    },
+    {
+     "w": "a",
+     "start": 2.38,
+     "end": 3.36
+    },
+    {
+     "w": "hundred",
+     "start": 2.41,
+     "end": 3.36
+    },
+    {
+     "w": "sixty",
+     "start": 2.56,
+     "end": 3.36
+    },
+    {
+     "w": "times",
+     "start": 3.3,
+     "end": 3.68
+    },
+    {
+     "w": "today's",
+     "start": 3.585,
+     "end": 4.08
+    },
+    {
+     "w": "tidal",
+     "start": 4.14,
+     "end": 4.56
+    },
+    {
+     "w": "pull.",
+     "start": 4.47,
+     "end": 5.44
+    },
+    {
+     "w": "The",
+     "start": 5.595,
+     "end": 5.645
+    },
+    {
+     "w": "solid",
+     "start": 5.625,
+     "end": 6.0
+    },
+    {
+     "w": "ground",
+     "start": 5.99,
+     "end": 6.32
+    },
+    {
+     "w": "already",
+     "start": 6.225,
+     "end": 6.56
+    },
+    {
+     "w": "rises",
+     "start": 6.65,
+     "end": 6.96
+    },
+    {
+     "w": "and",
+     "start": 7.03,
+     "end": 7.12
+    },
+    {
+     "w": "falls",
+     "start": 7.115,
+     "end": 7.44
+    },
+    {
+     "w": "tens",
+     "start": 7.445,
+     "end": 7.68
+    },
+    {
+     "w": "of",
+     "start": 7.765,
+     "end": 7.815
+    },
+    {
+     "w": "centimeters",
+     "start": 7.795,
+     "end": 8.48
+    },
+    {
+     "w": "a",
+     "start": 8.43,
+     "end": 8.64
+    },
+    {
+     "w": "day.",
+     "start": 9.235,
+     "end": 9.285
+    },
+    {
+     "w": "Here,",
+     "start": 9.29,
+     "end": 10.08
+    },
+    {
+     "w": "it",
+     "start": 10.28,
+     "end": 10.33
+    },
+    {
+     "w": "would",
+     "start": 10.34,
+     "end": 10.48
+    },
+    {
+     "w": "flex",
+     "start": 10.47,
+     "end": 10.8
+    },
+    {
+     "w": "far",
+     "start": 10.875,
+     "end": 11.44
+    },
+    {
+     "w": "more.",
+     "start": 12.665,
+     "end": 12.715
+    }
+   ]
+  },
+  {
+   "id": "L15",
+   "text": "Soon, the Moon rises on the wrong side of the sky.",
+   "file": "voice5/wav/L15.wav",
+   "dur": 5.29,
+   "sentences": [
+    {
+     "text": "Soon, the Moon rises on the wrong side of the sky.",
+     "t0": 0.335,
+     "t1": 4.4,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Soon,",
+     "start": 0.335,
+     "end": 1.2
+    },
+    {
+     "w": "the",
+     "start": 1.235,
+     "end": 1.36
+    },
+    {
+     "w": "Moon",
+     "start": 1.415,
+     "end": 1.68
+    },
+    {
+     "w": "rises",
+     "start": 1.77,
+     "end": 2.0
+    },
+    {
+     "w": "on",
+     "start": 2.095,
+     "end": 2.16
+    },
+    {
+     "w": "the",
+     "start": 2.18,
+     "end": 2.24
+    },
+    {
+     "w": "wrong",
+     "start": 2.21,
+     "end": 2.48
+    },
+    {
+     "w": "side",
+     "start": 2.405,
+     "end": 2.72
+    },
+    {
+     "w": "of",
+     "start": 2.695,
+     "end": 2.88
+    },
+    {
+     "w": "the",
+     "start": 2.885,
+     "end": 3.04
+    },
+    {
+     "w": "sky.",
+     "start": 3.13,
+     "end": 4.4
+    }
+   ]
+  },
+  {
+   "id": "L16",
+   "text": "Fifty thousand. Nearly eight times wider. One lap takes about a day and a quarter, close to how fast the Earth turns.",
+   "file": "voice5/wav/L16.wav",
+   "dur": 8.67,
+   "sentences": [
+    {
+     "text": "Fifty thousand.",
+     "t0": 0.2,
+     "t1": 1.52,
+     "claims": []
+    },
+    {
+     "text": "Nearly eight times wider.",
+     "t0": 1.49,
+     "t1": 3.44,
+     "claims": []
+    },
+    {
+     "text": "One lap takes about a day and a quarter, close to how fast the Earth turns.",
+     "t0": 3.56,
+     "t1": 8.4,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Fifty",
+     "start": 0.2,
+     "end": 1.52
+    },
+    {
+     "w": "thousand.",
+     "start": 0.23,
+     "end": 1.52
+    },
+    {
+     "w": "Nearly",
+     "start": 1.49,
+     "end": 1.92
+    },
+    {
+     "w": "eight",
+     "start": 1.945,
+     "end": 2.24
+    },
+    {
+     "w": "times",
+     "start": 2.31,
+     "end": 2.64
+    },
+    {
+     "w": "wider.",
+     "start": 2.575,
+     "end": 3.44
+    },
+    {
+     "w": "One",
+     "start": 3.56,
+     "end": 3.68
+    },
+    {
+     "w": "lap",
+     "start": 3.59,
+     "end": 4.08
+    },
+    {
+     "w": "takes",
+     "start": 4.095,
+     "end": 4.4
+    },
+    {
+     "w": "about",
+     "start": 4.35,
+     "end": 4.64
+    },
+    {
+     "w": "a",
+     "start": 4.595,
+     "end": 4.8
+    },
+    {
+     "w": "day",
+     "start": 4.79,
+     "end": 5.04
+    },
+    {
+     "w": "and",
+     "start": 5.135,
+     "end": 5.28
+    },
+    {
+     "w": "a",
+     "start": 5.375,
+     "end": 5.44
+    },
+    {
+     "w": "quarter,",
+     "start": 5.405,
+     "end": 5.84
+    },
+    {
+     "w": "close",
+     "start": 5.72,
+     "end": 6.16
+    },
+    {
+     "w": "to",
+     "start": 6.06,
+     "end": 6.32
+    },
+    {
+     "w": "how",
+     "start": 6.275,
+     "end": 6.56
+    },
+    {
+     "w": "fast",
+     "start": 6.53,
+     "end": 6.8
+    },
+    {
+     "w": "the",
+     "start": 6.86,
+     "end": 6.96
+    },
+    {
+     "w": "Earth",
+     "start": 6.955,
+     "end": 7.28
+    },
+    {
+     "w": "turns.",
+     "start": 7.19,
+     "end": 8.4
+    }
+   ]
+  },
+  {
+   "id": "L17",
+   "text": "Forty-two thousand. It hangs still.",
+   "file": "voice5/wav/L17.wav",
+   "dur": 4.01,
+   "sentences": [
+    {
+     "text": "Forty-two thousand.",
+     "t0": 0.2,
+     "t1": 1.6,
+     "claims": []
+    },
+    {
+     "text": "It hangs still.",
+     "t0": 1.675,
+     "t1": 3.44,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Forty-two",
+     "start": 0.2,
+     "end": 1.6
+    },
+    {
+     "w": "thousand.",
+     "start": 0.23,
+     "end": 1.6
+    },
+    {
+     "w": "It",
+     "start": 1.675,
+     "end": 1.84
+    },
+    {
+     "w": "hangs",
+     "start": 1.78,
+     "end": 2.48
+    },
+    {
+     "w": "still.",
+     "start": 2.39,
+     "end": 3.44
+    }
+   ]
+  },
+  {
+   "id": "L18",
+   "text": "Then it slides the wrong way. It rises in the west.",
+   "file": "voice5/wav/L18.wav",
+   "dur": 4.25,
+   "sentences": [
+    {
+     "text": "Then it slides the wrong way.",
+     "t0": 0.135,
+     "t1": 1.84,
+     "claims": []
+    },
+    {
+     "text": "It rises in the west.",
+     "t0": 1.99,
+     "t1": 3.6,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Then",
+     "start": 0.135,
+     "end": 0.32
+    },
+    {
+     "w": "it",
+     "start": 0.385,
+     "end": 0.48
+    },
+    {
+     "w": "slides",
+     "start": 0.415,
+     "end": 0.88
+    },
+    {
+     "w": "the",
+     "start": 0.895,
+     "end": 0.96
+    },
+    {
+     "w": "wrong",
+     "start": 0.925,
+     "end": 1.28
+    },
+    {
+     "w": "way.",
+     "start": 1.375,
+     "end": 1.84
+    },
+    {
+     "w": "It",
+     "start": 1.99,
+     "end": 2.08
+    },
+    {
+     "w": "rises",
+     "start": 2.095,
+     "end": 2.48
+    },
+    {
+     "w": "in",
+     "start": 2.495,
+     "end": 2.64
+    },
+    {
+     "w": "the",
+     "start": 2.725,
+     "end": 2.8
+    },
+    {
+     "w": "west.",
+     "start": 2.755,
+     "end": 3.6
+    }
+   ]
+  },
+  {
+   "id": "L19",
+   "text": "Thirty thousand. Twenty-five. Twenty.",
+   "file": "voice5/wav/L19.wav",
+   "dur": 7.415,
+   "sentences": [
+    {
+     "text": "Thirty thousand.",
+     "t0": 0.38,
+     "t1": 1.2,
+     "claims": []
+    },
+    {
+     "text": "Twenty-five.",
+     "t0": 1.4,
+     "t1": 1.76,
+     "claims": []
+    },
+    {
+     "text": "Twenty.",
+     "t0": 1.82,
+     "t1": 2.08,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Thirty",
+     "start": 0.38,
+     "end": 0.72
+    },
+    {
+     "w": "thousand.",
+     "start": 0.655,
+     "end": 1.2
+    },
+    {
+     "w": "Twenty-five.",
+     "start": 1.4,
+     "end": 1.76
+    },
+    {
+     "w": "Twenty.",
+     "start": 1.82,
+     "end": 2.08
+    }
+   ]
+  },
+  {
+   "id": "L20",
+   "text": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together. That's if the Moon acts like a fluid. A perfectly rigid Moon could come to about nine and a half thousand.",
+   "file": "voice5/wav/L20.wav",
+   "dur": 13.49,
+   "sentences": [
+    {
+     "text": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together.",
+     "t0": 0.175,
+     "t1": 8.4,
+     "claims": []
+    },
+    {
+     "text": "That's if the Moon acts like a fluid.",
+     "t0": 8.6,
+     "t1": 10.16,
+     "claims": []
+    },
+    {
+     "text": "A perfectly rigid Moon could come to about nine and a half thousand.",
+     "t0": 10.22,
+     "t1": 13.44,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Around",
+     "start": 0.175,
+     "end": 0.56
+    },
+    {
+     "w": "eighteen",
+     "start": 0.54,
+     "end": 1.04
+    },
+    {
+     "w": "thousand",
+     "start": 1.025,
+     "end": 1.28
+    },
+    {
+     "w": "kilometers",
+     "start": 1.405,
+     "end": 2.0
+    },
+    {
+     "w": "is",
+     "start": 2.19,
+     "end": 2.24
+    },
+    {
+     "w": "the",
+     "start": 2.22,
+     "end": 2.32
+    },
+    {
+     "w": "Roche",
+     "start": 2.37,
+     "end": 2.88
+    },
+    {
+     "w": "limit:",
+     "start": 3.12,
+     "end": 4.4
+    },
+    {
+     "w": "where",
+     "start": 4.6,
+     "end": 4.65
+    },
+    {
+     "w": "Earth's",
+     "start": 4.63,
+     "end": 5.12
+    },
+    {
+     "w": "tides",
+     "start": 5.115,
+     "end": 5.52
+    },
+    {
+     "w": "pull",
+     "start": 5.585,
+     "end": 5.76
+    },
+    {
+     "w": "harder",
+     "start": 5.645,
+     "end": 6.08
+    },
+    {
+     "w": "than",
+     "start": 6.04,
+     "end": 6.16
+    },
+    {
+     "w": "the",
+     "start": 6.07,
+     "end": 6.24
+    },
+    {
+     "w": "Moon's",
+     "start": 6.27,
+     "end": 6.56
+    },
+    {
+     "w": "own",
+     "start": 6.6,
+     "end": 6.72
+    },
+    {
+     "w": "gravity",
+     "start": 6.725,
+     "end": 7.12
+    },
+    {
+     "w": "holds",
+     "start": 7.2,
+     "end": 7.36
+    },
+    {
+     "w": "it",
+     "start": 7.34,
+     "end": 7.52
+    },
+    {
+     "w": "together.",
+     "start": 7.615,
+     "end": 8.4
+    },
+    {
+     "w": "That's",
+     "start": 8.6,
+     "end": 8.72
+    },
+    {
+     "w": "if",
+     "start": 8.63,
+     "end": 8.96
+    },
+    {
+     "w": "the",
+     "start": 8.92,
+     "end": 9.04
+    },
+    {
+     "w": "Moon",
+     "start": 8.95,
+     "end": 9.28
+    },
+    {
+     "w": "acts",
+     "start": 9.18,
+     "end": 9.44
+    },
+    {
+     "w": "like",
+     "start": 9.535,
+     "end": 9.6
+    },
+    {
+     "w": "a",
+     "start": 9.565,
+     "end": 9.68
+    },
+    {
+     "w": "fluid.",
+     "start": 9.615,
+     "end": 10.16
+    },
+    {
+     "w": "A",
+     "start": 10.22,
+     "end": 10.32
+    },
+    {
+     "w": "perfectly",
+     "start": 10.31,
+     "end": 10.64
+    },
+    {
+     "w": "rigid",
+     "start": 10.61,
+     "end": 11.04
+    },
+    {
+     "w": "Moon",
+     "start": 11.025,
+     "end": 11.28
+    },
+    {
+     "w": "could",
+     "start": 11.35,
+     "end": 11.44
+    },
+    {
+     "w": "come",
+     "start": 11.38,
+     "end": 11.6
+    },
+    {
+     "w": "to",
+     "start": 11.58,
+     "end": 11.76
+    },
+    {
+     "w": "about",
+     "start": 11.77,
+     "end": 11.92
+    },
+    {
+     "w": "nine",
+     "start": 11.955,
+     "end": 12.24
+    },
+    {
+     "w": "and",
+     "start": 12.285,
+     "end": 12.335
+    },
+    {
+     "w": "a",
+     "start": 12.315,
+     "end": 12.4
+    },
+    {
+     "w": "half",
+     "start": 12.495,
+     "end": 12.545
+    },
+    {
+     "w": "thousand.",
+     "start": 12.565,
+     "end": 13.44
+    }
+   ]
+  },
+  {
+   "id": "L21",
+   "text": "At eighteen thousand, it's more than twenty times wider than tonight. A wall of grey, straining.",
+   "file": "voice5/wav/L21.wav",
+   "dur": 7.063,
+   "sentences": [
+    {
+     "text": "At eighteen thousand, it's more than twenty times wider than tonight.",
+     "t0": 0.08,
+     "t1": 4.48,
+     "claims": []
+    },
+    {
+     "text": "A wall of grey, straining.",
+     "t0": 4.56,
+     "t1": 6.48,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "At",
+     "start": 0.08,
+     "end": 0.32
+    },
+    {
+     "w": "eighteen",
+     "start": 0.2,
+     "end": 0.96
+    },
+    {
+     "w": "thousand,",
+     "start": 0.23,
+     "end": 0.96
+    },
+    {
+     "w": "it's",
+     "start": 0.995,
+     "end": 1.2
+    },
+    {
+     "w": "more",
+     "start": 1.095,
+     "end": 1.36
+    },
+    {
+     "w": "than",
+     "start": 1.415,
+     "end": 1.6
+    },
+    {
+     "w": "twenty",
+     "start": 1.66,
+     "end": 2.0
+    },
+    {
+     "w": "times",
+     "start": 1.94,
+     "end": 2.4
+    },
+    {
+     "w": "wider",
+     "start": 2.785,
+     "end": 3.28
+    },
+    {
+     "w": "than",
+     "start": 3.235,
+     "end": 3.44
+    },
+    {
+     "w": "tonight.",
+     "start": 3.415,
+     "end": 4.48
+    },
+    {
+     "w": "A",
+     "start": 4.56,
+     "end": 4.64
+    },
+    {
+     "w": "wall",
+     "start": 4.7,
+     "end": 4.88
+    },
+    {
+     "w": "of",
+     "start": 4.975,
+     "end": 5.04
+    },
+    {
+     "w": "grey,",
+     "start": 5.02,
+     "end": 5.44
+    },
+    {
+     "w": "straining.",
+     "start": 5.465,
+     "end": 6.48
+    }
+   ]
+  },
+  {
+   "id": "L22",
+   "text": "And then it does something no Moon should survive.",
+   "file": "voice5/wav/L22.wav",
+   "dur": 2.71,
+   "sentences": [
+    {
+     "text": "And then it does something no Moon should survive.",
+     "t0": 0.2,
+     "t1": 2.4,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "And",
+     "start": 0.2,
+     "end": 0.25
+    },
+    {
+     "w": "then",
+     "start": 0.245,
+     "end": 0.48
+    },
+    {
+     "w": "it",
+     "start": 0.575,
+     "end": 0.64
+    },
+    {
+     "w": "does",
+     "start": 0.605,
+     "end": 0.8
+    },
+    {
+     "w": "something",
+     "start": 0.89,
+     "end": 1.12
+    },
+    {
+     "w": "no",
+     "start": 1.08,
+     "end": 1.28
+    },
+    {
+     "w": "Moon",
+     "start": 1.24,
+     "end": 1.6
+    },
+    {
+     "w": "should",
+     "start": 1.675,
+     "end": 1.76
+    },
+    {
+     "w": "survive.",
+     "start": 1.83,
+     "end": 2.4
+    }
+   ]
+  },
+  {
+   "id": "L23",
+   "text": "It comes apart. Not an explosion. A stretch.",
+   "file": "voice5/wav/L23.wav",
+   "dur": 3.815,
+   "sentences": [
+    {
+     "text": "It comes apart.",
+     "t0": 0.115,
+     "t1": 1.2,
+     "claims": []
+    },
+    {
+     "text": "Not an explosion.",
+     "t0": 1.28,
+     "t1": 2.48,
+     "claims": []
+    },
+    {
+     "text": "A stretch.",
+     "t0": 2.58,
+     "t1": 3.52,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "It",
+     "start": 0.115,
+     "end": 0.24
+    },
+    {
+     "w": "comes",
+     "start": 0.22,
+     "end": 0.48
+    },
+    {
+     "w": "apart.",
+     "start": 0.51,
+     "end": 1.2
+    },
+    {
+     "w": "Not",
+     "start": 1.28,
+     "end": 1.44
+    },
+    {
+     "w": "an",
+     "start": 1.32,
+     "end": 1.6
+    },
+    {
+     "w": "explosion.",
+     "start": 1.595,
+     "end": 2.48
+    },
+    {
+     "w": "A",
+     "start": 2.58,
+     "end": 2.72
+    },
+    {
+     "w": "stretch.",
+     "start": 2.735,
+     "end": 3.52
+    }
+   ]
+  },
+  {
+   "id": "L24",
+   "text": "The rock spreads along its old orbit, and over time it can flatten into a ring.",
+   "file": "voice5/wav/L24.wav",
+   "dur": 5.56,
+   "sentences": [
+    {
+     "text": "The rock spreads along its old orbit, and over time it can flatten into a ring.",
+     "t0": 0.085,
+     "t1": 5.28,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "The",
+     "start": 0.085,
+     "end": 0.24
+    },
+    {
+     "w": "rock",
+     "start": 0.255,
+     "end": 0.56
+    },
+    {
+     "w": "spreads",
+     "start": 0.645,
+     "end": 0.96
+    },
+    {
+     "w": "along",
+     "start": 0.845,
+     "end": 1.2
+    },
+    {
+     "w": "its",
+     "start": 1.215,
+     "end": 1.36
+    },
+    {
+     "w": "old",
+     "start": 1.42,
+     "end": 1.6
+    },
+    {
+     "w": "orbit,",
+     "start": 1.695,
+     "end": 2.0
+    },
+    {
+     "w": "and",
+     "start": 2.295,
+     "end": 2.4
+    },
+    {
+     "w": "over",
+     "start": 2.48,
+     "end": 2.64
+    },
+    {
+     "w": "time",
+     "start": 2.615,
+     "end": 2.8
+    },
+    {
+     "w": "it",
+     "start": 3.065,
+     "end": 3.12
+    },
+    {
+     "w": "can",
+     "start": 3.15,
+     "end": 3.28
+    },
+    {
+     "w": "flatten",
+     "start": 3.27,
+     "end": 3.76
+    },
+    {
+     "w": "into",
+     "start": 3.66,
+     "end": 4.0
+    },
+    {
+     "w": "a",
+     "start": 4.045,
+     "end": 4.24
+    },
+    {
+     "w": "ring.",
+     "start": 4.335,
+     "end": 5.28
+    }
+   ]
+  },
+  {
+   "id": "L25",
+   "text": "No Moon. Just a bright band, horizon to horizon.",
+   "file": "voice5/wav/L25.wav",
+   "dur": 4.875,
+   "sentences": [
+    {
+     "text": "No Moon.",
+     "t0": 0.19,
+     "t1": 1.12,
+     "claims": []
+    },
+    {
+     "text": "Just a bright band, horizon to horizon.",
+     "t0": 1.2,
+     "t1": 4.56,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "No",
+     "start": 0.19,
+     "end": 0.4
+    },
+    {
+     "w": "Moon.",
+     "start": 0.335,
+     "end": 1.12
+    },
+    {
+     "w": "Just",
+     "start": 1.2,
+     "end": 1.36
+    },
+    {
+     "w": "a",
+     "start": 1.265,
+     "end": 1.52
+    },
+    {
+     "w": "bright",
+     "start": 1.525,
+     "end": 1.84
+    },
+    {
+     "w": "band,",
+     "start": 1.76,
+     "end": 2.4
+    },
+    {
+     "w": "horizon",
+     "start": 2.425,
+     "end": 3.04
+    },
+    {
+     "w": "to",
+     "start": 3.085,
+     "end": 3.44
+    },
+    {
+     "w": "horizon.",
+     "start": 3.485,
+     "end": 4.56
+    }
+   ]
+  },
+  {
+   "id": "L26",
+   "text": "The real Moon is still drifting away, three point eight centimeters a year. Tonight's Moon is fine.",
+   "file": "voice5/wav/L26.wav",
+   "dur": 6.905,
+   "sentences": [
+    {
+     "text": "The real Moon is still drifting away, three point eight centimeters a year.",
+     "t0": 0.2,
+     "t1": 4.32,
+     "claims": []
+    },
+    {
+     "text": "Tonight's Moon is fine.",
+     "t0": 4.48,
+     "t1": 6.32,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "The",
+     "start": 0.2,
+     "end": 0.25
+    },
+    {
+     "w": "real",
+     "start": 0.255,
+     "end": 0.48
+    },
+    {
+     "w": "Moon",
+     "start": 0.535,
+     "end": 0.8
+    },
+    {
+     "w": "is",
+     "start": 0.815,
+     "end": 0.88
+    },
+    {
+     "w": "still",
+     "start": 0.915,
+     "end": 1.04
+    },
+    {
+     "w": "drifting",
+     "start": 1.07,
+     "end": 1.36
+    },
+    {
+     "w": "away,",
+     "start": 1.25,
+     "end": 1.6
+    },
+    {
+     "w": "three",
+     "start": 1.67,
+     "end": 2.4
+    },
+    {
+     "w": "point",
+     "start": 1.7,
+     "end": 2.4
+    },
+    {
+     "w": "eight",
+     "start": 1.73,
+     "end": 2.4
+    },
+    {
+     "w": "centimeters",
+     "start": 2.4,
+     "end": 3.2
+    },
+    {
+     "w": "a",
+     "start": 3.135,
+     "end": 3.44
+    },
+    {
+     "w": "year.",
+     "start": 3.535,
+     "end": 4.32
+    },
+    {
+     "w": "Tonight's",
+     "start": 4.48,
+     "end": 4.88
+    },
+    {
+     "w": "Moon",
+     "start": 4.79,
+     "end": 5.12
+    },
+    {
+     "w": "is",
+     "start": 5.215,
+     "end": 5.36
+    },
+    {
+     "w": "fine.",
+     "start": 5.615,
+     "end": 6.32
+    }
+   ]
+  },
+  {
+   "id": "B1",
+   "text": "Watch the Moon. It's coming closer.",
+   "file": "voice5/wav/B1.wav",
+   "dur": 2.66,
+   "sentences": [
+    {
+     "text": "Watch the Moon.",
+     "t0": 0.2,
+     "t1": 1.04,
+     "claims": []
+    },
+    {
+     "text": "It's coming closer.",
+     "t0": 1.03,
+     "t1": 2.4,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.2,
+     "end": 0.48
+    },
+    {
+     "w": "the",
+     "start": 0.57,
+     "end": 0.64
+    },
+    {
+     "w": "Moon.",
+     "start": 0.6,
+     "end": 1.04
+    },
+    {
+     "w": "It's",
+     "start": 1.03,
+     "end": 1.28
+    },
+    {
+     "w": "coming",
+     "start": 1.19,
+     "end": 1.52
+    },
+    {
+     "w": "closer.",
+     "start": 1.455,
+     "end": 2.4
+    }
+   ]
+  },
+  {
+   "id": "B2",
+   "text": "A quarter closer. What changes first?",
+   "file": "voice5/wav/B2.wav",
+   "dur": 2.69,
+   "sentences": [
+    {
+     "text": "A quarter closer.",
+     "t0": 0.055,
+     "t1": 1.36,
+     "claims": []
+    },
+    {
+     "text": "What changes first?",
+     "t0": 1.41,
+     "t1": 2.64,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "A",
+     "start": 0.055,
+     "end": 0.32
+    },
+    {
+     "w": "quarter",
+     "start": 0.3,
+     "end": 0.72
+    },
+    {
+     "w": "closer.",
+     "start": 0.6,
+     "end": 1.36
+    },
+    {
+     "w": "What",
+     "start": 1.41,
+     "end": 1.6
+    },
+    {
+     "w": "changes",
+     "start": 1.6,
+     "end": 2.08
+    },
+    {
+     "w": "first?",
+     "start": 1.99,
+     "end": 2.64
+    }
+   ]
+  },
+  {
+   "id": "B3",
+   "text": "Half the distance. Now the ocean climbs.",
+   "file": "voice5/wav/B3.wav",
+   "dur": 3.29,
+   "sentences": [
+    {
+     "text": "Half the distance.",
+     "t0": 0.21,
+     "t1": 1.28,
+     "claims": []
+    },
+    {
+     "text": "Now the ocean climbs.",
+     "t0": 1.355,
+     "t1": 3.04,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Half",
+     "start": 0.21,
+     "end": 0.56
+    },
+    {
+     "w": "the",
+     "start": 0.645,
+     "end": 0.72
+    },
+    {
+     "w": "distance.",
+     "start": 0.675,
+     "end": 1.28
+    },
+    {
+     "w": "Now",
+     "start": 1.355,
+     "end": 1.44
+    },
+    {
+     "w": "the",
+     "start": 1.575,
+     "end": 1.68
+    },
+    {
+     "w": "ocean",
+     "start": 1.69,
+     "end": 2.08
+    },
+    {
+     "w": "climbs.",
+     "start": 2.01,
+     "end": 3.04
+    }
+   ]
+  },
+  {
+   "id": "B4",
+   "text": "The night is getting too bright.",
+   "file": "voice5/wav/B4.wav",
+   "dur": 2.42,
+   "sentences": [
+    {
+     "text": "The night is getting too bright.",
+     "t0": 0.175,
+     "t1": 2.16,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "The",
+     "start": 0.175,
+     "end": 0.225
+    },
+    {
+     "w": "night",
+     "start": 0.205,
+     "end": 0.4
+    },
+    {
+     "w": "is",
+     "start": 0.605,
+     "end": 0.72
+    },
+    {
+     "w": "getting",
+     "start": 0.715,
+     "end": 0.96
+    },
+    {
+     "w": "too",
+     "start": 1.055,
+     "end": 1.2
+    },
+    {
+     "w": "bright.",
+     "start": 1.085,
+     "end": 2.16
+    }
+   ]
+  },
+  {
+   "id": "B5",
+   "text": "What happens when the Moon outgrows the Sun?",
+   "file": "voice5/wav/B5.wav",
+   "dur": 2.76,
+   "sentences": [
+    {
+     "text": "What happens when the Moon outgrows the Sun?",
+     "t0": 0.2,
+     "t1": 2.48,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "What",
+     "start": 0.2,
+     "end": 0.25
+    },
+    {
+     "w": "happens",
+     "start": 0.28,
+     "end": 0.72
+    },
+    {
+     "w": "when",
+     "start": 0.6,
+     "end": 0.88
+    },
+    {
+     "w": "the",
+     "start": 0.81,
+     "end": 0.96
+    },
+    {
+     "w": "Moon",
+     "start": 0.845,
+     "end": 1.2
+    },
+    {
+     "w": "outgrows",
+     "start": 1.235,
+     "end": 1.84
+    },
+    {
+     "w": "the",
+     "start": 1.865,
+     "end": 2.0
+    },
+    {
+     "w": "Sun?",
+     "start": 2.095,
+     "end": 2.48
+    }
+   ]
+  },
+  {
+   "id": "B6",
+   "text": "It's not just the sea. The ground moves too.",
+   "file": "voice5/wav/B6.wav",
+   "dur": 3.2,
+   "sentences": [
+    {
+     "text": "It's not just the sea.",
+     "t0": 0.13,
+     "t1": 1.52,
+     "claims": []
+    },
+    {
+     "text": "The ground moves too.",
+     "t0": 1.69,
+     "t1": 2.88,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "It's",
+     "start": 0.13,
+     "end": 0.32
+    },
+    {
+     "w": "not",
+     "start": 0.385,
+     "end": 0.48
+    },
+    {
+     "w": "just",
+     "start": 0.425,
+     "end": 0.72
+    },
+    {
+     "w": "the",
+     "start": 0.73,
+     "end": 0.88
+    },
+    {
+     "w": "sea.",
+     "start": 0.88,
+     "end": 1.52
+    },
+    {
+     "w": "The",
+     "start": 1.69,
+     "end": 1.74
+    },
+    {
+     "w": "ground",
+     "start": 1.72,
+     "end": 2.08
+    },
+    {
+     "w": "moves",
+     "start": 2.175,
+     "end": 2.32
+    },
+    {
+     "w": "too.",
+     "start": 2.415,
+     "end": 2.88
+    }
+   ]
+  },
+  {
+   "id": "B7",
+   "text": "Watch it rise in the wrong place.",
+   "file": "voice5/wav/B7.wav",
+   "dur": 2.32,
+   "sentences": [
+    {
+     "text": "Watch it rise in the wrong place.",
+     "t0": 0.195,
+     "t1": 2.0,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Watch",
+     "start": 0.195,
+     "end": 0.4
+    },
+    {
+     "w": "it",
+     "start": 0.325,
+     "end": 0.56
+    },
+    {
+     "w": "rise",
+     "start": 0.485,
+     "end": 0.88
+    },
+    {
+     "w": "in",
+     "start": 0.89,
+     "end": 0.96
+    },
+    {
+     "w": "the",
+     "start": 0.92,
+     "end": 1.12
+    },
+    {
+     "w": "wrong",
+     "start": 1.205,
+     "end": 1.44
+    },
+    {
+     "w": "place.",
+     "start": 1.525,
+     "end": 2.0
+    }
+   ]
+  },
+  {
+   "id": "B8",
+   "text": "There's a distance no moon survives.",
+   "file": "voice5/wav/B8.wav",
+   "dur": 3.1,
+   "sentences": [
+    {
+     "text": "There's a distance no moon survives.",
+     "t0": 0.17,
+     "t1": 2.8,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "There's",
+     "start": 0.17,
+     "end": 0.32
+    },
+    {
+     "w": "a",
+     "start": 0.41,
+     "end": 0.48
+    },
+    {
+     "w": "distance",
+     "start": 0.44,
+     "end": 1.04
+    },
+    {
+     "w": "no",
+     "start": 0.92,
+     "end": 1.2
+    },
+    {
+     "w": "moon",
+     "start": 1.085,
+     "end": 1.68
+    },
+    {
+     "w": "survives.",
+     "start": 1.71,
+     "end": 2.8
+    }
+   ]
+  },
+  {
+   "id": "D1",
+   "text": "If that made the sky feel bigger, tap like and follow.",
+   "file": "voice5/wav/D1.wav",
+   "dur": 2.945,
+   "sentences": [
+    {
+     "text": "If that made the sky feel bigger, tap like and follow.",
+     "t0": 0.43,
+     "t1": 2.88,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "If",
+     "start": 0.43,
+     "end": 0.48
+    },
+    {
+     "w": "that",
+     "start": 0.46,
+     "end": 0.56
+    },
+    {
+     "w": "made",
+     "start": 0.815,
+     "end": 0.88
+    },
+    {
+     "w": "the",
+     "start": 0.845,
+     "end": 0.96
+    },
+    {
+     "w": "sky",
+     "start": 0.995,
+     "end": 1.2
+    },
+    {
+     "w": "feel",
+     "start": 1.19,
+     "end": 1.36
+    },
+    {
+     "w": "bigger,",
+     "start": 1.41,
+     "end": 1.6
+    },
+    {
+     "w": "tap",
+     "start": 1.66,
+     "end": 1.84
+    },
+    {
+     "w": "like",
+     "start": 1.86,
+     "end": 2.0
+    },
+    {
+     "w": "and",
+     "start": 2.06,
+     "end": 2.24
+    },
+    {
+     "w": "follow.",
+     "start": 2.26,
+     "end": 2.88
+    }
+   ]
+  },
+  {
+   "id": "D2",
+   "text": "If that made the sky feel bigger, tap like and subscribe.",
+   "file": "voice5/wav/D2.wav",
+   "dur": 3.42,
+   "sentences": [
+    {
+     "text": "If that made the sky feel bigger, tap like and subscribe.",
+     "t0": 0.2,
+     "t1": 3.12,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "If",
+     "start": 0.2,
+     "end": 0.32
+    },
+    {
+     "w": "that",
+     "start": 0.315,
+     "end": 0.56
+    },
+    {
+     "w": "made",
+     "start": 0.655,
+     "end": 0.72
+    },
+    {
+     "w": "the",
+     "start": 0.685,
+     "end": 0.8
+    },
+    {
+     "w": "sky",
+     "start": 0.715,
+     "end": 1.12
+    },
+    {
+     "w": "feel",
+     "start": 1.215,
+     "end": 1.28
+    },
+    {
+     "w": "bigger,",
+     "start": 1.245,
+     "end": 1.52
+    },
+    {
+     "w": "tap",
+     "start": 1.585,
+     "end": 1.84
+    },
+    {
+     "w": "like",
+     "start": 1.76,
+     "end": 2.08
+    },
+    {
+     "w": "and",
+     "start": 2.175,
+     "end": 2.225
+    },
+    {
+     "w": "subscribe.",
+     "start": 2.21,
+     "end": 3.12
+    }
+   ]
+  },
+  {
+   "id": "D3",
+   "text": "Still looking up? Tap like and follow.",
+   "file": "voice5/wav/D3.wav",
+   "dur": 2.79,
+   "sentences": [
+    {
+     "text": "Still looking up?",
+     "t0": 0.08,
+     "t1": 1.125,
+     "claims": []
+    },
+    {
+     "text": "Tap like and follow.",
+     "t0": 1.105,
+     "t1": 2.48,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Still",
+     "start": 0.08,
+     "end": 0.4
+    },
+    {
+     "w": "looking",
+     "start": 0.42,
+     "end": 0.64
+    },
+    {
+     "w": "up?",
+     "start": 1.075,
+     "end": 1.125
+    },
+    {
+     "w": "Tap",
+     "start": 1.105,
+     "end": 1.36
+    },
+    {
+     "w": "like",
+     "start": 1.615,
+     "end": 1.665
+    },
+    {
+     "w": "and",
+     "start": 1.645,
+     "end": 1.92
+    },
+    {
+     "w": "follow.",
+     "start": 1.98,
+     "end": 2.48
+    }
+   ]
+  },
+  {
+   "id": "D4",
+   "text": "Still looking up? Tap like and subscribe.",
+   "file": "voice5/wav/D4.wav",
+   "dur": 3.55,
+   "sentences": [
+    {
+     "text": "Still looking up?",
+     "t0": 0.205,
+     "t1": 1.42,
+     "claims": []
+    },
+    {
+     "text": "Tap like and subscribe.",
+     "t0": 1.4,
+     "t1": 3.28,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Still",
+     "start": 0.205,
+     "end": 0.48
+    },
+    {
+     "w": "looking",
+     "start": 0.57,
+     "end": 0.8
+    },
+    {
+     "w": "up?",
+     "start": 1.37,
+     "end": 1.42
+    },
+    {
+     "w": "Tap",
+     "start": 1.4,
+     "end": 1.6
+    },
+    {
+     "w": "like",
+     "start": 1.635,
+     "end": 1.84
+    },
+    {
+     "w": "and",
+     "start": 1.795,
+     "end": 2.0
+    },
+    {
+     "w": "subscribe.",
+     "start": 2.03,
+     "end": 3.28
+    }
+   ]
+  }
+ ]
+}
