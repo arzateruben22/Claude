@@ -1,0 +1,69 @@
+[
+ {
+  "kind": "open",
+  "text": "The day is now twelve hours long.",
+  "take": "V.p2_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.03
+ },
+ {
+  "kind": "sent",
+  "text": "At a twelve hour day, sunrise to sunset takes six hours.",
+  "take": "A.s017",
+  "uid": "s17",
+  "vo": "vo02",
+  "dur": 3.18
+ },
+ {
+  "kind": "sent",
+  "text": "The Sun moves as fast as a clock's hour hand.",
+  "take": "A.s018",
+  "uid": "s18",
+  "vo": "vo03",
+  "dur": 2.38
+ },
+ {
+  "kind": "sent",
+  "text": "You are one point four percent lighter, four times what you feel today.",
+  "take": "A.s020",
+  "uid": "s20",
+  "vo": "vo04",
+  "dur": 3.4
+ },
+ {
+  "kind": "sent",
+  "text": "Eight hours of sleep no longer fits inside one night.",
+  "take": "A.s021",
+  "uid": "s21",
+  "vo": "vo05",
+  "dur": 2.37
+ },
+ {
+  "kind": "cta",
+  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+  "take": "V.cta_follow",
+  "sub_file": "vo/06-sub.wav",
+  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
+  "take_sub": "V.cta_sub",
+  "uid": "cta",
+  "vo": "vo06",
+  "dur": 5.11
+ },
+ {
+  "kind": "cliff",
+  "text": "And then the wind starts to blow.",
+  "take": "V.p2_cliff",
+  "uid": "cliff",
+  "vo": "vo07",
+  "dur": 2.79
+ },
+ {
+  "kind": "closer",
+  "text": "Part two of eight. Full video on YouTube.",
+  "take": "V.c2",
+  "uid": "tease",
+  "vo": "vo08",
+  "dur": 3.11
+ }
+]
