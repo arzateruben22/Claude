@@ -14,7 +14,8 @@ FPS, BPM = 30, 50
 A = {s["k"]: s for s in json.loads((SP / "cutA/lines.json").read_text())["sentence_files"]}
 V = json.loads((SP / "cutV/phrases.json").read_text())
 CONFIG = {
- 1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 11)], hook="How fast before you float off?", keys="p1"),
+ 1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p1_cliff"), ("closer", "V", "c1")], hook="How fast before you float off?"),
+ 2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
 }[N]
 TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast"]
 def src(kind, key):
@@ -61,29 +62,47 @@ GAP = 0.9                                                  # a pause between lin
 plan = {}
 for it in items:
     pre, hold = 0.1, GAP - 0.1
-    if it["kind"] == "open": pre, hold = 0.2, GAP
+    if it["kind"] == "open": pre, hold = 0.2, (2.0 if N == 2 else GAP)
     if it["kind"] == "closer": pre, hold = 0.0, 0.0
     if it["kind"] == "cta": pre, hold = 0.15, GAP - 0.1
+    if N == 2 and it["uid"] in ("s17", "s20"): hold = 3.2        # picture beats carried by sound effects
+    if N == 2 and it["uid"] == "s18": hold = 3.6                 # the ground-speed beat (no spoken unit): the mph readout counts up, the chip pops
+    if N == 2 and it["uid"] == "s21": hold = 2.4
+    if N == 1 and it["uid"] == "s4": hold = 3.2                  # the ground-speed beat
+    if N == 1 and it["uid"] == "s71": hold = 1.6                 # hold the liftoff
     plan[it["uid"]] = {"pre": pre, "hold": hold, "energy": 0.6}
-BEATS = f.layout(plan, end_hold=2.2)
+BEATS = f.layout(plan, end_hold=3.0)
 At = f.at
 vo = {it["uid"]: it["vo"] for it in items}
 lines_by = {l["id"]: l for l in f.lines}
 def t_of(uid, off=0.0): return lines_by[vo[uid]]["t"] + off
 def t_end_of(uid): return lines_by[vo[uid]]["t"] + lines_by[vo[uid]]["dur"]
 sent = [it for it in items if it["kind"] == "sent"]
-KEYS = [[0.0, 23.934], [round(f.duration, 3), 23.934]]; WW = []
-last = sent[-1]["uid"]
-FL0 = round(t_end_of("s71") - 1.4, 3); FL1 = round(t_end_of("s72") + 0.6, 3)
-RP = {"open": ("armsOut", "happy"), "s71": ("lookUp", "awe"), "s72": ("float", "happy"), "s4": ("stand", "neutral"), "s11": ("hips", "neutral")}
+closer = next(l for l in f.lines if LINE[l["id"]]["kind"] == "closer"); t_end = At(f"{closer['id']}:Full", -0.2)
+WW = []; FLASH = None
+def U(u): return t_of(u)
+if N == 1:
+    FL0 = round(At(f"{vo['s71']}:seventeen", -0.1), 3); FL1 = round(t_end_of("s71") + 1.3, 3); FLASH = {"t0": FL0, "t1": FL1}
+    KEYS = [[0.0, 23.934], [round(U("s13"), 3), 23.934], [round(U("s13") + 1.4, 3), 19.9], [round(f.duration, 3), 19.0]]
+    RP = {"open": ("armsOut", "happy"), "s71": ("float", "happy"), "s72": ("stand", "happy"), "s4": ("stand", "neutral"), "s12": ("stand", "wide"), "s13": ("lookUp", "awe"), "cta": ("armsOut", "happy"), "cliff": ("lookUp", "awe"), "tease": ("stand", "happy")}
+    BS = round(t_end_of("s4") + 0.35, 3)      # the ground-speed beat starts here
+    CAMS = [{"t0": 0.0, "mode": "push"}, {"t0": round(FL0 - 0.3, 3), "mode": "lift"}, {"t0": round(FL1 + 0.1, 3), "mode": "push"}, {"t0": round(BS - 0.2, 3), "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(BS + 1.5, 3), "t1": round(BS + 3.3, 3), "text": "Already faster than sound (767 mph)"}, {"t0": round(U("s12") + 1.9, 3), "t1": round(t_end_of("s12") + 0.5, 3), "text": "\u2248 a phone lighter"}]
+    HUD3 = {"bar_t0": round(FL1 + 0.1, 3), "weight_t0": round(U("s12") - 0.1, 3), "speed": {"t0": BS, "t1": round(t_end_of("s12") + 0.4, 3)}}
+else:
+    KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]
+    RP = {"open": ("lookUp", "awe"), "s17": ("lookUp", "wide"), "s18": ("lookUp", "neutral"), "s20": ("float", "happy"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s18") - 0.2, 3), "mode": "wide"}, {"t0": round(t_end_of("s18") - 0.2, 3), "mode": "push"}, {"t0": round(U("s21") - 0.2, 3), "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "base"}]
+    BS = round(t_end_of("s18") + 0.3, 3)
+    CHIPS = [{"t0": round(U("s17") + 0.4, 3), "t1": round(t_end_of("s17") + 0.3, 3), "text": "6 h of daylight"}, {"t0": round(U("s18") + 0.3, 3), "t1": round(t_end_of("s18") + 0.3, 3), "text": "Sun at hour-hand speed"},
+             {"t0": round(BS + 1.4, 3), "t1": round(BS + 3.3, 3), "text": "\u22482,080 mph \u00b7 nearly 3\u00d7 the speed of sound"}, {"t0": round(U("s21") + 0.2, 3), "t1": round(t_end_of("s21") + 0.4, 3), "text": "8 h of sleep won't fit"}]
+    HUD3 = {"bar_t0": round(U("s17"), 3), "weight_t0": round(U("s20") - 0.2, 3), "speed": {"t0": BS, "t1": round(t_end_of("s20") + 0.2, 3)}}
 ROBOT = []
 for it in items:
     p, e = RP.get(it["uid"], ("stand", "neutral")); ROBOT.append({"t": round(max(0.0, t_of(it["uid"]) - 0.3), 3), "pose": p, "expr": e})
-ROBOT[0]["t"] = 0.0; ROBOT.append({"t": FL1 + 0.3, "pose": "stand", "expr": "neutral"})
-CAMS = [{"t0": 0.0, "mode": "push"}, {"t0": round(FL0 - 0.2, 3), "mode": "wide"}, {"t0": round(FL1 + 0.2, 3), "mode": "ground"}]
-CHIPS = [{"t0": round(FL0 + 0.3, 3), "t1": round(FL1 - 0.2, 3), "text": "17\u00d7 faster = liftoff"}, {"t0": round(At(f"{vo['s11']}:sixteen", -0.2), 3), "t1": round(f.duration - 0.2, 3), "text": "Already faster than sound"}]
-HUD3 = {"bar_t0": FL1}
-t_end = f.duration + 5.0
+ROBOT[0]["t"] = 0.0
+if FLASH: ROBOT.append({"t": round(FL1 + 0.05, 3), "pose": "stand", "expr": "neutral"})
+ROBOT.sort(key=lambda r: r["t"])
 def lead(pages, by=0.14):
     for i, pg in enumerate(pages):
         prev = pages[i - 1]["t1"] if i else -1.0
@@ -103,16 +122,21 @@ TITLE = {"series": "Possibility Lab", "title": TITLES[N - 1], "t0": -20.0, "t1":
 END = {"title": "Full video on YouTube: *What If Earth Spun Faster…*", "follow": f"Possibility Lab · Part {N} of 8", "next": "Every number's source is in the description."}
 dummy = [999.0, 1000.0]; CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dummy, "wind": dummy, "oceans": dummy, "poles": dummy, "end": t_end, "seed": 3}
 SHOTS = [{"at": 0.0, "name": "eye", "beat": "open"}, {"at": t_end, "name": "end", "beat": "tease"}]
-film = {"id": f"possibility-lab-earth-spin-part{N}-v3-preview", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration, "v2": True,
+film = {"id": f"possibility-lab-earth-spin-part{N}-v3", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration, "v2": True,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4), "shots": SHOTS, "beats": BEATS,
         "world": {"cycleS": 16.0, "keys": KEYS, "dry": [[0.0, 90.0], [round(f.duration, 3), 90.0]], "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
         "disclosures": {"aiVoice": False, "realVoice": True, "aiIllustration": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
-        "cams": CAMS, "fx": {}, "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": 2.9}, "hud3": HUD3, "chips": CHIPS, "flash": {"t0": FL0, "t1": FL1},
+        "cams": CAMS, "fx": {}, "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": 2.9}, "hud3": HUD3, "chips": CHIPS, "flash": FLASH,
         "captions": captions, "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]; ev.append({"t": t_end, "kind": "signature", "tag": "end"})
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05, "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],
          "events": sorted(ev, key=lambda e: e["t"]), "voice": [{"id": v["id"], "t": v["t"], "file": v["file"]} for v in film["voice"]]}
 (D / "film.json").write_text(json.dumps(film, indent=1, ensure_ascii=False)); (D / "sheet.json").write_text(json.dumps(sheet, indent=1, ensure_ascii=False))
+sub = json.loads(json.dumps(sheet))
+for v in sub["voice"]:
+    it = LINE[v["id"]]
+    if it.get("sub_file"): v["file"] = it["sub_file"]
+(D / "sheet-sub.json").write_text(json.dumps(sub, indent=1, ensure_ascii=False))
 vg = [round(b["t"] - a["t"] - a["dur"], 2) for a, b in zip(f.lines, f.lines[1:])]; 
-print(f"part {N} v2: {f.duration:.1f} s, end card {t_end:.1f} s, max voiceless {max(vg)} s, speech {sum(l['dur'] for l in f.lines):.1f} s")
+print(f"part {N} v2: {f.duration:.1f} s, end card {t_end:.1f} s, max voiceless {max(vg)} s, CTA at {next(l for l in f.lines if LINE[l['id']]['kind']=='cta')['t'] / f.duration:.0%}, speech {sum(l['dur'] for l in f.lines):.1f} s")
 print("  keys:", KEYS); print("  cams:", CAMS)

@@ -342,5 +342,44 @@
   "verified_via": "calculation",
   "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
   "derivation": "Extra rise = (w^2 - w0^2) R^2 / (2 g0) (c6): 2,797 km at a 1.5 h day, a rough first-order guess; the mean ocean depth is about 3.7 km (c18), so 2,800 / 3.7 = about 760 times."
+ },
+ {
+  "id": "c30",
+  "sentence": "Already faster than sound (767 mph)",
+  "claim": "The ground at the equator moves at 1,674 km/h, about 1,040 mph (km/h x 0.6214). The speed of sound at sea level, 343 m/s, is about 767 mph.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "kind": "derivation",
+  "note": "OPEN: a person must check the arithmetic.",
+  "derivation": "The ground at the equator moves at 1,674 km/h, about 1,040 mph (km/h x 0.6214). The speed of sound at sea level, 343 m/s, is about 767 mph.",
+  "source_url": null
+ },
+ {
+  "id": "c31",
+  "sentence": "about 2,080 mph, nearly 3 times the speed of sound",
+  "claim": "At a 12 h day the equator moves at about 3,348 km/h, about 2,080 mph, nearly 3 times the speed of sound (767 mph).",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "kind": "derivation",
+  "note": "OPEN: a person must check the arithmetic.",
+  "derivation": "At a 12 h day the equator moves at about 3,348 km/h, about 2,080 mph, nearly 3 times the speed of sound (767 mph).",
+  "source_url": null
+ },
+ {
+  "id": "c32",
+  "sentence": "a phone lighter",
+  "claim": "About a third of a percent (0.35%) of a 70 kg person is about 0.24 kg, roughly the mass of a smartphone.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "not read",
+  "status": "OPEN",
+  "kind": "derivation",
+  "note": "OPEN: a person must check the arithmetic.",
+  "derivation": "About a third of a percent (0.35%) of a 70 kg person is about 0.24 kg, roughly the mass of a smartphone.",
+  "source_url": null
  }
 ]

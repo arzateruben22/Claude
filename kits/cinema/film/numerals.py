@@ -16,6 +16,8 @@ Rules (the owner's, 11 Nov 2026: "numbers read as actual numbers, km for kilomet
   - a lone "one" stays a word unless a unit, "point", a scale word or "of <number>" follows it ("one thing" stays)
   - units after a number: km, m, cm, mm, kg, g, %, °, km/h, m/s ("kilometers an hour", "meters a second", "per")
   - time words stay words (hours, minutes, seconds, days, years): they read better and the readouts already abbreviate
+  - "N times" reads "N×" (the owner, 12 Nov 2026: "make it say 17x"): "seventeen times faster" -> "17× faster",
+    "two and a half times wider" -> "2.5× wider"; a number written with a scale word ("1 million times") keeps "times"
   - nothing else changes: punctuation, capitals and spacing are kept
 
 display_tokens(words) maps spoken word tokens (with times) to display tokens, so karaoke highlighting still works:
@@ -177,7 +179,20 @@ def display_tokens(words):
             out.append((disp2, [words[x][1] for x in [*idx, *range(i, i + used)]])); i += used
         else:
             out.append((disp + trail, [words[x][1] for x in idx]))
-    return out
+    return _times_sign(out)
+
+
+def _times_sign(out):
+    """'17' + 'times' -> '17×' (keeps the trailing punctuation of 'times' and both time spans)"""
+    res, k = [], 0
+    while k < len(out):
+        d, ts = out[k]
+        if k + 1 < len(out) and re.fullmatch(r"[^\w]*\d[\d,]*(?:\.\d+)?", d) and re.fullmatch(r"times[^\w]*", out[k + 1][0], re.I):
+            trail = re.search(r"[^\w]*$", out[k + 1][0]).group(0)
+            res.append((d + "\u00d7" + trail, ts + out[k + 1][1])); k += 2
+            continue
+        res.append((d, ts)); k += 1
+    return res
 
 
 def _unit_after(words, i, disp):
@@ -206,12 +221,16 @@ TESTS = [
     ("Only one thing will change.", "Only one thing will change."),
     ("Half the distance: about one hundred ninety-two thousand kilometers.", "Half the distance: about 192,000 km."),
     ("Around nine and a half thousand, if it is perfectly rigid.", "Around 9,500, if it is perfectly rigid."),
-    ("The Moon is now about two and a half times wider.", "The Moon is now about 2.5 times wider."),
+    ("The Moon is now about two and a half times wider.", "The Moon is now about 2.5\u00d7 wider."),
     ("a chance of one in a million", "a chance of one in a million"),
     ("It moves about 340 meters a second.", "It moves about 340 m/s."),
     ("losing fifty to a hundred hairs a day", "losing 50 to 100 hairs a day"),
     ("at most around eighty percent as strong", "at most around 80% as strong"),
-    ("Its tidal pull is more than a hundred sixty times today's.", "Its tidal pull is more than 160 times today's."),
+    ("Its tidal pull is more than a hundred sixty times today's.", "Its tidal pull is more than 160\u00d7 today's."),
+    ("Only about seventeen times faster, a day of an hour", "Only about 17\u00d7 faster, a day of an hour"),
+    ("nearly three times the speed of sound.", "nearly 3\u00d7 the speed of sound."),
+    ("This wind would be four times faster,", "This wind would be 4\u00d7 faster,"),
+    ("It is 10,000 times slower.", "It is 10,000\u00d7 slower."),
     ("one million times slower", "1 million times slower"),
     ("three hundred eighty-four thousand four hundred kilometers", "384,400 km"),
     ("Your brain answers in two soft steps.", "Your brain answers in 2 soft steps."),

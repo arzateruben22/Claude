@@ -6,10 +6,10 @@ words.json: the studio's alignment format ({"lines": [{"id", "words": [{"w", "st
 {"w", "start", "end"} (seconds, in this file's own time). Use --line to pick one line of a multi-line file.
 
 How (restoration only, no resynthesis, the voice stays the speaker's own):
-  1. Word edges are refined from the audio: an aligned word is extended over the contiguous sound around it (up to 70 ms
-     before, 90 ms after), so soft onsets and tails ("s", "f", "h", a trailing vowel) always count as the word.
-  2. Every pause between words (and the lead-in and the tail) of 80 ms or more, after a guard of 40 ms before the next word
-     and 50 ms after the last, is examined in 5 ms frames.
+  1. Word edges are refined from the audio: an aligned word is extended over the contiguous sound around it (up to 150 ms
+     before, 220 ms after), so soft onsets and long whispered tails ("-iver", "-ings", a trailing vowel) count as the word.
+  2. Every pause between words (and the lead-in and the tail) of 120 ms or more, after a guard of 60 ms before the next word
+     and 90 ms after the last, is examined in 5 ms frames.
   3. Breath = any sound in a pause at least 8 dB above the recording's floor (whisper-safe: Evelyn's whispered words are
      unvoiced too, so the words are protected by the alignment and the refined edges, not by pitch). Breaths drop by --breath-db (default -30 dB); the rest of the pause (room tone) by --gap-db (-8 dB),
      so pauses stay natural, never dead silence. A clearly voiced sound inside a pause (a word the aligner missed: pitched for
@@ -35,23 +35,23 @@ def frames_voicing(m, sr, hop=0.005, win=0.02):
     return t, lv, vo
 
 
-def debreath(x, sr, words, breath_db=-30.0, gap_db=-8.0, pre=0.04, post=0.05, min_gap=0.08):
+def debreath(x, sr, words, breath_db=-30.0, gap_db=-8.0, pre=0.06, post=0.09, min_gap=0.12, split_long=False):
     m = x.mean(1) if x.ndim == 2 else x; n = len(m); dur = n / sr
     t, lv, vo = frames_voicing(m, sr); floor = np.percentile(lv, 8)
     ws = sorted(({"s": float(w["start"]), "e": float(w["end"])} for w in words if w.get("end", 0) > w.get("start", 0)), key=lambda w: w["s"])
     inw = np.zeros(len(t), bool)
     for w in ws: inw |= (t >= w["s"]) & (t <= w["e"])
     ref = np.percentile(lv[inw], 90) if inw.any() else lv.max()
-    snd = lv > max(floor + 10, ref - 22)                                      # "sound" for edge refinement
+    snd = lv > max(floor + 10, ref - 30)                                      # "sound" for edge refinement
     for w in ws:                                                              # 1. refine edges over contiguous sound
         i = np.searchsorted(t, w["s"])
         j = i
-        while j > 0 and snd[j - 1] and t[i] - t[j - 1] <= 0.07: j -= 1
+        while j > 0 and snd[j - 1] and t[i] - t[j - 1] <= 0.15: j -= 1
         w["s"] = min(w["s"], t[j] if j < len(t) else w["s"])
         i = np.searchsorted(t, w["e"]); j = i
-        while j < len(t) - 1 and snd[j] and t[j] - t[min(i, len(t) - 1)] <= 0.09: j += 1
+        while j < len(t) - 1 and snd[j] and t[j] - t[min(i, len(t) - 1)] <= 0.22: j += 1
         w["e"] = max(w["e"], t[j] if j < len(t) else w["e"])
-    for w in ws:                                                              # a breath the aligner gave to the word before it
+    for w in (ws if split_long else []):                                      # opt-in: a breath the aligner gave to the word before it
         if w["e"] - w["s"] < 0.6: continue
         sel = np.nonzero((t >= w["s"]) & (t <= w["e"]))[0]
         if len(sel) < 20: continue
@@ -96,9 +96,9 @@ def load_words(path, line=None):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("src"); ap.add_argument("words"); ap.add_argument("dst"); ap.add_argument("--line")
-    ap.add_argument("--breath-db", type=float, default=-30.0); ap.add_argument("--gap-db", type=float, default=-8.0); a = ap.parse_args()
+    ap.add_argument("--breath-db", type=float, default=-30.0); ap.add_argument("--gap-db", type=float, default=-8.0); ap.add_argument("--split-long", action="store_true"); a = ap.parse_args()
     x, sr = sf.read(a.src, dtype="float64"); ws = load_words(a.words, a.line)
-    y, found = debreath(x, sr, ws, a.breath_db, a.gap_db)
+    y, found = debreath(x, sr, ws, a.breath_db, a.gap_db, split_long=a.split_long)
     sf.write(a.dst, y, sr, subtype="PCM_24")
     print(f"debreath: {len(found)} breaths lowered {a.breath_db:.0f} dB ({sum(b - a_ for a_, b in found):.2f} s); words untouched -> {a.dst}")
     for s, e in found: print(f"  breath {s:6.2f}-{e:6.2f}")
