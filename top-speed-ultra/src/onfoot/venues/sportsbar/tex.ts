@@ -2,7 +2,7 @@
 // "SIMULATED" test card the screens show in S1, and one atlas for the boards, the pictograms and the signs. Every
 // string drawn here is plain and honest: nothing says the screens or the crowd are anything but simulated.
 import * as THREE from 'three';
-import { canvasTex } from '../../engine/geom';
+import { canvasTex, rand } from '../../engine/geom';
 import { BAR_NAME, BAR_TAGLINE, PALETTE } from './brand';
 
 const SANS = '"Avenir Next", "Segoe UI", system-ui, Arial, sans-serif';
@@ -150,4 +150,30 @@ export function signsAtlas() {
     // a nameplate: the bar's name in small type
     g.fillStyle = PALETTE.violet; g.fillRect(0, 780, 512, 120); g.fillStyle = PALETTE.lime; g.font = `900 52px ${WIDE}`; g.fillText(BAR_NAME.toUpperCase(), 256, 858);
   });
+}
+
+/** the bar's polished concrete floor (S4's second repair; it shared Lot 57's polishedTex): the same pale slab and 4 m
+ *  score lines, with the mottling and the flecks much fainter and finer. At Low the toon look posterizes the albedo
+ *  and Lot 57's dark brown flecks grew into blotches that read as dirt on the floor (the art review) */
+export function barFloorTex() {
+  return canvasTex(512, 512, (g, w, h) => {
+    g.fillStyle = '#aaa59d'; g.fillRect(0, 0, w, h);
+    const r = rand(91);
+    for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(${r() < 0.5 ? '96,90,84' : '255,250,240'},${r() * 0.025})`; g.beginPath(); g.ellipse(r() * w, r() * h, 30 + r() * 120, 20 + r() * 80, r() * 3, 0, 7); g.fill(); }
+    for (let i = 0; i < 3000; i++) { const a = r(); g.fillStyle = a < 0.5 ? `rgba(120,112,104,${0.05 + r() * 0.07})` : `rgba(235,230,220,${0.05 + r() * 0.08})`; const s = 0.6 + r() * 0.8; g.fillRect(r() * w, r() * h, s, s); }
+    g.fillStyle = 'rgba(40,36,32,0.5)'; g.fillRect(0, 0, w, 2); g.fillRect(0, 0, 2, h);
+  }, { repeat: true });
+}
+
+/** the bar's concrete (the walks, the patio, the planters and the facade; S4's second repair, it shared Lot 57's
+ *  concreteTex): the same colour and 1 m score joints with a much finer, fainter grain. At Low the toon look's
+ *  posterize grew Lot 57's dark grain into brown blotches on the planters and the paving (the art review) */
+export function barConcreteTex() {
+  return canvasTex(512, 512, (g, w, h) => {
+    g.fillStyle = '#b9b3a8'; g.fillRect(0, 0, w, h);
+    const r = rand(7);
+    for (let i = 0; i < 9000; i++) { const a = r() * 0.05, light = r() < 0.4; g.fillStyle = light ? `rgba(255,255,255,${a})` : `rgba(40,36,32,${a})`; const s = 0.8 + r() * 1.2; g.fillRect(r() * w, r() * h, s, s); }
+    g.strokeStyle = 'rgba(70,64,58,0.5)'; g.lineWidth = 3;
+    for (let k = 0; k <= 4; k++) { g.beginPath(); g.moveTo(k * w / 4, 0); g.lineTo(k * w / 4, h); g.stroke(); g.beginPath(); g.moveTo(0, k * h / 4); g.lineTo(w, k * h / 4); g.stroke(); }
+  }, { repeat: true });
 }
