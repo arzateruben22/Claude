@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else {"16x9": [0.87, 0.2], "9x16": [0.21, 0.31]} if PART == 6 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -315,6 +315,16 @@ _p04 = {"id": "pan", "file": PLATE04, "file9": PLATE04_9, "push": 0.12, "paralla
         "anchor": {"rig": {"kind": "pop", "pos": _w(731, 404), "scale": 0.86, "rotX": 0}},
         "p9": {"native9": True, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 40.1}, "shift": {"x": round((262 - 264.5) / 1290, 4), "y": round((470.5 - 396) / 1290, 4), "ppm": 1290}, "shift9": {"x": round((262 - 264.5) / 1290, 4), "y": round((470.5 - 396) / 1290, 4), "ppm": 1290},
                "anchor": {"rig": {"kind": "pop", "pos": _w4(262, 396), "scale": 0.62, "rotX": 0}}}}
+# plate-07: the kitchen window at dusk under storm clouds (Part 6's lightning). The bolt is drawn in the sky and the flash lights the room (a bluish bounce on everything outside the glass)
+PLATE07 = "../lf01/art/owner/plates/plate-07-storm-16x9.png"; PLATE07_9 = "../lf01/art/owner/plates/plate-07-storm-9x16.png"
+_w7 = lambda px, py, z=-1.0: [round((px - 264.5) / 1290 * -z, 4), round(0.4 + (470.5 - py) / 1290 * -z, 4), z]
+_p07 = {"id": "storm", "file": PLATE07, "file9": PLATE07_9, "push": 0.05, "parallax": 0, "fade": 0.4,
+        "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
+        "relight": {"color": [170, 190, 255], "glass": [[[525, 0], [1240, 0], [1240, 640], [525, 640]]]},
+        "anchor": {"dark": True, "rig": {"kind": "storm", "pos": _w(880, 40), "scale": 0.0312, "thk": 1.25}},
+        "p9": {"native9": True, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 40.1},
+               "relight": {"color": [170, 190, 255], "glass": [[[63, 145], [489, 145], [489, 606], [63, 606]]]},
+               "anchor": {"dark": True, "rig": {"kind": "storm", "pos": _w7(270, 165), "scale": 0.0418, "thk": 1.25}}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
@@ -337,6 +347,8 @@ elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
     PLATES = [dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0))]
 elif PART == 7 and (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
     PLATES = [dict(_p09, t0=0.0, t1=R(ENDSHOW))]
+elif PART == 6 and (HERE / "art/owner/plates/plate-07-storm-16x9.png").exists():
+    PLATES = [dict(_p07, t0=0.0, t1=R(ENDSHOW))]
 elif PART == 4 and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists():
     PLATES = [dict(_p01, t0=0.0, t1=R(ENDSHOW))]
 elif not PART and (HERE / "art/owner/plates/plate-01-wide-16x9.png").exists() and "sound" in CUTS and "bullet" in CUTS:
@@ -360,7 +372,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "pan": "popcorn", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "pan": "popcorn", "storm": "lightning", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))

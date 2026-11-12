@@ -79,6 +79,14 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
     if (it.p.night) { it.night = nightGL(it, ims[0], it.nightOrig); if (!it.night) { it.ok = false; return; } mk(it.night.cv, 9); it.night.cv.dataset.depth = 0; it.imgs = [it.night.cv]; }
     it.ok = true;
   })).catch(() => {});
+  // the flash on a storm plate: a screen-blended canvas over the plate (below the 3-D layer), bluish light that falls off toward the top, with the glass of the window cut out so only the room is lit
+  const rl = document.createElement("canvas"); rl.width = W; rl.height = H; rl.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;mix-blend-mode:screen;display:none;pointer-events:none;`; let rlOn = false;
+  const relight = (t, k) => { const it = active(t), r = it && it.p.relight; if (!r || k < 0.004) { if (rlOn) { rl.style.display = "none"; rlOn = false; } return; }
+    if (!rl.parentNode) canvas.parentNode.insertBefore(rl, canvas); const g = rl.getContext("2d"), sf = shiftAt(it, t), cs = Math.max(W / (it.imgs[0].naturalWidth || 1672), H / (it.imgs[0].naturalHeight || 941)), pw = it.imgs[0].naturalWidth, ph = it.imgs[0].naturalHeight;
+    const zz = 1 + (it.p.push ?? 0.05) * Math.max(0, Math.min(1, (t - it.p.t0) / (it.p.t1 - it.p.t0))), X = (x) => W / 2 + (x - pw / 2) * cs * zz - sf.x * sf.ppm * cs * zz * 0, Y = (y) => H / 2 + (y - ph / 2) * cs * zz;
+    g.clearRect(0, 0, W, H); const gr = g.createLinearGradient(0, Y(0), 0, Y(ph)); gr.addColorStop(0, `rgba(${r.color.join(",")},${0.08 * k})`); gr.addColorStop(1, `rgba(${r.color.join(",")},${0.36 * k})`);
+    g.fillStyle = gr; g.fillRect(0, 0, W, H); g.globalCompositeOperation = "destination-out"; g.fillStyle = "#000"; for (const poly of r.glass) { g.beginPath(); poly.forEach(([x, y], i) => (i ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y)))); g.closePath(); g.fill(); } g.globalCompositeOperation = "source-over";
+    rl.style.display = "block"; rlOn = true; };
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
   // where the picture is moved so its subject sits at the frame's centre (metres at 1 m, the camera aims the same way): 9:16 uses shift9 at once, a push-in ramps its shift with the push so the picture's edge never shows
   const shiftAt = (it, t) => { const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), sh = nine && p.shift9 ? p.shift9 : p.shift; if (!sh) return { x: 0, y: 0, ppm: 1 }; const k = nine && p.shift9 && !p.native9 ? 1 : d; return { x: sh.x * k, y: (sh.y || 0) * d, ppm: sh.ppm }; };   // a native 9:16 picture fills the frame exactly: its shift grows with the push, so no edge ever shows
@@ -102,5 +110,5 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sf = shiftAt(it, t), sh9 = -sf.x * sf.ppm * Math.max(W / 1672, H / 941); it.night.draw(R, w, sh9); return true; };
   const shiftPx = (t) => { const it = active(t); if (!it) return [0, 0]; const sf = shiftAt(it, t), cs = Math.max(W / 1672, H / 941); return [-sf.x * sf.ppm * cs, sf.y * sf.ppm * cs]; };
   const imageOf = (id) => { const it = items.find((q) => q.p.id === id); return it && it.ok ? it.imgs[0] : null; };
-  return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight, shiftPx };
+  return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight, shiftPx, relight };
 };

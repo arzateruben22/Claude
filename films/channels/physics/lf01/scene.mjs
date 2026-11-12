@@ -390,8 +390,9 @@ const bendFlap = (m, bx, rE0, open) => { const u = m.userData, P = m.geometry.at
   P.needsUpdate = true; m.geometry.computeVertexNormals(); };
 // ── the storm: a leader tree in the window, a return stroke (drawn in the backdrop plane) ──
 const SL = FILM.ev.leader, LZ = -4.4, TOPY = 6.6, GROUNDY = 0.15, LX0 = -1.2;
-const mkSeg = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false })); scene.add(m); m.visible = false; return m; };
-const setSeg = (m, a, b, w, op, col) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, LZ); m.rotation.z = Math.atan2(dy, dx); m.scale.set(L, w, 0.01); m.material.opacity = op; if (col) m.material.color.set(col); m.visible = op > 0.01; };
+const stormG = new THREE.Group(); scene.add(stormG); let stormThk = 1;   // the leader tree lives in a group, so a storm plate can place and scale it over its own sky
+const mkSeg = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false })); stormG.add(m); m.visible = false; return m; };
+const setSeg = (m, a, b, w, op, col) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, LZ); m.rotation.z = Math.atan2(dy, dx); m.scale.set(L, w * stormThk, 0.01); m.material.opacity = op; if (col) m.material.color.set(col); m.visible = op > 0.01; };
 const rl = rng(33); const STEPS = SL.steps, PATH = [[LX0, TOPY]];
 for (let i = 1; i <= STEPS; i++) { const p = PATH[i - 1]; PATH.push([i === STEPS ? LX0 + (rl() - 0.5) * 0.4 : p[0] + (rl() - 0.5) * 0.9, TOPY - (TOPY - GROUNDY) * i / STEPS]); }
 const BRANCH = []; for (const [at, dir] of [[2, -1], [3, 1], [4, -1], [5, 1], [6, -1]]) { const pts = [PATH[at]]; for (let j = 1; j <= 3; j++) { const q = pts[j - 1]; pts.push([q[0] + dir * (0.35 + rl() * 0.5), q[1] - 0.45 - rl() * 0.4]); } BRANCH.push({ at, pts }); }
@@ -463,7 +464,7 @@ window.seek = function (t) {
   stage(t);
   placeCam(t);
   const plateOn = plates.apply(t);
-  { const an0 = plateOn ? plates.anchor(t) : null; document.getElementById("stage").classList.toggle("night", !!(an0 && an0.night)); }
+  { const an0 = plateOn ? plates.anchor(t) : null; document.getElementById("stage").classList.toggle("night", !!(an0 && (an0.night || an0.dark))); }
   const k = kAt(t), F = Math.pow(10, k);
   const inLab = t >= EV.lab[0] && t < EV.lab[1], inMacro = t >= EV.hair[0] - 0.3 && t < EV.hair[1] + 4.1 && !inLab;
   fadeMat.uniforms.uA.value = dip(t);
@@ -532,6 +533,7 @@ window.seek = function (t) {
     if (rg) {
       plateRig.visible = true; plateRig.position.set(...rg.pos); plateRig.scale.setScalar(H > W && rg.scale9 ? rg.scale9 : rg.scale); plateRig.rotation.set(rg.rotX ?? 0, 0, 0);
       if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
+      else if (rg.kind === "storm") { stormG.position.set(rg.pos[0] - rg.scale * LX0, rg.pos[1] - rg.scale * TOPY, rg.pos[2] - rg.scale * LZ); stormG.scale.setScalar(rg.scale); stormThk = rg.thk || 1; }
       else if (rg.kind === "pop") {   // plate-04, the pan from above: the kernel, its foam and hulls live in the rig, stood on the pan's plane (code up = toward the camera)
         if (HERO.parent !== plateRig) { plateRig.add(HERO, foam, hullA, hullB); }
         if (!foam.userData.warm) { foam.userData.warm = 1; foamBits.forEach((m) => { m.material.color.set(0xFFF4DC); m.material.emissive = new THREE.Color(0xE8D3A2); m.material.emissiveIntensity = 0.3; }); [hullA, hullB, HERO].forEach((m) => { m.material.emissive = new THREE.Color(0x8A5A10); m.material.emissiveIntensity = 0.35; }); }
@@ -544,7 +546,7 @@ window.seek = function (t) {
       if (!rg.kind) { const sf = plates.shiftPx ? plates.shiftPx(t) : [0, 0]; wU.uZS.value.set(plates.zoom(t), sf[0], sf[1], Math.max(W / 1672, H / 941)); if (!wU.uPlateR.value) { const im = plates.imageOf("tapmug"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; wU.uPlateR.value = tx; } } if (!wU.uPlateR.value) wU.uZS.value.w = -1; }
       if (hangV && !rg.kind) { const u = t < d1 ? 0 : E.in2(seg(t, d1, d2)); hang.position.set(0, t < d1 ? rg.tipY - 0.0025 * E.in2(seg(t, d0, d1)) : lerp(rg.tipY - 0.0025, 0.003, u), 0); hang.scale.set(rg.drop, rg.drop * (t < d1 ? 1 : 1 + 0.4 * u), rg.drop); }
       birdRim.visible = birdFill.visible = true; for (const [l, i0] of keyLights) if (l) l.intensity = i0 * 0.35;
-    } else { plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); } if (HERO.parent === plateRig) { pan.add(HERO, foam, hullA, hullB); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts, cloudPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; cloudPts.visible = false; } }
+    } else { stormG.position.set(0, 0, 0); stormG.scale.setScalar(1); stormThk = 1; plateRig.visible = false; if (crown.parent === plateRig) { cupG.add(crown); crown.position.set(0, surfY, 0); kitchen.add(hang); } if (bubble.parent === plateRig) { kitchen.add(bubble); kitchen.add(rimR); } if (HERO.parent === plateRig) { pan.add(HERO, foam, hullA, hullB); }  if (appleP.parent === plateRig) { plateRig.remove(appleP); scene.add(bullet, cone, ...spray, ...petals, mistPts, cloudPts); petals.forEach((m) => { m.visible = false; }); mistPts.visible = false; cloudPts.visible = false; } }
     hang.visible = hangV || (!rg && t >= EV.light9 - 2.0 && t < T.still + 1.0 && !inMacro && !inLab); }
   if (!hang.visible) hang.visible = false;
   void 0;
@@ -611,6 +613,7 @@ window.seek = function (t) {
     BRANCH.forEach((br, bi) => br.pts.slice(1).forEach((q, j) => { const t0b = Lt + (br.at + j * 0.6) * every * 0.75 + 4, g = E.inout2(seg(t, t0b, t0b + 1.4)); const a = br.pts[j]; setSeg(brSegs[bi][j], a, [lerp(a[0], q[0], g), lerp(a[1], q[1], g)], 0.035, (!inL || t < t0b ? 0 : (t < ground ? 0.8 : Math.max(0, 0.45 - 0.45 * seg(t, ground + 3, ground + 30)))), 0xCFDDFF); }));
     PATH.slice(1).forEach((p, i) => { const idx = STEPS - 1 - i, a = PATH[idx + 1], b = PATH[idx], f0 = i / STEPS, f1 = (i + 1) / STEPS, g = Math.min(1, Math.max(0, (retK - f0) / (f1 - f0))); setSeg(retSegs[i], a, [lerp(a[0], b[0], g), lerp(a[1], b[1], g)], 0.12, inL && t >= ground && g > 0 ? 0.85 * E.out2(seg(t, ground, ground + 0.3)) : 0, 0xF2F6FF); });
     if (t >= ground && t < ground + 2.0) flashV = E.out2(seg(t, ground, ground + 0.35)) * (1 - E.inout2(seg(t, ground + 0.5, ground + 2.0)));   // soft: in over 0.35 s, out over 1.5 s (no full-frame white)
+    if (plateOn) plates.relight(t, flashV);   // a storm plate: the flash lights the room (a bluish additive bounce, never the sky)
     flashLight.intensity = 1.6 * flashV; renderer.toneMappingExposure = 1.0 + 0.18 * flashV; }
   // the light fronts: a flash across the room (1e8x), the flashlight's front (1e9x), a crawling pulse (1e10x and more)
   { const fl8 = EV.flash8, l9 = EV.light9, pulse0 = EV.pulse; let R = 0, lk = 1;

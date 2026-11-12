@@ -73,10 +73,16 @@
  "spineAt": [
   [
    -1000000000.0,
-   [
-    0.5,
-    0.29
-   ]
+   {
+    "16x9": [
+     0.87,
+     0.2
+    ],
+    "9x16": [
+     0.21,
+     0.31
+    ]
+   }
   ]
  ],
  "factorKeys": [
@@ -255,15 +261,18 @@
  },
  "badges": [
   {
-   "id": "code",
+   "id": "code-p0",
    "kind": "tag",
-   "text": "Drawn by code · model",
+   "text": "Kitchen: AI illustration · lightning drawn by code",
    "t0": 0.6,
    "t1": 67.95,
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": {
+  "9x16": 0.62,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 6 of 8",
   "title": "Lightning, a million times slower"
@@ -271,6 +280,128 @@
  "disclosures": {
   "aiVoice": true
  },
+ "drifts": null,
+ "plates": [
+  {
+   "id": "storm",
+   "file": "../lf01/art/owner/plates/plate-07-storm-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-07-storm-9x16.png",
+   "push": 0.05,
+   "parallax": 0,
+   "fade": 0.4,
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "relight": {
+    "color": [
+     170,
+     190,
+     255
+    ],
+    "glass": [
+     [
+      [
+       525,
+       0
+      ],
+      [
+       1240,
+       0
+      ],
+      [
+       1240,
+       640
+      ],
+      [
+       525,
+       640
+      ]
+     ]
+    ]
+   },
+   "anchor": {
+    "dark": true,
+    "rig": {
+     "kind": "storm",
+     "pos": [
+      0.0246,
+      0.6405,
+      -1.0
+     ],
+     "scale": 0.0312,
+     "thk": 1.25
+    }
+   },
+   "p9": {
+    "native9": true,
+    "cam3": {
+     "pos": [
+      0,
+      0.4,
+      0
+     ],
+     "target": [
+      0,
+      0.396,
+      -1
+     ],
+     "fov": 40.1
+    },
+    "relight": {
+     "color": [
+      170,
+      190,
+      255
+     ],
+     "glass": [
+      [
+       [
+        63,
+        145
+       ],
+       [
+        489,
+        145
+       ],
+       [
+        489,
+        606
+       ],
+       [
+        63,
+        606
+       ]
+      ]
+     ]
+    },
+    "anchor": {
+     "dark": true,
+     "rig": {
+      "kind": "storm",
+      "pos": [
+       0.0043,
+       0.6368,
+       -1.0
+      ],
+      "scale": 0.0418,
+      "thk": 1.25
+     }
+    }
+   },
+   "t0": 0.0,
+   "t1": 71.0667
+  }
+ ],
  "captions": [
   {
    "t0": 0.12,
