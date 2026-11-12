@@ -38,9 +38,9 @@ subprocess.run(node + ["--from", str(c0 * CH), "--to", str(min(film["dur"], (c1 
 out = Path(f"/tmp/sub{N}-out"); out.mkdir(exist_ok=True)
 subprocess.run(node + ["--assemble", "--audio", str(D / "build/audio-sub/mix-sfx.m4a"), "--name", f"possibility-lab-s3p{N}-v2-9x16", "--out", str(out)], check=True, capture_output=True)
 # YouTube 1440p from the spliced master
-T = Path(f"/tmp/subep{N}"); (T / "out").mkdir(parents=True, exist_ok=True)
-shutil.copy2(out / f"possibility-lab-s3p{N}-v2-9x16.mp4", T / "out" / f"possibility-lab-s3p{N}-v2-9x16.mp4")
+T = Path(f"/tmp/subepv2-{N}"); shutil.rmtree(T, ignore_errors=True); (T / "out").mkdir(parents=True, exist_ok=True)
+shutil.copy2(out / f"possibility-lab-s3p{N}-v2-9x16.mp4", T / "out" / f"possibility-lab-s3p{N}-9x16.mp4")
 shutil.copy2(D / "film.json", T / "film.json")
 subprocess.run(["python3", "-I", str(REPO / "kits/cinema/film/youtube1440.py"), str(T), "--force"], check=True, capture_output=True)
-shutil.copy2(T / "out" / f"possibility-lab-s3p{N}-v2-9x16-youtube.mp4", EPD / "out/v2" / f"possibility-lab-s3p{N}-v2-9x16-youtube.mp4")
+shutil.copy2(T / "out" / f"possibility-lab-s3p{N}-9x16-youtube.mp4", EPD / "out/v2" / f"possibility-lab-s3p{N}-v2-9x16-youtube.mp4")
 print(f"ep{12 + N}: YouTube file re-spliced ({c0}..{c1} chunks), {n} caption word(s) now say subscribe")
