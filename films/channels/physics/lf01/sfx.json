@@ -1,0 +1,318 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 9.7,
+   "kind": "buzz",
+   "dur": 4.0,
+   "f0": 205,
+   "pan": [
+    0.7,
+    -0.7
+   ],
+   "gain": -4,
+   "seed": 900
+  },
+  {
+   "at": 16.7,
+   "kind": "slowmo",
+   "dur": 3.0,
+   "gain": -6,
+   "seed": 901
+  },
+  {
+   "at": 39.3,
+   "kind": "buzz",
+   "dur": 5.0,
+   "f0": 55,
+   "pan": [
+    -0.4,
+    0.2
+   ],
+   "gain": -3,
+   "seed": 902
+  },
+  {
+   "at": 63.0,
+   "kind": "slowmo",
+   "dur": 5.0,
+   "gain": -5,
+   "pan": [
+    -0.3,
+    0.3
+   ],
+   "seed": 903
+  },
+  {
+   "at": 84.2,
+   "kind": "buzz",
+   "dur": 9.6,
+   "f0": 150,
+   "pan": [
+    -0.6,
+    0.6
+   ],
+   "gain": -5,
+   "seed": 904
+  },
+  {
+   "at": 93.8,
+   "kind": "buzz",
+   "dur": 8.4,
+   "f0": 420,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -6,
+   "seed": 905
+  },
+  {
+   "at": 109.1,
+   "kind": "drip",
+   "gain": -1,
+   "pan": 0.1,
+   "seed": 906
+  },
+  {
+   "at": 110.83,
+   "kind": "clink",
+   "gain": -2,
+   "seed": 907
+  },
+  {
+   "at": 110.83,
+   "kind": "splat",
+   "dur": 0.5,
+   "gain": -1,
+   "seed": 908
+  },
+  {
+   "at": 110.95,
+   "kind": "spray",
+   "dur": 1.8,
+   "gain": -3,
+   "pan": 0.2,
+   "seed": 909
+  },
+  {
+   "at": 110.9,
+   "kind": "slowmo",
+   "dur": 3.6,
+   "gain": -6,
+   "pan": [
+    0,
+    0.4
+   ],
+   "seed": 910
+  },
+  {
+   "at": 152.0,
+   "kind": "dust",
+   "dur": 19.0,
+   "rate": 10,
+   "gain": -10,
+   "seed": 911
+  },
+  {
+   "at": 157.95,
+   "kind": "tap",
+   "gain": -3,
+   "pan": -0.2,
+   "seed": 912
+  },
+  {
+   "at": 172.77,
+   "kind": "pop",
+   "f0": 620,
+   "gain": 0,
+   "seed": 913
+  },
+  {
+   "at": 172.8,
+   "kind": "slowmo",
+   "dur": 4.0,
+   "gain": -6,
+   "pan": [
+    0,
+    0.3
+   ],
+   "seed": 914
+  },
+  {
+   "at": 193.03,
+   "kind": "pop",
+   "f0": 900,
+   "gain": 0,
+   "seed": 915
+  },
+  {
+   "at": 193.15,
+   "kind": "spray",
+   "dur": 1.5,
+   "gain": -4,
+   "pan": 0.3,
+   "seed": 916
+  },
+  {
+   "at": 225.3,
+   "kind": "tap",
+   "gain": 2,
+   "seed": 917
+  },
+  {
+   "at": 225.35,
+   "kind": "boom",
+   "dur": 1.8,
+   "gain": -8,
+   "seed": 918
+  },
+  {
+   "at": 225.6,
+   "kind": "whoosh",
+   "dur": 2.6,
+   "gain": -4,
+   "pan": [
+    0,
+    0.7
+   ],
+   "seed": 919
+  },
+  {
+   "at": 232.5,
+   "kind": "wave",
+   "dur": 3.0,
+   "gain": -6,
+   "pan": [
+    0.4,
+    -0.4
+   ],
+   "seed": 920
+  },
+  {
+   "at": 297.0,
+   "kind": "slowmo",
+   "dur": 9.5,
+   "gain": -5,
+   "pan": [
+    -0.6,
+    0
+   ],
+   "seed": 921
+  },
+  {
+   "at": 307.0,
+   "kind": "splat",
+   "dur": 0.7,
+   "gain": 1,
+   "seed": 922
+  },
+  {
+   "at": 307.1,
+   "kind": "spray",
+   "dur": 2.6,
+   "gain": 0,
+   "pan": 0.3,
+   "seed": 923
+  },
+  {
+   "at": 329.0,
+   "kind": "wind",
+   "dur": 14.0,
+   "gain": -9,
+   "pan": [
+    -0.3,
+    0.3
+   ],
+   "seed": 924
+  },
+  {
+   "at": 348.0,
+   "kind": "tick",
+   "repeat": 7,
+   "every": 3.0,
+   "gain": -7,
+   "seed": 925
+  },
+  {
+   "at": 366.1,
+   "kind": "crack",
+   "dur": 1.5,
+   "gain": 0,
+   "seed": 926
+  },
+  {
+   "at": 366.2,
+   "kind": "boom",
+   "dur": 2.4,
+   "gain": -6,
+   "seed": 927
+  },
+  {
+   "at": 366.8,
+   "kind": "thunder",
+   "dur": 6.0,
+   "gain": -2,
+   "seed": 928
+  },
+  {
+   "at": 395.0,
+   "kind": "hush",
+   "dur": 1.6,
+   "gain": -4,
+   "seed": 929
+  },
+  {
+   "at": 396.4,
+   "kind": "shimmer",
+   "dur": 4.0,
+   "gain": -3,
+   "pan": [
+    -0.5,
+    0.5
+   ],
+   "seed": 930
+  },
+  {
+   "at": 416.7,
+   "kind": "tap",
+   "gain": -2,
+   "pan": -0.5,
+   "seed": 931
+  },
+  {
+   "at": 416.8,
+   "kind": "shimmer",
+   "dur": 5.0,
+   "gain": -2,
+   "pan": [
+    -0.7,
+    0.3
+   ],
+   "seed": 932
+  },
+  {
+   "at": 444.4,
+   "kind": "tick",
+   "repeat": 14,
+   "every": 0.3333,
+   "gain": -6,
+   "pan": 0.3,
+   "seed": 933
+  },
+  {
+   "at": 474.9,
+   "kind": "shimmer",
+   "dur": 8.0,
+   "gain": -6,
+   "seed": 934
+  },
+  {
+   "at": 543.5,
+   "kind": "riser",
+   "dur": 3.3,
+   "gain": -3,
+   "seed": 935
+  }
+ ]
+}
