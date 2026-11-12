@@ -20,11 +20,11 @@
   "ch": 2,
   "kbps": 255,
   "dur": 75.833,
-  "lufs": -16.0,
+  "lufs": -15.9,
   "true_peak_db": -1.5,
-  "lra": 5.3,
+  "lra": 4.9,
   "corr": 0.93,
-  "mono_loss_db": -0.03
+  "mono_loss_db": -0.0
  },
  "flashing": {
   "large_transitions": 0,
