@@ -1,0 +1,173 @@
+{
+ "source": "Valerio St 6.m4a (owner, 12 Nov 2026, 282.1 s, ALAC 48 kHz mono); cleaned: oo-s3-owner-clean.flac (clarity.py --style normal --rumble --noise 6.6-9.6, -16.7 LUFS). Same timeline in both.",
+ "note": "Recommended take per script line (seconds, approximate from speech detection + ASR; refine with forced alignment). Where he re-read a line, the LAST take is the default unless marked.",
+ "partA": {
+  "1": [
+   10.0,
+   13.9
+  ],
+  "2": [
+   16.4,
+   28.9
+  ],
+  "3": [
+   30.7,
+   33.3
+  ],
+  "4": [
+   36.4,
+   44.9
+  ],
+  "5": [
+   47.9,
+   51.6
+  ],
+  "6": [
+   53.8,
+   59.6
+  ],
+  "7": [
+   61.6,
+   67.3
+  ],
+  "8": [
+   68.6,
+   71.1
+  ],
+  "9": [
+   72.3,
+   79.0
+  ],
+  "10": [
+   81.5,
+   86.6
+  ],
+  "11": [
+   89.3,
+   93.1
+  ],
+  "12": {
+   "use": [
+    [
+     94.5,
+     102.3
+    ],
+    [
+     118.9,
+     123.2
+    ]
+   ],
+   "alt": [
+    109.0,
+    118.4
+   ],
+   "why": "two takes of the first half; ASR reads the 2nd take (113.6-118.4) as stumbled, the 1st as clean; the tail 'Not every month, because the orbit is tilted. But often.' is only in 118.9-123.2. Check both and keep the cleaner."
+  },
+  "13": [
+   124.5,
+   128.6
+  ],
+  "14": [
+   129.2,
+   141.4
+  ],
+  "15": [
+   142.7,
+   145.8
+  ],
+  "16": {
+   "use": [
+    157.0,
+    164.1
+   ],
+   "alt": [
+    148.1,
+    156.2
+   ]
+  },
+  "17": [
+   164.6,
+   168.6
+  ],
+  "18": [
+   169.5,
+   172.8
+  ],
+  "19": [
+   174.5,
+   181.5
+  ],
+  "20": [
+   182.1,
+   195.2
+  ],
+  "21": {
+   "use": [
+    195.9,
+    202.1
+   ],
+   "fix": "he says 'far more than twenty times wider' (twice in ASR); the checked fact is 'more than twenty times' (about 21x at 18,000 km): cut 'far' in the edit; if the cut isn't clean, tell me and the owner re-reads this one line. ASR also hints at a small restart before 'wider than tonight': cut to the clean words."
+  },
+  "22": [
+   203.5,
+   205.8
+  ],
+  "23": [
+   210.0,
+   213.6
+  ],
+  "24": [
+   214.5,
+   219.0
+  ],
+  "25": [
+   220.0,
+   224.2
+  ],
+  "26": [
+   232.4,
+   238.1
+  ]
+ },
+ "partB": {
+  "1": [
+   240.5,
+   242.5
+  ],
+  "2-3": [
+   242.9,
+   248.3
+  ],
+  "4": [
+   249.1,
+   250.7
+  ],
+  "5-7": [
+   251.6,
+   259.2
+  ],
+  "8": [
+   263.3,
+   266.1
+  ]
+ },
+ "partC": "not recorded here: reuse his closers from Possibility Lab (whatif-s2 voice-owner-spoken 'Valerio St 3.m4a', Part C)",
+ "partD": {
+  "follow-1": [
+   268.4,
+   270.8
+  ],
+  "subscribe-1": [
+   272.0,
+   274.5
+  ],
+  "follow-2": [
+   275.2,
+   277.5
+  ],
+  "subscribe-2": [
+   278.1,
+   280.7
+  ]
+ }
+}
