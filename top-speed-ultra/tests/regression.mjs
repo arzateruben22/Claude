@@ -2178,16 +2178,38 @@ await group('phone', async (use) => {
   // and at 0.9 the last one ask for the word already shown, so those steps must draw nothing), then nothing new while
   // it stays put. The shift lights' banks light with the revs: none at 50 % of the redline, green and amber at 80 %, all
   // three at 92 %.
-  await check('steering wheel: each car\'s parts by name; the left dial follows the profile and redraws only on a change; shift lights', async () => {
-    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR'];
+  // The wheel's centre (owner, 2026-10-27 and 2026-11-11: "make the center of the steering wheel more aesthetic
+  // looking"): the GT, Corsa and Hypercar carry the premium centre's named parts (the pillowed cover, the machined bezel,
+  // its stitching, the carbon chevron, the accent, the badge); the Brio and the Vela E the simpler one (bezel, insert,
+  // accent, badge, no cover; all five a dark machined ring between the badge and the accent ring). The accent is each
+  // car's own colour: GT cognac, Corsa yellow, Hypercar ice blue, Brio
+  // pale blue, Vela E blue.
+  await check('steering wheel: each car\'s parts by name, the centre\'s included; the left dial follows the profile and redraws only on a change; shift lights', async () => {
+    const HUB = ['wheel-hub-cover', 'wheel-hub-bezel', 'wheel-hub-stitch', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-gap', 'wheel-hub-badge'];
+    const SIMPLE = ['wheel-hub-bezel', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-gap', 'wheel-hub-badge'];
+    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR', ...HUB];
+    const ACCENT = { 'rossini-gt': 0xc8874c, 'rossini-corsa': 0xf0c020, 'oc-hyper': 0x7cc8ff, 'rossini-brio': 0x8fb0e0, 'vela-e': 0x4fb3ff };
+    // the wheel's triangle budget: at most 40 % over the wheel of c3962c5 (the live v14) at the suite's phone tier
+    // (GT 13,616; Corsa and Hypercar 10,552, PROJECT_OC_PROGRESS.md 2026-11-11)
+    const BUDGET = { 'rossini-gt': 13616 * 1.4, 'rossini-corsa': 10552 * 1.4, 'oc-hyper': 10552 * 1.4 };
     const out = [];
     for (const car of ['rossini-gt', 'rossini-corsa', 'oc-hyper', 'rossini-brio', 'vela-e']) {
-      const names = await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); const n = []; g.car.interior.wheel.traverse((o) => { if (o.isMesh) n.push(o.name); }); return n; }, car);
-      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads'] : SPORT;
+      const r = await game(page, (c) => {
+        const g = window.__game; g.car.configure({ ...g.car.config, car: c });
+        const n = [], w = g.car.interior.wheel; let tris = 0;
+        w.traverse((o) => { if (o.isMesh) { n.push(o.name); tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+        return { names: n, tris, accent: w.getObjectByName('wheel-hub-accent')?.material.color.getHex(), badge: !!w.getObjectByName('wheel-hub-badge')?.material.map };
+      }, car);
+      const names = r.names;
+      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads', ...SIMPLE] : SPORT;
       const missing = want.filter((k) => !names.includes(k));
       expect(!missing.length, `${car}: no ${missing.join(', ')} (has ${names.join(', ')})`);
       expect(!own || !names.includes('wheel-dial-left'), `${car}: carries the sport wheel's dials`);
-      out.push(`${car} ${names.length} meshes`);
+      expect(!own || !names.includes('wheel-hub-cover'), `${car}: carries the sport wheel's cover`);
+      expect(r.accent === ACCENT[car], `${car}: the centre's accent is #${(r.accent ?? 0).toString(16)}, not #${ACCENT[car].toString(16)}`);
+      expect(r.badge, `${car}: the badge has no picture`);
+      expect(!BUDGET[car] || r.tris <= BUDGET[car], `${car}: the wheel has ${r.tris} triangles, over its budget of ${Math.round(BUDGET[car])}`);
+      out.push(`${car} ${names.length} meshes, ${r.tris} triangles, accent #${r.accent.toString(16)}`);
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
     const dialState = () => game(page, () => {
@@ -2218,6 +2240,130 @@ await group('phone', async (use) => {
     });
     expect(lit.join(',') === '000,110,111', `shift lights at 50/80/92 % of the redline: ${lit.join(', ')} (want 000, 110, 111)`);
     return `${out.join(', ')}; left dial ${seen.join(', ')}; right "${b.right}"; no redraw while unchanged; shift lights ${lit.join(' ')}`;
+  });
+  // the centre against the driver's arms (owner, 2026-11-11: "make sure it doesn't ... act glitchy when 1st person POV
+  // with the arms"; the review of 2026-11-12: the centre's cup stands 3 mm nearer the driver than v15's badge, and at
+  // full lock one forearm lies across the wheel's face): with the wheel at its clamp both ways (2.2 rad, PlayerCar), every
+  // vertex of the arms, hands, sleeves and watch (their meshes read only, skinned as drawn) that lies over the centre
+  // must be in front of its surface (the cover, bezel, cup, accent, dark ring, badge, inserts and stitching), measured
+  // along the centre's own axis toward the driver; and the nearest any of them comes to the centre's vertices is reported
+  await check('steering wheel centre: the arms and hands stay clear of it at full lock both ways (GT, Hypercar, Vela E)', async () => {
+    const out = [];
+    for (const car of ['rossini-gt', 'oc-hyper', 'vela-e']) {
+      const r = await game(page, (c) => {
+        const g = window.__game; g.car.configure({ ...g.car.config, car: c });
+        const w = g.car.interior.wheel, arms = g.car.arms, badge = w.getObjectByName('wheel-hub-badge');
+        const PARTS = ['wheel-hub-cover', 'wheel-hub-bezel', 'wheel-hub-accent', 'wheel-hub-gap', 'wheel-hub-badge', 'wheel-hub-insert', 'wheel-hub-stitch'];
+        const V = badge.position.constructor, M4 = badge.matrixWorld.constructor;
+        let root = w; while (root.parent) root = root.parent;
+        const res = [], a0 = w.rotation.z;
+        for (const a of [-2.2, 2.2]) {
+          w.rotation.z = a; arms.setWheelAngle(a, 0); root.updateMatrixWorld(true);
+          const inv = new M4().copy(badge.matrixWorld).invert(), v = new V();
+          // the centre's triangles in its own frame (z toward the driver)
+          const tri = [], cv = [];
+          w.traverse((m) => {
+            if (!m.isMesh || !PARTS.includes(m.name)) return;
+            const P = m.geometry.attributes.position, I = m.geometry.index, n = I ? I.count : P.count, pts = [];
+            for (let i = 0; i < P.count; i++) { v.fromBufferAttribute(P, i).applyMatrix4(m.matrixWorld).applyMatrix4(inv); pts.push(v.x, v.y, v.z); cv.push(v.x, v.y, v.z); }
+            for (let k = 0; k < n; k += 3) { const i0 = I ? I.getX(k) : k, i1 = I ? I.getX(k + 1) : k + 1, i2 = I ? I.getX(k + 2) : k + 2; tri.push(pts[i0 * 3], pts[i0 * 3 + 1], pts[i0 * 3 + 2], pts[i1 * 3], pts[i1 * 3 + 1], pts[i1 * 3 + 2], pts[i2 * 3], pts[i2 * 3 + 1], pts[i2 * 3 + 2], m.name); }
+          });
+          let x0 = 1, x1 = -1, y0 = 1, y1 = -1;
+          for (let i = 0; i < cv.length; i += 3) { x0 = Math.min(x0, cv[i]); x1 = Math.max(x1, cv[i]); y0 = Math.min(y0, cv[i + 1]); y1 = Math.max(y1, cv[i + 1]); }
+          // the top of the centre's surface at (x, y): the highest triangle over it
+          const top = (x, y) => {
+            let best = -Infinity, part = '';
+            for (let t = 0; t < tri.length; t += 10) {
+              const ax = tri[t], ay = tri[t + 1], bx = tri[t + 3], by = tri[t + 4], cx = tri[t + 6], cy = tri[t + 7];
+              if (x < Math.min(ax, bx, cx) || x > Math.max(ax, bx, cx) || y < Math.min(ay, by, cy) || y > Math.max(ay, by, cy)) continue;
+              const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy); if (Math.abs(d) < 1e-14) continue;
+              const l0 = ((by - cy) * (x - cx) + (cx - bx) * (y - cy)) / d, l1 = ((cy - ay) * (x - cx) + (ax - cx) * (y - cy)) / d, l2 = 1 - l0 - l1;
+              if (l0 < -1e-6 || l1 < -1e-6 || l2 < -1e-6) continue;
+              const z = l0 * tri[t + 2] + l1 * tri[t + 5] + l2 * tri[t + 8]; if (z > best) { best = z; part = tri[t + 9]; }
+            }
+            return [best, part];
+          };
+          let clear = Infinity, clearPart = '', near = Infinity, over = 0, verts = 0;
+          arms.group.traverse((m) => {
+            if (!m.isMesh) return;
+            const P = m.geometry.attributes.position;
+            for (let i = 0; i < P.count; i++) {
+              m.getVertexPosition(i, v); v.applyMatrix4(m.matrixWorld).applyMatrix4(inv); verts++;
+              if (v.z > 0.12 || v.z < -0.06) continue;
+              for (let j = 0; j < cv.length; j += 3) { const d = Math.hypot(v.x - cv[j], v.y - cv[j + 1], v.z - cv[j + 2]); if (d < near) near = d; }
+              if (v.x < x0 || v.x > x1 || v.y < y0 || v.y > y1) continue;
+              const [zt, part] = top(v.x, v.y); if (zt === -Infinity) continue;
+              over++; if (v.z - zt < clear) { clear = v.z - zt; clearPart = part; }
+            }
+          });
+          res.push({ a, clear: clear === Infinity ? null : +(clear * 1000).toFixed(1), part: clearPart, near: +(near * 1000).toFixed(1), over, verts, tris: tri.length / 10 });
+        }
+        w.rotation.z = a0; arms.setWheelAngle(a0, 0);
+        return res;
+      }, car);
+      for (const k of r) expect(k.verts > 1000 && k.tris > 100, `${car}: read ${k.verts} arm vertices and ${k.tris} centre triangles`);
+      expect(r.some((k) => k.over > 0), `${car}: no arm vertex lies over the centre at either lock (the crossing forearm was not measured)`);
+      for (const k of r) expect(k.clear === null || k.clear > 0, `${car} at ${k.a} rad: an arm or hand vertex is ${-k.clear} mm inside the centre's ${k.part}`);
+      out.push(`${car}: ${r.map((k) => `${k.a > 0 ? '+' : ''}${k.a} rad ${k.over} arm vertices over the centre, least clearance ${k.clear ?? '-'} mm (${k.part || 'none'}), nearest ${k.near} mm`).join('; ')}`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    return out.join(' | ');
+  });
+  // the live cluster (owner, 2026-11-11: "Make the digital dashboard have more information"; car-dash.ts): the Rossini
+  // GT's (the tach's live window and its two side displays) and the OC Hypercar's (its wide display) show the game's
+  // own state: the gear the car is in, the handling profile, TCS and ABS, and with Go To set the HUD's own next turn,
+  // its distance and the destination; Clear route takes them away. With nothing changing (paused) no display redraws.
+  // The redline lights with the wheel's red shift lights: the GT's glow on the tach, the hypercar's arc.
+  await check('cluster: the shown fields follow the game state (gear, profile, TCS/ABS, Go To next turn and destination); no redraw while nothing changes; the redline lights with the shift lights', async () => {
+    const out = [];
+    // its own drive: the menu's demo drive behind the menu ignores setPaused, so run alone (--check=cluster) the
+    // check would see the demo's state, not a player's
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
+    expect(await game(page, () => !window.__game.inAttract), 'still in the menu\'s demo drive');
+    await game(page, () => { const g = window.__game; if (!g.__hudTap) { const o = g.ev.hud; g.ev.hud = (h) => { window.__lastHud = h; o(h); }; g.__hudTap = true; } g.setPaused(false); });
+    for (const car of ['rossini-gt', 'oc-hyper']) {
+      await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); g.navigateTo(null); g.fastForward(4, {}, 25); }, car);
+      // where each field is shown: the GT splits them over its three displays, the hypercar shows them all on one
+      const shown = (k) => `(() => { const d = window.__game.car.interior.group.userData.dash; const p = d.main ?? (${JSON.stringify(k)} === 'gear' ? d.window : ['profile', 'tcs', 'abs'].includes(${JSON.stringify(k)}) ? d.left : d.right); return p.shown[${JSON.stringify(k)}]; })()`;
+      const fmtMi = `((mi) => mi < 0.1 ? Math.max(0, Math.round(mi * 5280 / 50) * 50) + ' ft' : mi < 10 ? mi.toFixed(1) + ' mi' : Math.round(mi) + ' mi')`;
+      // the gear: the physics' own gear, as the cluster words it
+      await page.waitForFunction(`(() => { const p = window.__game.phys; return ${shown('gear')} === (p.gear < 0 ? 'R' : p.gear === 0 ? 'N' : String(p.gear)); })()`, null, { timeout: FRAMES_MS, polling: 250 });
+      const gear = await game(page, `${shown('gear')}`);
+      // the profile, two ways, and TCS and ABS as the physics has them
+      const prof = [];
+      for (const [h, word] of [[0.9, 'SIM'], [0.15, 'ARCADE']]) {
+        await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, h);
+        await page.waitForFunction(`${shown('profile')} === ${JSON.stringify(word)}`, null, { timeout: FRAMES_MS, polling: 250 });
+        prof.push(word);
+      }
+      await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, HANDLING);
+      await page.waitForFunction(`${shown('tcs')} === (window.__game.phys.tc ? 'on' : 'off') && ${shown('abs')} === (window.__game.phys.abs ? 'on' : 'off')`, null, { timeout: FRAMES_MS, polling: 250 });
+      const assists = await game(page, `${shown('tcs')} + '/' + ${shown('abs')}`);
+      // Go To Stoppage Time: the next turn's arrow and distance and the destination, the HUD's own
+      expect(await game(page, () => window.__game.navigateTo('Stoppage Time')), `${car}: Go To Stoppage Time refused`);
+      await page.waitForFunction(`(() => { const h = window.__lastHud; return h && h.dest === 'Stoppage Time' && ${shown('dest')} === h.dest && ${shown('turn')} === h.turn && ${shown('next')} === ${fmtMi}(h.nextDist / 1609.344); })()`, null, { timeout: FRAMES_MS, polling: 250 });
+      const nav = await game(page, `({ turn: ${shown('turn')}, next: ${shown('next')}, dest: ${shown('dest')}, hudTurn: window.__lastHud.turn, hudNext: window.__lastHud.nextDist })`);
+      expect(nav.turn === 'left' || nav.turn === 'right' || nav.turn === 'ahead', `${car}: the next turn "${nav.turn}"`);
+      // paused, nothing changes: no display draws again
+      await game(page, () => window.__game.setPaused(true));
+      await frames(page, 3);
+      const draws = () => game(page, () => { const d = window.__game.car.interior.group.userData.dash; return Object.values(d).map((p) => p.draws).join(','); });
+      const d0 = await draws(); await frames(page, 6); const d1 = await draws();
+      expect(d0 === d1, `${car}: the cluster redrew with nothing changing (${d0} -> ${d1})`);
+      await game(page, () => window.__game.setPaused(false));
+      // Clear route: the navigation goes
+      await game(page, () => window.__game.navigateTo(null));
+      await page.waitForFunction(`${shown('dest')} === '' && ${shown('turn')} === ''`, null, { timeout: FRAMES_MS, polling: 250 });
+      // the redline, read in one go (the frame loop feeds the real revs between calls)
+      const red = await game(page, () => {
+        const c = window.__game.car.interior, d = c.group.userData.dash, glow = c.group.getObjectByName('tach-redline');
+        return [0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0.2); return `${c.wheel.getObjectByName('ledR').material.emissiveIntensity > 0 ? 'R' : '-'}${glow ? (glow.material.opacity > 0 ? 'G' : '-') : (d.main.shown.redline === 'lit' ? 'A' : '-')}`; });
+      });
+      expect(red.join(',') === (car === 'oc-hyper' ? '--,RA' : '--,RG'), `${car}: the red shift lights and the redline at 80 / 92 %: ${red.join(', ')}`);
+      out.push(`${car}: gear ${gear}, profile ${prof.join(' then ')}, TCS/ABS ${assists}, Go To "${nav.dest}" ${nav.turn} ${nav.next}, no redraw paused (${d0}), redline ${red.join(' ')}`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    return out.join('; ');
   });
   await check('Go to lists all twenty carriageways', async () => {
     await page.getByRole('button', { name: 'Go to' }).click();

@@ -4,6 +4,200 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-12: a live digital dashboard and a premium wheel centre (`claude/sport-wheel`, not committed)
+
+The owner (2026-11-11, with a phone screenshot of v15's OC Hypercar seat view): "Make the digital dashboard have more
+information and make the center of the steering wheel more aesthetic looking"; (2026-10-27) "make the center part of the
+steering wheel more stylish"; (2026-11-11 evening) "make sure graphics are insane for both the steering wheel and
+characters and make sure it doesn't have any laggy graphics or act glitchy when 1st person POV with the arms". Rebuilt
+from the machine reset's backup (HEAD 5cf7212 = live v15 plus the earlier builders' uncommitted work), finished and
+re-proven in this pass.
+
+**The clusters** (`src/preview/car-dash.ts`, new; `cockpit.ts`; `PlayerCar.ts`; `Game.ts`). Every value is the game's own
+state (`DashReadout`): `PlayerCar.updateCockpit` fills the fast facts in place each frame (speed, gear, revs, the power in
+use, the tune's word, the handling profile, TCS and ABS, the body's acceleration in g) and `Game.sendHud` the slower ones
+ten times a second from the HUD's own figures (trip and top speed this run, the sky's clock, the simulated temperature
+labelled "sim", the hypercar's tune and Thrust tank, Go To's next turn, its distance, the destination and its distance).
+- OC Hypercar: its ice-blue wide display now carries a rev arc whose redline lights with the wheel's red shift lights
+  (the same test, the same flash), the speed and gear, the profile, TCS/ABS chips, UNLEASHED or RACE TUNE, the Thrust
+  tank, the next turn arrow and distance, the destination and distance, the clock and "°F sim", trip and top speed,
+  the power in use and a small G-meter.
+- Rossini GT, Corsa, Brio: the printed tach stays; its digital window is now live (gear, speed and the clock), the
+  redline band gets an additive glow lit with the red shift lights, and the two side displays show the profile, TCS and
+  ABS, trip and top speed (left) and the next turn, its distance, the destination (on two lines when it needs them), its
+  distance and the temperature, "sim" (right), in the part of each display the seat camera sees (between the rim, the
+  tach's bezel and the hands; see the repair below). The invented tyre pressures, oil and water temperatures and the
+  fixed "Exit Jamboree Rd 0.8 mi / 6:12 PM 74°F" are gone.
+- Vela E: the same facts in its own blue layout; the battery and range it printed are gone (no battery is simulated).
+- Each display redraws only when a shown value changes (quantised into a fixed array: no allocation when nothing
+  changed), looked at 15 times a second on High and 8 on phones, simpler drawing on the phone tier (no gradients, no
+  G-meter dot). The redline glow is always drawn and lit by its opacity, so no shader compiles mid-drive the first time
+  the revs reach it.
+
+**The wheel centre** (`wheel-sport.ts` `addSportCentre` / `addSimpleCentre`, materials in `cockpit.ts`). Our own design:
+GT, Corsa and Hypercar get a pillowed cover in the trim (GT soft-touch Nappa, Corsa and Hypercar Alcantara with sheen),
+a machined brushed bezel following the hub's six-sided outline, a row of stitching in the trim's thread, a gloss-carbon
+chevron under clear coat with an accent line, and the badge (R or the OC mark) in a raised machined cup with a chrome
+bead and a ring in the car's accent (GT cognac, Corsa yellow, Hypercar ice blue). The Brio (brushed bars, pale-blue
+ring) and the Vela E (brushed ring, blue ring, the V) get the simpler centre. Shared materials, fewer segments on the
+phone tier. Wheel triangles (high / phone): GT, Corsa, Hypercar 23,906 / 12,070 (5cf7212: 20,964 / 11,424; c3962c5 from
+this log: GT 21,696 / 13,616, Corsa and Hypercar 18,212 / 10,552, so +10 % GT and +31 % Corsa/Hypercar on high, within
+the +40 % note); the centre itself 3,174 / 1,262. Brio 17,964 / 9,236, Vela E 15,224 / 6,864. The rim, the grips, the
+dials, pads, paddles and shift lights are as they were; `spec.ts`, `hands*`, `car-wheel.ts`, `Physics.ts` and
+`onfoot/people` are untouched.
+
+**Suite.** The wheel check now asserts each car's centre parts by name (`wheel-hub-cover`, `-bezel`, `-stitch`,
+`-insert`, `-accent`, `-badge` on the sport wheels; bezel, insert, accent, badge and no cover on the Brio and Vela E),
+the accent colour per car, the badge's picture and the wheel's triangle budget at the suite's phone tier. A new check
+"cluster: the shown fields follow the game state" drives the GT and the hypercar: the gear the physics has, the profile
+(SIM then ARCADE through Settings), TCS/ABS as the physics has them, Go To Stoppage Time (the HUD's own turn, distance
+and destination on the cluster), no redraw while paused, Clear route empties it, and the redline lit with the red shift
+lights at 92 % and dark at 80 %.
+
+Checked (headless Chromium, SwiftShader, load average 17 to 20 from other lanes, one Playwright process at a time):
+- `npx tsc --noEmit` clean (and `tsconfig.game.json` through the build). `npm run build`: 3690 KB js, "artifact page
+  marked as the owner test build (owner mode on)".
+- `npm test -- --only=boot`: 6/6 passed (35 s). `npm test -- --only=phone`: 19/19 passed (745 s), including
+  "steering wheel: each car's parts by name, the centre's included ..." (`rossini-gt 22 meshes, 12070 triangles, accent
+  #c8874c, rossini-corsa ... #f0c020, oc-hyper ... #7cc8ff, rossini-brio 15 meshes, 9236 triangles, accent #8fb0e0, vela-e
+  10 meshes, 6864 triangles, accent #4fb3ff; left dial 0.15 ARCADE, 0.5 SPORT, 0.9 SIM, 0.35 CUSTOM; ... shift lights 000
+  110 111`) and "cluster: the shown fields follow the game state ..." (`rossini-gt: gear 4, profile SIM then ARCADE,
+  TCS/ABS on/on, Go To "Stoppage Time" right 4.6 mi, no redraw paused (45,20,8), redline -- RG; oc-hyper: gear 4, profile
+  SIM then ARCADE, TCS/ABS on/on, Go To "Stoppage Time" right 4.5 mi, no redraw paused (8), redline -- RA`). Outputs:
+  `tests/out/sport-wheel/suite-{boot,phone}.txt`.
+
+Frames (`tests/out/sport-wheel/`, BEFORE = 5cf7212, built in a scratch copy; its wheel and cockpit are identical to
+a9c9998's, `git diff a9c9998 5cf7212 -- src/preview` is empty; Go To Stoppage Time set, High quality):
+- seat view `hub-{before,after}-{gt,corsa,hyper}-{day,night}-{1280x720,390x844}.png`, `hub-{before,after}-{brio,vela}-day-390x844.png`
+  (the phone is DPR 3, isMobile; at 1280 x 720 the seat camera shows only the top of the hub); the GT and hypercar
+  frames are also saved as `dash-{before,after}-{gt,hyper}-*`.
+- close-ups: `hub-{before,after}-closeup-{car}-day.png` (the page's HUD hidden for that one frame), the night ones cut
+  from the full frames; `dash-{before,after}-closeup-{car}-{day,night}.png` cut from the full phone frames at DPR 3.
+- full lock both ways (wheel at the 2.2 rad clamp), phone, after: `lock-after-{gt,hyper,vela}-{left,right}.png`.
+
+Smoothness, measured. The 120 s seat-view drive (`rossini-gt`, Free Drive, moderate traffic, throttle held to 55-75 mph,
+0.7 s steering pulses left and right), the phone profile (390 x 844, DPR 3, isMobile, CPU throttling 4x, Low) and
+desktop 1280 x 720 (High), after and base back to back under the same conditions:
+
+| Run (rossini-gt, 120 s) | Frames | p50 / p95 / p99 frame (ms) | Long tasks > 50 ms (longest) | Draw calls median (max) | Triangles median (max) | JS heap after GC, start → end (MB) | Cockpit update p95 (ms) | Shader programs start → end |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Phone, after, round 1 | 36 | 2,767 / 10,800 / 13,499 | 34 (13,344) | 204 (324) | 513,907 (558,205) | 25.4 → 25.8 | not timed | not counted |
+| Phone, base, round 1 | 43 | 2,600 / 6,333 / 7,133 | 38 (3,215) | 332 (347) | 569,165 (585,565) | 25.3 → 25.7 | not timed | not counted |
+| Phone, after, round 2 (redline glow by opacity) | 44 | 2,933 / 5,883 / 6,617 | 45 (898) | 334 (351) | 571,999 (588,449) | 25.5 → 26.8 | 4.7 | 61 → 61 |
+| Phone, base, round 2 | 33 | 3,300 / 8,433 / 9,833 | 30 (8,320) | 214 (310) | 512,605 (553,009) | 25.4 → 26.4 | 0.8 | 58 → 58 |
+| Desktop High, after, round 1 | 14 | 7,516 / 16,666 / 16,666 | 8 (118) | 1 (post quad) | 1 | 28.0 → 28.4 | not timed | not counted |
+| Desktop High, base, round 1 | 23 | 3,383 / 12,866 / 15,399 | 5 (258) | 1 | 1 | 27.8 → 28.2 | not timed | not counted |
+| Desktop High, after, round 2 | 11 | 9,233 / 23,732 / 23,732 | 5 (361) | 1 | 1 | 28.1 → 28.3 | 0.4 | 89 → 89 |
+| Desktop High, base, round 2 | 19 | 6,217 / 18,816 / 18,816 | 8 (204) | 1 | 1 | 27.9 → 28.4 | 0.1 | 86 → 86 |
+
+Round 1's after run had one 13.3 s long task; the redline glow was then a hidden mesh first shown mid-drive, which
+compiles its shader at that moment, a likely cause (not confirmed: round 1 didn't count programs). It was changed to stay
+drawn and light by opacity; round 2 compiled no program during the drive. Raw numbers: `tests/out/sport-wheel/perf-r1.txt`,
+`perf-r2.txt`. (The phone cockpit p95 is per rendered frame at 0.3 fps with 4x throttling, so nearly every frame is a
+redraw frame; at 60 fps the displays redraw on at most 8 of them a second.)
+
+What this does and doesn't show. SwiftShader on 4 shared cores at a load average of 17 to 20 renders these at 0.1 to
+0.4 frames a second, so the 120 s runs hold 11 to 44 frames and their p95 swings run to run by more than the +10 % the
+brief allows (the base's own two phone runs: 6.3 s and 8.4 s); they cannot prove or rule out a 10 % change. Draw
+calls and triangles on desktop High read 1 (renderer.info counts the last pass, the post-processing quad). What they do
+show: no shader program compiled during round 2's runs (programs equal at start and end), one texture added in each phone
+run of both builds, and the JS heap after a forced GC 0.2 to 1.3 MB above its start in every run, after and base alike
+(the world streaming in as the car drives; geometries likewise grew by 0 to 32 in both builds). To isolate what
+this work adds, the cockpit's own per-frame work was timed without rendering (`setInstruments` + `update`, 3,600 frames
+of a scripted drive: speed ramp, revs through the redline, cornering g, trip rising, Go To set): p99 0.1 ms a frame in
+both builds; the whole minute 7.7 / 37.8 ms (GT phone / high) and 36.5 / 104.5 ms (hypercar) against 1.7 / 2.0 and
+41.3 / 28.3 ms at base; the heap after GC flat across four repeated minutes (hypercar 26.37 to 26.38, 26.38 to 26.46,
+27.16 to 27.32, 26.69 to 26.70 MB; GT 27.21 MB throughout). Single-call maxima of 11 to 775 ms appear at random in
+both builds (the machine's other lanes), so they are not attributed. Real-phone frame rates remain unmeasured.
+
+**Repair after review (same day).** The art review kept the work; the code review asked for these, all done:
+- Hypercar cluster: the clock sat on the frame's lines and the temperature's first digit under the housing's edge. The
+  top corners now hold one row each between the inner line and the hands (the clock left at x 150, "62°F sim" right);
+  trip and top speed moved under the destination, right of the speed (a second top row went under the fingers in the
+  seat view). Frame: `dash-after-r1-closeup-hyper-{day,night}.png`, every field readable, none under a hand.
+- Rossini side displays: the region the seat camera sees at 390 x 844 (DPR 3) was read off the frames (left display
+  x 380..470, y 80..300 of 512 x 320: the rim's lower edge over its top, the left hand's fingers and thumb over its left;
+  right display x 42..155, y 80..285). Everything now sits there: left, right-aligned, the profile (32 px), TCS and ABS
+  chips (no longer under the thumb), "TRIP mi" and "TOP mph" labels (22 px, units moved into them) over values at
+  40 px (were 20 and 36); right, the arrow, the next distance (40 px figure, unit beside), the destination on two lines,
+  its distance and "72°F sim" (no longer under the thumb or the bezel). The clock moved into the tach window's strip
+  under the speed (36 px of its 256). Frames: `dash-after-r1-closeup-{gt,corsa,brio}-day.png`, `-gt-night.png`.
+  Honestly: the side displays are small at phone size whatever the layout (about 90 by 220 canvas pixels are visible,
+  some 40 x 95 device pixels); this is as big as the visible part allows without moving the displays.
+- Hypercar wheel centre: the OC badge now lights a touch from its own picture (emissive map = the badge texture, 0.28:
+  the white mark and silver ring lift, the black enamel stays black) and sits 0.4 mm under the cup's lip (was 1.2 mm, its
+  lip shaded the mark). `hub-after-r1-closeup-hyper-{day,night}.png`: the mark reads white and crisp.
+- GT and Corsa centre: a dark machined ring (`wheel-hub-gap`, gunmetal, 1.1 mm) now sits between the badge's chrome
+  bead and the accent ring on every car, so the cognac or yellow ring stands apart from the yellow R
+  (`hub-after-r1-closeup-{gt,corsa}-day.png`). Wheel triangles at the suite's phone tier: sport wheels 12,118 (+48),
+  Brio 9,284, Vela E 6,912, still inside the +40 % budget the suite asserts.
+- Clearance, measured: a new suite check puts the wheel at its clamp both ways (±2.2 rad), poses the arms there (read
+  only: `setWheelAngle`), and for every arm, hand, sleeve and watch vertex (skinned as drawn) that lies over the centre
+  measures its height above the centre's surface along the centre's axis (cover, bezel and cup, accent, dark ring,
+  badge, inserts, stitching). GT and Hypercar: 709 / 712 vertices over the centre, least clearance 72.9 / 74.9 mm, nearest
+  approach to any centre vertex 68.5 mm; Vela E: 212 / 213 vertices, 89.0 / 87.7 mm, nearest 77.7 / 80.1 mm. The raised
+  cup (2.8 mm proud) is nowhere near the crossing forearm, so it stays as it is. Rim and spokes against the arms are the
+  arms owner's to test (queued, below).
+- Redraws spread: the cockpit looks at one display a tick in turn (each still every 1/15 s on High, 1/8 s on phones),
+  so the Rossinis' window and side displays never redraw and upload on the same frame; on phones their canvases are half
+  size (256 x 160 and 128 x 112, still more pixels than the displays cover on screen) with mipmaps kept (no shimmer).
+  Mipmaps were not dropped for the tach window: it is minified about 2.5x on a phone, and without them its digits shimmer.
+- The cluster check now starts its own Free Drive (and asserts `inAttract` is false) before it tests pause and no-redraw:
+  run alone it passed (`suite-phone-cluster-alone-r1.txt`).
+
+Checked in this pass (load average 2 to 9, one Playwright process at a time):
+- `npx tsc --noEmit` clean; `npm run build`: 3691 KB js, "artifact page marked as the owner test build (owner mode on)".
+- `npm test -- --only=boot`: 6/6 passed (`suite-boot-r1.txt`). `npm test -- --only=phone`, the whole group in one run:
+  20/20 passed in 671 s (`suite-phone-r1.txt`), with the wheel check (`rossini-gt 23 meshes, 12118 triangles, accent
+  #c8874c ... vela-e 11 meshes, 6912 triangles, accent #4fb3ff ... shift lights 000 110 111`), the new clearance check
+  (numbers above) and the cluster check (`rossini-gt: gear 4, profile SIM then ARCADE, TCS/ABS on/on, Go To "Stoppage
+  Time" right 4.6 mi, no redraw paused (42,16,4), redline -- RG; oc-hyper: ... right 4.5 mi, no redraw paused (7), redline
+  -- RA`). `npm test -- --only=phone --check=cluster:` alone: 2/2 passed (`gear 3 ... right 4.9 mi`).
+- Frames (High, Go To Stoppage Time, no page errors), `tests/out/sport-wheel/`: `hub-after-r1-{gt,corsa,hyper,brio,vela}-day-390x844.png`,
+  `hub-after-r1-{gt,hyper}-night-390x844.png`, `hub-after-r1-{gt,hyper}-day-1280x720.png` (the GT and hypercar ones also
+  as `dash-after-r1-*`), close-ups cut from the phone frames at DPR 3: `hub-after-r1-closeup-*`, `dash-after-r1-closeup-*`.
+  The BEFORE frames are the earlier `hub-before-*` / `dash-before-*` (5cf7212; nothing in the base changed). Not
+  re-shot this pass: the Corsa at night and at 1280 x 720 (the Corsa shares the GT's cluster code and centre).
+
+Smoothness, round 3 (this pass; `perf-r3.txt`). The same 120 s drive, steering pulses now held for at least 3 rendered
+frames so the wheel reaches full lock (2.2 rad in all four runs); draw calls and triangles now summed over every pass
+(the renderer's counters reset once a frame instead of per render call, so desktop no longer reads 1); "CPU" is the main
+thread's own time per frame (every requestAnimationFrame callback timed). The after build measured is this pass's first
+build (the spread redraws, the half-size phone canvases, the centre's dark ring and badge); the later layout moves change
+only where text is drawn.
+
+| Run (rossini-gt, 120 s) | Frames | p50 / p95 / p99 frame (ms) | CPU p50 / p95 per frame (ms) | Long tasks > 50 ms (longest) | Draw calls median (p95) | Triangles median (p95) | Heap after GC (MB) | Cockpit update p95 (ms) | Programs | Geometries (cockpit's) | Roads loaded |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Phone, after | 43 | 2,267 / 7,616 / 8,600 | 55.7 / 110.7 | 34 (7,617) | 334 (350) | 573,133 (584,643) | 25.4 → 26.0 | 2.0 | 61 → 61 | 318 → 351 (62 → 62) | 56 → 63 |
+| Phone, base | 30 | 4,717 / 9,016 / 17,833 | 83.4 / 426.8 | 27 (17,832) | 324 (332) | 568,719 (585,033) | 25.2 → 25.6 | 0.9 | 58 → 58 | 310 → 331 (54 → 54) | 56 → 60 |
+| Desktop High, after | 31 | 3,750 / 12,416 / 13,433 | 29.0 / 77.3 | 4 (13,426) | 834 (855) | 3,148,157 (3,279,693) | 28.0 → 28.6 | 0.6 | 89 → 89 | 575 → 599 (63 → 63) | 118 → 119 |
+| Desktop High, base | 27 | 5,583 / 11,716 / 11,933 | 38.6 / 421.6 | 10 (11,952) | 950 (1,034) | 4,140,207 (4,226,787) | 28.1 → 28.5 | 0.1 | 86 → 86 | 581 → 601 (55 → 55) | 118 → 119 |
+
+And a controlled A/B of what this lane changed (`bench.mjs` in the scratchpad, phone profile): the sim paused at one
+spot, the wheel swept from -2.2 to +2.2 rad over 20 frames with the arms following, the cockpit and arms alone rendered
+through the game's own path and read back (so SwiftShader's raster is inside the time), two sweeps per page: p95 base
+3,111 and 3,377 ms, after 3,311 and 3,285 ms (p50 2,243 / 2,874 against 2,721 / 2,857). The cockpit's update with the
+readout changing every frame (a redraw at every look): p95 base 3.7 / 0.9 ms, after 9.3 / 2.9 ms under 4x throttling.
+
+What this shows. The geometry growth during the drives is the world: the cockpit's own meshes and geometries are flat
+in every run (62 and 63 after, 54 and 55 at base: the centre's 8 extra meshes), while the roads loaded grow (56 → 63
+after, 56 → 60 base) with the scene's geometries. The draw-call spread between runs follows the traffic and the roads in
+view (desktop base 950 against after 834 here, the other way round from round 2's phone runs); the cockpit itself has 8
+more meshes than at base.
+No shader program compiles during any drive; the heap after GC ends 0.4 to 0.6 MB above its start in all four runs,
+after and base alike (the world streaming in). The cockpit's p95 update fell from 4.7 ms (round 2) to 2.0 ms with the
+spread redraws (a different run; both under 4x throttling). The frame times still cannot settle the +10 % p95 limit: SwiftShader renders 0.2 to 0.4 frames a second
+here, so a run is 27 to 43 frames, and the base build's own two cockpit-only sweeps differ by 8 % at p95 and 28 % at
+p50, more than the limit; within that noise the after build is not measurably slower (cockpit-only p95 +6 % and -3 %
+against base, +2 % on their means; phone drive p95 lower; desktop drive p95 6 % higher). A real phone or a GPU machine is still needed to prove the limit.
+
+Not done here: the characters (`src/onfoot/people/*`) and the driver's hands and arms (`hands*`) belong to other
+sessions and were not touched, so their visual quality and any first-person on-foot view were neither changed nor
+measured. At full lock one forearm lies across the wheel's face over the centre and the left of the cluster (the arms'
+crossing pose); the clearance check above shows it 73 mm or more in front of the centre. Queued for those sessions with a
+ready prompt (`PROJECT_OC_HANDOFF.md`, "Fable prompt: the characters' and the driver's arms' quality"): the owner's
+"insane graphics" ask for the people, a clearance test of the arms against the rim and spokes, and the crossing pose.
+
 ## 2026-11-11: Final live merge 3: fixes
 
 Drop 1 of 2 went live on claude/final-live (on top of c3962c5, the live v14 game). Three reviewed branches were merged by exact hash:
