@@ -1,0 +1,65 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p2_open",
+   "sub_take": null,
+   "text": "The day is now twelve hours long."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s017",
+   "sub_take": null,
+   "text": "At a twelve hour day, sunrise to sunset takes six hours."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s018",
+   "sub_take": null,
+   "text": "The Sun moves as fast as a clock's hour hand."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s020",
+   "sub_take": null,
+   "text": "You are one point four percent lighter, four times what you feel today."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s021",
+   "sub_take": null,
+   "text": "Eight hours of sleep no longer fits inside one night."
+  },
+  {
+   "line": "vo06",
+   "kind": "cta",
+   "take": "V.cta_follow",
+   "sub_take": "V.cta_sub",
+   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+  },
+  {
+   "line": "vo07",
+   "kind": "cliff",
+   "take": "V.p2_cliff",
+   "sub_take": null,
+   "text": "And then the wind starts to blow."
+  },
+  {
+   "line": "vo08",
+   "kind": "closer",
+   "take": "V.c2",
+   "sub_take": null,
+   "text": "Part two of eight. Full video on YouTube."
+  }
+ ]
+}
