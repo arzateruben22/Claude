@@ -2178,16 +2178,33 @@ await group('phone', async (use) => {
   // and at 0.9 the last one ask for the word already shown, so those steps must draw nothing), then nothing new while
   // it stays put. The shift lights' banks light with the revs: none at 50 % of the redline, green and amber at 80 %, all
   // three at 92 %.
-  await check('steering wheel: each car\'s parts by name; the left dial follows the profile and redraws only on a change; shift lights', async () => {
-    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR'];
+  // The wheel's centre (owner, 2026-10-27 and 2026-11-11: "make the center of the steering wheel more aesthetic
+  // looking"): the GT, Corsa and Hypercar carry the premium centre's named parts (the pillowed cover, the machined bezel,
+  // its stitching, the carbon chevron, the accent, the badge); the Brio and the Vela E the simpler one (bezel, insert,
+  // accent, badge, no cover). The accent is each car's own colour: GT cognac, Corsa yellow, Hypercar ice blue, Brio
+  // pale blue, Vela E blue.
+  await check('steering wheel: each car\'s parts by name, the centre\'s included; the left dial follows the profile and redraws only on a change; shift lights', async () => {
+    const HUB = ['wheel-hub-cover', 'wheel-hub-bezel', 'wheel-hub-stitch', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-badge'];
+    const SIMPLE = ['wheel-hub-bezel', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-badge'];
+    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR', ...HUB];
+    const ACCENT = { 'rossini-gt': 0xc8874c, 'rossini-corsa': 0xf0c020, 'oc-hyper': 0x7cc8ff, 'rossini-brio': 0x8fb0e0, 'vela-e': 0x4fb3ff };
     const out = [];
     for (const car of ['rossini-gt', 'rossini-corsa', 'oc-hyper', 'rossini-brio', 'vela-e']) {
-      const names = await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); const n = []; g.car.interior.wheel.traverse((o) => { if (o.isMesh) n.push(o.name); }); return n; }, car);
-      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads'] : SPORT;
+      const r = await game(page, (c) => {
+        const g = window.__game; g.car.configure({ ...g.car.config, car: c });
+        const n = [], w = g.car.interior.wheel; let tris = 0;
+        w.traverse((o) => { if (o.isMesh) { n.push(o.name); tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
+        return { names: n, tris, accent: w.getObjectByName('wheel-hub-accent')?.material.color.getHex(), badge: !!w.getObjectByName('wheel-hub-badge')?.material.map };
+      }, car);
+      const names = r.names;
+      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads', ...SIMPLE] : SPORT;
       const missing = want.filter((k) => !names.includes(k));
       expect(!missing.length, `${car}: no ${missing.join(', ')} (has ${names.join(', ')})`);
       expect(!own || !names.includes('wheel-dial-left'), `${car}: carries the sport wheel's dials`);
-      out.push(`${car} ${names.length} meshes`);
+      expect(!own || !names.includes('wheel-hub-cover'), `${car}: carries the sport wheel's cover`);
+      expect(r.accent === ACCENT[car], `${car}: the centre's accent is #${(r.accent ?? 0).toString(16)}, not #${ACCENT[car].toString(16)}`);
+      expect(r.badge, `${car}: the badge has no picture`);
+      out.push(`${car} ${names.length} meshes, ${r.tris} triangles, accent #${r.accent.toString(16)}`);
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
     const dialState = () => game(page, () => {
@@ -2218,6 +2235,58 @@ await group('phone', async (use) => {
     });
     expect(lit.join(',') === '000,110,111', `shift lights at 50/80/92 % of the redline: ${lit.join(', ')} (want 000, 110, 111)`);
     return `${out.join(', ')}; left dial ${seen.join(', ')}; right "${b.right}"; no redraw while unchanged; shift lights ${lit.join(' ')}`;
+  });
+  // the live cluster (owner, 2026-11-11: "Make the digital dashboard have more information"; car-dash.ts): the Rossini
+  // GT's (the tach's live window and its two side displays) and the OC Hypercar's (its wide display) show the game's
+  // own state: the gear the car is in, the handling profile, TCS and ABS, and with Go To set the HUD's own next turn,
+  // its distance and the destination; Clear route takes them away. With nothing changing (paused) no display redraws.
+  // The redline lights with the wheel's red shift lights: the GT's glow on the tach, the hypercar's arc.
+  await check('cluster: the shown fields follow the game state (gear, profile, TCS/ABS, Go To next turn and destination); no redraw while nothing changes; the redline lights with the shift lights', async () => {
+    const out = [];
+    await game(page, () => { const g = window.__game; if (!g.__hudTap) { const o = g.ev.hud; g.ev.hud = (h) => { window.__lastHud = h; o(h); }; g.__hudTap = true; } g.setPaused(false); });
+    for (const car of ['rossini-gt', 'oc-hyper']) {
+      await game(page, (c) => { const g = window.__game; g.car.configure({ ...g.car.config, car: c }); g.navigateTo(null); g.fastForward(4, {}, 25); }, car);
+      // where each field is shown: the GT splits them over its three displays, the hypercar shows them all on one
+      const shown = (k) => `(() => { const d = window.__game.car.interior.group.userData.dash; const p = d.main ?? (${JSON.stringify(k)} === 'gear' ? d.window : ['profile', 'tcs', 'abs'].includes(${JSON.stringify(k)}) ? d.left : d.right); return p.shown[${JSON.stringify(k)}]; })()`;
+      const fmtMi = `((mi) => mi < 0.1 ? Math.max(0, Math.round(mi * 5280 / 50) * 50) + ' ft' : mi < 10 ? mi.toFixed(1) + ' mi' : Math.round(mi) + ' mi')`;
+      // the gear: the physics' own gear, as the cluster words it
+      await page.waitForFunction(`(() => { const p = window.__game.phys; return ${shown('gear')} === (p.gear < 0 ? 'R' : p.gear === 0 ? 'N' : String(p.gear)); })()`, null, { timeout: FRAMES_MS, polling: 250 });
+      const gear = await game(page, `${shown('gear')}`);
+      // the profile, two ways, and TCS and ABS as the physics has them
+      const prof = [];
+      for (const [h, word] of [[0.9, 'SIM'], [0.15, 'ARCADE']]) {
+        await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, h);
+        await page.waitForFunction(`${shown('profile')} === ${JSON.stringify(word)}`, null, { timeout: FRAMES_MS, polling: 250 });
+        prof.push(word);
+      }
+      await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, HANDLING);
+      await page.waitForFunction(`${shown('tcs')} === (window.__game.phys.tc ? 'on' : 'off') && ${shown('abs')} === (window.__game.phys.abs ? 'on' : 'off')`, null, { timeout: FRAMES_MS, polling: 250 });
+      const assists = await game(page, `${shown('tcs')} + '/' + ${shown('abs')}`);
+      // Go To Stoppage Time: the next turn's arrow and distance and the destination, the HUD's own
+      expect(await game(page, () => window.__game.navigateTo('Stoppage Time')), `${car}: Go To Stoppage Time refused`);
+      await page.waitForFunction(`(() => { const h = window.__lastHud; return h && h.dest === 'Stoppage Time' && ${shown('dest')} === h.dest && ${shown('turn')} === h.turn && ${shown('next')} === ${fmtMi}(h.nextDist / 1609.344); })()`, null, { timeout: FRAMES_MS, polling: 250 });
+      const nav = await game(page, `({ turn: ${shown('turn')}, next: ${shown('next')}, dest: ${shown('dest')}, hudTurn: window.__lastHud.turn, hudNext: window.__lastHud.nextDist })`);
+      expect(nav.turn === 'left' || nav.turn === 'right' || nav.turn === 'ahead', `${car}: the next turn "${nav.turn}"`);
+      // paused, nothing changes: no display draws again
+      await game(page, () => window.__game.setPaused(true));
+      await frames(page, 3);
+      const draws = () => game(page, () => { const d = window.__game.car.interior.group.userData.dash; return Object.values(d).map((p) => p.draws).join(','); });
+      const d0 = await draws(); await frames(page, 6); const d1 = await draws();
+      expect(d0 === d1, `${car}: the cluster redrew with nothing changing (${d0} -> ${d1})`);
+      await game(page, () => window.__game.setPaused(false));
+      // Clear route: the navigation goes
+      await game(page, () => window.__game.navigateTo(null));
+      await page.waitForFunction(`${shown('dest')} === '' && ${shown('turn')} === ''`, null, { timeout: FRAMES_MS, polling: 250 });
+      // the redline, read in one go (the frame loop feeds the real revs between calls)
+      const red = await game(page, () => {
+        const c = window.__game.car.interior, d = c.group.userData.dash, glow = c.group.getObjectByName('tach-redline');
+        return [0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0.2); return `${c.wheel.getObjectByName('ledR').material.emissiveIntensity > 0 ? 'R' : '-'}${glow ? (glow.visible ? 'G' : '-') : (d.main.shown.redline === 'lit' ? 'A' : '-')}`; });
+      });
+      expect(red.join(',') === (car === 'oc-hyper' ? '--,RA' : '--,RG'), `${car}: the red shift lights and the redline at 80 / 92 %: ${red.join(', ')}`);
+      out.push(`${car}: gear ${gear}, profile ${prof.join(' then ')}, TCS/ABS ${assists}, Go To "${nav.dest}" ${nav.turn} ${nav.next}, no redraw paused (${d0}), redline ${red.join(' ')}`);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    return out.join('; ');
   });
   await check('Go to lists all twenty carriageways', async () => {
     await page.getByRole('button', { name: 'Go to' }).click();
