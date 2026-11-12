@@ -14,6 +14,8 @@
 //  - a cheap subsurface look: wrapped, red-tinted diffuse and light through thin parts (ears, nose), baked AO
 import * as THREE from 'three';
 import { Quality } from './params';
+// (from the leaf module, not face.ts: face.ts imports NOISE from here)
+import { MI, NM } from './morphs';
 
 export const NOISE = /* glsl */ `
 float hh13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
@@ -88,21 +90,38 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
     uInk: { value: new THREE.Color(o.tattooInk ?? 0x1a2230) },
     uHeadO: { value: new THREE.Vector3(0, 0, 0) }, uHeadS: { value: new THREE.Vector3(1, 1, 1) }, uLipP: { value: new THREE.Vector4(-1, 0.026, 1, 1) },
     uFaceP: { value: new THREE.Vector4(0.0315, -0.036, 0, 0) },   // the eye's x, the nose tip's y (head-local), the head's old
+    // the eye's shape, as face.ts lays its lids: its size, the lid line's tilt at the outer corner (mm, 1.2 x eyeTilt)
+    // and the upper lid's hood (person.ts sets it from the face; until it does, an eye of size 1, level and unhooded)
+    uEyeP: { value: new THREE.Vector4(1, 0, 0, 0) },
   };
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
+  // the face's expression for the per-pixel folds: smileL, smileR, squintL, squintR, read from the morph weights of a
+  // mesh that carries every one of the MORPHS (morphs.ts; the head), at their indices there; every other skin mesh (the
+  // coarse head, body, hands) gets zero. A face mesh that carries some but not all of them (setMorphs drops a morph
+  // that is zero everywhere) would lose its folds: its program says so when it is built, instead of going flat in silence
   m.onBeforeCompile = (sh) => {
+    if (detail === 'face' && sh.morphTargetsCount > 0 && sh.morphTargetsCount !== NM) console.warn(`people/skin: a face mesh with ${sh.morphTargetsCount} of the ${NM} morph targets; its smile and squint folds are off`);
     Object.assign(sh.uniforms, u);
     sh.defines = { ...(sh.defines ?? {}), SKIN_SSS: 1, ...(high ? { SKIN_HIGH: 1 } : {}), ...(detail === 'face' ? { SKIN_FACE: 1 } : {}) };
     sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute vec3 aRest; attribute vec4 aSkin; attribute vec4 aFace; attribute vec4 aMisc;\nvarying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvRest = aRest; vSkin = aSkin; vFace = aFace; vMisc = aMisc;');
+      .replace('#include <common>', '#include <common>\nattribute vec3 aRest; attribute vec4 aSkin; attribute vec4 aFace; attribute vec4 aMisc;\nvarying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;')
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+vRest = aRest; vSkin = aSkin; vFace = aFace; vMisc = aMisc;
+vExpr = vec4(0.0);
+#ifdef USE_MORPHTARGETS
+#ifdef MORPHTARGETS_TEXTURE
+#if MORPHTARGETS_COUNT == ${NM}
+vExpr = vec4(morphTargetInfluences[${MI.smileL}], morphTargetInfluences[${MI.smileR}], morphTargetInfluences[${MI.squintL}], morphTargetInfluences[${MI.squintR}]);
+#endif
+#endif
+#endif`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', /* glsl */ `#include <common>
-varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc;
+varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;
 uniform vec3 uTone; uniform float uDark; uniform vec3 uLip; uniform float uLipAmt; uniform float uBlush; uniform float uBeard; uniform vec3 uBeardCol;
 uniform float uLiner; uniform vec3 uHair; uniform float uFreckles; uniform float uAge; uniform float uMale; uniform vec3 uInk;
-uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP;
+uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP;
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
@@ -173,18 +192,53 @@ c = mix(c, c * vec3(1.08, 0.86, 0.84), blush * uBlush * (1.0 - uDark * 0.5));
 c *= 1.0 - eyeA * (0.17 + 0.12 * uAge + 0.22 * uLiner * (1.0 - uMale));   // lids are more pigmented than the cheek
 c = mix(c, c * vec3(0.97, 0.92, 0.93), eyeA * 0.6);
 c = mix(c, vec3(0.035, 0.026, 0.024), lashL);   // the lash line along each lid margin: what makes an eye read at a distance
+// the corners of the fissure, where it opens past the eyeball onto the socket: the caruncle in the inner corner (a
+// pink-red, wet mound) and the conjunctiva in shadow at the outer. Eye-local mm (head-local over the eye's size, as
+// face.ts lays the lids), inside face.ts' rest lid margins with their tilt and hood (margins()); the lids' outer skin
+// lies outside them and is left alone. Both end at the canthi: past a canthus the margins meet (u clamps, yU = yL), and
+// the band left there painted a wet line toward the nose and a dark one toward the temple. So the band closes with the
+// fissure (its height) and each term stops at its canthus (inner -15.2 mm, outer 13.5)
+float carM = 0.0;
+#ifdef SKIN_FACE
+if (eyeA > 0.15) {
+  float xe = (abs(hl.x) - uFaceP.x) * 1000.0 / uEyeP.x, ye = hl.y * 1000.0 / uEyeP.x;
+  float u = clamp((xe + 15.2) / 28.7, 0.0, 1.0);
+  float wU = u < 0.47 ? 0.5 * u / 0.47 : 0.5 + 0.5 * (u - 0.47) / 0.53, wL = u < 0.6 ? 0.5 * u / 0.6 : 0.5 + 0.5 * (u - 0.6) / 0.4;
+  float yc = mix(-0.9, 0.4 + uEyeP.y, u);
+  float yU = yc + (5.0 - 0.8 * uEyeP.z) * pow(max(1e-5, sin(3.14159 * wU)), 0.75), yL = yc - 4.3 * pow(max(1e-5, sin(3.14159 * wL)), 0.85);
+  float inF = smoothstep(yL - 0.5, yL + 0.3, ye) * smoothstep(yU + 0.5, yU - 0.3, ye) * smoothstep(0.2, 1.2, yU - yL);
+  carM = inF * smoothstep(-9.0, -11.0, xe) * smoothstep(-16.6, -15.0, xe);
+  vec3 carC = mix(vec3(0.6, 0.3, 0.28), c * vec3(0.95, 0.62, 0.6), 0.3 + 0.4 * uDark);
+  c = mix(c, carC, carM * 0.85);
+  c = mix(c, c * vec3(0.6, 0.5, 0.5), inF * smoothstep(9.0, 11.0, xe) * smoothstep(14.8, 13.3, xe) * 0.7);
+}
+#endif
 // stubble and beard shadow
 float stub = 0.0;
 #ifdef SKIN_FACE
-{
+if (beard * uBeard > 0.001) {   // (women and the skin outside the beard's mask skip the cell search)
   vec2 sc = cells(hp * 2.2);
   float dots = smoothstep(0.32, 0.1, sc.x);
   stub = beard * uBeard * (0.45 + 0.55 * dots * mid);
-  c = mix(c, mix(c * 0.62, uBeardCol * 0.6, 0.55), clamp(stub, 0.0, 1.0) * 0.8);
+  // under a beard, goatee or moustache (strand cards over it) the base is full and nearer the hair's own colour, so the
+  // hair reads as one dense mass between the cards instead of as dark tufts on skin. Its edge keeps the mask's soft
+  // few-mm ramp, broken up by noise (3 mm patches drawn out along the hair's fall, finer ones where they resolve), so it
+  // never follows the mesh's straight edges. (Sharpened with a smoothstep, the ramp became a hard cut-out whose outline
+  // showed the value noise's grid as square steps at 0.24 m. The noise fades out toward both ends of the ramp: nothing
+  // where the mask ends, where this branch stops running, and a full beard inside, where it is not even looked up. A
+  // full beard only: a moustache's mask carries a faint shadow at 0.25 over the beard's area, which the noise would
+  // break into blotches)
+  float fullB = smoothstep(0.85, 0.95, uBeard), beardE = beard;
+  if (uBeard > 0.95 && beard < 0.995) {
+    float bn = 0.4 * (vnoise(hp * vec3(0.33, 0.17, 0.33) + 41.0) - 0.5) + (mid > 0.05 ? 0.15 * (vnoise(hp * 1.1 + 47.0) - 0.5) * mid : 0.0);
+    beardE = clamp(beard + bn * min(1.0, 4.0 * beard) * min(1.0, 4.0 * (1.0 - beard)), 0.0, 1.0);
+  }
+  float amt = mix(stub * 0.8, beardE * (0.8 + 0.2 * dots), fullB);
+  c = mix(c, mix(c * 0.62, uBeardCol * 0.6, mix(0.55, 0.9, fullB)), clamp(amt, 0.0, 1.0));
 }
 #endif
-// scalp under the hair: the hair's colour, with strands
-{
+// scalp under the hair: the hair's colour, with strands (the edge noise lifts scE by 0.25 at most: no scalp, no work)
+if (scalp > 0.05) {
   float strand = 0.65 + 0.35 * vnoise(hp * vec3(1.6, 0.25, 1.6));
   // a broken, soft hairline: noise along the edge, fine hairs thinning out onto the skin
   float scE = scalp + 0.32 * (vnoise(hp * vec3(0.9, 0.35, 0.9)) - 0.5) + 0.18 * (vnoise(hp * vec3(3.0, 0.6, 3.0)) - 0.5);
@@ -192,8 +246,10 @@ float stub = 0.0;
 }
 // freckles; age spots (a few flat brown marks 2-3 mm across on lighter skin)
 #ifdef SKIN_FACE
-{
+if (uFreckles * fz > 0.002) {
   vec2 fr = cells(hp * 0.55); c *= 1.0 - uFreckles * fz * 0.28 * smoothstep(0.24, 0.08, fr.x) * step(0.55, hh13(floor(hp * 0.55) + 2.0));
+}
+if (uAge > 0.02 && mid3 > 0.001) {
   vec2 sp = cells(hp * 0.11 + 4.0);
   float spot = uAge * (1.0 - uDark * 0.7) * smoothstep(0.34, 0.16, sp.x) * step(0.87, hh13(floor(hp * 0.11 + 4.0) + 9.0)) * mid3;
   c = mix(c, c * vec3(0.84, 0.74, 0.66), spot * 0.6);
@@ -211,17 +267,20 @@ if (tat > 0.01) {
 }
 // ---- age in the face, per pixel in the head's frame (the mesh is too coarse to carry a 2 mm groove): the nasolabial
 // folds, marionette and glabellar lines, the bag and tear trough under each eye. Never on the lips or the lids.
-float fold = 0.0, bag = 0.0, trough = 0.0, bulge = 0.0;
+float fold = 0.0, foldC = 0.0, bag = 0.0, trough = 0.0, bulge = 0.0, apple = 0.0, smS = 0.0, sqS = 0.0;
 #ifdef SKIN_FACE
 {
+  // this side's smile and squint (smileL and squintL move the person's left, +x)
+  smS = hl.x > 0.0 ? vExpr.x : vExpr.y; sqS = hl.x > 0.0 ? vExpr.z : vExpr.w;
   vec2 q = vec2(abs(hl.x), hl.y);
   float mY = uLipP.x, mw = uLipP.y, ex = uFaceP.x, nY = uFaceP.y;
   float front = smoothstep(0.0, 0.008, hl.z) * (1.0 - lipM) * (1.0 - eyeA);
-  // the nasolabial fold: from the alar crease, bowing out across the cheek, to beyond the mouth corner; faint when young
-  vec2 a0 = vec2(0.016, nY - 0.003), a1 = vec2(mw + 0.004, mY + 0.013), a2 = vec2(mw + 0.008, mY - 0.007);
+  // the nasolabial fold: from the alar crease, bowing out across the cheek, to beyond the mouth corner; faint when young,
+  // and at any age it deepens and swings out with a smile (the cheek rides up against it)
+  vec2 a0 = vec2(0.016, nY - 0.003), a1 = vec2(mw + 0.004 + 0.002 * smS, mY + 0.013), a2 = vec2(mw + 0.008 + 0.004 * smS, mY - 0.007);
   float s1 = segS2(q, a0, a1), s2 = segS2(q, a1, a2);
   float sd = abs(s1) < abs(s2) ? s1 : s2;      // signed: positive on the cheek's side
-  float nAmt = 0.15 + 0.85 * uAge;
+  float nAmt = 0.15 + 0.85 * uAge + 0.6 * smS;
   float naso = exp(-pow(sd / 0.003, 2.0)) * nAmt;
   bulge = exp(-pow((sd - 0.0045) / 0.0032, 2.0)) * nAmt * smoothstep(mY - 0.01, mY + 0.004, q.y);   // the cheek overhangs the groove
   // marionette lines: from the mouth corner down beside the chin, fading out
@@ -231,42 +290,59 @@ float fold = 0.0, bag = 0.0, trough = 0.0, bulge = 0.0;
   float dg = segD2(q, vec2(0.0078, 0.014), vec2(0.0062, 0.029));
   float glab = exp(-pow(dg / 0.0022, 2.0)) * uAge * 0.8;
   fold = clamp(naso + mari + glab, 0.0, 1.0) * front;
+  // (the smile's share of the fold is mostly relief: its colour line kept softer, or a young smile looks drawn on)
+  foldC = clamp(naso - 0.25 * smS * exp(-pow(sd / 0.003, 2.0)) + mari + glab, 0.0, 1.0) * front;
   bulge *= front;
   // under each eye: a soft pillow below the lower lid, the tear trough beneath it
   float bx = (q.x - ex) / 0.013, by = (q.y + 0.0135) / 0.006;
   bag = exp(-(bx * bx + by * by)) * uAge * front;
   float tx = (q.x - ex) / 0.015, ty = (q.y + 0.0215) / 0.003;
   trough = exp(-(tx * tx + ty * ty)) * uAge * front;
+  // a smile lifts and tightens the cheek's apple: a touch lighter and glossier
+  float px = (q.x - 0.036) / 0.014, py = (q.y + 0.031) / 0.012;
+  apple = smS * exp(-px * px - py * py) * front;
 }
 #endif
 // ---- forehead lines and neck rings (in the vertex-masked bands): furrows 6-11 mm apart whose spacing drifts, that
 // break into segments of varying depth with fainter lines between, and on the forehead arch up with the brows. The
 // crow's feet fan out and back from the outer corner of each eye. All deeper and darker with age; never on the lips
 // or the lids. The phase runs on the body's y on every mesh so the neck's rings meet across the head/body seam.
-float cy = hp.y, crow = 0.0;
-#ifdef SKIN_FACE
-{
-  float hx = hl.x / 0.045;
-  cy += 3.5 * hx * hx * smoothstep(-0.12, -0.02, hl.y);   // mm: the forehead's lines are higher in the middle than at the temples
-  vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135, hl.y + 0.001);   // from the outer canthus, outward
-  float cr = length(cq), ca = atan(cq.y, max(cq.x, 0.0005));
-  float fan = pow(0.5 + 0.5 * sin(ca * 11.0 + 1.5 * vnoise(hp * 0.09)), 3.0);
-  crow = fan * smoothstep(0.002, 0.005, cr) * smoothstep(0.017, 0.009, cr) * smoothstep(0.85, 0.45, abs(ca)) * step(0.0, cq.x)
-       * smoothstep(0.066, 0.058, abs(hl.x)) * smoothstep(-0.03, -0.01, hl.z) * (0.6 + 0.4 * vnoise(hp * 0.2));
+// All of it scales with age (the crow's feet also with a squint) and with mid, so the noise runs only where it can show:
+// a young face at rest skips it all (a uniform branch), and the furrows and the fan only inside their own masks.
+float crease = 0.0;
+if (mid > 0.001 && (uAge > 0.02 || sqS > 0.01)) {
+  float crow = 0.0, lines = 0.0;
+  #ifdef SKIN_FACE
+  vec2 cq = vec2(abs(hl.x) - uFaceP.x - 0.0135 * uEyeP.x, hl.y + 0.001);   // from the outer canthus, outward
+  float cr = length(cq);
+  if (cq.x > 0.0 && cr < 0.017) {
+    float ca = atan(cq.y, max(cq.x, 0.0005));
+    float fan = pow(0.5 + 0.5 * sin(ca * 11.0 + 1.5 * vnoise(hp * 0.09)), 3.0);
+    crow = fan * smoothstep(0.002, 0.005, cr) * smoothstep(0.017, 0.009, cr) * smoothstep(0.85, 0.45, abs(ca))
+         * smoothstep(0.066, 0.058, abs(hl.x)) * smoothstep(-0.03, -0.01, hl.z) * (0.6 + 0.4 * vnoise(hp * 0.2));
+  }
+  #endif
+  if (uAge > 0.02 && wrink > 0.001) {
+    float cy = hp.y;
+    #ifdef SKIN_FACE
+    float hx = hl.x / 0.045;
+    cy += 3.5 * hx * hx * smoothstep(-0.12, -0.02, hl.y);   // mm: the forehead's lines are higher in the middle than at the temples
+    #endif
+    float drift = cy * 0.8 + 2.5 * vnoise(hp * vec3(0.045, 0.03, 0.045) + 3.0);
+    float li = floor((drift - 1.5708) / 6.2832 + 0.5);    // which furrow: each gets its own gaps and depth
+    float seg = smoothstep(0.3, 0.58, vnoise(vec3(hp.x * 0.07, li * 1.7, hp.z * 0.07) + 2.0)) * (0.6 + 0.6 * vnoise(vec3(hp.x * 0.03, li * 2.3, hp.z * 0.03) + 5.0));
+    lines = pow(0.5 + 0.5 * sin(drift), 4.0) * seg
+          + 0.3 * pow(0.5 + 0.5 * sin(drift * 2.0 + 1.0), 4.0) * smoothstep(0.4, 0.62, vnoise(hp * vec3(0.12, 0.3, 0.12) + 7.0));
+  }
+  // (a squint deepens the crow's feet; a young face shows them only then, and fainter)
+  crease = (clamp(wrink * lines + crow, 0.0, 1.0) * uAge + crow * sqS * (0.4 * uAge + 0.5 * (1.0 - uAge))) * mid * (1.0 - lipM) * (1.0 - eyeA);
 }
-#endif
-float drift = cy * 0.8 + 2.5 * vnoise(hp * vec3(0.045, 0.03, 0.045) + 3.0);
-float li = floor((drift - 1.5708) / 6.2832 + 0.5);    // which furrow: each gets its own gaps and depth
-float seg = smoothstep(0.3, 0.58, vnoise(vec3(hp.x * 0.07, li * 1.7, hp.z * 0.07) + 2.0)) * (0.6 + 0.6 * vnoise(vec3(hp.x * 0.03, li * 2.3, hp.z * 0.03) + 5.0));
-float lines = pow(0.5 + 0.5 * sin(drift), 4.0) * seg
-            + 0.3 * pow(0.5 + 0.5 * sin(drift * 2.0 + 1.0), 4.0) * smoothstep(0.4, 0.62, vnoise(hp * vec3(0.12, 0.3, 0.12) + 7.0));
-float crease = clamp(wrink * lines + crow, 0.0, 1.0) * uAge * mid * (1.0 - lipM) * (1.0 - eyeA);
 float crepe = 0.0;   // the fine polygonal network of older skin (cheeks, neck, the backs of the hands), 2 mm cells; skipped where it would not resolve
 if (uAge > 0.03 && mid3 > 0.001) {
   vec2 cp = cells(hp * 0.5 + 9.0);
   crepe = uAge * smoothstep(0.26, 0.06, cp.y) * mid3 * (1.0 - lipM) * (1.0 - eyeA * 0.5);
 }
-c *= 1.0 - 0.22 * crease - 0.2 * fold - 0.1 * trough - 0.05 * bag - 0.06 * crepe;
+c *= (1.0 - 0.22 * crease - 0.2 * foldC - 0.1 * trough - 0.05 * bag - 0.06 * crepe) * (1.0 + 0.06 * apple);
 c = mix(c, c * vec3(0.92, 0.86, 0.9), (trough + 0.4 * bag) * 0.5);   // the shadowed, bluer skin under the eye
 // mouth interior
 c = mix(c, vec3(0.2, 0.045, 0.05) * (0.4 + 0.6 * ao), smoothstep(0.2, 0.8, mouth));
@@ -287,16 +363,17 @@ H += 0.015 * (vnoise(hp * 2.7) - 0.5) * fine;
 H += 0.035 * (vnoise(hp * 1.5) - 0.5) * fine;   // gated fine: at 2 px/mm this was per-pixel speckle
 #endif
 // vertical lip lines
-H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0) * mid;
+if (lipM > 0.001) H -= 0.06 * lipM * pow(0.5 + 0.5 * sin(hp.x * 2.6 + vnoise(hp * 0.6) * 3.0), 3.0) * mid;
 // age: the furrows, folds, troughs and bags, plus a finer creasing across the cheeks
 H -= 0.7 * crease + 0.65 * fold + 0.35 * trough - 0.55 * bag - 0.35 * bulge + 0.05 * crepe;
 H += stub * 0.03 * fine;
 float rough = 0.52 - 0.12 * red * (1.0 - uDark * 0.3) + 0.05 * (1.0 - fine) + 0.03 * m3 + 0.03 * m4 * mid3;
 rough += 0.1 * uAge * (1.0 - red * 0.6);   // old skin is drier: matte on the forehead and cheeks, the nose keeps its shine
-rough -= 0.07 * (crease + fold);   // sebum sits in the folds
+rough -= 0.07 * (crease + fold) + 0.04 * apple;   // sebum sits in the folds; a smiling cheek is tighter
 rough = mix(rough, mix(0.42, 0.3, uLipAmt), lipM);
 rough = mix(rough, 0.22, smoothstep(0.2, 0.8, mouth));
 rough += 0.12 * eyeA;   // a matte lid: no env sheen turning a closed lid into a pale disc
+rough = mix(rough, 0.24, carM);   // (the caruncle is wet)
 rough = mix(rough, 0.62, clamp(stub, 0.0, 1.0) * 0.6);
 rough = mix(rough, 0.85, smoothstep(0.1, 0.8, scalp));   // a buzz cut is matte, never a polished dome
 gThin = thin * (1.0 - uDark * 0.5);

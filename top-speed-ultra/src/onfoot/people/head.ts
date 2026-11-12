@@ -113,7 +113,8 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     E([sg * 0.0042, mY + 0.0105 * lu, 0.0276], 0.0042, 0.0028, 0.003, 0.003);   // Cupid's bow peaks
     K([sg * 0.0042, -0.0495 * nl, 0.0258], [sg * 0.005, mY + 0.0105, 0.0268], 0.0021, 0.0023, 0.003);
     ER([sg * 0.012 * mw, mY - 0.0038, 0.0195], [1, 0.1 * sg, -0.65 * sg], [0, 1, 0], 0.0092 * mw, 0.0045 * ll, 0.0052, 0.004);
-    X([sg * 0.0265 * mw, mY, 0.0165], 0.002, 0.0026, 0.0022, 0.0025);   // the corners tuck in
+    // (no carve at the corners: a 2 mm one, and still a soft 1.5 mm one set back, baked a dark pit into the ambient
+    // occlusion there, so a closed mouth read as a drawn line with a dot at each end; the slit's tapering tip is the corner)
   }
   E([0, mY - 0.0064 - 0.0006 * ll, 0.0238 + 0.0014 * ll], 0.0132 * mw, 0.0057 * ll, 0.0062, 0.004);
   const gap = 0.0027;

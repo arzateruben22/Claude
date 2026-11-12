@@ -10,12 +10,11 @@ import { Field } from './field';
 import { meshField } from './mesher';
 import { Quality, Look } from './params';
 import { NOISE } from './skin';
-import { cardMaterial, lashTexture, browTexture } from './cards';
-
-export const MORPHS = ['jawOpen', 'mouthClose', 'smileL', 'smileR', 'wide', 'pucker', 'press', 'tuck', 'browUp', 'browDownL', 'browDownR', 'blinkL', 'blinkR', 'squintL', 'squintR'] as const;
-export type MorphName = typeof MORPHS[number];
-export const MI: Record<MorphName, number> = Object.fromEntries(MORPHS.map((n, i) => [n, i])) as Record<MorphName, number>;
-const NM = MORPHS.length;
+import { cardMaterial, browTexture } from './cards';
+import { beardMask, lipMask } from './masks';
+import { MORPHS, MorphName, MI, NM } from './morphs';
+export { MORPHS, MI } from './morphs';
+export type { MorphName } from './morphs';
 
 const g3 = (p: V3, c: V3, r: number) => { const dx = p[0] - c[0], dy = p[1] - c[1], dz = p[2] - c[2]; return Math.exp(-(dx * dx + dy * dy + dz * dz) / (r * r)); };
 
@@ -52,10 +51,15 @@ export function fieldDelta(e: number, p: V3, hf: HeadFrame, jawW?: number): V3 {
       const wc = Math.exp(-((x - corner[0]) ** 2 + (y - corner[1]) ** 2) / 0.0135 ** 2 - ((z - corner[2]) / 0.02) ** 2);
       const st = Math.exp(-(((y - mY) / 0.008) ** 2)) * lipZone * clamp((sg * x) / mw, 0, 1.1);
       const ch = g3(p, [sg * 0.036, -0.031, 0.012], 0.017), nl = g3(p, [sg * 0.031, -0.056, 0.016], 0.01), ue = g3(p, [sg * hf.eye.x, -0.013, 0.011], 0.007);
+      // the nasolabial line (skin.ts draws the same fold) stays back while the cheek beside it rises: the fold deepens
+      const fw = 0.026 * hf.face.mouthW, ax0 = 0.016, ay0 = hf.nose.tip[1] - 0.003, bx = fw + 0.004 - ax0, by = mY + 0.013 - ay0;
+      const tt = clamp(((sg * x - ax0) * bx + (y - ay0) * by) / (bx * bx + by * by));
+      const fd2 = (sg * x - ax0 - bx * tt) ** 2 + (y - ay0 - by * tt) ** 2;
+      const fl = Math.exp(-fd2 / 0.003 ** 2) * smooth(-0.01, 0.005, z);
       return [
         (sg * 0.0042 * wc + sg * 0.003 * st + sg * 0.0008 * ch + sg * 0.0008 * nl) * sideW,
-        (0.0042 * wc + 0.0014 * st + 0.0032 * ch + 0.0012 * nl + 0.0012 * ue) * sideW,
-        (-0.0025 * wc + 0.0022 * ch + 0.0025 * nl + 0.0005 * ue) * sideW,
+        (0.0042 * wc + 0.0014 * st + 0.0046 * ch + 0.0012 * nl + 0.0018 * ue) * sideW,
+        (-0.0025 * wc + 0.0022 * ch + 0.0025 * nl + 0.0005 * ue - 0.0012 * fl) * sideW,
       ];
     }
     case 'wide': {
@@ -212,7 +216,7 @@ function stripGeometry(rows: V3[][], uv: (i: number, j: number) => [number, numb
 function lashRows(hf: HeadFrame, side: number, upper: boolean, st: LidState, layer: number): V3[][] {
   const es = hf.face.eyeSize, n = 20, rows: V3[][] = [[], [], []];
   const u0 = upper ? 0.06 : 0.25, u1 = upper ? 0.98 : 0.95;
-  const lenMax = (upper ? 0.0062 : 0.0027) * (1 + 0.18 * (hf.male ? 0 : 1)) * (1 - 0.15 * layer);
+  const lenMax = (upper ? 0.0062 : 0.0018) * (1 + 0.18 * (hf.male ? 0 : 1)) * (1 - 0.15 * layer);   // the lower ones a short fringe
   for (let i = 0; i < n; i++) {
     const u = lerp(u0, u1, i / (n - 1));
     const m = margins(u, hf, st);
@@ -238,6 +242,41 @@ function lashRows(hf: HeadFrame, side: number, upper: boolean, st: LidState, lay
   return rows;
 }
 
+/** lashes, root at v = 0: dense, thick hairs at the lid margin that taper and thin out toward their tips, over a soft
+ *  band of density along the roots (cards.ts' lash texture is drawn from the canvas' top, which flipY puts at v = 1:
+ *  on the cards that was the tips, so the lashes were opaque at their ends and faded out at the lid; under the old
+ *  alpha test only the ends survived, as specks floating off the lid) */
+let lashTex: THREE.Texture | null = null;
+function lashCardTexture() {
+  if (lashTex) return lashTex;
+  const w = 256, h = 64, c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const g = c.getContext('2d')!;
+  g.clearRect(0, 0, w, h);
+  const band = g.createLinearGradient(0, h, 0, h * 0.6);
+  band.addColorStop(0, 'rgba(255,255,255,0.5)'); band.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = band; g.fillRect(0, 0, w, h);
+  const r = rng(4243);
+  for (let i = 0; i < 54; i++) {
+    const x0 = (i + 0.5) / 54 * w + (r.next() - 0.5) * 4, len = h * (0.5 + 0.5 * r.next()), lean = (r.next() - 0.5) * 12;
+    const wd = 1.1 + 0.7 * r.next();
+    // each hair twice: whole and thin, then its root third thicker (a taper a single stroke can't draw)
+    for (const [f, lw] of [[1, wd], [0.35, wd * 1.7]] as const) {
+      const L = len * f, grad = g.createLinearGradient(0, h, 0, h - L);
+      grad.addColorStop(0, 'rgba(255,255,255,1)'); grad.addColorStop(0.6, `rgba(255,255,255,${f < 1 ? 0.6 : 0.8})`); grad.addColorStop(1, 'rgba(255,255,255,0)');
+      g.strokeStyle = grad; g.lineWidth = lw;
+      g.beginPath(); g.moveTo(x0, h); g.quadraticCurveTo(x0 + lean * 0.3 * f, h - L * 0.5, x0 + lean * f * f, h - L); g.stroke();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.NoColorSpace;   // channels are data: r = strand shade, a = coverage
+  t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
+  t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.anisotropy = 4;
+  lashTex = t;
+  return t;
+}
+
 export function buildLashes(hf: HeadFrame, quality: Quality) {
   const layers = quality === 'high' ? 2 : 1;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
@@ -256,10 +295,15 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
       } else for (let k = 0; k < s.pos.length; k++) deltas[e].push(0);
     }
   }
-  return { pos, uvs, idx, deltas, mat: cardMaterial(0x0c0a09, lashTexture(), quality, { kk: false, alphaTest: 0.35 }) };
+  // soft alpha like the brows: the sub-pixel strokes blend into a dark fringe instead of breaking into specks and dots
+  const mat = cardMaterial(0x0c0a09, lashCardTexture(), quality, { kk: false, alphaTest: 0.03 });
+  mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
+  mat.forceSinglePass = true;   // (a transparent double-sided material otherwise draws twice, back faces then front: one more call)
+  return { pos, uvs, idx, deltas, mat };
 }
 
-/** brows on the skin: points projected onto the head's surface */
+/** brows on the skin: points projected onto the head's surface; facial hair (a beard, a goatee, a moustache) rides in
+ *  the same mesh, so it shares the brows' material, draw call and morph deltas */
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
   const thick = m ? 1.12 : 0.86, arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
@@ -287,86 +331,360 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
         rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0)));
       }
     }
-    const s = stripGeometry(rows, (i, j) => [i / (n - 1), j / 2]);
+    const s = stripGeometry(rows, (i, j) => [i / (n - 1), j / 4]);   // the atlas' brow half (v 0..0.5)
     const off = pos.length / 3;
     pos.push(...s.pos); uvs.push(...s.uvs); idx.push(...s.idx.map((v) => v + off));
   }
-  const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.55).getHex();
-  const mat = cardMaterial(brow, browTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
+  const fh = look.facialHair;
+  if (m && (fh === 'beard' || fh === 'goatee' || fh === 'moustache')) growBeard(hf, field, look, quality, pos, uvs, idx);
+  // every brow mesh carries all of MORPHS, beard or none: MORPHTARGETS_COUNT is part of a program's key, and a bearded
+  // brow mesh (13 morphs) next to a bare one (7) compiled a second card program, mid-play, the first time a bearded face
+  // came near. Vertices that no triangle uses, two on the lower lip and one under each eye, give the mouth's morphs and
+  // the squints (which barely reach the brows) clearly non-zero deltas, and person.ts' setMorphs keeps exactly the
+  // non-zero ones: so every brow mesh has all fifteen
+  for (const sx of [1, -1]) {
+    pos.push(sx * 0.008, hf.mouth.y - 0.004, 0.024, sx * hf.eye.x, -0.012, 0.012);
+    uvs.push(0, 0, 0, 0);
+  }
+  const col = facialHairColours(look);
+  const mat = cardMaterial(col.base, browBeardTexture(), quality, { kk: false, alphaTest: 0.02, grey: col.share, greyColor: col.grey });
   mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
   return { pos, uvs, idx, mat };
 }
 
+const GREY_STRAND = 0xbdb9b2;   // (cards.ts' grey strand colour)
+/** the brows' and facial hair's colours (sRGB hex) from the look: the strands' base (the hair's own colour, darker:
+ *  brows and beards grow darker than the scalp's hair), the grey strands' colour and share (cards.ts' per-strand hash),
+ *  and `skin`, the colour the skin under a beard is tinted toward (person.ts' skinLook.beardColor) for it to match the
+ *  cards' mean: skin.ts tints it to about 0.55 x beardColor, and the cards average their base and grey strands at
+ *  about 1 x (their texture's shade). With no grey that is the hair's colour, which is what person.ts passes today.
+ *  Only a grey or white head of hair (light and unsaturated) greys the base itself; any other colour keeps its own base
+ *  under the grey strands (a near-white base on a dark-haired man made every card a pale blob over the dark skin under
+ *  his beard) */
+export function facialHairColours(look: Look) {
+  const h = look.hairColor, r = ((h >> 16) & 255) / 255, g = ((h >> 8) & 255) / 255, b = (h & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), greyHair = mx - mn < 0.06 && mx + mn > 1;
+  const base = greyHair && look.grey > 0.7 ? new THREE.Color(0x8a847c) : new THREE.Color(h).multiplyScalar(0.55);
+  const share = Math.min(0.7, look.grey * 0.6);
+  return { base: base.getHex(), grey: GREY_STRAND, share, skin: base.clone().lerp(new THREE.Color(GREY_STRAND), share).multiplyScalar(1 / 0.55).getHex() };
+}
+
+// ------------------------------------------------------------------------------------------------ facial hair
+// A beard as strand cards grown where masks.ts puts it (a full beard, a goatee, a moustache): roots on a jittered grid
+// round the lower face, found on the skin by marching in from outside, never within 2.5 mm of the lips or in the
+// mouth; each card leaves the skin a little and lies down along it (outward 0.35, down 0.65, a little jitter), bending
+// back toward the skin at its tip; 7-10 mm for a beard, 5-6 mm for a goatee or moustache, a moustache's tips kept above
+// the upper lip's vermilion. The skin under it is tinted dark (skin.ts), so the cards add the hair's texture, its soft
+// edge and its volume over a full base.
+
+/** the brow texture (v 0..0.5, unchanged) with sixteen 32 px tiles of beard strands above it (v 0.5..1), side by side
+ *  along u. Each strand runs along v, root at v 0.63, tip toward v 0.98, so across a card u runs across its strands:
+ *  cards.ts' per-strand grey hash, floor(u * 220), then picks one colour per strand, constant along it, and each strand
+ *  is drawn on the centre of its hash column. (The strands ran along u: the hash flipped about 53 times along every
+ *  strand, and a grey beard or moustache read as salt-and-pepper static that mipmapping could not filter.) A tile is
+ *  about as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-2 texel strand is a 0.1-0.2 mm hair.
+ *  Each tile is a tuft that tapers to a point: the middle strands run the card's length, the outer ones are shorter,
+ *  every strand is thicker at its root, and the density under them narrows toward the tip (twelve even strands of one
+ *  length made every card a blunt bar). The sixteen rows next to the brow half stay empty: the brow strip's edge
+ *  samples v 0.5, and anything there bled into the brows' upper edge through filtering, down to mip level 4 */
+const BEARD_TILES = 16, HASH_COL = 512 / 220;   // (cards.ts: the grey hash's column, in texels)
+const BEARD_Y0 = 47.5, BEARD_Y1 = 2.5;   // the canvas rows of a card's root and tip (v 0.629 and 0.98)
+let browBeardTex: THREE.Texture | null = null;
+function browBeardTexture() {
+  if (browBeardTex) return browBeardTex;
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const g = c.getContext('2d')!;
+  g.clearRect(0, 0, 512, 128);
+  g.drawImage(browTexture().image as CanvasImageSource, 0, 64);   // flipY: the canvas' lower half is v 0..0.5
+  const r = rng(9091);
+  const tw = 512 / BEARD_TILES, yRoot = BEARD_Y0, yTip = BEARD_Y1;
+  const len = yRoot - yTip;
+  for (let k = 0; k < BEARD_TILES; k++) {
+    const x0 = k * tw, cx = x0 + tw / 2, hw = tw / 2 - 2;   // (a card shows its tile from 2 texels in on each side)
+    g.save();
+    g.beginPath(); g.rect(x0, 0, tw, yRoot + 0.5); g.clip();   // nothing past the root row (the guard) or into the next tile
+    // a soft density under the strands (a beard reads as a tone before single hairs do): a teardrop standing on the
+    // root row, as wide as the card there and narrowing toward the tip
+    for (let i = 0; i < 5; i++) {
+      const t = i / 5, rw = hw * (1 - 0.78 * t);
+      g.save(); g.translate(cx, yRoot - t * 0.62 * len); g.scale(1, 1.5);
+      const gr = g.createRadialGradient(0, 0, 0, 0, 0, rw);
+      gr.addColorStop(0, `rgba(255,255,255,${(0.1 * (1 - 0.5 * t)).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = gr; g.fillRect(-rw, -rw, 2 * rw, 2 * rw);
+      g.restore();
+    }
+    // a strand on most hash columns whose centre lies 2 texels or more inside the tile, each kept to its column (its
+    // tip leans toward the tuft's middle by half a texel at most): the middle strands the longest, the outer ones about
+    // a third of that, each drawn whole and then its root half again, thicker
+    for (let s = Math.ceil((x0 + 2) / HASH_COL - 0.5); (s + 0.5) * HASH_COL <= x0 + tw - 2; s++) {
+      const xc = (s + 0.5) * HASH_COL, a = Math.min(1, Math.abs(xc - cx) / hw);
+      if (r.next() < 0.05) continue;   // (a gap here and there)
+      const xs = xc + (r.next() - 0.5) * 0.3, ys = yRoot - 0.5 - 5 * r.next() * (0.4 + a);
+      const L = Math.min((1 - 0.68 * Math.pow(a, 1.5)) * (0.64 + 0.36 * r.next()) * len, ys - yTip);
+      const ex = xs + clamp((cx - xs) * 0.06, -0.5, 0.5) + (r.next() - 0.5) * 0.3, bend = (r.next() - 0.5) * 0.4;
+      const v = Math.round(150 + 105 * r.next()), a0 = 0.6 + 0.3 * r.next(), wd = 0.9 + 0.45 * r.next();
+      for (const [f, lw, k0] of [[1, wd, 1], [0.45, wd * 1.6, 0.6]] as const) {
+        const fx = lerp(xs, ex, f), fy = ys - L * f;
+        const grad = g.createLinearGradient(xs, ys, fx, fy);
+        grad.addColorStop(0, `rgba(${v},${v},${v},${(a0 * k0).toFixed(3)})`); grad.addColorStop(0.6, `rgba(${v},${v},${v},${(a0 * k0 * 0.75).toFixed(3)})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.strokeStyle = grad; g.lineWidth = lw;
+        g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + fx) / 2 + bend * f, (ys + fy) / 2, fx, fy); g.stroke();
+      }
+    }
+    g.restore();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.NoColorSpace;   // channels are data: r = strand shade, a = coverage
+  t.wrapS = THREE.RepeatWrapping; t.wrapT = THREE.ClampToEdgeWrapping;
+  t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter;
+  t.anisotropy = 4;
+  browBeardTex = t;
+  return t;
+}
+
+function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, pos: number[], uvs: number[], idx: number[]) {
+  const fh = look.facialHair, high = quality === 'high', full = fh === 'beard';
+  const F = hf.face, mY = hf.mouth.y, mw = 0.026 * F.mouthW;
+  // only the primitives that reach the lower face (and every carve): a tenth of the cost of the whole body per eval
+  const lo = hf.toBody([-0.1, -0.2, -0.12]), hi = hf.toBody([0.1, 0.03, 0.08]);
+  const keep = new Set<number>();
+  for (const b of field.bounds()) {
+    let inside = true;
+    for (let k = 0; k < 3; k++) if (b.c[k] + b.r < lo[k] - 0.03 || b.c[k] - b.r > hi[k] + 0.03) inside = false;
+    if (inside) keep.add(b.i);
+  }
+  const lf = field.subset((i) => field.carve[i] === 1 || keep.has(i));
+  const D = (l: V3) => { const b = hf.toBody(l); return lf.eval(b[0], b[1], b[2], null, 0); };
+  /** the skin's normal at a root, f0 the field there (the march's last sample: the same point, so the same number) */
+  const grad = (l: V3, f0: number): V3 => {
+    const b = hf.toBody(l), e = 0.0004;
+    const gx = (lf.eval(b[0] + e, b[1], b[2], null, 0) - f0) / e, gy = (lf.eval(b[0], b[1] + e, b[2], null, 0) - f0) / e, gz = (lf.eval(b[0], b[1], b[2] + e, null, 0) - f0) / e;
+    return norm([gx * hf.sx, gy * hf.sy, gz * hf.sz]);
+  };
+  const r = rng(Math.round(F.jaw * 7717 + F.chin * 3331 + F.width * 1777) + 41);
+  const g = full ? (high ? 0.003 : 0.0046) : (high ? 0.0026 : 0.004);   // grid step (m): cards overlap two or three deep
+  const cap = full ? (high ? 1100 : 460) : (high ? 360 : 160);
+  const W = (high ? 0.0027 : 0.0037) * (full ? 1 : 0.9);
+  const zA = -0.035, R = 0.066;
+  // where each kind can grow (head-local y, angle round the head from the front): rays outside it are never cast
+  const [yTop, yBot, phMax] = full ? [0.01, -0.128, 2.1] : fh === 'goatee' ? [-0.04, -0.125, 0.75] : [-0.04, mY, 0.75];
+  // (the masks are masks.ts' beardMask and lipMask: faceMasks' numbers without its other masks. Every test below decides
+  // as it did with faceMasks and all its probes, so the beard is the same; the work is a fraction)
+  const hits: { p: V3; f0: number; beard: number }[] = [];
+  for (let y = yTop; y > yBot; y -= g) for (let ph = -phMax; ph <= phMax; ph += g / R) {
+    const yy = y + (r.next() - 0.5) * g * 0.8, a = ph + (r.next() - 0.5) * (g / R) * 0.8;
+    const dir: V3 = [Math.sin(a), 0, Math.cos(a)];
+    // a ray that cannot reach the beard is never marched (the mask before, at and behind the skin's usual depth; the
+    // first depth that shows enough beard settles it)
+    let pre = 0;
+    for (const rr of [0.045, 0.06, 0.075]) { pre = Math.max(pre, beardMask([dir[0] * rr, yy, zA + dir[2] * rr], hf, look).beard); if (pre >= 0.05) break; }
+    if (pre < 0.05) continue;
+    // march in from outside to the skin
+    let t = 0.105, p: V3 = [0, 0, 0], hit = false, f0 = 0;
+    for (let it = 0; it < 80 && t > 0.005; it++) {
+      p = [dir[0] * t, yy, zA + dir[2] * t];
+      const d = D(p);
+      if (d < 0.00025) { hit = true; f0 = d; break; }
+      t -= Math.max(d * 0.85, 0.0003);
+    }
+    if (!hit) continue;
+    const mk = beardMask(p, hf, look);
+    if (mk.beard < 0.35 || mk.mouth > 0.01 || mk.lip > 0.02) continue;
+    // never within 2.5 mm of the lips (probed only beside the mouth)
+    let nearLip = false;
+    if (Math.abs(p[0]) < mw + 0.008 && Math.abs(p[1] - mY) < 0.016) for (const o of [[0, 0.0025, 0], [0, -0.0025, 0], [0.0025, 0, 0], [-0.0025, 0, 0]] as V3[]) if (lipMask(add(p, o), hf) > 0.1) { nearLip = true; break; }
+    if (nearLip) continue;
+    // thinner toward the mask's edge (a soft hairline, not a cut-out), and a neckline under the jaw
+    if (r.next() > smooth(0.3, 0.75, mk.beard) * smooth(-0.127, -0.108, p[1])) continue;
+    hits.push({ p, f0, beard: mk.beard });
+  }
+  // thin to the cap, evenly (a stable shuffle); then the skin's normal, only at the roots that stay
+  while (hits.length > cap) hits.splice(Math.floor(r.next() * hits.length), 1);
+  const roots = hits.map((h) => { const n = grad(h.p, h.f0); return { p: add(h.p, mul(n, 0.0006)), n, beard: h.beard }; });
+  const hU = (x: number) => 0.0072 * F.lipUpper * Math.pow(clamp(1 - (x / mw) ** 2), 0.55);
+  for (const rt of roots) {
+    const { p, n } = rt;
+    // the hair lies down along the skin (down the face, back along the underside of the jaw), lifting off it a little
+    let along = sub([0, -1, 0], mul(n, -n[1]));
+    if (Math.hypot(along[0], along[1], along[2]) < 0.35) along = add(along, sub([0, 0, -0.6], mul(n, -0.6 * n[2])));
+    const d = norm(add(add(mul(norm(along), 0.88), mul(n, 0.3)), [(r.next() - 0.5) * 0.35, (r.next() - 0.5) * 0.15, (r.next() - 0.5) * 0.35]));
+    let L = (full ? 0.006 + 0.003 * r.next() : 0.005 + 0.0012 * r.next()) * (0.7 + 0.3 * smooth(0.35, 0.8, rt.beard));
+    // a moustache's (and a beard's upper lip) tips stay above the vermilion
+    if (p[1] > mY && Math.abs(p[0]) < mw + 0.004 && d[1] < 0) {
+      const lim = mY + hU(p[0]) + 0.0006;
+      L = Math.min(L, (p[1] - lim) / -d[1]);
+      if (L < 0.002) continue;
+    }
+    const w = norm(cross(d, n));
+    const tipD = norm(add(d, mul(n, -0.3)));   // bending back toward the skin
+    const mid = add(p, mul(d, L * 0.5)), tip = add(mid, mul(tipD, L * 0.5));
+    const hw = W * (0.8 + 0.4 * r.next()) * 0.5;
+    const rows: V3[][] = [
+      [add(p, mul(w, -hw)), add(mid, mul(w, -hw * 1.05)), add(tip, mul(w, -hw * 0.8))],
+      [add(p, mul(w, hw)), add(mid, mul(w, hw * 1.05)), add(tip, mul(w, hw * 0.8))],
+    ];
+    // one of the atlas' beard tiles: u across the card (2 texels in from each side of the tile), v along it from the root
+    const u0 = Math.floor(r.next() * BEARD_TILES) / BEARD_TILES, du = 2 / 512, wu = 1 / BEARD_TILES - 2 * du;
+    const v0 = 1 - BEARD_Y0 / 128, v1 = 1 - BEARD_Y1 / 128;
+    const sg = stripGeometry(rows, (i, j) => [u0 + du + wu * j, v0 + (v1 - v0) * (i / 2)]);
+    const off = pos.length / 3;
+    pos.push(...sg.pos); uvs.push(...sg.uvs); idx.push(...sg.idx.map((v) => v + off));
+  }
+}
+
 // ------------------------------------------------------------------------------------------------ teeth and tongue
+// Neighbouring crowns are in different blend groups (each a rounded box with a convex labial bulge; the canines and
+// premolars cut to a cusp): they meet in a crisp crease instead of fusing into one bar (a 4 mm blend made the row a
+// corrugated band that read as chrome), and each crown blends into the gum with a small fillet. The crowns are laid
+// along the arch by arc length with their own widths, a smile line (the laterals shorter, the canines longest and
+// pointed) and a slight yaw each. The upper and lower rows are meshed apart, so no triangle can bridge them when the
+// jaw opens. Vertex colours: ivory enamel (no olive: the old depth term took the back of every crown to dark khaki),
+// darker in the clefts between crowns, toward the back of the arch, on the tongue side and toward the gum; the lower
+// row a shade darker; gums and tongue. Wet enamel: a tighter, stronger highlight.
+interface ToothSpec { w: number; h: number; t: number; r: number; dy: number; rise: number }
+// half width (along the arch), crown height, thickness, edge radius, incisal edge raised by, and for a cusped crown
+// how far its corners rise above the cusp tip (0: a flat incisal edge)
+const UPPER_TEETH: ToothSpec[] = [
+  { w: 0.0042, h: 0.0104, t: 0.0034, r: 0.0012, dy: 0, rise: 0 },               // central incisor
+  { w: 0.0032, h: 0.0094, t: 0.0031, r: 0.0013, dy: 0.0007, rise: 0 },          // lateral incisor: shorter, rounder
+  { w: 0.0037, h: 0.0108, t: 0.0042, r: 0.0013, dy: -0.0003, rise: 0.0017 },    // canine: the longest, pointed
+  { w: 0.0034, h: 0.0092, t: 0.005, r: 0.0015, dy: 0.0006, rise: 0.0011 },      // premolars: blunter buccal cusps
+  { w: 0.0032, h: 0.0086, t: 0.005, r: 0.0015, dy: 0.001, rise: 0.001 },
+];
+const LOWER_TEETH: ToothSpec[] = [
+  { w: 0.0026, h: 0.0092, t: 0.0029, r: 0.001, dy: 0, rise: 0 },
+  { w: 0.0029, h: 0.0094, t: 0.003, r: 0.0011, dy: 0.0002, rise: 0 },
+  { w: 0.0034, h: 0.0102, t: 0.004, r: 0.0013, dy: -0.0003, rise: 0.0015 },
+  { w: 0.0035, h: 0.0088, t: 0.0048, r: 0.0015, dy: 0.0007, rise: 0.001 },
+  { w: 0.0035, h: 0.0084, t: 0.0048, r: 0.0015, dy: 0.0011, rise: 0.0009 },
+];
+
+/** a point on the arch z = z0 - k x^2 (x >= 0) at arc length s from the midline: position, tangent, outward normal */
+function archAt(z0: number, k: number, s: number) {
+  const S = (x: number) => { const u = 2 * k * x; return (u * Math.sqrt(1 + u * u) + Math.asinh(u)) / (4 * k); };
+  let x = s;
+  for (let it = 0; it < 8; it++) x -= (S(x) - s) / Math.sqrt(1 + (2 * k * x) ** 2);
+  const t = norm([1, 0, -2 * k * x]);
+  return { x, z: z0 - k * x * x, t, n: [-t[2], 0, t[0]] as V3 };
+}
+
 export function buildTeeth(hf: HeadFrame, quality: Quality) {
-  const f = new Field();
-  const mY = hf.mouth.y;
-  const zF = 0.0168, s = 0.95;
-  // upper (group 0 bone 0) and lower (group 0, bone 1: follows the jaw)
-  const T = [[0.0043, 0.0098, 0.0034], [0.0034, 0.0088, 0.0031], [0.0039, 0.0098, 0.0039], [0.0036, 0.0082, 0.0042], [0.0034, 0.0076, 0.0043]];
-  const arch = (x: number) => zF - 27 * x * x;
+  const mY = hf.mouth.y, F = hf.face, high = quality === 'high';
+  const zL = 0.0161;                 // the upper central incisors' labial face (head-local)
+  const r = rng(Math.round(F.mouthW * 7919 + F.lipUpper * 3011 + F.jaw * 1009 + F.chin * 499 + F.noseLen * 211) + 77);
+  // fine enough to keep the crowns' flat edges and the clefts between them. The boxes end just behind the last crowns;
+  // the tongue is cut off behind what an open mouth shows (on phone, nearer still)
+  const h = high ? 0.0008 : 0.0015;
+  const parts: { pos: Float32Array; nrm: Float32Array; idx: Uint32Array; col: Float32Array; lower: boolean }[] = [];
   for (const lower of [false, true]) {
-    let x = 0;
+    const f = new Field(), bone = lower ? 1 : 0;
+    const specs = lower ? LOWER_TEETH : UPPER_TEETH;
+    const sg = lower ? -1 : 1;                       // +1: the crown grows up from its incisal edge (upper row)
+    const z0 = lower ? zL - 0.0039 : zL, k = lower ? 30 : 27;   // overjet: the lower labial faces behind the upper lingual ones
+    // the upper edges 2 mm below the lips' contact line: parted lips show the upper incisors first (the lower lip covers
+    // their edges when closed); overbite: the lower edges sit 1.4 mm up behind them
+    const yEdge = lower ? mY - 0.0007 : mY - 0.0021;
+    const crowns: { prims: number[]; i: number; n: V3; jit: number }[] = [], gums: number[] = [];
+    // two sibling groups, alternating along the arch: neighbours are always in different groups (a hard min, so a crisp
+    // crease between them) and crowns that share a group are a whole tooth apart (they never blend); each group blends
+    // into the gum with a small fillet. (One group per crown did the same at three times the cost per evaluation)
+    const grp = [f.addGroup(0, 0.0013), f.addGroup(0, 0.0013)];
     for (const side of [1, -1]) {
-      x = 0;
-      T.forEach(([hw, hh, ht], i) => {
-        const w = (lower ? [0.0028, 0.0031, 0.0034, 0.0035, 0.0035][i] : hw) * s;
-        const cx = x + w;
-        x = cx + w * 0.85;
-        const zc = arch(cx) - (lower ? 0.0036 : 0) - ht;   // overjet: the lower row sits behind the upper
-        const yEdge = lower ? mY - 0.0011 : mY - 0.0007;   // overbite: the lower lip covers the lower edges
-        const cy = lower ? yEdge - hh * 0.5 : yEdge + hh * 0.5;
-        const dx = 27 * 2 * cx;
-        const ax = norm([1, 0, -dx]);
-        // rounded boxes: flat incisal edges and a continuous row with shallow grooves between the crowns
-        f.box([side * cx, cy, zc], [side * ax[0], 0, ax[2]], [0, 1, 0], w * 0.99, hh * 0.5 * s, ht * s * 0.8, 0.0006, 0, 0.0042, lower ? 1 : 0);
+      let s = 0;
+      specs.forEach((T, i) => {
+        const sc = s + (i === 0 ? 0.00012 : 0.00018) + T.w;   // a hair's gap: the crowns meet in a crease, never fuse
+        s = sc + T.w;
+        const a = archAt(z0, k, sc);
+        // a slight yaw per crown (2-4 degrees): each catches the light a little differently
+        const yaw = (0.035 + 0.035 * r.next()) * (r.next() < 0.5 ? -1 : 1), cy = Math.cos(yaw), sy = Math.sin(yaw);
+        const tng: V3 = norm([side * (a.t[0] * cy - a.t[2] * sy), 0, a.t[2] * cy + a.t[0] * sy]);
+        const out: V3 = norm([side * (a.n[0] * cy - a.n[2] * sy), 0, a.n[2] * cy + a.n[0] * sy]);
+        const edge = yEdge + sg * (T.dy + (r.next() - 0.5) * 0.00025);
+        const cx = side * a.x - out[0] * T.t * 0.5, cz = a.z - out[2] * T.t * 0.5;
+        const g = grp[(side > 0 ? i : i + 1) % 2];
+        const prim = f.box([cx, edge + sg * T.h * 0.5, cz], tng, [0, 1, 0], T.w, T.h * 0.5, T.t * 0.5, T.r, g, 0.0006, bone);
+        // the labial face bulges (convex across and down): each crown shades as its own rounded form, its highlight a
+        // soft band, instead of a flat tile. It ends just short of the incisal edge, so the edge stays crisp
+        const bulge = f.ell([cx, edge + sg * T.h * 0.55, cz], tng, [0, 1, 0], T.w * 0.9, T.h * 0.5, T.t * 0.5 + 0.0004, g, 0.0006, bone);
+        if (T.rise > 0) {
+          // the cusp: the incisal corners cut away along two slopes from the tip. Each cut is a box under its slope that
+          // stops short of the corner, so it can never reach the neighbouring crown
+          const th = Math.atan2(T.rise, T.w), L = Math.hypot(T.w, T.rise) - 0.00035, hy = 0.001;
+          for (const m of [1, -1]) {
+            const dir: V3 = [tng[0] * m * Math.cos(th), sg * Math.sin(th), tng[2] * m * Math.cos(th)];
+            const below: V3 = [tng[0] * m * Math.sin(th), -sg * Math.cos(th), tng[2] * m * Math.sin(th)];
+            f.box([cx + dir[0] * L * 0.5 + below[0] * hy, edge + dir[1] * L * 0.5 + below[1] * hy, cz + dir[2] * L * 0.5 + below[2] * hy], dir, below, L * 0.5, hy, T.t, 0, 0, 0.0004, bone, 1);
+          }
+        }
+        crowns.push({ prims: [prim, bulge], i, n: out, jit: 0.96 + 0.06 * r.next() });
       });
     }
-    // the gum line
+    // the gum: a rope along the arch above (below) the crowns, clear of their visible part
+    const yG = yEdge + sg * 0.0098;
     for (const side of [1, -1]) {
-      const yG = lower ? mY - 0.0085 : mY + 0.0085;
-      f.cone([0, yG, arch(0) - 0.0028], [side * 0.019, yG, arch(0.019) - 0.0035], 0.003, 0.003, [0, 1, 0], 1, 1, 0, 0.002, lower ? 1 : 0);
+      let prev: V3 | null = null;
+      for (const s of [0, 0.011, 0.022, 0.034]) {
+        const a = archAt(z0, k, s), p: V3 = [side * (a.x - a.n[0] * 0.0026), yG, a.z - a.n[2] * 0.0026];
+        if (prev) gums.push(f.cone(prev, p, 0.003, 0.003, [0, 1, 0], 1, 1, 0, 0.002, bone));
+        prev = p;
+      }
     }
+    const tongue = lower ? f.ea([0, mY - 0.0088, zL - 0.0205], 0.0155, 0.0048, 0.017, 0, 0.003, 1) : -1;
+    f.finalize();
+    const y0 = lower ? mY - 0.0185 : mY - 0.006, y1 = lower ? mY + 0.003 : mY + 0.012, zBack = !lower ? 0.03 : high ? 0.04 : 0.026;
+    const box = { o: [-0.034, y0, zL - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.068 / h), ny: Math.ceil((y1 - y0) / h), nz: Math.ceil((zBack + 0.0045) / h) };
+    const mesh = meshField(f, box, h);
+    const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3);
+    for (let v = 0; v < nv; v++) {
+      const x = mesh.pos[v * 3], y = mesh.pos[v * 3 + 1], z = mesh.pos[v * 3 + 2];
+      let d1 = 1e9, d2 = 1e9, best = crowns[0];
+      for (const cr of crowns) {
+        const d = Math.min(f.prim(cr.prims[0], x, y, z), f.prim(cr.prims[1], x, y, z));
+        if (d < d1) { d2 = d1; d1 = d; best = cr; } else if (d < d2) d2 = d;
+      }
+      let dGum = 1e9;
+      for (const i of gums) dGum = Math.min(dGum, f.prim(i, x, y, z));
+      const dTongue = tongue >= 0 ? f.prim(tongue, x, y, z) : 1e9;
+      // enamel: ivory (the canines a touch yellower; with age yellower and darker, the dentin showing through), darker
+      // in the clefts between crowns (what separates them at 1-3 px/mm), toward the back of the arch, toward the gum
+      // (thinner enamel, and the lip's shade) and on the tongue side; the lower row a shade darker
+      const i = best.i;
+      let c: V3 = i === 2 ? [0.78, 0.71, 0.56] : [0.8, 0.75, 0.62];
+      c = [lerp(c[0], 0.7, 0.55 * hf.old), lerp(c[1], 0.61, 0.55 * hf.old), lerp(c[2], 0.44, 0.55 * hf.old)];
+      const cleft = lerp(high ? 0.5 : 0.7, 1, smooth(0.00005, 0.0008, d2 - Math.max(d1, 0)));
+      const arch = [1, 0.97, 0.9, 0.8, 0.72][i];
+      const cerv = lerp(1, 0.86, smooth(0.0015, 0.0065, sg * (y - yEdge)));
+      const ling = smooth(0.25, -0.35, mesh.nrm[v * 3] * best.n[0] + mesh.nrm[v * 3 + 2] * best.n[2]);
+      const sh = best.jit * cleft * arch * cerv * (1 - 0.3 * ling) * (lower ? 0.85 : 1);
+      c = [c[0] * sh, c[1] * sh, c[2] * sh];
+      // gums (over a fillet's width) and the tongue
+      const gum = smooth(0.0006, -0.0006, dGum - d1), occ = arch * (lower ? 0.85 : 1);
+      c = [lerp(c[0], 0.5 * occ, gum), lerp(c[1], 0.17 * occ, gum), lerp(c[2], 0.18 * occ, gum)];
+      if (dTongue < Math.min(d1, dGum) + 0.0002) c = [0.5, 0.22, 0.22];
+      col[v * 3] = c[0]; col[v * 3 + 1] = c[1]; col[v * 3 + 2] = c[2];
+    }
+    parts.push({ pos: mesh.pos, nrm: mesh.nrm, idx: mesh.idx, col, lower });
   }
-  // tongue
-  f.ea([0, mY - 0.0078, zF - 0.02], 0.0155, 0.0048, 0.017, 0, 0.003, 1);
-  f.finalize();
-  // mesh in head-local, then place
-  // fine enough to keep the crowns' flat edges and the grooves between them (a coarse grid made them into pegs)
-  const h = quality === 'high' ? 0.0008 : 0.0015;
-  // phone: only the front of the mouth (what a talking mouth shows); the back of the tongue and the molars are cut off
-  const zBack = quality === 'high' ? 0.048 : 0.026;
-  const box = { o: [-0.03, mY - 0.02, zF - zBack] as V3, ax: [1, 0, 0] as V3, ay: [0, 1, 0] as V3, az: [0, 0, 1] as V3, nx: Math.ceil(0.06 / h), ny: Math.ceil(0.04 / h), nz: Math.ceil((zBack + 0.008) / h) };
-  const mesh = meshField(f, box, h);
-  const nv = mesh.pos.length / 3, col = new Float32Array(nv * 3), lowerW = new Float32Array(nv);
-  const bd = new Float64Array(2);
-  for (let v = 0; v < nv; v++) {
-    const x = mesh.pos[v * 3], y = mesh.pos[v * 3 + 1], z = mesh.pos[v * 3 + 2];
-    // which jaw: nearest bone
-    let du = 1e9, dl = 1e9;
-    for (let i = 0; i < f.n; i++) { const d = f.prim(i, x, y, z); if (f.bone[i] === 1) dl = Math.min(dl, d); else du = Math.min(du, d); }
-    void bd;
-    lowerW[v] = dl < du ? 1 : 0;
-    const gum = lowerW[v] ? clamp((mY - 0.0063 - y) / 0.0016) : clamp((y - mY - 0.0063) / 0.0016);
-    const tongue = Math.abs(z - (zF - 0.022)) < 0.024 && y < mY - 0.002 && z < zF - 0.004 && x * x / 0.019 ** 2 + ((y - mY + 0.0075) / 0.0062) ** 2 + ((z - zF + 0.022) / 0.022) ** 2 < 1.25 ? 1 : 0;
-    const depth = smooth(zF - 0.03, zF - 0.002, z);
-    let c: V3 = [0.86, 0.77, 0.6];   // teeth are ivory, never paper white
-    c = [lerp(c[0], 0.72, gum), lerp(c[1], 0.36, gum), lerp(c[2], 0.38, gum)];
-    if (tongue) c = [0.62, 0.3, 0.3];
-    const sh = (0.3 + 0.72 * depth) * (lowerW[v] ? 0.7 : 1);   // the lower row sits in the lip's shadow
-    col[v * 3] = c[0] * sh; col[v * 3 + 1] = c[1] * sh; col[v * 3 + 2] = c[2] * sh;
-  }
-  // body frame
-  const P = new Float32Array(nv * 3), N = new Float32Array(nv * 3);
-  for (let v = 0; v < nv; v++) {
-    const b = hf.toBody([mesh.pos[v * 3], mesh.pos[v * 3 + 1], mesh.pos[v * 3 + 2]]);
-    P[v * 3] = b[0]; P[v * 3 + 1] = b[1]; P[v * 3 + 2] = b[2];
-    const n = norm([mesh.nrm[v * 3] / hf.sx, mesh.nrm[v * 3 + 1] / hf.sy, mesh.nrm[v * 3 + 2] / hf.sz]);
-    N[v * 3] = n[0]; N[v * 3 + 1] = n[1]; N[v * 3 + 2] = n[2];
+  // one buffer, body frame
+  let nvT = 0, niT = 0;
+  for (const p of parts) { nvT += p.pos.length / 3; niT += p.idx.length; }
+  const P = new Float32Array(nvT * 3), N = new Float32Array(nvT * 3), col = new Float32Array(nvT * 3), lowerW = new Float32Array(nvT), idx = new Uint32Array(niT);
+  let ov = 0, oi = 0;
+  for (const p of parts) {
+    const nv = p.pos.length / 3;
+    for (let v = 0; v < nv; v++) {
+      P.set(hf.toBody([p.pos[v * 3], p.pos[v * 3 + 1], p.pos[v * 3 + 2]]), (ov + v) * 3);
+      N.set(norm([p.nrm[v * 3] / hf.sx, p.nrm[v * 3 + 1] / hf.sy, p.nrm[v * 3 + 2] / hf.sz]), (ov + v) * 3);
+      lowerW[ov + v] = p.lower ? 1 : 0;
+    }
+    col.set(p.col, ov * 3);
+    for (let i = 0; i < p.idx.length; i++) idx[oi + i] = p.idx[i] + ov;
+    ov += nv; oi += p.idx.length;
   }
   const deltas = morphDeltas(P, hf, { jawW: (v) => lowerW[v], only: [MI.jawOpen] });
-  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.55, specularIntensity: 0.4, envMapIntensity: 0.1 });   // no grey-metal band
-  return { pos: P, nrm: N, idx: mesh.idx, col, deltas, mat };
+  const mat = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.32, specularIntensity: 0.7, envMapIntensity: 0.25 });   // wet enamel
+  return { pos: P, nrm: N, idx, col, deltas, mat };
 }
 
 // ------------------------------------------------------------------------------------------------ eyeballs
@@ -378,7 +696,9 @@ function eyeGeometry() {
   const r = 0.012, lim = 31 * Math.PI / 180, pts: THREE.Vector2[] = [];
   // the profile from the pupil out over the iris, then the sclera to the back (lathe axis = y, turned to +z below)
   const zi = r * Math.cos(lim) - 0.0006;
-  for (let i = 0; i <= 8; i++) { const t = i / 8; pts.push(new THREE.Vector2(Math.max(1e-5, t * r * Math.sin(lim)), zi + 0.0002 * (1 - t) - 0.0001 * t * t)); }
+  // the iris a shallow bowl, 0.7 mm deeper at the pupil than at its rim: the scene's lights shade it across (brighter on
+  // the side away from the light, as the cornea's focusing makes it), and seen at an angle its rim hides a sliver of it
+  for (let i = 0; i <= 8; i++) { const t = i / 8; pts.push(new THREE.Vector2(Math.max(1e-5, t * r * Math.sin(lim)), zi - 0.0008 * Math.pow(1 - t, 1.5) - 0.0001 * t * t)); }
   for (let i = 1; i <= 16; i++) { const a = lim + (Math.PI - lim) * (i / 16); pts.push(new THREE.Vector2(Math.max(1e-5, r * Math.sin(a)), r * Math.cos(a))); }
   const ball = new THREE.LatheGeometry(pts.reverse(), 30);   // bottom to top, so the faces point out
   ball.rotateX(Math.PI / 2);
@@ -388,22 +708,42 @@ function eyeGeometry() {
   return eyeGeoCache;
 }
 
-export function eyeMaterial(iris: number, quality: Quality) {
-  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.35, clearcoat: 0, envMapIntensity: 0.5 });
-  const u = { uIris: { value: new THREE.Color(iris) }, uPupil: { value: 2.1 } };
-  m.customProgramCacheKey = () => 'eye-' + quality;
+export interface EyeMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: { uGaze: { value: THREE.Vector2 } } }
+
+/** one eye's material: `side` +1 the person's left eye, -1 the right; `tilt` (mm) and `hooded` shape its lid margins */
+export function eyeMaterial(iris: number, quality: Quality, o: { side?: number; tilt?: number; hooded?: number } = {}) {
+  const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.22, clearcoat: 0, envMapIntensity: 0.5 }) as EyeMaterial;
+  const u = {
+    uIris: { value: new THREE.Color(iris) }, uPupil: { value: 2.3 },   // a 4.6 mm pupil: an evening patio, not daylight
+    uGaze: { value: new THREE.Vector2() }, uSide: { value: o.side ?? 1 }, uLid: { value: new THREE.Vector2(o.tilt ?? 0, o.hooded ?? 0) },
+  };
+  m.uniformsRef = u;
+  m.customProgramCacheKey = () => 'eye2-' + quality;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vObj;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', `#include <common>\nvarying vec3 vObj; uniform vec3 uIris; uniform float uPupil;\n${NOISE}`)
+      .replace('#include <common>', `#include <common>
+varying vec3 vObj; uniform vec3 uIris; uniform float uPupil; uniform vec2 uGaze; uniform float uSide; uniform vec2 uLid;
+${NOISE}
+float lidBump(float u, float peak, float pw) {   // face.ts bump(): the lid margins' arch
+  float w = u < peak ? 0.5 * u / peak : 0.5 + 0.5 * (u - peak) / (1.0 - peak);
+  return pow(max(1e-5, sin(3.14159265 * clamp(w, 0.0, 1.0))), pw);
+}`)
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
 vec3 o = vObj * 1000.0;           // mm, +z out of the pupil
 float rho = length(o.xy), ang = atan(o.y, o.x);
 float irisR = 5.9;
 vec3 c;
-float rough = 0.3;
-if (o.z > 9.3 && rho < irisR + 0.25) {
+float rough = 0.22, specK = 1.0;
+// the point in the socket's frame: the lids stay put while the ball turns (pitch about x, then yaw about y: Euler YXZ)
+float gcp = cos(uGaze.x), gsp = sin(uGaze.x), gcy = cos(uGaze.y), gsy = sin(uGaze.y);
+vec3 s1 = vec3(o.x, gcp * o.y - gsp * o.z, gsp * o.y + gcp * o.z);
+vec3 sk = vec3(gcy * s1.x + gsy * s1.z, s1.y, -gsy * s1.x + gcy * s1.z);
+// the lid margins at this point across the fissure (face.ts margins(), mm): - toward the nose, + toward the temple
+float xm = sk.x * uSide, lu = clamp((xm + 15.2) / 28.7, 0.0, 1.0), yc = mix(-0.9, 0.4 + uLid.x, lu);
+float yU = yc + (5.0 - 0.8 * uLid.y) * lidBump(lu, 0.47, 0.75), yL = yc - 4.3 * lidBump(lu, 0.6, 0.85);
+if (o.z > 8.6 && rho < irisR + 0.25) {
   // iris: radial fibres, a collarette, crypts, a dark limbal ring, the pupil
   float fib = vnoise(vec3(ang * 38.0, rho * 1.3, 1.0)) * 0.6 + vnoise(vec3(ang * 90.0, rho * 3.0, 5.0)) * 0.4;
   vec3 base = pow(uIris, vec3(1.05));
@@ -417,27 +757,48 @@ if (o.z > 9.3 && rho < irisR + 0.25) {
   c *= mix(1.0, 0.25, smoothstep(irisR - 0.9, irisR, rho));
   c = mix(c, vec3(0.012), smoothstep(uPupil + 0.12, uPupil - 0.08, rho));
   rough = 0.5;
+  specK = 0.12;   // the cornea carries the eye's reflections: the iris under it is matte (its bowl otherwise caught a milky sheen)
 } else {
-  // sclera: off-white, warmer and veined toward the corners, shaded where the lids hang over it
+  // sclera: a wet off-white, warmer and veined toward the corners, a little blue-grey at the limbus (thinner there)
   float side = smoothstep(4.0, 11.0, abs(o.x));
-  c = vec3(0.6, 0.575, 0.555) * (0.94 + 0.06 * vnoise(o * 0.8));
+  c = vec3(0.65, 0.625, 0.6) * (0.94 + 0.06 * vnoise(o * 0.8));
   float vein = smoothstep(0.92, 1.0, 1.0 - abs(vnoise(o * vec3(0.6, 1.4, 0.6)) - 0.5) * 2.0) * side;
   c = mix(c, vec3(0.75, 0.32, 0.3), vein * 0.5 + side * 0.12);
+  c *= mix(vec3(1.0), vec3(0.88, 0.92, 1.0), 0.6 * smoothstep(8.8, 6.6, rho) * smoothstep(6.0, 8.5, o.z));
   c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));
-  c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, o.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, o.y));
+  c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, sk.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, sk.y));
+  // the caruncle and the fold beside it: pink and wet in the inner corner
+  // (the ball's own silhouette ends about 11 mm out: beyond it the fissure shows the socket, where skin.ts paints the
+  // caruncle itself; on the ball the pink fold beside it, the plica, on the last few mm of white)
+  float car = smoothstep(7.5, 10.5, -xm);
+  c = mix(c, vec3(0.55, 0.3, 0.28), car * 0.65);
+  rough = mix(rough, 0.15, car);
 }
-// the upper lid and lashes shade the top of the eye (iris too), so the eye sits in the head instead of on it
-c *= mix(1.0, 0.42, smoothstep(0.0, 5.5, o.y)) * mix(1.0, 0.85, smoothstep(-2.5, -5.5, o.y));
+// the lids, where they are (not where the ball has turned to): the upper lid and its lashes shade the eye (iris too)
+// below their arch, so the eye sits in the head instead of on it; the lower lid a little
+// (strongest along the margin, fading out over about 3 mm; the lid's rest margin, so a raised lid widens the dark band
+// and a lowered one hides its darkest part: never a lit strip under the lid. Its reflections are shaded too)
+float shU = smoothstep(yU - 3.5, yU + 0.5, sk.y);
+// (and the whole eye a little: it sits in a hollow the sky and the room light reach only partly, like the skin round it)
+c *= 0.9 * (1.0 - 0.72 * shU * sqrt(shU)) * mix(1.0, 0.82, smoothstep(yL + 1.4, yL - 0.6, sk.y));
+specK *= 1.0 - 0.75 * shU;
+// the tear meniscus: a thin wet line along the lower lid's margin, a glint more than a colour
+float wet = exp(-pow((sk.y - yL - 0.35) / 0.28, 2.0)) * smoothstep(13.5, 9.0, abs(xm + 0.8));
+c *= 1.0 + 0.06 * wet;
+rough = mix(rough, 0.06, wet);
 diffuseColor.rgb = c;
 `)
-      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = rough;');
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = rough;')
+      // (the chunk is spliced in here: a replace on its text before three resolves the #include would find nothing)
+      .replace('#include <lights_physical_fragment>', THREE.ShaderChunk.lights_physical_fragment.replace('float specularIntensityFactor = specularIntensity;', 'float specularIntensityFactor = specularIntensity * specK;'));
   };
   return m;
 }
 
 export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint: V3): EyeParts {
   const g = eyeGeometry();
-  const mat = eyeMaterial(look.iris, quality);
+  // one material per eye (same program): each carries its own side and, set just before it draws, its ball's gaze
+  const mats: THREE.Material[] = [];
   const cornea = new THREE.MeshPhysicalMaterial({ color: 0x000000, roughness: 0.03, metalness: 0, specularIntensity: 0.9, ior: 1.376, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, envMapIntensity: 0.3 });
   const sockets: THREE.Object3D[] = [], balls: THREE.Object3D[] = [], meshes: THREE.Mesh[] = [];
   const es = hf.face.eyeSize;
@@ -448,12 +809,17 @@ export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint
     sock.scale.set(hf.sx * es, hf.sy * es, hf.sz * es);
     const ball = new THREE.Object3D();
     sock.add(ball);
+    const mat = eyeMaterial(look.iris, quality, { side, tilt: 1.2 * hf.face.eyeTilt, hooded: hf.face.hooded });
+    mats.push(mat);
     const m1 = new THREE.Mesh(g.ball, mat), m2 = new THREE.Mesh(g.cornea, cornea);
-    m2.renderOrder = 2;
+    m1.onBeforeRender = () => mat.uniformsRef.uGaze.value.set(ball.rotation.x, ball.rotation.y);
+    // the cornea's reflections go down first among the transparent parts: the lashes (soft alpha, no depth write) are
+    // then laid over its catchlights instead of the catchlights showing through them
+    m2.renderOrder = -1;
     ball.add(m1, m2);
     sockets.push(sock); balls.push(ball); meshes.push(m1, m2);
   }
-  return { sockets, balls, meshes, mats: [mat, cornea] };
+  return { sockets, balls, meshes, mats: [...mats, cornea] };
 }
 
 // ------------------------------------------------------------------------------------------------ the controller
