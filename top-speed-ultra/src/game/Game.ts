@@ -735,8 +735,9 @@ export class Game {
     this.hopLog.block = b ? { kind: b.kind, ds: +b.ds.toFixed(1), dd: +b.dd.toFixed(2), v: +b.v.toFixed(1), other: !!b.other } : null;
     if (plan.refuse) return no(plan.refuse);
     const track = p.vx * plan.T + 20;
-    if (p.s + track > this.path.len - 5 && !this.path.next) return no('No room to land');
-    if (p.s + track > this.path.len - 5) return no('Junction ahead: no hop');
+    // (to where the road is drawn: a road cut back off another's lanes ends short of its length, Network.trimEnds)
+    if (p.s + track > this.path.end - 5 && !this.path.next) return no('No room to land');
+    if (p.s + track > this.path.end - 5) return no('Junction ahead: no hop');
     const over = this.structureOver(this.path, p.s, p.d, track);
     if (over) return no(over === 'overpass' ? 'No hop: overpass ahead' : over === 'sign gantry' ? 'No hop: sign gantry ahead' : 'No hop: bridge overhead');
     if (!p.hop(plan.peak, plan.T)) return no('No hop');
@@ -755,10 +756,15 @@ export class Game {
   private hopProj = { s: 0, d: 0 };
   private hopAt = { x: 0, y: 0, z: 0, h: 0 };
   structureOver(path: Path, s0: number, d: number, len: number): string | null {
-    // the guide-sign gantries (where Roads.ts draws them: GANTRY_AHEAD before each exit), across the whole carriageway
+    // the guide-sign gantries (where Roads.ts draws them: GANTRY_AHEAD before each exit, moved by Roads.gantrySpot to
+    // where there's room, or left out), across the whole carriageway
     for (const g of this.net.signs) {
       if (g.path !== path) continue;
-      for (const ahead of GANTRY_AHEAD) { const gs = g.s - ahead; if (gs >= GANTRY_MIN_S && gs > s0 - 6 && gs < s0 + len + 6) return 'sign gantry'; }
+      for (let i = 0; i < GANTRY_AHEAD.length; i++) {
+        if (g.s - GANTRY_AHEAD[i] < GANTRY_MIN_S) continue;
+        const at = this.roads.gantryAt(g, i);
+        if (at && at.s > s0 - 6 && at.s < s0 + len + 6) return 'sign gantry';
+      }
     }
     const a0 = path.at(clamp(s0, 0, path.len), d), reach = len + 60;
     const near: Overpass[] = [];

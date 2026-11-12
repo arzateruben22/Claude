@@ -4,6 +4,32 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: Final live merge 4: fixes
+
+Went live: origin/claude/fix-road at a662f46 (the freeway debris fix), merged as f2e8e67 on top of v15 (5cf7212). For
+the owner: no scenery, ground, ramp decks or roadside hardware in the travel lanes of the 20 carriageways and the 28 Go
+To exit ramps; the I-5 North Disney Way / Katella spot is clear. Follow-up in this commit: the Thrust Hop's landing and
+junction checks measure to where the road is drawn, its sign-gantry refusal uses where the gantry is drawn
+(Roads.gantryAt), and the boot check reads the Go To ramps from both link files (Lot 57 and Stoppage Time). All 28
+ramps were already covered, so nothing was added; scripts/levels.mjs re-ran and oc-levels.json came out unchanged.
+Skipped: Stoppage Time S4 and the wheel centre (a later drop). Protected files and src/onfoot/embed.ts are unchanged.
+
+Frames: tests/out/final-live-3/i5n-disney-katella-{cockpit,hood,chase}-1350x750.png,
+tests/out/final-live-3/goto-stoppage-autodrive-start-1450x767.png, goto-stoppage-autodrive-exit-1450x767.png,
+goto-stoppage-arrived-1450x767.png.
+
+Suite: tsc (both configs) clean; build OK with one data-build="owner-test"; boot 15/15 (28 ramps, 315 chunks, nothing
+in their lanes; 20 carriageways clear; baked heights within 0.5 mm); venues 13/13; venues-trips 2/2; render 17/17 over
+two runs (the first hit the 20-minute cap during Founder Edition, re-run alone 2/2); phone 18/18; nav-hud 3/3; modes
+9/9 (only Free Drive and Speed Survival). Thrust Hop checks 5/9: the 4 failures call Traffic.addRacer, removed with
+Races on 2026-11-08, so they were already broken before this merge.
+
+Heap (before, then after trips 1/2/3): Lot 57 suite 89.5, 166/166.5/167 MB; Stoppage Time Go To 88.9,
+141.1/142.3/142.4 MB; Lot 57 Go To 89.0, 168.8/169.8/170.3 MB. No growth in geometries, textures or programs after
+trip 2, no venue objects left, 0 page errors.
+
+Passed 3 review lenses: ours, theirs, venues.
+
 ## 2026-11-11: Remove freeway debris at the source
 
 The owner asked to fix the debris showing up in parts of the freeway. Built: scenery, ground, overlapping ramp decks,
