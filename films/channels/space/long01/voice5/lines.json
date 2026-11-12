@@ -6,7 +6,7 @@
    "id": "L1",
    "text": "Tonight, the Moon starts coming closer. And it never stops.",
    "file": "voice5/wav/L1.wav",
-   "dur": 5.765,
+   "dur": 5.78,
    "sentences": [
     {
      "text": "Tonight, the Moon starts coming closer.",
@@ -78,7 +78,7 @@
    "id": "L2",
    "text": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year. Tonight, it reverses. A thought experiment, built from real physics.",
    "file": "voice5/wav/L2.wav",
-   "dur": 13.7,
+   "dur": 13.44,
    "sentences": [
     {
      "text": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year.",
@@ -246,7 +246,7 @@
    "id": "L3",
    "text": "Watch the number. It only goes down.",
    "file": "voice5/wav/L3.wav",
-   "dur": 6.035,
+   "dur": 3.52,
    "sentences": [
     {
      "text": "Watch the number.",
@@ -303,7 +303,7 @@
    "id": "L4",
    "text": "Two hundred eighty-eight thousand. A third wider. And the sea already feels it: more than twice the tidal pull.",
    "file": "voice5/wav/L4.wav",
-   "dur": 7.88,
+   "dur": 8.22,
    "sentences": [
     {
      "text": "Two hundred eighty-eight thousand.",
@@ -426,7 +426,7 @@
    "id": "L5",
    "text": "Halve the distance, and the water starts to climb.",
    "file": "voice5/wav/L5.wav",
-   "dur": 4.84,
+   "dur": 4.86,
    "sentences": [
     {
      "text": "Halve the distance, and the water starts to climb.",
@@ -487,7 +487,7 @@
    "id": "L6",
    "text": "Half the distance. Twice as wide. Eight times the tidal pull.",
    "file": "voice5/wav/L6.wav",
-   "dur": 5.515,
+   "dur": 5.87,
    "sentences": [
     {
      "text": "Half the distance.",
@@ -570,7 +570,7 @@
    "id": "L7",
    "text": "Not a measured height. Just the idea: the whole ocean, lifted from above.",
    "file": "voice5/wav/L7.wav",
-   "dur": 7.13,
+   "dur": 6.88,
    "sentences": [
     {
      "text": "Not a measured height.",
@@ -657,7 +657,7 @@
    "id": "L8",
    "text": "And the night is about to change.",
    "file": "voice5/wav/L8.wav",
-   "dur": 3.31,
+   "dur": 3.33,
    "sentences": [
     {
      "text": "And the night is about to change.",
@@ -708,7 +708,7 @@
    "id": "L9",
    "text": "One hundred fifty thousand. Six and a half times the moonlight. Your shadow is sharp on the sand.",
    "file": "voice5/wav/L9.wav",
-   "dur": 9.45,
+   "dur": 8.24,
    "sentences": [
     {
      "text": "One hundred fifty thousand.",
@@ -826,7 +826,7 @@
    "id": "L10",
    "text": "And it's faster. One lap takes about seven days, not twenty-seven.",
    "file": "voice5/wav/L10.wav",
-   "dur": 5.905,
+   "dur": 5.92,
    "sentences": [
     {
      "text": "And it's faster.",
@@ -903,7 +903,7 @@
    "id": "L11",
    "text": "It's bigger than the Sun now. So what happens when they line up?",
    "file": "voice5/wav/L11.wav",
-   "dur": 5.09,
+   "dur": 4.8,
    "sentences": [
     {
      "text": "It's bigger than the Sun now.",
@@ -990,7 +990,7 @@
    "id": "L12",
    "text": "One hundred thousand. Nearly four times wider. Its shadow on Earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted. But often.",
    "file": "voice5/wav/L12.wav",
-   "dur": 12.865,
+   "dur": 12.89,
    "sentences": [
     {
      "text": "One hundred thousand.",
@@ -1175,7 +1175,7 @@
    "id": "L13",
    "text": "Closer. Faster. And the ground feels it too.",
    "file": "voice5/wav/L13.wav",
-   "dur": 5.325,
+   "dur": 5.425,
    "sentences": [
     {
      "text": "Closer.",
@@ -1243,7 +1243,7 @@
    "id": "L14",
    "text": "Seventy thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.",
    "file": "voice5/wav/L14.wav",
-   "dur": 12.675,
+   "dur": 12.67,
    "sentences": [
     {
      "text": "Seventy thousand.",
@@ -1422,7 +1422,7 @@
    "id": "L15",
    "text": "Soon, the Moon rises on the wrong side of the sky.",
    "file": "voice5/wav/L15.wav",
-   "dur": 5.29,
+   "dur": 4.865,
    "sentences": [
     {
      "text": "Soon, the Moon rises on the wrong side of the sky.",
@@ -1493,7 +1493,7 @@
    "id": "L16",
    "text": "Fifty thousand. Nearly eight times wider. One lap takes about a day and a quarter, close to how fast the Earth turns.",
    "file": "voice5/wav/L16.wav",
-   "dur": 8.67,
+   "dur": 8.69,
    "sentences": [
     {
      "text": "Fifty thousand.",
@@ -1631,7 +1631,7 @@
    "id": "L17",
    "text": "Forty-two thousand. It hangs still.",
    "file": "voice5/wav/L17.wav",
-   "dur": 4.01,
+   "dur": 3.76,
    "sentences": [
     {
      "text": "Forty-two thousand.",
@@ -1678,7 +1678,7 @@
    "id": "L18",
    "text": "Then it slides the wrong way. It rises in the west.",
    "file": "voice5/wav/L18.wav",
-   "dur": 4.25,
+   "dur": 4.27,
    "sentences": [
     {
      "text": "Then it slides the wrong way.",
@@ -1755,7 +1755,7 @@
    "id": "L19",
    "text": "Thirty thousand. Twenty-five. Twenty.",
    "file": "voice5/wav/L19.wav",
-   "dur": 7.415,
+   "dur": 7.42,
    "sentences": [
     {
      "text": "Thirty thousand.",
@@ -1803,7 +1803,7 @@
    "id": "L20",
    "text": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together. That's if the Moon acts like a fluid. A perfectly rigid Moon could come to about nine and a half thousand.",
    "file": "voice5/wav/L20.wav",
-   "dur": 13.49,
+   "dur": 13.51,
    "sentences": [
     {
      "text": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together.",
@@ -2041,7 +2041,7 @@
    "id": "L21",
    "text": "At eighteen thousand, it's more than twenty times wider than tonight. A wall of grey, straining.",
    "file": "voice5/wav/L21.wav",
-   "dur": 7.063,
+   "dur": 6.458,
    "sentences": [
     {
      "text": "At eighteen thousand, it's more than twenty times wider than tonight.",
@@ -2204,7 +2204,7 @@
    "id": "L23",
    "text": "It comes apart. Not an explosion. A stretch.",
    "file": "voice5/wav/L23.wav",
-   "dur": 3.815,
+   "dur": 3.83,
    "sentences": [
     {
      "text": "It comes apart.",
@@ -2368,7 +2368,7 @@
    "id": "L25",
    "text": "No Moon. Just a bright band, horizon to horizon.",
    "file": "voice5/wav/L25.wav",
-   "dur": 4.875,
+   "dur": 4.88,
    "sentences": [
     {
      "text": "No Moon.",
@@ -2435,7 +2435,7 @@
    "id": "L26",
    "text": "The real Moon is still drifting away, three point eight centimeters a year. Tonight's Moon is fine.",
    "file": "voice5/wav/L26.wav",
-   "dur": 6.905,
+   "dur": 6.64,
    "sentences": [
     {
      "text": "The real Moon is still drifting away, three point eight centimeters a year.",
@@ -2923,7 +2923,7 @@
    "id": "B8",
    "text": "There's a distance no moon survives.",
    "file": "voice5/wav/B8.wav",
-   "dur": 3.1,
+   "dur": 3.12,
    "sentences": [
     {
      "text": "There's a distance no moon survives.",
@@ -2969,7 +2969,7 @@
    "id": "D1",
    "text": "If that made the sky feel bigger, tap like and follow.",
    "file": "voice5/wav/D1.wav",
-   "dur": 2.945,
+   "dur": 2.97,
    "sentences": [
     {
      "text": "If that made the sky feel bigger, tap like and follow.",
@@ -3168,7 +3168,7 @@
    "id": "D4",
    "text": "Still looking up? Tap like and subscribe.",
    "file": "voice5/wav/D4.wav",
-   "dur": 3.55,
+   "dur": 3.57,
    "sentences": [
     {
      "text": "Still looking up?",
@@ -3225,7 +3225,7 @@
    "id": "C1",
    "text": "Part one of eight. Full video on YouTube.",
    "file": "voice5/wav/C1.wav",
-   "dur": 2.9,
+   "dur": 2.92,
    "sentences": [
     {
      "text": "Part one of eight.",
@@ -3287,7 +3287,7 @@
    "id": "C2",
    "text": "Part two of eight. Full video on YouTube.",
    "file": "voice5/wav/C2.wav",
-   "dur": 2.4,
+   "dur": 2.42,
    "sentences": [
     {
      "text": "Part two of eight.",

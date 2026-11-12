@@ -112,3 +112,16 @@ duration, aligned word times and its sentences (`t0`/`t1`, claim tags). Nothing 
 (3) re-run `build_timeline.py` and `assemble_s3.py`; the captions, the counter (it reaches each value when the voice has said it), the part lengths and the CTA position all re-time themselves.
 (4) Re-render only if a part's length or a beat's timing changed enough to matter; the paintings and plates are untouched. Check each part is still 61-75 s and the long film 8:30-9:30.
 Voice pace of the stand-in: Kokoro am_michael at 0.92 (calm).
+
+## Season 3 v4: the owner's notes of 12 Nov 2026 (Parts 1 and 2 rebuilt)
+
+- **No double subtitles.** A chip (the teal "2× wider" box) that repeats the caption under it is not used: `season3/build_v4.py` carries no chips, and a new
+  part adds one only if it shows something the voice does not say.
+- **Nothing sounds cut off.** A line is cut out of the owner's recording only where the voice has died away (`season3/voice_edges.py`: the level back
+  within 6 dB of the quiet that follows for 60 ms, never into the next speech), and a long silent tail is trimmed to 0.3 s after the last word.
+  `owner_voice_v4.py` uses it; `recut_v4.py` rebuilds `long01/voice5/wav` from `voice-owner-spoken/takes-used.json` without a recogniser (run it once
+  per fresh lines.json/takes-used.json). A picture-led beat opens only in real silence (between two clips, or the middle of the pause between two
+  sentences), never inside a word, and `build_v4.py` stops if a voice piece would be shorter than 0.4 s. Before: Part 1 "…twice the tidal pull" and
+  Part 2 "…8× the tidal pull" ended 0.34/0.36 s early (−15/−16 dB at the cut), and two 0.12–0.17 s scraps of the next line sat before a beat.
+- **A spoken like/follow ask only in odd parts** (1, 3, 5, 7). Even parts keep the silent thumbs-up + bell pop-up, at the pause before the cliffhanger
+  line (`cta_at` in the timeline).

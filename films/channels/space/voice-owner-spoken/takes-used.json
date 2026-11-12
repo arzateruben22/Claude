@@ -3,28 +3,33 @@
   "segments": [
    [
     1.5,
-    7.26
+    7.28
    ]
   ],
   "why": "two clean reads; the first is steadier (level spread 5.2 vs 6.2 dB)",
   "breaths_lowered": [
    [
     0.01,
-    0.31
+    0.3
    ],
    [
-    3.28,
+    3.27,
     3.38
    ]
   ],
   "heard": "Tonight, the moon starts coming closer and it never stops.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L2": {
   "segments": [
    [
     16.05,
-    29.75
+    29.49
    ]
   ],
   "why": "one read",
@@ -47,30 +52,35 @@
    "three",
    "point",
    "eight"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.26,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L3": {
   "segments": [
    [
     30.64,
-    36.68
+    34.16
    ]
   ],
   "why": "one read",
-  "breaths_lowered": [
-   [
-    5.78,
-    6.02
-   ]
-  ],
+  "breaths_lowered": [],
   "heard": "Watch the number. It only goes down.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -2.52,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L4": {
   "segments": [
    [
     36.68,
-    44.56
+    44.9
    ]
   ],
   "why": "one read",
@@ -83,32 +93,42 @@
    "thousand.",
    "feels",
    "pull."
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.34,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L5": {
   "segments": [
    [
     47.95,
-    52.79
+    52.81
    ]
   ],
   "why": "one read",
   "breaths_lowered": [
    [
     4.65,
-    4.83
+    4.85
    ]
   ],
   "heard": "Half the distance and the water starts to climb.",
   "not_heard": [
    "Halve"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L6": {
   "segments": [
    [
     53.75,
-    59.26
+    59.62
    ]
   ],
   "why": "one read",
@@ -121,13 +141,18 @@
   "heard": "Half the distance, twice as wide, eight times the tidal point.",
   "not_heard": [
    "pull."
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.36,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L7": {
   "segments": [
    [
     61.39,
-    68.52
+    68.27
    ]
   ],
   "why": "one read",
@@ -142,13 +167,18 @@
    ]
   ],
   "heard": "Not a measured height, just the idea. The whole ocean lifted from above.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.25,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L8": {
   "segments": [
    [
     68.52,
-    71.83
+    71.85
    ]
   ],
   "why": "one read",
@@ -159,13 +189,18 @@
    ]
   ],
   "heard": "And the night is about to change.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L9": {
   "segments": [
    [
     72.07,
-    81.52
+    80.31
    ]
   ],
   "why": "one read",
@@ -176,7 +211,7 @@
    ],
    [
     8.11,
-    8.85
+    8.23
    ]
   ],
   "heard": "150,6. Your shadow is sharp on the sand.",
@@ -192,25 +227,35 @@
    "times",
    "the",
    "moonlight."
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -1.21,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L10": {
   "segments": [
    [
     81.52,
-    87.42
+    87.44
    ]
   ],
   "why": "one read",
   "breaths_lowered": [],
   "heard": "and it's faster. One lap takes about seven days, not twenty-seven.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L11": {
   "segments": [
    [
     89.09,
-    94.18
+    93.89
    ]
   ],
   "why": "one read",
@@ -221,7 +266,12 @@
    ]
   ],
   "heard": "It's bigger than the sun now. So what happens when they line up?",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.29,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L12": {
   "segments": [
@@ -231,19 +281,24 @@
    ],
    [
     118.98,
-    123.57
+    123.59
    ]
   ],
   "why": "spliced at the phrase boundary 'often.' | 'Not every month': first half from the first read, tail from the later read",
   "breaths_lowered": [],
   "heard": "one hundred thousand, nearly four times wider. Its shadow on earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted, but often.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L13": {
   "segments": [
    [
     124.19,
-    129.52
+    129.615
    ]
   ],
   "why": "one read",
@@ -254,13 +309,18 @@
    ],
    [
     5.13,
-    5.32
+    5.42
    ]
   ],
   "heard": "Closer, faster, and the ground fills it too.",
   "not_heard": [
    "feels"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.095,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L14": {
   "segments": [
@@ -290,24 +350,29 @@
   "segments": [
    [
     142.48,
-    147.77
+    147.345
    ]
   ],
   "why": "one read",
   "breaths_lowered": [
    [
     4.49,
-    5.28
+    4.62
    ]
   ],
   "heard": "Soon, the moon rises on the wrong side of the sky.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.425,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L16": {
   "segments": [
    [
     147.77,
-    156.44
+    156.46
    ]
   ],
   "why": "two reads; the first matches every word (1.0 vs 0.95)",
@@ -325,33 +390,43 @@
   "not_heard": [
    "Fifty",
    "thousand."
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L17": {
   "segments": [
    [
     165.0,
-    169.01
+    168.76
    ]
   ],
   "why": "one read",
   "breaths_lowered": [
    [
     3.53,
-    4.0
+    3.68
    ]
   ],
   "heard": "42,000. It hangs still.",
   "not_heard": [
    "Forty-two",
    "thousand."
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.25,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L18": {
   "segments": [
    [
     169.49,
-    173.74
+    173.76
    ]
   ],
   "why": "one read",
@@ -362,7 +437,12 @@
    ]
   ],
   "heard": "Then it slides the wrong way. It rises in the west.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L19": {
   "segments": [
@@ -379,7 +459,7 @@
    ],
    [
     2.4,
-    7.4
+    7.41
    ]
   ],
   "heard": "Thirty thousand twenty five twenty",
@@ -391,7 +471,7 @@
   "segments": [
    [
     182.04,
-    195.53
+    195.55
    ]
   ],
   "why": "one read",
@@ -401,28 +481,33 @@
    "the",
    "if",
    "rigid"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L21": {
   "segments": [
    [
     196.0,
-    203.29
+    202.8
    ]
   ],
   "why": "one read; 'far' cut; cut 'far' (197.11-197.44 s) with a 12 ms crossfade",
-  "breaths_lowered": [
-   [
-    2.6,
-    2.72
-   ]
-  ],
+  "breaths_lowered": [],
   "heard": "At 18,000, it's more than 20 times wider than tonight. A wall of gray straining.",
   "not_heard": [
    "eighteen",
    "thousand,",
    "grey,"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.49,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L22": {
   "segments": [
@@ -445,18 +530,23 @@
   "segments": [
    [
     206.0,
-    209.81
+    209.83
    ]
   ],
   "why": "two reads; the first is steadier (6.1 vs 7.9 dB) and has no 'explosion, explosion' restart",
   "breaths_lowered": [
    [
     3.69,
-    3.8
+    3.82
    ]
   ],
   "heard": "It comes apart, not an explosion, a stretch.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "L24": {
   "segments": [
@@ -488,7 +578,7 @@
   "breaths_lowered": [
    [
     4.65,
-    4.86
+    4.87
    ]
   ],
   "heard": "No moon, just a bright band, horizon to horizon.",
@@ -498,15 +588,11 @@
   "segments": [
    [
     224.8,
-    231.7
+    231.44
    ]
   ],
   "why": "two reads; the first says 'the real Moon' as scripted and is steadier",
   "breaths_lowered": [
-   [
-    0.01,
-    0.09
-   ],
    [
     6.41,
     6.54
@@ -517,7 +603,12 @@
    "three",
    "point",
    "eight"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": -0.26,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "B1": {
   "segments": [
@@ -627,7 +718,7 @@
   "segments": [
    [
     259.72,
-    262.82
+    262.84
    ]
   ],
   "why": "two clean reads; the first is steadier (4.5 vs 6.2 dB)",
@@ -635,19 +726,29 @@
   "heard": "There's a distance. No one survives.",
   "not_heard": [
    "moon"
-  ]
+  ],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "D1": {
   "segments": [
    [
     268.14,
-    271.09
+    271.11
    ]
   ],
   "why": "one read",
   "breaths_lowered": [],
   "heard": "If that made the sky feel bigger, tap like and follow.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "D2": {
   "segments": [
@@ -682,7 +783,7 @@
   "segments": [
    [
     278.07,
-    281.62
+    281.64
    ]
   ],
   "why": "one read",
@@ -693,7 +794,12 @@
    ]
   ],
   "heard": "Still looking up? Tap like and subscribe.",
-  "not_heard": []
+  "not_heard": [],
+  "settled": {
+   "start_earlier_s": 0.0,
+   "end_later_s": 0.02,
+   "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
+  }
  },
  "C1": {
   "segments": [
@@ -709,10 +815,18 @@
   "breaths_lowered": [
    [
     0.01,
-    0.09
+    0.14
+   ],
+   [
+    2.73,
+    2.82
    ]
   ],
-  "level_gain_db": -2.86
+  "level_gain_db": -2.86,
+  "settled": {
+   "end_later_s": 0.02,
+   "why": "voice_edges.py (owner, 12 Nov 2026)"
+  }
  },
  "C2": {
   "segments": [
@@ -731,6 +845,10 @@
     0.09
    ]
   ],
-  "level_gain_db": -2.7
+  "level_gain_db": -2.7,
+  "settled": {
+   "end_later_s": 0.02,
+   "why": "voice_edges.py (owner, 12 Nov 2026)"
+  }
  }
 }

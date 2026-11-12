@@ -1,7 +1,7 @@
 {
  "name": "v4-part2-yt",
  "mode": "port",
- "dur": 55.945,
+ "dur": 52.24,
  "clips": [
   {
    "id": "B3",
@@ -14,49 +14,35 @@
    "id": "L6",
    "file": "voice5/wav/L6.wav",
    "t": 9.79,
-   "dur": 5.515,
+   "dur": 5.87,
    "from": 0.0
   },
   {
    "id": "L7",
    "file": "voice5/wav/L7.wav",
-   "t": 15.655,
-   "dur": 0.115,
+   "t": 27.01,
+   "dur": 1.39,
    "from": 0.0
   },
   {
    "id": "L7",
    "file": "voice5/wav/L7.wav",
-   "t": 26.77,
-   "dur": 1.31,
-   "from": 0.115
-  },
-  {
-   "id": "L7",
-   "file": "voice5/wav/L7.wav",
-   "t": 33.08,
-   "dur": 5.705,
-   "from": 1.425
-  },
-  {
-   "id": "D4",
-   "file": "voice5/wav/D4.wav",
-   "t": 45.135,
-   "dur": 3.55,
-   "from": 0.0
+   "t": 33.4,
+   "dur": 5.49,
+   "from": 1.39
   },
   {
    "id": "L8",
    "file": "voice5/wav/L8.wav",
-   "t": 48.985,
-   "dur": 3.31,
+   "t": 45.24,
+   "dur": 3.33,
    "from": 0.0
   },
   {
    "id": "C2",
    "file": "voice5/wav/C2.wav",
-   "t": 52.645,
-   "dur": 2.4,
+   "t": 48.92,
+   "dur": 2.42,
    "from": 0.0
   }
  ],
@@ -97,50 +83,36 @@
    "spoken": "Eight times the tidal pull."
   },
   {
-   "t0": 27.0,
-   "t1": 28.05,
+   "t0": 27.355,
+   "t1": 28.37,
    "text": "Not a measured height.",
    "line": "L7",
    "spoken": "Not a measured height."
   },
   {
-   "t0": 33.1,
-   "t1": 38.465,
+   "t0": 33.455,
+   "t1": 38.82,
    "text": "Just the idea: the whole ocean, lifted from above.",
    "line": "L7",
    "spoken": "Just the idea: the whole ocean, lifted from above."
   },
   {
-   "t0": 45.34,
-   "t1": 46.515,
-   "text": "Still looking up?",
-   "line": "D4",
-   "spoken": "Still looking up?"
-  },
-  {
-   "t0": 46.535,
-   "t1": 48.665,
-   "text": "Tap like and subscribe.",
-   "line": "D4",
-   "spoken": "Tap like and subscribe."
-  },
-  {
-   "t0": 49.075,
-   "t1": 52.275,
+   "t0": 45.33,
+   "t1": 48.53,
    "text": "And the night is about to change.",
    "line": "L8",
    "spoken": "And the night is about to change."
   },
   {
-   "t0": 52.845,
-   "t1": 53.785,
+   "t0": 49.12,
+   "t1": 50.06,
    "text": "Part 2 of 8.",
    "line": "C2",
    "spoken": "Part two of eight."
   },
   {
-   "t0": 53.805,
-   "t1": 55.215,
+   "t0": 50.08,
+   "t1": 51.49,
    "text": "Full video on YouTube.",
    "line": "C2",
    "spoken": "Full video on YouTube."
@@ -156,7 +128,7 @@
    288300
   ],
   [
-   9.675,
+   9.615,
    192200,
    6.0
   ]
@@ -195,43 +167,32 @@
  },
  "beats": [
   {
-   "t0": 3.675,
-   "t1": 9.675,
+   "t0": 3.615,
+   "t1": 9.615,
    "kind": "approach"
   },
   {
-   "t0": 15.77,
-   "t1": 26.77,
+   "t0": 15.835,
+   "t1": 26.835,
    "kind": "climb"
   },
   {
-   "t0": 28.08,
-   "t1": 33.08,
+   "t0": 28.4,
+   "t1": 33.4,
    "kind": "tide"
   },
   {
-   "t0": 38.902,
-   "t1": 44.902,
+   "t0": 39.065,
+   "t1": 45.065,
    "kind": "pull"
   }
  ],
- "chips": [
-  {
-   "t0": 11.8,
-   "t1": 13.7,
-   "text": "2× wider"
-  },
-  {
-   "t0": 13.83,
-   "t1": 19.83,
-   "text": "8× the pull"
-  }
- ],
+ "chips": [],
  "badge": {
   "t": 5.0,
   "fade": 0.3
  },
- "cta_at": 45.135,
- "cta_frac": 0.807,
+ "cta_at": 45.065,
+ "cta_frac": 0.863,
  "cliff": "L8"
 }

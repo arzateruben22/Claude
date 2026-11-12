@@ -20,7 +20,7 @@
    "seed": 102
   },
   {
-   "at": 3.17,
+   "at": 2.98,
    "kind": "whoosh",
    "dur": 3.0,
    "pan": [
@@ -31,7 +31,7 @@
    "seed": 103
   },
   {
-   "at": 3.37,
+   "at": 3.19,
    "kind": "mass",
    "dur": 3.8,
    "gain": -4,
@@ -39,7 +39,7 @@
    "seed": 104
   },
   {
-   "at": 31.09,
+   "at": 29.57,
    "kind": "mass",
    "dur": 7.8,
    "gain": -2,
@@ -47,7 +47,7 @@
    "seed": 105
   },
   {
-   "at": 31.29,
+   "at": 29.77,
    "kind": "whoosh",
    "dur": 6.0,
    "pan": [
@@ -58,20 +58,20 @@
    "seed": 106
   },
   {
-   "at": 37.29,
+   "at": 35.77,
    "kind": "boom",
    "dur": 2.5,
    "gain": -4,
    "seed": 107
   },
   {
-   "at": 37.29,
+   "at": 35.77,
    "kind": "tick",
    "gain": -2,
    "seed": 108
   },
   {
-   "at": 43.26,
+   "at": 40.62,
    "kind": "whoosh",
    "dur": 3.0,
    "pan": [
@@ -82,7 +82,7 @@
    "seed": 109
   },
   {
-   "at": 43.46,
+   "at": 40.82,
    "kind": "mass",
    "dur": 3.8,
    "gain": -4,
@@ -90,14 +90,14 @@
    "seed": 110
   },
   {
-   "at": "capend:L5-11.38",
+   "at": 47.34,
    "kind": "surge",
    "dur": 4.0,
    "gain": 1,
    "seed": 111
   },
   {
-   "at": "capend:L5-9.80",
+   "at": 48.92,
    "kind": "wave",
    "dur": 2.6,
    "gain": -1,
@@ -112,7 +112,7 @@
    "seed": 113
   },
   {
-   "at": 16.82,
+   "at": 16.83,
    "kind": "shooting_star",
    "dur": 1.2,
    "pan": [
@@ -123,14 +123,14 @@
    "seed": 114
   },
   {
-   "at": 19.64,
+   "at": 19.66,
    "kind": "riser",
    "dur": 0.9,
    "gain": 0,
    "seed": 115
   },
   {
-   "at": 20.54,
+   "at": 20.55,
    "kind": "whoosh",
    "dur": 1.4,
    "pan": [
@@ -141,20 +141,20 @@
    "seed": 116
   },
   {
-   "at": 20.59,
+   "at": 20.61,
    "kind": "boom",
    "dur": 2.5,
    "gain": -3,
    "seed": 117
   },
   {
-   "at": 20.59,
+   "at": 20.61,
    "kind": "tick",
    "gain": -1,
    "seed": 118
   },
   {
-   "at": 20.74,
+   "at": 20.75,
    "kind": "mass",
    "dur": 12.0,
    "gain": -4,
@@ -162,51 +162,12 @@
    "seed": 119
   },
   {
-   "at": 21.94,
+   "at": 21.95,
    "kind": "tick",
    "gain": -4,
    "repeat": 14,
    "every": 0.7,
    "seed": 120
-  },
-  {
-   "at": 18.79,
-   "kind": "tick",
-   "gain": -1,
-   "seed": 121
-  },
-  {
-   "at": 18.79,
-   "kind": "boom",
-   "dur": 1.8,
-   "gain": -7,
-   "seed": 122
-  },
-  {
-   "at": 41.7,
-   "kind": "tick",
-   "gain": -1,
-   "seed": 123
-  },
-  {
-   "at": 41.7,
-   "kind": "boom",
-   "dur": 1.8,
-   "gain": -7,
-   "seed": 124
-  },
-  {
-   "at": 48.3,
-   "kind": "tick",
-   "gain": -1,
-   "seed": 125
-  },
-  {
-   "at": 48.3,
-   "kind": "boom",
-   "dur": 1.8,
-   "gain": -7,
-   "seed": 126
   },
   {
    "at": "cap:L5-1.4",

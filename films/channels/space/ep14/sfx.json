@@ -9,7 +9,7 @@
    "seed": 201
   },
   {
-   "at": 3.47,
+   "at": 3.42,
    "kind": "mass",
    "dur": 7.8,
    "gain": -2,
@@ -17,7 +17,7 @@
    "seed": 202
   },
   {
-   "at": 3.67,
+   "at": 3.62,
    "kind": "whoosh",
    "dur": 6.0,
    "pan": [
@@ -28,48 +28,48 @@
    "seed": 203
   },
   {
-   "at": 9.68,
+   "at": 9.62,
    "kind": "boom",
    "dur": 2.5,
    "gain": -4,
    "seed": 204
   },
   {
-   "at": 9.68,
+   "at": 9.62,
    "kind": "tick",
    "gain": -2,
    "seed": 205
   },
   {
-   "at": 15.77,
+   "at": 15.84,
    "kind": "surge",
    "dur": 11.5,
    "gain": 1,
    "seed": 206
   },
   {
-   "at": 20.72,
+   "at": 20.79,
    "kind": "wave",
    "dur": 2.6,
    "gain": -1,
    "seed": 207
   },
   {
-   "at": 28.08,
+   "at": 28.4,
    "kind": "surge",
    "dur": 5.5,
    "gain": 1,
    "seed": 208
   },
   {
-   "at": 30.33,
+   "at": 30.65,
    "kind": "wave",
    "dur": 2.6,
    "gain": -1,
    "seed": 209
   },
   {
-   "at": 38.84,
+   "at": 39.06,
    "kind": "whoosh",
    "dur": 6.0,
    "pan": [
@@ -80,38 +80,12 @@
    "seed": 210
   },
   {
-   "at": 39.04,
+   "at": 39.27,
    "kind": "mass",
    "dur": 6.8,
    "gain": -4,
    "f0": 44,
    "seed": 211
-  },
-  {
-   "at": 11.8,
-   "kind": "tick",
-   "gain": -1,
-   "seed": 212
-  },
-  {
-   "at": 11.8,
-   "kind": "boom",
-   "dur": 1.8,
-   "gain": -7,
-   "seed": 213
-  },
-  {
-   "at": 13.83,
-   "kind": "tick",
-   "gain": -1,
-   "seed": 214
-  },
-  {
-   "at": 13.83,
-   "kind": "boom",
-   "dur": 1.8,
-   "gain": -7,
-   "seed": 215
   },
   {
    "at": "cap:L8-1.4",

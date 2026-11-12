@@ -1,6 +1,8 @@
 """build_v4.py <n> [--preview S]: One More Orbit v4 Part n (1 or 2) in the owner's voice -> long01/out/v4-part<n>[-yt].json (+ ep<12+n>/sfx.json).
-Structure: opening line Bn, the part's lines (long01/voice5/lines.json), picture-led beats, one like/follow (or subscribe) line before the cliffhanger line, his closer (C<n>, if present).
-The 'Thought experiment' tag is shown for the first 5 s only (0.3 s fade): TL.badge."""
+Structure: opening line Bn, the part's lines (long01/voice5/lines.json), picture-led beats, one like/follow (or subscribe) line before the cliffhanger line in odd parts only, his closer (C<n>, if present).
+The 'Thought experiment' tag is shown for the first 5 s only (0.3 s fade): TL.badge.
+Owner's notes, 12 Nov 2026: no chip may repeat the spoken caption under it ("no need for double subtitles"), so the parts carry no chips; a beat opens only in
+real silence (between two clips, or at the quietest point between two sentences of a line), never inside a word, and a voice piece is never shorter than 0.4 s."""
 import json, os, re, sys, copy
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 L1 = f"{ROOT}/films/channels/space/long01"; OUT = L1 + "/out"
@@ -8,17 +10,19 @@ g = {"__file__": HERE + "/build_timeline.py", "__name__": "bt"}; exec(open(HERE 
 insert_beats, split_caps, to_display = g["insert_beats"], g["split_caps"], g["to_display"]
 lines = {x["id"]: x for x in json.load(open(L1 + "/voice5/lines.json"))["lines"]}
 N = int(sys.argv[1]); YT = "--yt" in sys.argv; PRE = float(sys.argv[sys.argv.index("--preview") + 1]) if "--preview" in sys.argv else None
-G = 0.35; CTA = ("D2" if N % 2 == 1 else "D4") if YT else ("D1" if N % 2 == 1 else "D3"); NAME = f"v4-part{N}" + ("-yt" if YT else "") + ("-preview" if PRE else "")
+G = 0.35
+SPOKEN_CTA = N % 2 == 1      # the owner, 12 Nov 2026: a spoken like/follow ask only in every other part (1, 3, 5, 7); even parts keep only the silent pop-up, at the pause before the cliffhanger
+CTA = (("D2" if YT else "D1") if N % 2 == 1 else ("D4" if YT else "D3")) if SPOKEN_CTA else None; NAME = f"v4-part{N}" + ("-yt" if YT else "") + ("-preview" if PRE else "")
 PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1",
             "beats": [("__hook__", 3.0, "grow"), ("only goes down", 6.0, "approach"), ("A third wider", 3.0, "grow"), ("tidal pull", 3.5, "tide")],
-            "chips": [("centimeters", "3.8 cm a year", 2.4, 1), ("wider", "1.33× wider", 2.0, 1), ("twice", "2× tidal pull", 2.6, 1)], "km": [288300]},
+            "chips": [], "km": [288300]},      # no chips: each one repeated the caption under it (owner, 12 Nov 2026)
         2: {"hook": "B3", "body": ["L6", "L7", "L8"], "closer": "C2",
             "beats": [("__hook__", 6.0, "approach"), ("the tidal pull", 11.0, "climb"), ("Not a measured height", 5.0, "tide"), ("lifted from above", 6.0, "pull")],
-            "chips": [("twice", "2× wider", 1.9, 1), ("eight", "8× the pull", 6.0, 1)], "km": [192200], "start": 288300}}[N]
+            "chips": [], "km": [192200], "start": 288300}}[N]
 body = PART["body"]; cliff = body[-1]
 def build(use_closer):
     # sequence of (id, from, dur): hook, body lines (the CTA goes before the cliffhanger line), the closer
-    seq = [(PART["hook"], 0.0, lines[PART["hook"]]["dur"])] + [(i, 0.0, lines[i]["dur"]) for i in body[:-1]] + [(CTA, 0.0, lines[CTA]["dur"]), (cliff, 0.0, lines[cliff]["dur"])]
+    seq = [(PART["hook"], 0.0, lines[PART["hook"]]["dur"])] + [(i, 0.0, lines[i]["dur"]) for i in body[:-1]] + ([(CTA, 0.0, lines[CTA]["dur"])] if CTA else []) + [(cliff, 0.0, lines[cliff]["dur"])]
     if use_closer: seq.append((PART["closer"], 0.0, lines[PART["closer"]]["dur"]))
     clips, caps, t = [], [], 0.15
     for lid, frm, d in seq:
@@ -27,14 +31,42 @@ def build(use_closer):
         for s in lines[lid]["sentences"]: caps.append({"t0": round(t + s["t0"], 3), "t1": round(t + s["t1"] + 0.25, 3), "text": s["text"], "line": lid})
         t += d + (0.3 if lid in (CTA,) or lid == seq[-1][0] else G)
     for a, b in zip(caps, caps[1:]): a["t1"] = round(min(a["t1"], b["t0"] - 0.02), 3) if b["t0"] > a["t0"] else a["t1"]
-    cta_t = next(c["t"] for c in clips if c["id"] == CTA)
+    if CTA: cta_t = next(c["t"] for c in clips if c["id"] == CTA)
+    else:                                                       # no spoken ask: the pop-up's moment is the pause before the cliffhanger line
+        cl = next(c for c in clips if c["id"] == cliff); prev = max((c for c in clips if c["t"] < cl["t"]), key=lambda c: c["t"]); cta_t = round((prev["t"] + prev["dur"] + cl["t"]) / 2, 3)
+    def wav_env(lid):
+        """the line's level per 10 ms (dBFS), or None if the file can't be read here"""
+        try:
+            import numpy as np, soundfile as sf
+            x, sr = sf.read(f"{L1}/{lines[lid]['file']}", dtype="float32"); x = x if x.ndim == 1 else x.mean(1); h = int(0.01 * sr); n = len(x) // h
+            return 20 * np.log10(np.sqrt((x[: n * h].reshape(n, h) ** 2).mean(1)) + 1e-9)
+        except Exception:
+            return None
+    def silent_after(cap):
+        """a beat boundary in real silence just after caption `cap`: between its clip and the next one when its sentence ends the line, else the quietest
+        20 ms between this sentence and the next one in the same line (the owner, 12 Nov 2026: a beat that split a word left a cut-off sound)"""
+        c = next(x for x in clips if x["id"] == cap["line"]); sents = lines[c["id"]]["sentences"]
+        k = next(j for j, sn in enumerate(sents) if to_display(sn["text"]) == to_display(cap["text"]) or sn["text"] == cap["text"])
+        if k == len(sents) - 1:
+            nxt = min((x for x in clips if x["t"] > c["t"]), key=lambda x: x["t"]); return round((c["t"] + c["dur"] + nxt["t"]) / 2, 3)
+        # the aligner's sentence edges can overlap (L7: 'height.' ends 1.52, 'Just' starts 1.445; the real pause is 1.23-1.42), so search the audio
+        # from 0.4 s before the end of this sentence to 0.3 s after the start of the next one, inside both sentences
+        a = max(sents[k]["t0"], sents[k]["t1"] - 0.4); b = min(sents[k + 1]["t1"], sents[k + 1]["t0"] + 0.3); E = wav_env(c["id"])
+        if E is None or b - a < 0.03: return round(c["t"] + (sents[k]["t1"] + sents[k + 1]["t0"]) / 2, 3)
+        import numpy as np
+        i0, i1 = int(a / 0.01), max(int(a / 0.01) + 1, int(b / 0.01)); w = np.convolve(E[i0:i1 + 1], np.ones(3) / 3, "same")
+        m = int(np.argmin(w)); lo = hi = m                                       # the middle of the quiet stretch around the quietest point
+        while lo > 0 and w[lo - 1] <= w[m] + 10: lo -= 1
+        while hi < len(w) - 1 and w[hi + 1] <= w[m] + 10: hi += 1
+        T = round(c["t"] + (i0 + (lo + hi) / 2) * 0.01 + 0.005, 3)
+        nxc = next((x for x in caps if x["line"] == c["id"] and x["text"] == sents[k + 1]["text"]), None)
+        if nxc is not None and nxc["t0"] < T + 0.02: nxc["t0"] = round(T + 0.02, 3)        # the aligner started the next sentence inside the pause
+        return T
     # beats
     items = []
     for after, d, kind in PART["beats"]:
-        if after == "__hook__": hc = [c for c in caps if c["line"] == PART["hook"]]; nx = next(c for c in caps if c["line"] != PART["hook"]); T = round((hc[-1]["t1"] + nx["t0"]) / 2, 3)
-        else:
-            i = next(j for j, c in enumerate(caps) if after in c["text"]); nxt = next((c for c in caps if c["t0"] > caps[i]["t0"] + 0.01), None)
-            T = round(min((caps[i]["t1"] + nxt["t0"]) / 2, nxt["t0"] - 0.02), 3) if nxt else round(caps[i]["t1"] + 0.1, 3)
+        if after == "__hook__": T = silent_after([c for c in caps if c["line"] == PART["hook"]][-1])
+        else: T = silent_after(next(c for c in caps if after in c["text"]))
         items.append((T, d, kind, PART["km"][0] if (kind == "approach" and PART["km"]) else None))
     items.sort(key=lambda x: x[0])
     st0 = PART.get("start", 384400); kk = [[0.0, st0]]
@@ -43,6 +75,8 @@ def build(use_closer):
     tracks = {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}
     dur0 = t + 0.6
     nclips, ncaps, nkm, ntr, beats, (dur, cta_n) = insert_beats(clips, caps, kk, tracks, items, [dur0, cta_t])
+    short = [(c["id"], c["dur"]) for c in nclips if c["dur"] < 0.4]
+    if short: raise SystemExit(f"a beat split a voice clip into a piece shorter than 0.4 s: {short} (owner, 12 Nov 2026: no cut-off fragments)")
     # the voice goes where its captions are: a clip that starts just before a beat boundary must move with its first sentence (a clip whose t falls a hair before T is not shifted by the warp)
     for c in nclips:
         for sn in lines[c["id"]]["sentences"]:

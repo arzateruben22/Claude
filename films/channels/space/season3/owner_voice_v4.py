@@ -28,14 +28,17 @@ START = {"L5": 48.24}     # the whole-file recogniser spells "Halve" as "Half", 
 CUTWORD = {"L21": ("far", 197.2, 197.4)}
 Hz = sr; ENV = 0.005
 def env(x): h = int(ENV * Hz); n = len(x) // h; return 20 * np.log10(np.sqrt((x[: n * h].reshape(n, h) ** 2).mean(1)) + 1e-9)
-E = env(a)
+E = env(a); FLOOR = float(np.percentile(E, 8))
+sys.path.insert(0, str(Path(__file__).resolve().parent)); import voice_edges as VE      # same 5 ms frames as env()
 def quiet(t, lo, hi):
     """the quietest 20 ms inside [lo, hi] (the nearest to t on ties)"""
     if hi - lo < 0.03: return (lo + hi) / 2
     i0, i1 = int(lo / ENV), int(hi / ENV); w = np.convolve(E[i0:i1], np.ones(4) / 4, "same"); j = int(np.argmin(w + 0.001 * np.abs(np.arange(len(w)) * ENV + lo - t))); return (i0 + j) * ENV
 def edges(t0, t1):
     prev = max([e for w, s, e in asr if e <= t0 + 0.05] or [t0 - 0.4]); nxt = min([s for w, s, e in asr if s >= t1 - 0.05] or [t1 + 0.4])
-    s = quiet(t0 - 0.1, max(prev + 0.02, t0 - 0.3), t0 - 0.02); e = quiet(t1 + 0.12, t1 + 0.02, min(nxt - 0.02, t1 + 0.35)); return s, e
+    s = quiet(t0 - 0.1, max(prev + 0.02, t0 - 0.3), t0 - 0.02); e = quiet(t1 + 0.12, t1 + 0.02, min(nxt - 0.02, t1 + 0.35))
+    # never cut on sound (owner, 12 Nov 2026: "some parts of the audio sound quickly cut off"): wait for the decay, stop before the next word
+    return VE.settle_start(E, s, FLOOR, limit=prev + 0.02), VE.settle_end(E, e, FLOOR, limit=nxt - 0.02)
 def fade(x, n=int(0.008 * sr)): x = x.copy(); x[:n] *= np.linspace(0, 1, n); x[-n:] *= np.linspace(1, 0, n); return x
 rec = align.recognizer(str(Path.home() / ".cache/cinema-voice/models")); out = []; used = {}
 for lid, t in text.items():
