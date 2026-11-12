@@ -81,10 +81,18 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   })).catch(() => {});
   // the flash on a storm plate: a screen-blended canvas over the plate (below the 3-D layer), bluish light that falls off toward the top, with the glass of the window cut out so only the room is lit
   const rl = document.createElement("canvas"); rl.width = W; rl.height = H; rl.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;mix-blend-mode:screen;display:none;pointer-events:none;`; let rlOn = false;
-  const relight = (t, k) => { const it = active(t), r = it && it.p.relight; if (!r || k < 0.004) { if (rlOn) { rl.style.display = "none"; rlOn = false; } return; }
+  // the window frame stays in front of the bolt: a copy of the plate with the glass cut out sits above the 3-D layer (same placement, same relight)
+  const fgc = document.createElement("canvas"); fgc.width = W; fgc.height = H; fgc.style.cssText = `position:absolute;left:0;top:0;width:${W}px;height:${H}px;z-index:2;display:none;pointer-events:none;`; let fgOn = false;
+  const drawFg = (it, t, k) => { const r = it.p.relight, im = it.imgs[0]; if (!r || !im || !im.naturalWidth) return; if (!fgc.parentNode) canvas.parentNode.insertBefore(fgc, canvas.nextSibling);
+    const pw = im.naturalWidth, ph = im.naturalHeight, cs = Math.max(W / pw, H / ph), sf = shiftAt(it, t), x0 = (W - pw * cs) / 2 - sf.x * sf.ppm * cs, y0 = (H - ph * cs) / 2 + sf.y * sf.ppm * cs, d = Math.max(0, Math.min(1, (t - it.p.t0) / (it.p.t1 - it.p.t0))), zz = 1 + (it.p.push ?? 0.05) * d, a = Math.max(0, Math.min(1, Math.min((t - it.p.t0) / (it.p.fade ?? 0.35), (it.p.t1 - t) / (it.p.fade ?? 0.35))));
+    const g = fgc.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "source-over"; g.clearRect(0, 0, W, H); g.globalAlpha = a; g.translate(W / 2, H / 2); g.scale(zz, zz); g.translate(-W / 2, -H / 2); g.drawImage(im, x0, y0, pw * cs, ph * cs);
+    if (k > 0.004) { g.globalCompositeOperation = "screen"; const gr = g.createLinearGradient(0, y0, 0, y0 + ph * cs); gr.addColorStop(0, `rgba(${r.color.join(",")},${0.08 * k})`); gr.addColorStop(1, `rgba(${r.color.join(",")},${0.5 * k})`); g.fillStyle = gr; g.fillRect(0, 0, W, H); }
+    g.globalCompositeOperation = "destination-out"; g.globalAlpha = 1; g.fillStyle = "#000"; for (const poly of r.glass) { g.beginPath(); poly.forEach(([x, y], i) => (i ? g.lineTo(x0 + x * cs, y0 + y * cs) : g.moveTo(x0 + x * cs, y0 + y * cs))); g.closePath(); g.fill(); }
+    g.setTransform(1, 0, 0, 1, 0, 0); g.globalCompositeOperation = "source-over"; fgc.style.display = "block"; fgOn = true; };
+  const relight = (t, k) => { const it = active(t), r = it && it.p.relight; if (!r) { if (fgOn) { fgc.style.display = "none"; fgOn = false; } return; } drawFg(it, t, k); if (k < 0.004) { if (rlOn) { rl.style.display = "none"; rlOn = false; } return; }
     if (!rl.parentNode) canvas.parentNode.insertBefore(rl, canvas); const g = rl.getContext("2d"), sf = shiftAt(it, t), cs = Math.max(W / (it.imgs[0].naturalWidth || 1672), H / (it.imgs[0].naturalHeight || 941)), pw = it.imgs[0].naturalWidth, ph = it.imgs[0].naturalHeight;
     const zz = 1 + (it.p.push ?? 0.05) * Math.max(0, Math.min(1, (t - it.p.t0) / (it.p.t1 - it.p.t0))), X = (x) => W / 2 + (x - pw / 2) * cs * zz - sf.x * sf.ppm * cs * zz * 0, Y = (y) => H / 2 + (y - ph / 2) * cs * zz;
-    g.clearRect(0, 0, W, H); const gr = g.createLinearGradient(0, Y(0), 0, Y(ph)); gr.addColorStop(0, `rgba(${r.color.join(",")},${0.08 * k})`); gr.addColorStop(1, `rgba(${r.color.join(",")},${0.36 * k})`);
+    g.clearRect(0, 0, W, H); const gr = g.createLinearGradient(0, Y(0), 0, Y(ph)); gr.addColorStop(0, `rgba(${r.color.join(",")},${0.08 * k})`); gr.addColorStop(1, `rgba(${r.color.join(",")},${0.5 * k})`);
     g.fillStyle = gr; g.fillRect(0, 0, W, H); g.globalCompositeOperation = "destination-out"; g.fillStyle = "#000"; for (const poly of r.glass) { g.beginPath(); poly.forEach(([x, y], i) => (i ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y)))); g.closePath(); g.fill(); } g.globalCompositeOperation = "source-over";
     rl.style.display = "block"; rlOn = true; };
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
@@ -92,6 +100,7 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const shiftAt = (it, t) => { const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), sh = nine && p.shift9 ? p.shift9 : p.shift; if (!sh) return { x: 0, y: 0, ppm: 1 }; const k = nine && p.shift9 && !p.native9 ? 1 : d; return { x: sh.x * k, y: (sh.y || 0) * d, ppm: sh.ppm }; };   // a native 9:16 picture fills the frame exactly: its shift grows with the push, so no edge ever shows
   const apply = (t) => {
     for (const it of items) { for (const im of it.imgs) im.style.display = "none"; if (it.swapImg) it.swapImg.style.display = "none"; }
+    if (fgOn) { fgc.style.display = "none"; fgOn = false; }
     const it = active(t); if (!it) return false;
     const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), f = p.fade ?? 0.35;
     const a = Math.min(1, (t - p.t0) / f, (p.t1 - t) / f), push = p.push ?? 0.05, par = p.parallax ?? 0.02;

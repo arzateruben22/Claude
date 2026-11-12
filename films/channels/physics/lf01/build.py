@@ -324,7 +324,7 @@ _p07 = {"id": "storm", "file": PLATE07, "file9": PLATE07_9, "push": 0.05, "paral
         "relight": {"color": [170, 190, 255], "glass": [[[525, 0], [1240, 0], [1240, 640], [525, 640]]]},
         "anchor": {"dark": True, "rig": {"kind": "storm", "pos": _w(880, 40), "scale": 0.0312, "thk": 1.25}},
         "p9": {"native9": True, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 40.1},
-               "relight": {"color": [170, 190, 255], "glass": [[[63, 145], [489, 145], [489, 606], [63, 606]]]},
+               "relight": {"color": [170, 190, 255], "glass": [[[73, 141], [272, 141], [272, 329], [73, 329]], [[284, 141], [485, 141], [485, 329], [284, 329]], [[66, 355], [491, 355], [491, 606], [66, 606]]]},
                "anchor": {"dark": True, "rig": {"kind": "storm", "pos": _w7(270, 165), "scale": 0.0418, "thk": 1.25}}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01

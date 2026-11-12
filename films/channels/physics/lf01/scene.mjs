@@ -392,11 +392,22 @@ const bendFlap = (m, bx, rE0, open) => { const u = m.userData, P = m.geometry.at
 const SL = FILM.ev.leader, LZ = -4.4, TOPY = 6.6, GROUNDY = 0.15, LX0 = -1.2;
 const stormG = new THREE.Group(); scene.add(stormG); let stormThk = 1;   // the leader tree lives in a group, so a storm plate can place and scale it over its own sky
 const mkSeg = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false })); stormG.add(m); m.visible = false; return m; };
-const setSeg = (m, a, b, w, op, col) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, LZ); m.rotation.z = Math.atan2(dy, dx); m.scale.set(L, w * stormThk, 0.01); m.material.opacity = op; if (col) m.material.color.set(col); m.visible = op > 0.01; };
+const setSeg = (m, a, b, w, op, col) => { const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, LZ); m.rotation.z = Math.atan2(dy, dx); m.scale.set(L, w * stormThk, 0.01); m.material.opacity = op; if (col) { if (col.isColor) m.material.color.copy(col); else m.material.color.set(col); } m.visible = op > 0.01; };
 const rl = rng(33); const STEPS = SL.steps, PATH = [[LX0, TOPY]];
 for (let i = 1; i <= STEPS; i++) { const p = PATH[i - 1]; PATH.push([i === STEPS ? LX0 + (rl() - 0.5) * 0.4 : p[0] + (rl() - 0.5) * 0.9, TOPY - (TOPY - GROUNDY) * i / STEPS]); }
-const BRANCH = []; for (const [at, dir] of [[2, -1], [3, 1], [4, -1], [5, 1], [6, -1]]) { const pts = [PATH[at]]; for (let j = 1; j <= 3; j++) { const q = pts[j - 1]; pts.push([q[0] + dir * (0.35 + rl() * 0.5), q[1] - 0.45 - rl() * 0.4]); } BRANCH.push({ at, pts }); }
-const mainSegs = PATH.slice(1).map(() => mkSeg()), mainGlow = PATH.slice(1).map(() => mkSeg()), brSegs = BRANCH.map((b) => b.pts.slice(1).map(() => mkSeg())), retSegs = PATH.slice(1).map(() => mkSeg());
+// a real channel: every leader step is a fractal polyline (midpoint displacement, many short jagged runs, no straight stretch); each branch splits again
+const jag = (a, b, lev, amp) => { let pts = [a, b]; for (let l = 0; l < lev; l++) { const out = [pts[0]]; for (let k = 0; k < pts.length - 1; k++) { const p0 = pts[k], p1 = pts[k + 1], dx = p1[0] - p0[0], dy = p1[1] - p0[1], L = Math.hypot(dx, dy) || 1, off = (rl() - 0.5) * 2 * amp * L; out.push([(p0[0] + p1[0]) / 2 - dy / L * off, (p0[1] + p1[1]) / 2 + dx / L * off]); out.push(p1); } pts = out; } return pts; };
+const polyOf = (pts) => { const cl = [0]; for (let k = 1; k < pts.length; k++) cl.push(cl[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1])); return { pts, cl, L: cl[cl.length - 1] }; };
+const mainPoly = PATH.slice(1).map((p, i) => polyOf(jag(PATH[i], p, 4, 0.2)));
+const BRANCH = []; for (const [at, dir] of [[1, -1], [2, 1], [3, -1], [4, 1], [5, -1], [6, 1], [6, -1]]) { const a0 = mainPoly[at - 1].pts[Math.floor(mainPoly[at - 1].pts.length * (0.3 + 0.5 * rl()))], tip = [a0[0] + dir * (0.7 + rl() * 0.8), a0[1] - 0.9 - rl() * 1.1], main = polyOf(jag(a0, tip, 4, 0.24)); const subs = []; if (rl() < 0.7) { const f = main.pts[Math.floor(main.pts.length * 0.5)]; subs.push(polyOf(jag(f, [f[0] + dir * (0.3 + rl() * 0.4), f[1] - 0.4 - rl() * 0.4], 3, 0.25))); } BRANCH.push({ at, main, subs }); }
+const mkPoly = (n) => Array.from({ length: n }, () => mkSeg());
+const mainSegs = mainPoly.map((q) => mkPoly(q.pts.length - 1)), mainGlow = mainPoly.map((q) => mkPoly(q.pts.length - 1)), retSegs = mainPoly.map((q) => mkPoly(q.pts.length - 1)), retGlow = mainPoly.map((q) => mkPoly(q.pts.length - 1));
+const brSegs = BRANCH.map((b) => [b.main, ...b.subs].map((q) => mkPoly(q.pts.length - 1))), brGlow = BRANCH.map((b) => [b.main, ...b.subs].map((q) => mkPoly(q.pts.length - 1)));
+const cloudGlowTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const c = cv.getContext("2d"), gr = c.createRadialGradient(32, 32, 1, 32, 32, 31); gr.addColorStop(0, "rgba(190,170,255,0.9)"); gr.addColorStop(0.4, "rgba(150,140,255,0.35)"); gr.addColorStop(1, "rgba(120,120,255,0)"); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
+const cloudGlows = mainPoly.map(() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: cloudGlowTex, transparent: true, opacity: 0, depthWrite: false, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor })); m.visible = false; stormG.add(m); return m; });   // the sky around the channel lights up
+// draw a polyline grown to a fraction g of its length, tapering toward the tip (w0 -> w1)
+const growPoly = (segs, q, g, w0, w1, op, col, fall = 1) => { const Lg = g * q.L; for (let k = 0; k < segs.length; k++) { const a = q.pts[k], b = q.pts[k + 1], l0 = q.cl[k], l1 = q.cl[k + 1], f = Math.min(1, Math.max(0, (Lg - l0) / Math.max(1e-6, l1 - l0))), u = (l0 / Math.max(1e-6, q.L)); setSeg(segs[k], a, [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f], w0 + (w1 - w0) * u, f > 0 ? op * (1 - fall * 0.3 * u) : 0, col); } };
+const CORE = new THREE.Color(3.2, 3.2, 3.4), CORE2 = new THREE.Color(1.2, 1.2, 1.4), HALO = new THREE.Color(0.55, 0.45, 1.8), HALO2 = new THREE.Color(0.35, 0.3, 1.1), RETC = new THREE.Color(6, 6, 6), RETH = new THREE.Color(1.4, 1.1, 3.6);
 const flashLight = new THREE.PointLight(0xcfe0ff, 0, 12); flashLight.position.set(-1.0, 2.0, -1.0); scene.add(flashLight);
 
 // ── the macro stage (a human hair and the light front, mm ruler) and the lab bench (the MIT camera's bottle) ──
@@ -605,15 +616,19 @@ window.seek = function (t) {
   // the storm's leader: a step every 3 s (1 s of growth, then a skipped wait), branches, the return stroke
   { const Lt = SL.t0, ground = SL.ground, every = SL.stepEvery; let flashV = 0;
     const retK = seg(t, ground, ground + 30), inL = t >= Lt && t < T.light + 6;
+    const retOn = inL && t >= ground, pulseR = t >= ground ? Math.exp(-(t - ground) / 0.9) : 0;   // the return stroke is brief and overexposed
     PATH.slice(1).forEach((p, i) => {
-      const t0i = Lt + i * every, g = E.inout2(seg(t, t0i, t0i + 1.0)), a = PATH[i], b = [lerp(a[0], p[0], g), lerp(a[1], p[1], g)];
+      const t0i = Lt + i * every, g = E.inout2(seg(t, t0i, t0i + 1.0)), q = mainPoly[i];
       const age = t - (t0i + 1.0), op = !inL || t < t0i ? 0 : (t < ground ? 0.95 - 0.22 * Math.min(1, Math.max(0, age) / 12) : Math.max(0, 0.5 - 0.5 * seg(t, ground + 3, ground + 30)));
-      setSeg(mainSegs[i], a, b, 0.07, op, 0xE6EEFF); setSeg(mainGlow[i], a, b, 0.22, op * 0.28, 0x7FA6FF);
+      growPoly(mainSegs[i], q, g, 0.05, 0.022, op, CORE); growPoly(mainGlow[i], q, g, 0.12, 0.06, op * 0.28, HALO);
+      const cg = cloudGlows[i], m = q.pts[Math.floor(q.pts.length / 2)]; cg.visible = op > 0.01 && g > 0.5; cg.position.set(m[0], m[1], LZ - 0.01); cg.scale.set(2.0, 2.4, 1); cg.material.opacity = op * (0.1 + 0.4 * pulseR);
     });
-    BRANCH.forEach((br, bi) => br.pts.slice(1).forEach((q, j) => { const t0b = Lt + (br.at + j * 0.6) * every * 0.75 + 4, g = E.inout2(seg(t, t0b, t0b + 1.4)); const a = br.pts[j]; setSeg(brSegs[bi][j], a, [lerp(a[0], q[0], g), lerp(a[1], q[1], g)], 0.035, (!inL || t < t0b ? 0 : (t < ground ? 0.8 : Math.max(0, 0.45 - 0.45 * seg(t, ground + 3, ground + 30)))), 0xCFDDFF); }));
-    PATH.slice(1).forEach((p, i) => { const idx = STEPS - 1 - i, a = PATH[idx + 1], b = PATH[idx], f0 = i / STEPS, f1 = (i + 1) / STEPS, g = Math.min(1, Math.max(0, (retK - f0) / (f1 - f0))); setSeg(retSegs[i], a, [lerp(a[0], b[0], g), lerp(a[1], b[1], g)], 0.12, inL && t >= ground && g > 0 ? 0.85 * E.out2(seg(t, ground, ground + 0.3)) : 0, 0xF2F6FF); });
+    BRANCH.forEach((br, bi) => [br.main, ...br.subs].forEach((q, qi) => { const t0b = Lt + (br.at + qi * 0.6) * every * 0.75 + 4, g = E.inout2(seg(t, t0b, t0b + 1.4)), op = !inL || t < t0b ? 0 : (t < ground ? 0.85 : Math.max(0, 0.5 - 0.5 * seg(t, ground + 3, ground + 30)));
+      growPoly(brSegs[bi][qi], q, g, qi ? 0.012 : 0.02, 0.006, op, CORE2); growPoly(brGlow[bi][qi], q, g, qi ? 0.07 : 0.1, 0.04, op * 0.3, HALO2); }));
+    mainPoly.forEach((q, i) => { const idx = STEPS - 1 - i, qq = mainPoly[idx], f0 = i / STEPS, f1 = (i + 1) / STEPS, g = Math.min(1, Math.max(0, (retK - f0) / (f1 - f0))), rev = { pts: qq.pts.slice().reverse(), cl: qq.cl.map((c) => qq.L - c).reverse(), L: qq.L };
+      const op = retOn && g > 0 ? E.out2(seg(t, ground, ground + 0.25)) * (0.55 + 0.45 * pulseR) : 0; growPoly(retSegs[i], rev, g, 0.07, 0.04, op, RETC, 0); growPoly(retGlow[i], rev, g, 0.3, 0.18, op * 0.4, RETH, 0); });
     if (t >= ground && t < ground + 2.0) flashV = E.out2(seg(t, ground, ground + 0.35)) * (1 - E.inout2(seg(t, ground + 0.5, ground + 2.0)));   // soft: in over 0.35 s, out over 1.5 s (no full-frame white)
-    if (plateOn) plates.relight(t, flashV);   // a storm plate: the flash lights the room (a bluish additive bounce, never the sky)
+    if (plateOn) plates.relight(t, t >= ground ? Math.min(1, Math.exp(-(t - ground) / 0.1) * 1.0 + 0.45 * Math.exp(-Math.max(0, t - ground - 0.3) / 0.12) * (t > ground + 0.3 ? 1 : 0) + 0.35 * flashV) : 0);   // a 150-250 ms bounce on the stroke (a quick flicker), then the slow afterglow   // a storm plate: the flash lights the room (a bluish additive bounce, never the sky)
     flashLight.intensity = 1.6 * flashV; renderer.toneMappingExposure = 1.0 + 0.18 * flashV; }
   // the light fronts: a flash across the room (1e8x), the flashlight's front (1e9x), a crawling pulse (1e10x and more)
   { const fl8 = EV.flash8, l9 = EV.light9, pulse0 = EV.pulse; let R = 0, lk = 1;
