@@ -65,6 +65,8 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
                                view. Build folder <tier>-W (9:16 sizes, as Skin Sense's copy names it) or <tier>-WxH
   --clean                      stills only (with --times): no page overlay (captions, labels, counters, title), the 3-D
                                picture alone, for covers and thumbnails; its own <...>-clean folder; PNGs kept
+  --keep SELECTOR              with --clean: overlay children of #hud matching SELECTOR stay (a scene's own 2-D drawing,
+                               e.g. "canvas" for One More Orbit S2E01's tree dots and people)
   --chunk S                    chunk length in seconds (default 10)
   --resume                     keep finished frames (PNG + log line + matching sha256), render the rest
   --fresh                      discard every chunk the range touches, then render them
@@ -82,7 +84,7 @@ const USAGE = `usage: node kits/cinema/film/render.mjs --film <dir> [options]   
   --where                      print this run's build folder
   --delivery-crf N             with --assemble: x264 CRF of the delivery file (default 15; lower is finer)`;
 const SPEC = { film: 1, tier: 1, aspect: 1, fps: 1, from: 1, to: 1, times: 1, chunk: 1, build: 1, out: 1, name: 1, audio: 1, poster: 1,
-  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, size: 1, clean: 0, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
+  "page-frames": 1, "frame-timeout": 1, "delivery-crf": 1, size: 1, keep: 1, clean: 0, resume: 0, fresh: 0, "force-mixed": 0, "keep-png": 0, assemble: 0, plain: 0, cues: 0, where: 0, help: 0, "share-cpu": 0,
   "fallback-fonts": 0 };
 const A = {};
 {
@@ -103,6 +105,8 @@ const A = {};
   if (A.resume && A.fresh) bad("--resume keeps finished frames and --fresh discards them: pick one");
   if (A.times && (A.from !== undefined || A.to !== undefined)) bad("--times or --from/--to, not both");
   if (A.clean && !A.times) bad("--clean makes stills: give --times S,S,...");
+  if (A.keep && !A.clean) bad("--keep only means something with --clean");
+  if (A.keep && /[{}]/.test(A.keep)) bad("--keep is a CSS selector, without braces");
   if (A.clean && (A.assemble || A.cues)) bad("--clean is for stills, not --assemble or --cues");
   if (A.size && !/^\d{2,4}x\d{2,4}$/.test(A.size)) bad(`--size is WxH in pixels, e.g. 2160x3840, not "${A.size}"`);
 }
@@ -424,7 +428,9 @@ const openPage = () => withTimeout((async () => {
     await pg.evaluate(() => document.fonts.ready.then(() => document.fonts.status));
     // --clean: the overlay (captions, labels, counters, the title) is DOM above the canvas: fade all of it out, with
     // !important so a scene's own inline opacity or visibility can't bring an element back
-    if (A.clean) await pg.addStyleTag({ content: "#stage > :not(#gl), body > :not(#stage) { opacity: 0 !important; }" });
+    if (A.clean) await pg.addStyleTag({ content: A.keep
+      ? `#stage > :not(#gl):not(#hud), body > :not(#stage), #hud > :not(${A.keep}) { opacity: 0 !important; }`
+      : "#stage > :not(#gl), body > :not(#stage) { opacity: 0 !important; }" });
     if (Q.errors.length || !(await pg.evaluate(() => typeof window.seek === "function"))) throw new SceneError(`the scene page failed to load: ${Q.errors.join(" | ") || "no seek()"}`);
     if (!plain && !(await pg.evaluate(() => typeof window.cinemaFrame === "function"))) throw new SceneError("the cinema finish did not load (no window.cinemaFrame)");
     if (kMax != null) await pg.evaluate((k) => { if (window.CINEMA) window.CINEMA.kMax = k; }, kMax);
