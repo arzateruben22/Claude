@@ -520,6 +520,33 @@ dense city block; npm test groups boot, interchanges, render, phone plus a new s
 If Fable is unavailable, run it on Opus with a design judge pair before any build.
 ```
 
+### Fable prompt: the six characters' graphics pass (people builder), queued 2026-11-12
+
+**The ask.** The owner (2026-11-11) wants the characters' graphics "insane". Lane cast A's renders show the people
+builder's limits on the six (`src/onfoot/cast.ts`). The comparisons are made by `node tests/cast-shoot.mjs`, then
+`python3 tests/cast-sheets.py <sheets folder>`, into `tests/out/cast/compare-<id>-body.png` and `-head.png`. The
+reference sheets are the owner's: a body sheet and a face sheet per character, not in the repository.
+
+**The defects to fix, against the sheets:**
+- generic faces with dark smudges over the cheeks and jaw;
+- helmet-like hair on the waves and side-part styles;
+- sloping shoulders and ballooning sleeves;
+- skin-tight straight jeans and trousers;
+- Marcus not reading as muscular;
+- the full beard, a hard-edged 4 mm shell with tabs at the ears (it needs strand cards with a soft alpha edge);
+- Marcus's scar on his right eyebrow, which isn't built.
+
+**The files:** `src/onfoot/people/*`, including `face.ts`, `skin.ts`, `masks.ts` and `body.ts`. Coordinate with the
+session and branch that own them. Keep existing presets and the public API, and keep the builder's LOD budgets
+(phone: 2,500 / 14,000 / 90,000 tris).
+
+**The proof:**
+- re-shoot all six beside their sheets;
+- `npm test -- --only=cast,cast-venues` (each run under 20 minutes);
+- the frames of each venue's crowd.
+
+Log it in `PROJECT_OC_PROGRESS.md` and `PROJECT_OC_CAST.md`.
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.

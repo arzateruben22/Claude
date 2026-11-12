@@ -4,6 +4,173 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-12: The cast (lane cast A): six characters, the picker, the crowds, the driver; the seat view at full lock
+
+**What was asked (owner, 2026-11-11):**
+- Six playable characters (three men, three women) from the owner's reference sheets.
+- A character picker on the main menu.
+- The chosen character as the driver everywhere.
+- The six as the only looks for the venues' people.
+- A future two-character pack prepared, not sold.
+- Insane graphics on the wheel and the characters, and no lag or glitches in the first-person view with the arms.
+
+The work was restored after the machine reset and finished here; it is not committed. `PROJECT_OC_CAST.md` has the
+catalog, the asset status, the mismatches, the file list and the remaining defects.
+
+**Built or finished in this pass (on top of the restored work):**
+- **The picker** has one stacked layout. On the main menu it sits in the menu's narrow column, and the old
+  side-by-side layout cropped the turntable and covered Kate's portrait with the "Closest" badge. New picks start
+  three-quarter on. With reduced motion, the character stands still.
+- **The reload check** reloads the same page with the save kept (`tsu.test.keep`). A second browser context had
+  crashed the browser here.
+- **The pack check** uses the store's own sale rule (`saleState`, `forSale`), not a DOM search.
+- **Lot 57's staff** are spread over all six characters.
+- **Two hair and beard fixes after the renders:**
+  - The high ponytail lost its face-framing cards, which hung as dark slabs beside Jas's cheeks.
+  - The full beard is thinner (4 mm), thinner up the sideburns and slightly smaller. It is still a hard-edged shell:
+    see the defects below.
+- **The seat view at full lock.** The drawn wheel turned to ±2.2 rad, past the hands' ±1 rad range, so at full lock
+  one forearm crossed the hub and the spokes and a hand vanished at the bottom of the rim (frame
+  `tests/out/cast/lock/jas-phone-lock-strip.png`). `PlayerCar.updateCockpit` now follows the steering ratio exactly
+  to 0.8 rad, then eases into 1.05 rad. That is unchanged at freeway speeds, where the lock is about 0.8 rad. After
+  the fix, `jas-phone-lock-strip-after.png` shows both hands on the rim and the hub clear both ways. The physics is
+  untouched. A hand-over-hand shuffle in `hands*` (the other session's) would restore the full lock.
+- **The new tools:**
+  - `tests/cast-perf.mjs`, the 120 s seat-view drive.
+  - `tests/cast-lock.mjs`, the full-lock and still frames.
+  - The `cast-seat-phone` group, split out so that no run passes 20 minutes.
+  - The Stoppage Time crowd frame now walks in first; from the car park its camera stood outside the walls.
+
+**Checks:**
+- `npx tsc --noEmit`: clean, on both configs.
+- `npm run build`: 3788 KB js, with exactly 1 `data-build="owner-test"` (the base was 3681 KB).
+- `npm run store:check`: the same 2 problems as the base, both in `car-wheel.ts`, another session's file. The sync is
+  in step (23 SKUs, 11 available).
+- **The suites** (SwiftShader; load average 16 to 18 from other lanes):
+  - boot 6/6 (1m38s).
+  - cast 9/9 (7m58s).
+  - cast-seat 3/3 (19m50s). Its phone half was cut off at the 20-minute limit in that run, so it became its own
+    group.
+  - cast-seat-phone 2/2 (6m22s).
+  - cast-venues 3/3 (9m43s).
+  - venues: 12/13 on the first run (11m55s). The failed check was "Stoppage Time: navigateTo routes to its exit
+    ramp...": the car parked, then a 120 s wait for the Get out button and toast timed out. The rerun on the final build passed 13/13 (12m08s).
+  - phone: 17/18 on the first run (17m49s). "sky camera: a sharp live picture inside its frame" timed out waiting 60 s.
+    The full rerun on the final build failed the same way (19m50s; the run was then cut off at the 20-minute
+    limit). So it is NOT shown to pass.
+    - Isolated with `--check=sky` or `--check=Minimal`, the check fails on both our build and the base, because it
+      needs the earlier checks' driving state. A full base phone run under the same load was not done, so whether the
+      base passes it here is unknown.
+    - Nothing in this lane touches the HUD's idle tuck or the sky camera.
+    - The other 16 checks passed both times, including the seat view and the steering wheel checks.
+- **The suite lines:**
+  - The six build within the phone budget. Tris at LOD 2/1/0 and draw calls at LOD 0:
+
+    | Character | LOD 2 | LOD 1 | LOD 0 | Calls |
+    | --- | --- | --- | --- | --- |
+    | Mateo | 1660 | 9077 | 84144 | 21 |
+    | Danny | 1376 | 7573 | 70322 | 21 |
+    | Marcus | 1664 | 8300 | 71409 | 18 |
+    | Leila | 1400 | 7991 | 88148 | 19 |
+    | Jas | 1308 | 7413 | 67413 | 19 |
+    | Kate | 1512 | 8005 | 72645 | 19 |
+
+    The budget is 2,500 / 14,000 / 90,000 tris and 1 / 2 / 24 calls.
+  - **An old save** (female, tone 1) keeps tone #f1c6a5, and the picker opens on Kate Morgan, marked closest.
+  - **The picker saves Leila,** and a reload restores her: the menu reads "Leila Farahani, Irvine", and the arms are
+    #d3a583.
+  - **The arms follow each character** while the ability stays Clear Path:
+
+    | Character | Tone | Presentation | Sleeve | Extras |
+    | --- | --- | --- | --- | --- |
+    | Mateo | #b57a58 | m | shirt, #3b3b3d | |
+    | Danny | #d6a47f | m | work, #9a9c9f | steel watch |
+    | Marcus | #65402f | m | work, #1f2740 | |
+    | Leila | #d3a583 | f | shirt, #e3d7c3 | |
+    | Jas | #c49068 | f | suit, #4e5536 | bangle |
+    | Kate | #e0b393 | f | work, #7f98b4 | |
+
+    A tone-only change goes through `setTone` (#8a5536).
+  - **The pack:** `cast-pack-duo` is `available: false`, at 500 cents (a placeholder). It is not on sale by the
+    store's rule.
+  - **Full lock:** 1.050 rad left and -1.050 rad right.
+  - **Lot 57:** the avatar is Marcus (#65402f, bald, 1.88 m). Of 49 people: Mateo 7, Danny 7, Marcus 10, Kate 11,
+    Jas 7, Leila 7. Nobody is outside the six.
+  - **Stoppage Time:** the avatar is Marcus. Of 42 people: Jas 5, Marcus 8, Leila 7, Danny 8, Mateo 7, Kate 7.
+    Nobody is outside the six.
+- **Flicker:** two still seat frames (phone, Low) half a second apart differ in 41 of 216,000 pixels over the wheel,
+  hub and cluster, by at most 46 levels. That is the live needle and antialiasing, not z-fighting.
+
+**Seat-view smoothness, measured** (`tests/cast-perf.mjs`):
+- **The drive:** 120 s in the cockpit with steering taps every 3 s and two slow full-lock holds each way. Our build
+  drove as Jas Cruz; the base (HEAD 5cf7212, built in a scratch folder) drove its archetype look.
+- **The setup:** headless Chromium on SwiftShader, software rendering, on 4 shared cores with a load average of 16 to
+  18 from other lanes. The absolute times are SwiftShader's, not a phone's.
+- **The order:** two runs each, run 2 in the reverse order.
+- **The methods:**
+  - Frame times come from requestAnimationFrame.
+  - Long tasks are the PerformanceObserver's, over 50 ms.
+  - Calls and triangles are `renderer.info` summed over every render call of a frame, except phone run 1, which read
+    the last call of a frame only.
+  - The heap is CDP `Runtime.getHeapUsage` after two forced GCs.
+
+| Profile | Build | Frames | p50 ms | p95 ms | p99 ms | Long tasks (ms) | Calls (mean) | Tris (mean) | Heap MB start → end |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Phone 390x844, DPR 3, CPU 4x, Low | base, run 1 | 39 | 2983 | 8266 | 10383 | 33 (7058) | 315* | 551,475 | 25.2 → 25.5 |
+| | cast, run 1 | 45 | 2533 | 5700 | 8600 | 40 (6426) | 281* | 531,260 | 25.1 → 25.5 |
+| | cast, run 2 | 47 | 2183 | 5750 | 13483 | 30 (16836) | 309 | 541,763 | 25.1 → 25.5 |
+| | base, run 2 | 48 | 2517 | 6017 | 8250 | 36 (9415) | 298 | 546,382 | 25.1 → 25.5 |
+| | **pooled base** | 87 | 2600 | 6200 | 10383 | | | | |
+| | **pooled cast** | 92 | 2350 | 5750 (-7 %) | 13483 | | | | |
+| Desktop 1280x720, High | base, run 1 | 23 | 5800 | 9033 | 14083 | 7 (785) | 847 | 3,099,578 | 27.8 → 28.2 |
+| | cast, run 1 | 24 | 5183 | 14283 | 15316 | 5 (511) | 845 | 3,075,638 | 27.9 → 28.1 |
+| | cast, run 2 | 19 | 6283 | 19383 | 19383 | 2 (270) | 833 | 3,055,878 | 27.8 → 28.1 |
+| | base, run 2 | 18 | 6783 | 12316 | 12316 | 3 (238) | 778 | 3,037,206 | 28.0 → 28.3 |
+| | **pooled base** | 41 | 5933 | 11733 | 14083 | | | (mean 5697 ms) | |
+| | **pooled cast** | 43 | 6083 | 15316 (+31 %) | 19382 | | | (mean 5652 ms) | |
+
+\* The last render call of a frame only (phone run 1).
+
+**What the table shows:**
+- **The heap does not grow on either profile** (+0.3 to 0.4 MB over the drive on both builds).
+- **Draw calls and triangles are the same** within the drive's own variation.
+- **The phone meets "no worse than +10 % p95":** -7 % pooled.
+- **The desktop is NOT shown to meet it.** Its pooled p95 is +31 %, while its p50 is +2.5 % and its mean -0.8 %.
+  With 41 to 43 frames per build, p95 is the third-worst frame. The four runs' p95s swing from 9.0 to 19.4 s with the
+  machine's load, both within one build and between builds. Nothing this lane added runs per frame in the drive. That
+  points to noise rather than a regression, but it is not proof: it needs a quiet machine or a real GPU.
+- **Run 1 of "cast" was the build before the full-lock fix.** Run 2 is the final build.
+
+**Frames, all looked at** (`tests/out/cast/`):
+- the picker: `picker-1450x767.png`, `picker-1450x767-cards.png`, `picker-390x844.png`, `picker-390x844-cards.png`;
+- the seat view:
+  - `seat-<id>-1280x720.png` and `seat-<id>-390x844.png` for the six;
+  - `seat-six-1280x720-hands.png`;
+  - `seat-lock-left|right-1280x720.png`;
+  - `seat-hood|chase-1280x720.png`;
+- full lock before and after: `lock/jas-phone-lock-strip.png`, `lock/jas-phone-lock-strip-after.png`,
+  `lock/marcus-desktop-left|centre|right.png`;
+- the venues: `venue-lot57-avatar.png`, `venue-lot57-crowd.png`, `venue-stoppage-avatar.png`,
+  `venue-stoppage-crowd.png`;
+- the six against their sheets: `compare-<id>-body.png` and `compare-<id>-head.png`;
+- the beards: `beard-fullBeard-vs-beard.png`, `beard-before-after.png`;
+- the perf drives' end frames: `perf/*-end.png`.
+
+**Not right yet (honest):**
+- **The characters are far from the sheets.** The faces are generic and smudged at the cheeks and jaw. Leila's and
+  Danny's hair reads as a helmet. The shoulders slope and the sleeves balloon. Marcus doesn't read as muscular. Straight jeans render skin-tight. The
+  full beard is a hard-edged shell with tabs at the ears. "Insane" character graphics are NOT achieved: that is the
+  people builder's geometry and shading (`face.ts`, `skin.ts` and `masks.ts`, another branch's), which is
+  Fable-class work.
+- **Marcus's scar** isn't built.
+- **The hands lack five sleeve and wrist pieces** (`PROJECT_OC_CAST.md` lists them for their session).
+- **No driver body** shows from the hood or chase cameras.
+- **The desktop p95 criterion** is not demonstrated (above).
+
+**Next (cast B):**
+1. The drive, park, exit, walk, enter, interact, leave, drive and reload loop with each of the six.
+2. The graphics pass on the six.
+
 ## 2026-11-11: Final live merge 3: fixes
 
 Drop 1 of 2 went live on claude/final-live (on top of c3962c5, the live v14 game). Three reviewed branches were merged by exact hash:
