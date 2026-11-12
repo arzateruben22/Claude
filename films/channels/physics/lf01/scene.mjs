@@ -319,9 +319,12 @@ const mist = []; { const rm = rng(11); for (let i = 0; i < 150; i++) { const m =
 const proxy = new THREE.Group(); proxy.visible = false; scene.add(proxy);
 const proxyMat = patch(new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor, depthWrite: false, side: THREE.DoubleSide }), false);
 const proxyBox = (w, h, d, x, y, z) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), proxyMat); m.position.set(x, y, z); m.frustumCulled = false; proxy.add(m); };
-// plate-01 (the wide kitchen from the doorway): camera 1.06 m up, back wall 3.8 m away, counters 1.73 m left and 1.36 m right, ceiling 2.6 m, the table 1.3-2.6 m out
-proxyBox(3.1, 2.6, 0.02, -0.185, 1.3, -3.8); proxyBox(0.02, 2.6, 3.8, -1.73, 1.3, -1.9); proxyBox(0.02, 2.6, 3.8, 1.36, 1.3, -1.9); proxyBox(3.1, 0.02, 3.8, -0.185, 0.0, -1.9); proxyBox(3.1, 0.02, 3.8, -0.185, 2.6, -1.9);
-proxyBox(0.68, 0.04, 1.3, -0.01, 0.76, -1.95);
+// the proxy room of a plate comes from its anchor.room {x0, x1, z0, h, table:{y, x0, x1, z0, z1}} (the default is plate-01's wide kitchen from the doorway: camera 1.06 m up, back wall 3.8 m away, counters 1.73 m left and 1.36 m right, ceiling 2.6 m, the table 1.3-2.6 m out)
+let proxyKey = "";
+const buildProxy = (R) => { const key = JSON.stringify(R); if (key === proxyKey) return; proxyKey = key; while (proxy.children.length) { const c = proxy.children[0]; proxy.remove(c); c.geometry.dispose(); }
+  const w = R.x1 - R.x0, cx = (R.x0 + R.x1) / 2, d = -R.z0, h = R.h; proxyBox(w, h, 0.02, cx, h / 2, R.z0); proxyBox(0.02, h, d, R.x0, h / 2, R.z0 / 2); proxyBox(0.02, h, d, R.x1, h / 2, R.z0 / 2); proxyBox(w, 0.02, d, cx, 0.0, R.z0 / 2); proxyBox(w, 0.02, d, cx, h, R.z0 / 2);
+  if (R.table) { const T = R.table; proxyBox(T.x1 - T.x0, 0.04, T.z1 - T.z0, (T.x0 + T.x1) / 2, T.y - 0.02, (T.z0 + T.z1) / 2); } };
+buildProxy({ x0: -1.73, x1: 1.36, z0: -3.8, h: 2.6, table: { y: 0.78, x0: -0.35, x1: 0.33, z0: -2.6, z1: -1.3 } });
 // ── sound: hands that clap, a ring (the wave painter draws it on every surface) ──
 const waveRing = new THREE.Mesh(new THREE.RingGeometry(0.93, 1.0, 128), new THREE.MeshBasicMaterial({ color: 0xA8D4FF, transparent: true, opacity: 0.8, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor, depthWrite: false, side: THREE.DoubleSide })); waveRing.visible = false; scene.add(waveRing);
 const waveFill = new THREE.Mesh(new THREE.CircleGeometry(0.93, 96), new THREE.MeshBasicMaterial({ color: 0x7FB6FF, transparent: true, opacity: 0.07, blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneFactor, blendSrcAlpha: THREE.ZeroFactor, blendDstAlpha: THREE.OneFactor, depthWrite: false, side: THREE.DoubleSide })); waveFill.visible = false; scene.add(waveFill);
@@ -565,7 +568,7 @@ window.seek = function (t) {
     if (inB && rB > 0 && rB < CAL.bubble_t) { rimR.visible = true; const rr = BUBR * Math.sin(th); bf(0, 0, BUBR * Math.cos(th), bv); rimR.position.copy(bubble.position).add(bv); rimR.quaternion.copy(qf); rimR.scale.setScalar(Math.max(rr, 1e-4)); } }
   // sound: the clap, a ring from the hands, its bounce off the left wall
   { const C0 = EV.clap, r = (t - C0) / 1000, vs = CAL.sound * 0.0, sm = t >= C0 - 16 && t < C0 + 36;
-    const an = plates.anchor(t); proxy.visible = !!(plateOn && an && an.proxy);
+    const an = plates.anchor(t); proxy.visible = !!(plateOn && an && an.proxy); if (an && an.room) buildProxy(an.room);
     if (an && an.pos) { [CLAPX, CLAPY, CLAPZ] = an.pos; } else { CLAPX = 2.45; CLAPY = TOP + 0.32; CLAPZ = -0.8; }
     const tint = an && an.tint ? an.tint : null; WV.uSTa.value.set(...(tint ? tint[0] : [0.62, 0.82, 1.0])); WV.uSTb.value.set(...(tint ? tint[1] : [0.3, 0.52, 0.95])); waveRing.material.color.set(tint ? tint[2] : 0xA8D4FF); waveFill.material.color.set(tint ? tint[3] : 0x7FB6FF);
     hands.visible = sm; hands.position.set(CLAPX, CLAPY, CLAPZ); const clap = t < C0 ? 0.5 + 0.5 * Math.abs(Math.sin(t * 2.5)) * seg(t, C0 - 14, C0 - 10) * (t < C0 - 2 ? 1 : 0) : 0; void vs;

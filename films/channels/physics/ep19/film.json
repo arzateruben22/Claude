@@ -480,6 +480,55 @@
    "anchor": {
     "night": true
    },
+   "p9": {
+    "native9": true,
+    "shift9": {
+     "x": 0,
+     "y": 0,
+     "ppm": 1
+    },
+    "file": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png",
+    "file9": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png",
+    "cam3": {
+     "pos": [
+      0,
+      1.06,
+      0
+     ],
+     "target": [
+      0,
+      1.183,
+      -1
+     ],
+     "fov": 95.7
+    },
+    "night": {
+     "orig": "../lf01/art/owner/plates/plate-09-night-9x16.png",
+     "pitch": true,
+     "fg": [],
+     "lamp": [
+      -1.18,
+      1.17,
+      -2.58
+     ],
+     "room": {
+      "x0": -1.23,
+      "x1": 1.18,
+      "z0": -3.8,
+      "h": 2.6,
+      "table": {
+       "y": 0.78,
+       "x0": -0.79,
+       "x1": 0.79,
+       "z0": -2.98,
+       "z1": -1.17
+      }
+     }
+    },
+    "anchor": {
+     "night": true
+    }
+   },
    "t0": 0.0,
    "t1": 63.3333
   }

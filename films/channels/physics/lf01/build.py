@@ -295,12 +295,18 @@ PLATE09 = "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png"; PLATE09O =
 _p09 = {"id": "night", "file": PLATE09, "file9": PLATE09, "push": 0.05, "parallax": 0, "fade": 0.4, "shift9": {"x": round((480 - 836) / _PX, 4), "ppm": _PX},
         "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
         "night": {"orig": PLATE09O, "fg": [[0, 92, 0, 941], [1584, 1672, 0, 941]], "lamp": [-1.7, 1.44, -2.82], "room": {"x0": -1.73, "x1": 1.36, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.35, "x1": 0.33, "z0": -2.6, "z1": -1.3}}},
-        "anchor": {"night": True}}
+        "anchor": {"night": True},
+        "p9": {"native9": True, "shift9": {"x": 0, "y": 0, "ppm": 1}, "file": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png", "file9": "../lf01/art/owner/plates/plate-09-night-lampoff-9x16.png", "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.183, -1], "fov": 95.7},
+               "night": {"orig": "../lf01/art/owner/plates/plate-09-night-9x16.png", "pitch": True, "fg": [], "lamp": [-1.18, 1.17, -2.58], "room": {"x0": -1.23, "x1": 1.18, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.79, "x1": 0.79, "z0": -2.98, "z1": -1.17}}},
+               "anchor": {"night": True}}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
 _p01 = {"id": "wide", "file": PLATE01, "file9": PLATE01_9, "push": 0.06, "parallax": 0, "fade": 0.35,
         "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
-        "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.62, 0.45, 0.14], [0.62, 0.45, 0.14], 0xE8B84A, 0xE8B84A]}}
+        "anchor": {"pos": [0.05, 1.0, -3.1], "mirror": [0.05, 1.0, -4.5], "proxy": True, "tint": [[0.62, 0.45, 0.14], [0.62, 0.45, 0.14], 0xE8B84A, 0xE8B84A]},
+        "p9": {"native9": True, "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.183, -1], "fov": 95.8},   # the owner's own 9:16 room picture, solved from its lines: eye 1.06 m above a floor line 211 px under the horizon, so 199 px/m at the back wall (3.8 m away, f = 756 px, a wide frame); the horizon is 93 px under the middle (the camera looks up 7 deg)
+               "anchor": {"pos": [0.0, 1.0, -2.0], "mirror": [0.0, 1.0, -5.6], "proxy": True, "tint": [[0.62, 0.45, 0.14], [0.62, 0.45, 0.14], 0xE8B84A, 0xE8B84A],
+                          "room": {"x0": -1.23, "x1": 1.18, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.79, "x1": 0.79, "z0": -2.98, "z1": -1.17}}}}}
 if PART == 1 and (HERE / "art/owner/plates/plate-02-feeder-16x9.png").exists():
     PLATES = [dict(_p02, t0=0.0, t1=R(W("wings", "But") - 0.2))]
 elif PART == 2 and (HERE / "art/owner/plates/plate-03-tap-mug-clean-16x9.png").exists():

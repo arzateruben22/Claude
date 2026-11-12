@@ -23,18 +23,18 @@
 // A night plate shows the picture with the lamp's light taken out (the DOM image) and reveals the original pixels where the light front has been.
 // A small WebGL2 canvas does the mix, in display colours, so the finish never touches it. The distance of every plate pixel from the lamp is solved once, by casting each pixel's ray into the plate's room box.
 const nightGL = (it, off, orig) => {
-  const n = it.p.night, cam = it.p.cam3, room = n.room, mw = 836, mh = 470, cv = document.createElement("canvas"); cv.width = it.W; cv.height = it.H;
+  const n = it.p.night, cam = it.p.cam3, room = n.room, pw = off.naturalWidth, ph = off.naturalHeight, mw = Math.ceil(pw / 2), mh = Math.ceil(ph / 2), cv = document.createElement("canvas"); cv.width = it.W; cv.height = it.H;
   const gl = cv.getContext("webgl2", { alpha: false, preserveDrawingBuffer: true, antialias: false }); if (!gl) return null;
-  const ppm = 470.5 / Math.tan((cam.fov * Math.PI) / 360), dist = new Float32Array(mw * mh), P = cam.pos, L = n.lamp;
+  const ppm = (ph / 2) / Math.tan((cam.fov * Math.PI) / 360), dist = new Float32Array(mw * mh), P = cam.pos, L = n.lamp, phi = n.pitch ? Math.atan((cam.target[1] - cam.pos[1]) / 1) : 0, sf = Math.sin(phi), cf = Math.cos(phi);
   for (let j = 0; j < mh; j++) for (let i = 0; i < mw; i++) {
-    const dx = ((i + 0.5) * 2 - 836) / ppm, dy = -(((j + 0.5) * 2) - 470.5) / ppm, dz = -1; let best = 1e9;
+    const ix = ((i + 0.5) * pw / mw - pw / 2) / ppm, iy = -(((j + 0.5) * ph / mh) - ph / 2) / ppm, dx = ix, dy = iy * cf + sf, dz = -cf + iy * sf; let best = 1e9;   // a ray: forward + right * ix + up * iy, the camera pitched by phi
     const hit = (t, ok) => { if (t > 0 && t < best && ok(P[0] + dx * t, P[1] + dy * t, P[2] + dz * t)) best = t; };
     hit((room.x0 - P[0]) / dx, (x, y, z) => y > 0 && y < room.h && z > room.z0); hit((room.x1 - P[0]) / dx, (x, y, z) => y > 0 && y < room.h && z > room.z0);
     hit((0 - P[1]) / dy, (x, y, z) => x > room.x0 && x < room.x1 && z > room.z0); hit((room.h - P[1]) / dy, (x, y, z) => x > room.x0 && x < room.x1 && z > room.z0);
     hit((room.z0 - P[2]) / dz, (x, y, z) => x > room.x0 && x < room.x1 && y > 0 && y < room.h);
     if (room.table) { const T = room.table; hit((T.y - P[1]) / dy, (x, y, z) => x > T.x0 && x < T.x1 && z > T.z0 && z < T.z1); }
     const x = P[0] + dx * best, y = P[1] + dy * best, z = P[2] + dz * best; dist[j * mw + i] = Math.hypot(x - L[0], y - L[1], z - L[2]);
-    { const px = (i + 0.5) * 2, py = (j + 0.5) * 2; for (const r of n.fg || []) if (px >= r[0] && px <= r[1] && py >= r[2] && py <= r[3]) dist[j * mw + i] = 1e4; }   // near-foreground pixels (a door frame) are never reached by the front
+    { const px = (i + 0.5) * pw / mw, py = (j + 0.5) * ph / mh; for (const r of n.fg || []) if (px >= r[0] && px <= r[1] && py >= r[2] && py <= r[3]) dist[j * mw + i] = 1e4; }   // near-foreground pixels (a door frame) are never reached by the front
   }
   const mkTex = (unit, fn) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); fn(); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return t; };
   mkTex(0, () => gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, off)); mkTex(1, () => gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, orig));
@@ -43,7 +43,7 @@ const nightGL = (it, off, orig) => {
   gl.attachShader(pr, sh(gl.VERTEX_SHADER, "#version 300 es\nin vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }"));
   gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `#version 300 es
 precision highp float; uniform sampler2D tOff, tOrig, tDist; uniform vec2 uRes, uPlate; uniform float uCs, uShift, uR, uW; out vec4 o;
-void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = vec2(836.0 + (f.x - uRes.x * 0.5 - uShift) / uCs, 470.5 + (f.y - uRes.y * 0.5) / uCs); vec2 uv = p / uPlate;
+void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = uPlate * 0.5 + vec2((f.x - uRes.x * 0.5 - uShift) / uCs, (f.y - uRes.y * 0.5) / uCs); vec2 uv = p / uPlate;
   vec3 a = texture(tOff, uv).rgb, b = texture(tOrig, uv).rgb; float d = texture(tDist, uv).r;
   float m = uR > 0.0 ? smoothstep(uR + 0.5 * uW, uR - 0.5 * uW, d) : 0.0, e = uR > 0.0 ? exp(-pow((d - uR) / (0.22 * uW + 0.012), 2.0)) : 0.0, g = uR > 0.0 ? 0.3 * exp(-pow((d - uR) / (1.6 * uW), 2.0)) : 0.0;
   vec3 c = mix(a, b, m); vec3 lin = pow(c, vec3(2.2)); float lu = dot(b, vec3(0.3, 0.55, 0.15));
