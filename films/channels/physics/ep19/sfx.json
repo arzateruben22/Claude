@@ -1,0 +1,59 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 13.9,
+   "kind": "hush",
+   "dur": 1.6,
+   "gain": -4,
+   "seed": 700
+  },
+  {
+   "at": 15.1,
+   "kind": "shimmer",
+   "dur": 4.0,
+   "gain": -3,
+   "pan": [
+    -0.5,
+    0.5
+   ],
+   "seed": 701
+  },
+  {
+   "at": 38.7,
+   "kind": "tap",
+   "gain": -2,
+   "pan": -0.5,
+   "seed": 702
+  },
+  {
+   "at": 38.8,
+   "kind": "shimmer",
+   "dur": 5.0,
+   "gain": -2,
+   "pan": [
+    -0.7,
+    0.3
+   ],
+   "seed": 703
+  },
+  {
+   "at": 38.8,
+   "kind": "slowmo",
+   "dur": 11.0,
+   "gain": -7,
+   "pan": [
+    -0.4,
+    0.4
+   ],
+   "seed": 704
+  },
+  {
+   "at": 57.5,
+   "kind": "riser",
+   "dur": 3.0,
+   "gain": -3,
+   "seed": 705
+  }
+ ]
+}

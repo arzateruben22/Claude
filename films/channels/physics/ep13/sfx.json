@@ -1,0 +1,54 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 0.2,
+   "kind": "buzz",
+   "dur": 5.0,
+   "f0": 55,
+   "pan": [
+    -0.4,
+    0.2
+   ],
+   "gain": -2,
+   "seed": 100
+  },
+  {
+   "at": "word:slower#1",
+   "kind": "slowmo",
+   "dur": 5.0,
+   "gain": -4,
+   "pan": [
+    -0.3,
+    0.3
+   ],
+   "seed": 101
+  },
+  {
+   "at": 53.5,
+   "kind": "whoosh",
+   "dur": 1.0,
+   "gain": -3,
+   "seed": 102
+  },
+  {
+   "at": 53.7,
+   "kind": "buzz",
+   "dur": 5.0,
+   "f0": 205,
+   "pan": [
+    0.6,
+    -0.4
+   ],
+   "gain": -3,
+   "seed": 103
+  },
+  {
+   "at": 56.4,
+   "kind": "riser",
+   "dur": 2.8,
+   "gain": -3,
+   "seed": 104
+  }
+ ]
+}

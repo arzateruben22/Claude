@@ -1,0 +1,76 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 3.1,
+   "kind": "buzz",
+   "dur": 9.6,
+   "f0": 150,
+   "pan": [
+    -0.6,
+    0.6
+   ],
+   "gain": -4,
+   "seed": 200
+  },
+  {
+   "at": 13.0,
+   "kind": "buzz",
+   "dur": 8.6,
+   "f0": 420,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -5,
+   "seed": 201
+  },
+  {
+   "at": 28.5,
+   "kind": "drip",
+   "gain": -1,
+   "pan": 0.1,
+   "seed": 202
+  },
+  {
+   "at": 30.33,
+   "kind": "clink",
+   "gain": -2,
+   "pan": 0.0,
+   "seed": 203
+  },
+  {
+   "at": 30.33,
+   "kind": "splat",
+   "dur": 0.5,
+   "gain": -1,
+   "seed": 204
+  },
+  {
+   "at": 30.45,
+   "kind": "spray",
+   "dur": 1.8,
+   "gain": -3,
+   "pan": 0.2,
+   "seed": 205
+  },
+  {
+   "at": 30.4,
+   "kind": "slowmo",
+   "dur": 3.6,
+   "gain": -5,
+   "pan": [
+    0,
+    0.4
+   ],
+   "seed": 206
+  },
+  {
+   "at": 65.0,
+   "kind": "riser",
+   "dur": 3.2,
+   "gain": -3,
+   "seed": 207
+  }
+ ]
+}

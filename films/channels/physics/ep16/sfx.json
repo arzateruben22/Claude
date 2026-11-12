@@ -1,0 +1,48 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 18.9,
+   "kind": "tap",
+   "gain": 2,
+   "pan": 0.0,
+   "seed": 400
+  },
+  {
+   "at": 18.95,
+   "kind": "boom",
+   "dur": 1.8,
+   "gain": -8,
+   "seed": 401
+  },
+  {
+   "at": 19.2,
+   "kind": "whoosh",
+   "dur": 2.6,
+   "gain": -4,
+   "pan": [
+    0.0,
+    0.7
+   ],
+   "seed": 402
+  },
+  {
+   "at": 26.0,
+   "kind": "wave",
+   "dur": 3.0,
+   "gain": -6,
+   "pan": [
+    0.4,
+    -0.4
+   ],
+   "seed": 403
+  },
+  {
+   "at": 64.5,
+   "kind": "riser",
+   "dur": 3.4,
+   "gain": -3,
+   "seed": 404
+  }
+ ]
+}

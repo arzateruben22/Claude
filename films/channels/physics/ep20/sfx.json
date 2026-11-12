@@ -1,0 +1,39 @@
+{
+ "palette": "kitchen",
+ "cues": [
+  {
+   "at": 6.4,
+   "kind": "tick",
+   "repeat": 15,
+   "every": 0.3333,
+   "gain": -6,
+   "pan": 0.3,
+   "seed": 800
+  },
+  {
+   "at": 11.2,
+   "kind": "whoosh",
+   "dur": 1.6,
+   "gain": -3,
+   "pan": [
+    -0.3,
+    0.4
+   ],
+   "seed": 801
+  },
+  {
+   "at": 43.9,
+   "kind": "shimmer",
+   "dur": 8.0,
+   "gain": -6,
+   "seed": 802
+  },
+  {
+   "at": 66.0,
+   "kind": "riser",
+   "dur": 2.8,
+   "gain": -3,
+   "seed": 803
+  }
+ ]
+}

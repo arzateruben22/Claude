@@ -244,6 +244,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
 SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else {"16x9": [0.87, 0.2], "9x16": [0.21, 0.31]} if PART == 6 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+if PART == 1: SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]}], [44.0, {"16x9": [0.74, 0.2], "9x16": [0.2, 0.22]}]]   # the bird section's last seconds (a 1.35x push): the counter moves up-left, off the feeder lid
 if PART == 8: SPINE_AT = [[-1e9, {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]}], [6.0, [0.5, 0.29]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
