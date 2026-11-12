@@ -1,0 +1,168 @@
+{
+ "title": "Your Skin Is Still Healing After It Looks Healed",
+ "three": {
+  "module": "../set/collagen3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.012,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   0.435,
+   3.59,
+   "Your skin is still healing after it looks healed."
+  ],
+  [
+   4.745,
+   7.87,
+   "When a small gap in your skin closes,"
+  ],
+  [
+   7.84,
+   9.925,
+   "it looks finished in a week or two,"
+  ],
+  [
+   9.895,
+   11.67,
+   "but it isn't."
+  ],
+  [
+   13.12,
+   16.53,
+   "Underneath, the work has already begun."
+  ],
+  [
+   18.035,
+   18.92,
+   "First,"
+  ],
+  [
+   18.89,
+   23.55,
+   "your body seals it and calls in its cleaning crews."
+  ],
+  [
+   24.975,
+   27.52,
+   "New cells creep in from the edges,"
+  ],
+  [
+   27.49,
+   31.57,
+   "and repair cells lay down fresh collagen."
+  ],
+  [
+   33.03,
+   38.39,
+   "Quickly, a little messily, like scaffolding."
+  ],
+  [
+   40.19,
+   41.835,
+   "But for months,"
+  ],
+  [
+   41.805,
+   43.655,
+   "sometimes a year or more,"
+  ],
+  [
+   43.625,
+   47.61,
+   "the skin keeps quietly rebuilding."
+  ],
+  [
+   49.065,
+   49.61,
+   "Then,"
+  ],
+  [
+   49.58,
+   54.545,
+   "quick collagen is traded for stronger fibers drawn slowly into line."
+  ],
+  [
+   54.515,
+   59.54,
+   "The spot grows flatter and softer, paler."
+  ],
+  [
+   61.105,
+   61.915,
+   "Even then,"
+  ],
+  [
+   61.885,
+   68.64,
+   "rebuilt skin usually ends up at most around 80% as strong as before."
+  ],
+  [
+   70.08,
+   76.46,
+   "So the skin you think of as healed is still being gently rewoven,"
+  ],
+  [
+   76.43,
+   78.86,
+   "long after you've forgotten it."
+  ],
+  [
+   80.975,
+   82.965,
+   "If you're feeling a little calmer,"
+  ],
+  [
+   82.935,
+   85.98,
+   "tap like and follow."
+  ]
+ ],
+ "hook": {
+  "text": "It's not done healing",
+  "t0": 0.0,
+  "t1": 3.0,
+  "size": 84,
+  "top": 300,
+  "grad": 0.75
+ }
+}

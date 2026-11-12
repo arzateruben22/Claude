@@ -1,0 +1,86 @@
+{
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Your skin is still healing after it looks healed.",
+   "a": 363.4,
+   "b": 367.48
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "When a small gap in your skin closes, it looks finished in a week or two, but it isn't.",
+   "a": 367.48,
+   "b": 374.2
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Underneath, the work has already begun.",
+   "a": 374.48,
+   "b": 377.84
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "First, your body seals it and calls in its cleaning crews.",
+   "a": 384.96,
+   "b": 390.36
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "New cells creep in from the edges, and repair cells lay down fresh collagen.",
+   "a": 390.36,
+   "b": 396.8
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "Quickly, a little messily, like scaffolding.",
+   "a": 396.8,
+   "b": 402.2
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "But for months, sometimes a year or more, the skin keeps quietly rebuilding.",
+   "a": 402.84,
+   "b": 410.32
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "Then, quick collagen is traded for stronger fibers drawn slowly into line. The spot grows flatter and softer, paler.",
+   "a": 410.24,
+   "b": 420.56
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Even then, rebuilt skin usually ends up at most around eighty percent as strong as before.",
+   "a": 420.88,
+   "b": 428.4
+  },
+  {
+   "id": "vo10",
+   "beat": "takeaway",
+   "text": "So the skin you think of as healed is still being gently rewoven, long after you've forgotten it.",
+   "a": 428.4,
+   "b": 436.88
+  }
+ ],
+ "cta": {
+  "follow": [
+   521.0,
+   525.74,
+   "If you're feeling a little calmer, tap like and follow."
+  ],
+  "subscribe": [
+   526.04,
+   529.42,
+   "If you're feeling a little calmer, tap like and subscribe."
+  ]
+ }
+}

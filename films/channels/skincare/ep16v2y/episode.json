@@ -1,0 +1,198 @@
+{
+ "title": "How One Pore Turns Into a Pimple",
+ "three": {
+  "module": "../set/plug3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.012,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   0.51,
+   4.115,
+   "A pimple begins deep inside a pore,"
+  ],
+  [
+   4.085,
+   7.05,
+   "long before you see anything."
+  ],
+  [
+   8.81,
+   10.04,
+   "Usually,"
+  ],
+  [
+   10.01,
+   14.07,
+   "old cells drift up and out with the oil."
+  ],
+  [
+   15.6,
+   19.73,
+   "But sometimes they cling together instead."
+  ],
+  [
+   21.245,
+   24.84,
+   "Oil and cells pack into a tiny plug…"
+  ],
+  [
+   24.81,
+   28.03,
+   "and the doorway starts to close."
+  ],
+  [
+   29.55,
+   31.77,
+   "If the top stays open,"
+  ],
+  [
+   31.74,
+   34.405,
+   "the plug can darken in the air."
+  ],
+  [
+   34.375,
+   36.055,
+   "That's a blackhead,"
+  ],
+  [
+   36.025,
+   39.45,
+   "and that dark color isn't dirt."
+  ],
+  [
+   40.915,
+   42.76,
+   "If skin closes over it,"
+  ],
+  [
+   42.73,
+   44.87,
+   "it stays pale."
+  ],
+  [
+   46.375,
+   48.155,
+   "Behind the plug,"
+  ],
+  [
+   48.125,
+   50.685,
+   "oil keeps arriving."
+  ],
+  [
+   50.655,
+   52.63,
+   "With nowhere to go,"
+  ],
+  [
+   52.6,
+   55.49,
+   "the pore slowly swells."
+  ],
+  [
+   57.005,
+   59.415,
+   "The microbes inside have a feast…"
+  ],
+  [
+   59.385,
+   61.95,
+   "and your body notices."
+  ],
+  [
+   63.465,
+   64.93,
+   "Immune cells gather,"
+  ],
+  [
+   64.9,
+   67.325,
+   "and the spot turns red, warm,"
+  ],
+  [
+   67.295,
+   69.37,
+   "and swollen."
+  ],
+  [
+   70.865,
+   73.72,
+   "That's the pimple you finally see."
+  ],
+  [
+   73.69,
+   76.79,
+   "A small, blocked doorway…"
+  ],
+  [
+   76.875,
+   77.895,
+   "and your body,"
+  ],
+  [
+   77.865,
+   80.07,
+   "working to clear it."
+  ],
+  [
+   82.685,
+   84.26,
+   "If you're feeling a little calmer,"
+  ],
+  [
+   84.23,
+   86.39,
+   "tap like and subscribe."
+  ]
+ ],
+ "hook": {
+  "text": "Starts before you see it",
+  "t0": 0.0,
+  "t1": 3.0,
+  "size": 88,
+  "top": 300,
+  "grad": 0.75
+ }
+}

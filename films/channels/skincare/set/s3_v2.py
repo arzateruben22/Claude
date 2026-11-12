@@ -27,7 +27,10 @@ def build(lines, words, suffix, cta_file):
     caps = []
     for L in lines:
         toks = [(w["w"], (w["start"], w["end"])) for w in words[L["id"]]]
+        prev = ""
         for disp, ts in display_tokens(toks):
+            if prev == "or" and disp.strip(".,;:!?") == "2": disp = disp.replace("2", "two")     # "a week or two" stays words
+            prev = disp.strip(".,;:!?").lower()
             ts = [x for x in ts if x]; caps.append({"w": disp, "t0": round(start[L["id"]] + min(a for a, _ in ts), 3), "t1": round(start[L["id"]] + max(b for _, b in ts), 3), "line": L["id"], "beat": L["beat"]})
     film = {"id": f"skin-sense-{sys.argv[1][2:].zfill(3)}", "title": {"series": "Skin Sense · Season 3", "title": cfg.get("final_title", cfg["title"])}, "fps": 30, "dur": dur, "poster": cfg["poster"], "theme": "../theme.json", "shots": [{"at": 0.0, "name": "main"}],
             "qaProfile": "asmr", "pace": PACE, "disclosures": {"aiVoice": False, "realVoice": True, "aiVisuals": True}, "captions": caps, "lines": {L["id"]: [start[L["id"]], end[L["id"]], L["beat"]] for L in lines}}
@@ -51,7 +54,7 @@ def build(lines, words, suffix, cta_file):
     names = []
     for i, L in enumerate(lines):
         ins += ["-i", str(d / "vo" / (cta_file if L["id"] == lines[-1]["id"] and cta_file else L["file"]))]; ms = int(start_o[L["id"]] * 1000)
-        fl.append(f"[{i + 1}:a]aformat=sample_rates=48000:channel_layouts=stereo,loudnorm=I=-17:TP=-3:LRA=7,adelay={ms}|{ms}[v{i}]"); names.append(f"[v{i}]")
+        fl.append(f"[{i + 1}:a]highpass=f=150:poles=2,highpass=f=150:poles=2,highpass=f=150:poles=2,highpass=f=150:poles=2,aformat=sample_rates=48000:channel_layouts=stereo,loudnorm=I=-17:TP=-3:LRA=7,adelay={ms}|{ms}[v{i}]"); names.append(f"[v{i}]")
     fl.append("".join(names) + f"amix=inputs={len(lines)}:normalize=0,atrim=0:{dur_o},rubberband=tempo={PACE}:transients=smooth:detector=soft:formant=preserved[vm]")
     fl.append(f"[b][vm]amix=inputs=2:normalize=0,atrim=0:{dur},loudnorm=I=-15.2:TP=-1.6:LRA=7,alimiter=limit=-1.6dB:level=disabled,atrim=0:{dur}[o]")
     subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", ";".join(fl), "-map", "[o]", "-ar", "48000", "-c:a", "aac", "-b:a", "256k", str(d / f"mix{suffix}.m4a")], check=True)

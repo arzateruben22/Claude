@@ -1,0 +1,916 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Every hair on you is scheduled to fall out.",
+   "heard": "Every hair on you is scheduled to fall out.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.055,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 0.345,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.77,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 0.8,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.155,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "scheduled",
+     "start": 1.44,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.91,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "fall",
+     "start": 2.045,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 2.665,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Every hair on your body is quietly keeping time.",
+   "heard": "Every hair on your body is quietly keeping time.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.27,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 0.45,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 0.825,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.13,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 1.215,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.71,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "quietly",
+     "start": 1.925,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "keeping",
+     "start": 2.625,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 3.005,
+     "end": 3.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "It grows, it pauses, it rests, and then… it lets go.",
+   "heard": "It grows, it pauses, it rests, and then it lets go.",
+   "words": [
+    {
+     "w": "It",
+     "start": 0.15,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "grows,",
+     "start": 0.36,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.985,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "pauses,",
+     "start": 1.21,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.925,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "rests,",
+     "start": 1.975,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.84,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "then…",
+     "start": 3.02,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.04,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "lets",
+     "start": 4.215,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "go.",
+     "start": 4.95,
+     "end": 5.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "On your head, growing can last for years. That's why it can grow so long.",
+   "heard": "On your head, growing can last for years. That's why it can grow so long.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.225,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.455,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "head,",
+     "start": 0.665,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "growing",
+     "start": 1.31,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 1.775,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "last",
+     "start": 1.975,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 2.695,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "years.",
+     "start": 2.805,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "That's",
+     "start": 4.05,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "why",
+     "start": 4.445,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.775,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "can",
+     "start": 4.95,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "grow",
+     "start": 5.03,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 5.565,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "long.",
+     "start": 6.215,
+     "end": 6.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "On your eyebrow, it lasts only months. They stay short.",
+   "heard": "On your eyebrow, it lasts only months. They stay short.",
+   "words": [
+    {
+     "w": "On",
+     "start": 0.18,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 0.325,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "eyebrow,",
+     "start": 0.52,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.595,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "lasts",
+     "start": 1.81,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 2.465,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "months.",
+     "start": 2.885,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 4.26,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "stay",
+     "start": 4.29,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "short.",
+     "start": 4.995,
+     "end": 5.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "When growing ends, the root shrinks and the hair loosens. Then it rests for a couple months.",
+   "heard": "When growing ends, the root shrinks and the hair loosens. Then it rests for a couple months.",
+   "words": [
+    {
+     "w": "When",
+     "start": 0.26,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "growing",
+     "start": 0.545,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "ends,",
+     "start": 1.045,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.035,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "root",
+     "start": 2.255,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "shrinks",
+     "start": 2.465,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.31,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.36,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 3.495,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "loosens.",
+     "start": 3.99,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "Then",
+     "start": 5.635,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 5.95,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "rests",
+     "start": 5.98,
+     "end": 6.72,
+     "heard": true
+    },
+    {
+     "w": "for",
+     "start": 6.855,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.885,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "couple",
+     "start": 7.15,
+     "end": 7.52,
+     "heard": true
+    },
+    {
+     "w": "months.",
+     "start": 7.46,
+     "end": 8.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "Meanwhile, in the same follicle, a brand new hair begins… and gently pushes the old one out.",
+   "heard": "Meanwhile, in the same follicle, a brand new hair begins and gently pushes the old one out.",
+   "words": [
+    {
+     "w": "Meanwhile,",
+     "start": 0.2,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.45,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.535,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 1.85,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "follicle,",
+     "start": 2.15,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.155,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "brand",
+     "start": 3.415,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "new",
+     "start": 3.895,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "hair",
+     "start": 4.17,
+     "end": 4.64,
+     "heard": true
+    },
+    {
+     "w": "begins…",
+     "start": 4.685,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 5.98,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "gently",
+     "start": 6.155,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 6.625,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 7.075,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "old",
+     "start": 7.205,
+     "end": 7.6,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 7.655,
+     "end": 7.92,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 8.12,
+     "end": 8.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "So losing fifty to a hundred hairs a day from your head alone is normal.",
+   "heard": "So losing 50 to 100 hairs a day from your head alone is normal.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.195,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "losing",
+     "start": 0.46,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "fifty",
+     "start": 1.155,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.645,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.8,
+     "end": 1.85,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.83,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "hairs",
+     "start": 2.3,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.755,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 3.28,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "from",
+     "start": 3.685,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.82,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "head",
+     "start": 3.895,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "alone",
+     "start": 4.325,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 4.64,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "normal.",
+     "start": 4.855,
+     "end": 5.68,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Every follicle keeps its own schedule, so they never all let go at once.",
+   "heard": "Every follicle keeps its own schedule so they never all let go at once.",
+   "words": [
+    {
+     "w": "Every",
+     "start": 0.165,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "follicle",
+     "start": 0.575,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 1.16,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "its",
+     "start": 1.605,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 1.725,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "schedule,",
+     "start": 1.92,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 2.68,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "they",
+     "start": 2.815,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "never",
+     "start": 2.96,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 3.37,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 3.595,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "go",
+     "start": 3.89,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 4.265,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "once.",
+     "start": 4.475,
+     "end": 5.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo10",
+   "text": "Right now, you're losing hair, and growing it, at the same time.",
+   "heard": "Right now, you're losing hair and growing it at the same time.",
+   "words": [
+    {
+     "w": "Right",
+     "start": 0.315,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "now,",
+     "start": 0.365,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 1.12,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "losing",
+     "start": 1.245,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "hair,",
+     "start": 1.665,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.35,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "growing",
+     "start": 2.575,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "it,",
+     "start": 3.4,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.51,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.685,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 4.235,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "time.",
+     "start": 4.725,
+     "end": 5.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo11",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "heard": "If you're feeling a little calmer, tap like and follow.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.135,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.26,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "feeling",
+     "start": 0.52,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.065,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.095,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "calmer,",
+     "start": 1.545,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.095,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.44,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.505,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.785,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

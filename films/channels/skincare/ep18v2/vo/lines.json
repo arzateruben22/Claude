@@ -1,0 +1,121 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Your skin is still healing after it looks healed.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.8,
+   "sha256": "ba3acf2a314e248aba6c7f9201bc50fef9d5efe8aa0d56f4842c51dae41d930d"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "When a small gap in your skin closes, it looks finished in a week or two, but it isn't.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 6.88,
+   "sha256": "d8beabdf16316140bf48b26477b5a0c7e0769b5521a47ca4a5d8b7900d5cd077"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "Underneath, the work has already begun.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.36,
+   "sha256": "e700c33f2b2e8fa6c21fb273e91d09323b7d5faf71c0a22fef9c0ca54f3a38b9"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "First, your body seals it and calls in its cleaning crews.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 5.48,
+   "sha256": "98a05096fd6ac5c31844dbd73f35577a0b272dd48283f9e03abf2e7084b361ac"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "New cells creep in from the edges, and repair cells lay down fresh collagen.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 6.52,
+   "sha256": "6820100be2720d943bbad5a4357607f1d1a54422965fade639d71bb5ac4be716"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "Quickly, a little messily, like scaffolding.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 5.64,
+   "sha256": "a2183e96318434a5debfe9e9219b1bfe6b5d022c892be7e1b818e6680dc84cfe"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "But for months, sometimes a year or more, the skin keeps quietly rebuilding.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 7.39,
+   "sha256": "78dc86d45d6415d92192357348f1354c2c9010dffa5e0f69fcd043775d4180db"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "Then, quick collagen is traded for stronger fibers drawn slowly into line. The spot grows flatter and softer, paler.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 10.48,
+   "sha256": "d7fc53d48980d4c117a2602644d49af2a2ed065163a3d927d4ef7e6847a058d4"
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Even then, rebuilt skin usually ends up at most around eighty percent as strong as before.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 7.6,
+   "sha256": "9dcb057b969befd72ccce1adaef55c16a5902411c2f01d3ef533f61ce476ebbf"
+  },
+  {
+   "id": "vo10",
+   "beat": "takeaway",
+   "text": "So the skin you think of as healed is still being gently rewoven, long after you've forgotten it.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 8.48,
+   "sha256": "c9fff02ac66f57a3e578a17363ad71d03fadf1b14bfd792600f579420f6bb3c9"
+  },
+  {
+   "id": "vo11",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 4.96,
+   "sha256": "32504b87c353e46b6c8f707095462214fa6130f3029ae1234c5972f6579599cb"
+  }
+ ]
+}

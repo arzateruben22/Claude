@@ -59,3 +59,14 @@ ep16v2y/build/
 ep16v2y/work/
 ep16v2y/out/
 *.part*
+!ep16v2/out/*-preview.mp4
+ep17v2/bed.wav
+ep17v2/bed-yt.wav
+ep18v2/bed.wav
+ep18v2/bed-yt.wav
+ep1[78]v2/build/
+ep1[78]v2/work/
+ep1[78]v2y/
+ep1[78]v2b/
+ep1[78]v2/out/*.mp4
+!ep1[78]v2/out/*-preview.mp4
