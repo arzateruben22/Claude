@@ -61,6 +61,12 @@ a { color: inherit; }
 /* Results and the selected job */
 .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding-bottom: 56px; align-items: start; }
 @media (min-width: 900px) { .split { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); } }
+.left { min-width: 0; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px; margin-bottom: 12px; background: var(--fill); border-radius: 9px; }
+.seg a { display: block; text-align: center; padding: 7px 10px; border-radius: 7px; font: 500 14px/1.25 var(--font); text-decoration: none; color: var(--text); }
+.seg a[aria-selected="true"] { background: var(--surface); font-weight: 600; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
+.seg span { margin-left: 4px; color: var(--text-2); font-weight: 500; font-variant-numeric: tabular-nums; }
+.empty { list-style: none; padding: 28px 18px; text-align: center; color: var(--text-2); background: var(--surface); border: 1px dashed var(--line); border-radius: 14px; }
 .results { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .job { display: grid; gap: 2px; padding: 16px 18px; background: var(--surface); border: 1px solid var(--line-soft); border-radius: 14px; text-decoration: none; transition: border-color .15s, box-shadow .15s; }
 .job:hover { border-color: var(--line); }
@@ -80,7 +86,7 @@ a { color: inherit; }
 }
 @media (max-width: 899px) {
   .detail { display: none; padding: 22px 18px; }
-  .show-detail .results, .show-detail .intro { display: none; }
+  .show-detail .left, .show-detail .intro { display: none; }
   .show-detail .detail { display: block; }
 }
 .back { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 14px; font-size: 17px; color: var(--text); text-decoration: none; }
@@ -129,7 +135,13 @@ a { color: inherit; }
     <p class="fine" id="fine"></p>
   </section>
   <div class="split">
-    <ul class="results" id="results" aria-label="Jobs"></ul>
+    <div class="left">
+      <nav class="seg" role="tablist" aria-label="Your jobs">
+        <a href="#jobs" role="tab" id="tab-jobs">Jobs<span id="n-jobs"></span></a>
+        <a href="#applied" role="tab" id="tab-applied">Applied<span id="n-applied"></span></a>
+      </nav>
+      <ul class="results" id="results" aria-label="Jobs"></ul>
+    </div>
     <section class="detail" id="detail" aria-live="polite"></section>
   </div>
   <p class="foot">job finder · private to you · nothing is sent or submitted for you</p>
@@ -154,7 +166,7 @@ a { color: inherit; }
   var docs = {};
   JOBS.forEach(function (j) { var st = state.jobs[j.id]; if (st && (st.resumeDoc || st.letter || st.outreach)) docs[j.id] = { resumeDoc: st.resumeDoc, letter: st.letter, outreach: st.outreach }; });
   var mainRef = null, saveTimer = null, saving = false, dirty = false;
-  var downloads = null, dlChecked = false, current = null, listY = 0, busy = false;
+  var downloads = null, dlChecked = false, current = null, listY = 0, busy = false, tab = "jobs";
   var wide = window.matchMedia ? window.matchMedia("(min-width: 900px)") : { matches: true };
 
   var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
@@ -339,12 +351,12 @@ a { color: inherit; }
       '<span class="job-title">' + esc(j.title) + "</span>" +
       '<span class="job-co">' + esc(j.company) + "</span>" +
       '<span class="job-loc">' + esc(j.city) + " · " + esc(away(j)) + "</span>" +
-      '<span class="tags"><span class="tag">' + esc(pay(j)) + "</span>" + (j.bestFit ? '<span class="tag tag-strong">Best fit</span>' : "") + (st.status === "applied" ? '<span class="tag tag-ok">Applied</span>' : "") + "</span></a></li>";
+      '<span class="tags"><span class="tag">' + esc(pay(j)) + "</span>" + (j.bestFit ? '<span class="tag tag-strong">Best fit</span>' : "") + (st.status === "applied" ? '<span class="tag tag-ok">Applied' + (st.appliedOn ? " " + esc(shortDate(st.appliedOn)) : "") + "</span>" : "") + "</span></a></li>";
   }
   function detail(j) {
     if (!j) return '<p class="hint">Pick a job from the list.</p>';
     var st = peek(j.id), url = safeUrl(j.url), d = docs[j.id] || {}, h = [];
-    h.push('<a class="back" href="#jobs">All jobs</a>');
+    h.push('<a class="back" href="#' + tab + '">' + (tab === "applied" ? "Applied" : "All jobs") + "</a>");
     h.push('<h2 class="d-title">' + esc(j.title) + '</h2><p class="d-co">' + esc(j.company) + '</p><p class="d-meta">' + esc(j.city) + " · " + esc(away(j)) + (j.posted ? " · Posted " + esc(j.posted) : "") + '</p><p class="d-pay">' + esc(pay(j)) + "</p>");
     h.push('<div class="d-actions">');
     if (url) h.push('<a class="btn btn-primary" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">Apply on company site</a>');
@@ -359,8 +371,17 @@ a { color: inherit; }
     if (d.outreach) h.push('<details class="fold"><summary>Message for the recruiter, after you apply</summary><p class="msg" id="msg-text">' + esc(d.outreach) + '</p><button type="button" class="btn btn-sm" data-copy>Copy message</button></details>');
     return h.join("");
   }
+  var isApplied = function (j) { return peek(j.id).status === "applied"; };
+  function lists() {
+    var applied = JOBS.filter(isApplied).sort(function (a, b) { return String(peek(b.id).appliedOn || "").localeCompare(String(peek(a.id).appliedOn || "")); });
+    return { jobs: JOBS.filter(function (j) { return !isApplied(j); }), applied: applied };
+  }
   function render() {
-    $("results").innerHTML = JOBS.map(row).join("");
+    var L = lists(), shown = L[tab];
+    $("n-jobs").textContent = L.jobs.length; $("n-applied").textContent = L.applied.length;
+    $("tab-jobs").setAttribute("aria-selected", String(tab === "jobs"));
+    $("tab-applied").setAttribute("aria-selected", String(tab === "applied"));
+    $("results").innerHTML = shown.length ? shown.map(row).join("") : '<li class="empty">' + (tab === "applied" ? "Jobs you mark as applied show up here, with the date you applied." : "You've applied to every job on this list.") + "</li>";
     $("detail").innerHTML = detail(BY[current]);
     $("dl-all").hidden = !downloads || !JOBS.some(function (j) { return resumeText(j); });
   }
@@ -375,7 +396,11 @@ a { color: inherit; }
       if (!wide.matches) window.scrollTo(0, 0);
       else if (fromNav) { var d = $("detail"); if (d) d.scrollTop = 0; }
     } else {
+      var h = (location.hash || "").slice(1);
+      if (h === "applied" || h === "jobs") tab = h;
       document.body.classList.remove("show-detail");
+      var inTab = lists()[tab];
+      if (fromNav && inTab.length && !inTab.some(function (j) { return j.id === current; })) current = inTab[0].id;
       if (!current && JOBS[0]) current = JOBS[0].id;
       render();
       if (showing && !wide.matches) window.scrollTo(0, listY);
@@ -391,7 +416,8 @@ a { color: inherit; }
     if (t.dataset.dl) { downloadOne(t.dataset.dl, j); return; }
     if (t.dataset.applied != null) {
       var st = js(j.id);
-      if (t.dataset.applied === "1") { st.status = "applied"; if (!st.appliedOn) st.appliedOn = today(); } else { st.status = "todo"; st.appliedOn = ""; }
+      if (t.dataset.applied === "1") { st.status = "applied"; if (!st.appliedOn) st.appliedOn = today(); toast("Moved to Applied"); }
+      else { st.status = "todo"; st.appliedOn = ""; toast("Moved back to Jobs"); }
       persist(); render(); return;
     }
     if (t.hasAttribute("data-copy")) {
