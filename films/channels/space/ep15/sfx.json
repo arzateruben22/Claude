@@ -1,0 +1,105 @@
+{
+ "palette": "space",
+ "cues": [
+  {
+   "at": 0.1,
+   "kind": "mass",
+   "dur": 6.0,
+   "gain": -3,
+   "seed": 301
+  },
+  {
+   "at": 3.02,
+   "kind": "mass",
+   "dur": 5.3,
+   "gain": -2,
+   "f0": 41,
+   "seed": 302
+  },
+  {
+   "at": 3.22,
+   "kind": "whoosh",
+   "dur": 3.5,
+   "pan": [
+    -0.4,
+    0.4
+   ],
+   "gain": -2,
+   "seed": 303
+  },
+  {
+   "at": 6.72,
+   "kind": "boom",
+   "dur": 2.5,
+   "gain": -5,
+   "seed": 304
+  },
+  {
+   "at": 6.72,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 305
+  },
+  {
+   "at": 27.6,
+   "kind": "surge",
+   "dur": 4.0,
+   "gain": 1,
+   "seed": 306
+  },
+  {
+   "at": 29.35,
+   "kind": "wave",
+   "dur": 2.4,
+   "gain": -1,
+   "seed": 307
+  },
+  {
+   "at": 40.67,
+   "kind": "surge",
+   "dur": 3.5,
+   "gain": 1,
+   "seed": 308
+  },
+  {
+   "at": 42.17,
+   "kind": "wave",
+   "dur": 2.4,
+   "gain": -1,
+   "seed": 309
+  },
+  {
+   "at": 54.56,
+   "kind": "whoosh",
+   "dur": 3.0,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 310
+  },
+  {
+   "at": 54.76,
+   "kind": "mass",
+   "dur": 3.8,
+   "gain": -4,
+   "f0": 44,
+   "seed": 311
+  },
+  {
+   "at": "cap:ch3_loop-1.4",
+   "kind": "riser",
+   "until": "capend:ch3_loop+0.1",
+   "gain": 2,
+   "seed": 312
+  },
+  {
+   "at": "capend:ch3_loop+0.1",
+   "kind": "boom",
+   "dur": 3.0,
+   "gain": 0,
+   "seed": 313
+  }
+ ]
+}

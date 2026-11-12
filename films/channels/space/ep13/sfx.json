@@ -1,0 +1,60 @@
+{
+ "palette": "space",
+ "cues": [
+  {
+   "at": 0.1,
+   "kind": "mass",
+   "dur": 6.0,
+   "gain": -3,
+   "seed": 101
+  },
+  {
+   "at": 12.08,
+   "kind": "tick",
+   "gain": -3,
+   "repeat": 6,
+   "every": 0.5,
+   "seed": 102
+  },
+  {
+   "at": 35.94,
+   "kind": "whoosh",
+   "dur": 2.5,
+   "pan": [
+    -0.5,
+    0.5
+   ],
+   "gain": -3,
+   "seed": 103
+  },
+  {
+   "at": 45.96,
+   "kind": "shimmer",
+   "dur": 3.0,
+   "gain": -3,
+   "seed": 104
+  },
+  {
+   "at": 58.26,
+   "kind": "tick",
+   "gain": -2,
+   "repeat": 7,
+   "every": 0.5,
+   "seed": 105
+  },
+  {
+   "at": "cap:ch1_loop-1.4",
+   "kind": "riser",
+   "until": "capend:ch1_loop+0.1",
+   "gain": 2,
+   "seed": 106
+  },
+  {
+   "at": "capend:ch1_loop+0.1",
+   "kind": "boom",
+   "dur": 3.0,
+   "gain": 0,
+   "seed": 107
+  }
+ ]
+}

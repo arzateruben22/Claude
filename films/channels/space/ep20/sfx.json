@@ -1,0 +1,155 @@
+{
+ "palette": "space",
+ "cues": [
+  {
+   "at": 0.1,
+   "kind": "mass",
+   "dur": 6.0,
+   "gain": -3,
+   "seed": 801
+  },
+  {
+   "at": 3.13,
+   "kind": "mass",
+   "dur": 4.8,
+   "gain": -2,
+   "f0": 41,
+   "seed": 802
+  },
+  {
+   "at": 3.33,
+   "kind": "whoosh",
+   "dur": 3.0,
+   "pan": [
+    -0.4,
+    0.4
+   ],
+   "gain": -2,
+   "seed": 803
+  },
+  {
+   "at": 6.33,
+   "kind": "boom",
+   "dur": 2.5,
+   "gain": -5,
+   "seed": 804
+  },
+  {
+   "at": 6.33,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 805
+  },
+  {
+   "at": 9.3,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 811
+  },
+  {
+   "at": 9.3,
+   "kind": "boom",
+   "dur": 2.2,
+   "gain": -2,
+   "seed": 812
+  },
+  {
+   "at": 11.39,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 813
+  },
+  {
+   "at": 11.39,
+   "kind": "boom",
+   "dur": 2.2,
+   "gain": -2,
+   "seed": 814
+  },
+  {
+   "at": 12.52,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 815
+  },
+  {
+   "at": 12.52,
+   "kind": "boom",
+   "dur": 2.2,
+   "gain": -2,
+   "seed": 816
+  },
+  {
+   "at": 41.14,
+   "kind": "mass",
+   "dur": 4.5,
+   "gain": 0,
+   "f0": 38,
+   "seed": 808
+  },
+  {
+   "at": 41.34,
+   "kind": "creak",
+   "dur": 2.2,
+   "pan": -0.3,
+   "gain": 0,
+   "seed": 806
+  },
+  {
+   "at": 42.44,
+   "kind": "crack",
+   "dur": 1.5,
+   "pan": 0.2,
+   "gain": -1,
+   "seed": 807
+  },
+  {
+   "at": 46.1,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 817
+  },
+  {
+   "at": 46.1,
+   "kind": "boom",
+   "dur": 2.2,
+   "gain": -2,
+   "seed": 818
+  },
+  {
+   "at": 50.98,
+   "kind": "surge",
+   "dur": 4.0,
+   "gain": 1,
+   "seed": 809
+  },
+  {
+   "at": 52.73,
+   "kind": "wave",
+   "dur": 2.4,
+   "gain": -1,
+   "seed": 810
+  },
+  {
+   "at": "cap:ch8_loop-1.4",
+   "kind": "riser",
+   "until": "capend:ch8_loop+0.1",
+   "gain": 2,
+   "seed": 819
+  },
+  {
+   "at": "capend:ch8_loop+0.1",
+   "kind": "boom",
+   "dur": 3.0,
+   "gain": 0,
+   "seed": 820
+  },
+  {
+   "at": "capend:ch8_loop+0.1",
+   "kind": "debris",
+   "dur": 3.0,
+   "gain": -3,
+   "seed": 821
+  }
+ ]
+}

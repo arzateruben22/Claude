@@ -1,0 +1,128 @@
+{
+ "palette": "space",
+ "cues": [
+  {
+   "at": 0.1,
+   "kind": "mass",
+   "dur": 6.0,
+   "gain": -3,
+   "seed": 701
+  },
+  {
+   "at": 2.59,
+   "kind": "mass",
+   "dur": 5.3,
+   "gain": -2,
+   "f0": 41,
+   "seed": 702
+  },
+  {
+   "at": 2.79,
+   "kind": "whoosh",
+   "dur": 3.5,
+   "pan": [
+    -0.4,
+    0.4
+   ],
+   "gain": -2,
+   "seed": 703
+  },
+  {
+   "at": 6.29,
+   "kind": "boom",
+   "dur": 2.5,
+   "gain": -5,
+   "seed": 704
+  },
+  {
+   "at": 6.29,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 705
+  },
+  {
+   "at": 22.66,
+   "kind": "whoosh",
+   "dur": 3.0,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -1,
+   "seed": 706
+  },
+  {
+   "at": 22.96,
+   "kind": "mass",
+   "dur": 3.0,
+   "gain": -3,
+   "f0": 40,
+   "seed": 707
+  },
+  {
+   "at": 29.19,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 712
+  },
+  {
+   "at": 29.19,
+   "kind": "boom",
+   "dur": 2.2,
+   "gain": -2,
+   "seed": 713
+  },
+  {
+   "at": 34.2,
+   "kind": "whoosh",
+   "dur": 3.0,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 708
+  },
+  {
+   "at": 34.4,
+   "kind": "mass",
+   "dur": 3.8,
+   "gain": -4,
+   "f0": 44,
+   "seed": 709
+  },
+  {
+   "at": 40.44,
+   "kind": "whoosh",
+   "dur": 3.5,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -1,
+   "seed": 710
+  },
+  {
+   "at": 40.74,
+   "kind": "mass",
+   "dur": 3.5,
+   "gain": -3,
+   "f0": 40,
+   "seed": 711
+  },
+  {
+   "at": "cap:ch7_loop-1.4",
+   "kind": "riser",
+   "until": "capend:ch7_loop+0.1",
+   "gain": 2,
+   "seed": 714
+  },
+  {
+   "at": "capend:ch7_loop+0.1",
+   "kind": "boom",
+   "dur": 3.0,
+   "gain": 0,
+   "seed": 715
+  }
+ ]
+}
