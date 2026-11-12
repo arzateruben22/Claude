@@ -70,23 +70,5 @@
    "qualification": "Own inference; see the note."
   },
   "derivation": "At 18,000 km centre to centre the Moon's angular width is 21x today's (horizon view); overhead, one Earth radius closer (about 11,600 km), it is about 17 deg wide, about 33x (calc.py). The film says 'more than twenty times'."
- },
- {
-  "id": "c41",
-  "sentence": "It is at least as wide as a fist held out at arm's length, and wider still overhead.",
-  "claim": "At 18,000 km the Moon would span roughly 11 degrees at the horizon, wider than a fist held at arm's length.",
-  "source_url": "",
-  "source_title": "Our calculation (shown in the film)",
-  "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-10",
-   "by": "builder (an AI): derivation, no page read for this step",
-   "quote": "",
-   "qualification": "Own inference; see the note."
-  },
-  "derivation": "At 18,000 km the Moon spans 11 deg at the horizon and about 17 deg overhead (calc.py); a closed fist at arm's length spans about 10 deg (common observing rule of thumb; a person should confirm against an astronomy-outreach page). The film says 'at least as wide as a fist ... and wider still overhead'."
  }
 ]
