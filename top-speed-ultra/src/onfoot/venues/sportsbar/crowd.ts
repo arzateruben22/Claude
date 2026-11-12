@@ -37,31 +37,21 @@ import { TYPES, DANCE_SLOTS } from './objects';
 import { DRINKS, FOODS, itemById, EMPTY } from './menu';
 import { Bartender, Server, Host, Barback, handPoint } from './crew';
 import { setHiddenCaster } from './visibility';
-import { Cards, SEATED, STANDING, CHEERING, CardPose } from './cards';
+import { Cards, SEATED, STANDING, CHEERING, CardPose, LOOKS } from './cards';
 import { SCREENS, fd, FRONT, POOL_TABLES } from './layout';
 import type { BarLife } from './life';
+import { withFillRim } from './look';
+import { apartFromSkin } from './dress';
+import { sfx } from './sfx';
 
 const SECS = 60;
 /**
- * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written here so the bar doesn't import Lot 57's
+ * A body's own fill light (Lot 57's withFill, lot57/crowdview.ts, written for the bar so it doesn't import Lot 57's
  * crowd): the room's light is baked into the venue's vertex colours, so the builder's body material, lit only by the
  * sky and the few real lights, drew guests inside as near-black cut-outs at Low. The fill is added as the albedo times
- * its level (the builder's material is wrapped, not changed; its own shader edits run first).
+ * its level; S4 adds the rim at HD and Ultra (look.ts withFillRim, which this now is).
  */
-function withFill(mat: THREE.Material, fill: { value: THREE.Color }) {
-  if ((mat.userData as { filled?: boolean }).filled) return;
-  (mat.userData as { filled?: boolean }).filled = true;
-  const before = mat.onBeforeCompile;
-  mat.onBeforeCompile = (sh, r) => {
-    before.call(mat, sh, r);
-    sh.uniforms.uFill = fill;
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uFill;')
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += diffuseColor.rgb * uFill;');
-  };
-  mat.customProgramCacheKey = () => 'person-lod-fill';
-  mat.needsUpdate = true;
-}
+const withFill = withFillRim;
 const WALK = 1.25;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' | 'staff'; at: P2; face: P2; y: number; stand: P2; r: number; x: number; z: number; sx: number; sz: number; seatId?: number };
@@ -139,6 +129,8 @@ export class Crowd {
   private pool: { regulars: Regular[]; groups: RegularGroup[] };
   private r: Rnd;
   private spares: { p: Person; opts: PersonOptions; q: 'phone' | 'high' }[] = [];
+  /** the guests whose garments dress.ts moved away from their skin colour (the test hooks' list shows them) */
+  private recoloured = new WeakSet<PersonOptions>();
   private empties: Empty[] = [];
   private plates: { x: number; z: number; until: number }[] = [];
   private decisionLog: unknown[] = [];
@@ -334,7 +326,9 @@ export class Crowd {
   private newNpc(party: Party, o: { regular?: Regular; opts?: PersonOptions; t: number }): Npc {
     const id = this.nextId++, r = mulberry(hash32('npc', this.seedN, id));
     const reg = o.regular ?? null;
-    const opts = o.opts ?? (reg ? randomPerson(reg.seed % 100000) : randomPerson(hash32('walkin', this.seedN, id) % 100000));
+    // (S4's fourth pass: no body garment in the wearer's own skin colour, dress.ts; the card and the body agree)
+    const raw = o.opts ?? (reg ? randomPerson(reg.seed % 100000) : randomPerson(hash32('walkin', this.seedN, id) % 100000)), opts = apartFromSkin(raw);
+    if (opts !== raw) this.recoloured.add(opts);
     const featured = this.life.tv.featured(fromAbs(o.t / SECS).week, fromAbs(o.t / SECS).day);
     const n: Npc = {
       id, key: `n${id}`, name: reg ? reg.name : FIRST_NAMES[Math.floor(r() * FIRST_NAMES.length)], regular: reg ? reg.key : null,
@@ -551,7 +545,14 @@ export class Crowd {
   private addFiller(id: string, u: Unit) {
     const s = this.slots.get(id)!, seat = s.seatId !== undefined ? this.c.venue.seats[s.seatId] : null;
     const h = hash32('filler', this.seedN, id.length * 977 + Math.round(s.x * 10) * 31 + Math.round(s.z * 10));
-    const f: Filler = { slot: id, unit: u.id, look: h % 8, pose: seat ? SEATED : STANDING, yaw: seat ? seat.face : this.F.yawFromFrame(s.face[0], s.face[1]), cheerUntil: 0, x: seat ? seat.x : s.x, y: seat ? Math.max(-0.1, seat.y - 0.47) : this.c.grid.height(s.x, s.z), z: seat ? seat.z : s.z };
+    // S4's second repair (the art review: identical bodies side by side, three brown jackets in a row at the TV wall):
+    // the seeded look, moved on to the next of the cards' looks while a filler within 3 m already wears it (a filler
+    // keeps its look once placed, so nothing changes under the camera)
+    const near: number[] = [];
+    for (const g of this.fillers.values()) if (Math.abs(g.x - s.x) < 3 && Math.abs(g.z - s.z) < 3 && Math.hypot(g.x - s.x, g.z - s.z) < 3) near.push(g.look);
+    let look = h % LOOKS;
+    for (let k = 0; k < LOOKS && near.includes(look); k++) look = (look + 1) % LOOKS;
+    const f: Filler = { slot: id, unit: u.id, look, pose: seat ? SEATED : STANDING, yaw: seat ? seat.face : this.F.yawFromFrame(s.face[0], s.face[1]), cheerUntil: 0, x: seat ? seat.x : s.x, y: seat ? Math.max(-0.1, seat.y - 0.47) : this.c.grid.height(s.x, s.z), z: seat ? seat.z : s.z };
     this.fillers.set(id, f);
   }
   /** the point fillers keep their distance from: you, or the overhead's target */
@@ -1101,6 +1102,8 @@ export class Crowd {
   }
   /** a reaction in front of the current action: the clip, then the action resumes */
   private react(n: Npc, clip: ClipName, delay: number, seconds: number) {
+    // S4: the reaction's sound (audio.ts sums a frame's reactions into one swell, its level by how many reacted)
+    if (clip === 'cheer' || clip === 'groan' || clip === 'clap') sfx(clip, n.x, n.z, 1, delay);
     n.clip = clip; n.clipUntil = this.T + delay + seconds;
     if (clip === 'cheer') n.cheerCardUntil = this.T + delay + seconds;
     const at = this.T + delay;
@@ -1258,7 +1261,12 @@ export class Crowd {
    *  then the atlas painted from them; spares fill in when the room has fewer than eight */
   private paintAtlas(reason: BuildReason, atLoad: boolean) {
     const cp = this.camPoint(), P = atLoad ? { x: this.c.player.x, z: this.c.player.z } : { x: cp.x, z: cp.z };
-    const near = this.npcs.filter((n) => n.mode === 'live').sort((a, b) => Math.hypot(a.x - P.x, a.z - P.z) - Math.hypot(b.x - P.x, b.z - P.z)).slice(0, 8);
+    // S4's second repair (the art review: at Low, cards of a bald guest in a grey shirt with skin showing through the
+    // chest, twice in one frame): a LOD 2 body smears an open or deep neckline's skin over the chest, and the atlas
+    // repeats that look across the room, so of the 14 nearest the 8 with closed tops go first (nearest first within each)
+    const deep = (n: Npc) => n.opts.outfit.some((g) => (g.kind === 'shirt' && g.open === true) || g.neck === 'v' || g.neck === 'scoop' || g.neck === 'strap' || g.neck === 'square') ? 1 : 0;
+    const near = this.npcs.filter((n) => n.mode === 'live').sort((a, b) => Math.hypot(a.x - P.x, a.z - P.z) - Math.hypot(b.x - P.x, b.z - P.z)).slice(0, 14)
+      .map((n, i) => ({ n, k: deep(n) * 100 + i })).sort((a, b) => a.k - b.k).slice(0, 8).map((x) => x.n);
     let built = 0;
     for (const n of near) if (!n.p || n.q !== this.pq) { this.sched.run(this.bodyJob(n, 2, reason), -1, true); built++; }
     const bodies = near.filter((n) => n.p).map((n) => ({ p: n.p!, name: n.name }));
@@ -1276,17 +1284,24 @@ export class Crowd {
     return { who: n.id, level, quality: this.pq, reason, run: () => {
       if (level === 2 || !n.p || n.q !== this.pq) {
         if (n.p) this.disposeBody(n.p);
-        n.p = buildPerson({ ...n.opts, quality: this.pq, lod: 2 }); n.q = this.pq; n.lod1 = false;
+        n.p = buildPerson({ ...this.forBuild(n.opts), quality: this.pq, lod: 2 }); n.q = this.pq; n.lod1 = false;
         n.p.group.name = `npc-${n.id}`; n.p.group.userData.group = 'people'; n.p.group.visible = false;
         this.noCast(n.p); this.c.scene.add(n.p.group);
       }
       if (level === 1 && n.p) { const was = n.p.stats().lod; n.p.setLod(1); n.p.setLod(was as 1 | 2); n.lod1 = true; this.noCast(n.p); }
     } };
   }
+  /** what a body is built from: at phone quality (Low) a deep or open neckline is built closed (S4's second repair, the
+   *  art review: phone LOD bodies smear the skin of a V, a scoop or an open shirt over the whole chest, which the
+   *  Retro look turns into a flat skin-coloured patch); the person's own options (their card, their look) are kept */
+  private forBuild(o: PersonOptions): PersonOptions {
+    if (this.pq !== 'phone' || !o.outfit.some((g) => g.open || (g.neck && g.neck !== 'crew' && g.neck !== 'collar'))) return o;
+    return { ...o, outfit: o.outfit.map((g) => (g.kind === 'shirt' || g.kind === 'tee' || g.kind === 'fitted' || g.kind === 'blouse' || g.kind === 'tank' || g.kind === 'cardigan' || g.kind === 'dress' || g.kind === 'polo') ? { ...g, open: false, neck: g.neck === 'collar' ? 'collar' : 'crew' } : g) };
+  }
   private staffLod1Job(s: StaffRec): BuildJob { return { who: s.id, level: 1, quality: this.pq, reason: 'fill', run: () => { const was = s.body.p.stats().lod; s.body.p.setLod(1); s.body.p.setLod(was as 1 | 2); s.lod1 = true; this.noCast(s.body.p); } }; }
   private spareJob(reason: BuildReason): BuildJob {
     const k = hash32('spare', this.seedN, this.nextId++);
-    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = randomPerson(k % 100000); const p = buildPerson({ ...opts, quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
+    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = apartFromSkin(randomPerson(k % 100000)); const p = buildPerson({ ...this.forBuild(opts), quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
   }
   /** the next build in the plan's order: everyone live not yet built (LOD 2, nearest the camera first); then the casters'
    *  LOD 1; then the drawn LOD 1 count's, nearest first; then the 6 spares. A tap puts that person's LOD 1 first. The LOD 1
@@ -1444,11 +1459,14 @@ export class Crowd {
     return f;
   }
   /** the fill on a body where it stands: inside the room's light (more at Low, which has no real lights), outside a
-   *  little at night under the patio's and the lot's lamps */
+   *  little at night under the lot's lamps, and (S4's repair) the pergola's warm light on the patio while open */
   private setFill(p: Person, x: number, z: number) {
     const f = this.fills.get(p); if (!f) return;
     const c = this.c.clock(), inside = this.indoorAt(x, z), k = this.quality === 'low' ? 1 : 0.55;
-    if (inside && c.open) f.value.setRGB(0.34 * k, 0.29 * k, 0.24 * k); else f.value.setRGB(0.12 * c.night, 0.11 * c.night, 0.1 * c.night);
+    if (inside && c.open) { f.value.setRGB(0.34 * k, 0.29 * k, 0.24 * k); return; }
+    // inline, as indoorXZ does: this runs per body per frame, so it makes no array (the code review of S4's third pass)
+    const A = this.F.A, B = this.F.B, u = x * A[0] + z * A[1], v = x * B[0] + z * B[1], patio = c.open && u > 2 && u < 24 && v < 0.3 && v > -5.5;
+    if (patio) f.value.setRGB(0.26 * c.night, 0.19 * c.night, 0.13 * c.night); else f.value.setRGB(0.12 * c.night, 0.11 * c.night, 0.1 * c.night);
   }
   private applyBody(p: Person, mode: DrawMode, bits: number, key: string) {
     const sig = `${mode}:${bits}`;
@@ -1717,7 +1735,7 @@ export class Crowd {
   list() {
     const F = this.F;
     return [
-      ...this.npcs.map((n) => { const [u, v] = F.toFrame(n.x, n.z); return { id: n.id, key: n.key, name: n.name, kind: 'guest', regular: n.regular, mode: n.mode, draw: n.draw, lod: n.p ? n.p.stats().lod : null, quality: n.q, lod1: n.lod1, caster: n.caster, u: +u.toFixed(2), v: +v.toFixed(2), indoor: this.indoorAt(n.x, n.z), slot: n.slot, home: n.home, walking: !!n.path, action: n.act?.action ?? null, stage: n.act?.stage ?? null, mood: +n.mood.toFixed(1), label: n.label, emotion: n.emotion, speedK: n.speedK, team: n.team, party: n.party.id, yours: n.party.yours, fan: +n.traits.fan.toFixed(3), active: +n.traits.active.toFixed(3), holding: { drink: n.hand.drink?.item ?? null, food: n.hand.food?.item ?? null }, order: n.order, dist: +n.dist.toFixed(2), look: n.look, hidden: n.hiddenUntil > this.T, body: n.p?.group.uuid ?? null }; }),
+      ...this.npcs.map((n) => { const [u, v] = F.toFrame(n.x, n.z); return { id: n.id, key: n.key, name: n.name, kind: 'guest', regular: n.regular, mode: n.mode, draw: n.draw, lod: n.p ? n.p.stats().lod : null, quality: n.q, lod1: n.lod1, caster: n.caster, u: +u.toFixed(2), v: +v.toFixed(2), indoor: this.indoorAt(n.x, n.z), slot: n.slot, home: n.home, walking: !!n.path, action: n.act?.action ?? null, stage: n.act?.stage ?? null, mood: +n.mood.toFixed(1), label: n.label, emotion: n.emotion, speedK: n.speedK, team: n.team, party: n.party.id, yours: n.party.yours, fan: +n.traits.fan.toFixed(3), active: +n.traits.active.toFixed(3), holding: { drink: n.hand.drink?.item ?? null, food: n.hand.food?.item ?? null }, order: n.order, dist: +n.dist.toFixed(2), look: n.look, hidden: n.hiddenUntil > this.T, body: n.p?.group.uuid ?? null, skin: '#' + n.opts.look.skin.toString(16).padStart(6, '0'), wear: n.opts.outfit.map((g) => `${g.kind} #${g.color.toString(16).padStart(6, '0')}`).join(', '), recoloured: this.recoloured.has(n.opts) }; }),
       ...this.staff.map((s) => { const [u, v] = F.toFrame(s.body.x, s.body.z); return { id: s.id, key: s.name, name: s.name, kind: 'staff', role: s.role, mode: s.body.on ? 'live' : 'off', draw: s.draw, lod: s.body.p.stats().lod, quality: this.pq, lod1: s.lod1, caster: s.caster, u: +u.toFixed(2), v: +v.toFixed(2), indoor: this.indoorAt(s.body.x, s.body.z), dist: +s.dist.toFixed(2) }; }),
     ];
   }
