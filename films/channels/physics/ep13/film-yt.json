@@ -349,7 +349,8 @@
   "title": "Watch a wing, slowed ten times"
  },
  "disclosures": {
-  "aiVoice": true
+  "aiVoice": true,
+  "aiVisuals": true
  },
  "drifts": null,
  "plates": [

@@ -411,7 +411,7 @@ film = {
              "sound": 343.0, "leader": CALC["leader"], "light": CALC["light"]["m_per_ns"], "hair_m": CALC["hair"]["m"]},
     "badges": BADGES, "captionY": ({"9x16": (0.64 if PART == 1 else CAPY), "16x9": 0.77} if PART else CAPY),
     "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
-    "disclosures": {"aiVoice": True},
+    "disclosures": {"aiVoice": True, "aiVisuals": True},
     "drifts": ([[18.5, 21.1], [62.0, 64.4], [64.7, 67.7]] if PART == 4 else None),
     "plates": PLATES,
     "captions": [pg for pg in phrase_captions(f, max_chars=CAPCH, fix=[], until=ENDSHOW - 0.3) if pg["t0"] < ENDSHOW - 0.35], "endShow": ENDSHOW, "endCard": EC, "end": END,

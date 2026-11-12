@@ -287,7 +287,7 @@
   {
    "id": "code-s0",
    "kind": "tag",
-   "text": "Drawn by code · model",
+   "text": "Drawn by code \u00b7 model",
    "t0": 1.0,
    "t1": 6.0,
    "slot": "tl"
@@ -295,7 +295,7 @@
   {
    "id": "code-p1",
    "kind": "tag",
-   "text": "Kitchen: AI illustration · bullet and apple drawn by code",
+   "text": "Kitchen: AI illustration \u00b7 bullet and apple drawn by code",
    "t0": 20.0333,
    "t1": 23.0333,
    "slot": "tl"
@@ -303,7 +303,7 @@
   {
    "id": "code-s2",
    "kind": "tag",
-   "text": "Drawn by code · model",
+   "text": "Drawn by code \u00b7 model",
    "t0": 37.1333,
    "t1": 40.1333,
    "slot": "tl"
@@ -314,11 +314,12 @@
   "16x9": 0.77
  },
  "title": {
-  "series": "Reality Rulebook · Season 3 · Part 5 of 8",
+  "series": "Reality Rulebook \u00b7 Season 3 \u00b7 Part 5 of 8",
   "title": "A bullet, through an apple, slowly"
  },
  "disclosures": {
-  "aiVoice": true
+  "aiVoice": true,
+  "aiVisuals": true
  },
  "drifts": null,
  "plates": [
@@ -1337,8 +1338,8 @@
  "endCard": 61.1667,
  "end": {
   "title": "Part 5 of *8*",
-  "follow": "Full video on YouTube · Follow Reality Rulebook",
-  "foot": "Reality Rulebook · Season 3"
+  "follow": "Full video on YouTube \u00b7 Follow Reality Rulebook",
+  "foot": "Reality Rulebook \u00b7 Season 3"
  },
  "voice": [
   {
