@@ -23,9 +23,9 @@
 // How they're drawn inside the phone and desktop budgets (bodies near, impostors far, nothing behind walls) is
 // lot57/crowdview.ts.
 import * as THREE from 'three';
-import { buildPerson, Person, PersonOptions, randomPerson, LOD_RANGES } from '../people';
-import { baseBody, baseLook, defaultFace, HAIR_COLORS } from '../people/params';
+import { buildPerson, Person, PersonOptions, LOD_RANGES } from '../people';
 import type { Garment } from '../people';
+import { crowdPerson, staffPerson as castStaff, castOf } from '../cast';
 import { Items, ItemId } from './items';
 import { Exchange, OPENERS, FOLLOWUPS, WRAPS, LATER, HELLO, NAMES, pick, fill } from './talk';
 import { rand, P2 } from './geom';
@@ -143,8 +143,8 @@ const ROSTER: PartyDef[] = [
   { label: 'at table 9 in the yard', cx: -12, cz: -5, r: 1.2, table: true, n: 2, holds: ['horchata', null], from: 'lot', order: 10, sit: 'bench', at: 'table 9' },
 ];
 
-const TOPS = new Set<Garment['kind']>(['dress', 'tee', 'fitted', 'tank', 'shirt', 'blouse', 'polo']);
-const OUTER = new Set<Garment['kind']>(['jacket', 'leather', 'blazer', 'cardigan']);
+const TOPS = new Set<Garment['kind']>(['dress', 'tee', 'fitted', 'tank', 'shirt', 'blouse', 'polo', 'henley']);
+const OUTER = new Set<Garment['kind']>(['jacket', 'leather', 'blazer', 'cardigan', 'bomber', 'overshirt', 'workJacket']);
 /** colours a top swaps to when it would read as bare skin (ours, from the builder's night palette) */
 const TOP_SWAP = [0x1d2a44, 0x2f4a3a, 0x3a2f4f, 0x0f3550, 0x7a1d24, 0x161616];
 /** a tan, beige or brown in the range of skin tones (sRGB hue 12 to 50 degrees, some saturation, not near black or white) */
@@ -174,7 +174,7 @@ export function patioOutfit(o: PersonOptions, lawn: boolean, seed: number): Pers
     const g: Garment = { ...gm };
     if (top) {
       if (g.kind === 'tank') g.kind = 'fitted';
-      if (g.kind !== 'shirt' && g.kind !== 'polo') g.neck = 'crew';
+      if (g.kind !== 'shirt' && g.kind !== 'polo' && g.kind !== 'henley') g.neck = 'crew';
       if ((g.sleeve ?? 0.25) < 0.3) g.sleeve = 0.5;
     }
     if (skinLike(g.color)) g.color = TOP_SWAP[seed % TOP_SWAP.length];
@@ -191,22 +191,15 @@ const LAYERS: Garment[] = [
 ];
 function forTheHour(o: PersonOptions, night: boolean, seed: number): PersonOptions {
   if (!night || o.outfit.some((g) => OUTER.has(g.kind) || g.kind === 'dress') || seed % 3 !== 0) return o;
-  const shoes = o.outfit.findIndex((g) => ['heels', 'boots', 'sneakers', 'loafers', 'flats'].includes(g.kind));
+  const shoes = o.outfit.findIndex((g) => ['heels', 'boots', 'sneakers', 'loafers', 'flats', 'sandals', 'deckShoes', 'lowHeels', 'chunkySneakers', 'workBoots'].includes(g.kind));
   const outfit = [...o.outfit]; outfit.splice(shoes < 0 ? outfit.length : shoes, 0, { ...LAYERS[seed % LAYERS.length] });
   return { ...o, outfit };
 }
 
-/** a staff member's outfit: our patina-green top (the aprons are a garment the people builder doesn't make yet) */
-function staffPerson(seed: number, f: boolean, top: Garment['kind']): PersonOptions {
-  const r = rand(seed);
-  const body = { ...baseBody(f ? 'f' : 'm'), age: 24 + Math.round(r() * 22), height: f ? 1.62 + r() * 0.08 : 1.72 + r() * 0.1, fat: 0.3 + r() * 0.25, muscle: 0.4 + r() * 0.2 };
-  const look = { ...baseLook(), skin: [0xeac0a4, 0xc99472, 0x9c6545, 0x65402f][Math.floor(r() * 4)], hair: (f ? 'ponytail' : r() < 0.5 ? 'short' : 'buzz') as PersonOptions['look']['hair'], hairColor: [HAIR_COLORS.black, HAIR_COLORS.darkBrown, HAIR_COLORS.brown][Math.floor(r() * 3)] };
-  const outfit: Garment[] = [
-    { kind: top, color: 0x4f7f6a, fabric: 'cotton', sleeve: top === 'polo' ? 0.25 : 0.22, neck: top === 'polo' ? 'collar' : 'crew' },
-    { kind: 'trousers', color: 0x22252a, fabric: 'cotton' },
-    { kind: 'sneakers', color: 0x161616, fabric: 'leather', accent: 0xf2f2f0 },
-  ];
-  return { seed, name: 'staff', body, face: defaultFace(f ? 'f' : 'm'), look, outfit, acc: { hoops: null, studs: null, chain: null, watch: f ? null : 0x161616, bracelet: null, ring: null, bag: 'none', bagColor: 0x111111 } };
+/** a staff member: one of the six (src/onfoot/cast.ts) in our patina-green top (the aprons are a garment the people
+ *  builder doesn't make yet). `slot` picks which of the six (staff side by side get different ones) */
+function staffPerson(seed: number, slot: number, top: Garment['kind']): PersonOptions {
+  return castStaff(seed, slot, { kind: top, color: 0x4f7f6a, sleeve: top === 'polo' ? 0.25 : 0.22 });
 }
 
 export interface StaffPost {
@@ -272,6 +265,8 @@ export class Crowd {
     this.root.add(this.view.root);
   }
 
+  /** (cast) which of the six each person here is built from: everyone (guests, staff, crew, walkers), for the checks */
+  castPool() { return [...this.npcs, ...this.staff, ...this.crew, ...this.walkers].map((n) => castOf(n.opts)); }
   /** build everyone (at load: a far body takes about a third of a second; the patio bodies come from the worker) */
   async build(posts: StaffPost[], ctx: CrowdCtx, night: boolean, progress: (k: number, n: number) => Promise<void> | void = () => {}) {
     const t0 = performance.now();
@@ -285,8 +280,10 @@ export class Crowd {
       const g: Group = { id: gi, label: d.label, cx: d.cx, cz: d.cz, r: d.r, table: d.table, members: [], home: [], speaker: -1, prev: -1, turnT: 0, pauseT: 0.5 + gi, lookAt: 0, lookT: 0, laughT: 20 + gi * 13, you: null, talk: null, active: false, seed: 77 + gi * 31, seated: !!d.sit, ready: false, party };
       const seats = d.sit ? this.pickSeats(ctx.seats, d) : [];
       for (let k = 0; k < d.n; k++) {
-        // adults on a night out, dressed for the patio (patioOutfit, above); P1b's six (seeds 300 to 305) unchanged
-        const o = forTheHour(patioOutfit(randomPerson(seed), !d.table, seed), night && gi >= 2, seed); seed++;
+        // adults on a night out, dressed for the patio (patioOutfit, above), every one of them one of the six (the cast,
+        // 2026-11-11): the members of a group are different characters (consecutive slots), and the groups start at
+        // different characters, so nobody stands beside their own double; the clothes' tints vary by seed
+        const o = forTheHour(patioOutfit(crowdPerson(seed, gi * 5 + k), !d.table, seed), night && gi >= 2, seed); seed++;
         const a = (k / d.n) * Math.PI * 2 + gi * 0.7;
         const st = seats[k] ?? null;
         const x = st ? st.x : d.cx + Math.sin(a) * d.r, z = st ? st.z : d.cz + Math.cos(a) * d.r;
@@ -298,7 +295,7 @@ export class Crowd {
       this.groups.push(g);
     }
     posts.forEach((s, i) => {
-      const o = staffPerson(900 + i * 17, i === 1, s.role === 'bartender' ? 'polo' : 'tee');
+      const o = staffPerson(900 + i * 17, i * 2 + 1, s.role === 'bartender' ? 'polo' : 'tee');
       const n = this.add(o, s.role, 'post', s.role === 'bartender' ? 'Bartender' : 'Cook', s.x, s.y, s.z, s.face, false);
       n.tx = s.x; n.tz = s.z; n.th = s.face; n.seeX = s.seeX;
       (n as Npc & { post: StaffPost }).post = s;
@@ -313,8 +310,9 @@ export class Crowd {
       ['busser', 'Busser', 983, true, -16, -26, Math.PI / 2],
       ['attendant', 'Lot attendant', 991, false, -45.5, 44.5, -Math.PI / 2],
     ];
+    let crewN = 0;
     for (const [role, name, sd, f, x, z, h] of crew) {
-      const n = this.add(staffPerson(sd, f, role === 'barback' ? 'polo' : 'tee'), role, 'crew', name, x, 0, z, h, false);
+      const n = this.add(staffPerson(sd, f ? 4 + crewN : crewN, role === 'barback' ? 'polo' : 'tee'), role, 'crew', name, x, 0, z, h, false); crewN++;
       n.tx = x; n.tz = z; n.th = h;
       if (role === 'barback' && bar) { (n as Npc & { post: StaffPost }).post = bar; n.seeX = bar.seeX; }
       this.crew.push(n);
@@ -322,7 +320,7 @@ export class Crowd {
     }
     // two walkers on the Orangewood sidewalks (one jogs)
     for (let k = 0; k < 2; k++) {
-      const o = randomPerson(410 + k * 7);
+      const o = crowdPerson(410 + k * 7, 2 + k * 3);
       const n = this.add(patioOutfit(o, true, 410 + k), 'walker', 'walker', k ? 'Jogger' : 'Walker', 0, 0.15, -54, Math.PI / 2, false);
       n.spd = k ? 2.6 : 1.3;
       this.walkers.push(n);

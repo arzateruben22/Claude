@@ -33,7 +33,7 @@ import { RouteChevrons } from './road/chevrons';
 import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
-import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
+import { Ability, ABILITIES, DRIVERS, characterLook } from './drivers';
 import { CARS, carById, applyCar, paintFor, wheelFor, earnCapFor, tuneFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
@@ -464,7 +464,7 @@ export class Game {
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
-    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
+    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin || s.character !== this.settings.character;
     const owner = s.owner !== this.settings.owner;
     const cur = carById(this.driving);
     const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
@@ -637,15 +637,20 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
-    const look = lookFor(d.id, s.presentation, s.skin);
+    // the chosen character's appearance (cast.ts) on the archetype's pose; no character yet: the archetype's look
+    const { look, presentation } = characterLook(d.id, s.character, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
+      look, presentation, nails: look.nails !== undefined ? look.nails : presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor / characterLook)
     });
   }
 
+  /** (tests) what the cockpit's arms show now: the look they were built with, the tone set through setTone */
+  get driverArms() { return this.car.armsLook; }
+  /** (tests) the ability the archetype gives */
+  get abilityId() { return this.ability?.def.id ?? null; }
   // who's driving: their look in the cockpit, and their ability
   private applyDriver() {
     const d = DRIVERS.find((x) => x.id === this.settings.driver) ?? DRIVERS[0];

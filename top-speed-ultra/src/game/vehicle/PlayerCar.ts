@@ -82,6 +82,10 @@ export class PlayerCar {
   private arms: DriverArms | null = null;
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
+  /** the skin tone last given to the arms' setTone (the regression check reads it through armsLook) */
+  private armsTone = -1;
+  /** what the driver's arms show now: the look they were built with and the tone set on them (tests) */
+  get armsLook() { return this.cfg ? { ...this.cfg.look, tone: this.armsTone, presentation: this.cfg.presentation, nails: this.cfg.nails } : null; }
   private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
   // the OC Hypercar's Cold Thrust: its two diffuser nozzles (markers on the sprung body, for the jets) and the
   // compressed-air pressure gauge on its dash (a small canvas display, redrawn only when what it shows changes)
@@ -146,13 +150,17 @@ export class PlayerCar {
     const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
     const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
-    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
+    // a new skin tone alone (another character of the same presentation and sleeves) goes through the hands' public
+    // setTone; anything else about the arms rebuilds them
+    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify({ ...o!.look, skin: 0 }) !== JSON.stringify({ ...c.look, skin: 0 });
+    const toneChanged = !handsChanged && o!.look.skin !== c.look.skin;
     this.cfg = c;
     const t0 = performance.now();
     if (carChanged) { this.buildCarAndCockpit(c); if (c.finish) this.setPaint(c.paint, c.finish); }
     else if (paintChanged) this.setPaint(c.paint, c.finish ?? null);
     if (wheelsChanged) this.buildWheels(c);   // the garage's Wheels tab: only the four wheels are rebuilt
     if (handsChanged) this.buildHands(c);
+    else if (toneChanged && this.arms) { this.arms.setTone(c.look.skin); this.armsTone = c.look.skin; }
     this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
   }
@@ -302,6 +310,8 @@ export class PlayerCar {
     if (this.arms) { this.arms.dispose(); this.arms.group.parent?.remove(this.arms.group); }
     const t = performance.now();
     this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality });
+    // (the tone through the public setTone as well: the one path a tone change takes, whether or not the arms rebuilt)
+    this.arms.setTone(c.look.skin); this.armsTone = c.look.skin;
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
     this.arms.group.position.copy(this.armsAt);
