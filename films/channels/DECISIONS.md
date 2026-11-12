@@ -40,3 +40,10 @@ applied. The user can override any of them; nothing here is published.
 - **Writing, for every channel:** `kits/cinema/script/WRITING.md` (the story standard: a person, a
   wrong idea or stakes in every episode; open loops; earned wonder; the "Never write" list, which
   `lint.py` checks).
+
+## Skin Sense LED specials for Lumevina Aesthetics (owner, 12 Nov 2026)
+- Two Skin Sense episodes made with Lumevina Aesthetics: ep19 "LED light therapy, explained" and ep20 "Celluma PRO LED panel, explained".
+- **Exception to the Skin Sense rules, for these two only:** they may name Celluma and the compared devices (Omnilux, CurrentBody, LightStim, Dermalux) and Lumevina, with a disclosure on screen for the first 3 s and in every post: "Made with Lumevina Aesthetics, which offers Celluma treatments." (wording and any other tie to BioPhotas: TODO, owner). Every other Skin Sense rule stands: no advice, no promises, no faces (the panel fits a featureless head-and-neck form, an arm and the back), one skin tone, Season 3 palette and type; the LED colours on screen are the subject, not accents.
+- Voice: Evelyn records (her written OK through the owner); a labelled AI stand-in for drafts only.
+- Length: about 2:30, vertical (outside the 70-90 s lesson window by the owner's choice: the identity's premium window or a new format must be updated before these pass validate.py at "editing").
+- Prism: ep19/ep20 sit outside the Season 3 slate (six titles): add a slate (e.g. "Specials: LED light, explained") in prism-studio/scripts/import-episodes.ts before pushing.
