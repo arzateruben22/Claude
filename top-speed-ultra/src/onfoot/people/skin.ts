@@ -246,6 +246,15 @@ if (scalp > 0.05) {
 }
 // freckles; age spots (a few flat brown marks 2-3 mm across on lighter skin)
 #ifdef SKIN_FACE
+// (2026-11-12) a healed scar up through the right eyebrow (Look.scar 'browR': uFaceP.w 1; 0 for everyone else): a thin
+// line paler and a little pinker than the skin, about 15 mm from the brow's lower edge up into the forehead, leaning
+// out at the top; soft at its ends
+if (uFaceP.w > 0.5) {
+  vec2 sq = vec2(hl.x + 0.028, hl.y - 0.026) * 1000.0;   // mm from the scar's middle (x -28 mm: the person's right)
+  vec2 sr = vec2(0.985 * sq.x + 0.17 * sq.y, -0.17 * sq.x + 0.985 * sq.y);
+  float scar = (1.0 - smoothstep(0.35, 0.95, abs(sr.x + 0.25 * sin(sr.y * 0.7)))) * (1.0 - smoothstep(5.5, 8.0, abs(sr.y)));
+  c = mix(c, mix(c * vec3(1.25, 1.12, 1.1), vec3(0.62, 0.45, 0.42), 0.25 + 0.35 * (1.0 - uDark)), scar * 0.85);
+}
 if (uFreckles * fz > 0.002) {
   vec2 fr = cells(hp * 0.55); c *= 1.0 - uFreckles * fz * 0.28 * smoothstep(0.24, 0.08, fr.x) * step(0.55, hh13(floor(hp * 0.55) + 2.0));
 }

@@ -240,16 +240,16 @@
   },
   {
     "sku": "cast-pack-duo",
-    "name": "Character Pack (two drivers)",
+    "name": "Chad & Chadaline Pack",
     "kind": "pack",
-    "price_cents": 500,
+    "price_cents": 2222,
     "currency": "usd",
     "mode": "payment",
-    "grants": ["cast-pack-duo-characters"],
-    "description": "Two more playable characters, one man and one woman, sold together. Looks only: every character drives the same, and the six characters in the game today stay free.",
+    "min_age": 18,
+    "grants": ["cast-pack-duo-characters", "cast-pack-duo-scarlatta"],
+    "description": "Two more playable characters, Chad and Chadaline (working names), and the Rossini Scarlatta, sold together. For players 18 and over. Looks only: every character drives the same, and the six characters in the game today stay free.",
     "available": false,
-    "unavailable_reason": "Not on sale: the two characters aren't made yet.",
-    "caveat": "A future plan, not a decided product (owner's master brief, 2026-11-11): the final price is undecided, $5 or $10 for the pair. price_cents is the one configurable price (500 = $5 as a placeholder); change it here when the owner decides. Nothing is sold or pre-sold until both characters exist in the game; the pack's characters never join the crowd."
+    "unavailable_reason": "Coming soon. Not on sale: the Rossini Scarlatta isn't built yet."
   },
   {
     "sku": "club-monthly",

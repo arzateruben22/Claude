@@ -4,6 +4,111 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-12: The cast graphics pass (Opus continuation): the Chad package, the beards, the six's sleeves, perf
+
+Not committed: everything is in the working tree on `claude/cast` (HEAD `440e96e`), for the judges. The Fable builder of
+this lane stopped at the owner's 92 % rule, and Opus 5.5 continued from what was on disk. `PROJECT_OC_CAST.md`'s
+"Graphics pass log" has each stage and what is still short.
+
+**Stage 1, the Chad package (Chad and Chadaline), repaired and proven:**
+- **The failing check.** The pack check "the TEST switch unlocks both ... restored on reload" failed: after the
+  reload the save read `chad` and `packTest` false.
+  - It was reproduced alone: the keep flag and the save were both gone after an immediate reload, and both survived a
+    3 s pause.
+  - Chromium had lost the localStorage write on a reload straight after it, under this machine's load. The game was
+    not at fault.
+  - The suite now waits 3 s (`settleStorage`) before every reload that must read back the save.
+- **The looks:**
+  - Chad: a smaller shoulder pad, a thinner jacket shell, a slightly larger head.
+  - Chadaline: the hair curtain comes forward past the ears, with wider cards.
+  - The fur shrug's rolls are blended into one sleeve.
+  - Before: `tests/out/cast/pack-*-fx.png` as found. After: `pack-*-o2.png`, and the final `pack-*-fx.png` re-shot
+    after this pass.
+- **What is still short** is written down in `PROJECT_OC_CAST.md` ("What is still short of the sheets"). They are
+  not yet the best-looking characters in the game.
+
+**Stage 2, the shared face work:**
+- The full-beard box at yaw 45 degrees and more was the six's own `fullBeard` shell. Mateo and Marcus now use the
+  face work's strand-card `beard`. The beard mask's cheek line and back edge are softened (`masks.ts`).
+- The grey speckle: the cards' per-strand grey turns into its mean where a strand is under a pixel (`cards.ts`). The
+  hair cap's grey is fine strands with a soft threshold instead of a hard step on coarse noise (`hair.ts`).
+- Frames, at yaw 0, 45 and 90 and at game distance: `stage2-before.png`, `stage2-after.png` and
+  `game45-zoom-before-after.png`. The regression head is the preset `casual`, with and without grey 0.5.
+
+**Stage 3, the six, partly:**
+- Marcus's scar on his right eyebrow (`Look.scar 'browR'`).
+- Straight and relaxed trouser legs (`Garment.leg`), with Kate's cargo pockets out on the fuller leg.
+- Before: the first pass's `compare-<id>-*.png`. After: `compare-<id>-*-fx.png`.
+- Not done: the faces' shapes, the cheek and jaw shading, the helmet hair, the shoulders and sleeves, Marcus's muscle
+  and the shoes. They need the builder's geometry and are Fable-class work.
+
+**Stage 4, the hands' options for the six** (`hands-acc.ts`, additively, as agreed):
+- The outfits `workcuff` (Mateo), `blazer` (Leila), `short` (Marcus) and `bomber` (Jas), and `look.hairTie` (Jas).
+- They are wired through the catalog.
+- The `cast` check asserts each one, and the hair tie.
+
+**Stage 5, smoothness: the perf pairs.** These are 3 alternating pairs (base, ours, base, ours, base, ours), 60 s each.
+The base is a clean build of `5cf7212` in a temporary detached worktree. Times are in milliseconds per frame. The
+machine's load average was 6 to 9 on 4 shared cores, from other lanes' renders, so the absolute times are SwiftShader
+under load (14 to 69 frames a run) and only the comparison means anything.
+
+The drive: desktop 1280x720 High with Chadaline; the phone profile (390x844, DPR 3, isMobile, CDP CPU throttle 4) with
+Chad.
+
+```
+desktop: run | char | frames | p50 | p95 | p99 | long>50 | calls | tris | heap start->end MB | load1
+pair1-base | (none) | 14 | 5033.2 | 7899.7 | 7899.7 | 4 | 846 | 3097969 | 28.4->28.1 | 9.08
+pair1-ours | chadaline | 14 | 3983.2 | 13266.1 | 13266.1 | 6 | 832 | 3064620 | 28->28.3 | 8.90
+pair2-base | (none) | 16 | 4083.2 | 9883 | 9883 | 5 | 846 | 3100853 | 27.9->28.1 | 9.10
+pair2-ours | chadaline | 15 | 4049.9 | 12299.5 | 12299.5 | 2 | 846 | 3110743 | 28.6->28.2 | 9.06
+pair3-base | (none) | 15 | 4216.5 | 6566.4 | 6566.4 | 1 | 840 | 3098490 | 28->28.2 | 7.75
+pair3-ours | chadaline | 20 | 3249.9 | 6949.7 | 6949.7 | 1 | 846 | 3128383 | 28->28.2 | 8.04
+  median base: p50 4216.5, p95 7899.7, calls 846, tris 3098490; base spread p95 6566.4..9883
+  median ours: p50 3983.2, p95 12299.5, calls 846, tris 3110743; base spread p95 6949.7..13266.1
+
+phone: run | char | frames | p50 | p95 | p99 | long>50 | calls | tris | heap start->end MB | load1
+pair1-base | (none) | 37 | 1533.3 | 4349.9 | 5183.2 | 30 | 288 | 542180 | 25.1->25.5 | 8.73
+pair1-ours | chad | 69 | 816.7 | 1916.6 | 2099.8 | 22 | 257 | 533824 | 25.2->25.6 | 9.17
+pair2-base | (none) | 37 | 1616.6 | 4249.8 | 4849.8 | 26 | 300 | 549835 | 25.2->25.5 | 6.32
+pair2-ours | chad | 41 | 1583.3 | 3183.2 | 3683.1 | 32 | 310 | 557701 | 25.1->25.5 | 8.39
+pair3-base | (none) | 36 | 1699.9 | 4433.2 | 5133.1 | 31 | 317 | 555029 | 25.1->25.5 | 8.57
+pair3-ours | chad | 44 | 1516.6 | 3299.8 | 3533.2 | 22 | 306 | 547071 | 25.1->25.5 | 8.91
+  median base: p50 1616.6, p95 4349.9, calls 300, tris 549835; base spread p95 4249.8..4433.2
+  median ours: p50 1516.6, p95 3183.2, calls 306, tris 547071; base spread p95 1916.6..3299.8
+```
+
+**The perf results:**
+- **Phone:** passes.
+  - p50 −6 % and p95 −27 % against the base.
+  - Draw calls +2.0 %. They follow the traffic, and they spread from 288 to 317 on the base itself.
+  - Triangles −0.5 %. The heap is flat.
+- **Desktop:** draw calls equal (846), triangles +0.4 %, p50 −5.5 %, heap flat. But p95 was +56 %, outside the base's
+  own spread (6,566 to 9,883 ms).
+  - Each of our runs had its slowest frame (13.3, 12.3 and 6.9 s) over the 40 s full-lock hold.
+  - A diagnostic run of our build without a character had no such frame: its slowest was 4.6 s, and p95 4,167 ms.
+  - So the cost was Chadaline's fur sleeve at full lock, a physical material with full sheen on High that fills more
+    of the screen with the arm raised.
+- **The fix, at the source:** the fur sleeve's sheen 0.4 (it was 1) and normal scale 1.2 (it was 1.6).
+  - One run after the fix (`diag-fur2`, Chadaline, desktop): p50 3,850 ms and p95 6,000 ms, inside the base's spread.
+    The 40 s frame was 5.5 s, with 844 calls and a flat heap.
+  - That is one run, not a new set of three pairs.
+
+**The base's phone group:** `npm test -- --only=phone` in the base worktree passed 18 of 18 (648 s). That includes
+"sky camera: a sharp live picture inside its frame" (220 px for 110 CSS px at 2x, mean 133.39, sd 33.16). So a
+failure of that check on our build would be ours, not pre-existing; our own phone run is below. The temporary worktree
+was removed afterwards (`git worktree remove`).
+
+**Proof:**
+- `npx tsc --noEmit` passes.
+- `npm run build` writes exactly one `data-build="owner-test"`, in `dist/artifact.html`.
+- `npm run store:check` reports two problems, the same two on the base (the wheel styles `mesh` and `blade`); this
+  pass adds none. `store-sync-catalog --check` is in sync (23 SKUs).
+- The suite:
+
+```
+SUITE_LINES
+```
+
 ## 2026-11-12: The cast (lane cast A): six characters, the picker, the crowds, the driver; the seat view at full lock
 
 **What was asked (owner, 2026-11-11):**

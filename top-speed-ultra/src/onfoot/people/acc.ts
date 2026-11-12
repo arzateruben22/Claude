@@ -5,7 +5,7 @@
 import * as THREE from 'three';
 import { Rig, B } from './body';
 import { Accessories, Look, Quality } from './params';
-import { V3, add, sub, mul, norm, cross, dot, lerp, clamp, DEG } from './math';
+import { V3, add, sub, mul, norm, cross, dot, lerp, clamp, DEG, rot, mirror, madd } from './math';
 import { NOISE } from './skin';
 
 type Surf = (x: number, y: number, z: number) => number;
@@ -77,6 +77,13 @@ function onSurface(f: Surf, p: V3, off: number): V3 {
   return q;
 }
 
+/** (pack) march from `p` along the unit direction `d` until `off` from the surface, then settle onto it */
+function marchOnto(f: Surf, p: V3, d: V3, off: number): V3 {
+  let q = p.slice() as V3;
+  for (let i = 0; i < 90; i++) { const v = f(q[0], q[1], q[2]) - off; if (v < 0.0003) break; const st = Math.max(v * 0.9, 0.0005); q = [q[0] + d[0] * st, q[1] + d[1] * st, q[2] + d[2] * st]; }
+  return onSurface(f, q, off);
+}
+
 export function accMaterial(quality: Quality) {
   const m = new THREE.MeshPhysicalMaterial({ vertexColors: true, roughness: 0.4, metalness: 0, clearcoat: quality === 'high' ? 0.2 : 0, clearcoatRoughness: 0.3, envMapIntensity: 1.1 });
   m.customProgramCacheKey = () => 'acc-' + quality;
@@ -111,7 +118,7 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     mb.bones = [B.head, B.head]; mb.w2 = 0;
     if (acc.hoops !== null) {
       mb.setColor(acc.hoops); mb.metal = 1; mb.rough = 0.18; mb.quilt = 0;
-      const R = 0.017 * hf.sx, path: V3[] = [];
+      const R = 0.017 * hf.sx * (acc.hoopSize ?? 1), path: V3[] = [];   // (hoopSize: the pack's small hoops)
       for (let i = 0; i < 32; i++) { const a = (i / 32) * Math.PI * 2; path.push([lobe[0] + sg * 0.0025, lobe[1] - R + Math.cos(a) * R, lobe[2] + Math.sin(a) * R]); }
       mb.tube(path, () => 0.0013, hq ? 8 : 6, true);
     } else if (acc.studs !== null) {
@@ -155,14 +162,16 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     return { ring, c, ax, u, v };
   };
   if (acc.watch !== null) {
-    const W = wrist(1, 0.0022);
-    mb.bones = [B.foreL, B.handL]; mb.w2 = 0.3;
+    // (watchRight, pack 2026-11-12: on the right wrist; unset, the left as before)
+    const wsg = acc.watchRight ? -1 : 1;
+    const W = wrist(wsg, 0.0022);
+    mb.bones = wsg > 0 ? [B.foreL, B.handL] : [B.foreR, B.handR]; mb.w2 = 0.3;
     // the strap: a flattened band (two tubes side by side read as a strap at this size)
     mb.setColor(acc.watch === 0x161616 ? 0x161616 : 0x2a1c14); mb.metal = acc.watch === 0x161616 ? 0 : 0; mb.rough = 0.5;
     if (acc.watch !== 0x161616) { mb.setColor(acc.watch); mb.metal = 1; mb.rough = 0.25; }
     for (const off of [-0.0045, 0, 0.0045]) mb.tube(W.ring.map((p) => add(p, mul(W.ax, off))), () => 0.0022, 6, true);
     // the case on the back of the wrist: lateral, away from the body in the rest pose (palms face the thighs)
-    let hN = norm(sub([1, 0, 0], mul(W.ax, W.ax[0])));
+    let hN = norm(sub([wsg, 0, 0], mul(W.ax, wsg * W.ax[0])));
     let t = 0.08;
     for (let k = 0; k < 40; k++) { const q = add(W.c, mul(hN, t)), f = rig.field.eval(q[0], q[1], q[2], null, 0); if (f < 0.0004) break; t -= Math.max(0.0005, f); }
     hN = norm(hN);
@@ -188,6 +197,69 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     mb.bones = [B.foreR, B.handR]; mb.w2 = 0.2;
     mb.setColor(acc.hairTie); mb.metal = 0; mb.rough = 0.7; mb.quilt = 0;
     mb.tube(W.ring.map((p) => add(p, mul(W.ax, -0.024))), () => 0.0024, 6, true);
+  }
+  // ---- (pack, 2026-11-12) plain bands on the fingers of both hands: left index and ring finger, right middle and
+  // ring finger, each round the first phalanx near the knuckle (the hand's frame as body.ts builds it)
+  if (acc.rings != null) {
+    const hA = L.dFore, hT = norm(sub([0, 0, 1], mul(hA, hA[2]))), hN = norm(cross(hA, hT));
+    const hs2 = rig.dims.handLen / 0.189, hw = hs2 * (rig.male ? 1 : 0.92) * (1 + 0.15 * rig.fat.arm / 0.03);
+    const FING = [{ t: 0.023, back: 0.0, len: 0.044, r: 0.0093 }, { t: 0.0075, back: -0.003, len: 0.049, r: 0.0096 }, { t: -0.0085, back: 0.0, len: 0.046, r: 0.009 }];
+    mb.setColor(acc.rings); mb.metal = 1; mb.rough = 0.16; mb.quilt = 0;
+    for (const [sg, fi, wide] of [[1, 0, 1], [1, 2, 0.75], [-1, 1, 0.75], [-1, 2, 1]] as [number, number, number][]) {
+      const fg = FING[fi];
+      const base = madd(madd(madd(L.wr, hA, (0.092 - fg.back) * hs2), hT, fg.t * hw), hN, 0.001 * hw);
+      const d0 = norm(add(hA, mul(hT, fg.t * 1.4))), d = norm(rot(d0, norm(cross(hN, d0)), -14 * DEG));
+      const c = madd(base, d, fg.len * hs2 * 0.42), u = norm(cross(d, hN)), v = cross(d, u), R = fg.r * hw * 0.96 + 0.0011;
+      mb.bones = sg > 0 ? [B.fingL, B.fingL] : [B.fingR, B.fingR]; mb.w2 = 0;
+      for (const off of wide > 0.9 ? [-0.0011, 0.0011] : [0]) {
+        const path: V3[] = [];
+        for (let i = 0; i < 20; i++) { const a = (i / 20) * Math.PI * 2, q = add(madd(c, d, off), add(mul(u, Math.cos(a) * R), mul(v, Math.sin(a) * R))); path.push(sg > 0 ? q : mirror(q)); }
+        mb.tube(path, () => 0.0012, hq ? 6 : 5, true);
+      }
+    }
+  }
+  // ---- (pack) a folded pocket square over the left breast pocket, and a double-breasted jacket's buttons: laid on the
+  // person's outer surface (the jacket), skinned to the chest (the cuffs' to the forearms)
+  if (acc.pocketSquare != null) {
+    const Dm = rig.dims;
+    mb.bones = [B.chest, B.chest]; mb.w2 = 0;
+    mb.setColor(acc.pocketSquare); mb.metal = 0; mb.rough = 0.8; mb.quilt = 0;
+    const y0 = Dm.chestY + 0.052 * s, hgt = 0.013 * s, x0 = 0.088 * rig.ws, x1 = 0.137 * rig.ws, nx = 7;
+    const front = (x: number, y: number, off: number): V3 => marchOnto(outer, [x, y, 0.35], [0, 0, -1], off);
+    const rows: number[][] = [];
+    for (const [dy, off] of [[0, 0.0012], [hgt * 0.55, 0.0036], [hgt, 0.0034], [hgt * 1.02, 0.0008]] as [number, number][]) {
+      const row: number[] = [];
+      for (let i = 0; i <= nx; i++) { const x = lerp(x0, x1, i / nx), p = front(x, y0 + dy - 0.0015 * (i / nx), off); row.push(mb.v(p, [0, 0.25, 1], i / nx, dy / hgt)); }
+      rows.push(row);
+    }
+    for (let r = 0; r < rows.length - 1; r++) for (let i = 0; i < nx; i++) { const a = rows[r][i], b = rows[r][i + 1], c2 = rows[r + 1][i], d2 = rows[r + 1][i + 1]; mb.idx.push(a, b, d2, a, d2, c2); }
+  }
+  if (acc.buttons != null) {
+    const Dm = rig.dims;
+    mb.setColor(acc.buttons); mb.metal = 0; mb.rough = 0.28; mb.quilt = 0;
+    const button = (c: V3, n: V3, r: number) => {
+      const path: V3[] = [];
+      for (let i = 0; i < 5; i++) path.push(madd(c, n, -0.001 + i * 0.0011));
+      mb.tube(path, (t) => r * (t < 0.55 ? 1 : 1 - (t - 0.55) * 1.6), 14, false);
+    };
+    const nrmAt = (p: V3): V3 => { const e = 0.001, d = outer(p[0], p[1], p[2]); return norm([outer(p[0] + e, p[1], p[2]) - d, outer(p[0], p[1] + e, p[2]) - d, outer(p[0], p[1], p[2] + e) - d]); };
+    // six on the front: two columns, three rows from under the lapels' crossing down to the waist
+    const yTop = Dm.chestY - 0.062 * s, gap = 0.084 * s;
+    for (let r = 0; r < 3; r++) for (const sg of [1, -1]) {
+      mb.bones = r === 0 ? [B.chest, B.chest] : [B.spine, B.chest]; mb.w2 = r === 0 ? 0 : 0.3;
+      const p = marchOnto(outer, [sg * 0.05 * rig.ws, yTop - r * gap, 0.35], [0, 0, -1], 0.0006);
+      button(p, nrmAt(p), 0.0088 * s);
+    }
+    // three on each cuff, on the back of the forearm just above the sleeve's end
+    for (const sg of [1, -1]) {
+      const w = rig.wrist[sg > 0 ? 0 : 1];
+      mb.bones = sg > 0 ? [B.foreL, B.foreL] : [B.foreR, B.foreR]; mb.w2 = 0;
+      for (let i = 0; i < 3; i++) {
+        const c = sub(w.p, mul(w.n, (0.05 + i * 0.016) * s));
+        const from = add(c, [sg * 0.03, 0, -0.09]), p = marchOnto(outer, from, norm(sub(c, from)), 0.0005);
+        button(p, nrmAt(p), 0.0052 * s);
+      }
+    }
   }
   // ---- bags
   const D = rig.dims;
