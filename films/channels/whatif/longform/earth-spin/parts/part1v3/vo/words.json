@@ -1,0 +1,400 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "What if Earth spun faster, and couldn't stop?",
+   "heard": "What if Earth spun faster and couldn't stop?",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 0.41,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.61,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "spun",
+     "start": 0.985,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "faster,",
+     "start": 1.165,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.645,
+     "end": 1.695,
+     "heard": true
+    },
+    {
+     "w": "couldn't",
+     "start": 1.675,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "stop?",
+     "start": 2.165,
+     "end": 2.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind.",
+   "heard": "only about 17 times faster. A day of an hour and 24 minutes, and you leave the ground behind.",
+   "words": [
+    {
+     "w": "Only",
+     "start": 0.03,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.255,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "seventeen",
+     "start": 0.495,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 1.02,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "faster,",
+     "start": 1.175,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.235,
+     "end": 2.285,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 2.265,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.3,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 2.485,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 2.71,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.975,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "twenty-four",
+     "start": 3.03,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 3.475,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.065,
+     "end": 4.115,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 4.095,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "leave",
+     "start": 4.335,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 4.475,
+     "end": 4.525,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 4.505,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "behind.",
+     "start": 4.72,
+     "end": 5.12,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "That is the whole distance between standing and flying.",
+   "heard": "That is the whole distance between standing and flying.",
+   "words": [
+    {
+     "w": "That",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.095,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.365,
+     "end": 0.415,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.395,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "distance",
+     "start": 0.55,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "between",
+     "start": 0.945,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 1.365,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.695,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "flying.",
+     "start": 1.775,
+     "end": 2.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "Only the spin changes, and it only gets faster.",
+   "heard": "Only the spin changes and it only gets faster.",
+   "words": [
+    {
+     "w": "Only",
+     "start": 0.065,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.315,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "spin",
+     "start": 0.495,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "changes,",
+     "start": 0.735,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.175,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 1.43,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 1.46,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.765,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "faster.",
+     "start": 1.795,
+     "end": 2.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+   "heard": "Right now the ground carries carries you at about 1670 kilometers an hour.",
+   "words": [
+    {
+     "w": "Right",
+     "start": 0.065,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.24,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.44,
+     "end": 0.49,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.55,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "carries",
+     "start": 0.84,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.58,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.76,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.84,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "sixteen",
+     "start": 2.0,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 2.03,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 2.06,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "seventy",
+     "start": 2.175,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "kilometers",
+     "start": 3.245,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 3.915,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 4.04,
+     "end": 4.48,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

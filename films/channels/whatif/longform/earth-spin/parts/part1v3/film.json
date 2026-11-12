@@ -1,0 +1,559 @@
+{
+ "id": "possibility-lab-earth-spin-part1-v3-preview",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 25.05,
+ "v2": true,
+ "poster": 10.8,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "open"
+  },
+  {
+   "at": 30.05,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.65,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "s71",
+   "t0": 4.65,
+   "t1": 10.8,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "s72",
+   "t0": 10.8,
+   "t1": 13.95,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "s4",
+   "t0": 13.95,
+   "t1": 17.25,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "s11",
+   "t0": 17.25,
+   "t1": 25.05,
+   "line": "vo05",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    25.05,
+    23.934
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    25.05,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 30.05,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 5.0,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "What If Earth Spun Faster?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 30.05,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 1 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0.0,
+   "mode": "push"
+  },
+  {
+   "t0": 8.313,
+   "mode": "wide"
+  },
+  {
+   "t0": 13.85,
+   "mode": "ground"
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0.0,
+   "pose": "armsOut",
+   "expr": "happy"
+  },
+  {
+   "t": 4.433,
+   "pose": "lookUp",
+   "expr": "awe"
+  },
+  {
+   "t": 10.6,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 13.733,
+   "pose": "stand",
+   "expr": "neutral"
+  },
+  {
+   "t": 17.033,
+   "pose": "hips",
+   "expr": "neutral"
+  },
+  {
+   "t": 13.950000000000001,
+   "pose": "stand",
+   "expr": "neutral"
+  }
+ ],
+ "hook": {
+  "text": "How fast before you float off?",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "hud3": {
+  "bar_t0": 13.65
+ },
+ "chips": [
+  {
+   "t0": 8.813,
+   "t1": 13.45,
+   "text": "17× faster = liftoff"
+  },
+  {
+   "t0": 19.133,
+   "t1": 24.85,
+   "text": "Already faster than sound"
+  }
+ ],
+ "flash": {
+  "t0": 8.513,
+  "t1": 13.65
+ },
+ "captions": [
+  {
+   "t0": 0.26,
+   "t1": 3.115,
+   "lines": [
+    [
+     [
+      "What",
+      0.4
+     ],
+     [
+      "if",
+      0.61
+     ],
+     [
+      "Earth",
+      0.81
+     ],
+     [
+      "spun",
+      1.185
+     ],
+     [
+      "faster,",
+      1.365
+     ]
+    ],
+    [
+     [
+      "and",
+      1.845
+     ],
+     [
+      "couldn't",
+      1.875
+     ],
+     [
+      "stop?",
+      2.365
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.623,
+   "t1": 7.708,
+   "lines": [
+    [
+     [
+      "Only",
+      4.763
+     ],
+     [
+      "about",
+      4.988
+     ],
+     [
+      "17",
+      5.228
+     ],
+     [
+      "times",
+      5.753
+     ]
+    ],
+    [
+     [
+      "faster,",
+      5.908
+     ],
+     [
+      "a",
+      6.968
+     ],
+     [
+      "day",
+      6.998
+     ],
+     [
+      "of",
+      7.033
+     ],
+     [
+      "an",
+      7.218
+     ],
+     [
+      "hour",
+      7.443
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.708,
+   "t1": 10.203,
+   "lines": [
+    [
+     [
+      "and",
+      7.708
+     ],
+     [
+      "24",
+      7.763
+     ],
+     [
+      "minutes,",
+      8.208
+     ],
+     [
+      "and",
+      8.798
+     ],
+     [
+      "you",
+      8.828
+     ]
+    ],
+    [
+     [
+      "leave",
+      9.068
+     ],
+     [
+      "the",
+      9.208
+     ],
+     [
+      "ground",
+      9.238
+     ],
+     [
+      "behind.",
+      9.453
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 10.825,
+   "t1": 11.845,
+   "lines": [
+    [
+     [
+      "That",
+      10.965
+     ],
+     [
+      "is",
+      10.995
+     ],
+     [
+      "the",
+      11.265
+     ],
+     [
+      "whole",
+      11.295
+     ],
+     [
+      "distance",
+      11.45
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.845,
+   "t1": 13.425,
+   "lines": [
+    [
+     [
+      "between",
+      11.845
+     ],
+     [
+      "standing",
+      12.265
+     ]
+    ],
+    [
+     [
+      "and",
+      12.595
+     ],
+     [
+      "flying.",
+      12.675
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.958,
+   "t1": 16.578,
+   "lines": [
+    [
+     [
+      "Only",
+      14.098
+     ],
+     [
+      "the",
+      14.348
+     ],
+     [
+      "spin",
+      14.528
+     ],
+     [
+      "changes,",
+      14.768
+     ]
+    ],
+    [
+     [
+      "and",
+      15.208
+     ],
+     [
+      "it",
+      15.463
+     ],
+     [
+      "only",
+      15.493
+     ],
+     [
+      "gets",
+      15.798
+     ],
+     [
+      "faster.",
+      15.828
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.258,
+   "t1": 19.093,
+   "lines": [
+    [
+     [
+      "Right",
+      17.398
+     ],
+     [
+      "now",
+      17.573
+     ],
+     [
+      "the",
+      17.773
+     ],
+     [
+      "ground",
+      17.883
+     ]
+    ],
+    [
+     [
+      "carries",
+      18.173
+     ],
+     [
+      "you",
+      18.913
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 19.093,
+   "t1": 22.123,
+   "lines": [
+    [
+     [
+      "at",
+      19.093
+     ],
+     [
+      "about",
+      19.173
+     ],
+     [
+      "1,670 km/h.",
+      19.333
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 3.51,
+   "file": "vo/01.wav",
+   "text": "What if Earth spun faster, and couldn't stop?"
+  },
+  {
+   "id": "vo02",
+   "t": 4.733333333333333,
+   "dur": 5.18,
+   "file": "vo/02.wav",
+   "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind."
+  },
+  {
+   "id": "vo03",
+   "t": 10.9,
+   "dur": 2.15,
+   "file": "vo/03.wav",
+   "text": "That is the whole distance between standing and flying."
+  },
+  {
+   "id": "vo04",
+   "t": 14.033333333333333,
+   "dur": 2.38,
+   "file": "vo/04.wav",
+   "text": "Only the spin changes, and it only gets faster."
+  },
+  {
+   "id": "vo05",
+   "t": 17.333333333333332,
+   "dur": 4.54,
+   "file": "vo/05.wav",
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour."
+  }
+ ]
+}

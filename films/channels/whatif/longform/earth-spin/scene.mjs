@@ -80,6 +80,8 @@ const desk = createDesk({ tokens: TK, y: 0, unit: 1, far: 160 });
 scene.add(desk.group);
 const you = createFigure({ tokens: TK, height: 1.7 });
 scene.add(you.group);
+const contact = new THREE.Mesh(new THREE.CircleGeometry(1, 40), new THREE.ShaderMaterial({ transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, vertexShader: "varying vec2 q; void main(){ q = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+  fragmentShader: "varying vec2 q; void main(){ float d = length(q); float g = exp(-d*d*5.0); gl_FragColor = vec4(vec3(0.55, 0.45, 1.0) * g * 1.8, 1.0); }" })); contact.rotation.x = -Math.PI / 2; contact.renderOrder = 9; contact.visible = false; contact.userData.noProbe = true; scene.add(contact);   // a soft glow where the robot's feet meet the surface
 let bot = null;
 if (V2) { bot = createRobot({ height: 1.7 }); scene.add(bot.group); scene.environment = makeEnv(renderer);
   const kL = new THREE.DirectionalLight(0xffffff, 2.0), rL = new THREE.DirectionalLight(0x5aa0ff, 2.2), hL = new THREE.HemisphereLight(0xbcd0ff, 0x20242c, 0.6); scene.add(kL, rL, hL); window.__botLights = { kL, rL, hL }; }
@@ -197,9 +199,20 @@ roEl.innerHTML = '<div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.
 const scrim = document.createElement("div");
 scrim.style.cssText = "position:absolute;left:0;top:0;width:" + (PORT ? "100vw" : "64vw") + ";height:" + (PORT ? "46vh" : "70vh") + ";z-index:4;pointer-events:none;background:radial-gradient(ellipse farthest-side at 28% 36%, rgba(6,9,16,.66) 0%, rgba(6,9,16,.5) 45%, rgba(6,9,16,0) 100%)";
 document.body.appendChild(scrim); document.body.appendChild(roEl);
-if (FILM.thumb) { roEl.style.display = "none"; scrim.style.display = "none"; }   // cover mode (film.json "thumb": true): the picture only, no readout
+if (FILM.thumb) { roEl.style.display = "none"; scrim.style.display = "none"; }
+if (FILM.v2 && FILM.hud3) roEl.style.display = "none";   // cover mode (film.json "thumb": true): the picture only, no readout
 // the hook: a few big words in the top third for the first seconds (film.json "hook": {text, t0, t1}); no card, no logo
-const hookEl = document.createElement("div"); hookEl.style.cssText = "position:absolute;left:6vw;right:6vw;top:" + (FILM.v2 ? "9vh" : PORT ? "30vh" : "8vh") + ";z-index:6;pointer-events:none;color:#fff;font:800 " + (PORT ? "5.6vh" : "9vh") + "/1.04 var(--font-display);letter-spacing:-.01em;font-variation-settings:'wdth' 85;text-shadow:0 .3vmin 1.6vmin rgba(0,0,0,.85),0 0 .5vmin rgba(0,0,0,.9);opacity:0";
+const hookEl = document.createElement("div"); hookEl.style.cssText = "position:absolute;left:6vw;right:6vw;top:" + (FILM.v2 ? "9vh" : PORT ? "30vh" : "8vh") + ";z-index:6;pointer-events:none;color:#fff;font:800 " + (PORT ? (FILM.hud3 ? "7.4vh" : "5.6vh") : "9vh") + "/1.04 var(--font-display);letter-spacing:-.01em;font-variation-settings:'wdth' 85;text-shadow:0 .3vmin 1.6vmin rgba(0,0,0,.85),0 0 .5vmin rgba(0,0,0,.9);opacity:0";
+// v3 HUD: the objective is a countdown to liftoff. A SPIN dial (x1 counting up), a progress bar x1..x17 with a glowing FLOAT OFF flag, a robot WEIGHT bar draining, day length as small text; comparison chips and a big title
+const V3 = !!(FILM.v2 && FILM.hud3);
+const h3 = document.createElement("div"); h3.style.cssText = "position:absolute;left:6vw;right:6vw;top:7vh;z-index:5;pointer-events:none;color:var(--hud-text);text-shadow:0 .2vmin 1.2vmin rgba(0,0,0,.6);opacity:0";
+h3.innerHTML = '<div style="display:flex;align-items:baseline;gap:2.4vw"><div style="font:700 2.1vh/1 var(--font-text);letter-spacing:.2em;color:var(--hud-text-2)">SPIN</div><div id="h3d" style="font:800 min(11vh,21vw)/1 var(--font-display);letter-spacing:-.02em;font-variation-settings:\'wdth\' 85">\u00d71</div><div id="h3s" style="font:600 2.2vh/1 var(--font-mono);color:var(--hud-text-2);margin-left:auto">1 day = 24 h</div></div>' +
+  '<div id="h3bar" style="margin-top:2.2vh;opacity:0"><div style="position:relative;height:1.7vh;border-radius:1vh;background:rgba(255,255,255,.16);overflow:visible"><div id="h3f" style="position:absolute;left:0;top:0;bottom:0;width:0%;border-radius:1vh;background:linear-gradient(90deg,#5aa0ff,#EB63FF)"></div><div style="position:absolute;right:-.2vw;top:-1.6vh;bottom:-1.6vh;width:.6vh;background:#EB63FF;box-shadow:0 0 2.4vh 1vh rgba(235,99,255,.65);border-radius:1vh"></div></div>' +
+  '<div style="display:flex;justify-content:space-between;margin-top:.9vh;font:700 2vh/1 var(--font-mono);color:var(--hud-text-2)"><span>\u00d71</span><span style="color:#EB63FF;text-shadow:0 0 1.6vh rgba(235,99,255,.9)">FLOAT OFF \u00d717</span></div></div>' +
+  '<div id="h3w" style="margin-top:2.2vh;display:flex;align-items:center;gap:2.2vw;opacity:0"><svg width="4.4vh" height="4.4vh" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="15" fill="#f4f5f7"/><ellipse cx="20" cy="21" rx="12" ry="9" fill="#05070a"/><ellipse cx="16" cy="20" rx="1.6" ry="2.4" fill="#fff"/><ellipse cx="24" cy="20" rx="1.6" ry="2.4" fill="#fff"/></svg><div style="font:700 2vh/1 var(--font-text);letter-spacing:.18em;color:var(--hud-text-2)">WEIGHT</div><div id="h3wv" style="font:800 4.2vh/1 var(--font-display);margin-left:1vw">100%</div><div style="flex:1;height:1.2vh;border-radius:1vh;background:rgba(255,255,255,.16)"><div id="h3wb" style="height:100%;width:100%;border-radius:1vh;background:#8fd0ff"></div></div></div>';
+document.body.appendChild(h3);
+const chipEl = document.createElement("div"); chipEl.style.cssText = "position:absolute;left:50%;top:" + (PORT ? "28vh" : "20vh") + ";transform:translateX(-50%);z-index:6;pointer-events:none;white-space:nowrap;padding:1.3vh 3.4vw;border-radius:5vh;background:rgba(8,9,11,.82);border:.35vh solid #EB63FF;box-shadow:0 0 3vh rgba(235,99,255,.45);color:#fff;font:800 4.6vh/1.1 var(--font-display);font-variation-settings:'wdth' 85;opacity:0"; document.body.appendChild(chipEl);
+const flashEl = document.createElement("div"); flashEl.style.cssText = "position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:7"; document.body.appendChild(flashEl);
 if (FILM.hook) { hookEl.textContent = FILM.hook.text; document.body.appendChild(hookEl); }
 const roT = roEl.querySelector("#roT"), roV = roEl.querySelector("#roV"), roL2 = roEl.querySelector("#roL2");
 const WWINS = WD.weightWins || [], inWeight = (t) => WWINS.some(([a, b]) => t >= a && t < b);
@@ -211,7 +224,7 @@ window.seek = function (t) {
   window.__t = t;
   const fxw0 = (k) => { const w = (FILM.fx || {})[k]; return w ? E.inout2(seg(t, w[0], w[0] + 1.5)) * (1 - E.inout2(seg(t, w[1] - 1.5, w[1]))) : 0; };
   const st = stage(t), shot = st.name;
-  const T = Th(t), ph = phase(t), gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
+  const flashOn = !!(FILM.flash && t >= FILM.flash.t0 && t < FILM.flash.t1), T = flashOn ? 1.408 : Th(t), ph = phase(t), gate = 1 - E.inout2(seg(t, FILM.endCard, FILM.endCard + 0.6));
   const spinU = clamp01(Math.log(WD.t0H / T) / Math.log(WD.t0H / WD.tOrbH));                     // 0 today, 1 at the float
   const pov = shot === "eye" || shot === "shoulder" || shot === "lift" || shot === "end";
   const sunDir = new THREE.Vector3(0, Math.sin(ph), -Math.cos(ph)), day0 = clamp01((sunDir.y + 0.12) / 0.4);
@@ -260,7 +273,7 @@ window.seek = function (t) {
   you.group.visible = sp && shot !== "end" && !V2;
   if (bot) { bot.group.visible = sp && shot !== "end"; if (bot.group.visible) { const K = FILM.robot || [{ t: 0, pose: "stand", expr: "neutral" }]; let i = 0; while (i + 1 < K.length && t >= K[i + 1].t) i++;
       const A_ = K[i], B_ = K[Math.min(i + 1, K.length - 1)], u = B_ === A_ ? 0 : E.inout2(clamp01((t - A_.t) / Math.max(0.01, B_.t - A_.t))); const pa = { ...(ROBOT_POSES[A_.pose] || {}), expr: A_.expr || (ROBOT_POSES[A_.pose] || {}).expr }, pb = { ...(ROBOT_POSES[B_.pose] || {}), expr: B_.expr || (ROBOT_POSES[B_.pose] || {}).expr };
-      const P = mixPose(pa, pb, u); P.head = { ...(P.head || {}), y: (P.head && P.head.y || 0) + 0.04 * Math.sin(t * 0.8) }; bot.set(P); bot.group.scale.setScalar(ysc); bot.group.position.set(pcx, pcy + 1.0 + bulge + rise, 0);
+      const P = mixPose(pa, pb, u); P.head = { ...(P.head || {}), y: (P.head && P.head.y || 0) + 0.04 * Math.sin(t * 0.8) }; bot.set(P); bot.group.scale.setScalar(ysc); const flU = flashOn ? E.inout2(seg(t, FILM.flash.t0 + 0.2, FILM.flash.t1 - 0.4)) : 0; bot.group.position.set(pcx, pcy + 1.0 + bulge + rise + 1.3 * flU - 0.012 * ysc / 0.26, 0); contact.visible = rise < 0.01 && !flashOn; contact.position.set(pcx, pcy + 1.0 + bulge + 0.002, 0); contact.scale.set(0.32 * ysc / 0.26 + 0.05, 0.32 * ysc / 0.26 + 0.05, 1);
       const { kL, rL, hL } = window.__botLights; kL.position.copy(lightV).multiplyScalar(8).add(new THREE.Vector3(2, 3, 5)); kL.intensity = 1.6 + 0.8 * day; rL.position.set(-4, 2, -5); } }
   if (you.group.visible) {
     you.set({ at: [0, 0, 0], arms: (FILM.hero ? FILM.hero.arms : 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3)), tilt: FILM.hero ? FILM.hero.tilt : 0 });
@@ -320,7 +333,17 @@ window.seek = function (t) {
   // the end: the scene dims under the end card, the text goes, the dim lifts
   dimEl.style.opacity = String((0.86 * seg(t, FILM.endCard - 0.25, FILM.endCard + 0.3) * (1 - seg(t, FILM.dur - 0.75, FILM.dur - 0.05))).toFixed(3));
   const hookA = (FILM.hook && FILM.v2) ? E.inout2(seg(t, FILM.hook.t0, FILM.hook.t0 + 0.25)) * (1 - E.inout2(seg(t, FILM.hook.t1 - 0.3, FILM.hook.t1))) : 0;
-  roEl.style.opacity = String(((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)) * (1 - hookA)).toFixed(3)); scrim.style.opacity = roEl.style.opacity;
+  roEl.style.opacity = String(((1 - seg(t, FILM.endCard - 0.3, FILM.endCard)) * (1 - hookA)).toFixed(3));
+  if (V3) {
+    const H = FILM.hud3, spin = flashOn ? 17 : 23.934 / T, wt = Math.max(0, 100 * (1 - (spin / 17) ** 2)), vis = (1 - seg(t, FILM.endCard - 0.3, FILM.endCard)) * (1 - hookA);
+    h3.style.opacity = String(vis.toFixed(3)); h3.querySelector("#h3d").textContent = "\u00d7" + (spin < 9.95 ? (Math.round(spin * 10) / 10).toString().replace(/\.0$/, "") : Math.round(spin));
+    h3.querySelector("#h3s").textContent = "1 day = " + fmtT(T);
+    const bar = h3.querySelector("#h3bar"); bar.style.opacity = String(E.inout2(seg(t, H.bar_t0 ?? 1e9, (H.bar_t0 ?? 1e9) + 0.4)).toFixed(3)); h3.querySelector("#h3f").style.width = (100 * clamp01((spin - 1) / 16)).toFixed(1) + "%";
+    const wb = h3.querySelector("#h3w"); wb.style.opacity = String(E.inout2(seg(t, H.weight_t0 ?? 1e9, (H.weight_t0 ?? 1e9) + 0.4)).toFixed(3));
+    h3.querySelector("#h3wv").textContent = (wt >= 99.95 ? "100" : wt.toFixed(wt >= 99 ? 1 : 0)) + "%"; h3.querySelector("#h3wb").style.width = wt.toFixed(1) + "%";
+  }
+  { const cs = FILM.chips || []; let co = 0, ct = ""; for (const c of cs) if (t >= c.t0 && t < c.t1) { co = E.inout2(seg(t, c.t0, c.t0 + 0.22)) * (1 - E.inout2(seg(t, c.t1 - 0.28, c.t1))); ct = c.text; } chipEl.style.opacity = String(co.toFixed(3)); if (ct) chipEl.textContent = ct; }
+  if (FILM.flash) { const F = FILM.flash; flashEl.style.opacity = String((0.4 * (E.inout2(seg(t, F.t0 - 0.12, F.t0 + 0.05)) * (1 - E.inout2(seg(t, F.t0 + 0.05, F.t0 + 0.3))) + E.inout2(seg(t, F.t1 - 0.12, F.t1)) * (1 - E.inout2(seg(t, F.t1, F.t1 + 0.28))))).toFixed(3)); } scrim.style.opacity = roEl.style.opacity;
   roT.textContent = fmtT(T); roV.textContent = Math.round(2 * Math.PI * R_EQ / (T * 3600) * 3.6 * 1000 / 1000 * 1000 / 1000).toLocaleString("en-US") + " km/h";
   if (inWeight(t)) { const w = Math.max(0, weightFrac(T)) * 100; roL2.textContent = "YOUR WEIGHT, VS A STILL EARTH"; roV.textContent = (w < 99.95 ? w.toFixed(w >= 99 ? 2 : 1) : "100") + " %"; }
   else roL2.textContent = "YOUR SPEED AT THE EQUATOR";

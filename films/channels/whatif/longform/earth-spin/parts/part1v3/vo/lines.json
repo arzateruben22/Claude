@@ -1,0 +1,58 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "What if Earth spun faster, and couldn't stop?",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.51,
+   "sha256": "209ecebc112234fdf15c0f216616445371fc5da8258606adeb4de6682870da1e"
+  },
+  {
+   "id": "vo02",
+   "beat": "s71",
+   "text": "Only about seventeen times faster, a day of an hour and twenty-four minutes, and you leave the ground behind.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 5.18,
+   "sha256": "c38b4312782facb71a43193e03018ffe2d6170e10dc50e26b3a3ab08563debdf"
+  },
+  {
+   "id": "vo03",
+   "beat": "s72",
+   "text": "That is the whole distance between standing and flying.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 2.15,
+   "sha256": "997d9055d30b5a4f65ceb3fdcdd7cc2f4fcd9e0a913fb4870b521dfee6a086b3"
+  },
+  {
+   "id": "vo04",
+   "beat": "s4",
+   "text": "Only the spin changes, and it only gets faster.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.38,
+   "sha256": "0bbedec77c87fd0645f3bb1c6de8da6535b1157a4e86be643fff75a12712bc1a"
+  },
+  {
+   "id": "vo05",
+   "beat": "s11",
+   "text": "Right now the ground carries you at about sixteen hundred and seventy kilometers an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 4.54,
+   "sha256": "a17c6dc84052400b28507ab35db978f3b22dcfb0d032121b05f806645e3feac3"
+  }
+ ]
+}
