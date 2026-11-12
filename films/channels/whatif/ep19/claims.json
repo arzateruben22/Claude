@@ -1,0 +1,75 @@
+[
+ {
+  "id": "c4",
+  "sentence": "Sunrise to sunset, speed and weight at 12, 6, 3 and 2 hours",
+  "claim": "Speed of the ground at the equator: 1,674 km/h today, 3,340 km/h at a 12 h day, 6,679 km/h at 6 h, 13,358 km/h at 3 h, 20,038 km/h at 2 h and 26,717 km/h at 1.5 h. The Sun is up for half of each day.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "{\"now\": {\"sun_min\": 718, \"v_kmh\": 1674}, \"h12\": {\"sun_min\": 360, \"v_kmh\": 3340}, \"h6\": {\"sun_min\": 180, \"v_kmh\": 6679}, \"h3\": {\"sun_min\": 90, \"v_kmh\": 13358}, \"h2\": {\"sun_min\": 60, \"v_kmh\": 20038}, \"h1_5\": {\"sun_min\": 45, \"v_kmh\": 26717}}"
+ },
+ {
+  "id": "c21",
+  "sentence": "the Sun slides its own width every minute (12 h), 16 s (3 h), 8 s (1.5 h)",
+  "claim": "The Sun's apparent motion is 360° divided by the day length: 0.5° per minute at a 12 h day, 2° per minute at 3 h and 4° per minute at 1.5 h. The Sun's disk is about 0.53° wide, so it moves its own width every 64 s, 16 s and 8 s.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "source",
+  "source_url": "https://science.nasa.gov/sun/facts/",
+  "source_title": "NASA Science, Sun Facts (angular size about 0.53 degrees)",
+  "verified_via": "not read",
+  "note": "OPEN: the 0.53 degree angular diameter is from memory; the rest is arithmetic.",
+  "derivation": "The Sun's apparent motion is 360 deg / T: 0.50 deg/min at a 12 h day, 2.0 deg/min at 3 h, 4.0 deg/min at 1.5 h. Its disk is about 0.53 deg wide, so it moves its own width every 64 s, 16 s and 8 s. At a 12 h day the Sun moves 0.5 deg/min, the same as a clock's hour hand (360 deg in 12 h)."
+ },
+ {
+  "id": "c2",
+  "sentence": "Standing on the equator, the ground carries you around at about sixteen hundred and seventy kilometers an hour.",
+  "claim": "The ground at the equator moves at about 1,674 km/h (465 m/s): one trip around the equator divided by the length of a day. That is about 1/17 of the speed needed to orbit.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "v = 2 pi R / T = 465 m/s = 1,674 km/h from R = 6,378 km and T = 23.934 h; and 7.9 km/s / 0.465 km/s = 17."
+ },
+ {
+  "id": "c5",
+  "sentence": "Weight at 12, 6, 3, 2 and 1.5 hour days",
+  "claim": "Your weight as a share of what it would be on a non-spinning Earth: 99.7% today, 98.6% at a 12 h day, 94.5% at 6 h, 78.0% at 3 h, 50.4% at 2 h and 11.9% at 1.5 h. A 70 kg person weighs 69 kg at 12 h and 55 kg at 3 h.",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "verified_via": "calculation",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "note": "DERIVATION: arithmetic only; not read from any page. OPEN until a person re-does the sum.",
+  "derivation": "{\"now\": 99.7, \"h12\": 98.6, \"h6\": 94.5, \"h3\": 78.0, \"h2\": 50.4, \"h1_5\": 11.9} (percent of the weight on a non-spinning Earth); 70 kg x 0.986 = 69 kg and 70 kg x 0.78 = 55 kg."
+ },
+ {
+  "id": "c13",
+  "sentence": "A seventy kilogram person (and treat every number as a first guess).",
+  "claim": "We use a 70 kg person as an example, not a measurement; every figure is a first-order estimate for a perfect ball.",
+  "source_title": "Assumption: an illustrative 70 kg person",
+  "accessed": "2026-11-09",
+  "verified_via": "assumption (no source)",
+  "status": "TODO open link",
+  "kind": "assumption",
+  "note": "ASSUMPTION: illustration only.",
+  "derivation": "70 kg is an illustrative body mass, not a measurement; every figure is a first-order estimate for a perfect ball."
+ },
+ {
+  "id": "c26",
+  "sentence": "a jump goes 2x / 8.4x higher; a cup falls 1.4x / 2.9x slower; 70 kg weighs 8.3 kg at 1.5 h",
+  "claim": "With the same push, jump height grows as gravity shrinks: about 2 times higher at a 2 h day and 8.4 times at 1.5 h; a falling cup takes 1.4 and 2.9 times longer.",
+  "accessed": "2026-11-11",
+  "status": "TODO open link",
+  "kind": "derivation",
+  "source_title": "Our calculation (shown in the film)",
+  "verified_via": "calculation",
+  "note": "DERIVATION: arithmetic only; OPEN until a person re-does the sum.",
+  "derivation": "With the same push, jump height is proportional to 1/g_eff and fall time to 1/sqrt(g_eff), where g_eff = weight fraction x g (c5): at 2 h (50.4%) the height is 1.98x and the fall time 1.41x; at 1.5 h (11.9%) 8.4x and 2.9x; 70 kg x 0.119 = 8.3 kg."
+ }
+]
