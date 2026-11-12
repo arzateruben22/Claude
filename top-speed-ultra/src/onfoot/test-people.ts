@@ -1,6 +1,9 @@
 // Test page for the people builder. Views (?view=): bodies, lineup, faces, talk, walk.
 //   faces: &only=reference,casual &expr=neutral,smile &dist=0.55 &dy=0.045 (aim below the eyes) &cy=0 (camera height)
 //          &grey=1,0 (each row's share of grey strands) &eyehook=1 (skin.ts' eye shape from the face, as person.ts will)
+//          &beardhook=1 (the skin under a beard tinted to the cards' mean, face.ts facialHairColours().skin, as a pending
+//          person.ts line will) &cardhook=1 (the brow and beard cards' grey hash faded to its share once a strand is
+//          smaller than a pixel, as a pending cards.ts change will; test only)
 //   &dbg=atlas: the brow and beard strand atlas over the page, with the beard half's coverage in the JSON
 //   node tools/preview-shoot.mjs src/onfoot/test-people.ts tests/out/onfoot/people-<view>.png --size=960x540 --query="view=<view>"
 import * as THREE from 'three';
@@ -10,6 +13,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { BokehPass } from 'three/examples/jsm/postprocessing/BokehPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { buildPerson, Person, preset, PresetName, randomPerson, PersonOptions, PRESETS, lodFor } from './people';
+import { facialHairColours } from './people/face';
 
 declare global { interface Window { __previewReady?: boolean; __previewError?: string; __people?: unknown } }
 addEventListener('error', (e) => { window.__previewError = String(e.message || e); });
@@ -199,6 +203,28 @@ async function main() {
         const u = ((m as THREE.Mesh).material as { uniformsRef?: Record<string, THREE.IUniform> } | undefined)?.uniformsRef?.uEyeP;
         if (u) (u.value as THREE.Vector4).set(o.face.eyeSize, 1.2 * o.face.eyeTilt, o.face.hooded, 0);
       });
+      // &beardhook=1: the pending person.ts line (skinLook.beardColor = facialHairColours(look).skin); &beardhook=0.6: the
+      // grey strands' share of that colour dimmed to 0.6 (the depth of a beard is in its own shade)
+      const bh = Number(q.get('beardhook') ?? 0);
+      if (bh > 0) p.group.traverse((m) => {
+        const u = ((m as THREE.Mesh).material as { uniformsRef?: Record<string, THREE.IUniform> } | undefined)?.uniformsRef?.uBeardCol;
+        const c = facialHairColours(o.look);
+        if (u) (u.value as THREE.Color).setHex(bh >= 1 ? c.skin : new THREE.Color(c.base).lerp(new THREE.Color(c.grey).multiplyScalar(bh), c.share).multiplyScalar(1 / 0.55).getHex());
+      });
+      // &cardhook=1: the pending cards.ts change, on the brow and beard material only (the 512 x 128 atlas): the per-strand
+      // grey hash fades to its share once a hash column is narrower than a pixel, so it can no longer alias (&cardhook=0.7:
+      // only that far, keeping some of the strands' contrast)
+      const fadeMax = Math.min(1, Number(q.get('cardhook') ?? 0));
+      if (fadeMax > 0) p.group.traverse((m) => {
+        const mat = (m as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined;
+        const im = mat?.map?.image as HTMLCanvasElement | undefined;
+        if (!mat || !im || im.width !== 512 || im.height !== 128 || (mat.userData as { hooked?: boolean }).hooked) return;
+        (mat.userData as { hooked?: boolean }).hooked = true;
+        const ob = mat.onBeforeCompile.bind(mat), key = mat.customProgramCacheKey.bind(mat);
+        mat.onBeforeCompile = (sh, r) => { ob(sh, r); sh.fragmentShader = sh.fragmentShader.replace('step(1.0 - uGrey, hsh)', `mix(step(1.0 - uGrey, hsh), uGrey, ${fadeMax.toFixed(2)} * smoothstep(0.6, 1.4, fwidth(vMapUv.x * 220.0)))`); };
+        mat.customProgramCacheKey = () => key() + '-greyfade' + fadeMax.toFixed(2);
+        mat.needsUpdate = true;
+      });
       p.group.position.set(i * 3, 0, 0);
       scene.add(p.group); people.push(p);
     });
@@ -377,20 +403,29 @@ async function main() {
     });
     if (atlas) {
       const a = atlas as HTMLCanvasElement;
-      // the beard half's coverage (mean alpha over the cards' canvas rows 3..55, v 0.57..0.98) by thirds from the root,
-      // and over the eight rows next to the brow half, which must stay empty
+      // the beard half's coverage (mean alpha over the cards' canvas rows 3..47, v 0.63..0.98) by thirds from the root,
+      // and over the sixteen rows next to the brow half, which must stay empty
       const px = a.getContext('2d')!.getImageData(0, 0, 512, 64).data, cov = [0, 0, 0];
       let guard = 0;
       for (let y = 0; y < 64; y++) for (let x = 0; x < 512; x++) {
         const al = px[(y * 512 + x) * 4 + 3] / 255;
-        if (y >= 56) guard += al; else if (y >= 3) cov[Math.min(2, Math.floor((55.5 - y) / 17.6))] += al;
+        if (y >= 48) guard += al; else if (y >= 3) cov[Math.min(2, Math.floor((47.5 - y) / 15))] += al;
       }
-      extra.beardCoverage = cov.map((s) => +(s / (512 * 53 / 3)).toFixed(3));   // [root third, middle, tip third]
-      extra.beardGuardCoverage = +(guard / (512 * 8)).toFixed(4);
+      extra.beardCoverage = cov.map((s) => +(s / (512 * 45 / 3)).toFixed(3));   // [root third, middle, tip third]
+      extra.beardGuardCoverage = +(guard / (512 * 16)).toFixed(4);
       a.style.cssText = 'position:fixed;left:0;top:0;width:100vw;height:25vw;image-rendering:pixelated;background:#25303c;z-index:9';
       document.body.appendChild(a);
     }
   }
+  // &dbg=nobeardtex: the atlas' beard half cleared (beards vanish): the brows as they are with nothing to bleed into them,
+  // a control for the guard rows
+  if (dbg === 'nobeardtex') people[0]?.group.traverse((m) => {
+    const t = ((m as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined)?.map;
+    const im = t?.image as HTMLCanvasElement | undefined;
+    if (t && im && im.width === 512 && im.height === 128 && !(t.userData as { cleared?: boolean }).cleared) {
+      im.getContext('2d')!.clearRect(0, 0, 512, 64); t.needsUpdate = true; (t.userData as { cleared?: boolean }).cleared = true;
+    }
+  });
   if (view !== 'crowd') extra.people = people.map((p) => p.stats());
   if (people[0]) { const ms: THREE.Mesh[] = []; people[0].group.traverse((m) => { if ((m as THREE.Mesh).isMesh) ms.push(m as THREE.Mesh); }); const e = ms[0]; e.updateWorldMatrix(true, false); const z = new THREE.Vector3(0, 0, 1).transformDirection(e.matrixWorld); extra.eyeZ = z.toArray().map((v) => +v.toFixed(3)); const pp = new THREE.Vector3(); e.getWorldPosition(pp); extra.eyeP = pp.toArray().map((v) => +v.toFixed(3)); extra.eyeParent = e.parent?.parent?.name; }
   extra.parts = people.slice(0, 1).map((p) => { const out: string[] = []; p.group.traverse((m) => { const g = (m as THREE.Mesh).geometry; if (g && m.visible) out.push(`${m.type}:${(g.index ? g.index.count : g.attributes.position.count) / 3}:${Object.keys(g.morphAttributes).length ? g.morphAttributes.position?.length : 0}`); }); return out.join(' '); });

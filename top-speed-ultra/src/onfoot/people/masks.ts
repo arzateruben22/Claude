@@ -7,15 +7,23 @@ import { HairStyle, Look } from './params';
 
 const g3 = (x: number, y: number, z: number, c: V3, r: number) => Math.exp(-((x - c[0]) ** 2 + (y - c[1]) ** 2 + (z - c[2]) ** 2) / (r * r));
 
+/** the scalp's natural hairline (head-local y) at an angle round the skull's centre (0 front .. pi back), before any
+ *  recession */
+const HAIRLINE: [number, number][] = [[0, 0.064], [0.55, 0.06], [0.95, 0.047], [1.25, 0.012], [1.55, -0.004], [1.85, -0.01], [2.3, -0.05], [3.15, -0.078]];
+function hairlineY(phi: number, male: boolean) {
+  const K = HAIRLINE;
+  let yH = K[K.length - 1][1];
+  for (let i = 0; i < K.length - 1; i++) if (phi <= K[i + 1][0]) { const t = (phi - K[i][0]) / (K[i + 1][0] - K[i][0]); yH = K[i][1] + (K[i + 1][1] - K[i][1]) * t; break; }
+  if (!male) yH -= 0.003 * smooth(0.4, 0.9, phi);
+  return yH;
+}
+
 /** the scalp under a hairstyle: 1 where hair grows (head-local) */
 export function scalpCover(style: HairStyle, l: V3, age: number, male: boolean) {
   if (style === 'bald') return 0;
   const [x, y, z] = l, ax = Math.abs(x);
   const phi = Math.abs(Math.atan2(x, z + 0.06));   // 0 front .. pi back, about the skull's centre
-  const K: [number, number][] = [[0, 0.064], [0.55, 0.06], [0.95, 0.047], [1.25, 0.012], [1.55, -0.004], [1.85, -0.01], [2.3, -0.05], [3.15, -0.078]];
-  let yH = K[K.length - 1][1];
-  for (let i = 0; i < K.length - 1; i++) if (phi <= K[i + 1][0]) { const t = (phi - K[i][0]) / (K[i + 1][0] - K[i][0]); yH = K[i][1] + (K[i + 1][1] - K[i][1]) * t; break; }
-  if (!male) yH -= 0.003 * smooth(0.4, 0.9, phi);
+  let yH = hairlineY(phi, male);
   const rec = style === 'receding' ? 1 : male ? clamp((age - 35) / 40) * 0.4 : 0;
   yH += rec * (0.022 * smooth(1.2, 0.0, phi) + 0.012 * Math.exp(-(((phi - 0.75) / 0.3) ** 2)));
   let c = smooth(yH - 0.003, yH + 0.004, y);
@@ -49,16 +57,42 @@ function mouthAt(x: number, y: number, z: number, hf: HeadFrame) {
   return inMouth ? smooth(0.0175, 0.0115, z) * smooth(0.0235 * F.mouthW, 0.019 * F.mouthW, ax) : 0;
 }
 
-/** beard and stubble where facial hair grows on a man (faceMasks().beard), given the lip and mouth masks there */
+/** beard and stubble where facial hair grows on a man (faceMasks().beard), given the lip and mouth masks there.
+ *  Every edge is a ramp a few mm wide, in the head's frame (head-local metres):
+ *  - the cheek line drops from the sideburn to the corner of the moustache, rising toward the ear instead of running
+ *    level along the side of the face;
+ *  - the sideburn runs from the cheek line up to the scalp's hairline in front of the ear, its back edge just ahead of
+ *    the ear's front (which moves with the ear's size), so no hair grows on the ear;
+ *  - behind, the beard stops in front of the lobe and then along the back of the jaw;
+ *  - the neckline runs from under the jaw's angle forward and down to the throat, one curve with no step.
+ *  (It was a set of hard boxes: the sideburn a box over the front of the ear with a vertical back edge, the side of the
+ *  face cut level, and a step under the jaw where the neck's cut met the face's. With a dense beard over a full base,
+ *  every edge of them showed from 45 degrees round.) */
 function beardAt(x: number, y: number, z: number, hf: HeadFrame, look: Look, lip: number, mouth: number) {
   if (!hf.male) return 0;
   const ax = Math.abs(x), mY = hf.mouth.y, fh = look.facialHair;
-  const yLine = -0.035 - 0.02 * clamp((0.05 - ax) / 0.025);
-  const lower = smooth(yLine + 0.004, yLine - 0.004, y) * (z > -0.078 ? 1 : smooth(-0.088, -0.078, z)) * smooth(0.074, 0.068, ax);
+  // the cheek line: low beside the mouth, climbing across the side of the face to the sideburn
+  const yLine = -0.035 - 0.02 * clamp((0.05 - ax) / 0.025) + 0.008 * smooth(-0.004, -0.04, z);
+  // the ear's front edge (the tragus side of its disc, head.ts): the sideburn stops just ahead of it, the beard below
+  // it in front of the lobe, then along the back of the jaw
+  const zEar = -0.0625 + 0.0185 * (hf.face.earSize - 1);
+  const zBack = zEar + 0.0005 - 0.0075 * smooth(-0.045, -0.062, y);   // (below the lobe it may reach 7.5 mm further back)
+  const back = smooth(zBack, zBack + 0.005, z);
+  // the neckline: under the jaw's angle at the back, falling forward to the throat
+  const yNeck = -0.091 - 0.032 * smooth(-0.074, -0.026, z);
+  const neck = smooth(yNeck - 0.007, yNeck + 0.003, y);
+  const lower = smooth(yLine + 0.004, yLine - 0.004, y) * back * neck;
   const must = ax < 0.03 && y > mY + 0.003 && y < -0.046 && z > 0.008 ? smooth(0.03, 0.022, ax) * smooth(mY + 0.003, mY + 0.006, y) * smooth(-0.046, -0.049, y) : 0;
-  const neck = y < -0.1 ? smooth(-0.155, -0.12, y) * (z > -0.065 ? 1 : 0) : 1;
-  const side = ax > 0.052 && y > -0.045 && y < 0.002 && z > -0.075 && z < -0.042 ? smooth(0.002, -0.006, y) : 0;
-  const full = clamp(Math.max(lower * neck, must, side)) * (1 - lip) * (1 - mouth);
+  // the sideburn: from the cheek line up into the scalp's hairline (a bald head's ends at the top of the ear), its
+  // front edge 2 cm ahead of the ear at the top and widening into the cheek at the bottom (worked out only where it
+  // can add to the rest: it is 0 at |x| < 0.05 and ahead of z -0.028, and nothing exceeds a full 1)
+  let side = 0;
+  if (lower < 1 && ax > 0.05 && z < -0.028 && back * neck > 0) {
+    const yHair = look.hair === 'bald' ? 0.004 : hairlineY(Math.abs(Math.atan2(x, z + 0.06)), true);
+    const zFront = -0.044 + 0.008 * smooth(-0.004, -0.028, y);
+    side = smooth(0.05, 0.058, ax) * smooth(yHair + 0.003, yHair - 0.003, y) * smooth(zFront + 0.008, zFront, z) * back * neck;
+  }
+  const full = clamp(Math.max(lower, must, side)) * (1 - lip) * (1 - mouth);
   // (a goatee covers the chin and stops just under it: it used to run on down the throat)
   return fh === 'goatee' ? clamp(Math.max(must, lower * smooth(0.028, 0.018, ax) * (y < -0.085 ? smooth(-0.124, -0.11, y) : smooth(mY - 0.002, mY - 0.006, y)))) * (1 - lip)
     : fh === 'moustache' ? must * (1 - lip) + full * 0.25

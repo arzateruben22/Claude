@@ -12,11 +12,9 @@ import { Quality, Look } from './params';
 import { NOISE } from './skin';
 import { cardMaterial, browTexture } from './cards';
 import { beardMask, lipMask } from './masks';
-
-export const MORPHS = ['jawOpen', 'mouthClose', 'smileL', 'smileR', 'wide', 'pucker', 'press', 'tuck', 'browUp', 'browDownL', 'browDownR', 'blinkL', 'blinkR', 'squintL', 'squintR'] as const;
-export type MorphName = typeof MORPHS[number];
-export const MI: Record<MorphName, number> = Object.fromEntries(MORPHS.map((n, i) => [n, i])) as Record<MorphName, number>;
-const NM = MORPHS.length;
+import { MORPHS, MorphName, MI, NM } from './morphs';
+export { MORPHS, MI } from './morphs';
+export type { MorphName } from './morphs';
 
 const g3 = (p: V3, c: V3, r: number) => { const dx = p[0] - c[0], dy = p[1] - c[1], dz = p[2] - c[2]; return Math.exp(-(dx * dx + dy * dy + dz * dz) / (r * r)); };
 
@@ -348,10 +346,27 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
     pos.push(sx * 0.008, hf.mouth.y - 0.004, 0.024, sx * hf.eye.x, -0.012, 0.012);
     uvs.push(0, 0, 0, 0);
   }
-  const brow = look.grey > 0.7 ? 0x8a847c : new THREE.Color(look.hairColor).multiplyScalar(0.55).getHex();
-  const mat = cardMaterial(brow, browBeardTexture(), quality, { kk: false, alphaTest: 0.02, grey: Math.min(0.7, look.grey * 0.6) });
+  const col = facialHairColours(look);
+  const mat = cardMaterial(col.base, browBeardTexture(), quality, { kk: false, alphaTest: 0.02, grey: col.share, greyColor: col.grey });
   mat.transparent = true; mat.depthWrite = false; mat.alphaToCoverage = false;
   return { pos, uvs, idx, mat };
+}
+
+const GREY_STRAND = 0xbdb9b2;   // (cards.ts' grey strand colour)
+/** the brows' and facial hair's colours (sRGB hex) from the look: the strands' base (the hair's own colour, darker:
+ *  brows and beards grow darker than the scalp's hair), the grey strands' colour and share (cards.ts' per-strand hash),
+ *  and `skin`, the colour the skin under a beard is tinted toward (person.ts' skinLook.beardColor) for it to match the
+ *  cards' mean: skin.ts tints it to about 0.55 x beardColor, and the cards average their base and grey strands at
+ *  about 1 x (their texture's shade). With no grey that is the hair's colour, which is what person.ts passes today.
+ *  Only a grey or white head of hair (light and unsaturated) greys the base itself; any other colour keeps its own base
+ *  under the grey strands (a near-white base on a dark-haired man made every card a pale blob over the dark skin under
+ *  his beard) */
+export function facialHairColours(look: Look) {
+  const h = look.hairColor, r = ((h >> 16) & 255) / 255, g = ((h >> 8) & 255) / 255, b = (h & 255) / 255;
+  const mx = Math.max(r, g, b), mn = Math.min(r, g, b), greyHair = mx - mn < 0.06 && mx + mn > 1;
+  const base = greyHair && look.grey > 0.7 ? new THREE.Color(0x8a847c) : new THREE.Color(h).multiplyScalar(0.55);
+  const share = Math.min(0.7, look.grey * 0.6);
+  return { base: base.getHex(), grey: GREY_STRAND, share, skin: base.clone().lerp(new THREE.Color(GREY_STRAND), share).multiplyScalar(1 / 0.55).getHex() };
 }
 
 // ------------------------------------------------------------------------------------------------ facial hair
@@ -363,14 +378,17 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
 // edge and its volume over a full base.
 
 /** the brow texture (v 0..0.5, unchanged) with sixteen 32 px tiles of beard strands above it (v 0.5..1), side by side
- *  along u. Each strand runs along v, root at v 0.57, tip toward v 0.98, so across a card u runs across its strands:
+ *  along u. Each strand runs along v, root at v 0.63, tip toward v 0.98, so across a card u runs across its strands:
  *  cards.ts' per-strand grey hash, floor(u * 220), then picks one colour per strand, constant along it, and each strand
  *  is drawn on the centre of its hash column. (The strands ran along u: the hash flipped about 53 times along every
  *  strand, and a grey beard or moustache read as salt-and-pepper static that mipmapping could not filter.) A tile is
- *  about as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-1.8 texel strand is a 0.1-0.2 mm hair.
- *  The eight rows next to the brow half stay empty: the brow strip's edge samples v 0.5, and roots there bled into it */
+ *  about as many texels across a card (2-4 mm) as along it (4-9 mm), and each 1-2 texel strand is a 0.1-0.2 mm hair.
+ *  Each tile is a tuft that tapers to a point: the middle strands run the card's length, the outer ones are shorter,
+ *  every strand is thicker at its root, and the density under them narrows toward the tip (twelve even strands of one
+ *  length made every card a blunt bar). The sixteen rows next to the brow half stay empty: the brow strip's edge
+ *  samples v 0.5, and anything there bled into the brows' upper edge through filtering, down to mip level 4 */
 const BEARD_TILES = 16, HASH_COL = 512 / 220;   // (cards.ts: the grey hash's column, in texels)
-const BEARD_Y0 = 55.5, BEARD_Y1 = 2.5;   // the canvas rows of a card's root and tip (v 0.566 and 0.98)
+const BEARD_Y0 = 47.5, BEARD_Y1 = 2.5;   // the canvas rows of a card's root and tip (v 0.629 and 0.98)
 let browBeardTex: THREE.Texture | null = null;
 function browBeardTexture() {
   if (browBeardTex) return browBeardTex;
@@ -381,27 +399,40 @@ function browBeardTexture() {
   g.drawImage(browTexture().image as CanvasImageSource, 0, 64);   // flipY: the canvas' lower half is v 0..0.5
   const r = rng(9091);
   const tw = 512 / BEARD_TILES, yRoot = BEARD_Y0, yTip = BEARD_Y1;
+  const len = yRoot - yTip;
   for (let k = 0; k < BEARD_TILES; k++) {
-    const x0 = k * tw, cx = x0 + tw / 2;
-    // a soft density under the strands, strongest at the root and down the card's middle (a beard reads as a tone
-    // before single hairs do): half an ellipse standing on the root row, so nothing spills into the brow half
-    g.save(); g.translate(cx, yRoot); g.scale(1, 2.2);
-    const gr = g.createRadialGradient(0, 0, 0, 0, 0, tw / 2);
-    gr.addColorStop(0, 'rgba(255,255,255,0.14)'); gr.addColorStop(0.55, 'rgba(255,255,255,0.06)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-    g.fillStyle = gr; g.fillRect(-tw / 2, -tw / 2, tw, tw / 2);
-    g.restore();
-    // a strand on every hash column whose centre lies 2 texels or more inside the tile: from near the root end, nearly
-    // straight up the card (it keeps to its column), tapering out before the tip
-    for (let s = Math.ceil((x0 + 2) / HASH_COL - 0.5); (s + 0.5) * HASH_COL <= x0 + tw - 2; s++) {
-      const xs = (s + 0.5) * HASH_COL + (r.next() - 0.5) * 0.3, ys = yRoot - 10 * r.next();
-      const L = Math.min((0.42 + 0.55 * r.next()) * (yRoot - yTip), ys - yTip);
-      const ex = xs + (r.next() - 0.5) * 0.7, ey = ys - L, bend = (r.next() - 0.5) * 0.5;
-      const v = Math.round(150 + 105 * r.next()), a0 = 0.55 + 0.3 * r.next();
-      const grad = g.createLinearGradient(xs, ys, ex, ey);
-      grad.addColorStop(0, `rgba(${v},${v},${v},${a0})`); grad.addColorStop(0.65, `rgba(${v},${v},${v},${a0 * 0.7})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
-      g.strokeStyle = grad; g.lineWidth = 1 + 0.8 * r.next();
-      g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + ex) / 2 + bend, (ys + ey) / 2, ex, ey); g.stroke();
+    const x0 = k * tw, cx = x0 + tw / 2, hw = tw / 2 - 2;   // (a card shows its tile from 2 texels in on each side)
+    g.save();
+    g.beginPath(); g.rect(x0, 0, tw, yRoot + 0.5); g.clip();   // nothing past the root row (the guard) or into the next tile
+    // a soft density under the strands (a beard reads as a tone before single hairs do): a teardrop standing on the
+    // root row, as wide as the card there and narrowing toward the tip
+    for (let i = 0; i < 5; i++) {
+      const t = i / 5, rw = hw * (1 - 0.78 * t);
+      g.save(); g.translate(cx, yRoot - t * 0.62 * len); g.scale(1, 1.5);
+      const gr = g.createRadialGradient(0, 0, 0, 0, 0, rw);
+      gr.addColorStop(0, `rgba(255,255,255,${(0.1 * (1 - 0.5 * t)).toFixed(3)})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = gr; g.fillRect(-rw, -rw, 2 * rw, 2 * rw);
+      g.restore();
     }
+    // a strand on most hash columns whose centre lies 2 texels or more inside the tile, each kept to its column (its
+    // tip leans toward the tuft's middle by half a texel at most): the middle strands the longest, the outer ones about
+    // a third of that, each drawn whole and then its root half again, thicker
+    for (let s = Math.ceil((x0 + 2) / HASH_COL - 0.5); (s + 0.5) * HASH_COL <= x0 + tw - 2; s++) {
+      const xc = (s + 0.5) * HASH_COL, a = Math.min(1, Math.abs(xc - cx) / hw);
+      if (r.next() < 0.05) continue;   // (a gap here and there)
+      const xs = xc + (r.next() - 0.5) * 0.3, ys = yRoot - 0.5 - 5 * r.next() * (0.4 + a);
+      const L = Math.min((1 - 0.68 * Math.pow(a, 1.5)) * (0.64 + 0.36 * r.next()) * len, ys - yTip);
+      const ex = xs + clamp((cx - xs) * 0.06, -0.5, 0.5) + (r.next() - 0.5) * 0.3, bend = (r.next() - 0.5) * 0.4;
+      const v = Math.round(150 + 105 * r.next()), a0 = 0.6 + 0.3 * r.next(), wd = 0.9 + 0.45 * r.next();
+      for (const [f, lw, k0] of [[1, wd, 1], [0.45, wd * 1.6, 0.6]] as const) {
+        const fx = lerp(xs, ex, f), fy = ys - L * f;
+        const grad = g.createLinearGradient(xs, ys, fx, fy);
+        grad.addColorStop(0, `rgba(${v},${v},${v},${(a0 * k0).toFixed(3)})`); grad.addColorStop(0.6, `rgba(${v},${v},${v},${(a0 * k0 * 0.75).toFixed(3)})`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.strokeStyle = grad; g.lineWidth = lw;
+        g.beginPath(); g.moveTo(xs, ys); g.quadraticCurveTo((xs + fx) / 2 + bend * f, (ys + fy) / 2, fx, fy); g.stroke();
+      }
+    }
+    g.restore();
   }
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.NoColorSpace;   // channels are data: r = strand shade, a = coverage
@@ -437,7 +468,7 @@ function growBeard(hf: HeadFrame, field: Field, look: Look, quality: Quality, po
   const W = (high ? 0.0027 : 0.0037) * (full ? 1 : 0.9);
   const zA = -0.035, R = 0.066;
   // where each kind can grow (head-local y, angle round the head from the front): rays outside it are never cast
-  const [yTop, yBot, phMax] = full ? [0.006, -0.128, 2.1] : fh === 'goatee' ? [-0.04, -0.125, 0.75] : [-0.04, mY, 0.75];
+  const [yTop, yBot, phMax] = full ? [0.01, -0.128, 2.1] : fh === 'goatee' ? [-0.04, -0.125, 0.75] : [-0.04, mY, 0.75];
   // (the masks are masks.ts' beardMask and lipMask: faceMasks' numbers without its other masks. Every test below decides
   // as it did with faceMasks and all its probes, so the beard is the same; the work is a fraction)
   const hits: { p: V3; f0: number; beard: number }[] = [];

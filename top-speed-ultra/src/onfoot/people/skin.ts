@@ -14,9 +14,8 @@
 //  - a cheap subsurface look: wrapped, red-tinted diffuse and light through thin parts (ears, nose), baked AO
 import * as THREE from 'three';
 import { Quality } from './params';
-// (face.ts imports NOISE from here: both modules only read the other's exports when a material is made, so the cycle
-// is harmless)
-import { MORPHS, MI } from './face';
+// (from the leaf module, not face.ts: face.ts imports NOISE from here)
+import { MI, NM } from './morphs';
 
 export const NOISE = /* glsl */ `
 float hh13(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
@@ -98,10 +97,9 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
   // the face's expression for the per-pixel folds: smileL, smileR, squintL, squintR, read from the morph weights of a
-  // mesh that carries every one of face.ts' MORPHS (the head), at their indices there; every other skin mesh (the
+  // mesh that carries every one of the MORPHS (morphs.ts; the head), at their indices there; every other skin mesh (the
   // coarse head, body, hands) gets zero. A face mesh that carries some but not all of them (setMorphs drops a morph
   // that is zero everywhere) would lose its folds: its program says so when it is built, instead of going flat in silence
-  const NM = MORPHS.length;
   m.onBeforeCompile = (sh) => {
     if (detail === 'face' && sh.morphTargetsCount > 0 && sh.morphTargetsCount !== NM) console.warn(`people/skin: a face mesh with ${sh.morphTargetsCount} of the ${NM} morph targets; its smile and squint folds are off`);
     Object.assign(sh.uniforms, u);
@@ -223,9 +221,19 @@ if (beard * uBeard > 0.001) {   // (women and the skin outside the beard's mask 
   float dots = smoothstep(0.32, 0.1, sc.x);
   stub = beard * uBeard * (0.45 + 0.55 * dots * mid);
   // under a beard, goatee or moustache (strand cards over it) the base is full and nearer the hair's own colour, so the
-  // hair reads as one dense mass between the cards instead of as dark tufts on skin
-  float fullB = smoothstep(0.85, 0.95, uBeard);
-  float amt = mix(stub * 0.8, beard * (0.8 + 0.2 * dots), fullB);
+  // hair reads as one dense mass between the cards instead of as dark tufts on skin. Its edge keeps the mask's soft
+  // few-mm ramp, broken up by noise (3 mm patches drawn out along the hair's fall, finer ones where they resolve), so it
+  // never follows the mesh's straight edges. (Sharpened with a smoothstep, the ramp became a hard cut-out whose outline
+  // showed the value noise's grid as square steps at 0.24 m. The noise fades out toward both ends of the ramp: nothing
+  // where the mask ends, where this branch stops running, and a full beard inside, where it is not even looked up. A
+  // full beard only: a moustache's mask carries a faint shadow at 0.25 over the beard's area, which the noise would
+  // break into blotches)
+  float fullB = smoothstep(0.85, 0.95, uBeard), beardE = beard;
+  if (uBeard > 0.95 && beard < 0.995) {
+    float bn = 0.4 * (vnoise(hp * vec3(0.33, 0.17, 0.33) + 41.0) - 0.5) + (mid > 0.05 ? 0.15 * (vnoise(hp * 1.1 + 47.0) - 0.5) * mid : 0.0);
+    beardE = clamp(beard + bn * min(1.0, 4.0 * beard) * min(1.0, 4.0 * (1.0 - beard)), 0.0, 1.0);
+  }
+  float amt = mix(stub * 0.8, beardE * (0.8 + 0.2 * dots), fullB);
   c = mix(c, mix(c * 0.62, uBeardCol * 0.6, mix(0.55, 0.9, fullB)), clamp(amt, 0.0, 1.0));
 }
 #endif
