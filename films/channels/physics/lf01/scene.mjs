@@ -347,8 +347,8 @@ appleMat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, appleU);
   outgoingLight = acesInv(lin, 1.0);
   #include <opaque_fragment>`); };
 const appleP = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), appleMat); appleP.geometry.scale(0.040, 0.0378, 0.040); appleP.frustumCulled = false; appleP.renderOrder = 2; let appleUVfor = null;
-const appleUV = (rg) => { if (appleUVfor === rg) return; appleUVfor = rg; const P = appleP.geometry.attributes.position, uv = new Float32Array(P.count * 2);
-  for (let k = 0; k < P.count; k++) { const wx = rg.pos[0] + rg.scale * P.getX(k), wy = rg.pos[1] + rg.scale * P.getY(k), wz = rg.pos[2] + rg.scale * P.getZ(k), d = -wz; uv[2 * k] = (836 + 1790 * wx / d) / 1672; uv[2 * k + 1] = 1 - (470.5 - 1790 * (wy - 0.4) / d) / 941; }
+const appleUV = (rg) => { if (appleUVfor === rg) return; appleUVfor = rg; const F = rg.uvf || { cx: 836, cy: 470.5, ppm: 1790, w: 1672, h: 941 }, P = appleP.geometry.attributes.position, uv = new Float32Array(P.count * 2);
+  for (let k = 0; k < P.count; k++) { const wx = rg.pos[0] + rg.scale * P.getX(k), wy = rg.pos[1] + rg.scale * P.getY(k), wz = rg.pos[2] + rg.scale * P.getZ(k), d = -wz; uv[2 * k] = (F.cx + F.ppm * wx / d) / F.w; uv[2 * k + 1] = 1 - (F.cy - F.ppm * (wy - 0.4) / d) / F.h; }
   appleP.geometry.setAttribute("uvRest", new THREE.BufferAttribute(uv, 2)); };
 const MACH = CAL.bullet.mach, HALFANG = Math.asin(1 / MACH);
 const coneM = new THREE.MeshBasicMaterial({ color: 0x9CB4FF, transparent: true, opacity: 0.12, depthWrite: false, side: THREE.DoubleSide });
@@ -366,13 +366,13 @@ const cloudN = 60, cloudV = []; { const rc = rng(31); for (let i = 0; i < cloudN
 const cloudGeo = new THREE.BufferGeometry(); cloudGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(cloudN * 3), 3));
 const cloudTex = (() => { const cv = document.createElement("canvas"); cv.width = cv.height = 64; const c = cv.getContext("2d"), gr = c.createRadialGradient(32, 32, 2, 32, 32, 31); gr.addColorStop(0, "rgba(236,220,170,0.55)"); gr.addColorStop(0.5, "rgba(232,212,158,0.22)"); gr.addColorStop(1, "rgba(230,210,155,0)"); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
 const cloudPts = new THREE.Points(cloudGeo, new THREE.PointsMaterial({ size: 0.024, map: cloudTex, transparent: true, depthWrite: false, opacity: 0.9, sizeAttenuation: true })); cloudPts.frustumCulled = false; cloudPts.visible = false; scene.add(cloudPts);   // the soft wet pulp cloud
-const flapU = { uPlate: appleU.uPlate };
+const flapU = { uPlate: appleU.uPlate, uSkin: { value: new THREE.Vector4(1120 / 1672, 470 / 941, 70 / 1672, 130 / 941) } };
 const flapMat = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide });   // real skin on the outside (the plate's own apple skin pixels), wet cream flesh on the inside
-flapMat.onBeforeCompile = (sh) => { sh.uniforms.uPlate = flapU.uPlate;
+flapMat.onBeforeCompile = (sh) => { sh.uniforms.uPlate = flapU.uPlate; sh.uniforms.uSkin = flapU.uSkin;
   sh.vertexShader = sh.vertexShader.replace("#include <common>", "#include <common>\nvarying vec2 vFU;").replace("#include <begin_vertex>", "#include <begin_vertex>\nvFU = uv;");
   sh.fragmentShader = sh.fragmentShader.replace("#include <common>", "#include <common>\nvarying vec2 vFU; uniform sampler2D uPlate;\n" + ACES_INV_GLSL)
     .replace("#include <opaque_fragment>", `
-  float al = 1.0 - vFU.y; vec2 su = vec2(1120.0 / 1672.0 + vFU.x * 70.0 / 1672.0, 1.0 - (470.0 + al * 130.0) / 941.0);
+  float al = 1.0 - vFU.y; vec2 su = vec2(uSkin.x + vFU.x * uSkin.z, 1.0 - (uSkin.y + al * uSkin.w));
   vec3 sk = texture2D(uPlate, su).rgb * (0.8 + 0.3 * (1.0 - al)); vec3 cr = mix(vec3(0.88, 0.78, 0.5), vec3(0.97, 0.9, 0.7), al);
   vec3 c = gl_FrontFacing ? cr : sk; c = mix(c, vec3(0.9, 0.82, 0.58), smoothstep(0.93, 0.99, al) * (gl_FrontFacing ? 0.0 : 0.8));
   outgoingLight = acesInv(clamp(c, 0.0, 1.0), 1.0);
@@ -525,7 +525,7 @@ window.seek = function (t) {
       if (rg.kind === "bubble") { if (bubble.parent !== plateRig) { plateRig.add(bubble); plateRig.add(rimR); } }
       else if (rg.kind === "apple") {
         if (appleP.parent !== plateRig) plateRig.add(appleP, bullet, cone, ...spray);
-        appleUV(rg); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
+        appleUV(rg); if (rg.skin) flapU.uSkin.value.set(...rg.skin); if (!appleU.uPlate.value) { const im = plates.imageOf("applep"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; appleU.uPlate.value = tx; } }
         appleP.visible = !!appleU.uPlate.value; }
       else { if (crown.parent !== plateRig) { plateRig.add(crown); plateRig.add(hang); } crown.position.set(0, 0, 0); }
       if (!rg.kind) { const sf = plates.shiftPx ? plates.shiftPx(t) : [0, 0]; wU.uZS.value.set(plates.zoom(t), sf[0], sf[1], Math.max(W / 1672, H / 941)); if (!wU.uPlateR.value) { const im = plates.imageOf("tapmug"); if (im) { const cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); const tx = new THREE.CanvasTexture(cv); tx.colorSpace = THREE.SRGBColorSpace; tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter; tx.needsUpdate = true; wU.uPlateR.value = tx; } } if (!wU.uPlateR.value) wU.uZS.value.w = -1; }

@@ -53,11 +53,11 @@ void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = ve
   const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
   const loc = gl.getAttribLocation(pr, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = (k) => gl.getUniformLocation(pr, k); gl.uniform1i(U("tOff"), 0); gl.uniform1i(U("tOrig"), 1); gl.uniform1i(U("tDist"), 2);
-  gl.uniform2f(U("uRes"), it.W, it.H); gl.uniform2f(U("uPlate"), 1672, 941); gl.uniform1f(U("uCs"), Math.max(it.W / 1672, it.H / 941)); gl.viewport(0, 0, it.W, it.H);
+  gl.uniform2f(U("uRes"), it.W, it.H); gl.uniform2f(U("uPlate"), off.naturalWidth, off.naturalHeight); gl.uniform1f(U("uCs"), Math.max(it.W / off.naturalWidth, it.H / off.naturalHeight)); gl.viewport(0, 0, it.W, it.H);
   return { cv, draw: (R, w, shiftPx) => { gl.uniform1f(U("uR"), R); gl.uniform1f(U("uW"), w); gl.uniform1f(U("uShift"), shiftPx || 0); gl.drawArrays(gl.TRIANGLES, 0, 3); } };
 };
 export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
-  const nine = H > W, list = (FILM.plates || []).filter(Boolean);
+  const nine = H > W, list = (FILM.plates || []).filter(Boolean).map((p) => (H > W && p.p9 ? { ...p, ...p.p9 } : p));   // p9: the 9:16 picture is its own image, so it brings its own camera, anchors and shift
   const load = (file) => new Promise((res) => {
     if (!file) return res(null);
     const im = new Image(); im.decoding = "sync";
@@ -81,7 +81,7 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   })).catch(() => {});
   const active = (t) => { for (const it of items) if (it.ok && t >= it.p.t0 && t < it.p.t1) return it; return null; };
   // where the picture is moved so its subject sits at the frame's centre (metres at 1 m, the camera aims the same way): 9:16 uses shift9 at once, a push-in ramps its shift with the push so the picture's edge never shows
-  const shiftAt = (it, t) => { const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), sh = nine && p.shift9 ? p.shift9 : p.shift; if (!sh) return { x: 0, y: 0, ppm: 1 }; const k = nine && p.shift9 ? 1 : d; return { x: sh.x * k, y: (sh.y || 0) * d, ppm: sh.ppm }; };
+  const shiftAt = (it, t) => { const p = it.p, d = Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))), sh = nine && p.shift9 ? p.shift9 : p.shift; if (!sh) return { x: 0, y: 0, ppm: 1 }; const k = nine && p.shift9 && !p.native9 ? 1 : d; return { x: sh.x * k, y: (sh.y || 0) * d, ppm: sh.ppm }; };   // a native 9:16 picture fills the frame exactly: its shift grows with the push, so no edge ever shows
   const apply = (t) => {
     for (const it of items) { for (const im of it.imgs) im.style.display = "none"; if (it.swapImg) it.swapImg.style.display = "none"; }
     const it = active(t); if (!it) return false;

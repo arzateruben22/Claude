@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -259,11 +259,15 @@ PLATE02_9 = "../lf01/art/owner/plates/plate-02-feeder-9x16.png" if (HERE / "art/
 # plate-02: the window with the hanging feeder (ports at about x 770-895, y 378 px of 1672x941). A pinhole camera at the origin: 1790 px per meter at 1 m, so the dish (215 px) is 12 cm; the bird (about 10 cm) hovers left of the left port, beak at the port.
 _PX = 1790.0
 _w = lambda px, py, z=-1.0: [round((px - 836) / _PX * -z, 4), round(0.4 + (470.5 - py) / _PX * -z, 4), z]   # the camera sits 0.4 m up (a camera at the exact origin makes the finish's motion estimate NaN)
+_w9 = lambda px, py, z=-1.0: [round((px - 470.5) / 2350 * -z, 4), round(0.4 + (836 - py) / 2350 * -z, 4), z]   # the 9:16 pictures are 941 x 1672: the principal point is (470.5, 836)
 _p02 = {"id": "feeder", "file": PLATE02, "file9": PLATE02_9, "push": 0.35, "parallax": 0, "fade": 0.05, "shift": {"x": round((735 - 836) / _PX, 4), "y": round((470.5 - 400) / _PX, 4), "ppm": _PX},   # a slow push from 1.0x to 1.35x, centred between the bird and the feeder
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},   # a hair of pitch: a camera looking exactly level makes the finish's motion probe NaN
         "shift9": {"x": round((735 - 836) / _PX, 4), "y": round((470.5 - 400) / _PX, 4), "ppm": _PX},   # 9:16: bird and feeder in the middle of the crop
         "anchor": {"bird": {"tip": _w(768, 378), "scale": 0.027, "yaw": -0.25, "tilt": 0.87},   # the bill tip goes into the left port flower
-                   "shadow": {"pos": _w(790, 396, -1.002), "w": 0.07, "h": 0.026, "opacity": 0.4}}}
+                   "shadow": {"pos": _w(790, 396, -1.002), "w": 0.07, "h": 0.026, "opacity": 0.4}},
+        "p9": {"native9": True, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 38.9},   # the owner's own 9:16 picture (941x1672): the dish is 282 px for 12 cm, so 2350 px per metre at 1 m
+               "shift": {"x": round((450 - 470.5) / 2350, 4), "y": round((836 - 1080) / 2350, 4), "ppm": 2350}, "shift9": {"x": round((450 - 470.5) / 2350, 4), "y": round((836 - 1080) / 2350, 4), "ppm": 2350},
+               "anchor": {"bird": {"tip": _w9(393.5, 963.5), "scale": 0.0354, "yaw": -0.25, "tilt": 0.87}, "shadow": {"pos": _w9(415, 990, -1.002), "w": 0.092, "h": 0.034, "opacity": 0.4}}}}
 # plate-03: the tap and the cobalt mug (Part 2). The mug's rim (full to the brim) is 415 px wide in the 1672 px picture: 0.0395 m of cup radius at 5240 px per code-metre, drawn at z = -0.31 (5774 px/m)
 PLATE03 = "../lf01/art/owner/plates/plate-03-tap-mug-16x9.png"; PLATE03C = "../lf01/art/owner/plates/plate-03-tap-mug-clean-16x9.png"
 _Z3 = -0.31; _PZ = _PX / -_Z3
@@ -272,15 +276,20 @@ _p03 = {"id": "tapmug", "file": PLATE03, "file9": PLATE03, "push": 0.04, "parall
         "anchor": {"rig": {"pos": [round((863 - 836) / _PZ, 4), round(0.4 + (470.5 - 594) / _PZ, 4), _Z3], "scale": round(5240 / _PZ, 4), "rotX": 0.227, "tipY": round((594 - 368) / 5240, 4), "drop": 0.85, "rad": 0.62}}}   # the crown stands on the mug's water at the drop's x
 # plate-05: the farmhouse sink under the window (Part 3's soap bubble). The bubble (0.025 code-m of radius) is drawn 55 px in radius, 2200 px per code-metre, in the air left of the tap
 PLATE05 = "../lf01/art/owner/plates/plate-05-sink-16x9.png"
-_p05 = {"id": "sink", "file": PLATE05, "file9": PLATE05, "push": 0.5, "parallax": 0, "fade": 0.3,
+_p05 = {"id": "sink", "file": PLATE05, "file9": "../lf01/art/owner/plates/plate-05-sink-9x16.png", "push": 0.5, "parallax": 0, "fade": 0.3,
         "shift": {"x": round((600 - 836) / _PX, 4), "y": round((470.5 - 440) / _PX, 4), "ppm": _PX}, "shift9": {"x": round((600 - 836) / _PX, 4), "y": round((470.5 - 440) / _PX, 4), "ppm": _PX},   # push in on the bubble: it fills about a quarter of the frame at the tear
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
-        "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(6200 / _PX, 4), "scale9": round(3500 / _PX, 4), "rotX": 0}}}
+        "anchor": {"rig": {"kind": "bubble", "pos": [round((600 - 836) / _PX, 4), round(0.4 + (470.5 - 440) / _PX, 4), -1.0], "scale": round(6200 / _PX, 4), "scale9": round(3500 / _PX, 4), "rotX": 0}},
+        "p9": {"native9": True, "shift": {"x": round((250 - 470.5) / 2350, 4), "y": round((836 - 880) / 2350, 4), "ppm": 2350}, "shift9": {"x": round((250 - 470.5) / 2350, 4), "y": round((836 - 880) / 2350, 4), "ppm": 2350},
+               "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 38.9},
+               "anchor": {"rig": {"kind": "bubble", "pos": _w9(250, 880), "scale": round(7000 / 2350, 4), "rotX": 0}}}}
 # plate-06: one red apple on the oak counter (Part 5). Its picture is projected onto an apple-shaped proxy mesh (pixel-identical before impact); the apple is 334 px wide, so 4175 px per code-metre
 PLATE06 = "../lf01/art/owner/plates/plate-06-apple-16x9.png"
-_p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1085 - 836) / _PX, 4), "ppm": _PX},
+_p06 = {"id": "applep", "file": PLATE06, "file9": "../lf01/art/owner/plates/plate-06-apple-9x16.png", "push": 0.04, "parallax": 0, "fade": 0.3, "shift9": {"x": round((1085 - 836) / _PX, 4), "ppm": _PX},
         "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 29.5},
-        "anchor": {"rig": {"kind": "apple", "pos": [round((1032 - 836) / _PX, 4), round(0.4 + (470.5 - 515) / _PX, 4), -1.0], "scale": round(4175 / _PX, 4), "rotX": 0}}}
+        "anchor": {"rig": {"kind": "apple", "pos": [round((1032 - 836) / _PX, 4), round(0.4 + (470.5 - 515) / _PX, 4), -1.0], "scale": round(4175 / _PX, 4), "rotX": 0}},
+        "p9": {"native9": True, "shift": {"x": 0.0, "y": 0.0, "ppm": 2350}, "shift9": {"x": 0.0, "y": 0.0, "ppm": 2350}, "cam3": {"pos": [0, 0.4, 0], "target": [0, 0.396, -1], "fov": 38.9},
+               "anchor": {"rig": {"kind": "apple", "pos": _w9(470, 1015), "scale": round(4125 / 2350, 4), "rotX": 0, "uvf": {"cx": 470.5, "cy": 836, "ppm": 2350, "w": 941, "h": 1672}, "skin": [575 / 941, 930 / 1672, 55 / 941, 120 / 1672]}}}}
 # plate-09: the same doorway view as plate 01 at night. The picture without the lamp's light is the base; the original pixels appear inside the light front that crawls out of the under-cabinet lamp (upper left)
 PLATE09 = "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png"; PLATE09O = "../lf01/art/owner/plates/plate-09-night-16x9.png"
 _p09 = {"id": "night", "file": PLATE09, "file9": PLATE09, "push": 0.05, "parallax": 0, "fade": 0.4, "shift9": {"x": round((480 - 836) / _PX, 4), "ppm": _PX},
@@ -341,7 +350,7 @@ film = {
     "spine": SPINE, "spineAt": SPINE_AT, "factorKeys": KEYS, "ramp": RAMP, "labelKeys": LBL, "ev": EV, "cam": CAM,
     "calc": {"c": CALC["c"], "hz": {"hum": 50.0, "fly": 200.0, "mosq": 500.0}, "bubble_t": CALC["bubble"]["t_s"], "bullet": CALC["bullet"],
              "sound": 343.0, "leader": CALC["leader"], "light": CALC["light"]["m_per_ns"], "hair_m": CALC["hair"]["m"]},
-    "badges": BADGES, "captionY": ({"9x16": CAPY, "16x9": 0.77} if PART else CAPY),
+    "badges": BADGES, "captionY": ({"9x16": (0.64 if PART == 1 else CAPY), "16x9": 0.77} if PART else CAPY),
     "title": ({"series": f"Reality Rulebook · Season 3 · Part {PART} of 8", "title": TITLES[PART - 1]} if PART else {"series": "Reality Rulebook · Season 3", "title": "How Much Would You Slow Time to Watch Light Move?"}),
     "disclosures": {"aiVoice": True},
     "drifts": ([[18.5, 21.1], [62.0, 64.4], [64.7, 67.7]] if PART == 4 else None),

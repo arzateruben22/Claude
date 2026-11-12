@@ -325,7 +325,7 @@
   {
    "id": "sink",
    "file": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
-   "file9": "../lf01/art/owner/plates/plate-05-sink-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-05-sink-9x16.png",
    "push": 0.5,
    "parallax": 0,
    "fade": 0.3,
@@ -363,6 +363,44 @@
      "scale": 3.4637,
      "scale9": 1.9553,
      "rotX": 0
+    }
+   },
+   "p9": {
+    "native9": true,
+    "shift": {
+     "x": -0.0938,
+     "y": -0.0187,
+     "ppm": 2350
+    },
+    "shift9": {
+     "x": -0.0938,
+     "y": -0.0187,
+     "ppm": 2350
+    },
+    "cam3": {
+     "pos": [
+      0,
+      0.4,
+      0
+     ],
+     "target": [
+      0,
+      0.396,
+      -1
+     ],
+     "fov": 38.9
+    },
+    "anchor": {
+     "rig": {
+      "kind": "bubble",
+      "pos": [
+       -0.0938,
+       0.3813,
+       -1.0
+      ],
+      "scale": 2.9787,
+      "rotX": 0
+     }
     }
    },
    "t0": 33.4667,
