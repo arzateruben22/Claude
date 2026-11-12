@@ -42,8 +42,8 @@ const nightGL = (it, off, orig) => {
   const sh = (type, src) => { const o = gl.createShader(type); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
   gl.attachShader(pr, sh(gl.VERTEX_SHADER, "#version 300 es\nin vec2 a; void main(){ gl_Position = vec4(a, 0.0, 1.0); }"));
   gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, `#version 300 es
-precision highp float; uniform sampler2D tOff, tOrig, tDist; uniform vec2 uRes, uPlate; uniform float uCs, uShift, uR, uW; out vec4 o;
-void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = uPlate * 0.5 + vec2((f.x - uRes.x * 0.5 - uShift) / uCs, (f.y - uRes.y * 0.5) / uCs); vec2 uv = p / uPlate;
+precision highp float; uniform sampler2D tOff, tOrig, tDist; uniform vec2 uRes, uPlate; uniform float uCs, uShift, uShiftY, uR, uW; out vec4 o;
+void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = uPlate * 0.5 + vec2((f.x - uRes.x * 0.5 - uShift) / uCs, (f.y - uRes.y * 0.5 - uShiftY) / uCs); vec2 uv = p / uPlate;
   vec3 a = texture(tOff, uv).rgb, b = texture(tOrig, uv).rgb; float d = texture(tDist, uv).r;
   float m = uR > 0.0 ? smoothstep(uR + 0.5 * uW, uR - 0.5 * uW, d) : 0.0, e = uR > 0.0 ? exp(-pow((d - uR) / (0.22 * uW + 0.012), 2.0)) : 0.0, g = uR > 0.0 ? 0.3 * exp(-pow((d - uR) / (1.6 * uW), 2.0)) : 0.0;
   vec3 c = mix(a, b, m); vec3 lin = pow(c, vec3(2.2)); float lu = dot(b, vec3(0.3, 0.55, 0.15));
@@ -54,7 +54,7 @@ void main(){ vec2 f = vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y); vec2 p = uP
   const loc = gl.getAttribLocation(pr, "a"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = (k) => gl.getUniformLocation(pr, k); gl.uniform1i(U("tOff"), 0); gl.uniform1i(U("tOrig"), 1); gl.uniform1i(U("tDist"), 2);
   gl.uniform2f(U("uRes"), it.W, it.H); gl.uniform2f(U("uPlate"), off.naturalWidth, off.naturalHeight); gl.uniform1f(U("uCs"), Math.max(it.W / off.naturalWidth, it.H / off.naturalHeight)); gl.viewport(0, 0, it.W, it.H);
-  return { cv, draw: (R, w, shiftPx) => { gl.uniform1f(U("uR"), R); gl.uniform1f(U("uW"), w); gl.uniform1f(U("uShift"), shiftPx || 0); gl.drawArrays(gl.TRIANGLES, 0, 3); } };
+  return { cv, draw: (R, w, shiftPx, shiftY) => { gl.uniform1f(U("uR"), R); gl.uniform1f(U("uW"), w); gl.uniform1f(U("uShift"), shiftPx || 0); gl.uniform1f(U("uShiftY"), shiftY || 0); gl.drawArrays(gl.TRIANGLES, 0, 3); } };
 };
 export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const nine = H > W, list = (FILM.plates || []).filter(Boolean).map((p) => (H > W && p.p9 ? { ...p, ...p.p9 } : p));   // p9: the 9:16 picture is its own image, so it brings its own camera, anchors and shift
@@ -107,7 +107,7 @@ export const createPlates = ({ scene, camera, W, H, FILM, canvas }) => {
   const zoom = (t) => { const it = active(t); if (!it) return 1; const p = it.p; return 1 + (p.push ?? 0.05) * Math.max(0, Math.min(1, (t - p.t0) / (p.t1 - p.t0))); };
   const cam3 = (t) => { const it = active(t); if (!it || !it.p.cam3) return null; const c = it.p.cam3; const sf = shiftAt(it, t); return sf.x || sf.y ? { ...c, target: [c.target[0] + sf.x, c.target[1] + sf.y, c.target[2]] } : c; };
   const anchor = (t) => { const it = active(t); return it && it.p.anchor ? it.p.anchor : null; };
-  const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sf = shiftAt(it, t), sh9 = -sf.x * sf.ppm * Math.max(W / 1672, H / 941); it.night.draw(R, w, sh9); return true; };
+  const drawNight = (t, R, w) => { const it = active(t); if (!it || !it.night) return false; const sf = shiftAt(it, t), cs = Math.max(W / it.imgs[0].width, H / it.imgs[0].height); it.night.draw(R, w, -sf.x * sf.ppm * cs, sf.y * sf.ppm * cs); return true; };
   const shiftPx = (t) => { const it = active(t); if (!it) return [0, 0]; const sf = shiftAt(it, t), cs = Math.max(W / 1672, H / 941); return [-sf.x * sf.ppm * cs, sf.y * sf.ppm * cs]; };
   const imageOf = (id) => { const it = items.find((q) => q.p.id === id); return it && it.ok ? it.imgs[0] : null; };
   return { ready, apply, cam, cam3, zoom, anchor, active, items, imageOf, drawNight, shiftPx, relight };

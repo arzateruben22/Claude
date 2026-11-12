@@ -244,6 +244,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
 SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.74, 0.22]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else {"16x9": [0.87, 0.2], "9x16": [0.21, 0.31]} if PART == 6 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+if PART == 8: SPINE_AT = [[-1e9, {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]}], [6.0, [0.5, 0.29]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -345,6 +346,10 @@ elif PART == 3 and (HERE / "art/owner/plates/plate-05-sink-16x9.png").exists():
         PLATES.insert(0, dict(_p04, t0=R(EV["kernel"]["jump"] - 1.0), t1=R(EV["bubble"]["in"] - 1.5), swap={"t": R(EV["kernel"]["jump"] - 0.1), "file": PLATE04C, "file9": PLATE04C_9}))
 elif PART == 5 and (HERE / "art/owner/plates/plate-06-apple-16x9.png").exists():
     PLATES = [dict(_p06, t0=R(EV["bullet"]["approach"] - 1.5), t1=R(EV["bullet"]["enter"] + 6.0))]
+elif PART == 8 and (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
+    # Part 8 is mostly code macro shots (the chip, the ruler, the hair); the plate carries only the opening: the lamp is on, the picture pushes in toward it
+    PLATES = [dict(_p09, t0=0.0, t1=R(EV["chip"][0] - 0.4), push=0.8, anchor={"night": True, "lampOn": True}, shift={"x": round((229 - 836) / 1790, 4), "y": round((470.5 - 337) / 1790, 4), "ppm": 1790},
+                   p9={**_p09["p9"], "anchor": {"night": True, "lampOn": True}, "push": 0.8, "shift": {"x": round((110 - 470.5) / 756, 4), "y": round((929 - 898) / 756, 4), "ppm": 756}, "shift9": {"x": round((110 - 470.5) / 756, 4), "y": round((929 - 898) / 756, 4), "ppm": 756}})]
 elif PART == 7 and (HERE / "art/owner/plates/plate-09-night-lampoff-16x9.png").exists():
     PLATES = [dict(_p09, t0=0.0, t1=R(ENDSHOW))]
 elif PART == 6 and (HERE / "art/owner/plates/plate-07-storm-16x9.png").exists():
@@ -373,7 +378,7 @@ def _retag():
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
             what = {"feeder": "bird", "pan": "popcorn", "storm": "lightning", "sill": "fly", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
-            segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
+            segs.append(dict(b, id="code-p" + str(len(segs)), text=("Kitchen: AI illustration" if (p["id"] == "night" and (p.get("anchor") or {}).get("lampOn")) else "Kitchen: AI illustration \u00b7 %s drawn by code" % what), t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))
         out += segs or [b]

@@ -622,7 +622,7 @@ window.seek = function (t) {
     if (t >= fl8 && t < fl8 + 4.0) R = Rint(t) - Rint(fl8);
     if (t >= l9) R = Rint(t) - Rint(l9);
     if (t >= pulse0 - 0.2) { const rn = Rint(t) - Rint(pulse0) + 0.005, q = E.inout2(seg(t, pulse0 - 0.2, pulse0 + 1.4)); R = lerp(Math.max(R, 6.0), rn, q); }   // the lit room's front shrinks back into the flashlight, smoothly
-    if (plateOn) plates.drawNight(t, on > 0.01 && R > 0 ? R : -1, 0.12 + 0.025 * R);   // a night plate: the lamp's light front reveals the original pixels
+    if (plateOn) { const an9 = plates.anchor(t); plates.drawNight(t, an9 && an9.lampOn ? 99 : (on > 0.01 && R > 0 ? R : -1), 0.12 + 0.025 * R); }   // a night plate: the lamp's light front reveals the original pixels
     WV.uLOn.value = on; WV.uLR.value = R; WV.uLW.value = t >= pulse0 ? Math.max(0.0004, Math.min(0.05, 0.4 * (Rint(t) - Rint(pulse0) + 0.01))) : 0.06; WV.uLK.value = lk;
     // the macro stage: the front crosses a hair (0.1 mm) in 1/3 s at 1e12x
     if (inMacro) { const rr = (t - EV.hair[1]) / 1.0, x = -0.0003 + CAL.c / 1e12 * (t - (EV.hair[1] - 0.18) ) * 1.0; frontPl.position.x = x; litLayer.position.x = x - 0.0003 - 0.000006; litLayer.visible = true; void rr; }
