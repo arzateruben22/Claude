@@ -98,6 +98,35 @@ changes; ≤ 3 in any second). On the Skin School delivery it reproduces the han
 `build/audio/qa.json` and the render cost from the chunk lines of the log (`--log`, default
 `films/channels/finals.log`). Each episode then gets `assets.md` and `review/HUMAN-REVIEW.md`.
 
+## Covers and thumbnails: clean stills and the hook
+
+The owner's cover rule (12 Nov 2026, `films/channels/PACKAGING.md`, "The hook") asks for a picture worth clicking
+and a hand-drawn hook on it. Two tools:
+
+```
+# 1. the picture: a clean still from the film's own scene, sharp enough to zoom into
+node kits/cinema/film/render.mjs --film <ep> --tier final --times 38 --size 2160x3840 --clean
+#    → <ep>/build/final-stills-2160x3840-clean/9x16/frames/<chunk>/<frame>.png (the log prints the path)
+# 2. the hook: a marker circle and/or arrow at the one surprising thing, and a 1-3 word question
+python3 -I kits/cinema/film/hook.py hero.png hero-hook.png --font <hand.ttf> --color "#E862FF" \
+    --note "that's|it?!" --note-at 44,640 --note-size 150 --circle 190,470,120,114 --arrow 400,680:320,500:60 \
+    --glow 190,470,68:#4682FF
+```
+
+- `--clean` fades out the page's overlay (captions, labels, counters, the title): the 3-D picture alone. `--size`
+  renders stills at any size; the camera keeps its vertical field of view, so 2160x3840 is the same frame at 2x
+  and 2160x2200 is a cover-shaped hero with more room at the sides. Both need `--times`, write to their own
+  `<tier>-stills-WxH[-clean]` folder and keep their PNGs, so they never mix with the film's frames.
+- For a still only, a scene may be staged for the cover without touching the film: a camera placed for the
+  picture (film.json `cam` keys), a secondary object hidden, a procedural texture generated larger (an
+  `earthSurface({ width: 4096 })` instead of 1024, so coastlines stay smooth at cover size), a material pushed
+  so it reads (a gold ring that reads gold). Sizes, counts and events stay what the video shows. Do it in a
+  scratch copy of the episode folder, never in the committed scene.
+- `hook.py` only draws marks and adds light (`--glow` disc, `--halo` ring, screened); the picture is not
+  repainted. Then set the channel's own layout around the hero (`whatif: covers.py`, `space: season2/make_cover.py`).
+- Tested 12 Nov 2026 on Possibility Lab S2E05 (`ep11`, t = 38 s, 2160x3840 clean: 5.9 s) and One More Orbit
+  S2E03 (`ep09`, t = 2 s, 2160x2200 clean with a cover camera: 4.5 s).
+
 ## Compilations (long-form YouTube)
 
 Every 4–6 episodes, a channel's latest episodes become one 5–10 minute 16:9 video:

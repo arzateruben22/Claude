@@ -153,7 +153,7 @@ pipeline's in [README.md](README.md).
 | 6 | Shots: split the grid into real shots and fill every field | Agent | `validate.py` passes; the manifest has a go-ahead | 5 |
 | 7 | Build on the channel's branch: stills first, then the full render | Agent, owner for the stills | `status.lookGate` is `approved` before the full render | 6 to 9 |
 | 8 | QA: `python3 -I films/channels/studio/tools/qa_episode.py <video> --episode <folder>/episode.json --out <folder>/review/qa-report.json` (`--kind long` for a long video, `--kind long --cards` when it is joined from episodes); `kits/cinema/film/qa.py` for a 60 to 75 s short; the (a) to (h) gate; the internal rubric in [QA.md](QA.md) | Agent, then reviewer | Every hard gate has passed, nothing factual or ethical is open, and the rubric is at 95 or more | 10 |
-| 9 | Packaging: `packaging.json` | Agent, then owner | The owner has picked the title; `status.title` is `chosen` | 11 |
+| 9 | Packaging: `packaging.json`, and the cover and thumbnail built to [PACKAGING.md](../PACKAGING.md) "The hook" (a clean 2x still, `kits/cinema/film/hook.py`) | Agent, then owner | The owner has picked the title; `status.title` is `chosen` | 11 |
 | 10 | Push to Prism and post. The coordinator pushes from a checkout of `claude/made-with-claude-film` ([STRUCTURE.md](STRUCTURE.md), section 11) | Coordinator, then owner | The owner has posted by hand | 11 |
 | 11 | After it posts: the Episode Intelligence Report, from [templates/episode-intelligence-report.md](templates/episode-intelligence-report.md); `status.stage` to `archive` | Agent | Measured results sit apart from hypotheses | 12 |
 

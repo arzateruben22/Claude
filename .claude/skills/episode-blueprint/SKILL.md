@@ -74,7 +74,8 @@ halves; every number names its source; "not measured" is valid. Its last part li
 - Anything not built yet is "Roadmap", with its stage (`ROADMAP.md`). Say so before promising it.
 
 ## Standing rules (read the file; do not copy it)
-- In `films/channels/`: `PACKAGING.md` (titles, thumbnails, truth rules), `SEASON-FORMAT.md` (formats, lengths,
+- In `films/channels/`: `PACKAGING.md` (titles, thumbnails, truth rules, and "The hook": every cover is a clean 2x still
+  with one hand-drawn hook, `kits/cinema/film/hook.py`), `SEASON-FORMAT.md` (formats, lengths,
   voices, Skin Sense Season 3), `CTA.md` (the like/follow line), `STUDIO-STYLE.md` (the (a) to (h) gate, words, facts),
   `briefs/STANDARDS-v2.md` (clarity, the four review files).
 - `kits/cinema/script/WRITING.md` (story), `kits/cinema/README.md`, `kits/cinema/film/README.md`, `prism-studio/CLAUDE.md`.
