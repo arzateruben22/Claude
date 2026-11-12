@@ -1240,7 +1240,7 @@ export class Game {
     this.car.updateCockpit(dt, {
       delta: this.phys.delta, rpm: this.phys.rpm, gear: this.phys.gear, auto: this.phys.auto, limiter: this.phys.limiter,
       speed: Math.abs(this.phys.vx), throttle: this.input.c.throttle, brake: this.input.c.brake, paused: this.paused,
-      handling: this.phys.handling, tank: this.hyper.tank, tcs: this.phys.tc,
+      handling: this.phys.handling, tank: this.hyper.tank, tcs: this.phys.tc, abs: this.phys.abs, ax: this.phys.ax, ay: this.phys.ay,
     });
     {
       const h = this.hyper, p = this.phys;
@@ -1963,7 +1963,7 @@ export class Game {
     // world x runs east and z south (tools/oc-network/common.py), and the car points along (sin psi, cos psi): its
     // bearing from north is pi - psi
     const heading = ((((Math.PI - p.psi) * 180) / Math.PI) % 360 + 360) % 360;
-    this.ev.hud({
+    const h: Hud = {
       speed: Math.round(Math.abs(p.vx) * MPH), gear: p.gear < 0 ? 'R' : String(p.gear), rpm: Math.round(p.rpm), rpmFrac: clamp(p.rpm / SPEC.redline, 0, 1),
       distance: this.distance, score: Math.round(this.score), combo: this.combo, fps: this.fps, mode: this.mode,
       auto: p.auto, cam: CAM_LABEL[this.cam],
@@ -1986,8 +1986,16 @@ export class Game {
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
       thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, thrustOn: this.hyper.thrust, groundLock: this.hyper.fan > 0.3,
       hop: !this.hyper.live ? '' : p.airborne ? 'Airborne' : this.hyper.tank >= TANK.hopNeed ? 'Hop ready' : this.hyper.charging ? 'Hop: charging' : 'Hop: tank low',
-    });
+    };
+    this.ev.hud(h);
+    // the car's own cluster shows the same facts (cockpit.ts / car-dash.ts): one object, filled in place
+    const d = this.dashInfo;
+    d.tripMi = this.distance / 1609.344; d.topMph = h.top; d.clock = h.clock; d.tempF = h.tempF;
+    d.tune = h.tune; d.tank = h.tank; d.thrustLive = h.thrustLive;
+    d.turn = h.dest ? h.turn : ''; d.nextMi = nextDist / 1609.344; d.navTo = navTo; d.dest = h.dest; d.destMi = destDist / 1609.344; d.road = h.road;
+    this.car.setDash(d);
   }
+  private dashInfo = { tripMi: 0, topMph: 0, clock: '', tempF: 0, tune: '', tank: 0, thrustLive: false, turn: '' as Turn, nextMi: 0, navTo: '', dest: '', destMi: 0, road: '' };
 
   get inAttract() { return this.attract; }
   // for the Feedback panel: the device and this drive, as numbers a player can paste to us. Nothing personal.
