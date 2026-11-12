@@ -1,0 +1,101 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Every hair on you is scheduled to fall out. Every hair on your body is quietly keeping time.",
+  "claim": "Each hair follicle cycles through growth, regression, rest and shedding.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Anagen (growth), catagen (regression), telogen (rest), exogen (shedding). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c2",
+  "sentence": "It grows, it pauses, it rests, and then… it lets go.",
+  "claim": "The cycle phases in plain words.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Plain-language version of anagen/catagen/telogen/exogen. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c3",
+  "sentence": "On your head, growing can last for years. That's why it can grow so long.",
+  "claim": "Scalp hair anagen lasts about 2 to 6-7 years, which sets how long it can grow.",
+  "source_url": "https://statpearls.com/sp/al/13/22483/",
+  "source_title": "StatPearls hair cycle entry (22483)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Sources differ: 2-6 vs 2-7 years. Film says 'for years' only. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c4",
+  "sentence": "On your eyebrow, it lasts only months. They stay short.",
+  "claim": "Eyebrow and eyelash anagen lasts only a few months.",
+  "source_url": "https://statpearls.com/sp/al/13/22483/",
+  "source_title": "StatPearls hair cycle entry (22483)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] One StatPearls entry: 'only a few months for eyebrows and eyelashes'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c5",
+  "sentence": "When growing ends, the root shrinks and the hair loosens. Then it rests for a couple months.",
+  "claim": "In catagen the lower follicle regresses; the club hair rests in telogen for about 100 days.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK499948/",
+  "source_title": "StatPearls hair cycle (NBK499948, via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Club hairs stay about 100 days. 'A couple months' is a plain-language rounding (about 3 months): ask a dermatologist whether to say 'a few months'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c6",
+  "sentence": "Meanwhile, in the same follicle, a brand new hair begins… and gently pushes the old one out.",
+  "claim": "A new anagen hair grows beneath the resting club hair and pushes it out.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK482293/",
+  "source_title": "StatPearls hair cycle (NBK482293, via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Described in one source; confirm wording. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c7",
+  "sentence": "So losing fifty to a hundred hairs a day from your head alone is normal.",
+  "claim": "Shedding about 50-100 scalp hairs a day is normal.",
+  "source_url": "https://statpearls.com/sp/al/13/22482/",
+  "source_title": "StatPearls (22482, via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] One source says about 100 per day on average; the 50-100 range is the common lay figure. NEEDS a primary source before posting. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c8",
+  "sentence": "Every follicle keeps its own schedule, so they never all let go at once.",
+  "claim": "Follicles cycle asynchronously (a mosaic pattern).",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] No source found in the search for explicit asynchrony in humans: NEEDS a source before posting. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c9",
+  "sentence": "Right now, you're losing hair, and growing it, at the same time.",
+  "claim": "At any moment some follicles shed while others grow.",
+  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK470321/",
+  "source_title": "StatPearls: Anatomy, Hair Follicle (NBK470321)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Follows from c1-c8; same source gap as c8. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ }
+]

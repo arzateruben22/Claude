@@ -1,0 +1,199 @@
+{
+ "about": "ep16 foley, timed to set/plug3d.js (beads, old cells, cling, plug, lips, darkening, lid, pool and swelling, microbes, immune cells, the doorway reopening).",
+ "cues": [
+  {
+   "at": 0.2,
+   "kind": "pop",
+   "f0": 520,
+   "gain": -2
+  },
+  {
+   "at": 0.2,
+   "kind": "tile",
+   "note": 3,
+   "gain": -3
+  },
+  {
+   "at": "start:vo01+1.6",
+   "kind": "tile",
+   "note": 2,
+   "step": 1,
+   "repeat": 5,
+   "every": 0.9,
+   "gain": -5,
+   "pan": -0.1
+  },
+  {
+   "at": "start:vo02+0.2",
+   "kind": "glide",
+   "dur": 1.6,
+   "gain": -4
+  },
+  {
+   "at": "start:vo02+0.6",
+   "kind": "tile",
+   "note": 4,
+   "step": 1,
+   "repeat": 4,
+   "every": 0.85,
+   "gain": -4,
+   "pan": 0.1
+  },
+  {
+   "at": "word:cling",
+   "kind": "pinch",
+   "repeat": 3,
+   "every": 0.32,
+   "gain": -3,
+   "pan": -0.1
+  },
+  {
+   "at": "word:together",
+   "kind": "squish",
+   "dur": 0.35,
+   "gain": -5,
+   "pan": 0.12
+  },
+  {
+   "at": "start:vo04+0.6",
+   "kind": "squeeze",
+   "until": "start:vo04+3.4",
+   "gain": -5
+  },
+  {
+   "at": "word:plug",
+   "kind": "tile",
+   "note": 6,
+   "gain": -3
+  },
+  {
+   "at": "word:plug",
+   "kind": "pop",
+   "f0": 430,
+   "gain": -4,
+   "pan": 0.1
+  },
+  {
+   "at": "start:vo04+3.2",
+   "kind": "creak",
+   "until": "end:vo04-0.2",
+   "gain": -4,
+   "pan": -0.2
+  },
+  {
+   "at": "start:vo05+3.0",
+   "kind": "dust",
+   "dur": 2.2,
+   "gain": -2
+  },
+  {
+   "at": "word:blackhead",
+   "kind": "tile",
+   "note": 0,
+   "gain": -1
+  },
+  {
+   "at": "start:vo06+0.5",
+   "kind": "squeeze",
+   "until": "end:vo06-0.5",
+   "gain": -5
+  },
+  {
+   "at": "start:vo06+0.5",
+   "kind": "pinch",
+   "gain": -4
+  },
+  {
+   "at": "end:vo06-0.3",
+   "kind": "pop",
+   "f0": 380,
+   "gain": -3
+  },
+  {
+   "at": "start:vo07+0.8",
+   "kind": "squish",
+   "dur": 0.4,
+   "repeat": 4,
+   "every": 1.2,
+   "gain": -6,
+   "pan": 0.15
+  },
+  {
+   "at": "start:vo07+1.0",
+   "kind": "tile",
+   "note": 2,
+   "step": 1,
+   "repeat": 5,
+   "every": 1.4,
+   "gain": -6
+  },
+  {
+   "at": "start:vo07+1.0",
+   "kind": "creak",
+   "until": "end:vo07+1.5",
+   "gain": -6,
+   "pan": 0.2
+  },
+  {
+   "at": "word:feast",
+   "kind": "pop",
+   "f0": 700,
+   "repeat": 5,
+   "every": 0.22,
+   "gain": -4,
+   "pan": -0.3
+  },
+  {
+   "at": "word:feast",
+   "kind": "tremble",
+   "dur": 1.2,
+   "gain": -4
+  },
+  {
+   "at": "word:notices",
+   "kind": "glide",
+   "dur": 1.2,
+   "gain": -3
+  },
+  {
+   "at": "start:vo09+0.2",
+   "kind": "tile",
+   "note": 5,
+   "step": 1,
+   "repeat": 4,
+   "every": 0.6,
+   "gain": -4,
+   "pan": -0.4
+  },
+  {
+   "at": "word:warm",
+   "kind": "glide",
+   "dur": 1.5,
+   "gain": -4
+  },
+  {
+   "at": "word:swollen",
+   "kind": "squeeze",
+   "until": "end:vo09+0.5",
+   "gain": -5
+  },
+  {
+   "at": "start:vo10+1.0",
+   "kind": "peel",
+   "dur": 1.4,
+   "gain": -3
+  },
+  {
+   "at": "start:vo10+4.5",
+   "kind": "dust",
+   "dur": 2.0,
+   "gain": -3
+  },
+  {
+   "at": "end:vo10+0.3",
+   "kind": "tile",
+   "note": 5,
+   "gain": -4
+  }
+ ]
+}

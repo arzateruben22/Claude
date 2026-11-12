@@ -1,0 +1,3 @@
+# Skin Sense S3 E6 (ep18): Your Skin Is Still Healing After It Looks Healed (tone: light, v2)
+
+Soft voxel cut-away with a clean notch that seals, fills with fibres and ends re-woven (set/collagen3d.js), a real person's recorded voice (credit only after she confirms). v2 pipeline as ep16v2; opens on the woven fibres and rewinds. vo04 is the retake ("First, your body seals it and calls in its cleaning crews", 385 s of the recording); the first take stumbled. Claim c9 (about 80% as strong) needs a primary source. Recognizer-only flags: vo01 "healed.", vo08 "Then,", vo09 "percent" (ASR writes 80%), vo10 "rewoven".
