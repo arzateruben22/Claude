@@ -243,7 +243,7 @@ for (t0, k0), (t1, k1) in zip(KEYS, KEYS[1:]):
         LBL.append([R(t1 + 0.9), f"1 real second now lasts {LABEL_TXT[round(k1, 3)]}"])
 CAM.sort(key=lambda k: k["t"])
 SPINE = [{"t0": 0.45, "t1": R(cut("tease") - 0.3) if PART else R(cut("takeaway") + 12.0), "label": "slow-motion"}]
-SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
+SPINE_AT = [[-1e9, {"16x9": [0.74, 0.2], "9x16": [0.5, 0.83]} if PART == 1 else {"16x9": [0.8, 0.3], "9x16": [0.5, 0.29]} if PART == 3 else {"16x9": [0.2, 0.3], "9x16": [0.5, 0.245]} if PART == 5 else {"16x9": [0.83, 0.14], "9x16": [0.72, 0.265]} if PART == 7 else [0.5, 0.29]]] if PART else [[-1e9, [0.3, 0.19]]]
 TITLES = ["Watch a wing, slowed ten times", "A fly's wings, then a splash", "A popcorn pop, in slow motion", "Watch sound cross a kitchen", "A bullet, through an apple, slowly",
           "Lightning, a million times slower", "Slow light until it crawls", "Slower than a snail: light"]
 if PART:
@@ -285,7 +285,7 @@ _p06 = {"id": "applep", "file": PLATE06, "file9": PLATE06, "push": 0.04, "parall
 PLATE09 = "../lf01/art/owner/plates/plate-09-night-lampoff-16x9.png"; PLATE09O = "../lf01/art/owner/plates/plate-09-night-16x9.png"
 _p09 = {"id": "night", "file": PLATE09, "file9": PLATE09, "push": 0.05, "parallax": 0, "fade": 0.4, "shift9": {"x": round((480 - 836) / _PX, 4), "ppm": _PX},
         "cam3": {"pos": [0, 1.06, 0], "target": [0, 1.001, -1], "fov": 50.4},
-        "night": {"orig": PLATE09O, "lamp": [-1.7, 1.44, -2.82], "room": {"x0": -1.73, "x1": 1.36, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.35, "x1": 0.33, "z0": -2.6, "z1": -1.3}}},
+        "night": {"orig": PLATE09O, "fg": [[0, 92, 0, 941], [1584, 1672, 0, 941]], "lamp": [-1.7, 1.44, -2.82], "room": {"x0": -1.73, "x1": 1.36, "z0": -3.8, "h": 2.6, "table": {"y": 0.78, "x0": -0.35, "x1": 0.33, "z0": -2.6, "z1": -1.3}}},
         "anchor": {"night": True}}
 PLATE01 = "../lf01/art/owner/plates/plate-01-wide-16x9.png"
 PLATE01_9 = "../lf01/art/owner/plates/plate-01-wide-9x16.png" if (HERE / "art/owner/plates/plate-01-wide-9x16.png").exists() else PLATE01
@@ -325,7 +325,7 @@ def _retag():
             t0, t1 = max(p["t0"], cur[0]), min(p["t1"], cur[1])
             if t1 <= t0: continue
             if t0 > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=cur[0], t1=R(t0)))
-            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple"}.get(p["id"], "wave")
+            what = {"feeder": "bird", "tapmug": "splash", "sink": "bubble", "applep": "bullet and apple", "night": "light"}.get(p["id"], "wave")
             segs.append(dict(b, id="code-p" + str(len(segs)), text="Kitchen: AI illustration \u00b7 %s drawn by code" % what, t0=R(t0), t1=R(t1)))
             cur[0] = t1
         if cur[1] > cur[0] + 0.05: segs.append(dict(b, id="code-s" + str(len(segs)), t0=R(cur[0]), t1=b["t1"]))

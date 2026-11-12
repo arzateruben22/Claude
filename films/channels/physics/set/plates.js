@@ -34,6 +34,7 @@ const nightGL = (it, off, orig) => {
     hit((room.z0 - P[2]) / dz, (x, y, z) => x > room.x0 && x < room.x1 && y > 0 && y < room.h);
     if (room.table) { const T = room.table; hit((T.y - P[1]) / dy, (x, y, z) => x > T.x0 && x < T.x1 && z > T.z0 && z < T.z1); }
     const x = P[0] + dx * best, y = P[1] + dy * best, z = P[2] + dz * best; dist[j * mw + i] = Math.hypot(x - L[0], y - L[1], z - L[2]);
+    { const px = (i + 0.5) * 2, py = (j + 0.5) * 2; for (const r of n.fg || []) if (px >= r[0] && px <= r[1] && py >= r[2] && py <= r[3]) dist[j * mw + i] = 1e4; }   // near-foreground pixels (a door frame) are never reached by the front
   }
   const mkTex = (unit, fn) => { const t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); fn(); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); return t; };
   mkTex(0, () => gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, off)); mkTex(1, () => gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, orig));

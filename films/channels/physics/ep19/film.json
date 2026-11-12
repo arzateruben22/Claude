@@ -73,10 +73,16 @@
  "spineAt": [
   [
    -1000000000.0,
-   [
-    0.5,
-    0.29
-   ]
+   {
+    "16x9": [
+     0.83,
+     0.14
+    ],
+    "9x16": [
+     0.72,
+     0.265
+    ]
+   }
   ]
  ],
  "factorKeys": [
@@ -393,13 +399,16 @@
   {
    "id": "code-p0",
    "kind": "tag",
-   "text": "Kitchen: AI illustration · wave drawn by code",
+   "text": "Kitchen: AI illustration · light drawn by code",
    "t0": 0.6,
    "t1": 60.2166,
    "slot": "tl"
   }
  ],
- "captionY": 0.62,
+ "captionY": {
+  "9x16": 0.62,
+  "16x9": 0.77
+ },
  "title": {
   "series": "Reality Rulebook · Season 3 · Part 7 of 8",
   "title": "Slow light until it crawls"
@@ -435,6 +444,20 @@
    },
    "night": {
     "orig": "../lf01/art/owner/plates/plate-09-night-16x9.png",
+    "fg": [
+     [
+      0,
+      92,
+      0,
+      941
+     ],
+     [
+      1584,
+      1672,
+      0,
+      941
+     ]
+    ],
     "lamp": [
      -1.7,
      1.44,

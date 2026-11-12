@@ -414,6 +414,7 @@ const fadeQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), fadeMat); fadeQua
 const dip = (t) => { let a = 0; for (const c of EV.fades) a = Math.max(a, 1 - E.inout2(seg(Math.abs(t - c), 0.2, 0.65))); return a; };   // a dip through black, 0.4 s fully black either side of nothing: |t - c| < 0.2 is black, gone by 0.65
 
 // ── the overlay: captions, the factor (the one live number), badges, the end card ──
+{ const st = document.createElement("style"); st.textContent = "#stage.night { --hud-plate: rgba(8,10,14,.86); --hud-cap-said: #fff; --hud-cap-next: #b9c1cc; --hud-note-bg: rgba(8,10,14,.82); --hud-badge-text: #e6e9ee; } #stage.night .hud-badge { background: rgba(8,10,14,.84) !important; color: #e6e9ee !important; } #stage.night .hud-badge .in, #stage.night .hud-badge .n { color: #e6e9ee !important; } #stage.night .hud-counter { background: rgba(8,10,14,.86); padding: .6vmin 1.4vmin .8vmin; } #stage.night .hud-counter .v { font-size: 6vmin; color: #fff; } #stage.night .hud-counter .u { font-size: 2.5vmin; color: #fff; } #stage.night .hud-counter .lb { font-size: 2vmin; max-width: 20vmin; color: #d3d9e1; margin-bottom: .4vmin; }"; document.head.appendChild(st); }   // night plates: dark pills (near-black, white text) and a smaller counter
 const hud = createHud({ camera, captionY: typeof FILM.captionY === "object" ? FILM.captionY[H > W ? "9x16" : "16x9"] : FILM.captionY });
 hud.captions(FILM.captions, { fade: 0.001 });
 for (const b of FILM.badges) hud.badge(b.id, { text: b.text, title: b.title, kind: b.kind, t0: b.t0, t1: b.t1 ?? null, slot: b.slot });
@@ -437,6 +438,7 @@ window.seek = function (t) {
   stage(t);
   placeCam(t);
   const plateOn = plates.apply(t);
+  { const an0 = plateOn ? plates.anchor(t) : null; document.getElementById("stage").classList.toggle("night", !!(an0 && an0.night)); }
   const k = kAt(t), F = Math.pow(10, k);
   const inLab = t >= EV.lab[0] && t < EV.lab[1], inMacro = t >= EV.hair[0] - 0.3 && t < EV.hair[1] + 4.1 && !inLab;
   fadeMat.uniforms.uA.value = dip(t);
