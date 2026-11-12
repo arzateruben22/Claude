@@ -5,11 +5,11 @@
    "at": "start:vo02+1.6",
    "kind": "tile",
    "note": 8,
-   "repeat": 7,
-   "every": 0.09,
+   "repeat": 4,
+   "every": 0.12,
    "step": 1,
    "pan": -0.15,
-   "gain": -1,
+   "gain": -13,
    "seed": 10
   },
   {
