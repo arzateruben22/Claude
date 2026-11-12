@@ -9,12 +9,14 @@ import { stage, seg, E, clamp01 } from "cinema/film/runtime.js";
 import { createHud } from "cinema/sci/hud.js";
 import { createDesk } from "../../set/desk.js";
 import { createFigure } from "../../set/anchor.js";
+import { createRobot, makeEnv, POSES as ROBOT_POSES } from "../../set/robot.js";
 import { titleFlap, injectCss } from "../../set/motif.js";
 import { tok } from "../../set/look.js";
 import { unlit, ACES_INV_GLSL, hexRgb } from "../../set/aces.js";
 import { earthSurface } from "../../../space/set/planet.js";
 
 const FILM = window.FILM, W = window.W, H = window.H, WD = FILM.world, CUE = FILM.cue;
+const V2 = !!FILM.v2;       // the v2 look: the high-tech Earth, the visor robot in the scene (film.json "v2": true)
 const PORT = H > W;                                                        // vertical clips use the same scene, framed natively for 9:16
 const TK = (window.THEME && window.THEME.tokens) || {};
 const canvas = document.getElementById("gl");
@@ -78,6 +80,10 @@ const desk = createDesk({ tokens: TK, y: 0, unit: 1, far: 160 });
 scene.add(desk.group);
 const you = createFigure({ tokens: TK, height: 1.7 });
 scene.add(you.group);
+let bot = null;
+if (V2) { bot = createRobot({ height: 1.7 }); scene.add(bot.group); scene.environment = makeEnv(renderer);
+  const kL = new THREE.DirectionalLight(0xffffff, 2.0), rL = new THREE.DirectionalLight(0x5aa0ff, 2.2), hL = new THREE.HemisphereLight(0xbcd0ff, 0x20242c, 0.6); scene.add(kL, rL, hL); window.__botLights = { kL, rL, hL }; }
+const mixPose = (a, b, u) => { if (typeof a === "number" && typeof b === "number") return a + (b - a) * u; if (a && b && typeof a === "object") { const o = {}; for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) o[k] = k === "expr" ? (u < 0.5 ? a[k] : b[k]) : mixPose(a[k] ?? (typeof b[k] === "number" ? 0 : undefined), b[k] ?? (typeof a[k] === "number" ? 0 : undefined), u); return o; } return u < 0.5 ? a : b; };
 const NW = 420, wind = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), basic(CHALK, 0.5, false), NW); wind.frustumCulled = false; wind.renderOrder = 6; wind.userData.noProbe = true; wind.visible = false; scene.add(wind);
 const NF = 320, dustF = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 8), basic(CHALK2, 0.5, false), NF); dustF.frustumCulled = false; dustF.renderOrder = 5; dustF.userData.noProbe = true; scene.add(dustF);
 { for (let i = 0; i < NF; i++) { const r = 0.012 + rnd(i, 5) * rnd(i, 6) * 0.04; S3.set(r, r, 1); P3.set((rnd(i, 7) - 0.5) * 24, 0.2 + rnd(i, 8) * 7, -3 - rnd(i, 9) * 40); Mx.compose(P3, Q0, S3); dustF.setMatrixAt(i, Mx); } dustF.instanceMatrix.needsUpdate = true; }
@@ -102,7 +108,47 @@ void main() {
 const earthTex = new THREE.CanvasTexture(earthSurface({ width: 1024 })); earthTex.wrapS = THREE.RepeatWrapping; earthTex.anisotropy = 4;
 const gU = { uCol: { value: new THREE.Vector3(...hexRgb(CHALK2)) }, uDark: { value: new THREE.Vector3(...hexRgb(CHALK2).map((v) => v * 0.28)) }, uLight: { value: new THREE.Vector3(-0.55, 0.45, 0.8) }, uExposure: { value: 1 }, uSpin: { value: 0 }, uDry: { value: 90 }, uMap: { value: earthTex } };
 const globe = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 72), new THREE.ShaderMaterial({ uniforms: gU, vertexShader: GVS, fragmentShader: GFS }));
-globe.renderOrder = 3; globe.frustumCulled = false; globe.userData.noProbe = true; globe.visible = false; scene.add(globe);
+
+// the high-tech Earth (v2): a glossy, glowing deep-blue ocean with flowing currents, grey relief land, a faint graticule, a glowing magenta equator with ticks and two ring arcs, a cyan rim and an atmosphere shell
+const GVS2 = `varying vec3 vN, vO, vW; void main() { vO = normalize(normal); vN = normalize(mat3(modelMatrix) * normal); vW = (modelMatrix * vec4(position, 1.0)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+const GFS2 = `precision highp float; uniform vec3 uLight; uniform float uExposure, uSpin, uDry, uT, uGlow; uniform sampler2D uMap; varying vec3 vN, vO, vW;
+${ACES_INV_GLSL}
+float h21(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(h21(i), h21(i + vec2(1.0, 0.0)), f.x), mix(h21(i + vec2(0.0, 1.0)), h21(i + vec2(1.0, 1.0)), f.x), f.y); }
+void main() {
+  vec3 n = normalize(vN), L = normalize(uLight), V = normalize(cameraPosition - vW); float lam = clamp(0.5 + 0.5 * dot(n, L), 0.0, 1.0);
+  vec3 o = normalize(vO); float lon = atan(o.x, o.z) + uSpin, lat = asin(clamp(o.y, -1.0, 1.0));
+  vec3 tx = texture2D(uMap, vec2(lon / 6.2831853 + 0.5, lat / 3.1415927 + 0.5)).rgb;
+  float water = step(tx.r + 0.04, tx.b); float dry = step(uDry * 0.0174533, abs(lat)) * water; water *= (1.0 - dry);
+  // ocean: deep luminous blue with flowing current streaks
+  vec2 uv = vec2(lon * 2.6, lat * 4.2); float f1 = vn(uv * 1.7 + vec2(uT * 0.04, 0.0)), f2 = vn(uv * 3.9 - vec2(uT * 0.06, uT * 0.02));
+  float streak = smoothstep(0.35, 0.95, 0.5 + 0.5 * sin(lat * 26.0 + f1 * 7.0 + f2 * 3.0 + uT * 0.25));
+  vec3 ocean = mix(vec3(0.01, 0.04, 0.2), vec3(0.02, 0.26, 0.78), 0.2 + 0.65 * streak * (0.4 + 0.6 * lam));
+  // land: grey relief, lit
+  float relief = tx.g * 0.8 + tx.r * 0.4; float rough = vn(uv * 9.0) * 0.5 + vn(uv * 22.0) * 0.3; vec3 land = mix(vec3(0.13, 0.15, 0.19), vec3(0.5, 0.52, 0.56), clamp(relief * 0.7 + rough * 0.6, 0.0, 1.0)) * (0.3 + 0.75 * lam);
+  vec3 seabed = vec3(0.30, 0.26, 0.20) * (0.35 + 0.7 * lam);
+  vec3 col = mix(land, ocean * (0.5 + 0.6 * lam) + vec3(0.0, 0.03, 0.14), water); col = mix(col, seabed, dry);
+  // glossy: a sharp highlight on water
+  vec3 Hh = normalize(L + V); float spec = pow(max(dot(n, Hh), 0.0), 90.0) * (0.25 + 0.75 * water) * 1.1; col += vec3(0.7, 0.85, 1.0) * spec * 0.8;
+  // graticule every 15 degrees (faint cyan), fading toward the poles
+  float gl = 1.0 - smoothstep(0.0, 0.006, abs(fract(lat / 0.2618 + 0.5) - 0.5) * 0.2618); float gm = 1.0 - smoothstep(0.0, 0.006 / max(0.15, cos(lat)), abs(fract(lon / 0.2618 + 0.5) - 0.5) * 0.2618);
+  col += vec3(0.25, 0.75, 1.0) * (gl + gm) * 0.16 * uGlow;
+  // the glowing equator (magenta), tick marks every 5 degrees, and two partial ring arcs
+  float eq = exp(-abs(lat) * 300.0) * 1.3 + exp(-abs(lat) * 60.0) * 0.1; float tick = smoothstep(0.88, 0.97, abs(fract(lon / 0.0873 + 0.5) * 2.0 - 1.0)) * exp(-abs(lat) * 55.0) * 0.5;
+  float arcs = (exp(-abs(abs(lat) - 0.62) * 420.0) * (0.35 + 0.65 * smoothstep(-0.2, 0.7, sin(lon * 3.0 + uT * 0.35)))) * 0.45;
+  col += vec3(1.0, 0.25, 0.85) * (eq + tick + arcs) * uGlow;
+  // cyan rim and an ocean glow on the night side
+  float fr = pow(1.0 - clamp(dot(n, V), 0.0, 1.0), 3.0); col += vec3(0.18, 0.5, 1.0) * fr * 1.5 * uGlow + vec3(0.0, 0.04, 0.2) * water * (1.0 - lam) * 0.9;
+  gl_FragColor = vec4(acesInv(srgbToLinear(clamp(col, 0.0, 1.0)), uExposure), 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}`;
+gU.uT = { value: 0 }; gU.uGlow = { value: 1 };
+const AVS = `varying vec3 vNv; void main() { vNv = normalize(normalMatrix * normal); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+const AFS = `precision highp float; varying vec3 vNv; ${ACES_INV_GLSL} void main() { float i = pow(clamp(0.74 - dot(vNv, vec3(0.0, 0.0, 1.0)), 0.0, 1.0), 3.2); vec3 c = vec3(0.2, 0.55, 1.0) * i * 2.2; gl_FragColor = vec4(acesInv(srgbToLinear(clamp(c, 0.0, 1.0)), 1.0), 1.0); #include <tonemapping_fragment>
+ #include <colorspace_fragment>
+}`;
+let atmos = null;globe.renderOrder = 3; globe.frustumCulled = false; globe.userData.noProbe = true; globe.visible = false; scene.add(globe);
 const dotMesh = (hex, order = 8, n = 1) => { const m = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 14), basic(hex, 1, false), n); m.frustumCulled = false; m.renderOrder = order; m.userData.noProbe = true; m.visible = false; scene.add(m); return m; };
 const markers = dotMesh(ANCH, 9, 3);                          // you at the equator, 45 N, the pole
 const arrows = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), basic(AMB, 1, false), 3); arrows.frustumCulled = false; arrows.renderOrder = 9; arrows.userData.noProbe = true; arrows.visible = false; scene.add(arrows);
@@ -112,6 +158,9 @@ const planetG = new THREE.Group(); scene.add(planetG);
 const eqGlow = new THREE.Mesh(new THREE.TorusGeometry(1, 0.012, 8, 160), basic(AMB, 0.0, false)); eqGlow.rotation.x = Math.PI / 2; eqGlow.renderOrder = 8; eqGlow.userData.noProbe = true; eqGlow.visible = false; scene.add(eqGlow);
 const water = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 72), new THREE.MeshBasicMaterial({ color: 0x3b8cff, transparent: true, opacity: 0.38, depthWrite: false })); water.renderOrder = 4; water.userData.noProbe = true; water.visible = false;
 planetG.add(globe, water, markers, arrows, storms, debris, eqGlow);
+if (V2) { globe.material = new THREE.ShaderMaterial({ uniforms: gU, vertexShader: GVS2, fragmentShader: GFS2 });
+  atmos = new THREE.Mesh(new THREE.SphereGeometry(1.075, 64, 48), new THREE.ShaderMaterial({ vertexShader: AVS, fragmentShader: AFS, side: THREE.BackSide, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+  atmos.renderOrder = 2; atmos.frustumCulled = false; atmos.userData.noProbe = true; planetG.add(atmos); }
 planetG.rotation.z = -Math.PI / 2;                              // the pole axis is horizontal: the figure on the top is ON the equator
 
 // ── the tower: all the spin energy, then and now ────────────────────────────
@@ -197,11 +246,16 @@ window.seek = function (t) {
     pcx = 0.9; pcy = -1.48; camera.fov = 32; camera.position.set(0.9 + sw, -0.1 + sh, 3.2); camera.lookAt(0.9, -0.3, 0);
   } else { camera.fov = 30; camera.position.set(-1.6, 0.9 + 0.2 * Math.sin(t * 0.1), beatId === "break" ? 6.2 : 5.4); camera.lookAt(-1.4, 0.1, 0); }
   planetG.position.set(pcx, pcy, 0); planetG.scale.setScalar(1);
+  gU.uT.value = t; if (V2) gU.uGlow.value = 0.55 + 0.45 * amp;
   if (FILM.figOnly) { sky.visible = stars.visible = sunDisk.visible = sunHalo.visible = false;       // the capsule figure alone on a flat black or white backdrop (matted into an alpha PNG for the cover variants)
     if (!window.__bgPlane) { window.__bgPlane = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), basic(FILM.figOnly.bg ? "#999999" : "#000000", 1, true)); window.__bgPlane.position.set(0, 0, -30); window.__bgPlane.userData.noProbe = true; scene.add(window.__bgPlane); } }
   window.__focus = shot === "tower" ? [0, 20, 0] : [pcx, pcy + 1, 0];
   const ysc = (PORT || FILM.hero ? figS : gl ? 0.6 : 1) * (PORT || FILM.hero ? 0.26 : 0.15), bulge = 0.07 * fxw0("ocean");
-  you.group.visible = sp && shot !== "end";
+  you.group.visible = sp && shot !== "end" && !V2;
+  if (bot) { bot.group.visible = sp && shot !== "end"; if (bot.group.visible) { const K = FILM.robot || [{ t: 0, pose: "stand", expr: "neutral" }]; let i = 0; while (i + 1 < K.length && t >= K[i + 1].t) i++;
+      const A_ = K[i], B_ = K[Math.min(i + 1, K.length - 1)], u = B_ === A_ ? 0 : E.inout2(clamp01((t - A_.t) / Math.max(0.01, B_.t - A_.t))); const pa = { ...(ROBOT_POSES[A_.pose] || {}), expr: A_.expr || (ROBOT_POSES[A_.pose] || {}).expr }, pb = { ...(ROBOT_POSES[B_.pose] || {}), expr: B_.expr || (ROBOT_POSES[B_.pose] || {}).expr };
+      const P = mixPose(pa, pb, u); P.head = { ...(P.head || {}), y: (P.head && P.head.y || 0) + 0.04 * Math.sin(t * 0.8) }; bot.set(P); bot.group.scale.setScalar(ysc); bot.group.position.set(pcx, pcy + 1.0 + bulge + rise, 0);
+      const { kL, rL, hL } = window.__botLights; kL.position.copy(lightV).multiplyScalar(8).add(new THREE.Vector3(2, 3, 5)); kL.intensity = 1.6 + 0.8 * day; rL.position.set(-4, 2, -5); } }
   if (you.group.visible) {
     you.set({ at: [0, 0, 0], arms: (FILM.hero ? FILM.hero.arms : 0.06 + 0.5 * liftU + 0.03 * Math.sin(t * 1.3)), tilt: FILM.hero ? FILM.hero.tilt : 0 });
     you.group.scale.set(ysc, ysc * (1 + 0.012 * Math.sin(t * 1.7)), ysc); you.group.position.set(pcx, pcy + 1.0 + bulge + (0.85 + rise) * ysc + (FILM.hero ? FILM.hero.lift || 0 : 0), 0); you.group.rotation.set(0, Math.PI, FILM.hero ? FILM.hero.tilt : 0.02 * Math.sin(t * 0.9));
@@ -217,6 +271,7 @@ window.seek = function (t) {
   // the globe (planet shots): flattening, drying poles, storms, markers, debris
   globe.visible = sp && !FILM.figOnly;
   const f = 0.02 + 0.28 * Math.pow(spinU, 1.4), gph = ph * 0.5;
+  if (atmos) { atmos.visible = sp; atmos.scale.set(1, 1 - f, 1); }
   globe.scale.set(1, 1 - f, 1); const ow = fxw0("ocean"); water.visible = ow > 0.01; water.scale.set(1 + 0.07 * ow, (1 - f) * 1.003, 1 + 0.07 * ow); gU.uSpin.value = FILM.thumb ? 0.6 : gl ? gph : 0.03 * t; gU.uDry.value = dryAt(t);
   if (gl) {
     const pulling = beatId === "break" ? E.inout2(seg(t, CUE.break[0] + 1.5, CUE.break[1] - 2)) : 0;
