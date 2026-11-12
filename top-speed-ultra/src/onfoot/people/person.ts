@@ -6,9 +6,9 @@ import * as THREE from 'three';
 import { buildRig, Rig, B } from './body';
 import { makeSkeleton } from './skeleton';
 import { aabbBox, fieldBounds, meshPart, skinWeights, skinWeightsF, bakeAO, buildGeometry, side, dropTris, clipByRegion } from './geo';
-import { buildGarments, GarmentBuild, isShoe } from './garments';
+import { buildGarments, GarmentBuild, isShoe, isBottom, lightSole } from './garments';
 import { clothMaterial } from './cloth';
-import { buildHairVolume, HairBuild, growCards, hairCapMaterial } from './hair';
+import { buildHairVolume, HairBuild, growCards, hairCapMaterial, buildBeardVolume } from './hair';
 import { LodField, Look2, Cover, Extra, reduced, paint, lodMaterial } from './lod';
 import { Field } from './field';
 import { buildAccessories } from './acc';
@@ -84,8 +84,9 @@ function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[], normals = fa
 export function buildPerson(o: PersonOptions): Person {
   const quality: Quality = o.quality ?? 'high';
   const t0 = performance.now();
-  const shoes = o.outfit.find((g) => ['heels', 'boots', 'sneakers', 'loafers', 'flats'].includes(g.kind));
-  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : 0;
+  const shoes = o.outfit.find((g) => isShoe(g.kind));
+  // (the cast's low heels lift 4.5 cm; every other shoe as before)
+  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : shoes?.kind === 'lowHeels' ? 0.045 * (o.body.height / 1.65) : 0;
   const rig = buildRig(o.body, o.face, heel);
   const sk = makeSkeleton(rig);
   const group = new THREE.Group();
@@ -101,7 +102,7 @@ export function buildPerson(o: PersonOptions): Person {
   const hf = rig.head;
   const male = o.body.sex === 'm';
   const fh = o.look.facialHair;
-  const beardAmt = !male ? 0 : fh === 'beard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? 0.75 : 0.22;
+  const beardAmt = !male ? 0 : fh === 'beard' || fh === 'fullBeard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? 0.75 : 0.22;
   const skinLook = { tone: o.look.skin, lipstick: o.look.lipstick, blush: o.look.blush, beard: beardAmt, beardColor: o.look.hairColor, liner: o.look.liner, hairColor: o.look.hairColor, freckles: o.look.freckles, age: o.body.age, male };
   let bodyMat: SkinMaterial | null = null, faceMat: SkinMaterial | null = null;
   const mats: THREE.Material[] = [];
@@ -200,7 +201,7 @@ export function buildPerson(o: PersonOptions): Person {
       }
     }
     const geo = buildGeometry(P, NR, idx, si, sw, { aCloth: { a: aCloth, n: 4 }, aFold: { a: aFold, n: 4 } });
-    const sole = gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
+    const sole = lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
     const mat = clothMaterial(gb.g.color, gb.g.fabric, quality, isShoe(gb.g.kind) ? sole : (gb.g.accent ?? gb.g.color));
     mats.push(mat);
     const m = new THREE.SkinnedMesh(geo.geo, mat);
@@ -280,6 +281,34 @@ export function buildPerson(o: PersonOptions): Person {
     cm.name = 'hair-cards';
     buildMs.hairCards = Math.round(performance.now() - tc);
     return [cap, cm];
+  };
+
+  // ---------------------------------------------------------------- (cast) a full beard's shell, LOD 0 only
+  const beardMeshes = (): THREE.Mesh[] => {
+    const bb = buildBeardVolume(rig, o.look);
+    if (!bb) return [];
+    const th = performance.now();
+    const h = quality === 'high' ? 0.0032 : 0.005;
+    const { mesh } = meshPart(bb.sdf, aabbBox(bb.box[0], bb.box[1], h), h);
+    const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => bb.sdf.keep(x, y, z));
+    const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
+    const ao = bakeAO(bb.sdf, cl.pos, cl.nrm, act, 0.004, 0.012);
+    const nv = cl.pos.length / 3, flow = new Float32Array(nv * 3), edge = new Float32Array(nv);
+    const si = new Uint16Array(nv * 4), sw = new Float32Array(nv * 4);
+    for (let v = 0; v < nv; v++) {
+      const p: V3 = [cl.pos[v * 3], cl.pos[v * 3 + 1], cl.pos[v * 3 + 2]];
+      flow.set(bb.flow(p), v * 3);
+      edge[v] = clamp(-bb.sdf.keep(p[0], p[1], p[2]) / 0.008);
+      const w = bb.headW(p);
+      si[v * 4] = B.head; sw[v * 4] = w[0]; si[v * 4 + 1] = B.neck; sw[v * 4 + 1] = w[1];
+    }
+    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 }, aEdge: { a: edge, n: 1 } });
+    const mat = hairCapMaterial({ ...o.look, hair: 'short' }, quality);
+    mats.push(mat);
+    const m = new THREE.SkinnedMesh(geo.geo, mat);
+    m.name = 'beard';
+    buildMs.beard = Math.round(performance.now() - th);
+    return [m];
   };
 
   // ---------------------------------------------------------------- parts
@@ -439,6 +468,7 @@ export function buildPerson(o: PersonOptions): Person {
     mats.push(...eyes.mats);
     buildMs.faceParts = Math.round(performance.now() - tf);
     for (const m of hairMeshes()) G.add(m);
+    for (const m of beardMeshes()) G.add(m);
     const ta = performance.now();
     const ac = buildAccessories(rig, o.acc, o.look, quality, outer);
     for (const m of ac.meshes) G.add(m);
@@ -455,8 +485,8 @@ export function buildPerson(o: PersonOptions): Person {
     const looks: Look2[] = [], covers: Cover[] = [], extras: Extra[] = [];
     const neckTop = rig.neckSeam + 0.01;
     for (const gb of gs) {
-      const shoe = isShoe(gb.g.kind), bottom = ['jeans', 'trousers', 'skirt', 'shorts'].includes(gb.g.kind);
-      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
+      const shoe = isShoe(gb.g.kind), bottom = isBottom(gb.g.kind);
+      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
       const reg = gb.sdf.region;
       covers.push({ t: gb.sdf.t + (gb.layer >= 3 ? 0.004 : 0), keep: (x, y, z) => Math.max(reg(x, y, z), y - neckTop), noArms: bottom, id });
       if (gb.sdf.drape) { const dr = gb.sdf.drape; extras.push({ d: (x, y, z) => dr.d(x, y, z), region: gb.keep, id }); }

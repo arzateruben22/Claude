@@ -4,7 +4,7 @@
 //   npm run build && npm test             every group
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
 //                                         progression, render, phone, nav-hud, launch, store, store-live, venues,
-//                                         venues-trips)
+//                                         venues-trips, cast, cast-seat, cast-venues)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
 //                                         group's page-error check); the group still opens its page
@@ -72,7 +72,8 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: dpr }
     : { viewport: { width: size[0], height: size[1] } });
   const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
-  await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
+  // (a check that reloads to see what the game itself saved sets tsu.test.keep first: then the reload keeps the save)
+  await ctx.addInitScript((s) => { if (localStorage.getItem('tsu.test.keep') !== '1') localStorage.setItem('tsu.settings', JSON.stringify(s)); }, { ...base, ...settings });
   const page = await ctx.newPage();
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
   // for a frame, so actions get four minutes instead of Playwright's 30 s (a check still fails on what it asserts)
@@ -3646,6 +3647,172 @@ async function venuesPhone(page) {
     return `on the ramp to ${r.leads}`;
   });
 }
+
+// The cast (PROJECT_OC_CAST.md): six playable characters from one catalog (src/onfoot/cast.ts). 'cast': the six build
+// within the people builder's phone budget; the picker saves the choice and a reload restores it; the cockpit arms follow
+// the chosen character (skin through the hands' setTone, the outfit's sleeves) while the archetype's ability stays; an
+// old save (presentation and skin, no character) keeps its look and the picker offers the closest character; the
+// two-character pack is a scaffold, not for sale. 'cast-seat': the hands of all six in the Rossini GT's seat (Day),
+// 1280x720 and 390x844. 'cast-venues': the chosen character is the avatar in Lot 57 and Stoppage Time and the people
+// there are built only from the six base looks; frames of each venue's crowd.
+const CAST_OUT = path.join(OUT, 'cast');
+mkdirSync(CAST_OUT, { recursive: true });
+const CAST_BUDGET = { 0: { tris: 90000, calls: 24 }, 1: { tris: 14000, calls: 2 }, 2: { tris: 2500, calls: 1 } };
+await group('cast', async (use) => {
+  const { page } = await use({ size: [1450, 767], settings: { presentation: 'f', skin: 0 } });
+  let info = null;
+  await check('cast: the catalog has the six base characters (3 men, 3 women) and an empty pack', async () => {
+    info = await game(page, () => window.__castInfo());
+    const ids = info.cast.map((c) => c.id), men = info.cast.filter((c) => c.presentation === 'm').length;
+    expect(ids.length === 6 && men === 3 && info.cast.every((c) => c.unlock === 'base'), JSON.stringify(ids));
+    expect(info.pack.unlock === 'pack' && info.pack.identities.length === 0, JSON.stringify(info.pack));
+    return `${ids.join(', ')}; pack '${info.pack.sku}' with ${info.pack.identities.length} identities`;
+  });
+  await check('cast: the six presets build within the phone budget (LOD 2, 1 and 0)', async () => {
+    const rows = await game(page, () => window.__castBudget());
+    writeFileSync(path.join(CAST_OUT, 'budget.json'), JSON.stringify(rows, null, 1));
+    for (const r of rows) for (const l of [0, 1, 2]) expect(r[l].tris <= CAST_BUDGET[l].tris && r[l].calls <= CAST_BUDGET[l].calls, `${r.id} LOD ${l}: ${JSON.stringify(r[l])} over ${JSON.stringify(CAST_BUDGET[l])}`);
+    return rows.map((r) => `${r.id} ${r[2].tris}/${r[1].tris}/${r[0].tris} tris, ${r[0].calls} calls, ${r[2].ms}+${r[1].ms}+${r[0].ms} ms`).join('; ');
+  });
+  await check('cast: an old save (female, tone 1, no character) keeps its look; the picker opens on the closest character', async () => {
+    const before = await game(page, () => ({ arms: window.__game.driverArms, s: JSON.parse(localStorage.getItem('tsu.settings')) }));
+    expect(!before.s.character && before.arms.skin === 0xf1c6a5 && before.arms.presentation === 'f', JSON.stringify(before).slice(0, 300));
+    await page.getByRole('button', { name: /^Character/ }).click();
+    await page.waitForSelector('.cast-card');
+    await page.waitForFunction(() => window.__castStage?.lod === 0, null, { timeout: 600000 });
+    const st = await game(page, () => ({ sel: document.querySelector('.cast-card.on b')?.textContent, closest: [...document.querySelectorAll('.cast-card')].find((c) => /Closest/.test(c.textContent))?.querySelector('b')?.textContent, cards: document.querySelectorAll('.cast-card').length, stage: window.__castStage, imgs: [...document.querySelectorAll('.cast-card img')].map((i) => i.naturalWidth) }));
+    await page.screenshot({ path: path.join(CAST_OUT, 'picker-1450x767.png') });
+    expect(st.cards === 6 && st.sel === 'Kate Morgan' && st.closest === 'Kate Morgan' && st.imgs.every((w) => w > 0), JSON.stringify(st));
+    return `kept tone #${before.arms.skin.toString(16)} (${before.arms.presentation}); picker opened on ${st.sel}, marked closest; turntable LOD ${st.stage.lod}, ${st.stage.tris} tris (${st.stage.ms} ms)`;
+  });
+  const ability0 = await game(page, () => window.__game.abilityId);
+  await check('cast: the picker saves the choice and a reload restores it', async () => {
+    await page.getByRole('radio', { name: /Leila Farahani/ }).click();
+    await page.waitForFunction(() => window.__castStage?.id === 'leila-farahani' && window.__castStage.lod === 0, null, { timeout: 600000 });
+    await page.getByRole('button', { name: 'Drive as Leila' }).click();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings')).character);
+    // the reload: the same page reloaded with the group's test settings no longer written over the save
+    await game(page, () => localStorage.setItem('tsu.test.keep', '1'));
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await hook(page);
+    const after = await game(page, () => ({ s: window.__game.settings.character, arms: window.__game.driverArms, menu: [...document.querySelectorAll('.pick')].map((p) => p.textContent).find((t) => /Character/.test(t)) }));
+    await game(page, () => localStorage.removeItem('tsu.test.keep'));
+    expect(saved === 'leila-farahani' && after.s === 'leila-farahani' && /Leila Farahani/.test(after.menu) && after.arms.skin === 0xd3a583, JSON.stringify({ saved, after }).slice(0, 400));
+    return `saved ${saved}; reloaded from the saved storage: ${after.s}, the menu reads "${after.menu}", the arms #${after.arms.skin.toString(16)}`;
+  });
+  await check('cast: the cockpit arms follow the character (tone through setTone, sleeves, wrist); the archetype ability stays', async () => {
+    const rows = [];
+    for (const c of info.cast) {
+      const r = await game(page, (id) => { const g = window.__game; g.updateSettings({ ...g.settings, character: id }); return { arms: g.driverArms, ability: g.abilityId, driver: g.settings.driver }; }, c.id);
+      const a = r.arms;
+      expect(a.skin === c.skin && a.tone === c.skin && a.presentation === c.presentation && a.sleeve === c.arms.sleeve && a.outfit === c.arms.outfit && a.watch === c.arms.watch && a.bracelet === c.arms.bracelet && a.gloves === null && a.nails === c.arms.nails, `${c.id}: ${JSON.stringify(a)}`);
+      expect(r.ability === ability0, `${c.id}: ability ${r.ability}, was ${ability0}`);
+      rows.push(`${c.id} #${a.tone.toString(16)} ${a.presentation} ${a.outfit} sleeve #${a.sleeve.toString(16)}${a.watch ? ' ' + a.watch + ' watch' : ''}${a.bracelet ? ' bangle' : ''}`);
+    }
+    // a tone change alone goes through setTone without a rebuild: the old look (no character), tone 1 to tone 3
+    const t = await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, character: '', presentation: 'm', skin: 1 }); const a1 = g.driverArms; g.updateSettings({ ...g.settings, skin: 3 }); return { a1, a2: g.driverArms }; });
+    expect(t.a2.tone === 0x8a5536 && t.a2.skin === 0x8a5536 && t.a1.tone === 0xd9a37f, JSON.stringify(t).slice(0, 300));
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, character: 'leila-farahani' }); });
+    return rows.join('; ') + `; ability ${ability0} throughout; tone-only change set #${t.a2.tone.toString(16)}`;
+  });
+  await check('cast: the two-character pack is in the catalog, not for sale, with one undecided price', async () => {
+    const cat = JSON.parse(readFileSync(path.join(ROOT, 'src', 'store', 'catalog.json'), 'utf8')), sku = cat.find((x) => x.sku === 'cast-pack-duo');
+    expect(sku && sku.available === false && Number.isInteger(sku.price_cents) && /undecided/.test(sku.caveat) && /\$5 or \$10/.test(sku.caveat), JSON.stringify(sku));
+    // in the game: the store's own sale rule (src/store/catalog.ts saleState, forSale: what the store lists) says no
+    const pk = (await game(page, () => window.__castInfo())).pack;
+    expect(pk.inCatalog && !pk.onSale && !pk.listed, JSON.stringify(pk));
+    return `${sku.sku}: available ${sku.available}, ${sku.price_cents} cents (placeholder), "${sku.unavailable_reason}"`;
+  });
+});
+await group('cast', async (use) => {
+  const { page } = await use({ phone: true, settings: { character: 'jas-cruz' } });
+  await check('cast phone: the picker at 390x844 (cards, turntable, the choice marked)', async () => {
+    await page.getByRole('button', { name: /^Character/ }).click();
+    await page.waitForSelector('.cast-card');
+    await page.waitForFunction(() => window.__castStage?.lod === 0, null, { timeout: 600000 });
+    await page.screenshot({ path: path.join(CAST_OUT, 'picker-390x844.png') });
+    const r = await game(page, () => { const b = [...document.querySelectorAll('.cast-card')].map((c) => c.getBoundingClientRect()); return { n: b.length, minW: Math.min(...b.map((x) => x.width)), minH: Math.min(...b.map((x) => x.height)), right: Math.max(...b.map((x) => x.right)), vw: innerWidth, mine: document.querySelector('.cast-card.mine b')?.textContent, stage: window.__castStage }; });
+    expect(r.n === 6 && r.minW >= 44 && r.minH >= 44 && r.right <= r.vw && r.mine === 'Jas Cruz', JSON.stringify(r));
+    return `6 cards, smallest ${Math.round(r.minW)}x${Math.round(r.minH)}; ${r.mine} marked; turntable LOD ${r.stage.lod} ${r.stage.tris} tris`;
+  });
+});
+// the seat view of all six, Day, in the Rossini GT
+async function castSeat(page, tag) {
+  await drive(page, 'Free Drive');
+  const info = await game(page, () => window.__castInfo());
+  const rows = [];
+  for (const c of info.cast) {
+    await game(page, (id) => { const g = window.__game; g.updateSettings({ ...g.settings, character: id }); g.setCam('cockpit'); }, c.id);
+    await frames(page, 4);
+    await page.screenshot({ path: path.join(CAST_OUT, `seat-${c.id}-${tag}.png`) });
+    const a = await game(page, () => ({ arms: window.__game.driverArms, car: window.__game.carId }));
+    expect(a.arms.tone === c.skin && a.car === 'rossini-gt', `${c.id}: ${JSON.stringify(a).slice(0, 200)}`);
+    rows.push(c.id);
+  }
+  // from the hood and the chase camera: what of the driver shows there (the arms through the glass; there is no
+  // driver's head or torso model)
+  if (tag === '1280x720') for (const cam of ['hood', 'chase']) {
+    await game(page, (cam) => window.__game.setCam(cam), cam);
+    await frames(page, 4);
+    await page.screenshot({ path: path.join(CAST_OUT, `seat-${cam}-${tag}.png`) });
+  }
+  return rows;
+}
+await group('cast-seat', async (use) => {
+  const { page } = await use({ size: [1280, 720], settings: { time: 'day' } });
+  await check('cast seat: the hands of all six in the Rossini GT, Day, 1280x720', async () => `${(await castSeat(page, '1280x720')).length} frames`);
+});
+await group('cast-seat', async (use) => {
+  const { page } = await use({ phone: true, settings: { time: 'day' } });
+  await check('cast seat: the hands of all six in the Rossini GT, Day, 390x844', async () => `${(await castSeat(page, '390x844')).length} frames`);
+});
+// the venues: the chosen character on foot, and the crowd built from the six
+async function crowdFrame(page, file) {
+  // a fixed camera 4.5 m from the densest cluster of drawn people, at eye height, looking at its middle
+  const cam = await game(page, () => {
+    const o = window.__onfoot, ppl = o.cast().where ?? [];
+    let best = null, bn = 0;
+    for (const a of ppl) { const n = ppl.filter((b) => Math.hypot(a.x - b.x, a.z - b.z) < 3.5).length; if (n > bn) { bn = n; best = a; } }
+    if (!best) return null;
+    const near = ppl.filter((b) => Math.hypot(best.x - b.x, best.z - b.z) < 3.5), cx = near.reduce((s, b) => s + b.x, 0) / near.length, cz = near.reduce((s, b) => s + b.z, 0) / near.length;
+    const me = o.pos(), d = Math.hypot(me.x - cx, me.z - cz) || 1, ux = (me.x - cx) / d, uz = (me.z - cz) / d;
+    o.camera([cx + ux * 4.5, 1.6, cz + uz * 4.5, cx, 1.1, cz]);
+    return { n: near.length, looks: [...new Set(near.map((b) => b.cast))] };
+  });
+  for (let i = 0; i < 3; i++) await game(page, () => window.__onfoot.render?.());
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: path.join(CAST_OUT, file) });
+  await game(page, () => window.__onfoot.camera(null));
+  return cam;
+}
+await group('cast-venues', async (use) => {
+  const { page } = await use({ size: [1280, 720], settings: { time: 'sunset', character: 'marcus-bell' } });
+  await drive(page, 'Free Drive');
+  const base = new Set((await game(page, () => window.__castInfo())).cast.filter((c) => c.unlock === 'base').map((c) => c.id));
+  for (const [venue, tag] of [['Lot 57', 'lot57'], ['Stoppage Time', 'stoppage']]) {
+    await check(`cast venues: ${venue}: the avatar is the chosen character; everyone there is one of the six base looks`, async () => {
+      const r = await autoDriveTo(page, venue);
+      expect(r.venue?.phase === 'parked', JSON.stringify(r).slice(0, 200));
+      const out = await getOut(page);
+      expect(out.ok && out.ready, JSON.stringify(out));
+      if (venue === 'Lot 57') await game(page, () => { const o = window.__onfoot; o.peopleReady && o.sim(3, true, true); });
+      const c = await game(page, () => window.__onfoot.cast());
+      expect(c.avatar === 'marcus-bell' && c.choice === 'marcus-bell' && c.skin === 0x65402f, JSON.stringify({ avatar: c.avatar, choice: c.choice, skin: c.skin }));
+      const counts = {}; for (const x of c.pool) counts[x] = (counts[x] ?? 0) + 1;
+      expect(c.people > 0 && c.notCast === 0 && c.pool.every((x) => base.has(x)), JSON.stringify(counts));
+      // the chosen character in the venue, from behind and to the side (third person)
+      await game(page, () => { const o = window.__onfoot; o.view('third'); o.look(200, -10); });
+      for (let i = 0; i < 3; i++) await game(page, () => window.__onfoot.render?.());
+      await page.waitForTimeout(1500);
+      await page.screenshot({ path: path.join(CAST_OUT, `venue-${tag}-avatar.png`) });
+      await game(page, () => window.__onfoot.view('first'));
+      const cf = await crowdFrame(page, `venue-${tag}-crowd.png`);
+      await driveByButton(page);
+      return `avatar ${c.avatar} (#${c.skin.toString(16)}, ${c.hair}, ${c.height} m); ${c.people} people: ${Object.entries(counts).map(([k, v]) => `${k} ${v}`).join(', ')}; crowd frame of ${cf?.n ?? 0} people, looks ${cf?.looks?.join(', ')}`;
+    });
+  }
+});
 
 await browser.close();
 

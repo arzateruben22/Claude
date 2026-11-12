@@ -9,7 +9,7 @@ import { Rig, B } from './body';
 import { HeadFrame } from './head';
 import { HairStyle, Look, Quality } from './params';
 import { V3, clamp, smooth, norm, cross, dot, rng, lerp } from './math';
-import { scalpCover } from './masks';
+import { scalpCover, faceMasks } from './masks';
 import { NOISE } from './skin';
 import { hairLights } from './cards';
 
@@ -20,6 +20,11 @@ export interface HairSpec {
   part: number;                               // x of the parting (head-local)
   cards: number; cardW: number; tex: 'straight' | 'wavy' | 'curl';
   framing: boolean;                           // loose strands framing the face
+  // (cast styles, 2026-11-11; unset on every older style, which build exactly as before)
+  tie?: V3; tailEnd?: V3; tailR?: [number, number];   // a tail's tie and end (head-local) and its radius there
+  cut?: number;                               // clipped sides: head-local y below which the volume is cut away
+  sweep?: boolean;                            // the top swept over sideways from the parting (a side part)
+  cardLen?: number;                           // how far strand cards grow (m), when the style needs longer ones
 }
 
 export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
@@ -33,6 +38,12 @@ export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
     case 'updo': return S({ top: 0.016, side: 0.008, back: 0.009, bun: true, cards: 340, cardW: 0.012, tex: 'wavy', framing: true, part: 0.0 });
     case 'ponytail': return S({ top: 0.007, side: 0.005, back: 0.006, tail: true, cards: 240, cardW: 0.012, part: 0.0 });
     case 'curly': return S({ top: male ? 0.024 : 0.028, side: male ? 0.014 : 0.022, back: male ? 0.016 : 0.024, hang: male ? null : -0.15, curl: 1, cards: male ? 300 : 440, cardW: 0.014, tex: 'curl' });
+    // ---- the cast's styles (src/onfoot/cast.ts)
+    case 'highPonytail': return S({ top: 0.007, side: 0.005, back: 0.006, tail: true, tie: [0, 0.088, -0.128], tailEnd: [0, -0.3, -0.215], tailR: [0.024, 0.011], cards: 380, cardW: 0.013, part: 0.0, framing: true, cardLen: 0.16 });
+    case 'lowPonytail': return S({ top: 0.01, side: 0.008, back: 0.008, tail: true, tie: [0, -0.04, -0.158], tailEnd: [0, -0.21, -0.19], tailR: [0.024, 0.013], cards: 340, cardW: 0.014, tex: 'wavy', part: 0.012, framing: true, cardLen: 0.12 });
+    case 'fade': return S({ top: 0.022, side: 0.004, back: 0.004, curl: 0.35, cut: 0.03, cards: 200, cardW: 0.012, tex: 'curl', part: 0, cardLen: 0.03 });
+    case 'sidePart': return S({ top: 0.024, side: 0.005, back: 0.005, cut: 0.032, sweep: true, part: -0.034, cards: 280, cardW: 0.013, cardLen: 0.09 });
+    case 'waves': return S({ top: 0.012, side: 0.012, back: 0.014, hang: -0.2, curl: 0.22, cards: 480, cardW: 0.016, tex: 'wavy', part: 0.032 });
   }
 }
 
@@ -41,6 +52,14 @@ export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
 const BUN_C: V3 = [0, 0.094, -0.142];
 function flowAt(sp: HairSpec, l: V3): V3 {
   const [x, y, z] = l;
+  if (sp.tie && sp.tailEnd) {
+    // (cast tails) on the tail itself: down along it, from the tie to the end; elsewhere pulled back to the tie
+    const a = sp.tie, b = sp.tailEnd, ab: V3 = [b[0] - a[0], b[1] - a[1], b[2] - a[2]];
+    const t = dot([x - a[0], y - a[1], z - a[2]], ab) / dot(ab, ab);
+    const q: V3 = [a[0] + ab[0] * t, a[1] + ab[1] * t, a[2] + ab[2] * t];
+    if (t > 0.02 && Math.hypot(x - q[0], y - q[1], z - q[2]) < 0.045) return norm(ab);
+    return norm([a[0] - x, a[1] - y, a[2] - z]);
+  }
   if (sp.bun || sp.tail) {
     // pulled back and up to the bun / the tie
     const c: V3 = sp.bun ? BUN_C : [0, 0.02, -0.165];
@@ -56,6 +75,13 @@ function flowAt(sp: HairSpec, l: V3): V3 {
     const down: V3 = [0.12 * Math.sign(x), -1, -0.15];
     const t = onTop * smooth(0.06, 0.0, ax - 0.02);
     return norm([lerp(down[0], away[0], t), lerp(down[1], away[1], t), lerp(down[2], away[2], t)]);
+  }
+  if (sp.sweep) {
+    // a side part: on top, up and over away from the parting (and a little back); the clipped sides comb down
+    const top = smooth(0.0, 0.05, y);
+    const over: V3 = [sg * 0.9, 0.15 - 0.6 * smooth(0.05, 0.09, ax), -0.45];
+    const down: V3 = [0.25 * Math.sign(x), -0.9, -0.35];
+    return norm([lerp(down[0], over[0], top), lerp(down[1], over[1], top), lerp(down[2], over[2], top)]);
   }
   // short styles: front to back on top, down and back at the sides
   const side = smooth(0.035, 0.07, Math.abs(x));
@@ -99,6 +125,9 @@ export class HairSdf implements Sdf {
       t += 0.0016 * lump * smooth(0.02, 0.07, l[1]) * smooth(0.6, 0.95, scalpCover(this.style, l, 35 + 40 * this.hf.old, this.hf.male));
     }
     if (sp.curl > 0) t += sp.curl * 0.009 * (clumps(l[0] * 70, l[1] * 70, l[2] * 70) - 0.45);
+    // clipped sides (fade, side part): the volume thins to nothing toward the cut, so the top sits on a short-clipped
+    // scalp (the skin shader's hair-coloured scalp) instead of ending in a ledge
+    if (sp.cut !== undefined) t *= smooth(sp.cut - 0.004, sp.cut + 0.04, l[1]);
     return t;
   }
   extra(l: V3) {
@@ -107,9 +136,9 @@ export class HairSdf implements Sdf {
     if (sp.bun) { const q = [(l[0]) / 0.05, (l[1] - BUN_C[1]) / 0.042, (l[2] - BUN_C[2]) / 0.043]; d = Math.min(d, (Math.hypot(q[0], q[1], q[2]) - 1) * 0.038 * s); }
     if (sp.tail) {
       // a tie at the back of the head, then a tapered tail falling down and a little out
-      const a: V3 = [0, 0.02, -0.168], b: V3 = [0, -0.2, -0.2];
+      const a: V3 = sp.tie ?? [0, 0.02, -0.168], b: V3 = sp.tailEnd ?? [0, -0.2, -0.2], tr = sp.tailR ?? [0.02, 0.009];
       const ab: V3 = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], t = clamp(dot([l[0] - a[0], l[1] - a[1], l[2] - a[2]], ab) / dot(ab, ab));
-      const r = lerp(0.02, 0.009, t) * (1 + 0.25 * Math.sin(t * 3.1));
+      const r = lerp(tr[0], tr[1], t) * (1 + 0.25 * Math.sin(t * 3.1));
       const c: V3 = [a[0] + ab[0] * t, a[1] + ab[1] * t, a[2] + ab[2] * t];
       d = Math.min(d, (Math.hypot(l[0] - c[0], l[1] - c[1], l[2] - c[2]) - r) * s);
     }
@@ -153,7 +182,10 @@ export class HairSdf implements Sdf {
     const male = hf.male;
     const c = scalpCover(this.style, l, 35 + 40 * hf.old, male);
     let k = (0.5 - c) * 0.03;
-    if (sp.bun || sp.tail) k = Math.min(k, this.extra(l) - 0.002);
+    // (the cast's tails: a deeper margin, so the tail's own surface reads as well inside the region: the cap shader's
+    // edge fade and the cards' roots both go by it)
+    if (sp.bun || sp.tail) k = Math.min(k, this.extra(l) - (sp.tie ? 0.02 : 0.002));
+    if (sp.cut !== undefined) k = Math.max(k, (sp.cut - 0.002 - l[1]) * 0.5);
     if (sp.hang !== null) {
       // the face: an oval column in front (hair frames it round its edge, never crosses it)
       const zc = 0.03, fx = Math.abs(l[0]) / 0.074;
@@ -190,7 +222,7 @@ export function buildHairVolume(rig: Rig, look: Look): HairBuild | null {
     };
   }
   const sdf = new HairSdf(hf, sp, H, C, hang, look.hair);
-  const lo = hf.toBody([-0.13, sp.hang !== null ? sp.hang - 0.08 : sp.tail ? -0.24 : -0.14, -0.24]), hi = hf.toBody([0.13, 0.15, 0.1]);
+  const lo = hf.toBody([-0.13, sp.hang !== null ? sp.hang - 0.08 : sp.tailEnd ? sp.tailEnd[1] - 0.05 : sp.tail ? -0.24 : -0.14, sp.tailEnd ? Math.min(-0.24, sp.tailEnd[2] - 0.05) : -0.24]), hi = hf.toBody([0.13, 0.15, 0.1]);
   const flow = (p: V3): V3 => {
     const l = hf.toLocal(p), f = flowAt(sp, l);
     return norm([f[0] * hf.sx, f[1] * hf.sy, f[2] * hf.sz]);
@@ -217,7 +249,7 @@ export function growCards(hb: HairBuild, roots: V3[], quality: Quality, seed: nu
   for (let c = 0; c < n; c++) {
     let p = roots[Math.floor(r.next() * roots.length)].slice() as V3;
     const off = -0.0015 + r.next() * (sp.bun || sp.tail ? 0.0022 : 0.0035);   // some under the surface, some proud (pulled-back hair lies flatter)
-    const maxLen = sp.hang !== null ? 0.6 : sp.tail ? 0.05 + r.next() * 0.04 : sp.bun ? 0.08 + r.next() * 0.08 : sp.curl ? 0.035 + r.next() * 0.03 : 0.05 + r.next() * 0.04;
+    const maxLen = sp.cardLen !== undefined ? sp.cardLen * (0.6 + 0.4 * r.next()) : sp.hang !== null ? 0.6 : sp.tail ? 0.05 + r.next() * 0.04 : sp.bun ? 0.08 + r.next() * 0.08 : sp.curl ? 0.035 + r.next() * 0.03 : 0.05 + r.next() * 0.04;
     const w = sp.cardW * (0.7 + 0.6 * r.next());
     const pts: { p: V3; s: V3; n: V3 }[] = [];
     let len = 0;
@@ -337,4 +369,67 @@ diffuseColor.a = vEdge * 1.5 - 0.2 + 0.6 * (s1 - 0.5) + 0.45 * (s3 - 0.5);`)
 reflectedLight.indirectDiffuse *= vAo; reflectedLight.indirectSpecular *= vAo * 0.6;`);
   };
   return m;
+}
+
+// ------------------------------------------------------------------------------------------------ (cast) a full beard
+/** (cast, 2026-11-11) FacialHair 'fullBeard': a short hair shell (the head's surface offset by `thick`) over the beard
+ *  area of the face masks, clipped at its edge (the cap shader thins the edge into strands). Skinned to the head
+ *  bone; it does not follow the mouth's morphs, so a wide-open mouth can show the chin through it. */
+export class BeardSdf implements Sdf {
+  n: number; maxK: number;
+  private buf: Int32Array;
+  // the beard mask sampled once on a 4 mm grid (head-local) and blurred: the face masks' sideburn and moustache edges
+  // are hard steps, which as a thickness made walls; blurred, the shell tapers out over about a centimetre
+  private grid: Float32Array; private lo: V3 = [-0.1, -0.2, -0.11]; private step = 0.004; private dim: [number, number, number];
+  constructor(public hf: HeadFrame, public H: Field, public t: number, public look: Look) {
+    this.n = H.n; this.maxK = H.maxK; this.buf = new Int32Array(H.n);
+    const st = this.step, nx = Math.round(0.2 / st) + 1, ny = Math.round(0.21 / st) + 1, nz = Math.round(0.23 / st) + 1;
+    this.dim = [nx, ny, nz];
+    let g = new Float32Array(nx * ny * nz);
+    for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) g[i + nx * (j + ny * k)] = faceMasks([this.lo[0] + i * st, this.lo[1] + j * st, this.lo[2] + k * st], hf, look).beard;
+    for (let pass = 0; pass < 2; pass++) for (let ax = 0; ax < 3; ax++) {
+      const o = new Float32Array(g.length), d = [1, nx, nx * ny][ax], n = this.dim[ax];
+      for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        const c = [i, j, k][ax], id = i + nx * (j + ny * k);
+        o[id] = (g[id] * 2 + g[c > 0 ? id - d : id] + g[c < n - 1 ? id + d : id]) / 4;
+      }
+      g = o;
+    }
+    this.grid = g;
+  }
+  /** the blurred beard mask at a body point (0 outside the grid) */
+  mask(x: number, y: number, z: number) {
+    const l = this.hf.toLocal([x, y, z]), [nx, ny, nz] = this.dim, st = this.step;
+    const fx = (l[0] - this.lo[0]) / st, fy = (l[1] - this.lo[1]) / st, fz = (l[2] - this.lo[2]) / st;
+    if (fx < 0 || fy < 0 || fz < 0 || fx >= nx - 1 || fy >= ny - 1 || fz >= nz - 1) return 0;
+    const i = Math.floor(fx), j = Math.floor(fy), k = Math.floor(fz), u = fx - i, v = fy - j, w = fz - k, g = this.grid;
+    const at = (a: number, b: number, c: number) => g[a + nx * (b + ny * c)];
+    const L = (a: number, b: number, t: number) => a + (b - a) * t;
+    return L(L(L(at(i, j, k), at(i + 1, j, k), u), L(at(i, j + 1, k), at(i + 1, j + 1, k), u), v), L(L(at(i, j, k + 1), at(i + 1, j, k + 1), u), L(at(i, j + 1, k + 1), at(i + 1, j + 1, k + 1), u), v), w);
+  }
+  prim(i: number, x: number, y: number, z: number) { return this.H.prim(i, x, y, z) - this.t - 0.004; }
+  /** the thickness here: full inside the beard, tapering to nothing toward its edge (no ledge) */
+  thickAt(x: number, y: number, z: number) { return this.t * smooth(0.15, 0.8, this.mask(x, y, z)); }
+  eval(x: number, y: number, z: number, act: Int32Array | null, nAct: number) {
+    if (!act) return this.H.eval(x, y, z, null, 0) - this.thickAt(x, y, z);
+    let n = 0;
+    for (let j = 0; j < nAct; j++) if (act[j] < this.H.n) this.buf[n++] = act[j];
+    return n ? this.H.eval(x, y, z, this.buf, n) - this.thickAt(x, y, z) : 1e9;
+  }
+  /** < 0 where the beard grows */
+  keep(x: number, y: number, z: number) { return (0.25 - this.mask(x, y, z)) * 0.03; }
+}
+export function buildBeardVolume(rig: Rig, look: Look) {
+  if (look.facialHair !== 'fullBeard' || !rig.male) return null;
+  const hf = rig.head, F = rig.field;
+  const H = F.subset((i) => F.bone[i] === B.head);
+  const sdf = new BeardSdf(hf, H, 0.0055, look);
+  const box: [V3, V3] = [hf.toBody([-0.1, -0.2, -0.11]), hf.toBody([0.1, 0.01, 0.12])];
+  const flow = (p: V3): V3 => {
+    const l = hf.toLocal(p), must = l[1] > -0.06 && Math.abs(l[0]) < 0.03 && l[2] > 0.0;
+    const f: V3 = must ? [Math.sign(l[0]) * 0.8, -0.6, 0.1] : [0.15 * Math.sign(l[0]), -1, 0.25];
+    return norm([f[0] * hf.sx, f[1] * hf.sy, f[2] * hf.sz]);
+  };
+  const headW = (p: V3) => { const l = hf.toLocal(p), h = smooth(-0.2, -0.13, l[1]); return [h, 1 - h, 0]; };
+  return { sdf, box, flow, headW };
 }
