@@ -1,0 +1,13 @@
+{
+ "voice": "recorded",
+ "lines": [
+  {
+   "id": "vo09",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and subscribe.",
+   "file": "09y.wav",
+   "dur": 3.68,
+   "sha256": "964c74487863a752d3d30bc22e34da266994048247efd724772005dc263c27ca"
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Feel that? A shiver.",
+   "a": 12.08,
+   "b": 14.88
+  },
+  {
+   "id": "vo02",
+   "beat": "change",
+   "text": "Tiny sensors in your skin feel the air cool… and quietly let your brain know.",
+   "a": 14.88,
+   "b": 21.44
+  },
+  {
+   "id": "vo03",
+   "beat": "why",
+   "text": "Your brain answers in two soft steps.",
+   "a": 21.76,
+   "b": 24.88
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you.",
+   "a": 25.2,
+   "b": 32.32
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "Then, if you're cold… your muscles begin to tremble. Not on purpose. Tiny, quick tightenings, over and over.",
+   "a": 32.64,
+   "b": 42.64
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "They do just one thing. They make heat. A strong shiver makes several times more than your body makes at rest.",
+   "a": 42.96,
+   "b": 52.64
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "And goosebumps? The same signal reaches the tiny muscle beside each hair… and lifts it upright.",
+   "a": 52.4,
+   "b": 60.56
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "One cool breeze. Skin, nerves, vessels and muscle, all answering together. All… without asking you.",
+   "a": 60.88,
+   "b": 71.28
+  }
+ ],
+ "cta": {
+  "follow": [
+   521.0,
+   525.74,
+   "If you're feeling a little calmer, tap like and follow."
+  ],
+  "subscribe": [
+   526.04,
+   529.42,
+   "If you're feeling a little calmer, tap like and subscribe."
+  ]
+ }
+}

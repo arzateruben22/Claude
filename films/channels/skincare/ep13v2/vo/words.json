@@ -1,0 +1,794 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Feel that? A shiver.",
+   "heard": "I feel that a shiver.",
+   "words": [
+    {
+     "w": "Feel",
+     "start": 0.155,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "that?",
+     "start": 0.52,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.585,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "shiver.",
+     "start": 1.615,
+     "end": 2.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "Tiny sensors in your skin feel the air cool… and quietly let your brain know.",
+   "heard": "Tiny sensors in your skin feel the air cool and quietly let your brain know.",
+   "words": [
+    {
+     "w": "Tiny",
+     "start": 0.225,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "sensors",
+     "start": 0.53,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.3,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.365,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 1.695,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 2.14,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.355,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "air",
+     "start": 2.47,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "cool…",
+     "start": 2.845,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.735,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "quietly",
+     "start": 3.765,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "let",
+     "start": 4.435,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.825,
+     "end": 4.96,
+     "heard": true
+    },
+    {
+     "w": "brain",
+     "start": 4.885,
+     "end": 5.44,
+     "heard": true
+    },
+    {
+     "w": "know.",
+     "start": 5.7,
+     "end": 6.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "Your brain answers in two soft steps.",
+   "heard": "Your brain answers in two soft steps.",
+   "words": [
+    {
+     "w": "Your",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "brain",
+     "start": 0.395,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "answers",
+     "start": 0.62,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.28,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 1.435,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "soft",
+     "start": 1.605,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "steps.",
+     "start": 2.225,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you.",
+   "heard": "First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you.",
+   "words": [
+    {
+     "w": "First,",
+     "start": 0.13,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.785,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 0.815,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 1.21,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "vessels",
+     "start": 1.43,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 2.03,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.275,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 2.58,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "narrow.",
+     "start": 3.105,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "Warm",
+     "start": 4.54,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "blood",
+     "start": 4.745,
+     "end": 5.2,
+     "heard": true
+    },
+    {
+     "w": "stays",
+     "start": 5.13,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "deeper",
+     "start": 5.56,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "inside",
+     "start": 5.99,
+     "end": 6.48,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 6.405,
+     "end": 7.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "Then, if you're cold… your muscles begin to tremble. Not on purpose. Tiny, quick tightenings, over and over.",
+   "heard": "Then, if you're cold, your muscles begin to tremble. Not on purpose. Tiny, quick tightenings over and over.",
+   "words": [
+    {
+     "w": "Then,",
+     "start": 0.255,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 0.805,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.95,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "cold…",
+     "start": 1.2,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 2.275,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "muscles",
+     "start": 2.4,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "begin",
+     "start": 2.95,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 3.325,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "tremble.",
+     "start": 3.455,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "Not",
+     "start": 4.835,
+     "end": 5.04,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 5.105,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "purpose.",
+     "start": 5.23,
+     "end": 6.24,
+     "heard": true
+    },
+    {
+     "w": "Tiny,",
+     "start": 6.62,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "quick",
+     "start": 7.185,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "tightenings,",
+     "start": 7.515,
+     "end": 8.24,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 8.455,
+     "end": 8.72,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 8.84,
+     "end": 9.28,
+     "heard": true
+    },
+    {
+     "w": "over.",
+     "start": 9.165,
+     "end": 9.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "They do just one thing. They make heat. A strong shiver makes several times more than your body makes at rest.",
+   "heard": "They do just one thing. They make heat. A strong shiver makes several times more than your body makes at rest.",
+   "words": [
+    {
+     "w": "They",
+     "start": 0.205,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "do",
+     "start": 0.405,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 0.74,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 1.025,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "thing.",
+     "start": 1.5,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "They",
+     "start": 2.325,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "make",
+     "start": 2.525,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "heat.",
+     "start": 2.87,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 4.28,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "strong",
+     "start": 4.31,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "shiver",
+     "start": 4.82,
+     "end": 5.6,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 5.63,
+     "end": 5.92,
+     "heard": true
+    },
+    {
+     "w": "several",
+     "start": 5.8,
+     "end": 6.4,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 6.445,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 6.78,
+     "end": 7.04,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 7.075,
+     "end": 7.2,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 7.19,
+     "end": 7.44,
+     "heard": true
+    },
+    {
+     "w": "body",
+     "start": 7.44,
+     "end": 7.76,
+     "heard": true
+    },
+    {
+     "w": "makes",
+     "start": 7.74,
+     "end": 8.16,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 8.24,
+     "end": 8.4,
+     "heard": true
+    },
+    {
+     "w": "rest.",
+     "start": 8.28,
+     "end": 9.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "And goosebumps? The same signal reaches the tiny muscle beside each hair… and lifts it upright.",
+   "heard": "And goosebumps, the same signal reaches the tiny muscle beside each hair and lifts it upright.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.185,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "goosebumps?",
+     "start": 0.365,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "The",
+     "start": 1.835,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 1.92,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "signal",
+     "start": 2.23,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "reaches",
+     "start": 2.965,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.3,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "tiny",
+     "start": 3.455,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "muscle",
+     "start": 3.675,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "beside",
+     "start": 4.355,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "each",
+     "start": 4.985,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "hair…",
+     "start": 5.27,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 6.24,
+     "end": 6.32,
+     "heard": true
+    },
+    {
+     "w": "lifts",
+     "start": 6.33,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 6.805,
+     "end": 6.96,
+     "heard": true
+    },
+    {
+     "w": "upright.",
+     "start": 6.905,
+     "end": 8.08,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "One cool breeze. Skin, nerves, vessels and muscle, all answering together. All… without asking you.",
+   "heard": "One cool breeze, skin, nerves, vessels, and muscle, all answering together, all without asking you.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.165,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "cool",
+     "start": 0.51,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "breeze.",
+     "start": 0.845,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "Skin,",
+     "start": 1.96,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "nerves,",
+     "start": 2.68,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "vessels",
+     "start": 3.545,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.245,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "muscle,",
+     "start": 4.395,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "all",
+     "start": 5.59,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "answering",
+     "start": 5.865,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "together.",
+     "start": 6.66,
+     "end": 7.68,
+     "heard": true
+    },
+    {
+     "w": "All…",
+     "start": 7.745,
+     "end": 8.0,
+     "heard": true
+    },
+    {
+     "w": "without",
+     "start": 8.38,
+     "end": 8.8,
+     "heard": true
+    },
+    {
+     "w": "asking",
+     "start": 8.805,
+     "end": 9.44,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 9.54,
+     "end": 10.0,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "heard": "If you're feeling a little calmer, tap like and follow.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.24,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.275,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "feeling",
+     "start": 0.485,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.045,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 1.185,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "calmer,",
+     "start": 1.525,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 2.075,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.65,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.485,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 3.765,
+     "end": 4.56,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

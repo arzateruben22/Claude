@@ -1,0 +1,72 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo10",
+   "text": "If you're feeling a little calmer, tap like and subscribe.",
+   "heard": "If you're feeling a little calmer, tap like and subscribe.",
+   "words": [
+    {
+     "w": "If",
+     "start": 0.135,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "you're",
+     "start": 0.265,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "feeling",
+     "start": 0.36,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.875,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 0.905,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "calmer,",
+     "start": 1.175,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "tap",
+     "start": 1.68,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.995,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.345,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "subscribe.",
+     "start": 2.67,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

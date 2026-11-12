@@ -75,11 +75,12 @@ export async function create(args) {
     renderer,
     seek(t) {
       const c = W3.camAt(t); W3.camPose(t, c);
+      const tz = 1 - sm(seg(t, 1.0, S("vo01", 3.0)));   // v2 opening: the film starts on the payoff (hairs standing, the little muscle pulled) and settles back to the cool, flat surface
       // surface hairs: lying flat, then rising in a wave when the muscle pulls
-      for (let i = 0; i < NH; i++) { const h = hairs[i], r = sm(seg(t, t2.wave0 + h.d, t2.wave0 + h.d + 1.1)), pitch = lerp(0.1, 1.4, r), sway = 0.02 * Math.sin(t * 1.3 + i);
+      for (let i = 0; i < NH; i++) { const h = hairs[i], r = Math.max(tz, sm(seg(t, t2.wave0 + h.d, t2.wave0 + h.d + 1.1))), pitch = lerp(0.1, 1.4, r), sway = 0.02 * Math.sin(t * 1.3 + i);
         dir.set(Math.cos(h.yaw) * Math.cos(pitch + sway), Math.sin(pitch + sway), Math.sin(h.yaw) * Math.cos(pitch) + h.lean * r).normalize(); O.position.set(h.x, h.y, h.z); O.quaternion.setFromUnitVectors(up, dir); O.scale.set(1, h.L, 1); O.updateMatrix(); hairI.setMatrixAt(i, O.matrix);
         O.position.set(h.x, h.y - 0.03, h.z); O.quaternion.identity(); O.scale.set(0.05 + 0.1 * r, 0.02 + 0.06 * r, 0.05 + 0.1 * r); O.updateMatrix(); bumpI.setMatrixAt(i, O.matrix); }
-      const pull = sm(seg(t, t2.up0, t2.up1));                                                                                                        // the little muscle shortens: the hero hair stands up
+      const pull = Math.max(tz, sm(seg(t, t2.up0, t2.up1)));                                                                                                        // the little muscle shortens: the hero hair stands up
       const hp = lerp(0.12, 1.45, pull); dir.set(Math.cos(hp), Math.sin(hp), 0); O.position.set(FOL, 0.45, 0); O.quaternion.setFromUnitVectors(up, dir); O.scale.set(2.2, 3.2, 2.2); O.updateMatrix(); hairI.setMatrixAt(NH, O.matrix);
       hairI.instanceMatrix.needsUpdate = bumpI.instanceMatrix.needsUpdate = true;
       const ax = lerp(ARA[0], ARA[0] + (ARB[0] - ARA[0]) * 0.22, pull), ay = lerp(ARA[1], ARA[1] + (ARB[1] - ARA[1]) * 0.22, pull), mp = [], mr = [], mth = 0.2 + 0.1 * pull;

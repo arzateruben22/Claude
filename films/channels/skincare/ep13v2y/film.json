@@ -1,0 +1,920 @@
+{
+ "id": "skin-sense-013",
+ "title": {
+  "series": "Skin Sense \u00b7 Season 3",
+  "title": "What One Shiver Does Inside You"
+ },
+ "fps": 30,
+ "dur": 84.4,
+ "poster": 24,
+ "theme": "../theme.json",
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "main"
+  }
+ ],
+ "qaProfile": "asmr",
+ "pace": 1.2,
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiVisuals": true
+ },
+ "captions": [
+  {
+   "w": "Feel",
+   "t0": 0.515,
+   "t1": 0.76,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "that?",
+   "t0": 0.88,
+   "t1": 1.08,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "A",
+   "t0": 1.945,
+   "t1": 2.04,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "shiver.",
+   "t0": 1.975,
+   "t1": 2.92,
+   "line": "vo01",
+   "beat": "hook"
+  },
+  {
+   "w": "Tiny",
+   "t0": 5.565,
+   "t1": 5.98,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "sensors",
+   "t0": 5.87,
+   "t1": 6.54,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "in",
+   "t0": 6.64,
+   "t1": 6.78,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "your",
+   "t0": 6.705,
+   "t1": 6.94,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "skin",
+   "t0": 7.035,
+   "t1": 7.34,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "feel",
+   "t0": 7.48,
+   "t1": 7.66,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "the",
+   "t0": 7.695,
+   "t1": 7.82,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "air",
+   "t0": 7.81,
+   "t1": 8.22,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "cool\u2026",
+   "t0": 8.185,
+   "t1": 8.7,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "and",
+   "t0": 9.075,
+   "t1": 9.18,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "quietly",
+   "t0": 9.105,
+   "t1": 9.82,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "let",
+   "t0": 9.775,
+   "t1": 10.06,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "your",
+   "t0": 10.165,
+   "t1": 10.3,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "brain",
+   "t0": 10.225,
+   "t1": 10.78,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "know.",
+   "t0": 11.04,
+   "t1": 11.82,
+   "line": "vo02",
+   "beat": "change"
+  },
+  {
+   "w": "Your",
+   "t0": 14.44,
+   "t1": 14.64,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "brain",
+   "t0": 14.635,
+   "t1": 14.96,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "answers",
+   "t0": 14.86,
+   "t1": 15.44,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "in",
+   "t0": 15.52,
+   "t1": 15.68,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "2",
+   "t0": 15.675,
+   "t1": 15.92,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "soft",
+   "t0": 15.845,
+   "t1": 16.4,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "steps.",
+   "t0": 16.465,
+   "t1": 17.28,
+   "line": "vo03",
+   "beat": "why"
+  },
+  {
+   "w": "First,",
+   "t0": 19.83,
+   "t1": 20.42,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "the",
+   "t0": 20.485,
+   "t1": 20.58,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "little",
+   "t0": 20.515,
+   "t1": 20.82,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "blood",
+   "t0": 20.91,
+   "t1": 21.22,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "vessels",
+   "t0": 21.13,
+   "t1": 21.7,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "near",
+   "t0": 21.73,
+   "t1": 22.02,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "your",
+   "t0": 21.975,
+   "t1": 22.18,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "skin",
+   "t0": 22.28,
+   "t1": 22.74,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "narrow.",
+   "t0": 22.805,
+   "t1": 23.78,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Warm",
+   "t0": 24.24,
+   "t1": 24.5,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "blood",
+   "t0": 24.445,
+   "t1": 24.9,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "stays",
+   "t0": 24.83,
+   "t1": 25.3,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "deeper",
+   "t0": 25.26,
+   "t1": 25.7,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "inside",
+   "t0": 25.69,
+   "t1": 26.18,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "you.",
+   "t0": 26.105,
+   "t1": 26.74,
+   "line": "vo04",
+   "beat": "why"
+  },
+  {
+   "w": "Then,",
+   "t0": 29.415,
+   "t1": 29.88,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "if",
+   "t0": 29.965,
+   "t1": 30.12,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "you're",
+   "t0": 30.11,
+   "t1": 30.44,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "cold\u2026",
+   "t0": 30.36,
+   "t1": 31.32,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "your",
+   "t0": 31.435,
+   "t1": 31.56,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "muscles",
+   "t0": 31.56,
+   "t1": 32.12,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "begin",
+   "t0": 32.11,
+   "t1": 32.44,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "to",
+   "t0": 32.485,
+   "t1": 32.6,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "tremble.",
+   "t0": 32.615,
+   "t1": 33.88,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "Not",
+   "t0": 33.995,
+   "t1": 34.2,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "on",
+   "t0": 34.265,
+   "t1": 34.44,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "purpose.",
+   "t0": 34.39,
+   "t1": 35.4,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "Tiny,",
+   "t0": 35.78,
+   "t1": 36.28,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "quick",
+   "t0": 36.345,
+   "t1": 36.6,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "tightenings,",
+   "t0": 36.675,
+   "t1": 37.4,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "over",
+   "t0": 37.615,
+   "t1": 37.88,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "and",
+   "t0": 38.0,
+   "t1": 38.44,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "over.",
+   "t0": 38.325,
+   "t1": 39.08,
+   "line": "vo05",
+   "beat": "why"
+  },
+  {
+   "w": "They",
+   "t0": 41.705,
+   "t1": 41.98,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "do",
+   "t0": 41.905,
+   "t1": 42.3,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "just",
+   "t0": 42.24,
+   "t1": 42.62,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "one",
+   "t0": 42.525,
+   "t1": 42.94,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "thing.",
+   "t0": 43.0,
+   "t1": 43.82,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "They",
+   "t0": 43.825,
+   "t1": 44.06,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "make",
+   "t0": 44.025,
+   "t1": 44.3,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "heat.",
+   "t0": 44.37,
+   "t1": 45.66,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "A",
+   "t0": 45.78,
+   "t1": 45.9,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "strong",
+   "t0": 45.81,
+   "t1": 46.38,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "shiver",
+   "t0": 46.32,
+   "t1": 47.1,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "makes",
+   "t0": 47.13,
+   "t1": 47.42,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "several",
+   "t0": 47.3,
+   "t1": 47.9,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "times",
+   "t0": 47.945,
+   "t1": 48.3,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "more",
+   "t0": 48.28,
+   "t1": 48.54,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "than",
+   "t0": 48.575,
+   "t1": 48.7,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "your",
+   "t0": 48.69,
+   "t1": 48.94,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "body",
+   "t0": 48.94,
+   "t1": 49.26,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "makes",
+   "t0": 49.24,
+   "t1": 49.66,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "at",
+   "t0": 49.74,
+   "t1": 49.9,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "rest.",
+   "t0": 49.78,
+   "t1": 50.94,
+   "line": "vo06",
+   "beat": "whoa"
+  },
+  {
+   "w": "And",
+   "t0": 53.545,
+   "t1": 53.68,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "goosebumps?",
+   "t0": 53.725,
+   "t1": 55.12,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "The",
+   "t0": 55.195,
+   "t1": 55.36,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "same",
+   "t0": 55.28,
+   "t1": 55.68,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "signal",
+   "t0": 55.59,
+   "t1": 56.24,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "reaches",
+   "t0": 56.325,
+   "t1": 56.64,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "the",
+   "t0": 56.66,
+   "t1": 56.8,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "tiny",
+   "t0": 56.815,
+   "t1": 57.12,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "muscle",
+   "t0": 57.035,
+   "t1": 57.76,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "beside",
+   "t0": 57.715,
+   "t1": 58.24,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "each",
+   "t0": 58.345,
+   "t1": 58.72,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "hair\u2026",
+   "t0": 58.63,
+   "t1": 59.2,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "and",
+   "t0": 59.6,
+   "t1": 59.68,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "lifts",
+   "t0": 59.69,
+   "t1": 60.16,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "it",
+   "t0": 60.165,
+   "t1": 60.32,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "upright.",
+   "t0": 60.265,
+   "t1": 61.44,
+   "line": "vo07",
+   "beat": "whoa"
+  },
+  {
+   "w": "One",
+   "t0": 64.025,
+   "t1": 64.34,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "cool",
+   "t0": 64.37,
+   "t1": 64.74,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "breeze.",
+   "t0": 64.705,
+   "t1": 65.7,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "Skin,",
+   "t0": 65.82,
+   "t1": 66.42,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "nerves,",
+   "t0": 66.54,
+   "t1": 67.3,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "vessels",
+   "t0": 67.405,
+   "t1": 68.1,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "and",
+   "t0": 68.105,
+   "t1": 68.26,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "muscle,",
+   "t0": 68.255,
+   "t1": 69.38,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "all",
+   "t0": 69.45,
+   "t1": 69.7,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "answering",
+   "t0": 69.725,
+   "t1": 70.42,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "together.",
+   "t0": 70.52,
+   "t1": 71.54,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "All\u2026",
+   "t0": 71.605,
+   "t1": 71.86,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "without",
+   "t0": 72.24,
+   "t1": 72.66,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "asking",
+   "t0": 72.665,
+   "t1": 73.3,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "you.",
+   "t0": 73.4,
+   "t1": 73.86,
+   "line": "vo08",
+   "beat": "takeaway"
+  },
+  {
+   "w": "If",
+   "t0": 77.235,
+   "t1": 77.34,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "you're",
+   "t0": 77.365,
+   "t1": 77.58,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "feeling",
+   "t0": 77.46,
+   "t1": 77.9,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "a",
+   "t0": 77.975,
+   "t1": 78.06,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "little",
+   "t0": 78.005,
+   "t1": 78.22,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "calmer,",
+   "t0": 78.275,
+   "t1": 78.78,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "tap",
+   "t0": 78.78,
+   "t1": 79.18,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "like",
+   "t0": 79.095,
+   "t1": 79.42,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "and",
+   "t0": 79.445,
+   "t1": 79.66,
+   "line": "vo09",
+   "beat": "cta"
+  },
+  {
+   "w": "subscribe.",
+   "t0": 79.77,
+   "t1": 80.46,
+   "line": "vo09",
+   "beat": "cta"
+  }
+ ],
+ "lines": {
+  "vo01": [
+   0.36,
+   3.24,
+   "hook"
+  ],
+  "vo02": [
+   5.34,
+   12.14,
+   "change"
+  ],
+  "vo03": [
+   14.24,
+   17.6,
+   "why"
+  ],
+  "vo04": [
+   19.7,
+   27.06,
+   "why"
+  ],
+  "vo05": [
+   29.16,
+   39.4,
+   "why"
+  ],
+  "vo06": [
+   41.5,
+   51.26,
+   "whoa"
+  ],
+  "vo07": [
+   53.36,
+   61.76,
+   "whoa"
+  ],
+  "vo08": [
+   63.86,
+   74.5,
+   "takeaway"
+  ],
+  "vo09": [
+   77.1,
+   80.78,
+   "cta"
+  ]
+ }
+}

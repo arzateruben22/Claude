@@ -1,0 +1,101 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Feel that? A shiver.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.88,
+   "sha256": "3e1bddce07d4dafee78a1a96d7777977e7e96d116b820f62be07be7c3b5bfcf3"
+  },
+  {
+   "id": "vo02",
+   "beat": "change",
+   "text": "Tiny sensors in your skin feel the air cool… and quietly let your brain know.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 6.8,
+   "sha256": "df2842c16bf797868e5403881afe9c4b3b6b7adc630b37fba2db524a13c72fd7"
+  },
+  {
+   "id": "vo03",
+   "beat": "why",
+   "text": "Your brain answers in two soft steps.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.36,
+   "sha256": "086d7bd91972f4a9e51df1ec660781bab5928c8ee872c0924ff793ce26456b19"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "First, the little blood vessels near your skin narrow. Warm blood stays deeper inside you.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 7.36,
+   "sha256": "64c662f27fcff93bff14b5155067d7b2d78918a882decd665e00b2cd5729b2e1"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "Then, if you're cold… your muscles begin to tremble. Not on purpose. Tiny, quick tightenings, over and over.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 10.24,
+   "sha256": "785469e908fa2c54631b901be7e610261e3138c2596854fa4aeb25be9c09bee5"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "They do just one thing. They make heat. A strong shiver makes several times more than your body makes at rest.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 9.76,
+   "sha256": "31e0fecfea437b575a96532aa1d445473b2ee51b6308d7b3e0a0d3ce002ce75d"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "And goosebumps? The same signal reaches the tiny muscle beside each hair… and lifts it upright.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 8.4,
+   "sha256": "0d2faf0c2da0daccb854749947aada38367566889d4731176878cbaf8e94ce94"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "One cool breeze. Skin, nerves, vessels and muscle, all answering together. All… without asking you.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 10.64,
+   "sha256": "0b062df2ad81716567070f8feb3d6bba29ae5b2d3c7f7078c94a1ef4890fae7c"
+  },
+  {
+   "id": "vo09",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 4.88,
+   "sha256": "a3cfc2c33ff8e9f4c5160cc22f7da7171d7bc6c91eb6ec98c16c31278db3141d"
+  }
+ ]
+}

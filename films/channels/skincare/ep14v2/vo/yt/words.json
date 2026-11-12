@@ -1,0 +1,78 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo10",
+   "text": "Your skin has plenty more quiet secrets. Tap like and subscribe.",
+   "heard": "Your skin has plenty more quiet secrets. Tap like and subscribe.",
+   "words": [
+    {
+     "w": "Your",
+     "start": 0.04,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "skin",
+     "start": 0.395,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.84,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "plenty",
+     "start": 1.225,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 1.715,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "quiet",
+     "start": 2.01,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "secrets.",
+     "start": 2.465,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "Tap",
+     "start": 3.395,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 3.74,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.16,
+     "end": 4.21,
+     "heard": true
+    },
+    {
+     "w": "subscribe.",
+     "start": 4.285,
+     "end": 4.4,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}
