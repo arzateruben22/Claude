@@ -35,7 +35,13 @@ export interface FaceShape {
   earSize: number; earOut: number;
 }
 
-export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | 'bald' | 'ponytail' | 'receding';
+export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | 'bald' | 'ponytail' | 'receding'
+  // (added 2026-11-11 for the cast, src/onfoot/cast.ts: new values only, the styles above are unchanged)
+  | 'highPonytail'     // long straight hair pulled up into a high tail at the crown, loose strands round the face
+  | 'lowPonytail'      // a low, loose tail at the nape, with loose face-framing strands
+  | 'fade'             // a skin fade: the sides and back clipped to the scalp, a textured (curly) top
+  | 'sidePart'         // a side-parted undercut: clipped sides, the top long and swept over from the parting
+  | 'waves';           // shoulder-length waves from a side parting
 export type FacialHair = 'none' | 'stubble' | 'beard' | 'moustache' | 'goatee';
 
 export interface Look {
@@ -59,7 +65,12 @@ export type GarmentKind =
   | 'dress' | 'tee' | 'fitted' | 'tank' | 'shirt' | 'blouse' | 'polo'
   | 'jeans' | 'trousers' | 'skirt' | 'shorts'
   | 'jacket' | 'leather' | 'blazer' | 'cardigan'
-  | 'sneakers' | 'boots' | 'heels' | 'loafers' | 'flats';
+  | 'sneakers' | 'boots' | 'heels' | 'loafers' | 'flats'
+  // (added 2026-11-11 for the cast: new values only, the kinds above are unchanged)
+  | 'bomber' | 'overshirt' | 'workJacket'            // outer layers: a cropped bomber with ribbed hem and cuffs, an open overshirt, a canvas work jacket
+  | 'henley'                                         // a tee with a short buttoned placket
+  | 'cargo' | 'chinoShorts' | 'workPants'            // trousers with side pockets, shorts just above the knee, straight work trousers
+  | 'sandals' | 'deckShoes' | 'lowHeels' | 'chunkySneakers' | 'workBoots';
 
 export interface Garment {
   kind: GarmentKind;
@@ -70,6 +81,9 @@ export interface Garment {
   neck?: 'crew' | 'v' | 'square' | 'scoop' | 'collar' | 'strap';
   open?: boolean;             // jackets and shirts worn open
   accent?: number;            // a second colour (soles, buttons, trim)
+  /** (cast, 2026-11-11) a turned-up roll at the sleeve's or the trouser leg's end, shown in the accent colour.
+   *  Unset: no roll, as before */
+  roll?: boolean;
 }
 
 export interface Accessories {
@@ -81,6 +95,11 @@ export interface Accessories {
   ring: number | null;
   bag: 'none' | 'quilted' | 'crossbody';
   bagColor: number;
+  // (added 2026-11-11 for the cast: optional, so every existing preset and caller builds as before)
+  /** sunglasses pushed up onto the top of the head (frame colour) */
+  sunglassesUp?: number | null;
+  /** an elastic hair tie worn on the right wrist (its colour) */
+  hairTie?: number | null;
 }
 
 export interface PersonOptions {

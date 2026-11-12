@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { buildRig, Rig, B } from './body';
 import { makeSkeleton } from './skeleton';
 import { aabbBox, fieldBounds, meshPart, skinWeights, skinWeightsF, bakeAO, buildGeometry, side, dropTris, clipByRegion } from './geo';
-import { buildGarments, GarmentBuild, isShoe } from './garments';
+import { buildGarments, GarmentBuild, isShoe, isBottom, lightSole } from './garments';
 import { clothMaterial } from './cloth';
 import { buildHairVolume, HairBuild, growCards, hairCapMaterial } from './hair';
 import { LodField, Look2, Cover, Extra, reduced, paint, lodMaterial } from './lod';
@@ -84,8 +84,9 @@ function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[], normals = fa
 export function buildPerson(o: PersonOptions): Person {
   const quality: Quality = o.quality ?? 'high';
   const t0 = performance.now();
-  const shoes = o.outfit.find((g) => ['heels', 'boots', 'sneakers', 'loafers', 'flats'].includes(g.kind));
-  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : 0;
+  const shoes = o.outfit.find((g) => isShoe(g.kind));
+  // (the cast's low heels lift 4.5 cm; every other shoe as before)
+  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : shoes?.kind === 'lowHeels' ? 0.045 * (o.body.height / 1.65) : 0;
   const rig = buildRig(o.body, o.face, heel);
   const sk = makeSkeleton(rig);
   const group = new THREE.Group();
@@ -200,7 +201,7 @@ export function buildPerson(o: PersonOptions): Person {
       }
     }
     const geo = buildGeometry(P, NR, idx, si, sw, { aCloth: { a: aCloth, n: 4 }, aFold: { a: aFold, n: 4 } });
-    const sole = gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
+    const sole = lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
     const mat = clothMaterial(gb.g.color, gb.g.fabric, quality, isShoe(gb.g.kind) ? sole : (gb.g.accent ?? gb.g.color));
     mats.push(mat);
     const m = new THREE.SkinnedMesh(geo.geo, mat);
@@ -455,8 +456,8 @@ export function buildPerson(o: PersonOptions): Person {
     const looks: Look2[] = [], covers: Cover[] = [], extras: Extra[] = [];
     const neckTop = rig.neckSeam + 0.01;
     for (const gb of gs) {
-      const shoe = isShoe(gb.g.kind), bottom = ['jeans', 'trousers', 'skirt', 'shorts'].includes(gb.g.kind);
-      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
+      const shoe = isShoe(gb.g.kind), bottom = isBottom(gb.g.kind);
+      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
       const reg = gb.sdf.region;
       covers.push({ t: gb.sdf.t + (gb.layer >= 3 ? 0.004 : 0), keep: (x, y, z) => Math.max(reg(x, y, z), y - neckTop), noArms: bottom, id });
       if (gb.sdf.drape) { const dr = gb.sdf.drape; extras.push({ d: (x, y, z) => dr.d(x, y, z), region: gb.keep, id }); }
