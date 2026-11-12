@@ -97,11 +97,14 @@ function moonScreen(t) {   // where the Moon is on the screen at time t (centre 
 // the caption pill keeps clear of the Moon: the first slot whose rectangle misses the Moon (plus a margin) at the start, middle and end of the line
 function placeCaption(cap, el, t) {
   const b = beats(), land = MODE === "land", w = el.offsetWidth, h = el.offsetHeight;
-  const slots = land ? (b && t < b.end + 0.5 ? [250, 84, 440, 600] : [84, 250, 440, 600]) : [390, 1180, 1000, 640, 1290];
+  const first = land ? (b && t < b.end + 0.5 ? [250, 84, 440, 600] : [84, 250, 440, 600]) : [390, 1180, 1000, 640, 1290];
+  const extra = land ? [120, 340, 520, 700] : [440, 520, 760, 880, 1100, 1380, 1480, 1560];
   const cs = [cap.t0, (cap.t0 + cap.t1) / 2, cap.t1 - 0.05].map(moonScreen).filter((m) => m.vis > 0.3);
-  const clear = (v) => { const px = v * U, x0 = (W - w) / 2, x1 = (W + w) / 2, y0 = land ? H - px - h : px, y1 = y0 + h;
-    return cs.every((m) => { const nx = Math.max(x0, Math.min(m.x, x1)), ny = Math.max(y0, Math.min(m.y, y1)); return Math.hypot(m.x - nx, m.y - ny) > m.r * 1.12 + 20 * U; }); };
-  const pick = slots.find(clear) ?? slots[0]; if (land) { el.style.bottom = `calc(${pick} * var(--u))`; } else { el.style.top = `calc(${pick} * var(--u))`; }
+  const clearance = (v) => { const px = v * U, x0 = (W - w) / 2, x1 = (W + w) / 2, y0 = land ? H - px - h : px, y1 = y0 + h;
+    return cs.length ? Math.min(...cs.map((m) => { const nx = Math.max(x0, Math.min(m.x, x1)), ny = Math.max(y0, Math.min(m.y, y1)); return Math.hypot(m.x - nx, m.y - ny) - m.r * 1.12 - 20 * U; })) : 1e9; };
+  let pick = first.find((v) => clearance(v) > 0);
+  if (pick === undefined) pick = first.concat(extra).reduce((best, v) => (clearance(v) > clearance(best) ? v : best), first[0]);   // the Moon fills the frame: the slot that overlaps it least
+  if (land) { el.style.bottom = `calc(${pick} * var(--u))`; } else { el.style.top = `calc(${pick} * var(--u))`; }
 }
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");

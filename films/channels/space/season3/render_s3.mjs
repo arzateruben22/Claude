@@ -21,7 +21,7 @@ const html = `<!doctype html><meta charset="utf-8"><style>${css}${HUDOFF}</style
 const hp = path.join(path.dirname(path.resolve(outp)), `.${path.basename(outp)}.html`); fs.mkdirSync(path.dirname(path.resolve(outp)), { recursive: true }); fs.writeFileSync(hp, html);
 const pwDir = process.env.PLAYWRIGHT_DIR || path.dirname(spawnSync("npm", ["root", "-g"], { encoding: "utf8" }).stdout.trim());
 const { chromium } = createRequire(path.join(pwDir, "x.js"))("playwright");
-const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined), args: ["--allow-file-access-from-files"] });
+const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined), args: ["--allow-file-access-from-files", "--disable-dev-shm-usage"] });
 const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 }); page.on("pageerror", (e) => console.error("page error:", e.message)); page.on("console", (m) => { if (m.type() === "error") console.error("console:", m.text()); });
 await page.goto(pathToFileURL(hp).href); await page.evaluate(([tl, a, m, w, h]) => window.setup(tl, a, m, w, h), [TL, assets, mode, W, H]);
 const t0 = FROM ? Number(FROM) : 0, t1 = TO ? Number(TO) : TL.dur, n0 = Math.round(t0 * fps), n1 = Math.round(t1 * fps);
