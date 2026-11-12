@@ -58,6 +58,9 @@ const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
 // turn signals: 90 flashes a minute (1.5 Hz, lit for half of each), on while the car crosses toward the next lane
 // (sideways along the road faster than SIG_RATE m/s for SIG_ARM s, above SIG_MIN m/s) and SIG_HOLD s after; and
 // while steering hard (the front wheels past SIG_LOCK rad) below SIG_SLOW m/s, as for a turn
+/** the drawn wheel's angles (rad): it follows the steering ratio exactly up to the knee, then eases into the maximum
+ *  (updateCockpit says why) */
+const WHEEL_KNEE = 0.8, WHEEL_MAX = 1.05;
 const SIG_HZ = 1.5, SIG_RATE = 0.6, SIG_ARM = 0.2, SIG_HOLD = 1.0, SIG_MIN = 6, SIG_LOCK = 0.12, SIG_SLOW = 12;
 
 function disposeGeometry(o: THREE.Object3D) {
@@ -82,6 +85,10 @@ export class PlayerCar {
   private arms: DriverArms | null = null;
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
+  /** the skin tone last given to the arms' setTone (the regression check reads it through armsLook) */
+  private armsTone = -1;
+  /** what the driver's arms show now: the look they were built with and the tone set on them (tests) */
+  get armsLook() { return this.cfg ? { ...this.cfg.look, tone: this.armsTone, presentation: this.cfg.presentation, nails: this.cfg.nails } : null; }
   private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
   // the OC Hypercar's Cold Thrust: its two diffuser nozzles (markers on the sprung body, for the jets) and the
   // compressed-air pressure gauge on its dash (a small canvas display, redrawn only when what it shows changes)
@@ -146,13 +153,17 @@ export class PlayerCar {
     const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
     const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
-    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
+    // a new skin tone alone (another character of the same presentation and sleeves) goes through the hands' public
+    // setTone; anything else about the arms rebuilds them
+    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify({ ...o!.look, skin: 0 }) !== JSON.stringify({ ...c.look, skin: 0 });
+    const toneChanged = !handsChanged && o!.look.skin !== c.look.skin;
     this.cfg = c;
     const t0 = performance.now();
     if (carChanged) { this.buildCarAndCockpit(c); if (c.finish) this.setPaint(c.paint, c.finish); }
     else if (paintChanged) this.setPaint(c.paint, c.finish ?? null);
     if (wheelsChanged) this.buildWheels(c);   // the garage's Wheels tab: only the four wheels are rebuilt
     if (handsChanged) this.buildHands(c);
+    else if (toneChanged && this.arms) { this.arms.setTone(c.look.skin); this.armsTone = c.look.skin; }
     this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
   }
@@ -302,6 +313,8 @@ export class PlayerCar {
     if (this.arms) { this.arms.dispose(); this.arms.group.parent?.remove(this.arms.group); }
     const t = performance.now();
     this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality });
+    // (the tone through the public setTone as well: the one path a tone change takes, whether or not the arms rebuilt)
+    this.arms.setTone(c.look.skin); this.armsTone = c.look.skin;
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
     this.arms.group.position.copy(this.armsAt);
@@ -458,7 +471,15 @@ export class PlayerCar {
 
   // the steering wheel, the hands on it, and the tachometer
   updateCockpit(dt: number, s: CockpitState) {
-    const target = clamp(s.delta * SPEC.steerRatio, -2.2, 2.2);       // steering ratio, clamped so the hands stay on the rim
+    // the steering ratio, with the drawn wheel held inside the angles the driver's hands are made for (2026-11-12). The
+    // hands grip the rim at ten and two and turn rigidly with it; they read right to about +-1 rad (src/preview/hands.ts).
+    // Past that (only at low speed: at 30 m/s the physics' lock is about 0.8 rad of wheel), the old clamp of +-2.2 rad
+    // crossed the arms over the hub and the spokes and hid a hand at the bottom of the rim (tests/cast-lock.mjs frames).
+    // So the wheel follows the ratio exactly to WHEEL_KNEE and then eases into WHEEL_MAX: no clipping at full lock either
+    // way. The physics' steering is unchanged; only the drawn wheel and the hands are limited. A hand-over-hand shuffle
+    // in the hands would let the drawn wheel turn to the real lock again (listed for the session that owns hands*).
+    const raw = s.delta * SPEC.steerRatio, over = Math.abs(raw) - WHEEL_KNEE;
+    const target = over <= 0 ? raw : Math.sign(raw) * (WHEEL_KNEE + (WHEEL_MAX - WHEEL_KNEE) * Math.tanh(over / (WHEEL_MAX - WHEEL_KNEE)));
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;

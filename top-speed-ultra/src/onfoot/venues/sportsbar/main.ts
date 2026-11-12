@@ -17,7 +17,8 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
 import { Environment } from '../../../game/env/Environment';
 import { configureTextures } from '../../../game/textures';
 import * as Props from '../../../game/road/props';
-import { buildPerson, Person, randomPerson } from '../../people';
+import { buildPerson, Person } from '../../people';
+import { crowdPerson, castOf } from '../../cast';
 import { Kit, P2, rand } from '../../engine/geom';
 import { ColliderSet, exportColliders, isTall, circ } from '../../engine/collide';
 import { WalkGrid, RADIUS } from '../../engine/walkgrid';
@@ -873,6 +874,8 @@ async function main() {
   const gate = venue.colliders.find((c) => c.tag === 'gate')!;
   const hooks = {
     ready: false, frames: 0, buildMs: 0,
+    /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
+    cast() { const pool = life.crowd ? life.crowd.castPool() : []; return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: life.crowd ? life.crowd.npcs.filter((n) => n.p && n.p.group.visible).map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts) })) : [] }; },
     attribution: (slice as { attribution: string }).attribution,
     setClock(day: number | string, hour: number) { live = false; clock = { day: C.parseDay(day), hour: clamp(hour, 0, 23.99) }; applyClock(); return hooks.clock(); },
     liveClock() { live = true; applyClock(); return hooks.clock(); },
@@ -1102,7 +1105,7 @@ async function main() {
     peopleCosts(which: string = 'npc') {
       const out: Record<string, unknown>[] = [];
       for (const quality2 of ['phone', 'high'] as const) {
-        const opts = which === 'driver' ? { ...personOpts } : randomPerson(4242);
+        const opts = which === 'driver' ? { ...personOpts } : crowdPerson(4242, 1);
         const t0 = performance.now(); const p = buildPerson({ ...opts, quality: quality2, lod: 2 as const }); const t2 = performance.now() - t0;
         const s2 = p.stats();
         let t = performance.now(); p.setLod(1); const t1 = performance.now() - t; const s1 = p.stats();

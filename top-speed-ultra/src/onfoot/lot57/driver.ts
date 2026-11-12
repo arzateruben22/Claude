@@ -1,14 +1,18 @@
 // Your driver as the avatar (PROJECT_OC_ON_FOOT.md, "Camera": archetype, male or female version, skin tone, and the
 // cosmetics from drivers.ts). The game keeps the choice in its settings on this device; this page reads them if
 // they're there (or ?driver=closer|ace|wrench&pres=m|f&skin=0..4), and builds the person with the people builder.
+// (2026-11-11) With a character chosen (Settings.character, or ?char=<cast id>), the avatar is that character from
+// the cast catalog (src/onfoot/cast.ts), the same one the cockpit's arms show; without one, the archetype look below,
+// exactly as before. Both venues (in the game and on their own pages) read it here.
 import { DRIVERS, SKINS, lookFor, DriverId, Presentation } from '../../game/drivers';
 import { baseBody, baseLook, defaultFace, HAIR_COLORS, IRIS_COLORS } from '../people/params';
 import type { PersonOptions, Garment, Accessories } from '../people';
+import { castById, castPerson, CastId } from '../cast';
 
-export interface DriverChoice { id: DriverId; pres: Presentation; skin: number; car: string; name: string }
+export interface DriverChoice { id: DriverId; pres: Presentation; skin: number; car: string; name: string; character: CastId | null }
 
 export function readDriver(q: URLSearchParams): DriverChoice {
-  let s: { driver?: string; presentation?: string; skin?: number } = {}, car = 'rossini-gt';
+  let s: { driver?: string; presentation?: string; skin?: number; character?: string } = {}, car = 'rossini-gt';
   try { s = JSON.parse(localStorage.getItem('tsu.settings') ?? '{}') ?? {}; } catch { /* a convenience */ }
   try { car = JSON.parse(localStorage.getItem('tsu.profile') ?? '{}')?.car ?? car; } catch { /* a convenience */ }
   const id = (q.get('driver') ?? s.driver ?? 'closer') as DriverId;
@@ -16,12 +20,14 @@ export function readDriver(q: URLSearchParams): DriverChoice {
   const skin = Math.max(0, Math.min(SKINS.length - 1, Number(q.get('skin') ?? s.skin ?? 1) || 0));
   const def = DRIVERS.find((d) => d.id === id) ?? DRIVERS[0];
   const carQ = q.get('car');
-  return { id: def.id, pres: pres === 'f' ? 'f' : 'm', skin, car: carQ ?? car, name: def.name };
+  const ch = castById(q.get('char') ?? s.character ?? '');
+  return { id: def.id, pres: ch ? ch.presentation : pres === 'f' ? 'f' : 'm', skin, car: carQ ?? car, name: ch ? ch.name : def.name, character: ch ? ch.id : null };
 }
 
 const GOLD = 0xc9a65a, STEEL = 0xb9bcc0, DARK = 0x161616;
 
 export function driverPerson(c: DriverChoice): PersonOptions {
+  if (c.character) return { ...castPerson(c.character), seed: 9900 };
   const look = lookFor(c.id, c.pres, c.skin), f = c.pres === 'f';
   // a driver's build: lean and upright, no belly (with the base body's apple and softness, a fitted shirt hung from the
   // shoulders as a lumpy bell in third person), the shoulders a little broader on the male version
