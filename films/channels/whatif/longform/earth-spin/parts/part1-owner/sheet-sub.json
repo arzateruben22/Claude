@@ -1,0 +1,249 @@
+{
+ "duration": 66.45,
+ "fps": 30,
+ "preset": "envelope-working",
+ "tail_s": 0.05,
+ "sections": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.05,
+   "energy": 0.6
+  },
+  {
+   "id": "hook-1",
+   "t0": 4.05,
+   "t1": 11.85,
+   "energy": 0.6
+  },
+  {
+   "id": "premise-1",
+   "t0": 11.85,
+   "t1": 13.65,
+   "energy": 0.6
+  },
+  {
+   "id": "premise-2",
+   "t0": 13.65,
+   "t1": 17.55,
+   "energy": 0.6
+  },
+  {
+   "id": "premise-3",
+   "t0": 17.55,
+   "t1": 22.5,
+   "energy": 0.6
+  },
+  {
+   "id": "premise-4",
+   "t0": 22.5,
+   "t1": 28.65,
+   "energy": 0.6
+  },
+  {
+   "id": "today-1",
+   "t0": 28.65,
+   "t1": 32.4,
+   "energy": 0.6
+  },
+  {
+   "id": "today-2",
+   "t0": 32.4,
+   "t1": 40.05,
+   "energy": 0.6
+  },
+  {
+   "id": "today-3",
+   "t0": 40.05,
+   "t1": 42.75,
+   "energy": 0.6
+  },
+  {
+   "id": "today-4",
+   "t0": 42.75,
+   "t1": 45.0,
+   "energy": 0.6
+  },
+  {
+   "id": "today-5",
+   "t0": 45.0,
+   "t1": 49.65,
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 49.65,
+   "t1": 56.85,
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 56.85,
+   "t1": 61.05,
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 61.05,
+   "t1": 66.45,
+   "energy": 0.6
+  }
+ ],
+ "events": [
+  {
+   "t": 0.0,
+   "kind": "section",
+   "id": "open",
+   "t1": 4.05
+  },
+  {
+   "t": 4.05,
+   "kind": "section",
+   "id": "hook-1",
+   "t1": 11.85
+  },
+  {
+   "t": 11.85,
+   "kind": "section",
+   "id": "premise-1",
+   "t1": 13.65
+  },
+  {
+   "t": 13.65,
+   "kind": "section",
+   "id": "premise-2",
+   "t1": 17.55
+  },
+  {
+   "t": 17.55,
+   "kind": "section",
+   "id": "premise-3",
+   "t1": 22.5
+  },
+  {
+   "t": 22.5,
+   "kind": "section",
+   "id": "premise-4",
+   "t1": 28.65
+  },
+  {
+   "t": 28.65,
+   "kind": "section",
+   "id": "today-1",
+   "t1": 32.4
+  },
+  {
+   "t": 32.4,
+   "kind": "section",
+   "id": "today-2",
+   "t1": 40.05
+  },
+  {
+   "t": 40.05,
+   "kind": "section",
+   "id": "today-3",
+   "t1": 42.75
+  },
+  {
+   "t": 42.75,
+   "kind": "section",
+   "id": "today-4",
+   "t1": 45.0
+  },
+  {
+   "t": 45.0,
+   "kind": "section",
+   "id": "today-5",
+   "t1": 49.65
+  },
+  {
+   "t": 49.65,
+   "kind": "section",
+   "id": "cta",
+   "t1": 56.85
+  },
+  {
+   "t": 56.85,
+   "kind": "section",
+   "id": "cliff",
+   "t1": 61.05
+  },
+  {
+   "t": 62.36666666666667,
+   "kind": "signature",
+   "tag": "end"
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "file": "vo/01.wav"
+  },
+  {
+   "id": "vo02",
+   "t": 4.1,
+   "file": "vo/02.wav"
+  },
+  {
+   "id": "vo03",
+   "t": 11.9,
+   "file": "vo/03.wav"
+  },
+  {
+   "id": "vo04",
+   "t": 13.7,
+   "file": "vo/04.wav"
+  },
+  {
+   "id": "vo05",
+   "t": 17.6,
+   "file": "vo/05.wav"
+  },
+  {
+   "id": "vo06",
+   "t": 22.533333333333335,
+   "file": "vo/06.wav"
+  },
+  {
+   "id": "vo07",
+   "t": 28.7,
+   "file": "vo/07.wav"
+  },
+  {
+   "id": "vo08",
+   "t": 32.43333333333333,
+   "file": "vo/08.wav"
+  },
+  {
+   "id": "vo09",
+   "t": 40.1,
+   "file": "vo/09.wav"
+  },
+  {
+   "id": "vo10",
+   "t": 42.8,
+   "file": "vo/10.wav"
+  },
+  {
+   "id": "vo11",
+   "t": 45.06666666666667,
+   "file": "vo/11.wav"
+  },
+  {
+   "id": "vo12",
+   "t": 49.8,
+   "file": "vo/12-sub.wav"
+  },
+  {
+   "id": "vo13",
+   "t": 56.9,
+   "file": "vo/13.wav"
+  },
+  {
+   "id": "vo14",
+   "t": 61.06666666666667,
+   "file": "vo/14.wav"
+  }
+ ]
+}
