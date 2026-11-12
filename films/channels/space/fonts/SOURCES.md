@@ -1,6 +1,6 @@
 # Fonts: Light Minute (space)
 
-All three families are SIL Open Font License 1.1. The font files are the projects' own builds,
+The three film families are SIL Open Font License 1.1; the cover-only marker face is Apache 2.0. The font files are the projects' own builds,
 unmodified (only renamed to plain file names), and each licence file is the project's own, byte for
 byte. Downloaded on 2026-10-22 through the session proxy: GitHub release assets where the project
 publishes a release with the file, otherwise the file in the project's repository at a pinned commit
@@ -15,6 +15,8 @@ read with `git ls-remote` and a blobless clone.
 | `Lexend-OFL.txt` (4,436 B) | Lexend licence | | <https://raw.githubusercontent.com/googlefonts/lexend/7894f02b2e7eabc48595f1d4eff3b17b48c6e651/OFL.txt> | `5da8505887d0fa7fe963445fd58852707fda34adfeb65af25c99d152bab285bd` |
 | `MartianMono-VF.woff2` (83,044 B) | Martian Mono, Version 1.100 (release `v1.1.0`, built 2025-02-11) | wght 100–800, wdth 75–112.5 | Release asset <https://github.com/evilmartians/mono/releases/download/v1.1.0/martian-mono-1.1.0-variable.zip> (zip sha256 `b87730975931dc2dbf0129ecf392ccaf8d29f46bc05e995703da4155db510867`), entry `MartianMonoVF.woff2` | `7cdf8e985a4872246d8c2a19333bcc5e8cbcf512746128823f35c1c43aac238a` |
 | `MartianMono-OFL.txt` (4,390 B) | Martian Mono licence | | <https://raw.githubusercontent.com/evilmartians/mono/v1.1.0/OFL.txt> (the release zip has no licence file) | `ddafd2c3f37ef1d83ef284ca63e159befd3820850c5e9eded14ca52eee92c256` |
+| `PermanentMarker-Regular.ttf` (74,632 B) | Permanent Marker, Regular (covers and thumbnails only: the hand-drawn hook note) | none | <https://raw.githubusercontent.com/google/fonts/35e77c3854970a550d9894a85aba21420813a019/apache/permanentmarker/PermanentMarker-Regular.ttf> (google/fonts `main` at 35e77c3, downloaded 2026-11-12) | `28f82c8a7943cb8e9d599f8554da1d4fc75dbcf69b9885ad6c0611d20c6946c5` |
+| `PermanentMarker-LICENSE.txt` (11,358 B) | Permanent Marker licence (Apache License 2.0) | | <https://raw.githubusercontent.com/google/fonts/35e77c3854970a550d9894a85aba21420813a019/apache/permanentmarker/LICENSE.txt> | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` |
 
 ## Notes
 
@@ -34,3 +36,6 @@ read with `git ls-remote` and a blobless clone.
 - **Why Lexend and Martian Mono:** the cross-check gave Atkinson Hyperlegible Next captions to the
   body channel only, so space takes the fallback its bible names (Lexend) and moves its counters
   from Atkinson Hyperlegible Mono to Martian Mono (DECISIONS.md).
+- **Permanent Marker is for covers only** (Apache 2.0, unlike the three OFL families above): the hand-drawn
+  hook note on a cover or thumbnail ("your ring?!"), in teal. It never appears in a film. The hand differs
+  from Possibility Lab's Caveat on purpose, so the two channels' covers stay apart.
