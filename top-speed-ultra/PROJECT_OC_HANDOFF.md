@@ -520,6 +520,32 @@ dense city block; npm test groups boot, interchanges, render, phone plus a new s
 If Fable is unavailable, run it on Opus with a design judge pair before any build.
 ```
 
+### Fable prompt: the characters' and the driver's arms' quality (from the sport-wheel lane, queued 2026-11-12)
+
+The owner (2026-11-11 ~5:45 PM PT): "make sure graphics are insane for both the steering wheel and characters and make
+sure it doesn't have any laggy graphics or act glitchy when 1st person POV with the arms and stuff". The sport-wheel
+lane (`claude/sport-wheel`) did the wheel and the cluster; the characters (`src/onfoot/people/*`) and the arms
+(`src/preview/hands*`) belong to other sessions and were not touched. Geometry and skinning: Fable-class.
+
+```
+Fable prompt. OC Ultra (top-speed-ultra), the people and the driver's arms, first-person quality. Read CLAUDE.md,
+PROJECT_OC_STYLE_GUIDE.md, the 2026-11-12 sport-wheel entry in PROJECT_OC_PROGRESS.md, src/onfoot/people/*,
+src/preview/hands*.ts, src/preview/cockpit.ts and wheel-sport.ts (read only: the wheel's rim, grips at 32/148 deg,
+spokes and centre are fixed). (1) People, HD and Ultra: skin shading (subsurface look, pores at close range), hair
+shapes with real silhouettes, cloth folds and fabric weave, without a new pass; Low stays as it is for phones.
+(2) The arms in the seat view: at the wheel's clamp (2.2 rad, PlayerCar.updateCockpit) one forearm crosses the wheel's
+face, over the centre and the left of the cluster; decide whether the crossing pose should hand over (the hand leaving
+the rim) instead, and add a geometric clearance test of the arms and hands against the rim, the spokes and the
+centre (tests/regression.mjs "steering wheel centre: the arms and hands stay clear ..." measures the centre only; it
+read 72.9 mm least clearance on the GT and Hypercar and 87.7 mm on the Vela E). No sleeve or wrist popping, no LOD
+switch in view, no per-frame allocation. (3) Any first-person on-foot view with arms (Lot 57, Stoppage Time): the same.
+Rules: our own brands only, honest labels, nothing in spec.ts, car-wheel.ts or Physics.ts. Proof: frames Day and Night at
+390x844 (DPR 3) and 1280x720 before and after; a 120 s seat-view drive with steering to full lock on the phone profile
+(CPU throttle 4) and desktop, p50/p95/p99 frame time, long tasks, draw calls and triangles summed over all passes
+(renderer.info.autoReset off), JS heap start and end, against the base; npm test groups boot, phone and onfoot. Log in
+PROJECT_OC_PROGRESS.md.
+```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.
