@@ -84,12 +84,14 @@ export function cleanContact(c: ContactResearch | null): ContactResearch | null 
   return { ...c, contacts: (c.contacts ?? []).filter((x) => x && x.value && okUrl(x.sourceUrl) && !personal(x)).slice(0, 5) };
 }
 
-export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[]; label?: string; area?: "LA" | "OC"; nearest?: boolean } = {}) {
+export function buildResume(dirs: string[], date: string, opts: { tradeFile?: string; kitDirs?: string[]; top?: number; leads?: Candidate[]; label?: string; area?: "LA" | "OC"; nearest?: boolean; maxMiles?: number } = {}) {
   const { rows, searched, notFound, slices, verifyPending, watch } = readJournals(dirs, opts.leads ?? []);
   const areaName = opts.area === "OC" ? "Orange County" : "Los Angeles County";
   // "Strictly one county": anything elsewhere is ruled out with that reason, not silently dropped.
   const scored = rows.map(scoreRow).map((j) =>
     opts.area && j.area !== opts.area && j.list !== "ruled_out" ? { ...j, list: "ruled_out" as const, ruledOutReason: `It is outside ${areaName}, and you asked for ${areaName} only` } : j,
+  ).map((j) =>
+    opts.maxMiles && j.milesFromHome > opts.maxMiles && j.list !== "ruled_out" ? { ...j, list: "ruled_out" as const, ruledOutReason: `It is more than ${opts.maxMiles} miles from ${HOME.name}` } : j,
   );
   const sel = select(scored, { best: 99, stretch: 99, maxPerEmployer: 2 });
   const top = opts.top ?? 10;
@@ -263,7 +265,7 @@ function main() {
   const kitDirs = (arg("kits") ?? "").split(",").map((s) => s.trim()).filter(Boolean);
   const leadsFile = arg("leads");
   const leads: Candidate[] = leadsFile && existsSync(leadsFile) ? JSON.parse(readFileSync(leadsFile, "utf8")) : [];
-  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads, label: arg("label"), area: arg("area") === "LA" || arg("area") === "OC" ? (arg("area") as "LA" | "OC") : undefined, nearest: process.argv.includes("--nearest") });
+  const { chosen, ...data } = buildResume(journals, date, { tradeFile: arg("trade"), kitDirs, top: arg("top") ? Number(arg("top")) : 10, leads, label: arg("label"), area: arg("area") === "LA" || arg("area") === "OC" ? (arg("area") as "LA" | "OC") : undefined, nearest: process.argv.includes("--nearest"), maxMiles: arg("max-miles") ? Number(arg("max-miles")) : undefined });
   const write = (file: string | undefined, text: string) => {
     if (!file) return;
     mkdirSync(path.dirname(file), { recursive: true });
