@@ -19,7 +19,8 @@ vmap = os.path.join(os.path.dirname(os.path.abspath(__file__)), clips + "-videos
 if os.path.exists(vmap):
     ids = json.load(open(vmap))
     for vid, asset in ids.items():
-        mp4 = '<source src="img/school/video/%s.mp4" type="video/mp4">' % vid
+        folder = "img/hero" if vid.startswith("hero") else "img/school/video"
+        mp4 = '<source src="%s/%s.mp4" type="video/mp4">' % (folder, vid)
         assert s.count(mp4) == 1, (vid, s.count(mp4))
         s = s.replace(mp4, '<source src="/_blob/%s" type="video/mp4">' % asset)
         s = re.sub(r'\s*<source src="img/school/video/%s\.webm"[^>]*>' % re.escape(vid), "", s)

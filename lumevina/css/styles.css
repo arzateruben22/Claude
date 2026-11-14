@@ -607,29 +607,48 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   overflow: hidden;
 }
 
-/* liquid rose-gold shader canvas (js/liquid-metal.js) */
-.hero-liquid {
+/* ─── The moving background (Nov 14): her logo sculpted in cream, rising
+   from water, made in Higgsfield (img/hero/hero-phone.mp4, a 9 s seamless
+   loop; img/hero/hero-poster.jpg is its first frame). Phones and tablets:
+   one screen tall, the sculpture at the top and the words over the calm
+   water below it. Desktop: the same clip as a tall panel on the right,
+   feathered into its own cream, the words on the left (until a wide clip
+   exists). ─── */
+.hero { --hero-cream: #F5D5BD; background: var(--hero-cream); }
+.hero-media {
   position: absolute;
-  inset: 0;
+  top: 0; left: 0; right: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-video {
+  display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: 60% 0%;
 }
 
-/* keeps the headline readable over the shader and fades the hero
-   into the linen ground at its base */
+/* a light wash behind the words (the water below the sculpture), then the
+   hero fades into the linen ground at its base; the clip's own bottom edge
+   melts into the cream when the words run longer than one screen */
 .hero-scrim {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(75% 55% at 50% 42%,
-      rgba(var(--glass-rgb), 0.72),
-      rgba(var(--glass-rgb), 0.38) 60%,
-      rgba(var(--glass-rgb), 0.12) 100%),
     linear-gradient(180deg,
-      rgba(var(--glass-rgb), 0.55) 0%,
-      rgba(var(--glass-rgb), 0) 30%,
-      rgba(var(--glass-rgb), 0) 62%,
-      var(--linen) 100%);
+      rgba(245, 213, 189, 0) 0%,
+      rgba(245, 213, 189, 0) calc(100svh - 9rem),
+      var(--hero-cream) 100svh,
+      var(--hero-cream) calc(100% - 8rem),
+      var(--linen) 100%),
+    linear-gradient(180deg,
+      rgba(var(--glass-rgb), 0) 44%,
+      rgba(var(--glass-rgb), 0.32) 62%,
+      rgba(var(--glass-rgb), 0.32) 100%);
 }
 
 /* the CSS glows are the no-WebGL fallback */
@@ -6865,4 +6884,52 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .app-copy { text-align: center; }
   .app-copy .section-sub { margin-left: auto; margin-right: auto; }
   .app-store { display: flex; width: max-content; margin-left: auto; margin-right: auto; text-align: left; }
+}
+
+/* ─── The hero's moving background: where the words sit (after every other
+   hero rule, so these win). See the clip's own rules near .hero-media. ─── */
+@media (max-width: 900px) {
+  /* the words start below the sculpture: its base sits halfway down the
+     clip, and the clip is a screen tall or, on a wide tablet, 1.78 x its width */
+  .hero {
+    justify-content: flex-start;
+    padding-top: calc(max(50svh, 88.8vw) + 0.75rem);
+  }
+}
+@media (min-width: 901px) {
+  .hero {
+    align-items: flex-start;
+    text-align: left;
+    padding-top: clamp(7rem, 17vh, 10rem);
+    padding-left: max(clamp(1.25rem, 5vw, 3rem), calc((100vw - 78rem) / 2 + 2rem));
+  }
+  /* the clip as a tall panel on the right, the full height of the hero */
+  .hero-media {
+    top: 2.75rem;
+    left: auto;
+    right: max(0px, calc((100vw - 90rem) / 2));
+    height: 100vh;
+    height: 100svh;
+    width: auto;
+    aspect-ratio: 768 / 1364;
+    /* feathered into the cream on the left and right, and at its foot */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 95%, transparent 100%), linear-gradient(180deg, #000 80%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 95%, transparent 100%), linear-gradient(180deg, #000 80%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .hero-scrim {
+    background: linear-gradient(180deg, rgba(245, 213, 189, 0) 0%, rgba(245, 213, 189, 0) calc(100% - 9rem), var(--linen) 100%);
+  }
+  .hero-inner {
+    max-width: min(38rem, calc(100vw - 100svh * 0.5625 - 6rem));
+    margin-right: auto;
+  }
+  /* what's on the shelf stays in the words' column, a row to scroll */
+  .hero-shelf { width: auto; margin-left: 0; }
+  .hero-shelf-k { text-align: left; }
+  .hero-shelf-list { justify-content: flex-start; }
+  .hero-title { font-size: clamp(2.46rem, 4.6vw, 4.4rem); }
+  .hero-sub { margin-left: 0; }
+  .hero-actions { justify-content: flex-start; }
 }

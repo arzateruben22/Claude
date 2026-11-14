@@ -429,3 +429,16 @@ From her launch questions page (https://claude.ai/artifact/XfuMJKhS4Fm8fdYF5fgYw
 | Anything else? | No | |
 
 Still waiting on: the deposit amount (the one question left on her page), the brand emails, the Skin Playbook and the Dew Drop photo.
+
+## The moving hero (Nov 14)
+
+The top of the page is now a moving picture: her logo sculpted in cream, rising from water, with sunbeams, drifting dust and rippling light. It replaced the rose-gold liquid animation and the drawn logo above the headline.
+
+- **How it was made:** a still from ChatGPT (the logo in cream, no lettering, tall 9:16), animated in Higgsfield. The prompt that worked asked for clearly visible motion in the water, light and dust, and only kept the sculpture's shape. The first try, which asked for "gentle" motion and a "completely still" sculpture, came out almost frozen. The original clip is in `marketing/source/hero-phone-higgsfield.mp4`.
+- **The files:** `img/hero/hero-phone.mp4` is a 9-second seamless loop (the last second blends into the first), 0.7 MB, with no sound. `img/hero/hero-poster.jpg` is its first frame, shown while it loads and whenever it doesn't play.
+- **Where it shows:** on phones and tablets it fills the first screen, with the sculpture at the top and the words over the calm water. On desktop it's a tall panel on the right, feathered into the same cream, with the words and the product row on the left.
+- **It stays still** (its first frame) for anyone with reduced motion or data saver on, in iPhone Low Power Mode, and while it's scrolled out of view.
+- **Previews:** the clip plays from each preview's asset store (`hero-phone` in `scripts/preview/v2-videos.json` and `v4-videos.json`), like the lesson clips.
+- **Still to do:** a wide (16:9) version for desktop, made the same way. With it, desktop gets the full-width picture behind the words, like the Los Güeros site.
+
+Also fixed on the way: the hidden icon set at the top of the page (the EV mark) was taking up 150 px, which showed as a blank strip above the top section in the previews.

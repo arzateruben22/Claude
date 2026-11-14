@@ -98,6 +98,28 @@
     form.reset();
   });
 
+  /* ── The hero's moving background: still (its first frame) for reduced
+     motion or data saver, and paused while it's scrolled out of view ── */
+  var heroVideo = document.querySelector(".hero-video");
+  if (heroVideo) {
+    var stillQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var heroInView = true;
+    var heroMotion = function () {
+      var still = stillQuery.matches || (navigator.connection && navigator.connection.saveData);
+      if (still || !heroInView) { heroVideo.pause(); return; }
+      var p = heroVideo.play();
+      if (p && p.catch) p.catch(function () { /* autoplay refused (Low Power Mode): the poster stays */ });
+    };
+    heroMotion();
+    if (stillQuery.addEventListener) stillQuery.addEventListener("change", heroMotion);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (entries) {
+        heroInView = entries[0].isIntersecting;
+        heroMotion();
+      }).observe(heroVideo);
+    }
+  }
+
   /* ── Motion (GSAP + ScrollTrigger) ── */
   if (typeof gsap === "undefined") return;
   gsap.registerPlugin(ScrollTrigger);
@@ -148,9 +170,7 @@
     var intro = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
     intro.timeScale(1.25);  /* the whole entrance plays a touch brisker */
     intro
-      .from(".hero-liquid", { opacity: 0, duration: 1.8, ease: "power2.out" }, 0)
-      .from(".hero-mark-art", { opacity: 0, scale: 0.94, duration: 2.4, ease: "power2.out" }, 0.05)
-      .from(".hero-glow", { opacity: 0, scale: 0.85, duration: 1.6, ease: "power2.out", stagger: 0.2 }, 0)
+      .from(".hero-media", { opacity: 0, duration: 1.6, ease: "power2.out" }, 0)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.2)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.6)
       .from(".hero-actions", { opacity: 0, y: 14, duration: 0.7 }, 0.7)
@@ -160,17 +180,6 @@
       .from(".hero-wordmark", { opacity: 0, y: 40, duration: 1.2, ease: "power2.out" }, 1.0)
       .from(".nav", { opacity: 0, y: -12, duration: 0.7 }, 0.4);
     intro.play(0);
-
-    /* her logo's symbol rises gently and fades as you leave the hero */
-    gsap.fromTo(".hero-mark-drift",
-      { opacity: 1, yPercent: 0 },
-      {
-        yPercent: -8,
-        opacity: 0.15,
-        ease: "none",
-        immediateRender: false,
-        scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true }
-      });
 
     /* Wordmark drifts down and fades as you leave the hero. Written as
        an explicit fromTo with immediateRender:false so the scrub reads
