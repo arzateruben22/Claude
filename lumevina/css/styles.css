@@ -6933,3 +6933,64 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .hero-sub { margin-left: 0; }
   .hero-actions { justify-content: flex-start; }
 }
+
+/* ─── The water (Nov 15): the hero's light and water carried down the page.
+   Book sits on a cream rose resting on water (img/water/rose.webp), FAQ and
+   Contact on open water (img/water/open.webp), both made in ChatGPT in the
+   hero's style. js/water.js draws the moving light over the water, a soft
+   band of it at the top of Shop, Services and Skin science, and a ring
+   wherever open background is tapped. Each picture fades into the linen
+   above and below it, so no section ends in a hard line. ─── */
+.water-canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; display: block; }
+.water-canvas.water-band { height: 300px; }
+
+.section-book {
+  border-top: 0;
+  border-bottom: 0;
+  background:
+    linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 7rem),
+    linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 6rem),
+    url("../img/water/rose.webp") 100% 55% / cover no-repeat,
+    #F0CDB0;
+}
+.book-glossgenius .bkl-gg {
+  background: rgba(255, 255, 255, 0.88);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+/* desktop: the words and the card keep to the left, the rose shows on the right */
+@media (min-width: 1000px) {
+  .book-glossgenius .section-book .book-head,
+  .book-glossgenius .section-book .bkl-gg { max-width: 46rem; }
+}
+/* phones: the picture is a band across the top with the rose at its right,
+   the heading starts below the rose, and the water's own colour carries on */
+@media (max-width: 760px) {
+  .section-book {
+    padding-top: max(var(--space-7), 40vw);
+    background:
+      linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 2.5rem),
+      linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 5rem),
+      linear-gradient(180deg, rgba(240, 205, 176, 0) calc(56.3vw - 4rem), #F0CDB0 56.3vw),
+      url("../img/water/rose.webp") 50% 0 / 100% auto no-repeat,
+      #F0CDB0;
+  }
+}
+
+/* FAQ and Contact: one stretch of open water, the sunbeams over the FAQ and
+   the ripples under Contact, joined where the two sections meet */
+.section-policies {
+  border-top: 0;
+  background:
+    linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 6rem),
+    linear-gradient(0deg, #F4D2B9 0, rgba(244, 210, 185, 0) 7rem),
+    url("../img/water/open.webp") 50% 0 / cover no-repeat,
+    #F4D2B9;
+}
+.section-contact {
+  background:
+    linear-gradient(180deg, #F4D2B9 0, rgba(244, 210, 185, 0) 7rem),
+    linear-gradient(0deg, var(--linen) 0, rgba(245, 241, 234, 0) 6rem),
+    url("../img/water/open.webp") 50% 100% / cover no-repeat,
+    #F4D2B9;
+}

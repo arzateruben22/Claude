@@ -442,3 +442,13 @@ The top of the page is now a moving picture: her logo sculpted in cream, rising 
 - **Still to do:** a wide (16:9) version for desktop, made the same way. With it, desktop gets the full-width picture behind the words, like the Los Güeros site.
 
 Also fixed on the way: the hidden icon set at the top of the page (the EV mark) was taking up 150 px, which showed as a blank strip above the top section in the previews.
+
+## The water, down the page (Nov 15)
+
+The hero's water now runs through the rest of the page, in the same cream and light:
+
+- **Book:** a cream rose resting on water (`img/water/rose.webp`). On desktop the rose sits to the right of the booking card; on phones it's a band across the top of the section.
+- **FAQ and Contact:** one stretch of open water (`img/water/open.webp`), with the sunbeams over the FAQ and the ripples under Contact.
+- **Shop, Services and Skin science:** a soft band of water and light behind each heading, fading out before the content. About keeps its own light.
+- **Moving light** (`js/water.js`): light drifts slowly across the water, drawn in code, so there's nothing to download. A ring spreads wherever someone taps open background, including on the hero, but never on a button, link, field or text. It only runs while that part of the page is on screen, and stands still with reduced motion on.
+- Both pictures were made in ChatGPT in the hero's style. The originals are in `marketing/source/water-rose.png` and `water-open.png`.
