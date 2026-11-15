@@ -92,5 +92,30 @@ check('urgency: full 0.2, half 0.65, 29: 1.11, empty 2.0', near(S.urgency(100), 
   let bad = 0; for (let i = 1; i < bs.length; i++) if (bs[i].start - (bs[i - 1].start + bs[i - 1].dur) < 2 * bs[i - 1].dur - 1e-6) bad++;
   check('the scheduler: 20 builds, never two a frame, the gap always met', bs.length === 20 && bad === 0 && new Set(bs.map((b) => b.frame)).size === 20, `${bs.length} builds over ${fr.length} frames, ${bad} in the gap`);
 }
+// 7. S4's fourth pass (the art review: a guest in a tan dress read as nude at Ultra after dark): no body garment the bar
+// builds is in its wearer's own skin colour (venues/sportsbar/dress.ts over the people builder's random wardrobe)
+{
+  const e2 = path.join(OUT, 'dress-entry.ts');
+  writeFileSync(e2, `export { apartFromSkin, skinLike, colorDistance } from '${path.join(ROOT, 'src/onfoot/venues/sportsbar/dress.ts')}';\nexport { randomPerson } from '${path.join(ROOT, 'src/onfoot/people/params.ts')}';\n`);
+  await build({ entryPoints: [e2], bundle: true, format: 'esm', platform: 'node', outfile: path.join(OUT, 'dress.mjs'), logLevel: 'warning' });
+  const D = await import(pathToFileURL(path.join(OUT, 'dress.mjs')).href + '?t=' + Date.now());
+  let before = 0, after = 0, changed = 0, same = 0, gapMin = Infinity;
+  for (let seed = 0; seed < 5000; seed++) {
+    const o = D.randomPerson(seed), a = D.apartFromSkin(o), b = D.apartFromSkin(D.randomPerson(seed));
+    if (D.skinLike(o)) before++;
+    if (D.skinLike(a)) after++;
+    if (a !== o) { changed++; for (let i = 0; i < a.outfit.length; i++) if (a.outfit[i].color !== o.outfit[i].color) gapMin = Math.min(gapMin, D.colorDistance(a.outfit[i].color, a.look.skin)); }
+    if (JSON.stringify(a.outfit) === JSON.stringify(b.outfit)) same++;
+  }
+  // the reviewed case: a tan dress (0xc58b3c) on skin 0xc99472
+  const tan = D.randomPerson(1); tan.look = { ...tan.look, skin: 0xc99472 }; tan.outfit = [{ kind: 'dress', color: 0xc58b3c, fabric: 'satin', length: 0.5, neck: 'strap', sleeve: 0 }, { kind: 'heels', color: 0x161616, fabric: 'leather' }];
+  const tanA = D.apartFromSkin(tan);
+  // (S4's fifth pass) the phone frame's case: a camel top (0xc9a77a) over brown trousers on mid-brown skin (0x9c6545),
+  // which read as bare from behind although the top is far from the wearer's own skin
+  const camel = D.randomPerson(2); camel.look = { ...camel.look, skin: 0x9c6545 }; camel.outfit = [{ kind: 'tee', color: 0xc9a77a, fabric: 'cotton', sleeve: 0.25, neck: 'crew' }, { kind: 'trousers', color: 0x2a2a2e, fabric: 'wool' }, { kind: 'flats', color: 0x161616, fabric: 'leather' }];
+  const camelA = D.apartFromSkin(camel);
+  check('no body garment in a skin colour (the wearer\'s or any skin tone): 5,000 random guests', after === 0 && same === 5000 && changed === before && gapMin >= 110 && tanA.outfit[0].color !== 0xc58b3c && tanA.outfit[1].color === 0x161616 && camelA.outfit[0].color !== 0xc9a77a && camelA.outfit[1].color === 0x2a2a2e,
+    `${before} of 5,000 wore a body garment that reads as skin, ${changed} recoloured (each new colour at least ${gapMin.toFixed(0)} from the wearer's skin), ${after} left; the same guest dressed the same ${same} of 5,000; the tan dress on 0xc99472 now #${tanA.outfit[0].color.toString(16).padStart(6, '0')}; the camel top on 0x9c6545 now #${camelA.outfit[0].color.toString(16).padStart(6, '0')}`);
+}
 console.log(fails ? `\n${fails} failed` : '\nall passed');
 process.exit(fails ? 1 : 0);

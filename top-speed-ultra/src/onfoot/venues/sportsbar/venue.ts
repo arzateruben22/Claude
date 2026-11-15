@@ -220,8 +220,15 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
   // carry a little interior glow of their own (the bounce off the floor and the bar's lights; dark when closed)
   {
     const DOWN = [0, -1, 0];
-    ceiling.emit = [0, 0, 0.55];
-    ceiling.plane(room.inner, [], (u, v) => P3(u, v, CEIL), DOWN, 0x8c8698, 1.4);
+    // S4's repair: the tiles' own glow 0.55 to 0.32 of the room's channel, which rises after dark: at 0.55 the ceiling
+    // was the brightest thing in the night frames, flat from end to end, and the pendants and screens didn't read; the
+    // tiles a shade deeper too
+    // S4's second repair (the art review: the ceiling was still the brightest, largest flat surface in every inside
+    // frame, a pink-lilac plane over the top third): its own glow 0.32 to 0.12, the tiles a neutral dark grey with
+    // only a trace of violet (0x736e80 to 0x4c4a52), and mats.ts's interior material darker and less lit by the sky's
+    // environment, so the pendants, the LED strip and the screens are the brightest things inside
+    ceiling.emit = [0, 0, 0.12];
+    ceiling.plane(room.inner, [], (u, v) => P3(u, v, CEIL), DOWN, 0x4c4a52, 1.4);
     ceiling.emit = null;
     /** where the line u = c (axis 0) or v = c (axis 1) crosses the inner ring: the other coordinate's range */
     const span = (axis: 0 | 1, c: number): [number, number] | null => {
@@ -241,8 +248,8 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     for (let v = 0.9; v < 16.4; v += 0.6) { const r = span(1, v); if (r) strip(r[0], v - W, r[1], v + W, gy, GRID); }
     // supply diffusers: a pale square with a darker louvred centre, in a run down the room and over the bar
     for (const [u, v] of [[6.0, 4.5], [12.0, 4.5], [18.0, 4.5], [24.0, 4.5], [30.0, 4.5], [8.4, 11.7], [15.6, 11.7], [22.8, 11.7]] as P2[]) {
-      strip(u - 0.3, v - 0.3, u + 0.3, v + 0.3, gy - 0.004, 0xc9c5cf);
-      for (let k = 0; k < 3; k++) { const d = 0.22 - k * 0.07; strip(u - d, v - d, u + d, v + d, gy - 0.008 - k * 0.004, k % 2 ? 0xb3aebb : 0x4a4656); }
+      strip(u - 0.3, v - 0.3, u + 0.3, v + 0.3, gy - 0.004, 0x8a8890);
+      for (let k = 0; k < 3; k++) { const d = 0.22 - k * 0.07; strip(u - d, v - d, u + d, v + d, gy - 0.008 - k * 0.004, k % 2 ? 0x76747c : 0x2e2c34); }
     }
   }
   // the floor: polished concrete on the 0.15 m slab, the chalk centre circle in front of the big screen
@@ -464,7 +471,9 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
   {
     const wallV = (u: number) => 0.012 * u;                                                        // the south wall's outer face
     const pr: P2[] = [[2.0, -5.5], [24.0, -5.5], [24.0, wallV(24)], [2.0, wallV(2)]];
-    concrete.cap(ring(pr), FL, 0xd6d0c4); concrete.walls(ring(pr), 0, FL, 0xb8b2a6);
+    // (S4's second repair: the slab subdivided to 1 m, as the ceiling is, so the pergola's and the festoon's baked light
+    // reads on it; as one cap its few corners took no light and the patio's floor stayed dark at night)
+    concrete.plane(pr, [], (u, v) => P3(u, v, FL), [0, 1, 0], 0xd6d0c4, 1.0); concrete.walls(ring(pr), 0, FL, 0xb8b2a6);
     // the fence: 1.1 m glass and steel, inner faces at u 2.05, u 23.95 and v -5.45; posts in the fence line
     const fenceLine: P2[] = [[2.0, wallV(2)], [2.0, -5.5], [24.0, -5.5], [24.0, wallV(24)]];
     for (let i = 1; i < fenceLine.length; i++) {
@@ -482,6 +491,17 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     // the warm linear lights: thin strips, lit after dark (the lot heads' material: dark by day)
     const strips = kit.get('lot-heads', m.lampHead, { glow: false });
     for (const v of [-1.6, -3.9]) { fbox(steel, 2.3, 23.7, v - 0.025, v + 0.025, PH - 0.05, PH - 0.01, STEEL); fbox(strips, 2.3, 23.7, v - 0.018, v + 0.018, PH - 0.056, PH - 0.05, 0xffe3b0); for (let u = 4; u < 24; u += 5) light(u, v, PH - 0.2, 6, 0, 7, 1.0); }
+    // S4's second repair (the art review: the night patio toward the freeway had no lit foreground, and the pergola's
+    // warm light barely showed): a festoon of warm bulbs along the pergola's outer beam over the rail, sagging between
+    // the posts, in the venue's existing batches (no new draw call; the bulbs are the neon's amber, bright while the bar
+    // is open and brighter after dark), and its light baked on the rail, the planters, the fence's top and the rail stools
+    for (let s0 = 0; s0 < 4; s0++) {
+      const ua = [2.0, 7.5, 13.0, 18.5, 24.0][s0], ub = [2.0, 7.5, 13.0, 18.5, 24.0][s0 + 1], V = -5.42, top = PH - 0.1, sag = 0.42;
+      const at = (t: number): [number, number, number] => [ua + (ub - ua) * t, V, top - sag * 4 * t * (1 - t)];
+      for (let k = 0; k < 10; k++) ftube(steel, at(k / 10), at((k + 1) / 10), 0.006, 3, STEEL);
+      for (let k = 1; k < 13; k++) { const [u, v, y] = at(k / 13); fbox(neon, u - 0.022, u + 0.022, v - 0.022, v + 0.022, y - 0.085, y - 0.03, 0xd08a3a); }
+      for (const t of [0.3, 0.7]) { const [mu, , my] = at(t); light(mu, -5.0, my - 0.25, 4.5, 0, 6, 0.5); }
+    }
     // six bench tables, long axis along v, a bench each side
     for (const u of PATIO_TABLES) {
       fbox(patioWood, u - 0.375, u + 0.375, -2.1, -0.5, 0.88, 0.93, OAK);

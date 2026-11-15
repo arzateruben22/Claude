@@ -289,8 +289,9 @@ if (want('data')) {
   await check(`data: the light streams at ${PRESETS.join(', ')}: both I-5 carriageways carry the preset's cars, shared by length`, async () => {
     const notes = [];
     for (const [q, x] of Object.entries(perPreset)) {
-      const st = x.sets.streams, want = { low: 100, high: 200, ultra: 400 }[q];
-      expect(st.cars === want && st.head === want && st.tail === want, `${q}: ${st.head}/${st.tail} drawn, ${st.cars} wanted ${want}`);
+      const st = x.sets.streams, want = { low: 100, high: 200, hd: 200, ultra: 400 }[q];
+      // (S4's second repair: a pair of lamps a car, white heads toward you or red tails going away: 2 lamps a car in all)
+      expect(st.cars === want && st.head + st.tail === 2 * want && st.head % 2 === 0, `${q}: ${st.head}/${st.tail} lamps drawn, ${st.cars} wanted ${want}`);
       expect(st.perPath.length === 2 && st.perPath.every((n) => n > 0) && st.perPath[0] + st.perPath[1] === want, `${q}: per chain ${st.perPath}`);
       const share = st.perPath[0] / want, byLength = st.paths[0].length / (st.paths[0].length + st.paths[1].length);
       expect(Math.abs(share - byLength) < 0.02, `${q}: northbound ${share.toFixed(3)} of the cars, ${byLength.toFixed(3)} of the length`);
@@ -511,13 +512,18 @@ if (want('honesty')) {
 }
 
 // ------------------------------------------------------------------------------------------------ crossing the doors
+// (S4's second repair) --cross-hours=21 --cross-doors=patio --cross-walks=0: one pair of the cross group's door
+// screenshots without the walks, to re-run a pair a long run lost to its time limit
+const CA = (k, d) => (process.argv.find((a) => a.startsWith(`--${k}=`)) ?? `--${k}=${d}`).slice(k.length + 3);
+const CROSS_HOURS = CA('cross-hours', '12,21').split(',').map(Number), CROSS_DOORS = CA('cross-doors', 'front,patio').split(',');
+const CROSS_WALK_DOORS = CA('cross-walks', '1') === '0' ? [] : ['front', 'patio'];
 if (want('cross')) {
   for (const q of PRESETS) {
     console.log(`doors at ${q}`);
     const { ctx, page, errors } = await open([1280, 720], `quality=${q}&ultra=1&day=Sat&hour=12&hint=0`);
     await check(`cross ${q}: boots with no console errors`, async () => { expect(!errors.length, errors.join(' | ')); });
     if (q === 'ultra') await H(page, 'window.__onfoot.setQuality("ultra")');
-    for (const door of ['front', 'patio']) for (const v of ['first', 'third']) {
+    for (const door of CROSS_WALK_DOORS) for (const v of ['first', 'third']) {
       await check(`cross ${q}: walking out of the ${door} door in ${v} person switches the state on the crossing frame; nothing in the street world and no caster changes but the listed swaps`, async () => {
         const r = await H(page, `window.__onfoot.cross('${door}', '${v}')`);
         expect(r.mismatched === 0, `${r.mismatched} steps where the state didn't match the camera's side`);
@@ -540,7 +546,7 @@ if (want('cross')) {
       });
     }
     // the screenshots on both sides of each door: inside looking out, then 0.5 m past the door at the same yaw and pitch
-    for (const hour of [12, 21]) for (const door of ['front', 'patio']) {
+    for (const hour of CROSS_HOURS) for (const door of CROSS_DOORS) {
       await check(`cross ${q}: screenshots on both sides of the ${door} door at ${hour}:00`, async () => {
         const names = [];
         for (const sideIn of [true, false]) {

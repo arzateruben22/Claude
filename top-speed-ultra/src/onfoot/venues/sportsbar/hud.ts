@@ -71,8 +71,43 @@ export class BarHud {
     // S2b's repair: the toasts sit under the top centre column (the needs, the place and the crowd chip) and the screens
     // chip, never over the "Simulated crowd" chip: their lowest bottom edge is measured whenever either changes size
     // or the window does (sportsbar.html's #toast reads --tcb), never per frame
-    const tc = $('tc'), tv = $('tvchip'), hudEl = $('hud');
-    const mark = () => { const a = tc.getBoundingClientRect(), b = tv.getBoundingClientRect(); if (a.height > 0) hudEl.style.setProperty('--tcb', `${Math.round(Math.max(a.bottom, b.height > 0 ? b.bottom : 0))}px`); };
+    const tc = $('tc'), tv = $('tvchip'), hudEl = $('hud'), crowd = $('crowd');
+    // S4's second repair (the art review: on a phone the HUD's stacked pills covered the top of the frame): in a
+    // portrait screen the crowd chip and the screens chip share one row, centred together, when both fit across it;
+    // otherwise (Large text, a long match label) the screens chip sits just under the crowd chip. Worked out on a
+    // change of size or text, never per frame
+    let placing = false;
+    // (S4's third pass: a packed night's two chips missed one row by a few pixels at Medium text, so the HUD covered
+    // the top quarter of a phone; when they don't fit at 12 px they try 11 px, a touch tighter, before stacking)
+    const place = () => {
+      crowd.style.transform = ''; tv.style.left = ''; tv.style.top = ''; tv.style.transform = ''; hudEl.classList.remove('chipsTight');
+      if (innerWidth > 520 || crowd.getBoundingClientRect().height === 0) return;
+      const gap = 6, room = innerWidth - 20;
+      let c = crowd.getBoundingClientRect(), t = tv.getBoundingClientRect();
+      if (c.width + gap + t.width > room) {
+        hudEl.classList.add('chipsTight'); c = crowd.getBoundingClientRect(); t = tv.getBoundingClientRect();
+        if (c.width + gap + t.width > room) { hudEl.classList.remove('chipsTight'); c = crowd.getBoundingClientRect(); t = tv.getBoundingClientRect(); }
+      }
+      if (c.width + gap + t.width <= room) {
+        const x0 = (innerWidth - (c.width + gap + t.width)) / 2;
+        crowd.style.transform = `translateX(${Math.round(x0 - c.left)}px)`;
+        tv.style.left = `${Math.round(x0 + c.width + gap)}px`; tv.style.top = `${Math.round(c.top)}px`; tv.style.transform = 'none';
+      } else tv.style.top = `${Math.round(c.bottom + gap)}px`;
+    };
+    const mark = () => {
+      if (!placing) { placing = true; place(); placing = false; }
+      const a = tc.getBoundingClientRect(), b = tv.getBoundingClientRect(); if (a.height > 0) hudEl.style.setProperty('--tcb', `${Math.round(Math.max(a.bottom, b.height > 0 ? b.bottom : 0))}px`);
+    };
+    this.placeChips = mark;
+    // the map credit: in full for the first 12 s of play, then one line naming the map data; a tap (or Enter) shows
+    // it in full again for 12 s
+    const credit = $('credit');
+    let briefAt = 0;
+    const brief = (on: boolean) => { credit.classList.toggle('brief', on); credit.setAttribute('aria-expanded', String(!on)); };
+    const later = () => { clearTimeout(briefAt); briefAt = window.setTimeout(() => brief(true), 12000); };
+    credit.addEventListener('click', () => { const on = !credit.classList.contains('brief'); brief(on); if (!on) later(); });
+    credit.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); credit.click(); } });
+    later();
     if (typeof ResizeObserver !== 'undefined') { const ro = new ResizeObserver(mark); ro.observe(tc); ro.observe(tv); }
     addEventListener('resize', mark);
     this.needsEl.addEventListener('click', () => this.onNeeds());
@@ -161,7 +196,14 @@ export class BarHud {
     if (key === this.lastQueue) return; this.lastQueue = key;
     $('queue').innerHTML = items.map((i, k) => `<button data-id="${i.id}" class="${i.now ? 'now' : ''}" aria-label="${esc(i.label)}: tap to cancel">${svgIcon(i.icon, '')}<i aria-hidden="true">${k + 1}</i></button>`).join('');
   }
-  setTv(text: string) { if (text === this.lastTv) return; this.lastTv = text; $('tvText').textContent = text; }
+  /** the screens chip's text; its "On now: " in its own span, which a portrait screen hides (S4's second repair) */
+  setTv(text: string) {
+    if (text === this.lastTv) return; this.lastTv = text;
+    const el = $('tvText'), pre = 'On now: ';
+    if (text.startsWith(pre)) { const s = document.createElement('span'); s.className = 'pre'; s.textContent = pre; el.replaceChildren(s, text.slice(pre.length)); } else el.textContent = text;
+  }
+  /** lay out the crowd and screens chips again (a change of text size; resizes are watched) */
+  placeChips: () => void = () => {};
   fillGuide(d: GuideData) {
     $('guideNote').textContent = d.note;
     $('guideList').innerHTML = d.groups.map((g) => `<h3>${esc(g.title)}</h3>` + (g.rows.length ? g.rows.map((r) => `<div class="fx${r.featured ? ' feat' : ''}"><span class="t">${r.kickoff}</span>${r.homeCrest}<span>${esc(r.home)} v ${esc(r.away)}${r.featured ? ' · featured' : ''}<br><small>${esc(r.state)}</small></span>${r.awayCrest}<span class="s">${esc(r.score)}</span></div>`).join('') : `<p class="small">${esc(g.empty ?? 'No fixtures today.')}</p>`)).join('');
@@ -234,6 +276,7 @@ export class BarHud {
   get cheering() { return $('cheer').classList.contains('on'); }
   setText(size: 0 | 1 | 2) {
     document.documentElement.classList.remove('t0', 't1', 't2'); document.documentElement.classList.add('t' + size);
+    requestAnimationFrame(() => this.placeChips());
     for (const b of $('segText').querySelectorAll('button')) b.setAttribute('aria-pressed', String((b as HTMLElement).dataset.t === String(size)));
   }
 }
