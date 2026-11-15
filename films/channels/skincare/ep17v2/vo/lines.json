@@ -1,0 +1,121 @@
+{
+ "voice": "recorded",
+ "speaker": "a real person (credit pending her confirmation)",
+ "speed": null,
+ "lang": "en-us",
+ "style": "whisper",
+ "source": "voice-evelyn/evelyn-s3-full.m4a",
+ "made_by": "polish.py --style whisper on the whole recording, cut by word alignment (set/s3_cut.py)",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "hook",
+   "text": "Every hair on you is scheduled to fall out.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.68,
+   "sha256": "b945f917640ab0bf3807d1890f02858bff306e0d416f0c00179def8fff508105"
+  },
+  {
+   "id": "vo02",
+   "beat": "normal",
+   "text": "Every hair on your body is quietly keeping time.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 3.84,
+   "sha256": "7eee713a29e8b337e5155bb974b121d31d8d4a0ac36f6ad9debde27c9527bbb0"
+  },
+  {
+   "id": "vo03",
+   "beat": "change",
+   "text": "It grows, it pauses, it rests, and then… it lets go.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 5.92,
+   "sha256": "b14a7a270f74a967db672b62975efb267a082e233879186a1e24de0bbbd0ea22"
+  },
+  {
+   "id": "vo04",
+   "beat": "why",
+   "text": "On your head, growing can last for years. That's why it can grow so long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 7.12,
+   "sha256": "bfb1daffd1f8d1e821bd53d5c80a21e43f09857ac0d7ee8deb7e598b929077b7"
+  },
+  {
+   "id": "vo05",
+   "beat": "why",
+   "text": "On your eyebrow, it lasts only months. They stay short.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 6.24,
+   "sha256": "0a58df0efc53e15c68f14094e916a8c6391a50e1f77ca013ae370ee7f5fa3c11"
+  },
+  {
+   "id": "vo06",
+   "beat": "whoa",
+   "text": "When growing ends, the root shrinks and the hair loosens. Then it rests for a couple months.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 8.8,
+   "sha256": "8983acaf2517e23c3e01f3ade2cf6d7bbdf948c209cbd4cd8dc00a0c085e5de7"
+  },
+  {
+   "id": "vo07",
+   "beat": "whoa",
+   "text": "Meanwhile, in the same follicle, a brand new hair begins… and gently pushes the old one out.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 9.12,
+   "sha256": "978fe4d8d39448fe89b40b439de0bf3a3b3d190bec56cf0843207942499512bf"
+  },
+  {
+   "id": "vo08",
+   "beat": "takeaway",
+   "text": "So losing fifty to a hundred hairs a day from your head alone is normal.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 6.0,
+   "sha256": "da194298d2999dad9839d2488576ace49ae18a83c7e4cb613f3b8d23bd70cc3b"
+  },
+  {
+   "id": "vo09",
+   "beat": "takeaway",
+   "text": "Every follicle keeps its own schedule, so they never all let go at once.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 5.44,
+   "sha256": "359f943b874cb13f906c8c1751ac6b3b16b7f29a4c0bcea30393b6cff357024e"
+  },
+  {
+   "id": "vo10",
+   "beat": "takeaway",
+   "text": "Right now, you're losing hair, and growing it, at the same time.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 5.52,
+   "sha256": "00bbf076e130124dd413cce3973447f8bd35f2278f9c3f596b077fd1ffd08c9b"
+  },
+  {
+   "id": "vo11",
+   "beat": "cta",
+   "text": "If you're feeling a little calmer, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 4.96,
+   "sha256": "32504b87c353e46b6c8f707095462214fa6130f3029ae1234c5972f6579599cb"
+  }
+ ]
+}

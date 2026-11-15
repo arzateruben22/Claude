@@ -1,0 +1,178 @@
+{
+ "title": "Every Hair on You Is Scheduled to Fall Out",
+ "three": {
+  "module": "../set/hair3d.js",
+  "bg": "#0B1513",
+  "ground": [
+   0.0033,
+   0.0075,
+   0.0065
+  ],
+  "exposure": 0.95,
+  "coc": 0.009,
+  "bloom": 0.45,
+  "grain": 0.012,
+  "camera": [
+   {
+    "t": 0,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   },
+   {
+    "t": 200,
+    "sc": "S",
+    "pos": [
+     0,
+     0,
+     10
+    ],
+    "look": [
+     0,
+     0,
+     0
+    ],
+    "fov": 32
+   }
+  ]
+ },
+ "caps": [
+  [
+   0.365,
+   4.17,
+   "Every hair on you is scheduled to fall out."
+  ],
+  [
+   5.76,
+   9.75,
+   "Every hair on your body is quietly keeping time."
+  ],
+  [
+   10.98,
+   13.7,
+   "It grows, it pauses, it rests,"
+  ],
+  [
+   13.67,
+   16.93,
+   "and then… it lets go."
+  ],
+  [
+   18.475,
+   19.59,
+   "On your head,"
+  ],
+  [
+   19.56,
+   22.33,
+   "growing can last for years."
+  ],
+  [
+   22.3,
+   25.55,
+   "That's why it can grow so long."
+  ],
+  [
+   27.05,
+   28.495,
+   "On your eyebrow,"
+  ],
+  [
+   28.465,
+   31.16,
+   "it lasts only months."
+  ],
+  [
+   31.13,
+   33.29,
+   "They stay short."
+  ],
+  [
+   34.87,
+   36.675,
+   "When growing ends,"
+  ],
+  [
+   36.645,
+   40.275,
+   "the root shrinks and the hair loosens."
+  ],
+  [
+   40.245,
+   43.59,
+   "Then it rests for a couple months."
+  ],
+  [
+   45.11,
+   48.095,
+   "Meanwhile, in the same follicle,"
+  ],
+  [
+   48.065,
+   50.92,
+   "a brand new hair begins…"
+  ],
+  [
+   50.89,
+   54.21,
+   "and gently pushes the old one out."
+  ],
+  [
+   55.725,
+   61.71,
+   "So losing 50 to 100 hairs a day from your head alone is normal."
+  ],
+  [
+   63.195,
+   65.74,
+   "Every follicle keeps its own schedule,"
+  ],
+  [
+   65.71,
+   68.65,
+   "so they never all let go at once."
+  ],
+  [
+   70.285,
+   72.35,
+   "Right now, you're losing hair,"
+  ],
+  [
+   72.32,
+   73.51,
+   "and growing it,"
+  ],
+  [
+   73.48,
+   75.67,
+   "at the same time."
+  ],
+  [
+   78.025,
+   80.015,
+   "If you're feeling a little calmer,"
+  ],
+  [
+   79.985,
+   83.03,
+   "tap like and follow."
+  ]
+ ],
+ "hook": {
+  "text": "You're losing hair right now",
+  "t0": 0.0,
+  "t1": 3.0,
+  "size": 74,
+  "top": 300,
+  "grad": 0.75
+ }
+}

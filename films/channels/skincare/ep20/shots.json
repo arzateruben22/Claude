@@ -1,0 +1,299 @@
+{
+  "version": 1,
+  "episode": "ss-s3e08",
+  "journey": "TODO: one or two sentences: the whole camera path, start to end.",
+  "continuity": [
+    "TODO: what stays the same in every shot (light direction, the readout's place, the direction of travel)."
+  ],
+  "shots": [
+    {
+      "id": "S01",
+      "beat": "hook",
+      "purpose": "A feeling or sight everyone knows, on a frame that is already composed.",
+      "seconds": [0.0, 8.5],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: frame 0, already composed",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "open",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo01"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "Frame 0 is already composed and works as the poster."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S02",
+      "beat": "enter",
+      "purpose": "Go from the familiar surface into the hidden machinery, in one unbroken move.",
+      "seconds": [8.5, 26.5],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo02"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S03",
+      "beat": "mechanism",
+      "purpose": "The first step of how it works. One mechanism, shown before it is named.",
+      "seconds": [26.5, 53.0],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo03"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S04",
+      "beat": "deeper",
+      "purpose": "The second step, further in. It raises the question the payoff answers.",
+      "seconds": [53.0, 79.0],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo04"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S05",
+      "beat": "payoff",
+      "purpose": "The one true twist. The single on-screen word or number appears here, then the picture holds.",
+      "seconds": [79.0, 106.5],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo05"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S06",
+      "beat": "cta",
+      "purpose": "The like/follow moment: one soft line in the narrator's voice, right after the payoff.",
+      "seconds": [106.5, 112.0],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo06"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame.",
+        "The like/follow line shows as a normal caption: no button graphic, no arrow, no like-button sound."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S07",
+      "beat": "return",
+      "purpose": "The way back out. It answers something the first frame showed.",
+      "seconds": [112.0, 130.5],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "narration": [
+        "vo07"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    },
+    {
+      "id": "S08",
+      "beat": "close",
+      "purpose": "Back where it started, seen differently. The last frame matches frame 0.",
+      "seconds": [130.5, 150.0],
+      "aspect": "9:16",
+      "camera": {
+        "preset": "TODO: pick a camera preset from films/channels/studio/SHOTS.md",
+        "from": "TODO: where the camera is and what it looks at on the first frame",
+        "to": "TODO: the same for the last frame",
+        "lens": "TODO: field of view in degrees, and what is in focus"
+      },
+      "subject": "TODO: the one thing the eye is on",
+      "motion": "TODO: what moves in the world, and on which spoken word it lands",
+      "lighting": "TODO. The season look comes first. Channel lighting as built: Ivory studio (set/w3d.js): a procedural soft-box environment through PMREM, a warm key, a cool rim and 2048 px soft shadows (PCFSoftShadowMap).",
+      "environment": "TODO. Look: Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+      "materials": "TODO. The season look comes first. Channel materials as built: Skin and tissue as MeshPhysicalMaterial with sheen and clearcoat in each Season 2 scene (set/goose3d.js to set/print3d.js). The helper skinMaterial in set/studio.js (sheen, clearcoat, an attenuation tint through a little transmission; used by ep01 to ep03) approximates subsurface scattering. The channel's own finish in set/w3d.js: 4x MSAA, a 20-tap depth of field, bloom, ACES with the ivory ground exempt. Season 2 renders with --plain, so there is no motion blur.",
+      "principle": "TODO: the science this shot shows, matching the claims listed",
+      "startState": "TODO: the first frame",
+      "endState": "TODO: the last frame; the next shot starts here",
+      "transitionIn": "motivated push: TODO choose the join from SHOTS.md and say what motivates it",
+      "transitionOut": "close: TODO say how the last frame ends (use loop when it returns to frame 0)",
+      "narration": [
+        "vo08"
+      ],
+      "sound": "TODO. Channel sound: Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+      "assets": [],
+      "claims": [],
+      "qa": [
+        "The subject stays inside the safe box on every frame.",
+        "Captions read at 4.5:1 or better over this shot.",
+        "At most 3 flashes a second.",
+        "The first frame matches the previous shot's last frame."
+      ],
+      "status": "planned"
+    }
+  ]
+}

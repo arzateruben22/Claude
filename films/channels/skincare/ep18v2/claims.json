@@ -1,0 +1,112 @@
+[
+ {
+  "id": "c1",
+  "sentence": "Your skin is still healing after it looks healed.",
+  "claim": "Wound remodeling continues for months to years after the surface has closed.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Remodeling runs from about day 21 and can last a year or more; one source says years. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c2",
+  "sentence": "When a small gap in your skin closes, it looks finished in a week or two, but it isn't.",
+  "claim": "Surface closure typically takes days to a couple of weeks; deeper repair continues.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Timing depends on the injury: film says 'a small gap'. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c3",
+  "sentence": "Underneath, the work has already begun.",
+  "claim": "Repair starts in the first days (hemostasis, inflammation).",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Plain-language. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c4",
+  "sentence": "First, your body seals it and calls in its cleaning crews.",
+  "claim": "Hemostasis (a clot seals the injury) then inflammatory cells (neutrophils, macrophages) clear debris.",
+  "source_url": "https://www.jove.com/science-education/13557/phases-of-wound-repair",
+  "source_title": "JoVE: phases of wound repair (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Phases: hemostasis, inflammation, proliferation, remodeling. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c5",
+  "sentence": "New cells creep in from the edges, and repair cells lay down fresh collagen.",
+  "claim": "Keratinocytes migrate from the wound edges (re-epithelialization); fibroblasts deposit collagen.",
+  "source_url": "https://www.jove.com/science-education/13557/phases-of-wound-repair",
+  "source_title": "JoVE: phases of wound repair (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Proliferation phase. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c6",
+  "sentence": "Quickly, a little messily, like scaffolding.",
+  "claim": "The first collagen (mostly type III) is laid down quickly and disorganized.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] 'Messy' is a plain-language word for disorganized fibres. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c7",
+  "sentence": "But for months, sometimes a year or more, the skin keeps quietly rebuilding.",
+  "claim": "Collagen production and breakdown continue for 6 months to a year or more.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Sources: 6 months to 1 year; some say years. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c8",
+  "sentence": "Then, quick collagen is traded for stronger fibers drawn slowly into line. The spot grows flatter and softer, paler.",
+  "claim": "Type III collagen is replaced by type I and fibres realign along tension lines; scars flatten and fade.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Collagen switch (type I:III about 4:1 as in normal skin). 'Paler' applies to many mature scars, not all: check. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c9",
+  "sentence": "Even then, rebuilt skin usually ends up at most around eighty percent as strong as before.",
+  "claim": "Healed skin regains at most about 70-80% of its original tensile strength.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Sources say about 80% (70-80%). Lay/study sources: NEEDS a primary review before posting. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c10",
+  "sentence": "So the skin you think of as healed is still being gently rewoven, long after you've forgotten it.",
+  "claim": "Remodeling continues quietly after closure.",
+  "source_url": "https://www.emedicine.com/plastic/topic457.htm",
+  "source_title": "eMedicine: wound healing (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Summary of c1 and c7. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ }
+]

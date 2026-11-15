@@ -1,0 +1,200 @@
+[
+  {
+    "id": "c1",
+    "sentence": "LED therapy shines low-power light onto the skin.",
+    "claim": "Light therapies of this kind use relatively low fluences (0.04-50 J/cm2) and power densities (under 100 mW/cm2).",
+    "source_title": "Avci P et al., Low-level laser (light) therapy (LLLT) in skin: stimulating, healing, restoring. Semin Cutan Med Surg 2013",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4126803/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "quote: 'relatively low fluences (0.04–50 J/cm2) and power densities (< 100 mW/cm2)'"
+  },
+  {
+    "id": "c2",
+    "sentence": "Some molecules in your cells absorb certain wavelengths, and that can change what the cell does.",
+    "claim": "Red and near-infrared light are thought to be absorbed by mitochondrial chromophores, chiefly cytochrome c oxidase, setting off a cascade of cellular events.",
+    "source_title": "Avci P et al., Low-level laser (light) therapy (LLLT) in skin: stimulating, healing, restoring. Semin Cutan Med Surg 2013",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4126803/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "quote: 'absorption of red and NIR light by mitochondrial chromophores, in particular cytochrome c oxidase'"
+  },
+  {
+    "id": "c3",
+    "sentence": "Scientists call it photobiomodulation. / Near-infrared is studied for tissue recovery and for calming inflammation.",
+    "claim": "Photobiomodulation is the use of red and near-infrared light to stimulate healing, relieve pain and reduce inflammation.",
+    "source_title": "Hamblin MR, Mechanisms and applications of the anti-inflammatory effects of photobiomodulation. AIMS Biophys 2017",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/28748217/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'the use of red and near-infrared light to stimulate healing, relieve pain, and reduce inflammation'"
+  },
+  {
+    "id": "c4",
+    "sentence": "Blue works near the surface. Red and near-infrared reach deeper.",
+    "claim": "Wavelengths of 390-600 nm are used for superficial tissue; longer wavelengths of 600-1,100 nm penetrate further and are used for deeper tissue.",
+    "source_title": "Avci P et al., Low-level laser (light) therapy (LLLT) in skin: stimulating, healing, restoring. Semin Cutan Med Surg 2013",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4126803/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "quote: 'Wavelengths in the range of 390 nm to 600 nm are used to treat superficial tissue, and longer wavelengths in the range of 600nm to 1,100nm, which penetrate further'. Exact depths vary; say 'deeper', no millimetres"
+  },
+  {
+    "id": "c5",
+    "sentence": "Blue light, around 415 nm, is absorbed by pigments that acne bacteria make inside the pore. That releases reactive oxygen, which harms the bacteria.",
+    "claim": "Blue light is absorbed by porphyrins that acne bacteria (P./C. acnes) make; this forms reactive free radicals and singlet oxygen that damage the bacteria. Clinical blue-light devices peak near 415 nm.",
+    "source_title": "Avci P et al., Low-level laser (light) therapy (LLLT) in skin: stimulating, healing, restoring. Semin Cutan Med Surg 2013; Papageorgiou P et al., Phototherapy with blue (415 nm) and red (660 nm) light in the treatment of acne vulgaris. Br J Dermatol 2000",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4126803/ ; https://pubmed.ncbi.nlm.nih.gov/10809858/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "Avci quote: 'absorption of light (specifically blue light) by porphyrins that have been produced by P. acnes ... forms reactive free radicals and singlet oxygen'. Papageorgiou: 'blue light (peak at 415 nm)'. Lab mechanism; how much killing happens in skin is not measured here"
+  },
+  {
+    "id": "c6",
+    "sentence": "Dermatologists use it for inflamed pimples, but reviews rate the evidence as low quality.",
+    "claim": "A Cochrane systematic review of light therapies for acne (71 trials) rated the quality of evidence as low to very low.",
+    "source_title": "Barbaric J et al., Light therapies for acne. Cochrane Database Syst Rev 2016",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/27670126/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'rated the quality of the evidence as very low' for light therapies vs placebo/no treatment/other comparators; 'low-quality evidence' for the main PDT comparison. The 2024 AAD guideline (https://pubmed.ncbi.nlm.nih.gov/38300170/) makes no recommendation for light devices (full text: TODO a person checks the table)"
+  },
+  {
+    "id": "c7",
+    "sentence": "Visible light doesn't clear blackheads, whiteheads or cysts.",
+    "claim": "The AAD says blue, red and blue+red light devices can treat pimples, but visible light is not effective against blackheads, whiteheads, acne cysts or nodules.",
+    "source_title": "American Academy of Dermatology, Lasers and lights: How well do they treat acne?",
+    "source_url": "https://www.aad.org/public/diseases/acne/derm-treat/lasers-lights",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "quote: 'these devices can treat pimples. Visible light is not effective against blackheads, whiteheads, acne cysts, or nodules.'"
+  },
+  {
+    "id": "c8",
+    "sentence": "Red light, around 630 to 660 nm, is thought to act on the mitochondria, the cell's power stations.",
+    "claim": "The primary site of red/near-infrared light absorption is thought to be the mitochondria, specifically cytochrome c oxidase; the mechanism is a hypothesis.",
+    "source_title": "Hamblin MR, Mechanisms and Mitochondrial Redox Signaling in Photobiomodulation. Photochem Photobiol 2018",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/29164625/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'The primary site of light absorption in mammalian cells has been identified as the mitochondria and, more specifically, cytochrome c oxidase (CCO). It is hypothesized...'"
+  },
+  {
+    "id": "c9",
+    "sentence": "In small controlled trials, red and near-infrared light improved fine lines, roughness and collagen over several weeks.",
+    "claim": "In a controlled trial (136 volunteers, 30 sessions), red and broadband light improved skin complexion, roughness and ultrasound-measured collagen density versus controls.",
+    "source_title": "Wunsch A, Matuschka K, A controlled trial to determine the efficacy of red and near-infrared light treatment... Photomed Laser Surg 2014",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/24286286/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'significantly improved skin complexion and skin feeling, profilometrically assessed skin roughness, and ultrasonographically measured collagen density'; broadband showed no advantage over red only"
+  },
+  {
+    "id": "c10",
+    "sentence": "(same line as c9)",
+    "claim": "In a randomised, sham-controlled split-face trial (76 people), 633 nm, 830 nm and combined LED twice a week for four weeks reduced wrinkles (best case 36%) and raised elasticity.",
+    "source_title": "Lee SY et al., A prospective, randomized, placebo-controlled, double-blinded, and split-face clinical study on LED phototherapy for skin rejuvenation. J Photochem Photobiol B 2007",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/17566756/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'significant reductions of wrinkles (maximum: 36%)' — a maximum, not an average: never put 36% on screen"
+  },
+  {
+    "id": "c11",
+    "sentence": "Near-infrared is invisible to your eyes.",
+    "claim": "The human eye cannot see infrared light.",
+    "source_title": "NASA Science, Infrared Waves",
+    "source_url": "https://science.nasa.gov/ems/07_infraredwaves/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "quote: 'the human eye cannot see it'"
+  },
+  {
+    "id": "c12",
+    "sentence": "Amber, near 590 nm, has a few small studies for fine lines and redness.",
+    "claim": "An uncontrolled prospective study of 90 people treated with a 590 nm LED array reported smoother texture, fewer fine lines and less redness and pigmentation.",
+    "source_title": "Weiss RA et al., Clinical trial of a novel non-thermal LED array for reversal of photoaging. Lasers Surg Med 2005",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/15654716/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'reduction of signs of photoaging in 90% of subjects with smoother texture, reduction of peri-orbital rhytids, and reduction of erythema'. No control group: label 'small studies'"
+  },
+  {
+    "id": "c13",
+    "sentence": "(same line as c12)",
+    "claim": "A split-face randomised trial in 137 women found red (660 nm) and amber (590 nm) light each reduced eye-area wrinkle volume by about 30% after 10 sessions; hydration and elasticity did not change.",
+    "source_title": "Mota LR et al., Photobiomodulation Reduces Periocular Wrinkle Volume by 30%: A Randomized Controlled Trial. Photobiomodul Photomed Laser Surg 2023",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/36780572/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'significant reduction in wrinkle volume after red (31.6%) and amber (29.9%) PBM. None of the treatments improved skin hydration and viscoelasticity.' Split-face, each side treated: no untreated control"
+  },
+  {
+    "id": "c14",
+    "sentence": "Green, cyan and white are marketed for tone, calm or everything at once, but we found little clinical evidence for them.",
+    "claim": "Our PubMed search (12 Nov 2026) found no controlled trials of green or cyan LED light for skin appearance; the 2016 Cochrane acne review covers blue, red, yellow and infrared light; in one acne trial (Papageorgiou 2000), cool white light was the control and did worst.",
+    "source_title": "Our search of PubMed (12 Nov 2026) + Cochrane 2016 + Papageorgiou 2000",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/?term=%28%22green+light%22+OR+%22green+LED%22+OR+%22520+nm%22+OR+%22525+nm%22%29+AND+%28skin+OR+melasma+OR+hyperpigmentation%29+AND+%28randomized+OR+controlled%29 ; https://pubmed.ncbi.nlm.nih.gov/?term=%28%22cyan%22+OR+%22490+nm%22%29+AND+%28LED+OR+light-emitting%29+AND+skin ; https://pubmed.ncbi.nlm.nih.gov/10809858/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator ran the searches: 22 and 6 hits, none a skin-appearance trial of green or cyan LED",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "Narrate as 'we found little clinical evidence', never 'it does not work'. A person re-runs the two searches before export."
+  },
+  {
+    "id": "c15",
+    "sentence": "Purple is usually red and blue switched on together.",
+    "claim": "Device makers describe 'purple' modes as red and blue LEDs lit together.",
+    "source_title": "Manufacturer colour guides (marketing)",
+    "source_url": "TODO: a person opens a manufacturer page and records it",
+    "accessed": "",
+    "verified_via": "",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "marketing-only; status stays OPEN until a person opens one"
+  },
+  {
+    "id": "c16",
+    "sentence": "Results depend on the wavelength, how much light reaches the skin, for how long, how often, and the device itself.",
+    "claim": "Photobiomodulation outcomes depend on many parameters (wavelength, energy, fluence, power, irradiance, pulse mode, treatment duration and repetition), which has led to contradictory results.",
+    "source_title": "Zein R et al., Review of light parameters and photobiomodulation efficacy: dive into complexity. J Biomed Opt 2018",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/30550048/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'The wide range of parameters that can be applied (wavelength, energy, fluence, power, irradiance, pulse mode, treatment duration, and repetition) in some cases has led to contradictory results.'"
+  },
+  {
+    "id": "c17",
+    "sentence": "More isn't always better: past a point, extra light can do less.",
+    "claim": "Low-level light shows a biphasic dose response: low levels of light often stimulate more than higher levels.",
+    "source_title": "Huang YY et al., Biphasic dose response in low level light therapy. Dose Response 2009",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/20011653/",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstract: 'low levels of light have a much better effect on stimulating and repairing tissues than higher levels of light'"
+  },
+  {
+    "id": "c18",
+    "sentence": "In the studies, people came back a few times a week, for a month or more.",
+    "claim": "Trial schedules: twice a week for 4 weeks (Lee 2007); 10 sessions over 4 weeks (Mota 2023); 30 sessions (Wunsch 2014); for at-home acne devices the AAD describes twice-daily use for 4 to 5 weeks.",
+    "source_title": "Lee 2007; Mota 2023; Wunsch 2014; AAD lasers and lights page",
+    "source_url": "https://pubmed.ncbi.nlm.nih.gov/17566756/ ; https://pubmed.ncbi.nlm.nih.gov/36780572/ ; https://www.aad.org/public/diseases/acne/derm-treat/lasers-lights",
+    "accessed": "2026-11-12",
+    "verified_via": "coordinator fetched the page/abstract and matched the quote (an agent, not a person)",
+    "status": "OPEN (a person opens the source before export)",
+    "note": "abstracts and AAD page as quoted in c10, c13, c7"
+  }
+]

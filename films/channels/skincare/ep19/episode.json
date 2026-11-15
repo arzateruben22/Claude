@@ -1,0 +1,185 @@
+{
+  "version": 1,
+  "id": "ss-s3e07",
+  "channel": "skincare",
+  "season": 3,
+  "number": 7,
+  "folder": "ep19",
+  "title": "LED light therapy, explained",
+  "topic": "LED light therapy, explained",
+  "question": "TODO: the one question this episode answers (topic: LED light therapy, explained)",
+  "hook": "TODO: the first line and the first picture",
+  "payoff": "TODO: what the viewer knows or feels at the end",
+  "format": {
+    "kind": "premium",
+    "aspect": "9:16",
+    "size": [1080, 1920],
+    "nativeSize": [1080, 1920],
+    "fps": 30,
+    "durationS": [70, 90],
+    "targetS": 150.0,
+    "durationForced": true,
+    "deliveries": [
+      {
+        "name": "master",
+        "size": [1080, 1920],
+        "native": true,
+        "how": "kits/cinema/film/render.mjs, final tier"
+      },
+      {
+        "name": "YouTube file",
+        "size": [1440, 2560],
+        "native": false,
+        "how": "Lanczos upscale by kits/cinema/film/youtube1440.py. Label it '1440 upscale'."
+      }
+    ],
+    "notes": "Season 3: six lessons, each landing at about 75 to 80 s, never under 60 s. Native 1080x1920 render; the YouTube file is a 1440x2560 upscale. kits/cinema/film/qa.py's 60 to 75 s gate and kits/cinema/script/lint.py's length and pace gates fail this format until per-format profiles exist (Roadmap stage 1 for lint, stage 4 for QA)."
+  },
+  "voice": {
+    "kind": "guest",
+    "id": "voice-evelyn",
+    "tone": "ASMR: soft-spoken, close and unhurried; a light whisper is fine if every word stays clear. Slower than feels natural, steady volume, the last line of each lesson softest of all.",
+    "wpm": 115,
+    "talkShare": 0.8,
+    "standIn": "An AI voice stands in until the recording arrives, and every draft with it is labelled as AI (films/channels/SEASON-FORMAT.md).",
+    "consent": "TODO (owner): the guest's written OK for this use is not on record here."
+  },
+  "look": {
+    "season": "s3",
+    "summary": "Strongly influenced by the Skin School course, not a copy: soft, glowing voxel skin layers on a dark green-black ground, teal as the only accent, small ivory serif captions, and an ASMR voice by Evelyn.",
+    "palette": {
+      "ground": "#0B1513",
+      "teal": "#3FBFAE",
+      "caption": "#F4EDE3"
+    },
+    "notes": "Owner, 11 Nov 2026 (films/channels/SEASON-FORMAT.md, 'Skin Sense Season 3'). Reference: films/skin-school-pilot/out/8-2-9x16.jpg. Voxels a little softer and slightly translucent, glowing from within; a warm glow where the skin meets the dark; soft studio light; a calm camera. Captions in Newsreader on a dark rounded plate. The skin layers take the episode's one skin tone. Six lessons of 70 to 90 s, then one joined long video. Open: the owner's approval of one still and a 10 s clip; Evelyn's written OK for the voice and the look, and her credit choice. The directive restates the ivory identity, so the owner is asked to confirm that this look is the one for Season 3. A 10 s look test exists on the channel branch (voxel take: set/voxel3d.js through s3-looktest/scene.mjs, rendered on the --plain path with grain 0.02 in set/w3d.js, no motion blur; out/skin-sense-s3-looktest.mp4 and -still.png). It awaits the owner's look gate. It is not yet a reusable world or a theme file. s3-looktest/BRIEF.md and bible.md on the channel branch are older than this decision.",
+    "status": "pending look gate"
+  },
+  "sound": {
+    "music": "Season 3: very low, slow music under the voice. Seasons 1 and 2: preset outerlayer-slide (kits/cinema/studio/vibes/outerlayer-slide.json), F major at 64.29 BPM, a soft pad and a breathy reed.",
+    "foley": "Season 3: gentle foley only (soft brushing, droplets, a low warm hum). Seasons 1 and 2: reed signature F5, C6, A5.",
+    "loudnessLufs": -14,
+    "rules": [
+      "Delivered AAC: integrated loudness -15 to -13 LUFS, true peak at most -1 dBTP, mono-safe (kits/cinema/film/qa.py).",
+      "The look-test brief's target of about -16 LUFS fails that gate. Deliver at -14 until an ASMR loudness profile exists (Roadmap stage 4).",
+      "ASMR: no hits, stings, whooshes or sudden loudness changes, and no like-button sound.",
+      "Use the recording's 10 s of room tone for noise reduction; keep her breaths soft rather than cut to silence.",
+      "Captions are always on.",
+      "No bells, plucks, pings, mallets or blips."
+    ]
+  },
+  "story": {
+    "beats": [
+      {
+        "id": "hook",
+        "purpose": "A feeling or sight everyone knows, on a frame that is already composed.",
+        "seconds": [0.0, 8.5],
+        "words": 13,
+        "lines": [
+          "vo01"
+        ]
+      },
+      {
+        "id": "enter",
+        "purpose": "Go from the familiar surface into the hidden machinery, in one unbroken move.",
+        "seconds": [8.5, 26.5],
+        "words": 28,
+        "lines": [
+          "vo02"
+        ]
+      },
+      {
+        "id": "mechanism",
+        "purpose": "The first step of how it works. One mechanism, shown before it is named.",
+        "seconds": [26.5, 53.0],
+        "words": 42,
+        "lines": [
+          "vo03"
+        ]
+      },
+      {
+        "id": "deeper",
+        "purpose": "The second step, further in. It raises the question the payoff answers.",
+        "seconds": [53.0, 79.0],
+        "words": 41,
+        "lines": [
+          "vo04"
+        ]
+      },
+      {
+        "id": "payoff",
+        "purpose": "The one true twist. The single on-screen word or number appears here, then the picture holds.",
+        "seconds": [79.0, 106.5],
+        "words": 38,
+        "lines": [
+          "vo05"
+        ]
+      },
+      {
+        "id": "cta",
+        "purpose": "The like/follow moment: one soft line in the narrator's voice, right after the payoff.",
+        "seconds": [106.5, 112.0],
+        "words": 10,
+        "lines": [
+          "vo06"
+        ]
+      },
+      {
+        "id": "return",
+        "purpose": "The way back out. It answers something the first frame showed.",
+        "seconds": [112.0, 130.5],
+        "words": 29,
+        "lines": [
+          "vo07"
+        ]
+      },
+      {
+        "id": "close",
+        "purpose": "Back where it started, seen differently. The last frame matches frame 0.",
+        "seconds": [130.5, 150.0],
+        "words": 28,
+        "lines": [
+          "vo08"
+        ]
+      }
+    ]
+  },
+  "files": {
+    "script": "script.md",
+    "claims": "claims.json",
+    "shots": "shots.json",
+    "packaging": "out/packaging.json"
+  },
+  "cta": {
+    "line": "If you're feeling a little calmer, tap like and follow.",
+    "at": "Right after the payoff, about 70 to 85% through; never in the first 20 s.",
+    "seconds": [106.5, 112.0],
+    "section": "Skin Sense (ASMR, Season 3 on)",
+    "variants": {
+      "follow": "If you're feeling a little calmer, tap like and follow.",
+      "subscribe": "If you're feeling a little calmer, tap like and subscribe."
+    }
+  },
+  "status": {
+    "stage": "concept",
+    "lookGate": "pending",
+    "sources": "open",
+    "title": "working",
+    "recording": "waiting"
+  },
+  "disclosures": {
+    "aiVoice": true,
+    "aiVisuals": false
+  },
+  "assumptions": [
+    "The target of 150 s is outside the format's 70 to 90 s. It was accepted because of --force (format.durationForced). A forced length is a plan only: it never ships, and validate.py fails it from stage \"editing\" on.",
+    "Word budget: 150 s at 115 words a minute, with the voice speaking 0.8 of the runtime, is about 230 words. The 0.8 is a working figure for this format, not a measurement.",
+    "The Season 3 look is \"pending look gate\" in the identity file. The owner approves stills before any build.",
+    "Like/follow line 1 of 2 under \"Skin Sense (ASMR, Season 3 on)\" in films/channels/CTA.md, chosen by rotation. Check it differs from the previous episode's.",
+    "The like/follow line needs about 5.5 s at this pace. CTA.md asks for about 2 to 3 s: shorten the line or accept the longer moment.",
+    "disclosures.aiVoice starts true because an AI voice stands in until the recording arrives. Set it false once the real recording is in every line. A cloned voice keeps it true: set voice.synthetic true and record the consent in voice.consent (the channel's rules say which voice a season uses).",
+    "disclosures.aiVisuals is false. Set it true as soon as any AI-made image appears in the picture (SHOTS.md, owner-made AI art)."
+  ],
+  "created": "2026-11-12",
+  "generatedBy": "new_episode.py --channel skincare --topic \"LED light therapy, explained\" --duration 150 --format premium"
+}

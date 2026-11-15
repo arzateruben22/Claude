@@ -1,0 +1,112 @@
+[
+ {
+  "id": "c1",
+  "sentence": "A pimple begins deep inside a pore, long before you see anything.",
+  "claim": "Acne lesions begin as a microcomedone, a microscopic plug in the follicle, before anything is visible.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Microcomedone is the earliest stage; gradual accumulation of keratinous material and sebum converts it into a closed comedone. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c2",
+  "sentence": "Usually, old cells drift up and out with the oil.",
+  "claim": "Normally, shed follicular lining cells (keratinocytes) are carried out of the follicle with sebum.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Normal desquamation of the follicular epithelium; wording is a plain-language version (caption words 'drift up' per script, recognizer heard 'stripped'). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c3",
+  "sentence": "But sometimes they cling together instead.",
+  "claim": "In acne, follicular keratinocytes shed abnormally and cohere (follicular hyperkeratinization).",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Hyperkeratinization / abnormal desquamation is a key step; 'cling together' is the plain-language version. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c4",
+  "sentence": "Oil and cells pack into a tiny plug and the doorway starts to close.",
+  "claim": "Sebum and keratinous debris form a plug in the follicle; the lesion is open or closed depending on whether the orifice stays patent.",
+  "source_url": "https://statpearls.com/sp/al/9/17101/",
+  "source_title": "StatPearls: comedone / acne (continuing education, 17101)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Hyperkeratinization plus excess sebum forms a plug; open vs closed depending on patency of the orifice. Need a dermatologist to confirm 'doorway starts to close' wording. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c5",
+  "sentence": "If the top stays open, the plug can darken in the air. That's a blackhead, and that dark color isn't dirt.",
+  "claim": "An open comedone's dark color comes from oxidation of lipids and melanin in the plug exposed to air, not from dirt.",
+  "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10939092",
+  "source_title": "PMC10939092 (comedone / acne review, via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Sources differ in pigment chemistry detail (oxidized lipids, melanin granules); all say it is not dirt. Check the exact source before posting; wording 'darken in the air' is a simplification. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c6",
+  "sentence": "If skin closes over it, it stays pale.",
+  "claim": "A closed comedone (whitehead) stays skin-coloured or pale because the plug is covered by a thin layer of epithelium.",
+  "source_url": "https://my.clevelandclinic.org/health/diseases/comedonal-acne",
+  "source_title": "Cleveland Clinic: comedonal acne (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Closed comedones are small skin-coloured papules without a visible opening; some sources say white/yellow tint. Lay-source: replace with a dermatology source before posting. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c7",
+  "sentence": "Behind the plug, oil keeps arriving. With nowhere to go, the pore slowly swells.",
+  "claim": "Sebum production continues behind the plug and the follicle distends, enlarging the comedone.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Continuous distension widens the follicle; androgen-driven sebum keeps flowing. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c8",
+  "sentence": "The microbes inside have a feast, and your body notices.",
+  "claim": "C. acnes proliferates in the lipid-rich, low-oxygen plugged follicle and triggers innate and adaptive immune responses.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] C. acnes can trigger innate and adaptive immunity. A 2024 Frontiers review argues the host response, not the bacteria alone, drives inflammation: wording 'notices' is a simplification. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c9",
+  "sentence": "Immune cells gather and the spot turns red, warm, and swollen.",
+  "claim": "Immune cells (neutrophils, lymphocytes) are recruited and the lesion becomes inflamed (redness, warmth, swelling).",
+  "source_url": "https://www.frontiersin.org/articles/10.3389/fimmu.2024.1275269",
+  "source_title": "Frontiers in Immunology 2024: immune response in acne (via search)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Progression is not always linear from microcomedone to inflammatory lesion; the film shows one simple path. Redness/warmth/swelling are her words; on screen only a soft tissue warmth inside the pore cut-away. A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ },
+ {
+  "id": "c10",
+  "sentence": "That's the pimple you finally see. A small, blocked doorway… and your body, working to clear it.",
+  "claim": "The visible inflamed pimple is the end of a process that began in the follicle; inflammation is part of the body's response.",
+  "source_url": "https://ncbi.nlm.nih.gov/books/NBK459173",
+  "source_title": "StatPearls: Acne Vulgaris (NBK459173)",
+  "accessed": "2026-11-11",
+  "note": "[SOURCE-READ via search summary] Interpretive summary. Line text to be confirmed by ear (script words used where recognizer heard 'black … in your body'). A person opens the source; dermatologist sign-off required.",
+  "verified_via": "search",
+  "status": "OPEN"
+ }
+]
