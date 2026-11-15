@@ -8,73 +8,73 @@
    "words": [
     {
      "w": "Deep",
-     "start": 0.26,
-     "end": 0.56,
+     "start": 0.2,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "in",
-     "start": 0.475,
+     "start": 0.455,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "your",
-     "start": 0.615,
+     "start": 0.74,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "skin,",
-     "start": 1.01,
+     "start": 0.99,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "right",
-     "start": 1.515,
+     "start": 1.495,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "now,",
-     "start": 1.815,
+     "start": 1.795,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.285,
+     "start": 2.265,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "new",
-     "start": 2.315,
+     "start": 2.355,
      "end": 2.64,
      "heard": true
     },
     {
      "w": "cell",
-     "start": 2.6,
-     "end": 3.12,
+     "start": 2.565,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "is",
-     "start": 3.27,
-     "end": 3.36,
+     "start": 3.07,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "being",
-     "start": 3.35,
+     "start": 3.25,
      "end": 3.6,
      "heard": true
     },
     {
      "w": "born.",
-     "start": 3.62,
+     "start": 3.6,
      "end": 4.56,
      "heard": true
     }
@@ -87,68 +87,68 @@
    "words": [
     {
      "w": "It",
-     "start": 0.12,
-     "end": 0.4,
+     "start": 0.1,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "starts",
-     "start": 0.44,
-     "end": 0.88,
+     "start": 0.42,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "at",
-     "start": 0.945,
-     "end": 1.12,
+     "start": 0.73,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.095,
+     "start": 1.075,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "very",
-     "start": 1.215,
-     "end": 1.6,
+     "start": 1.195,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "bottom…",
-     "start": 1.625,
-     "end": 2.4,
+     "start": 1.605,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.73,
+     "start": 2.68,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "slowly",
-     "start": 2.785,
+     "start": 2.71,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "begins",
-     "start": 3.345,
-     "end": 4.0,
+     "start": 3.325,
+     "end": 3.92,
      "heard": true
     },
     {
      "w": "to",
-     "start": 3.92,
-     "end": 4.32,
+     "start": 3.84,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "rise.",
-     "start": 4.29,
-     "end": 5.28,
+     "start": 4.27,
+     "end": 5.2,
      "heard": true
     }
    ]
@@ -160,98 +160,98 @@
    "words": [
     {
      "w": "As",
-     "start": 0.225,
-     "end": 0.4,
+     "start": 0.2,
+     "end": 0.25,
      "heard": true
     },
     {
      "w": "it",
-     "start": 0.375,
+     "start": 0.355,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "climbs,",
-     "start": 0.63,
+     "start": 0.655,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "it",
-     "start": 1.585,
+     "start": 1.565,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "fills",
-     "start": 1.83,
+     "start": 1.81,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "with",
-     "start": 2.19,
+     "start": 2.17,
      "end": 2.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.495,
-     "end": 2.545,
+     "start": 2.475,
+     "end": 2.525,
      "heard": true
     },
     {
      "w": "tough",
-     "start": 2.525,
+     "start": 2.565,
      "end": 3.36,
      "heard": false
     },
     {
      "w": "protein",
-     "start": 2.555,
+     "start": 2.595,
      "end": 3.36,
      "heard": false
     },
     {
      "w": "called",
-     "start": 3.245,
-     "end": 3.52,
+     "start": 3.31,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "keratin.",
-     "start": 3.715,
+     "start": 3.605,
      "end": 5.04,
      "heard": true
     },
     {
      "w": "It",
-     "start": 5.155,
-     "end": 5.205,
+     "start": 5.135,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "grows",
-     "start": 5.315,
-     "end": 5.68,
+     "start": 5.295,
+     "end": 5.6,
      "heard": true
     },
     {
      "w": "flatter…",
-     "start": 5.705,
-     "end": 6.16,
+     "start": 5.685,
+     "end": 6.08,
      "heard": true
     },
     {
      "w": "and",
-     "start": 6.435,
+     "start": 6.415,
      "end": 6.56,
      "heard": true
     },
     {
      "w": "flatter.",
-     "start": 6.645,
-     "end": 7.52,
+     "start": 6.625,
+     "end": 7.6,
      "heard": true
     }
    ]
@@ -263,86 +263,86 @@
    "words": [
     {
      "w": "Near",
-     "start": 0.185,
-     "end": 0.48,
+     "start": 0.165,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.575,
-     "end": 0.64,
+     "start": 0.39,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "top,",
-     "start": 0.62,
+     "start": 0.6,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "it",
-     "start": 0.925,
+     "start": 0.905,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "lets",
-     "start": 1.085,
-     "end": 1.52,
+     "start": 1.065,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "go",
-     "start": 1.5,
+     "start": 1.45,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.68,
+     "start": 1.66,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "its",
-     "start": 1.98,
+     "start": 1.96,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "nucleus…",
-     "start": 2.135,
-     "end": 3.2,
+     "start": 2.115,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.155,
+     "start": 4.135,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "its",
-     "start": 4.465,
+     "start": 4.445,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "life",
-     "start": 5.035,
-     "end": 5.36,
+     "start": 4.785,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "gently",
-     "start": 5.675,
+     "start": 5.64,
      "end": 6.16,
      "heard": true
     },
     {
      "w": "ends.",
      "start": 6.255,
-     "end": 6.88,
+     "end": 7.12,
      "heard": true
     }
    ]
@@ -354,104 +354,104 @@
    "words": [
     {
      "w": "So",
-     "start": 0.305,
+     "start": 0.31,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.385,
+     "start": 0.39,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 0.475,
+     "start": 0.48,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "you",
-     "start": 1.125,
+     "start": 1.13,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "can",
-     "start": 1.375,
+     "start": 1.38,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "touch",
-     "start": 1.57,
+     "start": 1.48,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "right",
-     "start": 1.985,
+     "start": 1.99,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "now",
-     "start": 2.225,
-     "end": 2.48,
+     "start": 2.23,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.615,
+     "start": 2.62,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "made",
-     "start": 2.825,
+     "start": 2.83,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "of",
-     "start": 3.095,
+     "start": 3.1,
      "end": 3.2,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 3.125,
+     "start": 3.13,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "that",
-     "start": 3.755,
-     "end": 3.92,
+     "start": 3.76,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "have",
-     "start": 3.815,
+     "start": 4.095,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "finished",
-     "start": 4.155,
+     "start": 4.16,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "their",
-     "start": 4.745,
+     "start": 4.75,
      "end": 4.96,
      "heard": true
     },
     {
      "w": "lives.",
-     "start": 4.925,
-     "end": 5.84,
+     "start": 4.93,
+     "end": 5.92,
      "heard": true
     }
    ]
@@ -463,44 +463,44 @@
    "words": [
     {
      "w": "Stacked",
-     "start": 0.245,
-     "end": 0.8,
+     "start": 0.25,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "like",
-     "start": 0.825,
+     "start": 0.88,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "bricks,",
-     "start": 1.14,
-     "end": 2.08,
+     "start": 1.225,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "they",
-     "start": 2.13,
-     "end": 2.32,
+     "start": 2.11,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "seal",
-     "start": 2.245,
-     "end": 2.8,
+     "start": 2.225,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.885,
-     "end": 3.04,
+     "start": 2.76,
+     "end": 2.96,
      "heard": true
     },
     {
      "w": "water.",
-     "start": 2.955,
-     "end": 4.0,
+     "start": 2.935,
+     "end": 3.92,
      "heard": true
     }
    ]
@@ -512,44 +512,44 @@
    "words": [
     {
      "w": "The",
-     "start": 0.2,
-     "end": 0.25,
+     "start": 0.195,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "whole",
-     "start": 0.445,
+     "start": 0.225,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "journey",
-     "start": 0.725,
-     "end": 1.2,
+     "start": 0.705,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "takes",
-     "start": 1.195,
-     "end": 1.68,
+     "start": 1.175,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "about",
-     "start": 1.59,
-     "end": 2.0,
+     "start": 1.505,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.955,
+     "start": 1.935,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "month.",
-     "start": 2.155,
-     "end": 3.36,
+     "start": 2.33,
+     "end": 3.44,
      "heard": true
     }
    ]
@@ -561,134 +561,134 @@
    "words": [
     {
      "w": "Then,",
-     "start": 0.215,
+     "start": 0.195,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "quietly,",
-     "start": 0.515,
-     "end": 1.2,
+     "start": 0.495,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.47,
+     "start": 1.45,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "top",
-     "start": 1.62,
+     "start": 1.6,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 1.895,
+     "start": 1.875,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "drift",
-     "start": 2.38,
+     "start": 2.36,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "away,",
-     "start": 2.76,
-     "end": 3.92,
+     "start": 2.78,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "far",
-     "start": 3.915,
+     "start": 3.895,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "too",
-     "start": 4.35,
+     "start": 4.33,
      "end": 4.56,
      "heard": true
     },
     {
      "w": "small",
-     "start": 4.69,
+     "start": 4.655,
      "end": 5.04,
      "heard": true
     },
     {
      "w": "to",
-     "start": 5.03,
-     "end": 5.28,
+     "start": 5.01,
+     "end": 5.36,
      "heard": true
     },
     {
      "w": "see.",
-     "start": 5.315,
+     "start": 5.295,
      "end": 6.24,
      "heard": true
     },
     {
      "w": "Some",
-     "start": 6.245,
+     "start": 6.225,
      "end": 6.48,
      "heard": true
     },
     {
      "w": "of",
-     "start": 6.515,
+     "start": 6.495,
      "end": 6.64,
      "heard": true
     },
     {
      "w": "the",
-     "start": 6.69,
+     "start": 6.67,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "dust",
-     "start": 6.855,
+     "start": 6.835,
      "end": 7.2,
      "heard": true
     },
     {
      "w": "in",
-     "start": 7.2,
+     "start": 7.18,
      "end": 7.36,
      "heard": true
     },
     {
      "w": "your",
-     "start": 7.315,
+     "start": 7.295,
      "end": 7.52,
      "heard": true
     },
     {
      "w": "home…",
-     "start": 7.58,
-     "end": 7.84,
+     "start": 7.615,
+     "end": 7.92,
      "heard": true
     },
     {
      "w": "began",
-     "start": 8.015,
+     "start": 7.995,
      "end": 8.48,
      "heard": true
     },
     {
      "w": "as",
-     "start": 8.8,
-     "end": 9.04,
+     "start": 8.78,
+     "end": 9.12,
      "heard": true
     },
     {
      "w": "you.",
-     "start": 9.37,
-     "end": 9.92,
+     "start": 9.065,
+     "end": 9.84,
      "heard": true
     }
    ]
@@ -700,147 +700,74 @@
    "words": [
     {
      "w": "Underneath,",
-     "start": 0.165,
+     "start": 0.145,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "new",
-     "start": 0.79,
+     "start": 0.77,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 1.02,
+     "start": 1.0,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "are",
-     "start": 1.7,
+     "start": 1.68,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "already",
-     "start": 1.88,
+     "start": 1.86,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "rising.",
-     "start": 2.335,
+     "start": 2.315,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "Always",
-     "start": 3.9,
+     "start": 3.88,
      "end": 4.08,
      "heard": true
     },
     {
      "w": "rebuilding…",
-     "start": 4.255,
-     "end": 5.36,
+     "start": 4.235,
+     "end": 5.28,
      "heard": true
     },
     {
      "w": "from",
-     "start": 5.525,
+     "start": 5.625,
      "end": 5.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 5.805,
+     "start": 5.845,
      "end": 6.0,
      "heard": true
     },
     {
      "w": "bottom",
-     "start": 6.095,
+     "start": 6.075,
      "end": 6.8,
      "heard": true
     },
     {
      "w": "up.",
-     "start": 6.97,
-     "end": 7.44,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo10",
-   "text": "Your skin has plenty more quiet secrets. Tap like and follow.",
-   "heard": "Your skin has plenty more quiet secrets tap, like and follow.",
-   "words": [
-    {
-     "w": "Your",
-     "start": 0.095,
-     "end": 0.24,
-     "heard": true
-    },
-    {
-     "w": "skin",
-     "start": 0.335,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "has",
-     "start": 0.735,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "plenty",
-     "start": 0.825,
-     "end": 1.12,
-     "heard": true
-    },
-    {
-     "w": "more",
-     "start": 1.11,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "quiet",
-     "start": 1.395,
-     "end": 1.76,
-     "heard": true
-    },
-    {
-     "w": "secrets.",
-     "start": 1.705,
-     "end": 2.24,
-     "heard": true
-    },
-    {
-     "w": "Tap",
-     "start": 2.465,
-     "end": 2.96,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 2.92,
-     "end": 3.12,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 3.275,
-     "end": 3.52,
-     "heard": true
-    },
-    {
-     "w": "follow.",
-     "start": 3.615,
-     "end": 4.08,
+     "start": 6.95,
+     "end": 7.36,
      "heard": true
     }
    ]

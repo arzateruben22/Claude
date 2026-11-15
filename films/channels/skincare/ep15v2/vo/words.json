@@ -8,62 +8,62 @@
    "words": [
     {
      "w": "Look",
-     "start": 0.175,
+     "start": 0.155,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "closely",
-     "start": 0.475,
+     "start": 0.455,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "at",
-     "start": 1.04,
-     "end": 1.28,
+     "start": 1.02,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.255,
+     "start": 1.235,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "skin.",
-     "start": 1.625,
+     "start": 1.605,
      "end": 2.64,
      "heard": true
     },
     {
      "w": "Those",
-     "start": 2.72,
+     "start": 2.7,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "tiny",
-     "start": 3.06,
+     "start": 3.04,
      "end": 3.52,
      "heard": true
     },
     {
      "w": "dots…",
-     "start": 3.47,
+     "start": 3.45,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "are",
-     "start": 4.435,
-     "end": 4.72,
+     "start": 4.415,
+     "end": 4.64,
      "heard": true
     },
     {
      "w": "pores.",
-     "start": 4.8,
-     "end": 5.68,
+     "start": 4.78,
+     "end": 5.44,
      "heard": true
     }
    ]
@@ -71,7 +71,7 @@
   {
    "id": "vo02",
    "text": "The pores you can see are little doorways, into narrow tunnels called hair follicles.",
-   "heard": "The pores you can see are little doorways into narrow tunnels called air follicles.",
+   "heard": "The pores you can see are little doorways into narrow tunnels called hair follicles.",
    "words": [
     {
      "w": "The",
@@ -81,80 +81,80 @@
     },
     {
      "w": "pores",
-     "start": 0.385,
-     "end": 0.88,
+     "start": 0.23,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "you",
-     "start": 0.985,
+     "start": 0.965,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "can",
-     "start": 1.045,
+     "start": 1.025,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "see",
-     "start": 1.1,
+     "start": 1.295,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "are",
-     "start": 1.52,
+     "start": 1.5,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "little",
-     "start": 1.685,
-     "end": 2.0,
+     "start": 1.665,
+     "end": 1.92,
      "heard": true
     },
     {
      "w": "doorways,",
-     "start": 2.0,
-     "end": 2.72,
+     "start": 1.98,
+     "end": 2.64,
      "heard": true
     },
     {
      "w": "into",
-     "start": 2.92,
-     "end": 3.28,
+     "start": 2.9,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "narrow",
-     "start": 3.285,
+     "start": 3.265,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "tunnels",
-     "start": 3.69,
-     "end": 4.48,
+     "start": 3.655,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "called",
-     "start": 4.63,
-     "end": 4.8,
+     "start": 4.315,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 5.0,
+     "start": 5.24,
      "end": 5.6,
-     "heard": false
+     "heard": true
     },
     {
      "w": "follicles.",
-     "start": 5.62,
-     "end": 6.96,
+     "start": 5.6,
+     "end": 7.28,
      "heard": true
     }
    ]
@@ -166,80 +166,80 @@
    "words": [
     {
      "w": "Even",
-     "start": 0.025,
-     "end": 0.48,
+     "start": 0.12,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "where",
-     "start": 0.39,
-     "end": 0.72,
+     "start": 0.49,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "you",
-     "start": 0.665,
-     "end": 0.88,
+     "start": 0.765,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "can't",
-     "start": 0.885,
-     "end": 1.36,
+     "start": 1.005,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "see",
-     "start": 1.36,
-     "end": 1.52,
+     "start": 1.46,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "one…",
-     "start": 1.615,
-     "end": 2.0,
+     "start": 1.715,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.075,
-     "end": 2.24,
+     "start": 2.175,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "fine",
-     "start": 2.255,
-     "end": 2.72,
+     "start": 2.355,
+     "end": 2.8,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 2.6,
-     "end": 3.2,
+     "start": 2.7,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "is",
-     "start": 3.21,
-     "end": 3.52,
+     "start": 3.31,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "usually",
-     "start": 3.54,
-     "end": 4.0,
+     "start": 3.64,
+     "end": 4.16,
      "heard": true
     },
     {
      "w": "growing",
-     "start": 4.065,
-     "end": 4.72,
+     "start": 4.165,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "inside.",
-     "start": 4.61,
-     "end": 5.68,
+     "start": 4.76,
+     "end": 5.84,
      "heard": true
     }
    ]
@@ -257,67 +257,67 @@
     },
     {
      "w": "down",
-     "start": 0.765,
+     "start": 0.745,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "sits",
-     "start": 1.075,
+     "start": 1.055,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.475,
+     "start": 1.455,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "small",
-     "start": 1.74,
+     "start": 1.72,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "oil",
-     "start": 2.125,
-     "end": 2.48,
+     "start": 2.105,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "gland.",
-     "start": 2.49,
-     "end": 3.52,
+     "start": 2.47,
+     "end": 3.44,
      "heard": true
     },
     {
      "w": "Its",
-     "start": 3.565,
+     "start": 3.545,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 3.715,
+     "start": 3.695,
      "end": 4.24,
      "heard": true
     },
     {
      "w": "do",
-     "start": 4.245,
-     "end": 4.48,
+     "start": 4.225,
+     "end": 4.56,
      "heard": true
     },
     {
      "w": "something",
-     "start": 4.71,
-     "end": 5.04,
+     "start": 4.655,
+     "end": 4.88,
      "heard": true
     },
     {
      "w": "strange.",
-     "start": 5.01,
+     "start": 4.99,
      "end": 6.0,
      "heard": true
     }
@@ -331,13 +331,13 @@
     {
      "w": "Each",
      "start": 0.085,
-     "end": 0.48,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "one",
      "start": 0.515,
-     "end": 0.72,
+     "end": 0.88,
      "heard": true
     },
     {
@@ -361,7 +361,7 @@
     {
      "w": "oil…",
      "start": 2.3,
-     "end": 2.96,
+     "end": 2.8,
      "heard": true
     },
     {
@@ -415,7 +415,7 @@
     {
      "w": "oil.",
      "start": 6.245,
-     "end": 7.52,
+     "end": 7.44,
      "heard": true
     }
    ]
@@ -427,128 +427,128 @@
    "words": [
     {
      "w": "That",
-     "start": 0.18,
+     "start": 0.16,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "oil",
-     "start": 0.45,
-     "end": 0.96,
+     "start": 0.43,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.905,
+     "start": 0.885,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "called",
-     "start": 1.145,
+     "start": 1.125,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "sebum.",
-     "start": 1.48,
+     "start": 1.46,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "It",
-     "start": 2.605,
-     "end": 2.8,
+     "start": 2.585,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "glides",
-     "start": 2.75,
-     "end": 3.36,
+     "start": 2.73,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "up",
-     "start": 3.56,
-     "end": 3.61,
+     "start": 3.185,
+     "end": 3.6,
      "heard": true
     },
     {
      "w": "along",
-     "start": 3.68,
+     "start": 3.54,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "the",
-     "start": 4.02,
+     "start": 4.0,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "hair,",
-     "start": 4.05,
+     "start": 4.06,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "and",
-     "start": 4.86,
-     "end": 5.04,
+     "start": 4.84,
+     "end": 4.96,
      "heard": true
     },
     {
      "w": "spreads",
-     "start": 5.16,
+     "start": 4.9,
      "end": 5.6,
      "heard": true
     },
     {
      "w": "over",
-     "start": 5.52,
+     "start": 5.5,
      "end": 5.84,
      "heard": true
     },
     {
      "w": "your",
-     "start": 5.9,
+     "start": 5.88,
      "end": 6.08,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 6.005,
-     "end": 6.56,
+     "start": 6.17,
+     "end": 6.48,
      "heard": true
     },
     {
      "w": "in",
-     "start": 6.635,
+     "start": 6.45,
      "end": 6.72,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.925,
-     "end": 6.975,
+     "start": 6.905,
+     "end": 6.955,
      "heard": true
     },
     {
      "w": "thin,",
-     "start": 6.955,
+     "start": 6.935,
      "end": 7.36,
      "heard": true
     },
     {
      "w": "soft",
-     "start": 7.255,
-     "end": 7.92,
+     "start": 7.42,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "coat.",
-     "start": 7.9,
-     "end": 8.88,
+     "start": 7.88,
+     "end": 9.12,
      "heard": true
     }
    ]
@@ -560,68 +560,68 @@
    "words": [
     {
      "w": "Tiny",
-     "start": 0.215,
-     "end": 0.64,
+     "start": 0.195,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "microbes",
-     "start": 0.595,
+     "start": 0.575,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "live",
-     "start": 1.635,
+     "start": 1.615,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "in",
-     "start": 2.02,
+     "start": 2.0,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "there",
-     "start": 2.05,
+     "start": 2.115,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "too,",
-     "start": 2.545,
+     "start": 2.395,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "quietly",
-     "start": 3.545,
+     "start": 3.525,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "feeding",
-     "start": 4.23,
+     "start": 4.21,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "on",
-     "start": 4.53,
+     "start": 4.525,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "that",
-     "start": 4.82,
+     "start": 4.8,
      "end": 5.12,
      "heard": true
     },
     {
      "w": "oil.",
-     "start": 5.155,
-     "end": 6.24,
+     "start": 5.135,
+     "end": 6.0,
      "heard": true
     }
    ]
@@ -633,80 +633,80 @@
    "words": [
     {
      "w": "That's",
-     "start": 0.15,
-     "end": 0.56,
+     "start": 0.13,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.625,
+     "start": 0.395,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "pore.",
-     "start": 0.815,
-     "end": 1.68,
+     "start": 0.795,
+     "end": 1.6,
      "heard": false
     },
     {
      "w": "A",
-     "start": 1.685,
+     "start": 1.665,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "doorway.",
-     "start": 1.87,
-     "end": 2.56,
+     "start": 1.85,
+     "end": 2.88,
      "heard": true
     },
     {
      "w": "A",
-     "start": 2.945,
+     "start": 2.925,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "hair.",
-     "start": 3.175,
+     "start": 3.21,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "A",
-     "start": 3.96,
+     "start": 3.94,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "gland.",
-     "start": 4.16,
+     "start": 4.14,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "And",
-     "start": 5.595,
-     "end": 5.76,
+     "start": 5.575,
+     "end": 5.68,
      "heard": true
     },
     {
      "w": "its",
-     "start": 5.88,
-     "end": 5.93,
+     "start": 5.78,
+     "end": 5.84,
      "heard": true
     },
     {
      "w": "tiny",
-     "start": 6.12,
-     "end": 6.56,
+     "start": 6.1,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "residents.",
-     "start": 6.515,
-     "end": 6.86,
+     "start": 6.625,
+     "end": 6.94,
      "heard": false
     }
    ]
@@ -718,32 +718,32 @@
    "words": [
     {
      "w": "Until…",
-     "start": 0.27,
+     "start": 0.28,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.835,
+     "start": 0.845,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "doorway",
-     "start": 1.195,
+     "start": 1.205,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "gets",
-     "start": 1.865,
+     "start": 1.765,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "blocked.",
-     "start": 2.25,
-     "end": 3.52,
+     "start": 2.26,
+     "end": 3.76,
      "heard": true
     }
    ]
@@ -755,62 +755,62 @@
    "words": [
     {
      "w": "If",
-     "start": 0.24,
+     "start": 0.22,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "you're",
-     "start": 0.275,
+     "start": 0.255,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "feeling",
-     "start": 0.485,
+     "start": 0.465,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.045,
+     "start": 1.025,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "little",
-     "start": 1.185,
+     "start": 1.165,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "calmer,",
-     "start": 1.525,
-     "end": 2.08,
+     "start": 1.505,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "tap",
-     "start": 2.075,
-     "end": 2.48,
+     "start": 2.055,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "like",
-     "start": 2.65,
-     "end": 2.8,
+     "start": 2.825,
+     "end": 2.875,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.485,
+     "start": 3.465,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "follow.",
-     "start": 3.765,
-     "end": 4.56,
+     "start": 3.745,
+     "end": 4.64,
      "heard": true
     }
    ]

@@ -1,0 +1,23 @@
+{
+ "about": "Skin Sense ep15 ASMR foley, timed to set/pore3d.js T0 anchors (the drop into the tunnel, the hair growing, the gland duct, oil filling and breaking down, sebum flowing and coating, microbes feeding, the doorway starting to close). See set/foley.py.",
+ "cues": [
+  {"at": 0.4, "kind": "tile", "note": 6, "repeat": 3, "every": 0.2, "step": 1, "pan": -0.1, "gain": -6, "seed": 1},
+  {"at": 0.3, "until": 3.2, "kind": "dust", "pan": 0.2, "gain": 0, "seed": 2},
+  {"at": "start:vo02+0.6", "until": "start:vo02+3.6", "kind": "glide", "down": true, "pan": -0.2, "gain": 1, "seed": 3},
+  {"at": "start:vo02+4.2", "kind": "pop", "pan": 0.15, "gain": -3, "seed": 4},
+  {"at": "start:vo03+0.4", "until": "end:vo03+1.0", "kind": "creak", "pan": 0.0, "gain": 3, "seed": 5},
+  {"at": "start:vo03+3.6", "kind": "tile", "note": 5, "repeat": 3, "every": 0.26, "step": 1, "pan": 0.25, "gain": -4, "seed": 6},
+  {"at": "start:vo04+1.0", "kind": "squish", "repeat": 3, "every": 0.7, "pan": 0.3, "gain": 0, "seed": 7},
+  {"at": "start:vo04+2.2", "kind": "pop", "pan": 0.35, "gain": -2, "seed": 8},
+  {"at": "start:vo05+0.8", "until": "end:vo05-0.8", "kind": "squeeze", "pan": 0.1, "gain": 6, "seed": 9},
+  {"at": "start:vo05+1.6", "kind": "pinch", "repeat": 3, "every": 1.1, "pan": -0.2, "gain": -1, "seed": 10},
+  {"at": "end:vo05-0.5", "kind": "pop", "repeat": 4, "every": 0.35, "pan": 0.0, "gain": 0, "seed": 11},
+  {"at": "start:vo06+0.3", "until": "start:vo06+3.2", "kind": "glide", "pan": 0.0, "gain": 3, "seed": 12},
+  {"at": "start:vo06+0.8", "kind": "tile", "note": 4, "repeat": 4, "every": 0.5, "step": 1, "pan": -0.15, "gain": -4, "seed": 13},
+  {"at": "start:vo06+4.0", "until": "end:vo06+1.5", "kind": "peel", "pan": 0.0, "gain": -2, "seed": 14},
+  {"at": "start:vo07+0.5", "kind": "tap", "repeat": 6, "every": 0.5, "pan": 0.3, "gain": -2, "seed": 15},
+  {"at": "start:vo08+1.2", "kind": "tile", "note": 5, "repeat": 4, "every": 1.2, "step": 1, "pan": 0.0, "gain": -4, "seed": 16},
+  {"at": "start:vo09+0.2", "until": "end:vo09+1.0", "kind": "squeeze", "pan": -0.1, "gain": 4, "seed": 17},
+  {"at": "end:vo09+0.6", "kind": "pinch", "pan": 0.0, "gain": 0, "seed": 18}
+ ]
+}

@@ -14,8 +14,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 4.88,
-   "sha256": "8074b65ac3e314cd1b96fbd19dbaad9ebd7a6f78ebe43abb562f0072bc025dba"
+   "dur": 4.83,
+   "sha256": "1ebc2cab47a696c9dcab709d42ec2f73c42b426d928ee4037f681561604db95c"
   },
   {
    "id": "vo02",
@@ -24,8 +24,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 5.6,
-   "sha256": "6d839d97e58c0c2f15ff7eacdf06588f198ddb676b5f1086f272c95855572148"
+   "dur": 5.48,
+   "sha256": "c4bf7cad275c6117755c56858c08fb51f77306c3e7f2fc7c747008f7ff8c8bb5"
   },
   {
    "id": "vo03",
@@ -34,8 +34,8 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 8.16,
-   "sha256": "f6cdf7bfebe698169ca66531b08fd2130b83ea54c1ef4b58140e93fc54da11fe"
+   "dur": 8.18,
+   "sha256": "dc0ca13ba2d2001e7c810a4877775790735b79811287bcdb72ae30a128a3e2d0"
   },
   {
    "id": "vo04",
@@ -44,8 +44,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 7.52,
-   "sha256": "c6fbea0e0ca84e9826f578423a7e6901cf8b5aee5ddd51e2e8ffada8417dd3bf"
+   "dur": 7.38,
+   "sha256": "d909429d57252aaf8471f9b50c5f91f1d3121b03353119c17b89113b826f48e8"
   },
   {
    "id": "vo05",
@@ -54,8 +54,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 6.16,
-   "sha256": "6d9d4fd1d6c5d162e926494b4baaf2ae5101cad6e876a68be34a74bf0c193f51"
+   "dur": 6.21,
+   "sha256": "621e65c614b3449fcc78b977f650ff338a23f69476dc7858f18c61a9ddaa0f8c"
   },
   {
    "id": "vo06",
@@ -64,8 +64,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 4.32,
-   "sha256": "14c050f21f628d8bf66003bc39c65fff9cc171d3e5c27f0c7a4164fb6dcd2431"
+   "dur": 4.18,
+   "sha256": "3c0050423a78275d30b0fa7b895a2c481a4402bc736d7fc6893c3f3bce164285"
   },
   {
    "id": "vo07",
@@ -74,8 +74,8 @@
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 3.68,
-   "sha256": "f0f7ad858071807b8ab102ac98f2bb1b39309148c854f4169f6797d1646583d6"
+   "dur": 3.7,
+   "sha256": "49d066e1769c6e9d9d25218b150394f0e7c398bee82ee6ecb52fc3f1cbac0982"
   },
   {
    "id": "vo08",
@@ -84,8 +84,8 @@
    "stars": [],
    "phonemes": null,
    "file": "08.wav",
-   "dur": 10.24,
-   "sha256": "4e33038af2022d0075aac3b87391b7d5800a43262e4683cd8133c4564596110a"
+   "dur": 10.1,
+   "sha256": "f16eb79b4e8f640aa06a2de3aa25920ff3e2a9f6b0d171e66a918e81a988a70f"
   },
   {
    "id": "vo09",
@@ -94,18 +94,8 @@
    "stars": [],
    "phonemes": null,
    "file": "09.wav",
-   "dur": 8.08,
-   "sha256": "ba21a5eca5e40c9b880427a903f6b23b70c3b2e4d68643ee7b5d1fdcd558c0b0"
-  },
-  {
-   "id": "vo10",
-   "beat": "cta",
-   "text": "Your skin has plenty more quiet secrets. Tap like and follow.",
-   "stars": [],
-   "phonemes": null,
-   "file": "10.wav",
-   "dur": 4.4,
-   "sha256": "fc1f72633b869167f35eaeaf0052f270e6a1c7a1445b91c221f886e52a8da50c"
+   "dur": 7.94,
+   "sha256": "37e6ac488ddad746b302e3ccb508fb9344e5bf40fa9df9669cbb113144ebf76e"
   }
  ]
 }
