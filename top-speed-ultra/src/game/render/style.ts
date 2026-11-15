@@ -608,11 +608,17 @@ export class RetroPass {
   readonly mat: THREE.ShaderMaterial;
   calls = 0; tris = 0;      // the last scene render's draw calls and triangles (the pass itself adds one call)
 
+  private rect: THREE.WebGLRenderTarget | null = null;   // a second, small target for renderRect (made on first use)
+  private static makeTarget() {
+    const t = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: true, stencilBuffer: false });
+    t.texture.minFilter = t.texture.magFilter = THREE.NearestFilter;
+    t.texture.generateMipmaps = false;
+    t.depthTexture = new THREE.DepthTexture(1, 1);
+    return t;
+  }
+
   constructor(o: RetroOptions = RETRO_DEFAULTS) {
-    this.target = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: true, stencilBuffer: false });
-    this.target.texture.minFilter = this.target.texture.magFilter = THREE.NearestFilter;
-    this.target.texture.generateMipmaps = false;
-    this.target.depthTexture = new THREE.DepthTexture(1, 1);
+    this.target = RetroPass.makeTarget();
     this.mat = new THREE.ShaderMaterial({
       uniforms: {
         tColor: { value: this.target.texture }, tDepth: { value: this.target.depthTexture }, uTexel: { value: new THREE.Vector2(1, 1) },
@@ -646,7 +652,28 @@ export class RetroPass {
     renderer.info.autoReset = auto;
   }
 
-  dispose() { this.target.depthTexture?.dispose(); this.target.dispose(); this.quad.geometry.dispose(); this.mat.dispose(); }
+  // The same pass for a second view drawn into a square of the screen (the game's sky camera): the scene into its own
+  // small target (px device pixels a side), then the pass into the viewport and scissor the caller has set on the
+  // renderer (setRenderTarget(null) brings them back). The main target and its uniforms are left for the main view.
+  renderRect(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, px: number) {
+    const t = this.rect ??= RetroPass.makeTarget(), n = Math.max(1, Math.floor(px));
+    if (t.width !== n || t.height !== n) t.setSize(n, n);
+    const u = this.mat.uniforms;
+    u.tColor.value = t.texture; u.tDepth.value = t.depthTexture;
+    u.uTexel.value.set(1 / n, 1 / n); u.uStep.value = Math.max(1, Math.round(renderer.getPixelRatio()));
+    u.uNear.value = camera.near; u.uFar.value = camera.far;
+    const prev = renderer.getRenderTarget();
+    renderer.setRenderTarget(t);
+    renderer.render(scene, camera);
+    renderer.setRenderTarget(prev);
+    renderer.render(this.scene, this.cam);
+    u.tColor.value = this.target.texture; u.tDepth.value = this.target.depthTexture;
+  }
+
+  dispose() {
+    for (const t of [this.target, this.rect]) { t?.depthTexture?.dispose(); t?.dispose(); }
+    this.rect = null; this.quad.geometry.dispose(); this.mat.dispose();
+  }
 }
 
 // ------------------------------------------------------------------------------------------------ the facade
@@ -736,6 +763,21 @@ export class RetroStyle {
     U.uRetroMarks.value.set(this.options.marks[0] * pr, this.options.marks[1] * pr);
     this.pass.render(this.renderer, scene, camera);
   }
+
+  // a second camera's view (the game's sky camera) through the same pass, into the square of the screen the caller set
+  // with setViewport and setScissor (CSS pixels, as three takes them): the main view's sky, materials and shadows as
+  // they are, the markings' least size measured against that square. Called after attach; before render is fine.
+  renderRect(scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
+    if (this.scene !== scene) this.attach(scene, this.roots);
+    this.styleNew();                                   // a chunk built this frame, before the main view styles it
+    const vp = this.renderer.getViewport(this.vp), pr = this.renderer.getPixelRatio(), px = Math.floor(vp.z * pr);
+    const res = U.uRetroRes.value, rw = res.x, rh = res.y;
+    res.set(px, Math.floor(vp.w * pr));
+    U.uRetroMarks.value.set(this.options.marks[0] * pr, this.options.marks[1] * pr);
+    this.pass.renderRect(this.renderer, scene, camera, px);
+    res.set(rw, rh);
+  }
+  private vp = new THREE.Vector4();
 
   detach() {
     if (this.scene) { this.stylizer.unstyle(this.scene); this.scene.remove(this.sky.mesh); }

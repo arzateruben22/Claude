@@ -956,7 +956,8 @@ export class Game {
   }
   // RS1: the Retro style (src/game/render/style.ts) on Low while Settings.style says so: attached with the tier, its
   // materials, sky and pass all undone when it goes. The road chunks and terrain tiles are styled as they're built.
-  // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw).
+  // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw), and
+  // the sky camera's corner takes its rectangle version (drawSky).
   private style: RetroStyle | null = null;
   private applyStyle() {
     const on = retroOn(this.settings), roots = this.roads ? [this.roads.group, this.terrain.group] : [];
@@ -1684,7 +1685,7 @@ export class Game {
     r.shadowMap.autoUpdate = false;                        // the shadows already made will do; the main view updates them
     r.setRenderTarget(null);
     r.setScissorTest(true); r.setScissor(x, y, s, s); r.setViewport(x, y, s, s);
-    r.render(this.scene, this.skyCam);
+    if (this.style) this.style.renderRect(this.scene, this.skyCam); else r.render(this.scene, this.skyCam);   // Retro: its pass, into the square
     r.setScissorTest(false);
     const size = r.getSize(this.tmpSize);
     r.setViewport(0, 0, size.x, size.y);

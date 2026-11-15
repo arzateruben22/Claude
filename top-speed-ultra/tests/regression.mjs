@@ -3114,8 +3114,10 @@ await group('phone', async (use) => {
   });
   // RS1, the Retro style on a phone, switched on where a player would (Settings, under Low): it draws at the screen's
   // full resolution (a render scale of 1, the pixel ratio never under 1) through its own pass, and the HUD (the page
-  // over the canvas) still shows the speed on top of it. Switched back, it is gone and saved so.
-  await check('Retro on a phone: the switch under Low turns it on at full resolution, the speed readout over it', async () => {
+  // over the canvas) still shows the speed on top of it. The sky camera's corner goes through the same pass, into its
+  // own small target (RetroStyle.renderRect): its copied picture is on the palette too, and the copy's self-check holds.
+  // Switched back, the corner is the standard picture again.
+  await check('Retro on a phone: the switch under Low turns it on at full resolution, the speed readout over it, the sky camera in the style too', async () => {
     await game(page, () => window.__game.setPaused(true));
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
@@ -3133,13 +3135,37 @@ await group('phone', async (use) => {
         speed: !!sp && getComputedStyle(sp).visibility !== 'hidden' && sp.getBoundingClientRect().height > 0, mph: document.querySelector('.hud-mph')?.textContent ?? '' };
     });
     await page.screenshot({ path: path.join(OUT, 'phone-retro.png') });
-    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
-    await frames(page, 2, 400000);
+    // the sky camera: the corner's canvas holds an exact copy of its square of the drawing buffer
+    const skyLook = () => game(page, () => {
+      const cv = document.querySelector('.corner.sky canvas'), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      const on = (v, n) => v === Math.round(Math.round((v * (n - 1)) / 255) * (255 / (n - 1)));
+      let k = 0, n = 0, s = 0, s2 = 0;
+      for (let i = 0; i < d.length; i += 28) { n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++; const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; s += l; s2 += l * l; }
+      return { px: cv.width, share: k / n, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), mode: window.__game.skyMode, self: window.__game.skyCheck };
+    });
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); });
+    await page.waitForSelector('.corner.sky canvas', { timeout: 60000 });
+    await frames(page, 4, 400000);
+    const sky = await skyLook();
+    const rect = await game(page, () => { const t = window.__game.style?.pass.rect; return t ? `${t.width}x${t.height}` : ''; });
+    await page.screenshot({ path: path.join(OUT, 'phone-retro-sky.png') });
+    // off the way it went on: the switch in Settings (which also saves it)
+    await game(page, () => window.__game.setPaused(true));
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await sw.uncheck();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await frames(page, 4, 400000);
+    const skyOff = await skyLook();
     const offState = await game(page, () => ({ style: !!window.__game.style, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').style }));
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
     expect(r.on && r.scale === 1 && r.pr >= Math.min(1, r.dpr) && r.target === r.buf, `Retro ${r.on ? 'on' : 'off'}, render scale ${r.scale}, pixel ratio ${r.pr} on a ${r.dpr}x screen, pass ${r.target} for a ${r.buf} canvas`);
     expect(r.speed && /\d/.test(r.mph), `the speed readout: ${r.speed ? 'shown' : 'hidden'}, "${r.mph}"`);
-    expect(!offState.style, `switched back: ${JSON.stringify(offState)}`);
-    return `pixel ratio ${r.pr} on a ${r.dpr}x screen, ${r.buf}; speed "${r.mph}" over it`;
+    expect(rect === `${sky.px}x${sky.px}` && sky.share > 0.9 && sky.mean > 20 && sky.sd > 8, `the sky camera with Retro: its pass ${rect || 'unused'} for a ${sky.px} px corner, ${pct(sky.share)} on the palette, mean ${fmt(sky.mean)}, sd ${fmt(sky.sd)}`);
+    expect(sky.mode === 'copy' && sky.self.startsWith('copy ok'), `the sky camera's self-check with Retro: ${sky.mode}, "${sky.self}"`);
+    expect(!offState.style && offState.saved === 'standard' && skyOff.share < 0.2 && skyOff.mean > 20, `switched back: ${JSON.stringify(offState)}, the corner ${pct(skyOff.share)} on the palette`);
+    return `pixel ratio ${r.pr} on a ${r.dpr}x screen, ${r.buf}; speed "${r.mph}" over it; sky camera ${rect}, ${pct(sky.share)} on the palette (${pct(skyOff.share)} back on standard)`;
   });
   await page.keyboard.press('Escape');
   await check('OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop', async () => {
