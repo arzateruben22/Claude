@@ -106,6 +106,19 @@ front, "your ring?!").
 5. **Keep each channel's layout:** Possibility Lab keeps `covers.py`'s plate (series line, title with the marker
    word, disclosure line), which the owner approved on S2E01, S2E04 and S2E05; One More Orbit keeps
    `season2/make_cover.py`'s look (night gradient, 0-4 words in Lexend 800, teal accent, no series line).
+6. **Switch it up (owner, 15 Nov 2026: "not every thumbnail has the same ?! with arrows"):** a channel's grid of the
+   handwritten "?!" note and arrow on every post reads as a template. Rotate the hook among these, all clickbait,
+   all true:
+   - the handwritten "?!" note with an arrow (at most every third post);
+   - one giant number as the star ("17×", "1,400 km", "0.4 s"), no arrow;
+   - side by side: before/after, or two speeds (10× | 20×, today | 17× spin);
+   - an extreme close-up of the impossible frozen moment, cropped tight, no words;
+   - a size line-up: the tiny thing beside the huge thing;
+   - a zoom circle: a magnifier inset on the one detail that matters;
+   - a circle only, no words;
+   - the tiny person facing the huge thing (the "Walking to the Moon" look).
+   Never the same device on two neighbouring posts of a channel. **Grid check before delivery:** put the new cover
+   beside the channel's last five, three across as the profile grid shows them, and change it if it repeats.
 
 ## Truth rules (non-negotiable)
 
