@@ -7,12 +7,13 @@
 import { DRIVERS, SKINS, lookFor, DriverId, Presentation } from '../../game/drivers';
 import { baseBody, baseLook, defaultFace, HAIR_COLORS, IRIS_COLORS } from '../people/params';
 import type { PersonOptions, Garment, Accessories } from '../people';
-import { castById, castPerson, CastId } from '../cast';
+import { playable, castPerson, CastId } from '../cast';
+import { packUnlocked } from '../../game/castPack';
 
 export interface DriverChoice { id: DriverId; pres: Presentation; skin: number; car: string; name: string; character: CastId | null }
 
 export function readDriver(q: URLSearchParams): DriverChoice {
-  let s: { driver?: string; presentation?: string; skin?: number; character?: string } = {}, car = 'rossini-gt';
+  let s: { driver?: string; presentation?: string; skin?: number; character?: string; packTest?: boolean } = {}, car = 'rossini-gt';
   try { s = JSON.parse(localStorage.getItem('tsu.settings') ?? '{}') ?? {}; } catch { /* a convenience */ }
   try { car = JSON.parse(localStorage.getItem('tsu.profile') ?? '{}')?.car ?? car; } catch { /* a convenience */ }
   const id = (q.get('driver') ?? s.driver ?? 'closer') as DriverId;
@@ -20,7 +21,9 @@ export function readDriver(q: URLSearchParams): DriverChoice {
   const skin = Math.max(0, Math.min(SKINS.length - 1, Number(q.get('skin') ?? s.skin ?? 1) || 0));
   const def = DRIVERS.find((d) => d.id === id) ?? DRIVERS[0];
   const carQ = q.get('car');
-  const ch = castById(q.get('char') ?? s.character ?? '');
+  // (a pack character only while the pack is unlocked: the store's entitlement, or in a test-mode build the saved TEST
+  // unlock, or on these pages ?pack=test, which a live build ignores as well; else the look without a character)
+  const ch = playable(q.get('char') ?? s.character ?? '', packUnlocked({ packTest: s.packTest === true || q.get('pack') === 'test' }));
   return { id: def.id, pres: ch ? ch.presentation : pres === 'f' ? 'f' : 'm', skin, car: carQ ?? car, name: ch ? ch.name : def.name, character: ch ? ch.id : null };
 }
 

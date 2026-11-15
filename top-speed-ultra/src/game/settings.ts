@@ -43,6 +43,9 @@ export interface Settings {
   // old presentation and skin above, exactly as before (2026-11-11). Picked, it is the driver everywhere: the cockpit
   // arms, the on-foot avatar in both venues. The archetype (driver) stays the gameplay choice.
   character: string;
+  // (2026-11-12) the pack characters' TEST unlock (src/game/castPack.ts): honoured only in a test-mode build; not a
+  // purchase and not a store entitlement
+  packTest: boolean;
   music: number;            // radio volume
   ultra: boolean;           // Ultra Realism (opens at level 5), and its three parts
   ultraTunnel: boolean;
@@ -154,7 +157,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, character: '', music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, character: '', packTest: false, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
@@ -207,6 +210,7 @@ function readSettings(): Settings {
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       character: isCastId(v.character) ? v.character : '',
+      packTest: v.packTest === true,
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
