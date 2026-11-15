@@ -91,7 +91,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
 // the Retro style's palette (src/game/render/style.ts: 32/64/32 levels, written out as 8 bits): the share of the drawing
-// buffer's pixels whose three channels all sit on a 5/6/5-bit step, read straight after a frame drawn for it (so no
+// buffer's pixels (pure black left out) whose three channels all sit on a 5/6/5-bit step, read straight after a frame drawn for it (so no
 // HUD and no compositing in the way). A Retro frame is nearly all of them; a standard one about 1 in 2000 by chance
 const onPalette = (page) => game(page, () => {
   const g = window.__game, gl = g.renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, d = new Uint8Array(w * h * 4);
@@ -100,7 +100,10 @@ const onPalette = (page) => game(page, () => {
   gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, d);
   const on = (v, n) => v === Math.round(Math.round((v * (n - 1)) / 255) * (255 / (n - 1)));
   let k = 0, n = 0;
-  for (let i = 0; i < d.length; i += 4 * 7) { n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++; }
+  for (let i = 0; i < d.length; i += 4 * 7) {
+    if (d[i] + d[i + 1] + d[i + 2] === 0) continue;   // pure black is on any palette (and see the Retro check's note)
+    n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++;
+  }
   return k / Math.max(1, n);
 });
 const pc = (f) => (f * 100).toFixed(1) + '%';
@@ -2454,6 +2457,7 @@ await group('render', async (use) => {
         retroProgs: g.renderer.info.programs.filter((p) => /retro/.test(p.cacheKey)).length };
     });
     const before = await census();
+    const shareBefore = await onPalette(page);
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low', style: 'retro' }); g.fastForward(6, {}, 30); });
     await frames(page, 3, 400000);
     const on = await census();
@@ -2462,7 +2466,9 @@ await group('render', async (use) => {
     // the palette on screen (32/64/32 levels and a dither): every channel of a canvas pixel on its 5/6/5-bit step
     const share = await onPalette(page);
     // the context lost and restored with Retro on (Game's webglcontextrestored runs applyQuality, which keeps the
-    // style): it draws through its pass again, at the canvas's size, still in the palette
+    // style): it draws through its pass again, at the canvas's size, still in the palette. (Pure black is left out of
+    // the palette share: since before the port a restored context leaves the environment map unbuilt, so the
+    // cabin draws pure black (0,0,0) in the standard style after the context check above)
     await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
     await page.getByText('Graphics reset').waitFor({ timeout: 10000 });
     await game(page, () => window.__lose.restoreContext());
@@ -2477,11 +2483,10 @@ await group('render', async (use) => {
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
     await frames(page, 2, 400000);
     const off = await census();
-    const shareOff = await onPalette(page);
     expect(on.style && on.toon > 0 && on.lit < before.lit / 4, `Retro on: ${on.toon} toon, ${on.lit} still lit (before: ${before.lit} lit)`);
     expect(on.shadow === 0 && !on.sky && on.retroSky, `Retro on: shadow type ${on.shadow} (0 is one-step), realistic sky ${on.sky ? 'shown' : 'hidden'}, banded sky ${on.retroSky ? 'in' : 'missing'}`);
     expect(on.pr >= Math.min(1, on.dpr) && extra.target === extra.buffer, `Retro on: pixel ratio ${on.pr} on a ${on.dpr}x screen, pass ${extra.target} for a ${extra.buffer} canvas`);
-    expect(share > 0.9 && shareOff < 0.2, `pixels on the 5/6/5 palette: ${pc(share)} with Retro, ${pc(shareOff)} after switching back`);
+    expect(share > 0.9 && shareBefore < 0.2, `pixels on the 5/6/5 palette: ${pc(share)} with Retro, ${pc(shareBefore)} before it`);
     expect(back.style && back.target === back.buffer && shareBack > 0.9, `after a lost context: ${JSON.stringify(back)}, ${pc(shareBack)} on the palette`);
     expect(!off.style && off.toon === 0 && off.lit >= before.lit && off.shadow === before.shadow && off.sky && !off.retroSky, `switched back: ${JSON.stringify(off)} (before ${JSON.stringify(before)})`);
     expect(on.retroProgs > 0 && off.retroProgs === 0, `Retro's shader programs: ${on.retroProgs} while on, ${off.retroProgs} left after switching back`);
@@ -2489,7 +2494,7 @@ await group('render', async (use) => {
     // while on), both undone on the way back
     expect(on.marks > 0 && off.marks === 0 && before.marks === 0, `marking geometries with Retro's extents: ${before.marks} before, ${on.marks} on, ${off.marks} back`);
     expect(on.films > 0 && off.films === 0 && before.films === 0, `glass films put away: ${before.films} before, ${on.films} on, ${off.films} back`);
-    return `on: ${on.toon} toon materials on meshes (${extra.materials} made: ${extra.flat} flat, ${extra.poster} posterized maps), ${on.lit} left lit, one-step shadows, pass ${extra.target}, ${pc(share)} on the palette, ${on.retroProgs} programs, ${on.marks} marking meshes, ${on.films} films put away; after a lost context ${pc(shareBack)}; back: ${off.lit} lit, 0 toon, ${off.retroProgs} programs, ${pc(shareOff)} on the palette`;
+    return `on: ${on.toon} toon materials on meshes (${extra.materials} made: ${extra.flat} flat, ${extra.poster} posterized maps), ${on.lit} left lit, one-step shadows, pass ${extra.target}, ${pc(share)} on the palette, ${on.retroProgs} programs, ${on.marks} marking meshes, ${on.films} films put away; after a lost context ${pc(shareBack)}; back: ${off.lit} lit, 0 toon, ${off.retroProgs} programs; ${pc(shareBefore)} on the palette before`;
   });
   // last, because the first frames after a switch compile new shaders and take minutes here
   await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
@@ -3114,7 +3119,8 @@ await group('phone', async (use) => {
     await game(page, () => window.__game.setPaused(true));
     await page.waitForSelector('.panel.paused', { timeout: 30000 });
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
-    const sw = page.getByRole('checkbox', { name: /Style: Retro/ });
+    await page.locator('#set-graphics').waitFor({ timeout: 30000 });
+    const sw = page.getByRole('switch', { name: /Style: Retro/ });           // Toggle is a checkbox with role="switch"
     const low = await game(page, () => window.__game.settings.quality === 'low');
     expect(low && await sw.count() === 1, `the switch: ${await sw.count()} under quality "${await game(page, () => window.__game.settings.quality)}"`);
     await sw.check();
