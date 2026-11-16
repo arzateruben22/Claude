@@ -90,6 +90,42 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
+// the Retro style's palette (src/game/render/style.ts: 32/64/32 levels, written out as 8 bits): the share of the drawing
+// buffer's pixels (pure black left out) whose three channels all sit on a 5/6/5-bit step, read straight after a frame drawn for it (so no
+// HUD and no compositing in the way). A Retro frame is nearly all of them; a standard one about 1 in 2000 by chance
+const onPalette = (page) => game(page, () => {
+  const g = window.__game, gl = g.renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, d = new Uint8Array(w * h * 4);
+  g.draw(performance.now(), 0);
+  g.renderer.setRenderTarget(null);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, d);
+  const on = (v, n) => v === Math.round(Math.round((v * (n - 1)) / 255) * (255 / (n - 1)));
+  let k = 0, n = 0;
+  for (let i = 0; i < d.length; i += 4 * 7) {
+    if (d[i] + d[i + 1] + d[i + 2] === 0) continue;   // pure black is on any palette (and see the Retro check's note)
+    n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++;
+  }
+  return k / Math.max(1, n);
+});
+const pc = (f) => (f * 100).toFixed(1) + '%';
+// in the page: one frame drawn and read straight from the drawing buffer (no HUD), kept as window.__ctxRef[tag]; its
+// share of pure black (0,0,0) pixels, its mean difference per channel (0..255) from the frame kept as 'pre' (diff) and
+// from the last one read (step), and whether the environment map is still due to be built (dirty)
+function ctxFrameInPage(tag) {
+  const g = window.__game, gl = g.renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, d = new Uint8Array(w * h * 4);
+  g.draw(performance.now(), 0);
+  g.renderer.setRenderTarget(null);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, d);
+  const ref = (window.__ctxRef ??= {}), pre = ref.pre, last = ref.last;
+  let black = 0, diff = 0, step = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] + d[i + 1] + d[i + 2] === 0) black++;
+    if (pre && pre.length === d.length) diff += Math.abs(d[i] - pre[i]) + Math.abs(d[i + 1] - pre[i + 1]) + Math.abs(d[i + 2] - pre[i + 2]);
+    if (last && last.length === d.length) step += Math.abs(d[i] - last[i]) + Math.abs(d[i + 1] - last[i + 1]) + Math.abs(d[i + 2] - last[i + 2]);
+  }
+  ref[tag] = d; ref.last = d;
+  const n = w * h;
+  return { black: black / n, diff: pre && pre.length === d.length ? diff / (3 * n) : 99, step: last && last.length === d.length ? step / (3 * n) : 99, dirty: !!g.env.envDirty };
+}
 // after a page load: keep every result the game reports, so checks can read it; and the stopped-car helper below
 async function hook(page) {
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -826,6 +862,38 @@ await group('boot', async (use) => {
     const text = await page.locator('.overlay.menu').innerText();
     expect(/OpenStreetMap contributors via Overture Maps \(ODbL\)/.test(text), 'no OSM/Overture credit');
     expect(!(await page.getByRole('button', { name: /^Controls$/ }).count()), 'a Controls button is back');
+  });
+  // The field of view's default is +10 (owner, 2026-11-16: "make the standard pov set at +10"). A device that saved
+  // the old default (0, before settings version 2) moves to +10 once, and the move is written back; a 0 saved since
+  // (version 2: the player's own) stays 0; any other value saved before stays as it was. Each in its own page, the
+  // boot group's own game held meanwhile (two software-rendered games at once take minutes a frame here).
+  await check('field of view: +10 by default; a saved 0 from before moves to +10 once; a 0 chosen since stays', async () => {
+    const boot = async (saved) => {
+      const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
+      try {
+        // written once (a reload keeps what the game saved)
+        await ctx.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); if (s) localStorage.setItem('tsu.settings', JSON.stringify(s)); else localStorage.removeItem('tsu.settings'); } }, saved);
+        const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+        const read = async () => {
+          await p.waitForFunction(() => window.__game?.net, null, { timeout: BOOT_MS });
+          return p.evaluate(() => { const s = JSON.parse(localStorage.getItem('tsu.settings') || 'null'); return { fov: window.__game.settings.fov, savedFov: s?.fov ?? null, savedV: s?.v ?? null }; });
+        };
+        await p.goto(pathToFileURL(GAME).href);
+        const first = await read();
+        await p.reload();
+        return { first, again: await read() };
+      } finally { await ctx.close(); }
+    };
+    await game(page, () => window.__game.hold(true));
+    try {
+      const base = { quality: 'low', adaptive: false, density: 'none' };
+      const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
+      expect(fresh.first.fov === 10, `a new device starts at ${fresh.first.fov}`);
+      expect(old0.first.fov === 10 && old0.first.savedFov === 10 && old0.first.savedV === 2 && old0.again.fov === 10, `the old default 0 saved before: ${JSON.stringify(old0)}`);
+      expect(old5.first.fov === 5 && old5.again.fov === 5, `+5 saved before: ${JSON.stringify(old5)}`);
+      expect(mine0.first.fov === 0 && mine0.again.fov === 0 && mine0.again.savedFov === 0, `0 saved at version 2: ${JSON.stringify(mine0)}`);
+      return `new device +${fresh.first.fov}; old 0 → +${old0.first.fov} (saved ${old0.first.savedFov}, version ${old0.first.savedV}), still +${old0.again.fov} after a reload; old +5 kept; a 0 saved at version 2 kept (${mine0.again.fov})`;
+    } finally { await game(page, () => window.__game.hold(false)); }
   });
 });
 
@@ -2437,6 +2505,106 @@ await group('render', async (use) => {
     await shot('after-context-loss');
     return `paused while lost, rendering again after Resume (${after.roads} road chunks)`;
   });
+  // A lost and restored context must come back looking as it did (2026-11-16: on iOS, after the app went to the
+  // background, standard Low drew the cabin pure black for good, because the environment map lived only on the GPU and
+  // nothing drew it again). Low and High, the seat view, paused: the frame is read straight from the drawing buffer
+  // once it has settled (the environment map built, the field of view eased in), then again after a loss and restore.
+  // Measured here (640x360, SwiftShader): two settled frames differ by 0.03 to 0.2 levels a channel on average; the
+  // broken restore was 28.5 at Low (34% of the frame pure black) and 0.7 even with Retro's toon materials. 2.0 sits
+  // ten times over the noise and well under the smallest real breakage. The game's onContextRestored hook (the one
+  // restore path other parts register their GPU rebuilds with) must run once per restore and not after unregistering.
+  await check('a lost context comes back as it was: Low and High, seat view, no black cabin; onContextRestored runs once a restore', async () => {
+    const read = (tag) => game(page, ctxFrameInPage, tag);
+    const loseAndRestore = async () => {
+      await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
+      await page.waitForFunction(() => window.__game.renderer.getContext().isContextLost(), null, { timeout: 30000 });
+      await page.waitForTimeout(300);
+      await game(page, () => window.__lose.restoreContext());
+      await page.waitForFunction(() => !window.__game.renderer.getContext().isContextLost() && window.__game.isPaused, null, { timeout: 60000 });
+      await frames(page, 2, 400000);
+    };
+    await game(page, () => { const g = window.__game; window.__hookRuns = []; window.__unhook = g.onContextRestored((n) => window.__hookRuns.push(n)); });
+    const out = [], restores0 = await game(page, () => window.__game.contextRestores);
+    for (const q of ['low', 'high']) {
+      await game(page, (qq) => { const g = window.__game; g.updateSettings({ ...g.settings, quality: qq, style: 'standard', corner: 'map' }); g.setPaused(true); g.setCam('cockpit'); }, q);
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: 400000 });
+      let calm = 0, s = null;
+      for (let k = 0; k < 60 && calm < 2; k++) { await frames(page, 3, 400000); s = await read('settle'); calm = !s.dirty && s.step < 0.6 ? calm + 1 : 0; }
+      expect(calm >= 2, `${q}: the frame never settled (last step ${fmt(s.step)}, environment map ${s.dirty ? 'still due' : 'built'})`);
+      await read('pre');
+      await frames(page, 2, 400000);
+      const noise = await read('noise');
+      await loseAndRestore();
+      const after = await read('after');
+      if (q === 'low') await shot('context-restored-low-seat');
+      expect(after.black <= noise.black + 0.005, `${q}: ${pc(after.black)} of the frame pure black after the restore (${pc(noise.black)} before)`);
+      expect(after.diff < 2, `${q}: the restored frame differs from the one before by ${fmt(after.diff)} levels a channel on average (two frames before it: ${fmt(noise.diff)})`);
+      out.push(`${q}: ${fmt(after.diff)} levels from the frame before (noise ${fmt(noise.diff)}), ${pc(after.black)} pure black`);
+      if (q === 'low') await game(page, () => window.__unhook());   // the hook leaves before the second restore
+    }
+    const hook = await game(page, (r0) => ({ runs: window.__hookRuns, restores: window.__game.contextRestores - r0 }), restores0);
+    expect(hook.restores === 2 && hook.runs.length === 1 && hook.runs[0] === restores0 + 1, `restores ${hook.restores}, the hook ran with ${JSON.stringify(hook.runs)} (registered for the first only)`);
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low' }); });
+    await frames(page, 2, 400000);
+    return out.join('; ') + `; the hook ran once for ${hook.restores} restores`;
+  });
+  // RS1, the Retro style (src/game/render/style.ts) on Low: cel-shaded toon materials everywhere the world was lit,
+  // the road chunks and tiles built while it's on styled too, hard one-step shadows, its banded sky in place of the
+  // realistic one, its own pass at the screen's full resolution; switched back, every original material returns
+  await check('Retro style on Low: toon materials, hard shadows, banded sky, full resolution; switching back restores it all', async () => {
+    const census = () => game(page, () => {
+      const g = window.__game, c = { toon: 0, lit: 0, marks: 0, films: 0 };
+      g.scene.traverse((o) => {
+        if (!o.isMesh) return;
+        if (o.geometry?.getAttribute('retroU')) c.marks++;
+        for (const m of [].concat(o.material)) {
+          if (m.isMeshToonMaterial) c.toon++; else if (m.isMeshStandardMaterial) c.lit++;
+          if (m.isMeshBasicMaterial && m.blending === 2 && !m.polygonOffset && m.depthTest && !m.depthWrite && !m.visible) c.films++;   // 2: additive
+        }
+      });
+      return { ...c, shadow: g.renderer.shadowMap.type, sky: g.env.sky.visible, retroSky: !!g.scene.getObjectByName('retro-sky'), style: !!g.style, pr: g.renderer.getPixelRatio(), dpr: devicePixelRatio,
+        retroProgs: g.renderer.info.programs.filter((p) => /retro/.test(p.cacheKey)).length };
+    });
+    const before = await census();
+    const shareBefore = await onPalette(page);
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low', style: 'retro' }); g.fastForward(6, {}, 30); });
+    await frames(page, 3, 400000);
+    const on = await census();
+    const extra = await game(page, () => { const g = window.__game, st = g.style.stylizer.counts, t = g.style.pass.target; return { ...st, target: `${t.width}x${t.height}`, buffer: `${g.renderer.domElement.width}x${g.renderer.domElement.height}` }; });
+    await shot('retro-day-clear');
+    // the palette on screen (32/64/32 levels and a dither): every channel of a canvas pixel on its 5/6/5-bit step
+    const share = await onPalette(page);
+    // the context lost and restored with Retro on (Game's webglcontextrestored runs applyQuality, which keeps the
+    // style): it draws through its pass again, at the canvas's size, still in the palette. (Pure black is left out of
+    // the palette share: until 2026-11-16 a restored context left the environment map unbuilt and the cabin drew pure
+    // black (0,0,0) in the standard style; the restore path now rebuilds it, checked just above)
+    await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
+    await page.getByText('Graphics reset').waitFor({ timeout: 10000 });
+    await game(page, () => window.__lose.restoreContext());
+    await page.waitForFunction(() => !window.__game.renderer.getContext().isContextLost(), null, { timeout: 15000 });
+    await page.getByRole('button', { name: 'Resume' }).first().click();
+    await frames(page, 4, 400000);
+    await game(page, () => window.__game.setPaused(true));
+    await frames(page, 1, 400000);
+    const back = await game(page, () => { const g = window.__game, t = g.style?.pass.target, el = g.renderer.domElement; return { style: !!g.style, target: t ? `${t.width}x${t.height}` : '', buffer: `${el.width}x${el.height}` }; });
+    const shareBack = await onPalette(page);
+    await shot('retro-after-context-loss');
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
+    await frames(page, 2, 400000);
+    const off = await census();
+    expect(on.style && on.toon > 0 && on.lit < before.lit / 4, `Retro on: ${on.toon} toon, ${on.lit} still lit (before: ${before.lit} lit)`);
+    expect(on.shadow === 0 && !on.sky && on.retroSky, `Retro on: shadow type ${on.shadow} (0 is one-step), realistic sky ${on.sky ? 'shown' : 'hidden'}, banded sky ${on.retroSky ? 'in' : 'missing'}`);
+    expect(on.pr >= Math.min(1, on.dpr) && extra.target === extra.buffer, `Retro on: pixel ratio ${on.pr} on a ${on.dpr}x screen, pass ${extra.target} for a ${extra.buffer} canvas`);
+    expect(share > 0.9 && shareBefore < 0.2, `pixels on the 5/6/5 palette: ${pc(share)} with Retro, ${pc(shareBefore)} before it`);
+    expect(back.style && back.target === back.buffer && shareBack > 0.9, `after a lost context: ${JSON.stringify(back)}, ${pc(shareBack)} on the palette`);
+    expect(!off.style && off.toon === 0 && off.lit >= before.lit && off.shadow === before.shadow && off.sky && !off.retroSky, `switched back: ${JSON.stringify(off)} (before ${JSON.stringify(before)})`);
+    expect(on.retroProgs > 0 && off.retroProgs === 0, `Retro's shader programs: ${on.retroProgs} while on, ${off.retroProgs} left after switching back`);
+    // the lane markings' least size (their quads' half extents, added while on) and the films on the glass (put away
+    // while on), both undone on the way back
+    expect(on.marks > 0 && off.marks === 0 && before.marks === 0, `marking geometries with Retro's extents: ${before.marks} before, ${on.marks} on, ${off.marks} back`);
+    expect(on.films > 0 && off.films === 0 && before.films === 0, `glass films put away: ${before.films} before, ${on.films} on, ${off.films} back`);
+    return `on: ${on.toon} toon materials on meshes (${extra.materials} made: ${extra.flat} flat, ${extra.poster} posterized maps), ${on.lit} left lit, one-step shadows, pass ${extra.target}, ${pc(share)} on the palette, ${on.retroProgs} programs, ${on.marks} marking meshes, ${on.films} films put away; after a lost context ${pc(shareBack)}; back: ${off.lit} lit, 0 toon, ${off.retroProgs} programs; ${pc(shareBefore)} on the palette before`;
+  });
   // last, because the first frames after a switch compile new shaders and take minutes here
   await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
     const out = [];
@@ -3198,6 +3366,61 @@ await group('phone', async (use) => {
     expect(st.mode === 'direct' && st.canvas === 'hidden' && /rgba\(0, 0, 0, 0\)|transparent/.test(st.bg) && st.radius === '0px', `the frame in the fallback: ${JSON.stringify(st)}`);
     expect(dDirect < 14 && dDirect < dBehind / 2, `inside the frame the screen is ${fmt(dDirect)} levels from the sky view (the road behind: ${fmt(dBehind)})`);
     return `the screen inside the frame is ${fmt(dDirect)} levels from the copy's picture (the road behind it: ${fmt(dBehind)}); frame ${st.bg}, radius ${st.radius}`;
+  });
+  // RS1, the Retro style on a phone, switched on where a player would (Settings, under Low): it draws at the screen's
+  // full resolution (a render scale of 1, the pixel ratio never under 1) through its own pass, and the HUD (the page
+  // over the canvas) still shows the speed on top of it. The sky camera's corner goes through the same pass, into its
+  // own small target (RetroStyle.renderRect): its copied picture is on the palette too, and the copy's self-check holds.
+  // Switched back, the corner is the standard picture again.
+  await check('Retro on a phone: the switch under Low turns it on at full resolution, the speed readout over it, the sky camera in the style too', async () => {
+    await game(page, () => window.__game.setPaused(true));
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.locator('#set-graphics').waitFor({ timeout: 30000 });
+    const sw = page.getByRole('switch', { name: /Style: Retro/ });           // Toggle is a checkbox with role="switch"
+    const low = await game(page, () => window.__game.settings.quality === 'low');
+    expect(low && await sw.count() === 1, `the switch: ${await sw.count()} under quality "${await game(page, () => window.__game.settings.quality)}"`);
+    await sw.check();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await frames(page, 4, 400000);
+    const r = await game(page, () => {
+      const g = window.__game, el = g.renderer.domElement, t = g.style?.pass.target, sp = document.querySelector('.hud-speed');
+      return { on: !!g.style, scale: g.renderScale, pr: g.renderer.getPixelRatio(), dpr: devicePixelRatio, buf: `${el.width}x${el.height}`, target: t ? `${t.width}x${t.height}` : '',
+        speed: !!sp && getComputedStyle(sp).visibility !== 'hidden' && sp.getBoundingClientRect().height > 0, mph: document.querySelector('.hud-mph')?.textContent ?? '' };
+    });
+    await page.screenshot({ path: path.join(OUT, 'phone-retro.png') });
+    // the sky camera: the corner's canvas holds an exact copy of its square of the drawing buffer
+    const skyLook = () => game(page, () => {
+      const cv = document.querySelector('.corner.sky canvas'), d = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      const on = (v, n) => v === Math.round(Math.round((v * (n - 1)) / 255) * (255 / (n - 1)));
+      let k = 0, n = 0, s = 0, s2 = 0;
+      for (let i = 0; i < d.length; i += 28) { n++; if (on(d[i], 32) && on(d[i + 1], 64) && on(d[i + 2], 32)) k++; const l = d[i] * 0.3 + d[i + 1] * 0.59 + d[i + 2] * 0.11; s += l; s2 += l * l; }
+      return { px: cv.width, share: k / n, mean: s / n, sd: Math.sqrt(Math.max(0, s2 / n - (s / n) ** 2)), mode: window.__game.skyMode, self: window.__game.skyCheck };
+    });
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'sky'; i++) g.cycleCorner(); });
+    await page.waitForSelector('.corner.sky canvas', { timeout: 60000 });
+    await frames(page, 4, 400000);
+    const sky = await skyLook();
+    const rect = await game(page, () => { const t = window.__game.style?.pass.rect; return t ? `${t.width}x${t.height}` : ''; });
+    await page.screenshot({ path: path.join(OUT, 'phone-retro-sky.png') });
+    // off the way it went on: the switch in Settings (which also saves it)
+    await game(page, () => window.__game.setPaused(true));
+    await page.waitForSelector('.panel.paused', { timeout: 30000 });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await sw.uncheck();
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume', exact: true }).click();
+    await frames(page, 4, 400000);
+    const skyOff = await skyLook();
+    const offState = await game(page, () => ({ style: !!window.__game.style, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').style }));
+    await game(page, () => { const g = window.__game; for (let i = 0; i < 3 && g.settings.corner !== 'map'; i++) g.cycleCorner(); });
+    expect(r.on && r.scale === 1 && r.pr >= Math.min(1, r.dpr) && r.target === r.buf, `Retro ${r.on ? 'on' : 'off'}, render scale ${r.scale}, pixel ratio ${r.pr} on a ${r.dpr}x screen, pass ${r.target} for a ${r.buf} canvas`);
+    expect(r.speed && /\d/.test(r.mph), `the speed readout: ${r.speed ? 'shown' : 'hidden'}, "${r.mph}"`);
+    expect(rect === `${sky.px}x${sky.px}` && sky.share > 0.9 && sky.mean > 20 && sky.sd > 8, `the sky camera with Retro: its pass ${rect || 'unused'} for a ${sky.px} px corner, ${pct(sky.share)} on the palette, mean ${fmt(sky.mean)}, sd ${fmt(sky.sd)}`);
+    expect(sky.mode === 'copy' && sky.self.startsWith('copy ok'), `the sky camera's self-check with Retro: ${sky.mode}, "${sky.self}"`);
+    expect(!offState.style && offState.saved === 'standard' && skyOff.share < 0.2 && skyOff.mean > 20, `switched back: ${JSON.stringify(offState)}, the corner ${pct(skyOff.share)} on the palette`);
+    return `pixel ratio ${r.pr} on a ${r.dpr}x screen, ${r.buf}; speed "${r.mph}" over it; sky camera ${rect}, ${pct(sky.share)} on the palette (${pct(skyOff.share)} back on standard)`;
   });
   await page.keyboard.press('Escape');
   await check('OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop', async () => {

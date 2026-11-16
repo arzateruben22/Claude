@@ -15,6 +15,7 @@ export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
 export type HudStyle = 'modern' | 'minimal';
+export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low (temporary switch until RS2 makes it Low itself)
 
 export type Look = 'ultra' | 'hd';
 export interface Settings {
@@ -26,7 +27,7 @@ export interface Settings {
   master: number;
   engine: number;
   ambient: number;
-  fov: number;              // added to the cockpit's base field of view, degrees
+  fov: number;              // added to the cockpit's base field of view, degrees (FOV_DEFAULT unless the player moved it)
   showFps: boolean;
   corner: Corner;           // the top-right window: road map, live sky camera, or nothing
   cornerSize: number;       // 0 small, 1 medium, 2 large
@@ -45,13 +46,21 @@ export interface Settings {
   ultraMuffle: boolean;
   hudStyle: HudStyle;       // Minimal tucks the top bar and the corner window away after 4 s without input (U1)
   owner: boolean;           // owner mode: every car in the garage to drive, for test builds only (a local switch, not security)
+  style: Style;             // RS1: 'retro' draws Low in the Retro style (src/game/render/style.ts)
   // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
   // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
   look: Look;
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
+  v: number;                // the settings' version (SETTINGS_V): which defaults a saved value was made under
 }
+
+// The field of view's default (owner, 2026-11-16: "make the standard pov set at +10"): Settings' "Field of view" slider
+// (-10..+15) starts at +10. It was 0; readSettings moves a saved 0 made under the old default to +10, once (SETTINGS_V).
+export const FOV_DEFAULT = 10;
+// 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
+export const SETTINGS_V = 2;
 
 export interface QualityPreset {
   label: string;
@@ -66,6 +75,7 @@ export interface QualityPreset {
   props: number;            // scenery density multiplier
   texture: number;          // procedural texture size
   grade: boolean;           // the Ultra grade pass: a soft vignette, edge chromatic aberration and faint film grain
+  minPixelRatio?: number;   // the adaptive resolution's floor (Retro: never under the screen's CSS pixels)
 }
 
 export const QUALITY: Record<Quality, QualityPreset> = {
@@ -103,6 +113,12 @@ export function customLine(h: number): string {
   if (i < 0) return 'Your own point on the slider.';
   return `Between ${pts[i].label} and ${pts[i + 1].label}: every assist scales smoothly with the slider.`;
 }
+
+// RS1, the Retro style on Low: Low's world (draw distance, scenery, textures) at full resolution, the device's pixel
+// ratio up to 2 and never under 1, with hard one-step sun shadows and its own single post pass (no composer)
+export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Low · Retro', renderScale: 1, maxPixelRatio: 2, minPixelRatio: 1, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0 };
+export const retroOn = (s: Pick<Settings, 'quality' | 'style'>) => s.quality === 'low' && s.style === 'retro';
+export const presetFor = (s: Pick<Settings, 'quality' | 'style'>): QualityPreset => (retroOn(s) ? RETRO : QUALITY[s.quality]);
 
 // cars per kilometre per lane, and the share of aggressive drivers
 export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: number }> = {
@@ -149,8 +165,8 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
 }
 
@@ -175,22 +191,31 @@ export function ownerTestBuild(): boolean {
 }
 
 export function loadSettings(): Settings {
-  const s = readSettings(), hash = ownerFromHash();
+  const { s, migrated } = readSettings(), hash = ownerFromHash();
+  if (migrated) saveSettings(s);                                  // the move to SETTINGS_V happens once, and is kept
   if (hash !== null && hash !== s.owner) { s.owner = hash; saveSettings(s); }
   else if (hash === null && ownerTestBuild()) s.owner = true;   // for this visit; what the device saved is left as it was
   return s;
 }
 
-function readSettings(): Settings {
+// the settings this device saved, checked, over the defaults; `migrated` when they were saved by an older version
+// (before SETTINGS_V) and moved to this one here, so loadSettings writes them back once
+function readSettings(): { s: Settings; migrated: boolean } {
   const d = defaults();
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return d;
+    if (!raw) return { s: d, migrated: false };
     const v = JSON.parse(raw) as Partial<Settings>;
     // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
     const old = v as Record<string, unknown>; delete old.course; delete old.mode;
-    return {
+    const from = typeof v.v === 'number' && Number.isFinite(v.v) ? v.v : 1;
+    let fov = typeof v.fov === 'number' && Number.isFinite(v.fov) ? Math.max(-10, Math.min(15, Math.round(v.fov))) : d.fov;
+    // the old default, never moved: saved before SETTINGS_V 2 at exactly 0, it takes the new default (+10). Once saved
+    // at v 2, a 0 is the player's own choice and stays.
+    if (from < 2 && fov === 0) fov = FOV_DEFAULT;
+    const s: Settings = {
       ...d, ...v,
+      fov, v: SETTINGS_V,
       quality: v.quality && v.quality in QUALITY ? v.quality : d.quality,
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
@@ -205,12 +230,14 @@ function readSettings(): Settings {
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
+      style: v.style === 'retro' ? 'retro' : 'standard',
       look: v.look === 'hd' ? 'hd' : 'ultra',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
     };
-  } catch { return d; }
+    return { s, migrated: from < SETTINGS_V };
+  } catch { return { s: d, migrated: false }; }
 }
 
 export function saveSettings(s: Settings): void {

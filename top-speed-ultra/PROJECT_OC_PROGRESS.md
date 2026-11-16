@@ -83,6 +83,55 @@ Verified (headless Chromium, SwiftShader; load average 8 to 19 from other sessio
   1350x750, 390x844), the I-5 North at the Disney Way / Katella Ave exit (cockpit, hood, chase), Stoppage Time on foot
   at HD and Ultra, Lot 57 on foot at HD, the OC Hypercar in the garage; the store's card at $9.99 with "Test mode ·
   nothing is charged" (`tests/out/store-hypercar-card-1440.png`).
+## 2026-11-16: the black cabin after a lost WebGL context, fixed; the field of view defaults to +10
+
+Branch fix/context-restore (3d20ef15, 8ab478cd, d38c6317) on local/live-preview 7a033fa, fast-forwarded into
+local/live-preview and published as main link v18.
+
+**The black cabin after a lost WebGL context.** On iOS, sending the app to the background drops the WebGL context.
+After the restore, the seat view at standard Low drew about 35% pure black, and it stayed that way.
+- **Cause:** the PMREM environment map existed only on the GPU and was rebuilt only when the sky moved.
+- **Reproduced on 7a033fa** with WEBGL_lose_context (640x360, SwiftShader). Against the pre-loss frame the
+  difference was about 28 levels per channel, at Low, Medium and High, chase and seat, and in the sky-camera corner.
+  The seat view was 31-36% black; Retro was only 0.7 levels off. Lot 57 on foot, then back in the car: 33% black.
+- **Fix:** Game.restoreGpu runs once per loss and handles repeated losses. It redraws the map and moves materials and
+  uniforms off the old one. It marks textures needsUpdate, drops the shadow map, and rebuilds the composer, the reveal
+  stage and the sky corner. Objects from before the loss are dropped, not disposed, which avoids stale-handle warnings.
+- **After:** 0.01-0.13 levels per channel and 0% black everywhere. Two settled frames differ by 0.02-0.28.
+- **New API for other lanes:** `game.onContextRestored(fn) => off`. It runs after the game's own rebuild. The hyper-gfx
+  lane registers its procedural textures and reflections here. It is documented in the technical notes, under Rendering.
+- **New render-group check:** Low and High, seat view. The difference must stay under 2.0, there must be no new black,
+  and the hook must run once per restore. It adds about 11.5 minutes to the group.
+
+**Field of view.** Owner, 2026-11-16: "make the standard pov set at +10".
+- The default is now +10, and settings carry version 2. A 0 saved before version 2 moves to +10 once; a 0 chosen later
+  is kept.
+- Limit: a player on version 1 who chose 0 on purpose also moves to +10. The code can't tell that 0 from the old
+  default.
+- Framing at +10, desktop 1280x720: seat 69.1° and chase 66.8° vertical, from 58.9° and 61.8°.
+- Framing at +10, iPhone 393x852 at 3x: seat 94.6° and chase 86.8°, from 85.1° and 81.8°.
+- The phone seat-view check passes unchanged, with the horizon at 38.9% against a 35-40% limit. That margin is thin
+  for the next change to the portrait cockpit framing.
+- A new boot-group check covers the migration.
+
+**Checked.**
+- tsc and build clean; boot 16/16, render 19/19, phone 19/19, launch 11/11.
+- **Judged keep** (Opus, independent). It repeated each restore 3 times per config, found no leaks or duplicate
+  passes, and tested a throwing hook, an unregistered hook and a self-unregistering hook. It moved the field of view
+  through the real Settings slider.
+- Its first render run went 18/19: "Founder Edition's lights wake" was a SwiftShader frame stall. The re-run was 19/19.
+
+**Not done.**
+- **The on-foot venues have no restore handler.** Their renderers (Lot 57; the sports bar, which has its own PMREM)
+  don't handle a lost context. Lot 57 came back unchanged; the sports bar was not tested.
+- **Shots:** scratchpad/ctx-restore/{before,after,sheets,fov}/.
+
+## 2026-11-16: the Retro look in the main game (switch under Low; off by default)
+
+2026-11-15, Retro on the live game (branch retro/live, worktree .claude/worktrees/retro-live, from local/live-preview d08eee0; not pushed, not yet judged). The three retro/port commits were cherry-picked and rewired onto today's code: ca9b4841 (style.ts and the settings pieces), 3f62a53c (the Game hooks and the 'Style: Retro' switch under Low), c65012a0 (the suite checks and tests/modes-retro.mjs). Two fixes followed: 847afa07 (the phone check finds the switch by role="switch"; the palette share leaves pure black out) and c46e8ffa (the sky-camera corner, renderSky and its renderSkyDirect fallback through drawSky, now goes through the Retro pass via RetroStyle.renderRect when Retro is on). Checked: tsc clean; build made (the same single-file md5 as the build tested); boot 15/15, render 18/18, phone 19/19, launch 11/11. The Retro render check: 745 toon materials, 1 left lit, one-step shadows, pass at canvas size, 100% on the 5/6/5 palette (1.1% before Retro), still 100% after a context lose/restore with Retro on, 0 retro programs after switching back. The Retro phone check: pixel ratio 2 on a 2x screen, speed readout over it, sky camera pass 220x220 at 100% on the palette (0.2% back on standard). Defaults: fresh desktop, fresh iPhone and saved-Low-without-style all have style 'standard' and 0 /retro/ programs. Perf, the same frame: desktop chase 478 calls/710k tris off vs 551/1,021k on; iPhone 393x852@3 chase 426/658k off vs 498/968k on; frame ms on SwiftShader not meaningful. Found, not fixed, also on d08eee0: after a WebGL context restore, standard rendering draws the cabin pure black (about 35% of the frame) and it stays that way, likely the PMREM environment map not rebuilt on restore. Shots: scratchpad/retro-live/{desktop,iphone}-retro-{off,on}-{chase,cockpit,sky,sky-crop}.png.
+
+- **Judged:** an independent judge (Opus) said keep. Its notes for the next Retro stage (RS2): budget the phone cost before Retro becomes the real Low (it draws about 4x the pixels of standard Low on an iPhone, with about 70 more calls and about 310k more triangles); a few hard cloud fragments at the iPhone top edge; jagged dash shadows behind the wheel.
+- **Found, not caused here:** on the main game (d08eee0) a WebGL context loss and restore turns the cabin pure black at Low. Reported for its own fix.
 
 ## 2026-11-11: Final live merge 4: fixes
 

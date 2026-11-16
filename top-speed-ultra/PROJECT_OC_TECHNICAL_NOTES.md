@@ -305,6 +305,26 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   dimmer and warmer than day, which the regression suite's sunset check requires.
 - **Corner window.** It's either a 2D heading-up map drawn into a canvas at 10 Hz, or a scissored second render from
   a camera 150 m above the car.
+- **A lost WebGL context (`Game.onContextRestore`, 2026-11-16).** iOS drops the context when the app goes to the
+  background or memory runs short and hands back an empty one later, sometimes more than once. three re-creates its
+  own state (programs, buffers, and every texture with a CPU source: canvas, ImageData, data arrays) on first use,
+  but anything only ever drawn on the GPU is gone. Before this, the environment map (`Environment.rebuildEnv`, a PMREM
+  of the sky) was rebuilt only when the sky moved, so on a still day it stayed empty after a restore: every lit
+  material lost its sky light and reflections, and the cabin drew pure black (about 35% of the seat view) for good.
+  The one restore path, `Game.restoreGpu`, runs once per loss (a guard drops a second restored event) and in order:
+  the environment map drawn again and any material or uniform holding the old one moved to the new; the scene's
+  textures with a source marked `needsUpdate`; the sun's shadow map let go and redrawn; `applyQuality()` (the
+  composer and its targets at the current size, the Retro pass kept); the garage's reveal stage rebuilt if open (its
+  own PMREM); the sky camera's corner copied at once. Then the registered hooks run.
+  - **The hook for other parts:** `const off = game.onContextRestored((n) => { ... })` runs after the game's own
+    rebuild (`scene.environment` is already the new map), with the restore's number; `off()` unregisters it. Use it
+    for anything drawn on the GPU: a procedural texture rendered by a shader into a target, a reflection probe or
+    cube camera, a baked PMREM. Do not add a second `webglcontextrestored` listener. `game.contextRestores` counts
+    the restores (for tests).
+  - Measured on SwiftShader (640x360, paused): in the seat view Low, Medium and High drew 31-36% pure black after a
+    restore on 7a033fa, and every view and tier (chase too) differed from the frame before by about 28 levels a channel
+    on average; Retro's toon materials by 0.7. With the restore path: 0.02 to 0.13, inside the 0.02 to 0.28 two settled
+    frames differ by, the sky camera's corner too. The render group's check holds it under 2.0 at Low and High.
 
 ## UI
 

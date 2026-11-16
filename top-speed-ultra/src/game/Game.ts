@@ -9,6 +9,8 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { presetFor, retroOn } from './settings';
+import { RetroStyle } from './render/style';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
 import { Network, Hit, Sign, Overpass, GANTRY_AHEAD, GANTRY_MIN_S } from './world/Network';
@@ -271,8 +273,9 @@ export class Game {
     this.offStore = onStoreChange(() => { setFounderSerial(serialOf('plaque-founder-edition')); if (syncGarage(this.profile) && this.attract) this.applyCarChoice(); else this.configureCar(); });
     this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
-    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
-    canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
+    // (after three's own listeners, added in the renderer's constructor: by the time ours runs it has a new context)
+    canvas.addEventListener('webglcontextlost', this.onContextLost);
+    canvas.addEventListener('webglcontextrestored', this.onContextRestore);
     addEventListener('resize', this.onResize);
     // the stage's own size, too: iOS can lay out a turned phone or a resized viewer's iframe after its resize event has
     // fired (the handler reads the old size), which left the drawing buffer at the old shape, stretched to the new one
@@ -463,7 +466,7 @@ export class Game {
   get isPaused() { return this.paused; }
 
   updateSettings(s: Settings) {
-    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density;
+    const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
@@ -482,6 +485,7 @@ export class Game {
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
+    else if (st) this.applyQuality();
     this.onResize();
   }
 
@@ -641,10 +645,12 @@ export class Game {
     const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
+    this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
       look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
+    this.style?.restyle(this.car.root);
   }
 
   // who's driving: their look in the cockpit, and their ability
@@ -890,7 +896,7 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- graphics quality
   private applyQuality(rebuild = false) {
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     this.renderScale = q.renderScale;
     this.renderer.shadowMap.enabled = q.shadows > 0;
     const far = q.drawDistance * 1.15;
@@ -947,7 +953,19 @@ export class Game {
       c.addPass(out); this.outputSat = sat;
       this.composer = c;
     }
+    this.applyStyle();
     this.resize(true);                     // a new composer (and grade pass) takes the size even when the canvas kept it
+  }
+  // RS1: the Retro style (src/game/render/style.ts) on Low while Settings.style says so: attached with the tier, its
+  // materials, sky and pass all undone when it goes. The road chunks and terrain tiles are styled as they're built.
+  // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw), and
+  // the sky camera's corner takes its rectangle version (drawSky).
+  private style: RetroStyle | null = null;
+  private applyStyle() {
+    const on = retroOn(this.settings), roots = this.roads ? [this.roads.group, this.terrain.group] : [];
+    if (!on && this.style) { this.style.detach(); this.style = null; }
+    if (on && !this.style) { this.style = new RetroStyle(this.renderer); this.style.attach(this.scene, roots); }
+    this.style?.watch(roots);
   }
 
   // Fit the drawing buffer to the stage. setPixelRatio and setSize reassign canvas.width and height, which clears the
@@ -957,8 +975,9 @@ export class Game {
   private applied = { w: 0, h: 0, pr: 0 };
   private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
-    const q = QUALITY[this.settings.quality];
-    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
+    const q = presetFor(this.settings), dpr = window.devicePixelRatio || 1;
+    // the floor: 0.5 as always, or the preset's own (Retro: the screen's CSS pixels, never more than the device has)
+    const pr = clamp(dpr * this.renderScale, q.minPixelRatio !== undefined ? Math.min(q.minPixelRatio, dpr) : 0.5, q.maxPixelRatio);
     const cv = this.renderer.domElement, a = this.applied;
     if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
     a.w = w; a.h = h; a.pr = pr;
@@ -977,6 +996,81 @@ export class Game {
     if (this.resize() && this.raf && !this.ctxLost) this.draw(performance.now(), 0);
   };
   private onVisibility = () => { if (document.hidden && !this.attract && !this.foot) this.setPaused(true); };
+
+  // ----------------------------------------------------------------------------------------- a lost WebGL context
+  // iOS drops a page's WebGL context when the app goes to the background or memory runs short, and the browser hands
+  // back a new, empty one later; the loss can come again. three re-creates its own state on the restore (programs,
+  // buffers, and textures with a source to upload again), but whatever was only ever drawn on the GPU is gone: the
+  // environment map (PMREM) that lights and reflects every lit material, so the cabin drew pure black and stayed so.
+  // This is the one restore path: everything the game draws into a GPU-only target is rebuilt here, in order, and other
+  // parts register their own rebuilds with onContextRestored (they run last, after the scene's own).
+  private restorers = new Set<(n: number) => void>();
+  /** how many times the context has been restored this session (for tests) */
+  contextRestores = 0;
+  /**
+   * Run `fn` each time a lost WebGL context comes back, after the game has rebuilt its own GPU resources (the
+   * environment map, the composer and its targets, the shadow maps; scene.environment is already the new map). For a
+   * part that draws its own textures or targets on the GPU (a procedural texture rendered by a shader, a reflection
+   * probe): rebuild them in `fn`. Textures with a CPU source (canvas, ImageData, data arrays) come back by themselves.
+   * `fn` gets the restore's number (1 for the first). Returns a function that unregisters it; call that on dispose.
+   */
+  onContextRestored(fn: (n: number) => void): () => void {
+    this.restorers.add(fn);
+    return () => { this.restorers.delete(fn); };
+  }
+  private onContextLost = (e: Event) => {
+    e.preventDefault();                                         // or the browser never offers it back
+    if (this.ctxLost) return;
+    this.ctxLost = true;
+    this.setPaused(true);
+    this.ev.context(true);
+  };
+  private onContextRestore = () => {
+    if (!this.ctxLost) return;                                  // one restore per loss
+    this.ctxLost = false;
+    const n = ++this.contextRestores;
+    try { this.restoreGpu(); } catch (e) { console.warn('context restore', e); }
+    for (const fn of [...this.restorers]) { try { fn(n); } catch (e) { console.warn('context restore hook', e); } }
+    this.ev.context(false);
+  };
+  private restoreGpu() {
+    // the environment map, drawn again now; any material holding the old map as its own envMap takes the new one
+    const { from, to } = this.env.restore();
+    // every texture with a CPU source (canvas, ImageData, data) uploaded again: three would on first use anyway, as its
+    // record of them went with the old context; marking them keeps that true even for one three still thinks is current
+    const seen = new Set<THREE.Texture>();
+    this.scene.traverse((o) => {
+      const mats = (o as THREE.Mesh).material;
+      if (!mats) return;
+      for (const m of Array.isArray(mats) ? mats : [mats]) {
+        const mm = m as THREE.Material & { envMap?: THREE.Texture | null };
+        if (from && mm.envMap === from) { mm.envMap = to; mm.needsUpdate = true; }
+        for (const v of Object.values(m)) {
+          if (!(v instanceof THREE.Texture) || seen.has(v)) continue;
+          seen.add(v);
+          const t = v as THREE.Texture & { isRenderTargetTexture?: boolean; isDepthTexture?: boolean; isFramebufferTexture?: boolean };
+          if (t.isRenderTargetTexture || t.isDepthTexture || t.isFramebufferTexture || t === to) continue;
+          const img = t.image as { width?: number; data?: unknown } | null;
+          if (img && (img.data || (img.width ?? 0) > 0)) t.needsUpdate = true;
+        }
+        if ((m as THREE.ShaderMaterial).uniforms) {
+          for (const u of Object.values((m as THREE.ShaderMaterial).uniforms)) if (from && u && u.value === from) u.value = to;
+        }
+      }
+    });
+    // the sun's shadow map, made and drawn again on the next frame
+    this.env.restoreShadows();
+    this.renderer.shadowMap.needsUpdate = true;
+    // the composer and its targets made again at the current size, the Retro pass kept. What went with the old context
+    // is dropped, not disposed, here and below: three's dispose would send its stale handles to the new context
+    this.composer = null;
+    this.applyQuality();
+    // the garage's reveal stage, if one is open: its own environment map was GPU-only too
+    const r = this.rv;
+    if (r?.stage) { r.stage = null; r.compiled = false; this.buildRevealStage(); r.dirty = true; }
+    // the sky camera's corner: copied again on the next frame
+    this.skyAt = -1e9;
+  }
 
   // ----------------------------------------------------------------------------------------- input actions
   private actions() {
@@ -1284,7 +1378,7 @@ export class Game {
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     this.renderReveal(dt);                              // the garage's reveal stage, under this frame's own render
-    if (this.composer) this.composer.render(dt); else this.renderer.render(this.scene, this.camera);
+    if (this.composer) this.composer.render(dt); else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
     this.env.renderFlare();
     this.renderSkyDirect();                             // the sky camera's fallback, over the finished frame
   }
@@ -1669,7 +1763,7 @@ export class Game {
     r.shadowMap.autoUpdate = false;                        // the shadows already made will do; the main view updates them
     r.setRenderTarget(null);
     r.setScissorTest(true); r.setScissor(x, y, s, s); r.setViewport(x, y, s, s);
-    r.render(this.scene, this.skyCam);
+    if (this.style) this.style.renderRect(this.scene, this.skyCam); else r.render(this.scene, this.skyCam);   // Retro: its pass, into the square
     r.setScissorTest(false);
     const size = r.getSize(this.tmpSize);
     r.setViewport(0, 0, size.x, size.y);
@@ -1888,7 +1982,7 @@ export class Game {
     this.scaleT += dt;
     if (this.scaleT < 1.2) return;
     this.scaleT = 0;
-    const q = QUALITY[this.settings.quality];
+    const q = presetFor(this.settings);
     let next = this.renderScale;
     if (this.frameAvg > 20) next = Math.max(0.5, this.renderScale - 0.08);
     else if (this.frameAvg < 14.5) next = Math.min(q.renderScale, this.renderScale + 0.05);
@@ -2017,7 +2111,7 @@ export class Game {
       pointer: typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'touch' : 'mouse',
       cores: navigator.hardwareConcurrency || 0, memoryGB: nav.deviceMemory ?? null,
       gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
-      quality: QUALITY[this.settings.quality].label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
+      quality: presetFor(this.settings).label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
       buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
       mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
@@ -2169,6 +2263,11 @@ export class Game {
     this.resizeObs?.disconnect();
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
+    const cv = this.renderer.domElement;
+    cv.removeEventListener('webglcontextlost', this.onContextLost);
+    cv.removeEventListener('webglcontextrestored', this.onContextRestore);
+    this.restorers.clear();
+    this.style?.detach(); this.style = null;
     this.renderer.dispose();
   }
 }
