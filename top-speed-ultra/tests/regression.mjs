@@ -3232,8 +3232,12 @@ await group('phone', async (use) => {
   // the fix: 3.05 to 5.75; it was 4.0 to 7.8 before the creases' valleys were kept three pixels wide, the rest of that
   // being their stair-stepping on Low), and at most 2% clipped white (0 in both builds here; High's bloom is the risk).
   // Also the cabin's sun shade at the arms (hands-sun.ts), for the record.
-  // (b2c4cfcc's mean luminance of the Ace's sleeves in this check, measured with it)
-  const ACE_MEAN = { straight: { L: 12.3, R: 25.5 }, 'full lock': { L: 25.1, R: 26.9 } };
+  // (the Ace's sleeves against the cabin around them in the same frame: each sleeve's mean luminance over the mean of
+  // the rest of the screen's lower 40 % (sleevesInPage's cabin), so a change of framing, light or exposure moves both)
+  // 6196bd6e (the sleeves fix, judged keep): straight L 0.52, R 0.89; full lock L 0.79, R 0.87. The floors are 0.6 of
+  // those: round 1's near-black suit (about 0.4 of b2c4cfcc's means: 10 against a cabin of 39 at full lock, 0.26) fails
+  // them, and b2c4cfcc's own means (12.3, 25.5; 25.1, 26.9) pass them against this cabin (0.35, 0.72; 0.65, 0.69)
+  const ACE_K = { straight: { L: 0.3, R: 0.5 }, 'full lock': { L: 0.45, R: 0.5 } };
   // (SLAB: since the seat camera came up and forward (2026-11-16) the wheel held straight shows the sleeves only at the
   // frame's edges, 0.4 % and 0.8 % of it (6196bd6e: 2.3 % and 2.7 %), the right one a cuff in full sun with a spread of
   // 25; at full lock they cover 10.3 % and 5.4 %, and are held to the spread and the detail there)
@@ -3264,19 +3268,20 @@ await group('phone', async (use) => {
       if (r.nearer > 0 || r.margin < 2) fails.push(`${name}: nearest sleeve vertex ${r.minDepth} m (${r.margin}x the near plane), ${r.nearer} nearer than it`);
       out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L ${pc((r.L?.px ?? 0) / r.frame)} of the frame, R ${pc((r.R?.px ?? 0) / r.frame)}; L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
     }
-    // the Ace's dark fire suit keeps its form: each sleeve's mean luminance at least 3/4 of b2c4cfcc's here, or a spread
-    // of 20 (round 1 of the fix took the suit to near black: about 0.4 of b2c4cfcc's mean at full lock)
+    // the Ace's dark fire suit keeps its form: each sleeve's mean luminance at least ACE_K of the cabin's in the same
+    // frame, or a spread of 20 (round 1 of the sleeves fix took the suit to near black: about 0.4 of b2c4cfcc's mean
+    // at full lock; this measured against b2c4cfcc's means, a constant, until 2026-11-16)
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, driver: 'ace', presentation: 'm' }); });
     for (const [name, delta] of [['straight', 0], ['full lock', 0.6]]) {
       await game(page, (d) => { window.__game.phys.delta = d; }, delta);
       await frames(page, 12);
       const r = await game(page, sleevesInPage);
       for (const side of ['L', 'R']) {
-        const s = r[side], floor = ACE_MEAN[name][side] * 0.75;
+        const s = r[side], floor = ACE_K[name][side] * r.cabin;
         if (!s) { fails.push(`Ace ${name}: no ${side} sleeve pixels`); continue; }
-        if (s.mean < floor && s.spread < 20) fails.push(`Ace ${name} ${side}: mean ${s.mean} (under ${floor.toFixed(1)}), spread ${s.spread}`);
+        if (s.mean < floor && s.spread < 20) fails.push(`Ace ${name} ${side}: mean ${s.mean} (under ${floor.toFixed(1)}, ${ACE_K[name][side]} of the cabin's ${r.cabin}), spread ${s.spread}`);
       }
-      out.push(`Ace ${name}: L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail}`);
+      out.push(`Ace ${name}: cabin ${r.cabin}; L mean ${r.L?.mean} (${(r.L?.mean / r.cabin).toFixed(2)} of it) spread ${r.L?.spread} detail ${r.L?.detail}; R mean ${r.R?.mean} (${(r.R?.mean / r.cabin).toFixed(2)}) spread ${r.R?.spread} detail ${r.R?.detail}`);
     }
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, driver: 'closer', presentation: 'm' }); });
     await game(page, () => { const g = window.__game; g.phys.delta = 0; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
