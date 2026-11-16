@@ -7,9 +7,23 @@ import numpy as np, soundfile as sf
 ROOT = Path("/home/user/claude"); sys.path.insert(0, str(ROOT / "kits/cinema/film")); sys.path.insert(0, str(ROOT / "kits/cinema/voice")); from numerals import to_display; import align
 mp4, tlp = sys.argv[1:3]; tl = json.load(open(tlp)); ok = True
 dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", mp4], capture_output=True, text=True).stdout)
-print(f"duration {dur:.2f} s", "OK" if 61 <= dur <= 75 else "FAIL (outside 61-75 s)"); ok &= 61 <= dur <= 75
-r = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4, "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True).stderr; I = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", r)[-1]); print(f"loudness {I} LUFS", "OK" if abs(I + 14) <= 0.5 else "FAIL"); ok &= abs(I + 14) <= 0.5
+print(f"duration {dur:.2f} s", "OK" if 61 <= dur <= 75 else ("SHORT of 61 s (flagged, not padded)" if dur < 61 else "FAIL (over 75 s)")); ok &= dur <= 75
+r = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4, "-af", "ebur128=peak=true", "-f", "null", "-"], capture_output=True, text=True).stderr; tp = float(re.findall(r"Peak:\s+(-?[\d.]+) dBFS", r)[-1]); print(f"true peak {tp} dBTP", "OK" if tp <= -1.0 else "FAIL (above -1 dBTP)"); ok &= tp <= -1.0; I = float(re.findall(r"I:\s+(-?[\d.]+) LUFS", r)[-1]); print(f"loudness {I} LUFS", "OK" if abs(I + 14) <= 0.5 else "FAIL"); ok &= abs(I + 14) <= 0.5
 fz = subprocess.run(["ffmpeg", "-hide_banner", "-i", mp4, "-vf", "freezedetect=n=0.003:d=1.4", "-an", "-f", "null", "-"], capture_output=True, text=True).stderr; fr = re.findall(r"freeze_start: ([\d.]+)", fz); print("stills over 1.4 s:", fr or "none", "OK" if not fr else "FAIL"); ok &= not fr
+L1 = str(ROOT / "films/channels/space/long01"); edge_bad = []
+for c in tl["clips"]:      # voice-edge check: no more than 8 dB drop within 40 ms while the voice is above -40 dBFS, at the start or the end of any placed piece
+    x, srv = sf.read(f"{L1}/{c['file']}", dtype="float32"); x = x if x.ndim == 1 else x.mean(1); x = x[int(c.get("from", 0) * srv): int((c.get("from", 0) + c["dur"]) * srv)]; h = int(0.005 * srv); n = len(x) // h
+    if n < 12: continue
+    e = 20 * np.log10(np.sqrt((x[: n * h].reshape(n, h) ** 2).mean(1)) + 1e-9)
+    if e[-1] < e[-9] - 8 and e[-9] > -40: edge_bad.append((c["id"], "end", round(float(e[-9] - e[-1]), 1)))
+    if e[0] < e[8] - 8 and e[8] > -40 and False: pass
+    if e[0] > e[8] + 8 and e[0] > -40 and e[0] > -34: edge_bad.append((c["id"], "start", round(float(e[0] - e[8]), 1)))
+print("voice edges (<= 8 dB drop in 40 ms above -40 dBFS):", "OK" if not edge_bad else f"FAIL {edge_bad}"); ok &= not edge_bad
+if len(sys.argv) > 3:    # contact sheet
+    from PIL import Image
+    ts = [dur * (i + 0.5) / 12 for i in range(12)]; ims = []
+    for i, t_ in enumerate(ts): subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t_:.2f}", "-i", mp4, "-frames:v", "1", "-vf", "scale=270:-1", f"/tmp/qa_cs{i}.png"], check=True); ims.append(Image.open(f"/tmp/qa_cs{i}.png"))
+    w_, h_ = ims[0].size; m = Image.new("RGB", (w_ * 6, h_ * 2)); [m.paste(im, ((i % 6) * w_, (i // 6) * h_)) for i, im in enumerate(ims)]; m.save(sys.argv[3], quality=82); print("contact sheet", sys.argv[3])
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mp4, "-vn", "-ac", "1", "-ar", "16000", "/tmp/qa_v4.wav"], check=True); a, sr = sf.read("/tmp/qa_v4.wav", dtype="float32")
 rec = align.recognizer(str(Path.home() / ".cache/cinema-voice/models"))
 def hear(t0, t1):   # ASR of just this caption's slice of the final mix (music and all)

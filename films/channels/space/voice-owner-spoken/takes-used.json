@@ -850,5 +850,58 @@
    "end_later_s": 0.02,
    "why": "voice_edges.py (owner, 12 Nov 2026)"
   }
+ },
+ "C4": {
+  "segments": [
+   [
+    76.6,
+    79.1
+   ]
+  ],
+  "source": "Possibility Lab recording 'Valerio St 3.m4a' (whatif-s2), Part C",
+  "why": "his own closer, reused; clarity normal+rumble, end settled, debreath defaults, level matched",
+  "heard": "Part 4 of 8 full video on YouTube",
+  "not_heard": [],
+  "breaths_lowered": [
+   [
+    0.01,
+    0.11
+   ],
+   [
+    2.49,
+    2.88
+   ]
+  ]
+ },
+ "C6": {
+  "segments": [
+   [
+    83.9,
+    86.4
+   ]
+  ],
+  "source": "Possibility Lab recording 'Valerio St 3.m4a' (whatif-s2), Part C",
+  "why": "his own closer, reused; clarity normal+rumble, end settled, debreath defaults, level matched",
+  "heard": "Part six of eight full video on YouTube.",
+  "not_heard": [],
+  "breaths_lowered": [
+   [
+    0.01,
+    0.12
+   ]
+  ]
+ },
+ "C8": {
+  "segments": [
+   [
+    96.4,
+    99.0
+   ]
+  ],
+  "source": "Possibility Lab recording 'Valerio St 3.m4a' (whatif-s2), Part C",
+  "why": "his own closer, reused; clarity normal+rumble, end settled, debreath defaults, level matched",
+  "heard": "Part 8 of 8 Full Video on YouTube.",
+  "not_heard": [],
+  "breaths_lowered": []
  }
 }

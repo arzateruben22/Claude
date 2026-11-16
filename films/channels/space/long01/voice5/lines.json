@@ -3344,6 +3344,192 @@
      "end": 2.32
     }
    ]
+  },
+  {
+   "id": "C4",
+   "text": "Part four of eight. Full video on YouTube.",
+   "file": "voice5/wav/C4.wav",
+   "dur": 3.01,
+   "sentences": [
+    {
+     "text": "Part four of eight.",
+     "t0": 0.24,
+     "t1": 1.12,
+     "claims": []
+    },
+    {
+     "text": "Full video on YouTube.",
+     "t0": 1.24,
+     "t1": 2.4,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.24,
+     "end": 0.56
+    },
+    {
+     "w": "four",
+     "start": 0.535,
+     "end": 0.72
+    },
+    {
+     "w": "of",
+     "start": 0.615,
+     "end": 0.88
+    },
+    {
+     "w": "eight.",
+     "start": 0.975,
+     "end": 1.12
+    },
+    {
+     "w": "Full",
+     "start": 1.24,
+     "end": 1.44
+    },
+    {
+     "w": "video",
+     "start": 1.445,
+     "end": 1.76
+    },
+    {
+     "w": "on",
+     "start": 1.85,
+     "end": 1.92
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.92,
+     "end": 2.4
+    }
+   ]
+  },
+  {
+   "id": "C6",
+   "text": "Part six of eight. Full video on YouTube.",
+   "file": "voice5/wav/C6.wav",
+   "dur": 2.52,
+   "sentences": [
+    {
+     "text": "Part six of eight.",
+     "t0": 0.415,
+     "t1": 1.12,
+     "claims": []
+    },
+    {
+     "text": "Full video on YouTube.",
+     "t0": 1.395,
+     "t1": 2.48,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.415,
+     "end": 0.56
+    },
+    {
+     "w": "six",
+     "start": 0.57,
+     "end": 0.8
+    },
+    {
+     "w": "of",
+     "start": 0.745,
+     "end": 0.96
+    },
+    {
+     "w": "eight.",
+     "start": 1.04,
+     "end": 1.12
+    },
+    {
+     "w": "Full",
+     "start": 1.395,
+     "end": 1.52
+    },
+    {
+     "w": "video",
+     "start": 1.425,
+     "end": 1.84
+    },
+    {
+     "w": "on",
+     "start": 1.92,
+     "end": 2.0
+    },
+    {
+     "w": "YouTube.",
+     "start": 2.035,
+     "end": 2.48
+    }
+   ]
+  },
+  {
+   "id": "C8",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "file": "voice5/wav/C8.wav",
+   "dur": 2.8,
+   "sentences": [
+    {
+     "text": "Part eight of eight.",
+     "t0": 0.28,
+     "t1": 1.12,
+     "claims": []
+    },
+    {
+     "text": "Full video on YouTube.",
+     "t0": 1.48,
+     "t1": 2.72,
+     "claims": []
+    }
+   ],
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.28,
+     "end": 0.4
+    },
+    {
+     "w": "eight",
+     "start": 0.36,
+     "end": 0.72
+    },
+    {
+     "w": "of",
+     "start": 0.755,
+     "end": 0.88
+    },
+    {
+     "w": "eight.",
+     "start": 0.985,
+     "end": 1.12
+    },
+    {
+     "w": "Full",
+     "start": 1.48,
+     "end": 1.68
+    },
+    {
+     "w": "video",
+     "start": 1.74,
+     "end": 2.0
+    },
+    {
+     "w": "on",
+     "start": 2.095,
+     "end": 2.16
+    },
+    {
+     "w": "YouTube.",
+     "start": 2.15,
+     "end": 2.72
+    }
+   ]
   }
  ]
 }

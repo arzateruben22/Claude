@@ -1,0 +1,246 @@
+{
+ "name": "v4-part7",
+ "mode": "port",
+ "dur": 61.258,
+ "clips": [
+  {
+   "id": "B8",
+   "file": "voice5/wav/B8.wav",
+   "t": 0.15,
+   "dur": 3.12,
+   "from": 0.0
+  },
+  {
+   "id": "L19",
+   "file": "voice5/wav/L19.wav",
+   "t": 9.12,
+   "dur": 7.42,
+   "from": 0.0
+  },
+  {
+   "id": "L20",
+   "file": "voice5/wav/L20.wav",
+   "t": 21.89,
+   "dur": 13.51,
+   "from": 0.0
+  },
+  {
+   "id": "L21",
+   "file": "voice5/wav/L21.wav",
+   "t": 40.75,
+   "dur": 6.458,
+   "from": 0.0
+  },
+  {
+   "id": "D3",
+   "file": "voice5/wav/D3.wav",
+   "t": 54.558,
+   "dur": 2.79,
+   "from": 0.0
+  },
+  {
+   "id": "L22",
+   "file": "voice5/wav/L22.wav",
+   "t": 57.648,
+   "dur": 2.71,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.32,
+   "t1": 3.2,
+   "text": "There's a distance no moon survives.",
+   "line": "B8",
+   "spoken": "There's a distance no moon survives."
+  },
+  {
+   "t0": 9.5,
+   "t1": 10.5,
+   "text": "30,000.",
+   "line": "L19",
+   "spoken": "Thirty thousand."
+  },
+  {
+   "t0": 10.52,
+   "t1": 10.92,
+   "text": "25.",
+   "line": "L19",
+   "spoken": "Twenty-five."
+  },
+  {
+   "t0": 10.94,
+   "t1": 11.45,
+   "text": "20.",
+   "line": "L19",
+   "spoken": "Twenty."
+  },
+  {
+   "t0": 22.065,
+   "t1": 26.174,
+   "text": "Around 18,000 km is the Roche limit: where Earth's tides",
+   "line": "L20",
+   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+  },
+  {
+   "t0": 26.194,
+   "t1": 30.47,
+   "text": "pull harder than the Moon's own gravity holds it together.",
+   "line": "L20",
+   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+  },
+  {
+   "t0": 30.49,
+   "t1": 32.09,
+   "text": "That's if the Moon acts like a fluid.",
+   "line": "L20",
+   "spoken": "That's if the Moon acts like a fluid."
+  },
+  {
+   "t0": 32.11,
+   "t1": 35.545,
+   "text": "A perfectly rigid Moon could come to about 9,500.",
+   "line": "L20",
+   "spoken": "A perfectly rigid Moon could come to about nine and a half thousand."
+  },
+  {
+   "t0": 40.83,
+   "t1": 45.29,
+   "text": "At 18,000, it's more than 20× wider than tonight.",
+   "line": "L21",
+   "spoken": "At eighteen thousand, it's more than twenty times wider than tonight."
+  },
+  {
+   "t0": 45.31,
+   "t1": 47.353,
+   "text": "A wall of grey, straining.",
+   "line": "L21",
+   "spoken": "A wall of grey, straining."
+  },
+  {
+   "t0": 54.638,
+   "t1": 55.643,
+   "text": "Still looking up?",
+   "line": "D3",
+   "spoken": "Still looking up?"
+  },
+  {
+   "t0": 55.663,
+   "t1": 57.288,
+   "text": "Tap like and follow.",
+   "line": "D3",
+   "spoken": "Tap like and follow."
+  },
+  {
+   "t0": 57.848,
+   "t1": 60.298,
+   "text": "And then it does something no Moon should survive.",
+   "line": "L22",
+   "spoken": "And then it does something no Moon should survive."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   42000
+  ],
+  [
+   0.0,
+   42000
+  ],
+  [
+   8.945,
+   30000,
+   5.5
+  ],
+  [
+   9.669,
+   30000
+  ],
+  [
+   10.199,
+   25000
+  ],
+  [
+   10.67,
+   25000,
+   1.0
+  ],
+  [
+   11.2,
+   20000,
+   1.0
+  ],
+  [
+   28.719,
+   20000
+  ],
+  [
+   30.22,
+   18000,
+   1.5
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 3.445,
+   "t1": 8.945,
+   "kind": "approach"
+  },
+  {
+   "t0": 16.715,
+   "t1": 21.715,
+   "kind": "grow"
+  },
+  {
+   "t0": 35.575,
+   "t1": 40.575,
+   "kind": "strain"
+  },
+  {
+   "t0": 47.383,
+   "t1": 54.383,
+   "kind": "strain"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "cta_at": 54.558,
+ "cta_frac": 0.891,
+ "cliff": "L22"
+}

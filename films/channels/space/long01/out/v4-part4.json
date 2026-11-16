@@ -1,0 +1,261 @@
+{
+ "name": "v4-part4",
+ "mode": "port",
+ "dur": 61.185,
+ "clips": [
+  {
+   "id": "B5",
+   "file": "voice5/wav/B5.wav",
+   "t": 0.15,
+   "dur": 2.76,
+   "from": 0.0
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 10.26,
+   "dur": 3.35,
+   "from": 0.0
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 18.61,
+   "dur": 4.77,
+   "from": 3.35
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 30.38,
+   "dur": 3.53,
+   "from": 8.12
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 38.91,
+   "dur": 1.24,
+   "from": 11.65
+  },
+  {
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 47.5,
+   "dur": 2.7,
+   "from": 0.0
+  },
+  {
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 54.2,
+   "dur": 2.725,
+   "from": 2.7
+  },
+  {
+   "id": "C4",
+   "file": "voice5/wav/C4.wav",
+   "t": 57.275,
+   "dur": 3.01,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.35,
+   "t1": 2.88,
+   "text": "What happens when the Moon outgrows the Sun?",
+   "line": "B5",
+   "spoken": "What happens when the Moon outgrows the Sun?"
+  },
+  {
+   "t0": 10.47,
+   "t1": 11.535,
+   "text": "100,000.",
+   "line": "L12",
+   "spoken": "One hundred thousand."
+  },
+  {
+   "t0": 11.555,
+   "t1": 13.58,
+   "text": "Nearly 4× wider.",
+   "line": "L12",
+   "spoken": "Nearly four times wider."
+  },
+  {
+   "t0": 18.855,
+   "t1": 23.35,
+   "text": "Its shadow on Earth is wider, and eclipses come far more often.",
+   "line": "L12",
+   "spoken": "Its shadow on Earth is wider, and eclipses come far more often."
+  },
+  {
+   "t0": 30.615,
+   "t1": 33.88,
+   "text": "Not every month, because the orbit is tilted.",
+   "line": "L12",
+   "spoken": "Not every month, because the orbit is tilted."
+  },
+  {
+   "t0": 38.99,
+   "t1": 40.07,
+   "text": "But often.",
+   "line": "L12",
+   "spoken": "But often."
+  },
+  {
+   "t0": 47.955,
+   "t1": 49.085,
+   "text": "Closer.",
+   "line": "L13",
+   "spoken": "Closer."
+  },
+  {
+   "t0": 49.105,
+   "t1": 50.17,
+   "text": "Faster.",
+   "line": "L13",
+   "spoken": "Faster."
+  },
+  {
+   "t0": 54.5,
+   "t1": 56.79,
+   "text": "And the ground feels it too.",
+   "line": "L13",
+   "spoken": "And the ground feels it too."
+  },
+  {
+   "t0": 57.515,
+   "t1": 58.495,
+   "text": "Part 4 of 8.",
+   "line": "C4",
+   "spoken": "Part four of eight."
+  },
+  {
+   "t0": 58.515,
+   "t1": 59.925,
+   "text": "Full video on YouTube.",
+   "line": "C4",
+   "spoken": "Full video on YouTube."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   150000
+  ],
+  [
+   0.0,
+   150000
+  ],
+  [
+   10.085,
+   100000,
+   7.0
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ],
+   [
+    23.18,
+    0
+   ],
+   [
+    24.98,
+    1
+   ],
+   [
+    30.38,
+    1
+   ],
+   [
+    31.98,
+    0
+   ],
+   [
+    40.125,
+    0
+   ],
+   [
+    41.925,
+    1
+   ],
+   [
+    47.325,
+    1
+   ],
+   [
+    48.925,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 3.085,
+   "t1": 10.085,
+   "kind": "approach"
+  },
+  {
+   "t0": 13.61,
+   "t1": 18.61,
+   "kind": "grow"
+  },
+  {
+   "t0": 23.38,
+   "t1": 30.38,
+   "kind": "eclipse"
+  },
+  {
+   "t0": 33.91,
+   "t1": 38.91,
+   "kind": "pull"
+  },
+  {
+   "t0": 40.325,
+   "t1": 47.325,
+   "kind": "eclipse"
+  },
+  {
+   "t0": 50.2,
+   "t1": 54.2,
+   "kind": "grow"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "cta_at": 47.325,
+ "cta_frac": 0.773,
+ "cliff": "L13"
+}

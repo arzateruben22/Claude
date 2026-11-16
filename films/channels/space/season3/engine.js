@@ -138,7 +138,7 @@ function chips(t) {
 }
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");
-  document.getElementById("num").textContent = fmt(d) + " km"; document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
+  document.getElementById("num").textContent = TL.units === "mi" ? fmt(d * 0.621371) + " mi" : fmt(d) + " km";   // the owner, 16 Nov 2026: US units on the counter (the voice and captions keep saying kilometers) document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
   chips(t); const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap");
   if (cap) { el.textContent = cap.text; el.style.opacity = 1; placeCaption(cap, el, t); } else el.style.opacity = 0;
 }

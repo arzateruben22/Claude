@@ -1,0 +1,253 @@
+{
+ "name": "v4-part8",
+ "mode": "port",
+ "dur": 59.16,
+ "clips": [
+  {
+   "id": "L23",
+   "file": "voice5/wav/L23.wav",
+   "t": 0.15,
+   "dur": 3.83,
+   "from": 0.0
+  },
+  {
+   "id": "L24",
+   "file": "voice5/wav/L24.wav",
+   "t": 14.33,
+   "dur": 5.56,
+   "from": 0.0
+  },
+  {
+   "id": "L25",
+   "file": "voice5/wav/L25.wav",
+   "t": 29.24,
+   "dur": 1.025,
+   "from": 0.0
+  },
+  {
+   "id": "L25",
+   "file": "voice5/wav/L25.wav",
+   "t": 38.265,
+   "dur": 3.855,
+   "from": 1.025
+  },
+  {
+   "id": "L26",
+   "file": "voice5/wav/L26.wav",
+   "t": 42.47,
+   "dur": 6.64,
+   "from": 0.0
+  },
+  {
+   "id": "C8",
+   "file": "voice5/wav/C8.wav",
+   "t": 55.46,
+   "dur": 2.8,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.265,
+   "t1": 1.41,
+   "text": "It comes apart.",
+   "line": "L23",
+   "spoken": "It comes apart."
+  },
+  {
+   "t0": 1.43,
+   "t1": 2.71,
+   "text": "Not an explosion.",
+   "line": "L23",
+   "spoken": "Not an explosion."
+  },
+  {
+   "t0": 2.73,
+   "t1": 3.92,
+   "text": "A stretch.",
+   "line": "L23",
+   "spoken": "A stretch."
+  },
+  {
+   "t0": 14.415,
+   "t1": 16.978,
+   "text": "The rock spreads along its old orbit,",
+   "line": "L24",
+   "spoken": "The rock spreads along its old orbit, and over time it can flatten into a ring."
+  },
+  {
+   "t0": 16.998,
+   "t1": 19.86,
+   "text": "and over time it can flatten into a ring.",
+   "line": "L24",
+   "spoken": "The rock spreads along its old orbit, and over time it can flatten into a ring."
+  },
+  {
+   "t0": 29.43,
+   "t1": 30.235,
+   "text": "No Moon.",
+   "line": "L25",
+   "spoken": "No Moon."
+  },
+  {
+   "t0": 38.44,
+   "t1": 42.05,
+   "text": "Just a bright band, horizon to horizon.",
+   "line": "L25",
+   "spoken": "Just a bright band, horizon to horizon."
+  },
+  {
+   "t0": 42.67,
+   "t1": 46.93,
+   "text": "The real Moon is still drifting away, 3.8 cm a year.",
+   "line": "L26",
+   "spoken": "The real Moon is still drifting away, three point eight centimeters a year."
+  },
+  {
+   "t0": 46.95,
+   "t1": 49.04,
+   "text": "Tonight's Moon is fine.",
+   "line": "L26",
+   "spoken": "Tonight's Moon is fine."
+  },
+  {
+   "t0": 55.74,
+   "t1": 56.83,
+   "text": "Part 8 of 8.",
+   "line": "C8",
+   "spoken": "Part eight of eight."
+  },
+  {
+   "t0": 56.94,
+   "t1": 58.43,
+   "text": "Full video on YouTube.",
+   "line": "C8",
+   "spoken": "Full video on YouTube."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   17000
+  ],
+  [
+   45.789,
+   17000
+  ],
+  [
+   48.79,
+   384400,
+   3.0
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ],
+   [
+    0.165,
+    1
+   ],
+   [
+    1.565,
+    0
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ],
+   [
+    0.165,
+    0
+   ],
+   [
+    1.565,
+    1
+   ],
+   [
+    14.315,
+    1
+   ],
+   [
+    17.015,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ],
+   [
+    14.315,
+    0
+   ],
+   [
+    17.015,
+    1
+   ],
+   [
+    46.75,
+    1
+   ],
+   [
+    48.95,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ],
+   [
+    46.75,
+    0
+   ],
+   [
+    48.95,
+    1
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 4.155,
+   "t1": 14.155,
+   "kind": "stretch"
+  },
+  {
+   "t0": 20.065,
+   "t1": 29.065,
+   "kind": "band"
+  },
+  {
+   "t0": 30.265,
+   "t1": 38.265,
+   "kind": "ring"
+  },
+  {
+   "t0": 49.285,
+   "t1": 55.285,
+   "kind": "pull"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "cta_at": 42.295,
+ "cta_frac": 0.715,
+ "cliff": "L26"
+}

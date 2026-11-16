@@ -1,0 +1,153 @@
+{
+ "palette": "space",
+ "cues": [
+  {
+   "at": 0.1,
+   "kind": "mass",
+   "dur": 6.0,
+   "gain": -3,
+   "seed": 601
+  },
+  {
+   "at": 2.44,
+   "kind": "mass",
+   "dur": 8.8,
+   "gain": -2,
+   "f0": 41,
+   "seed": 602
+  },
+  {
+   "at": 2.65,
+   "kind": "whoosh",
+   "dur": 7.0,
+   "pan": [
+    -0.4,
+    0.4
+   ],
+   "gain": -2,
+   "seed": 603
+  },
+  {
+   "at": 9.64,
+   "kind": "boom",
+   "dur": 2.5,
+   "gain": -4,
+   "seed": 604
+  },
+  {
+   "at": 9.64,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 605
+  },
+  {
+   "at": 13.05,
+   "kind": "whoosh",
+   "dur": 4.0,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 606
+  },
+  {
+   "at": 13.25,
+   "kind": "mass",
+   "dur": 4.8,
+   "gain": -4,
+   "f0": 44,
+   "seed": 607
+  },
+  {
+   "at": 22.68,
+   "kind": "whoosh",
+   "dur": 4.0,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 608
+  },
+  {
+   "at": 22.88,
+   "kind": "mass",
+   "dur": 4.8,
+   "gain": -4,
+   "f0": 44,
+   "seed": 609
+  },
+  {
+   "at": 30.8,
+   "kind": "whoosh",
+   "dur": 5.5,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 610
+  },
+  {
+   "at": 31.0,
+   "kind": "mass",
+   "dur": 6.3,
+   "gain": -4,
+   "f0": 44,
+   "seed": 611
+  },
+  {
+   "at": "capend:L18-11.08",
+   "kind": "whoosh",
+   "dur": 9.0,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -1,
+   "seed": 612
+  },
+  {
+   "at": "capend:L18-10.78",
+   "kind": "mass",
+   "dur": 9.0,
+   "gain": -3,
+   "f0": 40,
+   "seed": 613
+  },
+  {
+   "at": "capend:L18+0.59",
+   "kind": "whoosh",
+   "dur": 7.0,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -1,
+   "seed": 614
+  },
+  {
+   "at": "capend:L18+0.89",
+   "kind": "mass",
+   "dur": 7.0,
+   "gain": -3,
+   "f0": 40,
+   "seed": 615
+  },
+  {
+   "at": "cap:L18-1.4",
+   "kind": "riser",
+   "until": "capend:L18+0.1",
+   "gain": 2,
+   "seed": 690
+  },
+  {
+   "at": "capend:L18+0.1",
+   "kind": "boom",
+   "dur": 3.0,
+   "gain": 0,
+   "seed": 691
+  }
+ ]
+}
