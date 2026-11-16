@@ -57,6 +57,11 @@ export interface QualityPreset {
   label: string;
   renderScale: number;      // starting fraction of the device pixel ratio
   maxPixelRatio: number;
+  // G1 (super ultra 4K HD): a touch screen (coarse pointer: a phone or tablet) is held to this pixel ratio instead, so
+  // the frame rate holds; and the drawing buffer is held to this many pixels (3840 x 2160: a 4K screen renders
+  // natively, nothing renders above it). Both optional: the presets without them behave as before
+  phonePixelRatio?: number;
+  maxPixels?: number;
   shadows: number;          // shadow map size, 0 = off
   post: boolean;            // composer at all
   bloom: boolean;
@@ -72,7 +77,7 @@ export const QUALITY: Record<Quality, QualityPreset> = {
   low:    { label: 'Low',    renderScale: 0.75, maxPixelRatio: 1,   shadows: 0,    post: false, bloom: false, ao: false, msaa: 0, drawDistance: 900,  props: 0.45, texture: 512,  grade: false },
   medium: { label: 'Medium', renderScale: 1,    maxPixelRatio: 1.5, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0, drawDistance: 1300, props: 0.75, texture: 1024, grade: false },
   high:   { label: 'High',   renderScale: 1,    maxPixelRatio: 2,   shadows: 2048, post: true,  bloom: true,  ao: false, msaa: 4, drawDistance: 1800, props: 1,    texture: 1024, grade: false },
-  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 2,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048, grade: true },
+  ultra:  { label: 'Ultra',  renderScale: 1,    maxPixelRatio: 3, phonePixelRatio: 2, maxPixels: 3840 * 2160,   shadows: 4096, post: true,  bloom: true,  ao: true,  msaa: 4, drawDistance: 2400, props: 1.25, texture: 2048, grade: true },
 };
 
 // Driving profiles (hypercar plan M4): named points on the handling slider, which stays the one saved value (the
