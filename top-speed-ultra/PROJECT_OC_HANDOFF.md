@@ -522,6 +522,20 @@ If Fable is unavailable, run it on Opus with a design judge pair before any buil
 
 ### Fable prompt: the six characters' graphics pass (people builder), queued 2026-11-12
 
+**TAKEN (2026-11-12) by the cast lane's graphics pass** (branch `claude/cast`, uncommitted for the judges). A Fable
+builder ran it until the owner's 92 % rule, and then an Opus continuation. What is done and what is still open:
+`PROJECT_OC_CAST.md`, "Graphics pass log". Still open there: the faces' own shapes, the helmet hair (Leila, Danny),
+the sloping shoulders, the ballooning sleeves, Marcus's muscle, and the shoes. They need the builder's geometry
+(`body.ts`, `head.ts`, `hair.ts`) and are Fable-class.
+
+**Third pass (Fable, 2026-11-15/16, uncommitted for the judges):** those open items were worked: the faces' own
+shapes and the cheek and jaw shading, flowing hair for Chadaline and Leila, Chad's curls, Danny's side part, tailored
+sleeves and shoulders, lapels, Marcus's bulk, the bent foot for heels, Chadaline's budget, and 01's new appearance
+from the owner's reference of 2026-11-15. What is done, what is still short and the proof: `PROJECT_OC_CAST.md`
+("Third pass after the weekly reset") and the progress log's entry of 2026-11-16. Still open, Fable-class: faces that
+read as the sheets' people, Chad's curls as ringlets, Marcus's V shape under a tee. Opus-class: shoe detail (laces,
+tongue, straps), pockets and seams, re-running `phone` and the desktop perf pairs on a quiet machine.
+
 **The ask.** The owner (2026-11-11) wants the characters' graphics "insane". Lane cast A's renders show the people
 builder's limits on the six (`src/onfoot/cast.ts`). The comparisons are made by `node tests/cast-shoot.mjs`, then
 `python3 tests/cast-sheets.py <sheets folder>`, into `tests/out/cast/compare-<id>-body.png` and `-head.png`. The
