@@ -4,6 +4,41 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: a clean pause menu, and the standard Field of view at +10 (branch claude/fov, uncommitted)
+
+The owner (2026-11-16 ~4:25 PM PT, with a phone screenshot of the pause menu over the OC Hypercar's seat view): "this
+looks too cluttered, lets fix this and get rid of any unnecessary toggles". Also the owner: "make the standard set pov
+set at +10".
+
+- **The pause screen** (src/ui/App.tsx, styles.css): was eleven equal stacked buttons (Resume, Phone, Radio, World map,
+  Go to a freeway, Restart, Settings, End drive, Feedback, Store, Main menu), taller than the screen on a 390 x 844
+  phone (overlay 910 / 844 px in Free Drive) and on a 1280 x 720 laptop (934 / 720). Now: the info lines (clock,
+  temperature "simulated", the handling chips, the run line) closer together; RESUME as the one big plate (focused
+  when the screen opens, so Enter resumes; Esc resumes as before); a row of four icon tiles, MAP (accessible name
+  "World map"), RADIO, PHONE (with its unread count) and STORE; a slim row of SETTINGS, RESTART and ONE way out:
+  End drive in Free Drive (its results' Main menu goes on to the menu), Main menu in Speed Survival. Eight buttons.
+- **Go to a freeway** moved into the World Map (WorldMap.tsx, while driving): a "Go to a freeway" action above Back
+  opens the Go to card, whose Back returns to the map. **Feedback** left the pause screen: Settings now has it next to
+  Done (the Driver panel and the phone keep theirs). A new store icon (Icons.tsx). Nothing was removed from the game:
+  every action is a tap away, or one more (Go to a freeway: Map, then Go to a freeway; Feedback: Settings, then
+  Feedback; Main menu in Free Drive: End drive, then Main menu).
+- **Field of view** (settings.ts, the orchestrator's change, kept): the default is +10; a saved 0 without `fovSet` (the
+  old default, never touched) reads as +10; moving the slider sets `fovSet`, so a chosen value (0 included) is kept.
+- **Measured** (Playwright, OC Hypercar seat view, owner mode, Low): after, the pause panel is 443 px tall on the
+  390 x 844 phone (overlay 844 / 844, no scroll) and 447 px at 1280 x 720 (overlay 720 / 720), in both modes.
+- **Tests** (tests/regression.mjs): a `pauseToMenu` helper leaves a paused drive the player's way (End drive, then the
+  results' Main menu, in Free Drive); the owner-mode and hypercar-earnings checks (progression) and the Founder
+  Edition lights check (render) use it; the Feedback check opens it from Settings and asserts it is not on the pause
+  screen; the hypercar check asserts Speed Survival's slim row is Settings, Restart, Main menu; a new phone check
+  (pause screen: Resume, four tiles, a slim row with one exit; no Feedback; fits 390 x 844 unscrolled; Go to a freeway
+  from the World Map; Esc resumes). The harness pins fov 0 + fovSet so older checks keep their view; the boot check
+  "the standard Field of view is +10, and a chosen value is kept" holds the group's own page still while it boots its
+  own twice (it had timed out under load).
+- **Frames:** tests/out/pause/before-{free,survival}-{phone,desk}.png (HEAD 7a033fa), after-{free,survival}-{phone,
+  desk}.png, after-worldmap-{phone,desk}.png, after-goto-from-map-{phone,desk}.png (phone: 390 x 844 at DPR 3, so
+  1170 x 2532; desk: 1280 x 720).
+- **Checked:** RESULTS_PLACEHOLDER
+
 ## 2026-11-16: the Retro look in the main game (switch under Low; off by default)
 
 2026-11-15, Retro on the live game (branch retro/live, worktree .claude/worktrees/retro-live, from local/live-preview d08eee0; not pushed, not yet judged). The three retro/port commits were cherry-picked and rewired onto today's code: ca9b4841 (style.ts and the settings pieces), 3f62a53c (the Game hooks and the 'Style: Retro' switch under Low), c65012a0 (the suite checks and tests/modes-retro.mjs). Two fixes followed: 847afa07 (the phone check finds the switch by role="switch"; the palette share leaves pure black out) and c46e8ffa (the sky-camera corner, renderSky and its renderSkyDirect fallback through drawSky, now goes through the Retro pass via RetroStyle.renderRect when Retro is on). Checked: tsc clean; build made (the same single-file md5 as the build tested); boot 15/15, render 18/18, phone 19/19, launch 11/11. The Retro render check: 745 toon materials, 1 left lit, one-step shadows, pass at canvas size, 100% on the 5/6/5 palette (1.1% before Retro), still 100% after a context lose/restore with Retro on, 0 retro programs after switching back. The Retro phone check: pixel ratio 2 on a 2x screen, speed readout over it, sky camera pass 220x220 at 100% on the palette (0.2% back on standard). Defaults: fresh desktop, fresh iPhone and saved-Low-without-style all have style 'standard' and 0 /retro/ programs. Perf, the same frame: desktop chase 478 calls/710k tris off vs 551/1,021k on; iPhone 393x852@3 chase 426/658k off vs 498/968k on; frame ms on SwiftShader not meaningful. Found, not fixed, also on d08eee0: after a WebGL context restore, standard rendering draws the cabin pure black (about 35% of the frame) and it stays that way, likely the PMREM environment map not rebuilt on restore. Shots: scratchpad/retro-live/{desktop,iphone}-retro-{off,on}-{chase,cockpit,sky,sky-crop}.png.

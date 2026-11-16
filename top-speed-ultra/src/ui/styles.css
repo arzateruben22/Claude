@@ -420,10 +420,24 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .panel.paused .oc-watermark i { width: 112%; bottom: -3%; }
 /* what left the phone's driving HUD (HUD_POV_SPEC 1): the time the sky shows, the temperature and where it comes from,
    the handling chips, the run's numbers. --dim on the panel's glass: 9:1 and up */
-.panel.paused :is(.pause-clock, .pause-chips, .pause-run) { position: relative; margin: 0; font: 500 12.5px/1.35 var(--f-mono); letter-spacing: 0.02em; color: var(--dim); font-variant-numeric: tabular-nums; }
-.panel.paused .pause-clock { margin-top: -6px; color: var(--ink); }
-.panel.paused .pause-chips { text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; }
-.panel.paused .pause-run { margin-bottom: 4px; }
+.panel.paused { gap: 14px; }
+.panel.paused h2 { font-size: 36px; padding-bottom: 10px; }
+.pause-info { position: relative; display: grid; gap: 2px; margin-top: -4px; }
+.panel.paused :is(.pause-clock, .pause-chips, .pause-run) { margin: 0; font: 500 12px/1.35 var(--f-mono); letter-spacing: 0.02em; color: var(--dim); font-variant-numeric: tabular-nums; }
+.panel.paused .pause-clock { color: var(--ink); }
+.panel.paused .pause-chips { text-transform: uppercase; letter-spacing: 0.12em; font-size: 10.5px; }
+/* the pause screen (owner, 2026-11-16: "too cluttered"): Resume, the big plate; four icon tiles for what is done
+   mid-drive; a slim row of plain plates for Settings, Restart and the one way out */
+.btn.pause-resume { margin-top: 2px; min-height: 56px; font-size: 16px; letter-spacing: 0.24em; }
+.pause-tiles { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding-inline: 6px; }
+.btn.ptile { display: grid; justify-items: center; align-content: center; gap: 7px; min-height: 70px; padding: 8px 2px; font: 600 11px/1 var(--f-ui); letter-spacing: 0.14em; }
+.btn.ptile .ico { width: 24px; height: 24px; color: var(--ice-text); }
+.ptile-new { position: absolute; top: 5px; right: 8px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--ice); color: var(--night); font: 700 11px/18px var(--f-mono); letter-spacing: 0; }
+.pause-more { position: relative; display: flex; gap: 8px; padding: 12px 6px 0; box-shadow: inset 0 1px 0 var(--line); }
+.btn.slim { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 6px; font-size: 11.5px; letter-spacing: 0.12em; color: var(--dim); }
+.btn.slim::before { background: none; box-shadow: inset 0 0 0 1px var(--line); }
+@media (hover: hover) { .btn.slim:hover { color: var(--ink); } }
+@media (pointer: coarse) { .btn.slim { min-height: 44px; } }
 
 /* ------------------------------------------------------------------ the main menu */
 /* The owner's 2026-10-21 reference, in our tokens: a glass rail down the left (brand, Drive, the loadout, the rest of
@@ -1350,6 +1364,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 @media (hover: hover) { .wm-item:not(.off):not(.on):hover { background: var(--ice-wash); } }
 .wm-act { display: grid; gap: 8px; }
 .wm-act .btn { width: 100%; }
+.wm-act .btn.wm-goto { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.wm-goto .ico { width: 18px; height: 18px; color: var(--ice-text); }
 .wm-exits summary { cursor: pointer; padding: 6px 2px; font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ice-text); }
 .wm-exits { max-height: 30vh; overflow-y: auto; }
 .wm-exit { display: flex; justify-content: space-between; gap: 10px; width: 100%; min-height: 36px; padding: 4px 8px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); font: 500 13px/1.25 var(--f-ui); }

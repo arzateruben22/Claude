@@ -8,6 +8,7 @@
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
 //                                         group's page-error check); the group still opens its page
+//   npm test -- --only=phone '--check=a|b'  several texts, separated by |: the checks whose names contain any of them
 //   SUITE_HANDLING=0.9 npm test -- ...    every group at that handling value: Settings' Arcade is 0.15, Sport 0.5,
 //                                         Simulation 0.9 (src/game/settings.ts PROFILES). Without it the suite drives at
 //                                         0.35, the value its checks were tuned at (the game's default was 0.35 until
@@ -46,7 +47,7 @@ const results = [];
 const fmt = (v) => (typeof v === 'number' ? Math.round(v * 100) / 100 : v);
 function expect(ok, msg) { if (!ok) throw new Error(msg); }
 async function check(name, fn) {
-  if (checkOnly && !name.includes(checkOnly) && !name.endsWith(': no page errors')) return;
+  if (checkOnly && !checkOnly.split('|').some((c) => name.includes(c)) && !name.endsWith(': no page errors')) return;
   const t0 = Date.now();
   try {
     const note = (await fn()) ?? '';
@@ -71,7 +72,8 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   const ctx = await browser.newContext(phone
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: dpr }
     : { viewport: { width: size[0], height: size[1] } });
-  const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
+  // fov 0 with fovSet: every check keeps the view it was written for; the boot group checks the +10 default on its own
+  const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, fov: 0, fovSet: true };
   await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
   const page = await ctx.newPage();
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
@@ -127,6 +129,19 @@ async function drive(page, label) {
   await page.getByRole('radio', { name: new RegExp(label) }).click();
   await page.getByRole('button', { name: 'Drive', exact: true }).click();
   await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
+}
+// leave a paused drive for the menu the way a player does. The pause screen has one way out (owner, 2026-11-16): in
+// Free Drive End drive, whose results' Main menu goes on to the menu; in Speed Survival Main menu
+async function pauseToMenu(page) {
+  const p = page.locator('.panel.paused');
+  await p.waitFor();
+  const end = p.getByRole('button', { name: 'End drive', exact: true });
+  if (await end.count()) {
+    await end.click();
+    await page.waitForSelector('.result', { timeout: 60000 });
+    await page.locator('.result').getByRole('button', { name: 'Main menu', exact: true }).click();
+  } else await p.getByRole('button', { name: 'Main menu', exact: true }).click();
+  await page.waitForSelector('.overlay.menu', { timeout: 120000 });
 }
 async function group(name, fn) {
   if (only.length && !only.includes(name)) return;
@@ -843,6 +858,31 @@ await group('boot', async (use) => {
     const text = await page.locator('.overlay.menu').innerText();
     expect(/OpenStreetMap contributors via Overture Maps \(ODbL\)/.test(text), 'no OSM/Overture credit');
     expect(!(await page.getByRole('button', { name: /^Controls$/ }).count()), 'a Controls button is back');
+  });
+  // the owner (2026-11-16): the standard Field of view is +10; a device that saved the old default (0) without moving the
+  // slider takes it, and a value the player chose (fovSet) is kept
+  await check('the standard Field of view is +10, and a chosen value is kept', async () => {
+    // the group's own page holds still meanwhile (its menu drive's renders would starve this page's two software-rendered boots)
+    await game(page, () => { const g = window.__game; if (!g.__held) { cancelAnimationFrame(g.raf); g.__held = true; } });
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+    try {
+      const p = await ctx.newPage();
+      p.setDefaultTimeout(240000);   // a software-rendered boot under load is slow (as in open())
+      await p.addInitScript(() => { if (!sessionStorage.getItem('fovSeeded')) { sessionStorage.setItem('fovSeeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, fov: 0 })); } });
+      await p.goto(pathToFileURL(GAME).href, { timeout: BOOT_MS });
+      await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+      const old = await p.evaluate(() => window.__game.settings.fov);
+      await p.evaluate(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, fov: 0, fovSet: true })));
+      await p.reload({ timeout: BOOT_MS, waitUntil: 'domcontentloaded' });
+      await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+      const chosen = await p.evaluate(() => window.__game.settings.fov);
+      expect(old === 10, `an untouched old save reads ${old}, not +10`);
+      expect(chosen === 0, `a chosen 0 reads ${chosen}`);
+      return `old default save -> +${old}; chosen 0 kept (${chosen})`;
+    } finally {
+      await ctx.close();
+      await game(page, () => { const g = window.__game; if (g.__held) { g.__held = false; g.raf = requestAnimationFrame(g.frame); } });
+    }
   });
 });
 
@@ -2010,8 +2050,7 @@ await group('progression', async (use) => {
       return { car: g.carId, built: g.car.config?.car, top: g.carTop(), owner: g.settings.owner, vehicles: [...g.profile.p.vehicles], chosen: g.profile.p.car,
         credits: g.profile.p.credits, level: g.profile.level, saved: localStorage.getItem('tsu.profile') };
     });
-    await page.getByRole('button', { name: 'Main menu' }).click();
-    await toMenu();
+    await pauseToMenu(page);
     const s0 = await state();
     const off = await garage(); await done();
     await owner(true);
@@ -2024,8 +2063,7 @@ await group('progression', async (use) => {
     // a run starts in the owner's car
     await drive(page, 'Free Drive');
     const run = await game(page, () => { const g = window.__game; g.setPaused(true); return { built: g.car.config?.car, top: g.carTop() }; });
-    await page.getByRole('button', { name: 'Main menu' }).click();
-    await toMenu();
+    await pauseToMenu(page);
     await owner(false);
     const s2 = await state();
     const back = await garage(); await done();
@@ -2121,16 +2159,19 @@ await group('progression', async (use) => {
       };
       return { driving: g.driving, mode: g.mode, cap: g.earnCap, fast: run(150), slow: run(90) };
     });
-    await page.getByRole('button', { name: 'Main menu' }).click();
-    await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    await pauseToMenu(page);
     await drive(page, 'Speed Survival');
     await frames(page, 2);
     const scored = await chips();
     const race = await game(page, () => { const g = window.__game; g.setPaused(true); return { driving: g.driving, mode: g.mode, cap: g.earnCap }; });
+    // (the pause screen's slim row in Speed Survival: one way out, Main menu, and no End drive; owner, 2026-11-16)
+    await page.waitForSelector('.panel.paused', { timeout: 60000 });
+    const exits = await game(page, () => [...document.querySelectorAll('.panel.paused .pause-more button')].map((b) => b.textContent.trim()));
     // back to the menu with the car it came in with, for the checks after this one (the Founder Edition's garage card
     // opens from the menu and chooses the hypercar itself)
-    await page.getByRole('button', { name: 'Main menu' }).click().catch(() => game(page, () => window.__game.quitToMenu()));
+    await pauseToMenu(page).catch(() => game(page, () => window.__game.quitToMenu()));
     await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    expect(JSON.stringify(exits) === JSON.stringify(['Settings', 'Restart', 'Main menu']), `Speed Survival's pause row: ${exits.join(', ')}`);
     await game(page, (id) => { const g = window.__game; g.chooseOwnerCar(id); g.applyCarChoice(); }, was);
     const paidFast = r.fast.credits * 200, paidSlow = r.slow.credits * 200;
     expect(r.driving === 'oc-hyper' && r.mode === 'free' && free.includes('Unleashed') && !free.includes('Race tune'), `Free Drive in ${r.driving}: chips ${free.join(', ')}`);
@@ -2551,7 +2592,7 @@ await group('render', async (use) => {
     expect(/wake-ice/.test(keys.led) && /wake-ice/.test(keys.lamp) && /wake-bar/.test(keys.tail), `the hypercar's lights: ${JSON.stringify(keys)}`);
     expect(wk[0] < 0.3 && mid.length >= 2 && rising && wk[wk.length - 1] === 9, `the sweep's progress frame by frame: ${wk.map(fmt).join(', ')}`);
     expect(!reduced.waking && reduced.t >= 99 && after === 9, `reduced motion: ${JSON.stringify(reduced)}, then ${after}`);
-    await page.getByRole('button', { name: 'Main menu' }).click().catch(() => game(page, () => window.__game.quitToMenu()));
+    await pauseToMenu(page).catch(() => game(page, () => window.__game.quitToMenu()));
     const dark = wk.findIndex((v) => v > 0), last = wk.length - 2;
     return `GT tail shader without the wake; the hypercar's LEDs, blades and red bar with it; over ${wk.length} frames: dark for ${dark}, then ${fmt(wk[dark])} → ${fmt(wk[Math.floor((dark + last) / 2)])} → ${fmt(wk[last])} (${mid.length} frames mid-sweep), then steady (${wk[wk.length - 1]}); reduced motion: steady at once`;
   });
@@ -3019,6 +3060,47 @@ await group('phone', async (use) => {
     await page.locator('.radio-card').getByRole('button', { name: 'Close', exact: true }).click();
     return `${wedges} wedges; radio card at y ${Math.round(card.y)}`;
   });
+  // the pause screen (owner, 2026-11-16: "this looks too cluttered, lets fix this and get rid of any unnecessary
+  // toggles"): Resume, four tiles (the World Map, the radio, the phone, the store), a slim row of Settings, Restart and
+  // one way out (End drive in Free Drive); no Feedback (it is in Settings) and no Go to a freeway (it is in the World
+  // Map, and Back from it goes back to the map). It fits a 390 x 844 phone without scrolling, the keyboard lands on
+  // Resume and Esc resumes.
+  await check('pause screen: Resume, four tiles, a slim row with one exit; no Feedback; fits 390 × 844 unscrolled; Go to a freeway from the World Map; Esc resumes', async () => {
+    await game(page, () => window.__game.setPaused(true));
+    await page.waitForSelector('.panel.paused', { timeout: 60000 });
+    // (its entrance animation done, so what is measured is where it rests)
+    await page.waitForFunction(() => { const p = document.querySelector('.panel.paused'); return p && p.getAnimations().every((a) => a.playState === 'finished'); }, null, { timeout: 120000 });
+    const r = await game(page, () => {
+      const p = document.querySelector('.panel.paused'), ov = p.closest('.overlay'), pr = p.getBoundingClientRect();
+      const name = (b) => (b.getAttribute('aria-label') || b.textContent).trim();
+      const all = [...p.querySelectorAll('button')], inView = all.every((b) => { const q = b.getBoundingClientRect(); return q.top >= 0 && q.bottom <= innerHeight && q.left >= 0 && q.right <= innerWidth && q.height >= 40; });
+      return { names: all.map(name), resume: [...p.querySelectorAll(':scope > button.primary')].map(name), tiles: [...p.querySelectorAll('.pause-tiles button')].map(name),
+        row: [...p.querySelectorAll('.pause-more button')].map(name), focus: name(document.activeElement || document.body), scroll: [ov.scrollHeight, ov.clientHeight], top: Math.round(pr.top), bottom: Math.round(pr.bottom), inView, vh: innerHeight };
+    });
+    await page.screenshot({ path: path.join(OUT, 'phone-pause.png') });
+    expect(JSON.stringify(r.resume) === '["Resume"]', `the big action: ${r.resume.join(', ')}`);
+    expect(r.tiles.length === 4 && r.tiles[0] === 'World map' && r.tiles[1] === 'Radio' && /^Phone/.test(r.tiles[2]) && r.tiles[3] === 'Store', `the tiles: ${r.tiles.join(', ')}`);
+    expect(JSON.stringify(r.row) === JSON.stringify(['Settings', 'Restart', 'End drive']), `the slim row: ${r.row.join(', ')}`);
+    expect(!r.names.some((n) => /Feedback|Go to a freeway/.test(n)), `still on the pause screen: ${r.names.join(', ')}`);
+    expect(r.names.filter((n) => n === 'End drive' || n === 'Main menu').length === 1 && r.names.length === 8, `buttons: ${r.names.join(', ')}`);
+    expect(r.scroll[0] <= r.scroll[1] + 1 && r.top >= 0 && r.bottom <= r.vh && r.inView, `fits: overlay ${r.scroll[0]} / ${r.scroll[1]} px, panel ${r.top} to ${r.bottom} of ${r.vh}, every button in view and 40 px tall: ${r.inView}`);
+    expect(r.focus === 'Resume', `the keyboard starts on ${r.focus}`);
+    // the World Map's Go to a freeway opens the Go to card; its Back goes back to the map, the map's Back to the pause screen
+    await page.locator('.panel.paused').getByRole('button', { name: 'World map', exact: true }).click();
+    await page.waitForSelector('.worldmap canvas');
+    await page.locator('.worldmap').getByRole('button', { name: 'Go to a freeway', exact: true }).click();
+    const goTo = await page.locator('.panel h2').first().innerText();
+    const freeways = await page.locator('.panel .grid.nav button').count();
+    await page.locator('.panel').getByRole('button', { name: 'Back', exact: true }).click();
+    await page.waitForSelector('.worldmap canvas');
+    await page.locator('.worldmap').getByRole('button', { name: 'Back', exact: true }).click();
+    await page.waitForSelector('.panel.paused');
+    // Esc carries on driving
+    await page.keyboard.press('Escape');
+    await page.waitForFunction(() => !window.__game.isPaused && !document.querySelector('.panel.paused'), null, { timeout: 60000 });
+    expect(/^Go to$/i.test(goTo) && freeways >= 10, `the World Map's Go to a freeway opened "${goTo}" with ${freeways} freeways`);
+    return `Resume; tiles ${r.tiles.join(' / ')}; row ${r.row.join(' / ')}; panel ${r.top} to ${r.bottom} of ${r.vh} px, overlay ${r.scroll[0]} / ${r.scroll[1]}; focus on ${r.focus}; World Map > Go to a freeway > "${goTo}" (${freeways} freeways) > Back > map > Back > pause; Esc resumed`;
+  });
   // the adaptive HUD (U1): the compass is the ring round the map; the time and the temperature, which says it's
   // simulated, are in the pause screen. Minimal tucks the icons and the map away after 4 s of just driving, keeps Pause
   // in reach, and a tap on the road brings the rest back.
@@ -3420,7 +3502,10 @@ await group('launch', async (use) => {
   });
   await check('Feedback report names the browser, the GPU, the preset, the frame rate and the drive', async () => {
     await game(page, () => window.__game.setPaused(true));
-    await page.getByRole('button', { name: 'Feedback', exact: true }).click();
+    // Feedback left the pause screen (owner, 2026-11-16): it is in Settings, next to Done
+    expect(!(await page.locator('.panel.paused').getByRole('button', { name: 'Feedback' }).count()), 'Feedback is back on the pause screen');
+    await page.locator('.panel.paused').getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.locator('.panel.settings').getByRole('button', { name: 'Feedback', exact: true }).click();
     const text = await page.locator('textarea.report').inputValue();
     await page.screenshot({ path: path.join(OUT, 'launch-feedback.png') });
     for (const k of ['Chrome', 'GPU:', 'Low', 'fps', road]) expect(text.includes(k), `the report lacks "${k}": ${text.slice(0, 160)}`);
