@@ -2743,8 +2743,9 @@ function hudBoxesInPage() {
 // in the page: the driver's sleeves as the seat sees them. The nearest sleeve vertex in view (skinned, camera space)
 // against the near plane and how many in view sit nearer than it; then one frame read from the drawing buffer and a mask
 // render (the sleeves red, everything else black) at the same size: per side of the screen the sleeve pixels'
-// luminance spread (5th to 95th percentile), local detail (mean |Laplacian| of luminance inside the sleeve) and share
-// of clipped white; the wheel's angle, the field of view and the arms' sun shade
+// luminance (mean, and its spread from the 5th to the 95th percentile), local detail (mean |Laplacian| of luminance
+// inside the sleeve) and share of clipped white; the mean luminance of the rest of the screen's lower 40 % (the dash,
+// the wheel, the hands); the wheel's angle, the field of view and the arms' sun shade
 function sleevesInPage() {
   const g = window.__game, cam = g.camera, car = g.car, arms = car.arms, r = g.renderer, gl = r.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
   g.draw(performance.now(), 0); r.setRenderTarget(null);
@@ -2783,9 +2784,11 @@ function sleevesInPage() {
     if (ys.length < 200) return null;
     ys.sort((a, b) => a - b);
     const q = (f) => ys[Math.min(ys.length - 1, Math.floor(f * ys.length))];
-    return { px: ys.length, spread: Math.round(q(0.95) - q(0.05)), detail: +(lap / Math.max(1, nl)).toFixed(2), clip: +(clip / ys.length).toFixed(3) };
+    return { px: ys.length, mean: +(ys.reduce((a, b) => a + b, 0) / ys.length).toFixed(1), spread: Math.round(q(0.95) - q(0.05)), detail: +(lap / Math.max(1, nl)).toFixed(2), clip: +(clip / ys.length).toFixed(3) };
   };
-  return { L: side(true), R: side(false), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
+  let cs = 0, cn = 0;
+  for (let y = 0; y < Math.floor(H * 0.4); y++) for (let x = 0; x < W; x++) if (!isS(x, y)) { cs += Y((y * W + x) * 4); cn++; }
+  return { L: side(true), R: side(false), cabin: +(cs / Math.max(1, cn)).toFixed(1), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
 }
 
 await group('phone', async (use) => {
@@ -2945,10 +2948,13 @@ await group('phone', async (use) => {
   // and at full lock: no sleeve vertex in view nearer the lens than 2x the near plane (no slicing: b2c4cfcc's nearest
   // is 6.6x straight, 3.6x at full lock, the same with the fix); each sleeve's pixels (a mask render) spread at least
   // 30 levels of luminance from their 5th to their 95th percentile (b2c4cfcc's evenly sunlit right sleeve: 22 straight,
-  // 20 at full lock; the fix: 66-69 and 39-40) with a local detail (the mean |Laplacian| of luminance inside the sleeve) of at
-  // least 3 (b2c4cfcc: 2.06 and 1.95 there, 2.23 on the left sleeve at full lock, whose spread of 39 alone would pass;
-  // the fix: 4.0 to 7.8 over two runs), and at most 2% clipped white (0 in both builds here; High's bloom is the risk). Also the
-  // cabin's sun shade at the arms (hands-sun.ts), for the record.
+  // 20 at full lock; the fix: 59 and 33) with a local detail (the mean |Laplacian| of luminance inside the sleeve) of at
+  // least 2.6 (b2c4cfcc: 2.13 and 1.97 there, 2.23 on the left sleeve at full lock, whose spread of 39 alone would pass;
+  // the fix: 3.05 to 5.75; it was 4.0 to 7.8 before the creases' valleys were kept three pixels wide, the rest of that
+  // being their stair-stepping on Low), and at most 2% clipped white (0 in both builds here; High's bloom is the risk).
+  // Also the cabin's sun shade at the arms (hands-sun.ts), for the record.
+  // (b2c4cfcc's mean luminance of the Ace's sleeves in this check, measured with it)
+  const ACE_MEAN = { straight: { L: 12.3, R: 25.5 }, 'full lock': { L: 25.1, R: 26.9 } };
   await check('sleeves from the seat on a phone: in front of the near plane, shaded and creased, not clipped white', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');   // (run on its own with --check)
     await page.setViewportSize({ width: 393, height: 852 });
@@ -2967,17 +2973,85 @@ await group('phone', async (use) => {
         const s = r[side];
         if (!s) { fails.push(`${name}: no ${side} sleeve pixels`); continue; }
         if (s.spread < 30) fails.push(`${name} ${side}: luminance spread ${s.spread}`);
-        if (s.detail < 3) fails.push(`${name} ${side}: detail ${s.detail}`);
+        if (s.detail < 2.6) fails.push(`${name} ${side}: detail ${s.detail}`);
         if (s.clip > 0.02) fails.push(`${name} ${side}: ${pc(s.clip)} clipped white`);
       }
       if (r.nearer > 0 || r.margin < 2) fails.push(`${name}: nearest sleeve vertex ${r.minDepth} m (${r.margin}x the near plane), ${r.nearer} nearer than it`);
-      out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
+      out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
     }
+    // the Ace's dark fire suit keeps its form: each sleeve's mean luminance at least 3/4 of b2c4cfcc's here, or a spread
+    // of 20 (round 1 of the fix took the suit to near black: about 0.4 of b2c4cfcc's mean at full lock)
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, driver: 'ace', presentation: 'm' }); });
+    for (const [name, delta] of [['straight', 0], ['full lock', 0.6]]) {
+      await game(page, (d) => { window.__game.phys.delta = d; }, delta);
+      await frames(page, 12);
+      const r = await game(page, sleevesInPage);
+      for (const side of ['L', 'R']) {
+        const s = r[side], floor = ACE_MEAN[name][side] * 0.75;
+        if (!s) { fails.push(`Ace ${name}: no ${side} sleeve pixels`); continue; }
+        if (s.mean < floor && s.spread < 20) fails.push(`Ace ${name} ${side}: mean ${s.mean} (under ${floor.toFixed(1)}), spread ${s.spread}`);
+      }
+      out.push(`Ace ${name}: L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail}`);
+    }
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, driver: 'closer', presentation: 'm' }); });
     await game(page, () => { const g = window.__game; g.phys.delta = 0; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     await page.setViewportSize({ width: 390, height: 844 });
     await frames(page, 2);
     expect(fails.length === 0, fails.join('; ') + ' | ' + out.join(' | '));
     return out.join(' | ');
+  });
+  // the arms under a bridge where the world casts shadows (High): they take no shadow map (hands-sun.ts), so the car
+  // tests the sun's ray from them against the decks overhead. The same seat view on High, placed where the Jeffrey Road
+  // deck's shadow over the I-405 North falls on the cabin, then 150 m short of it in the open: the screen's lower part
+  // (the dash, the wheel, the hands) goes darker under the deck, and each sleeve's mean luminance must drop with it, to
+  // under 0.88 of the open's (b2c4cfcc, the arms taking the shadow map: about 0.76; round 1 of the fix, no world term:
+  // 0.94, the arms lit in full sun under the deck)
+  await check('sleeves under an overpass (High): the arms go dark with the cabin', async () => {
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
+    await page.setViewportSize({ width: 393, height: 852 });
+    const spot = await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North'), sd = g.env.sunDir;
+      g.updateSettings({ ...g.settings, quality: 'high', driver: 'closer', presentation: 'm' });
+      g.car.configure({ ...g.car.config, car: 'oc-hyper' }); g.setCam('cockpit');
+      // where the arms (about 1 m over the road) see a Jeffrey Road deck's middle toward the sun (the name has more
+      // than one bridge; the one over this road is the one with a spot)
+      let best = null;
+      for (const o of g.net.overpasses.filter((x) => x.name === 'Jeffrey Road')) {
+        const vx = o.bx - o.ax, vz = o.bz - o.az, L = Math.hypot(vx, vz), nx = -vz / L, nz = vx / L;
+        for (let s = 0; s < m.len; s += 1) {
+          const a = m.at(s, 0);
+          if (Math.abs(a.x - (o.ax + o.bx) / 2) > 400 || Math.abs(a.z - (o.az + o.bz) / 2) > 400) continue;
+          const h = o.y - a.y - 1;
+          if (h < 3 || h > 20) continue;
+          const t = h / Math.max(0.05, sd.y), px = a.x + sd.x * t, pz = a.z + sd.z * t;
+          const along = ((px - o.ax) * vx + (pz - o.az) * vz) / (L * L), d = Math.abs((px - o.ax) * nx + (pz - o.az) * nz);
+          if (along > 0.05 && along < 0.95 && (!best || d < best.d)) best = { s, d, o };
+        }
+      }
+      return best && { name: best.o.name, s: best.s, d: +best.d.toFixed(1), w: best.o.w, sun: [sd.x, sd.y, sd.z].map((v) => +v.toFixed(2)) };
+    });
+    expect(!!spot, 'no spot under an overpass on the I-405 North');
+    const at = async (s) => {
+      await game(page, (s) => {
+        const g = window.__game, m = g.findMain('I-405 North'), p = g.phys;
+        g.setPaused(false); g.placeCar(m, s, 1, 79.6); g.apLane = 1;
+        for (let i = 0; i < 600; i++) { const a = g.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6), b = g.terrain.update(p.x, p.z, 3); if (a === 0 && b === 0) break; }
+        g.setPaused(true);
+      }, s);
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+      await frames(page, 12);
+      return game(page, sleevesInPage);
+    };
+    const open = await at(spot.s - 150), under = await at(spot.s);
+    await game(page, () => { const g = window.__game; g.setPaused(false); g.updateSettings({ ...g.settings, quality: 'low' }); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    const k = (a, b) => +(b / Math.max(1, a)).toFixed(2);
+    const cab = k(open.cabin, under.cabin), L = open.L && under.L ? k(open.L.mean, under.L.mean) : null, R = open.R && under.R ? k(open.R.mean, under.R.mean) : null;
+    const msg = `under ${spot.name} (s ${spot.s}, the deck's shadow ${spot.d} m off, sun ${spot.sun}): the cabin ${open.cabin} to ${under.cabin} (${cab}); L sleeve ${open.L?.mean} to ${under.L?.mean} (${L}); R sleeve ${open.R?.mean} to ${under.R?.mean} (${R}); sun at the arms ${open.sun?.join(',')} to ${under.sun?.join(',')}`;
+    expect(cab < 0.85, `the cabin didn't go dark under the deck: ${msg}`);
+    expect(L !== null && R !== null && L < 0.88 && R < 0.88, `the sleeves stayed lit under the deck: ${msg}`);
+    return msg;
   });
   // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
   // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb

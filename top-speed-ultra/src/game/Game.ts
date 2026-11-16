@@ -1354,7 +1354,7 @@ export class Game {
     this.weatherTick(dt);
     this.realism(dt);
     this.env.follow(this.car.root.position, this.camera, this.time, this.paused ? 0 : dt, this.carVel.set(Math.sin(this.phys.psi) * this.phys.vx, 0, Math.cos(this.phys.psi) * this.phys.vx));
-    this.car.updateSunShade(this.env.sunDir, dt);     // the sun on the driver's arms through the cabin's glass (hands-sun.ts)
+    this.car.updateSunShade(this.env.sunDir, dt, false, this.renderer.shadowMap.enabled ? this.net : undefined);     // the sun on the driver's arms through the cabin's glass and under bridges' decks where the world casts shadows (hands-sun.ts)
     this.draw(now, dt);
     this.renderCorner(dt);
     if (!this.attract) {

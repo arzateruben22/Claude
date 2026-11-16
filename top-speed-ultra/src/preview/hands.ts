@@ -19,7 +19,8 @@
 //                     meshMs: the cached-per-presentation skin mesh, accMs: sleeves, watch, ring, bangle)
 //     grip            { right, left }: the middle of each grip (knuckles to fingertips), car frame, wheel straight
 //     sunPoints       where the sun is sampled this frame (hands-sun.ts): right knuckles, wrist, elbow, then the
-//                     left's, in the group's frame; setSunVisibility(v) gives the sun's visibility (0..1) at each.
+//                     left's, in the group's frame; setSunVisibility(v, world) gives the sun's visibility (0..1) at
+//                     each through the cabin and the world's share (bridges' decks overhead).
 //                     The arms take no shadow map (its texels are wider than a finger): this is their sun shade
 //
 // Each hand is one smooth surface meshed once from an anatomical distance field (hands-sdf.ts, hands-mesh.ts): four
@@ -35,7 +36,7 @@ import { buildArmGeometry, ArmGeometry } from './hands-geo';
 import { skinMaterial, nailMaterial, Quality } from './hands-skin';
 import { buildNails, NailGeometry } from './hands-nails';
 import { buildAccessories, accentOf } from './hands-acc';
-import { sunUniform, armRotUniform, withSunShade, SUN_PTS } from './hands-sun';
+import { sunUniform, armRotUniform, worldUniform, withSunShade, SUN_PTS } from './hands-sun';
 
 export interface HandsOptions {
   look: DriverLook;
@@ -61,9 +62,10 @@ export interface DriverArms {
   grip: { right: THREE.Vector3; left: THREE.Vector3 };
   /** the sun's sample points this frame (group frame): right knuckles, wrist, elbow, then the left's */
   sunPoints: THREE.Vector3[];
-  /** the sun's visibility (0 shade .. 1 full sun) at each of sunPoints; also takes the group's world rotation (its
-   *  matrixWorld, updated by the caller) for the cabin's sky term */
-  setSunVisibility(v: ArrayLike<number>): void;
+  /** the sun's visibility (0 shade .. 1 full sun) at each of sunPoints through the cabin, and the world's share (0
+   *  under a bridge's deck .. 1 in the open, for both arms); also takes the group's world rotation (its matrixWorld,
+   *  updated by the caller) for the cabin's sky term */
+  setSunVisibility(v: ArrayLike<number>, world?: number): void;
 }
 
 const CT = Math.cos(WHEEL_TILT), ST = Math.sin(WHEEL_TILT);
@@ -331,13 +333,13 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   for (const a of acc.meshes) meshes.push(a);
   // the light on the arms in the cabin: their own sun shade and sky share (hands-sun.ts), not the shadow map; they
   // still cast into it (onto the lap)
-  const sunU = sunUniform(), rotU = armRotUniform();
+  const sunU = sunUniform(), rotU = armRotUniform(), worldU = worldUniform();
   for (const m of meshes) {
     m.bind(skeleton, bindIdentity);
     m.frustumCulled = false;
     m.castShadow = m.name !== 'crystal' && m.name !== 'dial';
     m.receiveShadow = false;
-    for (const mm of Array.isArray(m.material) ? m.material : [m.material]) withSunShade(mm, sunU, rotU);
+    for (const mm of Array.isArray(m.material) ? m.material : [m.material]) withSunShade(mm, sunU, rotU, worldU);
     group.add(m);
   }
   let tris = 0;
@@ -364,7 +366,8 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     stats: { buildMs, tris, calls: meshes.length, meshMs: tMesh, accMs: tAcc },
     grip: { right: new THREE.Vector3(...toCar(gripG, 0)), left: new THREE.Vector3(...toCar(gripG, 1)) },
     sunPoints: sunPts,
-    setSunVisibility(v: ArrayLike<number>) {
+    setSunVisibility(v: ArrayLike<number>, world = 1) {
+      worldU.value = Math.min(1, Math.max(0, Number.isFinite(world) ? world : 1));
       for (let i = 0; i < SUN_PTS; i++) { const p = sunPts[i]; sunU.value[i].set(p.x, p.y, p.z, Math.min(1, Math.max(0, Number.isFinite(v[i]) ? v[i] : 1))); }
       rotU.value.setFromMatrix4(group.matrixWorld);     // (the caller has just updated it; the sky term's frame)
     },

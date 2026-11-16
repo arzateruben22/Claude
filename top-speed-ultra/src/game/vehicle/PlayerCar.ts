@@ -65,6 +65,14 @@ function disposeGeometry(o: THREE.Object3D) {
   o.parent?.remove(o);
 }
 
+// the distances (m) along the sun's ray from the driver's arms at which PlayerCar.updateSunShade asks for a deck overhead
+const SUN_MARCH = [3, 9, 16, 25];
+/** what updateSunShade asks of the road network (Network) */
+export interface SunDecks {
+  overpassAt(x: number, z: number, y0: number, y1: number, margin: number): unknown;
+  pavedAt(x: number, z: number, y0: number, y1: number, self: null, margin: number): unknown;
+}
+
 export class PlayerCar {
   readonly root = new THREE.Group();          // position, heading, the road's grade
   readonly body = new THREE.Group();          // sprung: pitch, roll, heave, vibration
@@ -419,9 +427,16 @@ export class PlayerCar {
   // 3.5 cm out, across the sun's direction) go through the cabin test above; the share that leaves through the glass
   // is the sun's visibility there, eased over about a sixth of a second so a pillar's edge sweeps across rather than
   // switching. 30 ray-cabin tests a frame, against a handful of quads. sunDir: toward the sun, world space.
-  private sunVis = new Float32Array(6).fill(1);
-  private sunTmp = { p: new THREE.Vector3(), q: new THREE.Vector3(), a: new THREE.Vector3(), b: new THREE.Vector3() };
-  updateSunShade(sunDir: THREE.Vector3, dt: number, instant = false) {
+  // decks (the road network, given where the world casts shadows, so the arms darken with the dash under a bridge):
+  // one ray from the middle of the arms up toward the sun, four samples 3 to 25 m along it, each asking whether a
+  // street bridge's deck, or another road's surface well over the cabin, lies over that spot between the cabin's roof
+  // and the ray's height there (the ray having risen from under the roof to there, a deck over that spot is one it
+  // crossed); any deck found shades every point, eased the same way. (Without it the arms, taking no shadow map, stayed in full sun
+  // under an overpass while the cabin and the road went dark.)
+  private sunCab = new Float32Array(6).fill(1);
+  private sunWorld = 1;
+  private sunTmp = { p: new THREE.Vector3(), q: new THREE.Vector3(), a: new THREE.Vector3(), b: new THREE.Vector3(), c: new THREE.Vector3() };
+  updateSunShade(sunDir: THREE.Vector3, dt: number, instant = false, decks?: SunDecks) {
     const arms = this.arms;
     if (!arms) return;
     const t = this.sunTmp, R = 0.035;
@@ -429,20 +444,33 @@ export class PlayerCar {
     t.b.copy(sunDir).cross(t.a).normalize();
     arms.group.updateWorldMatrix(true, false);
     const k = instant ? 1 : 1 - Math.exp(-Math.max(0, dt) * 6);
+    t.c.set(0, 0, 0);
     for (let i = 0; i < 6; i++) {
       t.p.copy(arms.sunPoints[i]).applyMatrix4(arms.group.matrixWorld);
+      t.c.addScaledVector(t.p, 1 / 6);
       let lit = 0;
       for (let j = 0; j < 5; j++) {
         t.q.copy(t.p);
         if (j) { const ang = (j - 1) * Math.PI * 0.5; t.q.addScaledVector(t.a, Math.cos(ang) * R).addScaledVector(t.b, Math.sin(ang) * R); }
         if (!this.sunBlocked(t.q, sunDir)) lit++;
       }
-      this.sunVis[i] += (lit / 5 - this.sunVis[i]) * k;
+      this.sunCab[i] += (lit / 5 - this.sunCab[i]) * k;
     }
-    arms.setSunVisibility(this.sunVis);
+    let world = 1;
+    if (decks && sunDir.y > 0.02) {
+      for (const d of SUN_MARCH) {
+        t.q.copy(t.c).addScaledVector(sunDir, d);
+        const x = t.q.x + ORIGIN.x, z = t.q.z + ORIGIN.z;     // (the network's frame: the scene's is recentred on the car)
+        // (a road's surface counts from 3 m over the arms: the car's own road rising ahead on a grade is not a deck)
+        if (decks.overpassAt(x, z, t.c.y + 1.2, t.q.y + 0.5, 0) || decks.pavedAt(x, z, t.c.y + 3, t.q.y + 0.5, null, 0)) { world = 0; break; }
+      }
+    }
+    this.sunWorld += (world - this.sunWorld) * k;
+    arms.setSunVisibility(this.sunCab, this.sunWorld);
   }
-  /** the sun's visibility at the arms' six sample points (right knuckles, wrist, elbow, then the left's), for the tests */
-  get sunShade() { return Array.from(this.sunVis, (v) => Math.round(v * 100) / 100); }
+  /** the sun's visibility at the arms' six sample points (right knuckles, wrist, elbow, then the left's) through the
+   *  cabin, then the share the world leaves (1 in the open, 0 under a bridge's deck), for the tests */
+  get sunShade() { return [...Array.from(this.sunCab, (v) => Math.round(v * 100) / 100), Math.round(this.sunWorld * 100) / 100]; }
 
   // on: the beams' level (0 by day, 1 at night); dark: how dark it is, so the painted pool keeps a lower level when
   // the lamps come on for rain or fog by day
