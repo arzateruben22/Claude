@@ -19,7 +19,7 @@ import { Roads } from './world/Roads';
 import { Terrain } from './world/Terrain';
 import { CarPhysics, SPEC } from './vehicle/Physics';
 import { PlayerCar } from './vehicle/PlayerCar';
-import { HyperAbility, planHop, HOP, TANK, HopVehicle } from './vehicle/HyperAbility';
+import { HyperAbility, planHop, HOP, TANK, HopVehicle, hopCostFor, hopNeedAt } from './vehicle/HyperAbility';
 import { ThrustJets } from './vehicle/ThrustJets';
 import { CAR_IDS, shapeFor } from '../preview/car-shape';
 import type { CarId } from '../preview/car-shape';
@@ -73,6 +73,7 @@ const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts count
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+const HOP_SAY = 2500;              // a hop refusal's reason stays on the HUD's strip and the car's cluster this long (ms)
 const ARRIVE_M = 80;               // a venue's ramp: how far before the street the fade parks you (the plans' 80 m)
 // the seat view on a portrait screen: its horizontal field of view (degrees) and where the horizon sits (from the top)
 const SEAT_HFOV_P = 50, SEAT_HORIZON_P = 0.37, DEG = Math.PI / 180;
@@ -223,8 +224,8 @@ export class Game {
   // (`short`: a plain hop that came down short of a vehicle too far ahead to clear; `warn`: it came down with traffic
   // close ahead), and the last refusal (`block`: the vehicle behind the plan's refusal, its distance ahead and to the side
   // in this road's frame, its speed, and whether it was on another road projected onto this one)
-  hopLog = { n: 0, peak: 0, T: 0, over: '' as string | null, short: null as string | null, warn: false, apex: 0, air: 0, landV: 0, landMph: 0, refused: '', refusedN: 0,
-    block: null as { kind: string; ds: number; dd: number; v: number; other: boolean } | null };
+  hopLog = { n: 0, peak: 0, T: 0, cost: 0, over: '' as string | null, short: null as string | null, warn: false, apex: 0, air: 0, landV: 0, landMph: 0, refused: '', refusedN: 0,
+    refusedAt: -1e9, block: null as { kind: string; ds: number; dd: number; v: number; other: boolean } | null };
   private driving = 'rossini-gt';    // the car applyCarChoice last put into the physics and the scene
   private ownerPick: string | null | undefined;   // owner mode's car, kept on this device apart from the profile (undefined: not read yet)
   // a story errand (story.ts): set from the phone before a Free Drive, live during it (the sign, the time left)
@@ -699,6 +700,7 @@ export class Game {
     this.input.thrustInstantBelow = live ? HOP.minV : 0;          // a standing launch: no double-tap to wait for
     this.fulls = this.hyper.fulls;
     this.phys.ext.fx = 0; this.phys.ext.fz = 0;
+    this.hopLog.refusedAt = -1e9;
     this.jets?.clear();
   }
   // Thrust Hop (double-tap THRUST): plans an arc over the vehicles ahead in your lane and launches it, or says why not.
@@ -709,7 +711,7 @@ export class Game {
     const p = this.phys, h = this.hyper;
     if (!h.live || this.attract || this.over || this.paused) return 'off';
     if (p.airborne) return 'in the air';
-    const no = (why: string) => { this.hopLog.refused = why; this.hopLog.refusedN++; this.ev.toast(why, 'info'); return why; };
+    const no = (why: string) => { this.hopLog.refused = why; this.hopLog.refusedN++; this.hopLog.refusedAt = performance.now(); this.ev.toast(why, 'info'); return why; };
     if (h.tank < TANK.hopNeed) return no('Thrust Hop: tank low');
     if (p.vx < HOP.minV) return no('Need more speed');
     // every vehicle on this road, out to the longest hop's landing and its room, in this road's frame: one on another
@@ -738,19 +740,24 @@ export class Game {
       const v0 = (t.stopT > 0 ? 0 : t.v0 * this.traffic.pace) * (t.v > 0.1 ? v / t.v : 1);
       cars.push({ ds, v: v * ws, v0: v0 * ws, bold: t.bold, acc: t.acc * ws * ws, dd, len: cl.len, wid: cl.wid, height: cl.height, kind: cl.id, other: t.path !== this.path });
     }
-    const plan = planHop(p.vx, SPEC.halfL, SPEC.halfW, cars), b = plan.block;
+    // (the car's drag slows it in the air, where the valve stays shut: the plan allows for it)
+    const airDrag = (0.5 * 1.225 * SPEC.CdA * p.vx * p.vx) / SPEC.mass;
+    const plan = planHop(p.vx, SPEC.halfL, SPEC.halfW, cars, airDrag), b = plan.block;
     this.hopLog.block = b ? { kind: b.kind, ds: +b.ds.toFixed(1), dd: +b.dd.toFixed(2), v: +b.v.toFixed(1), other: !!b.other } : null;
     if (plan.refuse) return no(plan.refuse);
     const track = p.vx * plan.T + 20;
     // (to where the road is drawn: a road cut back off another's lanes ends short of its length, Network.trimEnds)
     if (p.s + track > this.path.end - 5 && !this.path.next) return no('No room to land');
     if (p.s + track > this.path.end - 5) return no('Junction ahead: no hop');
+    // the gas scales with the arc (hopCostFor): a big arc can ask for more than the tank holds
+    const cost = hopCostFor(plan.peak, plan.T);
+    if (h.tank < cost) return no('Thrust Hop: tank low');
     const over = this.structureOver(this.path, p.s, p.d, track);
     if (over) return no(over === 'overpass' ? 'No hop: overpass ahead' : over === 'sign gantry' ? 'No hop: sign gantry ahead' : 'No hop: bridge overhead');
     if (!p.hop(plan.peak, plan.T)) return no('No hop');
-    h.spendHop(p);                                               // and the valve shuts: the arc is planned at this speed
+    h.spendHop(p, cost);                                         // and the valve shuts: the arc is planned at this speed
     const L = this.hopLog;
-    L.n++; L.peak = plan.peak; L.T = plan.T; L.over = plan.over; L.short = plan.short ?? null; L.warn = !!plan.warn; L.apex = 0; L.air = 0; L.landV = 0; L.landMph = 0;
+    L.n++; L.peak = plan.peak; L.T = plan.T; L.cost = cost; L.over = plan.over; L.short = plan.short ?? null; L.warn = !!plan.warn; L.apex = 0; L.air = 0; L.landV = 0; L.landMph = 0;
     this.jets.puff(0.35);
     if (!this.attract) this.audio.hop();
     const name = (k: string) => (k === 'semi' ? 'big rig' : k === 'truck' ? 'box truck' : k);
@@ -1436,7 +1443,9 @@ export class Game {
         // the landing: the springs compress, the camera dips, a thump and a chirp from the tyres; never a crash
         this.car.land(im.speed);
         this.dip.a = Math.min(0.12, 0.016 * im.speed); this.dip.t = 0;
-        this.shake = Math.max(this.shake, Math.min(0.6, im.speed / 14));
+        // (the shake's random jolt capped at the old 1.5 m hop's: the bigger hop lands at up to 8 m/s down, and its
+        // settle is the dip and the springs, not more jitter)
+        this.shake = Math.max(this.shake, Math.min(0.4, im.speed / 14));
         if (!this.attract) this.audio.land(im.speed, Math.abs(p.vx));
         this.hopLog.landV = im.speed; this.hopLog.landMph = Math.abs(p.vx) * MPH;
         continue;
@@ -2087,17 +2096,26 @@ export class Game {
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
       thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, thrustOn: this.hyper.thrust, groundLock: this.hyper.fan > 0.3,
-      hop: !this.hyper.live ? '' : p.airborne ? 'Airborne' : this.hyper.tank >= TANK.hopNeed ? 'Hop ready' : this.hyper.charging ? 'Hop: charging' : 'Hop: tank low',
+      hop: this.hopState(),
     };
     this.ev.hud(h);
     // the car's own cluster shows the same facts (cockpit.ts / car-dash.ts): one object, filled in place
     const d = this.dashInfo;
     d.tripMi = this.distance / 1609.344; d.topMph = h.top; d.clock = h.clock; d.tempF = h.tempF;
-    d.tune = h.tune; d.tank = h.tank; d.thrustLive = h.thrustLive;
+    d.tune = h.tune; d.tank = h.tank; d.thrustLive = h.thrustLive; d.lock = h.groundLock; d.hop = h.hop;
     d.turn = h.dest ? h.turn : ''; d.nextMi = nextDist / 1609.344; d.navTo = navTo; d.dest = h.dest; d.destMi = destDist / 1609.344; d.road = h.road;
     this.car.setDash(d);
   }
-  private dashInfo = { tripMi: 0, topMph: 0, clock: '', tempF: 0, tune: '', tank: 0, thrustLive: false, turn: '' as Turn, nextMi: 0, navTo: '', dest: '', destMi: 0, road: '' };
+  private dashInfo = { tripMi: 0, topMph: 0, clock: '', tempF: 0, tune: '', tank: 0, thrustLive: false, lock: false, hop: '', turn: '' as Turn, nextMi: 0, navTo: '', dest: '', destMi: 0, road: '' };
+  // the hop's state for the HUD and the cluster: in the air; a refusal's reason for HOP_SAY ms after it; ready when the
+  // tank holds the default hop's gas at this speed (hopNeedAt); else charging or tank low
+  private hopState() {
+    const h = this.hyper, p = this.phys;
+    if (!h.live) return '';
+    if (p.airborne) return 'Airborne';
+    if (performance.now() - this.hopLog.refusedAt < HOP_SAY && this.hopLog.refused) return this.hopLog.refused;
+    return h.tank >= hopNeedAt(Math.abs(p.vx)) ? 'Hop ready' : h.charging ? 'Hop: charging' : 'Hop: tank low';
+  }
 
   get inAttract() { return this.attract; }
   // for the Feedback panel: the device and this drive, as numbers a player can paste to us. Nothing personal.

@@ -4,6 +4,66 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: THRUST built into the cockpit, and a bigger Thrust Hop (two cars at 200 mph)
+
+The owner (2026-11-16, with an iPhone portrait screenshot of v19's seat view at 137 mph): "Make the thrust option and
+display more seamlessly integrated and also make the thrust jump be higher by about the measurement of being able to
+hop over 2 cars at 200 mph". Branch claude/thrust from c7b0943 (v19); not committed.
+
+- **The display, in the car.** The floating THRUST box (it sat on the wheel's hub and the cluster's lower half) is
+  gone. In the seat view the OC Hypercar's own driver display (`car-dash.ts` hyperDash) shows THRUST left of the speed
+  with THRUST live: the tank's percentage large, the bar with the hop's 40 % mark, a GROUND LOCK chip (filled while the
+  fans run) and the hop's state (HOP READY, HOP CHARGING, HOP: TANK LOW, AIRBORNE, or for 2.5 s the reason a request
+  was refused, `Game.hopState`). It redraws only on a change (two new watched fields; the tank to 1 %). The profile, TCS
+  and ABS move to the right block's foot. In the chase and hood views a slim strip by the speed (`.hud-thr`): over the
+  speed block on a desktop, a line of the plate on a phone; hidden in the seat view.
+- **The controls, in the control row.** THRUST and the driver's ability (CLEAR PATH etc.) are keys in the pedals' style
+  (a slanted plate, a coloured top line, the bar along the foot is the tank or the ability's charge): on a phone upright
+  THRUST over GAS and the ability over BRAKE, each its pedal's width, 48 px tall, 10 px above it; sideways a column left
+  of BRAKE; on a desktop beside the speed, or in its corner in the seat view. Double-tap THRUST, the keys and a gamepad
+  are unchanged.
+- **The bigger hop** (`HyperAbility.ts`; PROJECT_OC_HYPERCAR.md §6.4 has the numbers and why): the default hop rises
+  with the speed from 1.5 m at 30 mph to 3.5 m at 200 mph in its natural time (1.69 s: about 100 m on traffic at 30 m/s,
+  two sedans at the traffic's following distance); the planner starts from that height (a lower arc when it lands
+  gentler or only it fits); the arc's times allow for the car's drag in the air; the gas scales with the arc (35 % for
+  the old hop, 53 % for the default at 200 mph, at most 56 %); the longest arc stays 2.5 s (2.8 s was tried and reverted:
+  a landing in natural traffic hit the next vehicle); the landing's random camera shake is capped at the old hop's.
+- **Tests.** New in the abilities group: the seat view at 1280 × 720 (no HUD box; the cluster's words for each state;
+  the keys' boxes against the projected wheel hub and cluster; the chase strip by the speed) and the 200 mph hop (the
+  default 3.5 m, the camera emulated at 60 frames a second in the chase and seat views, two sedans at the following
+  distance from 25 and 45 m, four in a row refused). New in the phone group: the seat view at 390 × 844 the same way.
+  Updated: the 60/120/200 mph hop expects the default arcs; the phone THRUST checks expect the keys over the pedals; the
+  four hop checks that called the removed `Traffic.addRacer` (failing since 2026-11-08) now place their vehicle with a
+  test helper (`window.placeTraffic`) and run again.
+
+Verified: `npx tsc --noEmit` and `npx tsc --noEmit -p tsconfig.game.json` clean; `npm run build` OK with one
+`data-build="owner-test"` (dist/artifact.html). Suites on the final build: `--only=abilities` **23/23** in 6 min 24 s;
+`--only=boot,nav-hud` **19/19** in 17 min 48 s; `--only=phone` **23/23** in 23 min 19 s (over the 20 minutes asked
+for: load 12-13 from other passes). Before the maxT revert the abilities group was 21/23 (the natural-traffic landing
+hit, and the camera check's first metric, which compared heights on a grade).
+
+Measured (abilities group): the default hop 1.86 / 2.56 / 3.5 m at 60 / 120 / 200 mph, 1.22 / 1.44 / 1.68 s up, 39 /
+46 / 53 % of the tank; at 200 mph over two sedans 29.8 and 75.2 m ahead a 3.5 m, 1.69 s arc 1.2 and 0.72 m over their
+1.44 m roofs, and 49.8 and 95.2 m ahead a 3.5 m, 2.08 s arc 1.82 and 0.55 m over, 0 contacts, landed in lane; four in a
+row "No room to land", no gas spent; the camera rose 3.37 m (chase) and 3.4 m (seat), at most 0.155 m a frame, the
+step changing by at most 0.044 m, back within 5 cm a second after touchdown. Natural traffic (I-5 North, moderate):
++30 m/s from 50 m 43 of 53 over it, 0 contacts; a sedan at +15 m/s from 15 m 25 of 27; casual at 55 m/s 36 of 40
+granted. Seat view at 390 × 844: THRUST 296-370 × 640-688, the ability 206-280 × 676-724, the hub 150-240 × 544-602,
+the cluster 58-332 × 459-523; at 1280 × 720 the keys at 1074-1262 × 646-702, the hub 572-708 × 615-707.
+
+Frames (the session's scratchpad, /tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/thrust/frames/; tests/out is not kept): the seat view BEFORE (c7b0943) and AFTER, 390 × 844
+(isMobile, touch, DPR 3) and 1280 × 720, day and night: before-seat-{phone,desk}-{day,night}.png,
+after-seat-{phone,desk}-{day,night}.png. A hop over two sedans at 200 mph (30 m/s, 40.5 m apart, the first 47.8 m
+ahead), 1280 × 720, the game's frame function driven by hand at 1/60 s: final-hop2-chase-1..6.png and
+final-hop2-cockpit-1..6.png (strips: final-hop2-*-strip.png): a 3.5 m, 2.05 s arc, 1.77 and 0.62 m over the roofs, 0
+contacts, landed in lane at 192 mph; the camera at most 0.168 m a frame (chase) and 0.115 m (seat). In the chase strip
+the camera rises with the car, so the height reads from the sedans passing under it rather than from the horizon.
+
+Not done or not proven: the small words on the cluster (THRUST, GROUND LOCK) are about 4-5 CSS px tall on a 390 px
+phone, legible in the DPR 3 frames but small (the percentage and the hop's state are larger); the cluster's layout was
+fitted to today's seat framing, which another session (fix/sleeves) may change; the Low/HD/Ultra presets share the
+camera code, but the frames and the camera measurements here are on Low only; no real phone or GPU.
+
 ## 2026-11-11: Final live merge 5: Stoppage Time S4, the dashboard and the wheel centre
 
 What went live on claude/final-live (base d08eee0, v16): origin/claude/sports-bar cafc5a3 gives Stoppage Time its S4

@@ -453,7 +453,7 @@ export function App() {
             </div>
           </div>
           {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause. OC Hypercar in Free Drive: hold Left Shift for Cold Thrust, double-tap it (or press J) for Thrust Hop; gamepad: D-pad up.</p>}
-          {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (beside your ability) for Cold Thrust, double-tap it for Thrust Hop.</p>}
+          {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (over GAS) for Cold Thrust, double-tap it for Thrust Hop.</p>}
           {/* the feedback report, here since it left the pause screen (owner, 2026-11-16); the phone has it too */}
           <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
         </>,
