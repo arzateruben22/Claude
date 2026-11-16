@@ -6639,7 +6639,6 @@ a.book-btn { text-align: center; }
 .sh-tabs-bar.is-set { opacity: 1; transition: transform 420ms cubic-bezier(0.2, 0.9, 0.2, 1), width 420ms cubic-bezier(0.2, 0.9, 0.2, 1); }
 .sh-count { margin: 0; font-size: 0.8rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
 .sh-nav .sh-count { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.sh-count--under { margin: 0.75rem 0.35rem 0; }
 .sh-sec { scroll-margin-top: 8.5rem; }
 @media (max-width: 760px) {
   .sh-console { padding: 0.6rem; border-radius: 18px; gap: 0.6rem; }
@@ -6650,7 +6649,6 @@ a.book-btn { text-align: center; }
   .sh-nav { top: var(--nav-bottom, 4rem); margin-top: 0.4rem; }
   /* scrolling down through the products: tucked up under the header */
   .sh-nav.is-stuck.is-tucked { transform: translateY(calc(-100% - 1px)); opacity: 0; pointer-events: none; }
-  .sh-count--under { margin: 0.65rem 0.25rem 0; }
   .sh-tabs { gap: 1.3rem; }
   /* the row scrolls: fade its far edge so it reads as more to see */
   .sh-tabs, .sh-seg { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }

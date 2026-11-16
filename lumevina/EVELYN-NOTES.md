@@ -660,3 +660,7 @@ The koi are gone from everything:
 ## Services: the paragraph under "Your glow, on your schedule" (Nov 16)
 
 Now: "Explore treatments and pricing below. Tap 'Book' to view availability and book through GlossGenius. Any required deposit will be listed with the service. Gift certificates are available in any amount." ("Gift certificates" links to the gift card.) "Through GlossGenius" shows only while the Book buttons open GlossGenius. Once booking moves to the website, the sentence just says "book".
+
+## Shop: no product count (Nov 16)
+
+The "43 products · 43 on the shelf now" line under the shop's search and brands is removed. A hidden copy stays for screen readers, so someone who can't see the page still hears how many products match a search. The search's own "5 products for 'spf'" in its results list is unchanged.
