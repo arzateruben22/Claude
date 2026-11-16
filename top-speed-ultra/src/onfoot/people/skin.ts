@@ -64,6 +64,8 @@ export function sssLights() {
 export interface SkinLook {
   tone: number; lipstick: number | null; blush: number; beard: number; beardColor: number; liner: number;
   hairColor: number; freckles: number; age: number; male: boolean; tattooInk?: number;
+  /** (graphics pass) Look.softShade; unset: 0, as before */
+  soft?: number;
 }
 
 export interface SkinMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: Record<string, THREE.IUniform> }
@@ -93,6 +95,7 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
     // the eye's shape, as face.ts lays its lids: its size, the lid line's tilt at the outer corner (mm, 1.2 x eyeTilt)
     // and the upper lid's hood (person.ts sets it from the face; until it does, an eye of size 1, level and unhooded)
     uEyeP: { value: new THREE.Vector4(1, 0, 0, 0) },
+    uSoft: { value: o.soft ?? 0 },
   };
   m.uniformsRef = u;
   m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
@@ -121,7 +124,7 @@ vExpr = vec4(morphTargetInfluences[${MI.smileL}], morphTargetInfluences[${MI.smi
 varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;
 uniform vec3 uTone; uniform float uDark; uniform vec3 uLip; uniform float uLipAmt; uniform float uBlush; uniform float uBeard; uniform vec3 uBeardCol;
 uniform float uLiner; uniform vec3 uHair; uniform float uFreckles; uniform float uAge; uniform float uMale; uniform vec3 uInk;
-uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP;
+uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP; uniform float uSoft;
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
@@ -246,6 +249,15 @@ if (scalp > 0.05) {
 }
 // freckles; age spots (a few flat brown marks 2-3 mm across on lighter skin)
 #ifdef SKIN_FACE
+// (2026-11-12) a healed scar up through the right eyebrow (Look.scar 'browR': uFaceP.w 1; 0 for everyone else): a thin
+// line paler and a little pinker than the skin, about 15 mm from the brow's lower edge up into the forehead, leaning
+// out at the top; soft at its ends
+if (uFaceP.w > 0.5) {
+  vec2 sq = vec2(hl.x + 0.028, hl.y - 0.026) * 1000.0;   // mm from the scar's middle (x -28 mm: the person's right)
+  vec2 sr = vec2(0.985 * sq.x + 0.17 * sq.y, -0.17 * sq.x + 0.985 * sq.y);
+  float scar = (1.0 - smoothstep(0.35, 0.95, abs(sr.x + 0.25 * sin(sr.y * 0.7)))) * (1.0 - smoothstep(5.5, 8.0, abs(sr.y)));
+  c = mix(c, mix(c * vec3(1.25, 1.12, 1.1), vec3(0.62, 0.45, 0.42), 0.25 + 0.35 * (1.0 - uDark)), scar * 0.85);
+}
 if (uFreckles * fz > 0.002) {
   vec2 fr = cells(hp * 0.55); c *= 1.0 - uFreckles * fz * 0.28 * smoothstep(0.24, 0.08, fr.x) * step(0.55, hh13(floor(hp * 0.55) + 2.0));
 }
@@ -379,6 +391,9 @@ rough = mix(rough, 0.85, smoothstep(0.1, 0.8, scalp));   // a buzz cut is matte,
 gThin = thin * (1.0 - uDark * 0.5);
 gSss = mix(vec3(1.0, 0.36, 0.24), vec3(0.78, 0.34, 0.24), uDark);
 gAoD = mix(1.0, ao, 0.5);
+// (Look.softShade; 0: exactly as before)
+gSss = mix(gSss, vec3(1.0, 0.66, 0.54), 0.75 * uSoft);
+gAoD = mix(1.0, ao, 0.5 - 0.32 * uSoft);
 `)
       .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = clamp(rough, 0.2, 0.85);')
       .replace('float specularIntensityFactor = specularIntensity;', 'float specularIntensityFactor = specularIntensity * specK;')
@@ -386,7 +401,7 @@ gAoD = mix(1.0, ao, 0.5);
 normal = bumpNormal(-vViewPosition, normal, H * 0.001, faceDirection);`)
       .replace('#include <lights_fragment_end>', /* glsl */ `#include <lights_fragment_end>
 {
-  reflectedLight.indirectDiffuse *= ao;
+  reflectedLight.indirectDiffuse *= ao * (1.0 + 0.45 * uSoft);   // (repair 2026-11-16, Look.softShade: more of the sky's light on skin in shade; with the sun behind them the cast's faces read far darker than their tone by day. 0: as before)
   float dotNVo = saturate(dot(geometryNormal, geometryViewDir));
   reflectedLight.indirectSpecular *= computeSpecularOcclusion(dotNVo, ao, material.roughness);
   #ifdef USE_SHEEN

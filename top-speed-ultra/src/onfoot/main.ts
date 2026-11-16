@@ -720,7 +720,7 @@ async function main() {
     frames: 0,
     buildMs: 0,
     /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
-    cast() { const pool = crowd.castPool(); return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: crowd.npcs.filter((n) => n.rep !== 'off').map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts) })) }; },
+    cast() { const pool = crowd.castPool(); return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: crowd.npcs.filter((n) => n.rep !== 'off').map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts), rep: n.rep, lod: n.lod })), you: person ? { lod: avatarLod } : null }; },
     attribution: DATA_ATTRIBUTION,
     /** set the simulated clock: day 0-6 (Sunday 0) or a name, hour 0-24; `ms` is how long setting it took (the crowd
      *  settling, posed at once) */
