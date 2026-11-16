@@ -99,7 +99,7 @@ export function paint(lf: LodField, looks: Look2[], pos: Float32Array, hf: HeadF
         const m = faceMasks(l, hf, look);
         c.multiply(new THREE.Color(1, 1 - 0.12 * m.red, 1 - 0.14 * m.red));
         c.lerp(lip, smooth(0.15, 0.6, m.lip));
-        if (male) c.lerp(beard.clone().multiplyScalar(0.5), clamp(m.beard) * (look.facialHair === 'none' ? 0.15 : look.facialHair === 'stubble' ? 0.4 : 0.85));
+        if (male) c.lerp(beard.clone().multiplyScalar(0.5), clamp(m.beard) * (look.facialHair === 'none' ? 0.15 * (look.beardShadow ?? 1) : look.facialHair === 'stubble' ? 0.4 : look.facialHair === 'lightStubble' ? 0.2 : 0.85));   // (2026-11-16: a day's growth is a shadow at a distance too; it was painted as a full beard)
         c.lerp(lin(look.hairColor).multiplyScalar(0.6), smooth(0.2, 0.8, m.scalp));
         // eyes: the opening reads as white with a dark iris; brows a band above
         const ax = Math.abs(l[0]), dx = ax - ex;
