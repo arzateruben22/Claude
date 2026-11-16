@@ -31,6 +31,7 @@ the v3 HUD style, magenta `#EB63FF`, 9:16 framing, the cinema kit). Script and o
 
 ## Placeholders / TODO
 - The owner's takes (the scratch voice is stock and never ships).
+- v2 (16 Nov, owner: more compelling visuals): `scene2.mjs` (= `scene_head.mjs` + `scene_tail2.mjs`, built by `mk_v2.py` from the v1 tail), `glimpses.js` (cup, stair, skeleton, tower, city, ocean + sky layer, mountain ledge), film `part1v2/film.json` from `part1v2.py` (windows frozen; only line 11 text changed), `part1v2_audio.py`, `part1v2_guide.py`; outputs `out/part1-picture-v2.mp4`, `out/part1-guide-v2.mp4`, stems in `part1v2/audio/`.
 - Caption position `--y` chosen when the real takes are in (0.70 sits under the robot's feet on the globe).
 - The thumbs-up + bell pop-up (`cta.py`): not in this repo's branch; it layers on after the captions.
 - Claims in `PLAN-part1-script.md` stay OPEN: "standing up gets dangerous" at 4 g needs an aerospace-medicine source; the branch sag is drawn loosely ("a little lower").
