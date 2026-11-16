@@ -16,9 +16,14 @@ V = json.loads((SP / "cutV/phrases.json").read_text())
 CONFIG = {
  1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p1_cliff"), ("closer", "V", "c1")], hook="How fast before you float off?"),
  3: dict(items=[("open", "V", "p3_open"), ("sent", "A", 23), ("sent", "S", "u_ground"), ("sent", "S", "u_gust"), ("sent", "A", 26), ("sent", "A", 27), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p3_cliff")], hook="The air can't keep up"),
+ 4: dict(items=[("open", "V", "p4_open"), ("sent", "A", 29), ("sent", "S", "u_sea"), ("sent", "S", "u_depth"), ("sent", "A", 32), ("sent", "A", 33), ("cliff", "V", "p4_cliff"), ("closer", "V", "c4")], hook="Then the oceans move"),
+ 5: dict(items=[("open", "V", "p5_open"), ("sent", "A", 34), ("sent", "A", 35), ("sent", "A", 36), ("sent", "A", 37), ("sent", "A", 38), ("sent", "S", "u_eq6"), ("sent", "A", 40), ("sent", "A", 41), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p5_cliff")], hook="Storms are steered by the spin"),
+ 6: dict(items=[("open", "V", "p6_open"), ("sent", "A", 43), ("sent", "A", 44), ("sent", "A", 45), ("sent", "A", 46), ("sent", "A", 47), ("sent", "A", 48), ("cliff", "V", "p6_cliff"), ("closer", "V", "c6")], hook="The calendar breaks"),
+ 7: dict(items=[("open", "V", "p7_open"), ("sent", "A", 49), ("sent", "S", "u_speed3"), ("sent", "S", "u_w3"), ("sent", "A", 52), ("sent", "S", "u_jump2"), ("sent", "A", 54), ("sent", "A", 55), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p7_cliff")], hook="Three hours, then two"),
+ 8: dict(items=[("open", "V", "p8_open"), ("sent", "S", "u_w15"), ("sent", "S", "u_jump15"), ("sent", "A", 58), ("cliff", "V", "p8_cliff"), ("closer", "V", "c8")], hook="Almost weightless"),
  2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
 }[N]
-TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up"]
+TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up", "Then the oceans move", "Storms are steered by the spin", "The calendar breaks", "Three hours, then two", "Almost weightless"]
 SI = json.loads((HERE / "standin/lines.json").read_text())
 def src(kind, key):
     if kind == "S": return HERE / "standin" / SI[key]["file"], SI[key]["text"], f"standin.{key}"
@@ -29,6 +34,7 @@ if STEP == "build":
     for k, it in enumerate(CONFIG["items"], 1):
         kind = it[0]; wav, text, tag = src(it[1], it[2]); x, sr = sf.read(wav)
         x = x if x.ndim == 1 else x.mean(1)
+        if it[1] == "A" and it[2] == 47: x = x[int(70.9 * sr):]        # the owner paused 70 s before this sentence: keep only the speech
         rec = dict(kind=kind, text=text, take=tag)
         if kind == "cta":
             wav2, text2, tag2 = src(it[1], it[3]); y2, _ = sf.read(wav2); n = max(len(x), len(y2)); pad = lambda v: np.concatenate([v, np.zeros(n - len(v))])
@@ -73,6 +79,8 @@ for it in items:
     if N == 2 and it["uid"] == "s21": hold = 2.4
     if N == 3 and it["uid"] in ("u_ground", "u_gust"): hold = 2.2        # the speed count-up and the chip (carried by sound effects)
     if N == 3 and it["uid"] in ("s27", "open"): hold = 1.6
+    if N in (4, 5, 6, 7, 8) and it["uid"] in ("u_sea", "u_depth", "u_eq6", "u_speed3", "u_w3", "u_jump2", "u_w15", "u_jump15"): hold = 1.8
+    if N in (4, 6, 8) and it["uid"] in ("s33", "s48", "s58"): hold = 1.4
     if N == 1 and it["uid"] == "s4": hold = 3.2                  # the ground-speed beat
     if N == 1 and it["uid"] == "s71": hold = 1.6                 # hold the liftoff
     plan[it["uid"]] = {"pre": pre, "hold": hold, "energy": 0.6}
@@ -100,7 +108,41 @@ elif N == 3:
     CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
     CHIPS = [{"t0": round(U("u_ground") + 0.4, 3), "t1": round(t_end_of("u_ground") + 0.3, 3), "text": "Ground through the air: 1,040 mph"}, {"t0": round(U("u_gust") + 0.4, 3), "t1": round(t_end_of("u_gust") + 0.3, 3), "text": "Strongest gust ever: 250 mph"},
              {"t0": round(U("s26") + 0.5, 3), "t1": round(U("s26") + 3.6, 3), "text": "4\u00d7 faster"}]
-    HUD3 = {"speed": {"t0": round(U("u_ground") - 0.1, 3), "t1": round(t_end_of("u_gust") + 0.4, 3)}}
+    HUD3 = {"speed": {"mph": 1040, "t0": round(U("u_ground") - 0.1, 3), "t1": round(t_end_of("u_gust") + 0.4, 3)}}
+elif N == 4:
+    KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]; FX = {"ocean": [round(U("s29") + 2.0, 3), round(t_end_of("s33") + 0.5, 3)]}
+    RP = {"open": ("lookUp", "wide"), "s29": ("armsOut", "wide"), "u_sea": ("lookUp", "awe"), "u_depth": ("stand", "neutral"), "s32": ("lean", "squint"), "s33": ("hips", "worried"), "cliff": ("lookUp", "wide"), "tease": ("stand", "happy")}
+    CAMS = [{"t0": 0.0, "mode": "wide"}, {"t0": round(U("u_sea") - 0.3, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("u_sea") + 0.3, 3), "t1": round(t_end_of("u_sea") + 0.4, 3), "text": "Equator sea level: +20 miles"}, {"t0": round(U("u_depth") + 0.2, 3), "t1": round(t_end_of("u_depth") + 0.3, 3), "text": "Ocean depth: 2.3 miles"},
+             {"t0": round(U("s32") + 0.6, 3), "t1": round(t_end_of("s32") + 0.3, 3), "text": "The poles dry out"}]
+    HUD3 = {}
+elif N == 5:
+    KEYS = [[0.0, 6.0], [round(f.duration, 3), 6.0]]; FX = {"wind": [round(U("s35"), 3), round(t_end_of("s37") + 0.5, 3)]}
+    RP = {"open": ("lean", "squint"), "s34": ("lean", "wide"), "s35": ("lookUp", "wide"), "s36": ("lookUp", "awe"), "s37": ("lean", "squint"), "s38": ("stand", "neutral"), "u_eq6": ("stand", "wide"), "s40": ("float", "happy"), "s41": ("float", "happy"), "cta": ("armsOut", "happy"), "cliff": ("lookUp", "awe")}
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s38") - 0.2, 3), "mode": "push"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("s35") + 0.2, 3), "t1": round(t_end_of("s35") + 0.4, 3), "text": "Storm steering: 4\u00d7 today"}, {"t0": round(U("s36") + 0.1, 3), "t1": round(t_end_of("s36") + 0.4, 3), "text": "At the edge of floating: 17\u00d7"},
+             {"t0": round(U("u_eq6") + 0.4, 3), "t1": round(t_end_of("u_eq6") + 0.4, 3), "text": "Equator: 4,150 mph"}, {"t0": round(U("s40") + 0.1, 3), "t1": round(t_end_of("s40") + 0.5, 3), "text": "5.5% lighter than a still Earth"}]
+    HUD3 = {"weight_t0": round(U("s38") - 0.2, 3), "speed": {"mph": 4150, "t0": round(U("u_eq6") - 0.1, 3), "t1": round(t_end_of("s40") + 0.3, 3)}}
+elif N == 6:
+    KEYS = [[0.0, 6.0], [round(f.duration, 3), 6.0]]; FX = {}
+    RP = {"open": ("lookUp", "wide"), "s43": ("stand", "neutral"), "s44": ("lookUp", "awe"), "s45": ("hips", "happy"), "s46": ("stand", "neutral"), "s47": ("lean", "squint"), "s48": ("hips", "worried"), "cliff": ("lookUp", "wide"), "tease": ("stand", "happy")}
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s45") - 0.3, 3), "mode": "wide"}, {"t0": round(U("s48") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("s43") + 0.5, 3), "t1": round(t_end_of("s43") + 0.3, 3), "text": "1,460 days in a year"}, {"t0": round(U("s44") + 0.8, 3), "t1": round(t_end_of("s44") + 0.3, 3), "text": "6,000+ days by the end"},
+             {"t0": round(U("s46") + 0.6, 3), "t1": round(t_end_of("s46") + 0.3, 3), "text": "45\u00b0N: 70% of the speed"}]
+    HUD3 = {"weight_t0": round(U("s45") - 0.2, 3)}
+elif N == 7:
+    KEYS = [[0.0, 3.0], [round(U("s52") - 0.3, 3), 3.0], [round(U("s52") + 1.2, 3), 2.0], [round(f.duration, 3), 2.0]]; FX = {}
+    RP = {"open": ("lean", "wide"), "s49": ("lookUp", "wide"), "u_speed3": ("float", "wide"), "u_w3": ("float", "happy"), "s52": ("float", "awe"), "u_jump2": ("float", "happy"), "s54": ("float", "happy"), "s55": ("float", "wide"), "cta": ("armsOut", "happy"), "cliff": ("float", "awe")}
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("u_speed3") - 0.3, 3), "mode": "push"}, {"t0": round(U("s52") - 0.3, 3), "mode": "lift"}, {"t0": round(U("s54") - 0.3, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("u_speed3") + 0.4, 3), "t1": round(t_end_of("u_speed3") + 0.4, 3), "text": "Ground: 8,300 mph"}, {"t0": round(U("u_w3") + 1.2, 3), "t1": round(t_end_of("u_w3") + 0.3, 3), "text": "150 lb feels like 117 lb"},
+             {"t0": round(U("u_jump2") + 0.3, 3), "t1": round(t_end_of("u_jump2") + 0.3, 3), "text": "A 1.5 ft jump becomes 3 ft"}, {"t0": round(U("s55") + 0.2, 3), "t1": round(t_end_of("s55") + 0.2, 3), "text": "Half the force"}]
+    HUD3 = {"weight_t0": round(U("u_w3") - 0.2, 3), "speed": {"mph": 8300, "t0": round(U("u_speed3") - 0.1, 3), "t1": round(t_end_of("u_speed3") + 0.4, 3)}}
+elif N == 8:
+    KEYS = [[0.0, 1.5], [round(f.duration, 3), 1.5]]; FX = {}
+    RP = {"open": ("float", "awe"), "u_w15": ("float", "awe"), "u_jump15": ("float", "happy"), "s58": ("lookUp", "wide"), "cliff": ("float", "wide"), "tease": ("float", "happy")}
+    CAMS = [{"t0": 0.0, "mode": "lift"}, {"t0": round(U("u_jump15") - 0.3, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("u_w15") + 1.6, 3), "t1": round(t_end_of("u_w15") + 0.4, 3), "text": "150 lb feels like 18 lb"}, {"t0": round(U("u_jump15") + 0.5, 3), "t1": round(t_end_of("u_jump15") + 0.3, 3), "text": "1.5 ft jump \u2192 13 ft"}]
+    HUD3 = {"weight_t0": round(U("u_w15") - 0.3, 3)}
 else:
     KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]
     RP = {"open": ("lookUp", "awe"), "s17": ("lookUp", "wide"), "s18": ("lookUp", "neutral"), "s20": ("float", "happy"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
@@ -150,5 +192,5 @@ for v in sub["voice"]:
     if it.get("sub_file"): v["file"] = it["sub_file"]
 (D / "sheet-sub.json").write_text(json.dumps(sub, indent=1, ensure_ascii=False))
 vg = [round(b["t"] - a["t"] - a["dur"], 2) for a, b in zip(f.lines, f.lines[1:])]; 
-print(f"part {N} v2: {f.duration:.1f} s, end card {t_end:.1f} s, max voiceless {max(vg)} s, CTA at {next(l for l in f.lines if LINE[l['id']]['kind']=='cta')['t'] / f.duration:.0%}, speech {sum(l['dur'] for l in f.lines):.1f} s")
+print(f"part {N} v2: {f.duration:.1f} s, end card {t_end:.1f} s, max voiceless {max(vg)} s, CTA at {(lambda c: f'{c[0]["t"] / f.duration:.0%}' if c else "none (even part)")([l for l in f.lines if LINE[l['id']]['kind']=='cta'])}, speech {sum(l['dur'] for l in f.lines):.1f} s")
 print("  keys:", KEYS); print("  cams:", CAMS)

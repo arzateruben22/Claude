@@ -1,0 +1,1033 @@
+{
+ "id": "possibility-lab-earth-spin-part7-v3",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 53.4,
+ "v2": true,
+ "poster": 26.25,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "open"
+  },
+  {
+   "at": 50.01,
+   "name": "end",
+   "beat": "cliff"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 5.1,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "s49",
+   "t0": 5.1,
+   "t1": 11.4,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "u_speed3",
+   "t0": 11.4,
+   "t1": 16.5,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "u_w3",
+   "t0": 16.5,
+   "t1": 24.0,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "s52",
+   "t0": 24.0,
+   "t1": 26.25,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "u_jump2",
+   "t0": 26.25,
+   "t1": 31.95,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "s54",
+   "t0": 31.95,
+   "t1": 34.8,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "s55",
+   "t0": 34.8,
+   "t1": 42.6,
+   "line": "vo08",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 42.6,
+   "t1": 45.9,
+   "line": "vo09",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 45.9,
+   "t1": 53.4,
+   "line": "vo10",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    3.0
+   ],
+   [
+    23.8,
+    3.0
+   ],
+   [
+    25.3,
+    2.0
+   ],
+   [
+    53.4,
+    2.0
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    53.4,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 50.01,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 5.0,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "Three hours, then two",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 50.01,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 7 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0.0,
+   "mode": "ground"
+  },
+  {
+   "t0": 11.2,
+   "mode": "push"
+  },
+  {
+   "t0": 23.8,
+   "mode": "lift"
+  },
+  {
+   "t0": 31.733,
+   "mode": "wide"
+  },
+  {
+   "t0": 45.8,
+   "mode": "push"
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0.0,
+   "pose": "lean",
+   "expr": "wide"
+  },
+  {
+   "t": 4.9,
+   "pose": "lookUp",
+   "expr": "wide"
+  },
+  {
+   "t": 11.2,
+   "pose": "float",
+   "expr": "wide"
+  },
+  {
+   "t": 16.3,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 23.8,
+   "pose": "float",
+   "expr": "awe"
+  },
+  {
+   "t": 26.033,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 31.733,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 34.6,
+   "pose": "float",
+   "expr": "wide"
+  },
+  {
+   "t": 42.433,
+   "pose": "armsOut",
+   "expr": "happy"
+  },
+  {
+   "t": 45.7,
+   "pose": "float",
+   "expr": "awe"
+  }
+ ],
+ "hook": {
+  "text": "Three hours, then two",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "hud3": {
+  "weight_t0": 16.4,
+  "speed": {
+   "mph": 8300,
+   "t0": 11.4,
+   "t1": 15.1
+  }
+ },
+ "chips": [
+  {
+   "t0": 11.9,
+   "t1": 15.1,
+   "text": "Ground: 8,300 mph"
+  },
+  {
+   "t0": 17.8,
+   "t1": 22.487,
+   "text": "150 lb feels like 117 lb"
+  },
+  {
+   "t0": 26.633,
+   "t1": 30.413,
+   "text": "A 1.5 ft jump becomes 3 ft"
+  },
+  {
+   "t0": 35.1,
+   "t1": 41.98,
+   "text": "Half the force"
+  }
+ ],
+ "flash": null,
+ "captions": [
+  {
+   "t0": 0.28,
+   "t1": 1.935,
+   "lines": [
+    [
+     [
+      "3",
+      0.42
+     ],
+     [
+      "hours,",
+      0.74
+     ],
+     [
+      "then",
+      1.11
+     ],
+     [
+      "2.",
+      1.37
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 1.935,
+   "t1": 3.755,
+   "lines": [
+    [
+     [
+      "A",
+      1.935
+     ],
+     [
+      "day",
+      2.025
+     ],
+     [
+      "is",
+      2.12
+     ],
+     [
+      "as",
+      2.455
+     ],
+     [
+      "long",
+      2.485
+     ]
+    ],
+    [
+     [
+      "as",
+      2.68
+     ],
+     [
+      "a",
+      2.74
+     ],
+     [
+      "movie.",
+      3.005
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.125,
+   "t1": 6.27,
+   "lines": [
+    [
+     [
+      "At",
+      5.265
+     ],
+     [
+      "a",
+      5.44
+     ],
+     [
+      "3",
+      5.47
+     ],
+     [
+      "hour",
+      5.5
+     ],
+     [
+      "day",
+      5.775
+     ],
+     [
+      "the",
+      6.01
+     ],
+     [
+      "Sun",
+      6.11
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.27,
+   "t1": 8.075,
+   "lines": [
+    [
+     [
+      "crosses",
+      6.27
+     ],
+     [
+      "the",
+      6.66
+     ],
+     [
+      "sky",
+      6.79
+     ]
+    ],
+    [
+     [
+      "in",
+      7.08
+     ],
+     [
+      "90",
+      7.11
+     ],
+     [
+      "minutes,",
+      7.605
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.075,
+   "t1": 10.7,
+   "lines": [
+    [
+     [
+      "sliding",
+      8.075
+     ],
+     [
+      "its",
+      8.625
+     ],
+     [
+      "own",
+      8.655
+     ],
+     [
+      "width",
+      8.87
+     ]
+    ],
+    [
+     [
+      "every",
+      9.205
+     ],
+     [
+      "16",
+      9.615
+     ],
+     [
+      "seconds.",
+      9.95
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.385,
+   "t1": 15.14,
+   "lines": [
+    [
+     [
+      "The",
+      11.525
+     ],
+     [
+      "ground",
+      11.615
+     ],
+     [
+      "moves",
+      11.945
+     ],
+     [
+      "at",
+      12.335
+     ],
+     [
+      "about",
+      12.595
+     ]
+    ],
+    [
+     [
+      "8,300",
+      12.9
+     ],
+     [
+      "miles",
+      13.79
+     ],
+     [
+      "an",
+      14.195
+     ],
+     [
+      "hour.",
+      14.39
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.48,
+   "t1": 21.31,
+   "lines": [
+    [
+     [
+      "You",
+      16.62
+     ],
+     [
+      "weigh",
+      16.65
+     ],
+     [
+      "22%",
+      17.01
+     ],
+     [
+      "less:",
+      17.895
+     ]
+    ],
+    [
+     [
+      "150",
+      18.505
+     ],
+     [
+      "pounds",
+      19.42
+     ],
+     [
+      "feels",
+      19.885
+     ],
+     [
+      "like",
+      20.255
+     ],
+     [
+      "117.",
+      20.42
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.02,
+   "t1": 25.825,
+   "lines": [
+    [
+     [
+      "At",
+      24.16
+     ],
+     [
+      "2",
+      24.27
+     ],
+     [
+      "hours,",
+      24.385
+     ]
+    ],
+    [
+     [
+      "you",
+      24.65
+     ],
+     [
+      "weigh",
+      24.795
+     ],
+     [
+      "half.",
+      25.075
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.213,
+   "t1": 28.038,
+   "lines": [
+    [
+     [
+      "The",
+      26.353
+     ],
+     [
+      "jump",
+      26.458
+     ],
+     [
+      "that",
+      26.698
+     ],
+     [
+      "lifts",
+      26.838
+     ]
+    ],
+    [
+     [
+      "you",
+      27.038
+     ],
+     [
+      "a",
+      27.313
+     ],
+     [
+      "foot",
+      27.428
+     ],
+     [
+      "and",
+      27.598
+     ],
+     [
+      "a",
+      27.628
+     ],
+     [
+      "half",
+      27.948
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 28.038,
+   "t1": 30.278,
+   "lines": [
+    [
+     [
+      "now",
+      28.038
+     ],
+     [
+      "lifts",
+      28.433
+     ],
+     [
+      "you",
+      28.638
+     ]
+    ],
+    [
+     [
+      "about",
+      28.903
+     ],
+     [
+      "3",
+      29.128
+     ],
+     [
+      "feet.",
+      29.528
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.953,
+   "t1": 34.273,
+   "lines": [
+    [
+     [
+      "The",
+      32.093
+     ],
+     [
+      "Sun",
+      32.123
+     ],
+     [
+      "crosses",
+      32.388
+     ]
+    ],
+    [
+     [
+      "the",
+      32.803
+     ],
+     [
+      "whole",
+      32.833
+     ],
+     [
+      "sky",
+      33.043
+     ],
+     [
+      "in",
+      33.303
+     ],
+     [
+      "an",
+      33.493
+     ],
+     [
+      "hour.",
+      33.523
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.825,
+   "t1": 36.435,
+   "lines": [
+    [
+     [
+      "Every",
+      34.965
+     ],
+     [
+      "object",
+      35.205
+     ],
+     [
+      "near",
+      35.505
+     ]
+    ],
+    [
+     [
+      "the",
+      35.705
+     ],
+     [
+      "equator",
+      35.875
+     ],
+     [
+      "is",
+      36.205
+     ],
+     [
+      "half",
+      36.28
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 36.435,
+   "t1": 38.75,
+   "lines": [
+    [
+     [
+      "as",
+      36.435
+     ],
+     [
+      "heavy",
+      36.755
+     ],
+     [
+      "as",
+      36.92
+     ],
+     [
+      "it",
+      37.115
+     ],
+     [
+      "should",
+      37.21
+     ],
+     [
+      "be,",
+      37.305
+     ]
+    ],
+    [
+     [
+      "and",
+      37.635
+     ],
+     [
+      "buildings,",
+      37.815
+     ],
+     [
+      "bridges",
+      38.345
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 38.75,
+   "t1": 41.415,
+   "lines": [
+    [
+     [
+      "and",
+      38.75
+     ],
+     [
+      "oceans",
+      39.05
+     ],
+     [
+      "must",
+      39.485
+     ],
+     [
+      "hold",
+      39.675
+     ]
+    ],
+    [
+     [
+      "on",
+      39.84
+     ],
+     [
+      "with",
+      40.14
+     ],
+     [
+      "half",
+      40.225
+     ],
+     [
+      "the",
+      40.505
+     ],
+     [
+      "force.",
+      40.665
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 42.598,
+   "t1": 44.803,
+   "lines": [
+    [
+     [
+      "If",
+      42.738
+     ],
+     [
+      "you're",
+      42.813
+     ],
+     [
+      "enjoying",
+      43.048
+     ],
+     [
+      "this,",
+      43.353
+     ]
+    ],
+    [
+     [
+      "tap",
+      43.608
+     ],
+     [
+      "like",
+      43.783
+     ],
+     [
+      "and",
+      43.933
+     ],
+     [
+      "follow.",
+      44.053
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 46.015,
+   "t1": 48.415,
+   "lines": [
+    [
+     [
+      "At",
+      46.155
+     ],
+     [
+      "an",
+      46.315
+     ],
+     [
+      "hour",
+      46.395
+     ],
+     [
+      "and",
+      46.575
+     ],
+     [
+      "a",
+      46.79
+     ],
+     [
+      "half,",
+      46.82
+     ]
+    ],
+    [
+     [
+      "you're",
+      47.13
+     ],
+     [
+      "almost",
+      47.375
+     ],
+     [
+      "weightless.",
+      47.665
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 3.99,
+   "file": "vo/01.wav",
+   "text": "Three hours, then two. A day is as long as a movie."
+  },
+  {
+   "id": "vo02",
+   "t": 5.2,
+   "dur": 5.39,
+   "file": "vo/02.wav",
+   "text": "At a three hour day the Sun crosses the sky in ninety minutes, sliding its own width every sixteen seconds."
+  },
+  {
+   "id": "vo03",
+   "t": 11.5,
+   "dur": 3.2,
+   "file": "vo/03.wav",
+   "text": "The ground moves at about eighty-three hundred miles an hour."
+  },
+  {
+   "id": "vo04",
+   "t": 16.6,
+   "dur": 5.587,
+   "file": "vo/04.wav",
+   "text": "You weigh twenty-two percent less: a hundred and fifty pounds feels like a hundred and seventeen."
+  },
+  {
+   "id": "vo05",
+   "t": 24.1,
+   "dur": 1.24,
+   "file": "vo/05.wav",
+   "text": "At two hours, you weigh half."
+  },
+  {
+   "id": "vo06",
+   "t": 26.333333333333332,
+   "dur": 3.78,
+   "file": "vo/06.wav",
+   "text": "The jump that lifts you a foot and a half now lifts you about three feet."
+  },
+  {
+   "id": "vo07",
+   "t": 32.03333333333333,
+   "dur": 1.92,
+   "file": "vo/07.wav",
+   "text": "The Sun crosses the whole sky in an hour."
+  },
+  {
+   "id": "vo08",
+   "t": 34.9,
+   "dur": 6.88,
+   "file": "vo/08.wav",
+   "text": "Every object near the equator is half as heavy as it should be, and buildings, bridges and oceans must hold on with half the force."
+  },
+  {
+   "id": "vo09",
+   "t": 42.733333333333334,
+   "dur": 2.29,
+   "file": "vo/09.wav",
+   "text": "If you're enjoying this, tap like and follow."
+  },
+  {
+   "id": "vo10",
+   "t": 46.0,
+   "dur": 3.51,
+   "file": "vo/10.wav",
+   "text": "At an hour and a half, you're almost weightless."
+  }
+ ]
+}

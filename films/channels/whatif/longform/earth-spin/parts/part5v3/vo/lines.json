@@ -1,0 +1,118 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "Storms are turning faster, and the days are six hours long.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 4.3,
+   "sha256": "383476f57075b81109097fbc08311b8b3576e5d4d1c1b35382581f90926098a3"
+  },
+  {
+   "id": "vo02",
+   "beat": "s34",
+   "text": "Storms are steered by the spin, and that steering grows with the spin rate.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 3.79,
+   "sha256": "dd0b56b3e8b155c6554672d4366283d37461c7d556a3b0586d0b6aa8ceab77ca"
+  },
+  {
+   "id": "vo03",
+   "beat": "s35",
+   "text": "At a six hour day it is four times stronger than today.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 2.39,
+   "sha256": "6f673e48661687813c0393aa18c6489cf218440cbdbe5cc854b53ab004b75c65"
+  },
+  {
+   "id": "vo04",
+   "beat": "s36",
+   "text": "At the edge of floating, seventeen times.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.17,
+   "sha256": "4d26c78407118e0a2cb53ef96aa8a738a7f459de66cb5e990eff42b78713872f"
+  },
+  {
+   "id": "vo05",
+   "beat": "s37",
+   "text": "The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 5.41,
+   "sha256": "60052b5512b834941ed02ea8c83d3cb07c5ca545e9e758907087076e78f4c5c6"
+  },
+  {
+   "id": "vo06",
+   "beat": "s38",
+   "text": "At a six hour day the Sun crosses from horizon to horizon in three hours.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 7.69,
+   "sha256": "08f058c875f6845f8606c48fb4976c49a86ed3beb05e62413b64a2641a62e3d0"
+  },
+  {
+   "id": "vo07",
+   "beat": "u_eq6",
+   "text": "The equator moves at about forty-one hundred and fifty miles an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.893,
+   "sha256": "0bbb04c7cc0293bc6dbce656df9150d0582768bf21a1752208df5613d1e9b8ae"
+  },
+  {
+   "id": "vo08",
+   "beat": "s40",
+   "text": "You are five and a half percent lighter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 2.16,
+   "sha256": "e2055f04049bf811743466e13a0e8c89ae46d04196d190542cdff83347468f1e"
+  },
+  {
+   "id": "vo09",
+   "beat": "s41",
+   "text": "Jumping takes you higher than it should, and every step feels slightly wrong.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 3.12,
+   "sha256": "eaf8894a0b4ac6a81b0e4f48d875cafdc0446e95bf3f82345408c5958433ca63"
+  },
+  {
+   "id": "vo10",
+   "beat": "cta",
+   "text": "If you're enjoying this, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "10.wav",
+   "dur": 2.29,
+   "sha256": "73b778bf4dd15e38a4097afd993ecce229d7152cd7301b90517dd966554b4f9c"
+  },
+  {
+   "id": "vo11",
+   "beat": "cliff",
+   "text": "And the calendar is about to break.",
+   "stars": [],
+   "phonemes": null,
+   "file": "11.wav",
+   "dur": 2.95,
+   "sha256": "b1c0537d4a1d10438c8b236da6055595c9e39f7b52fd5374f784405b5e38c312"
+  }
+ ]
+}

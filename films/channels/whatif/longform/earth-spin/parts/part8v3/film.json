@@ -1,0 +1,706 @@
+{
+ "id": "possibility-lab-earth-spin-part8-v3",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 39.75,
+ "v2": true,
+ "poster": 24.9,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "open"
+  },
+  {
+   "at": 34.63333333333333,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 4.35,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "u_w15",
+   "t0": 4.35,
+   "t1": 13.35,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "u_jump15",
+   "t0": 13.35,
+   "t1": 24.9,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "s58",
+   "t0": 24.9,
+   "t1": 28.95,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 28.95,
+   "t1": 33.6,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "tease",
+   "t0": 33.6,
+   "t1": 39.75,
+   "line": "vo06",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    1.5
+   ],
+   [
+    39.75,
+    1.5
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    39.75,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 34.63333333333333,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 5.0,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "Almost weightless",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 34.63333333333333,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 8 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0.0,
+   "mode": "lift"
+  },
+  {
+   "t0": 13.167,
+   "mode": "wide"
+  },
+  {
+   "t0": 28.867,
+   "mode": "push"
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0.0,
+   "pose": "float",
+   "expr": "awe"
+  },
+  {
+   "t": 4.133,
+   "pose": "float",
+   "expr": "awe"
+  },
+  {
+   "t": 13.167,
+   "pose": "float",
+   "expr": "happy"
+  },
+  {
+   "t": 24.7,
+   "pose": "lookUp",
+   "expr": "wide"
+  },
+  {
+   "t": 28.767,
+   "pose": "float",
+   "expr": "wide"
+  },
+  {
+   "t": 33.3,
+   "pose": "float",
+   "expr": "happy"
+  }
+ ],
+ "hook": {
+  "text": "Almost weightless",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "hud3": {
+  "weight_t0": 4.133
+ },
+ "chips": [
+  {
+   "t0": 6.033,
+   "t1": 11.947,
+   "text": "150 lb feels like 18 lb"
+  },
+  {
+   "t0": 13.967,
+   "t1": 23.29,
+   "text": "1.5 ft jump → 13 ft"
+  }
+ ],
+ "flash": null,
+ "captions": [
+  {
+   "t0": 0.39,
+   "t1": 3.12,
+   "lines": [
+    [
+     [
+      "A",
+      0.53
+     ],
+     [
+      "day",
+      0.645
+     ],
+     [
+      "now",
+      1.005
+     ],
+     [
+      "lasts",
+      1.035
+     ]
+    ],
+    [
+     [
+      "about",
+      1.395
+     ],
+     [
+      "an",
+      1.685
+     ],
+     [
+      "hour",
+      1.715
+     ],
+     [
+      "and",
+      1.99
+     ],
+     [
+      "a",
+      2.295
+     ],
+     [
+      "half.",
+      2.37
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 4.313,
+   "t1": 6.893,
+   "lines": [
+    [
+     [
+      "At",
+      4.453
+     ],
+     [
+      "an",
+      4.673
+     ],
+     [
+      "hour",
+      4.753
+     ],
+     [
+      "and",
+      4.993
+     ],
+     [
+      "a",
+      5.168
+     ],
+     [
+      "half",
+      5.198
+     ],
+     [
+      "you",
+      5.493
+     ]
+    ],
+    [
+     [
+      "are",
+      5.728
+     ],
+     [
+      "almost",
+      5.788
+     ],
+     [
+      "weightless,",
+      6.198
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 6.893,
+   "t1": 8.378,
+   "lines": [
+    [
+     [
+      "about",
+      6.893
+     ],
+     [
+      "one",
+      7.198
+     ],
+     [
+      "eighth",
+      7.228
+     ]
+    ],
+    [
+     [
+      "of",
+      7.678
+     ],
+     [
+      "your",
+      7.708
+     ],
+     [
+      "weight:",
+      7.953
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 8.378,
+   "t1": 11.243,
+   "lines": [
+    [
+     [
+      "150",
+      8.378
+     ],
+     [
+      "pounds",
+      9.273
+     ]
+    ],
+    [
+     [
+      "becomes",
+      9.803
+     ],
+     [
+      "about",
+      10.273
+     ],
+     [
+      "18.",
+      10.493
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 13.347,
+   "t1": 16.602,
+   "lines": [
+    [
+     [
+      "A",
+      13.487
+     ],
+     [
+      "foot-and-a-half",
+      13.557
+     ],
+     [
+      "jump",
+      14.292
+     ]
+    ],
+    [
+     [
+      "carries",
+      14.647
+     ],
+     [
+      "you",
+      15.067
+     ],
+     [
+      "about",
+      15.362
+     ],
+     [
+      "13",
+      15.692
+     ],
+     [
+      "feet,",
+      16.242
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 16.602,
+   "t1": 18.442,
+   "lines": [
+    [
+     [
+      "higher",
+      16.602
+     ]
+    ],
+    [
+     [
+      "than",
+      17.087
+     ],
+     [
+      "a",
+      17.317
+     ],
+     [
+      "basketball",
+      17.357
+     ],
+     [
+      "hoop,",
+      18.027
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 18.442,
+   "t1": 20.147,
+   "lines": [
+    [
+     [
+      "and",
+      18.442
+     ],
+     [
+      "a",
+      18.632
+     ],
+     [
+      "cup",
+      18.662
+     ],
+     [
+      "falling",
+      18.872
+     ]
+    ],
+    [
+     [
+      "off",
+      19.402
+     ],
+     [
+      "a",
+      19.547
+     ],
+     [
+      "table",
+      19.577
+     ],
+     [
+      "takes",
+      19.937
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 20.147,
+   "t1": 22.852,
+   "lines": [
+    [
+     [
+      "about",
+      20.147
+     ],
+     [
+      "3×",
+      20.517
+     ]
+    ],
+    [
+     [
+      "as",
+      21.327
+     ],
+     [
+      "long",
+      21.492
+     ],
+     [
+      "to",
+      21.807
+     ],
+     [
+      "land.",
+      22.102
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.92,
+   "t1": 27.795,
+   "lines": [
+    [
+     [
+      "The",
+      25.06
+     ],
+     [
+      "Sun",
+      25.09
+     ],
+     [
+      "crosses",
+      25.385
+     ],
+     [
+      "the",
+      25.81
+     ],
+     [
+      "whole",
+      25.84
+     ]
+    ],
+    [
+     [
+      "sky",
+      26.055
+     ],
+     [
+      "in",
+      26.535
+     ],
+     [
+      "45",
+      26.565
+     ],
+     [
+      "minutes.",
+      27.045
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.127,
+   "t1": 30.177,
+   "lines": [
+    [
+     [
+      "One",
+      29.267
+     ],
+     [
+      "more",
+      29.422
+     ],
+     [
+      "nudge,",
+      29.637
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 30.177,
+   "t1": 31.807,
+   "lines": [
+    [
+     [
+      "and",
+      30.177
+     ],
+     [
+      "something",
+      30.252
+     ]
+    ],
+    [
+     [
+      "changes",
+      30.667
+     ],
+     [
+      "completely.",
+      31.057
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 33.66,
+   "t1": 34.82,
+   "lines": [
+    [
+     [
+      "Part",
+      33.8
+     ],
+     [
+      "8",
+      33.88
+     ],
+     [
+      "of",
+      34.285
+     ],
+     [
+      "8.",
+      34.47
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 3.11,
+   "file": "vo/01.wav",
+   "text": "A day now lasts about an hour and a half."
+  },
+  {
+   "id": "vo02",
+   "t": 4.433333333333334,
+   "dur": 7.114,
+   "file": "vo/02.wav",
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen."
+  },
+  {
+   "id": "vo03",
+   "t": 13.466666666666667,
+   "dur": 9.523,
+   "file": "vo/03.wav",
+   "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land."
+  },
+  {
+   "id": "vo04",
+   "t": 25.0,
+   "dur": 2.52,
+   "file": "vo/04.wav",
+   "text": "The Sun crosses the whole sky in forty-five minutes."
+  },
+  {
+   "id": "vo05",
+   "t": 29.066666666666666,
+   "dur": 3.59,
+   "file": "vo/05.wav",
+   "text": "One more nudge, and something changes completely."
+  },
+  {
+   "id": "vo06",
+   "t": 33.6,
+   "dur": 3.03,
+   "file": "vo/06.wav",
+   "text": "Part eight of eight. Full video on YouTube."
+  }
+ ]
+}

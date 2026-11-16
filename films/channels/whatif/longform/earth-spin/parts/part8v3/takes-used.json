@@ -1,0 +1,51 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p8_open",
+   "sub_take": null,
+   "text": "A day now lasts about an hour and a half."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "standin.u_w15",
+   "sub_take": null,
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "standin.u_jump15",
+   "sub_take": null,
+   "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s058",
+   "sub_take": null,
+   "text": "The Sun crosses the whole sky in forty-five minutes."
+  },
+  {
+   "line": "vo05",
+   "kind": "cliff",
+   "take": "V.p8_cliff",
+   "sub_take": null,
+   "text": "One more nudge, and something changes completely."
+  },
+  {
+   "line": "vo06",
+   "kind": "closer",
+   "take": "V.c8",
+   "sub_take": null,
+   "text": "Part eight of eight. Full video on YouTube."
+  }
+ ]
+}

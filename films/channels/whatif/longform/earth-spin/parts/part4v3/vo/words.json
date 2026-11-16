@@ -1,0 +1,643 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "The oceans are sliding toward the equator.",
+   "heard": "The oceans are sliding toward the equator.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.2,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "oceans",
+     "start": 0.25,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 0.6,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "sliding",
+     "start": 0.955,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 1.305,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.585,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "equator.",
+     "start": 1.8,
+     "end": 3.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
+   "heard": "A spinning planet pushes water outward toward the equator exactly as it pushes you.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "spinning",
+     "start": 0.21,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "planet",
+     "start": 0.43,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 0.785,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 1.185,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "outward,",
+     "start": 1.285,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 1.95,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.22,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 2.415,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "exactly",
+     "start": 3.065,
+     "end": 3.44,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.43,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 3.68,
+     "end": 3.73,
+     "heard": true
+    },
+    {
+     "w": "pushes",
+     "start": 3.71,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "you.",
+     "start": 3.915,
+     "end": 4.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "At a twelve hour day the sea wants to stand about twenty miles higher at the equator.",
+   "heard": "At a 12 hour day the sea wants to stand about 20 miles higher at the equator.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.235,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "twelve",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.525,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.15,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "sea",
+     "start": 1.18,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "wants",
+     "start": 1.54,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.785,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 1.995,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.285,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "twenty",
+     "start": 2.515,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "miles",
+     "start": 2.89,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 3.165,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 3.575,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.685,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "equator.",
+     "start": 3.86,
+     "end": 4.32,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The ocean is only about two point three miles deep.",
+   "heard": "The ocean is only about 2.3 miles deep.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.025,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "ocean",
+     "start": 0.055,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.65,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 0.7,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.02,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "two",
+     "start": 1.25,
+     "end": 1.92,
+     "heard": false
+    },
+    {
+     "w": "point",
+     "start": 1.28,
+     "end": 1.92,
+     "heard": false
+    },
+    {
+     "w": "three",
+     "start": 1.31,
+     "end": 1.92,
+     "heard": false
+    },
+    {
+     "w": "miles",
+     "start": 1.8,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "deep.",
+     "start": 2.29,
+     "end": 2.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "So it drains toward a belt around the equator, and the poles dry out.",
+   "heard": "So it drains towards a belt around the equator and the poles dry out.",
+   "words": [
+    {
+     "w": "So",
+     "start": 0.005,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 0.305,
+     "end": 0.355,
+     "heard": true
+    },
+    {
+     "w": "drains",
+     "start": 0.335,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "toward",
+     "start": 0.645,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.945,
+     "end": 0.995,
+     "heard": true
+    },
+    {
+     "w": "belt",
+     "start": 0.975,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "around",
+     "start": 1.36,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.535,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 1.755,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 2.305,
+     "end": 2.355,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.335,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 2.52,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "dry",
+     "start": 2.79,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "out.",
+     "start": 3.09,
+     "end": 3.2,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods.",
+   "heard": "A rough first guess but the direction is certain. Land near the poles emerges and your own coast floods.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.07,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "rough",
+     "start": 0.1,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "first",
+     "start": 0.33,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "guess,",
+     "start": 0.645,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "but",
+     "start": 0.93,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.12,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "direction",
+     "start": 1.16,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 1.415,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "certain:",
+     "start": 1.67,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "land",
+     "start": 2.185,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "near",
+     "start": 2.39,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.75,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 2.78,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "emerges,",
+     "start": 3.12,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.9,
+     "end": 3.95,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.93,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "own",
+     "start": 4.165,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "coast",
+     "start": 4.24,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "floods.",
+     "start": 4.52,
+     "end": 4.96,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "And the weather is about to change completely.",
+   "heard": "and the weather is about to change completely.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.24,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.27,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "weather",
+     "start": 0.305,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 0.605,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 0.875,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 1.065,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "change",
+     "start": 1.17,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 1.525,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "Part four of eight. Full video on YouTube.",
+   "heard": "Part 4 of 8 Full Video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.2,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 0.445,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.525,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.89,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.16,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.355,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.77,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.835,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

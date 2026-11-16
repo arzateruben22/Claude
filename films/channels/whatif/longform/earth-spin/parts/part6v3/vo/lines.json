@@ -1,0 +1,98 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "Now a year has more than a thousand days in it.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 2.63,
+   "sha256": "36a5601f55f531dd4bda3aa220325324128765ad9770fed59184acc8e43d6728"
+  },
+  {
+   "id": "vo02",
+   "beat": "s43",
+   "text": "At a six hour day, a year holds about fourteen hundred and sixty days.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 3.265,
+   "sha256": "e9dff652288de58f5fa00036a69eb1c8cb5a6b40610ac4e174eff983f8391a4b"
+  },
+  {
+   "id": "vo03",
+   "beat": "s44",
+   "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 5.88,
+   "sha256": "e00159f237ba4db9561aebc8c0fbfa6411a17ec80d2f8b8e1226f253670cbac0"
+  },
+  {
+   "id": "vo04",
+   "beat": "s45",
+   "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 3.65,
+   "sha256": "4edab89504e81199f960b1ddcc14e4154052850607a5ee164b1089b22ae43336"
+  },
+  {
+   "id": "vo05",
+   "beat": "s46",
+   "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 4.7,
+   "sha256": "f75e7f8985c22c9c557755c3fc362df8bd496bf47356cc6165e55d5c3e785cea"
+  },
+  {
+   "id": "vo06",
+   "beat": "s47",
+   "text": "The farther from the equator, the longer you keep your weight.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 2.53,
+   "sha256": "1bff60ae3d0c558788ee741541324a51994e486e746180547a2d6a03f1bb87f6"
+  },
+  {
+   "id": "vo07",
+   "beat": "s48",
+   "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 3.97,
+   "sha256": "433bdd977d0179b92ea8437a5e881b4760be1cb49c3c9cd8c0fcf24e3b354501"
+  },
+  {
+   "id": "vo08",
+   "beat": "cliff",
+   "text": "And the day keeps getting shorter.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 3.35,
+   "sha256": "b495b15986ed2ba136655cc7d5ca5e8a647b5a58e6d8d75bca4200813a995930"
+  },
+  {
+   "id": "vo09",
+   "beat": "tease",
+   "text": "Part six of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "09.wav",
+   "dur": 2.47,
+   "sha256": "86153f5a6fa7f8583c19bb102c9c7261e706e8f12d9a2389a9a5f93d4e9c0f01"
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p5_open",
+   "sub_take": null,
+   "text": "Storms are turning faster, and the days are six hours long."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s034",
+   "sub_take": null,
+   "text": "Storms are steered by the spin, and that steering grows with the spin rate."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s035",
+   "sub_take": null,
+   "text": "At a six hour day it is four times stronger than today."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s036",
+   "sub_take": null,
+   "text": "At the edge of floating, seventeen times."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s037",
+   "sub_take": null,
+   "text": "The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s038",
+   "sub_take": null,
+   "text": "At a six hour day the Sun crosses from horizon to horizon in three hours."
+  },
+  {
+   "line": "vo07",
+   "kind": "sent",
+   "take": "standin.u_eq6",
+   "sub_take": null,
+   "text": "The equator moves at about forty-one hundred and fifty miles an hour."
+  },
+  {
+   "line": "vo08",
+   "kind": "sent",
+   "take": "A.s040",
+   "sub_take": null,
+   "text": "You are five and a half percent lighter."
+  },
+  {
+   "line": "vo09",
+   "kind": "sent",
+   "take": "A.s041",
+   "sub_take": null,
+   "text": "Jumping takes you higher than it should, and every step feels slightly wrong."
+  },
+  {
+   "line": "vo10",
+   "kind": "cta",
+   "take": "V.ask_follow",
+   "sub_take": "V.ask_sub",
+   "text": "If you're enjoying this, tap like and follow."
+  },
+  {
+   "line": "vo11",
+   "kind": "cliff",
+   "take": "V.p5_cliff",
+   "sub_take": null,
+   "text": "And the calendar is about to break."
+  }
+ ]
+}

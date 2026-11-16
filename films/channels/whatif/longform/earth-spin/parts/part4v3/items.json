@@ -1,0 +1,66 @@
+[
+ {
+  "kind": "open",
+  "text": "The oceans are sliding toward the equator.",
+  "take": "V.p4_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.51
+ },
+ {
+  "kind": "sent",
+  "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you.",
+  "take": "A.s029",
+  "uid": "s29",
+  "vo": "vo02",
+  "dur": 4.23
+ },
+ {
+  "kind": "sent",
+  "text": "At a twelve hour day the sea wants to stand about twenty miles higher at the equator.",
+  "take": "standin.u_sea",
+  "uid": "u_sea",
+  "vo": "vo03",
+  "dur": 4.326
+ },
+ {
+  "kind": "sent",
+  "text": "The ocean is only about two point three miles deep.",
+  "take": "standin.u_depth",
+  "uid": "u_depth",
+  "vo": "vo04",
+  "dur": 2.705
+ },
+ {
+  "kind": "sent",
+  "text": "So it drains toward a belt around the equator, and the poles dry out.",
+  "take": "A.s032",
+  "uid": "s32",
+  "vo": "vo05",
+  "dur": 3.26
+ },
+ {
+  "kind": "sent",
+  "text": "A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods.",
+  "take": "A.s033",
+  "uid": "s33",
+  "vo": "vo06",
+  "dur": 5.02
+ },
+ {
+  "kind": "cliff",
+  "text": "And the weather is about to change completely.",
+  "take": "V.p4_cliff",
+  "uid": "cliff",
+  "vo": "vo07",
+  "dur": 3.34
+ },
+ {
+  "kind": "closer",
+  "text": "Part four of eight. Full video on YouTube.",
+  "take": "V.c4",
+  "uid": "tease",
+  "vo": "vo08",
+  "dur": 3.03
+ }
+]

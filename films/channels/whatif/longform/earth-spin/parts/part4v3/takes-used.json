@@ -1,0 +1,65 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p4_open",
+   "sub_take": null,
+   "text": "The oceans are sliding toward the equator."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s029",
+   "sub_take": null,
+   "text": "A spinning planet pushes water outward, toward the equator, exactly as it pushes you."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "standin.u_sea",
+   "sub_take": null,
+   "text": "At a twelve hour day the sea wants to stand about twenty miles higher at the equator."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "standin.u_depth",
+   "sub_take": null,
+   "text": "The ocean is only about two point three miles deep."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s032",
+   "sub_take": null,
+   "text": "So it drains toward a belt around the equator, and the poles dry out."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s033",
+   "sub_take": null,
+   "text": "A rough first guess, but the direction is certain: land near the poles emerges, and your own coast floods."
+  },
+  {
+   "line": "vo07",
+   "kind": "cliff",
+   "take": "V.p4_cliff",
+   "sub_take": null,
+   "text": "And the weather is about to change completely."
+  },
+  {
+   "line": "vo08",
+   "kind": "closer",
+   "take": "V.c4",
+   "sub_take": null,
+   "text": "Part four of eight. Full video on YouTube."
+  }
+ ]
+}

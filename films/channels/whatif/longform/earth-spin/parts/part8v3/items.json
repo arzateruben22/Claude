@@ -1,0 +1,50 @@
+[
+ {
+  "kind": "open",
+  "text": "A day now lasts about an hour and a half.",
+  "take": "V.p8_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.11
+ },
+ {
+  "kind": "sent",
+  "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen.",
+  "take": "standin.u_w15",
+  "uid": "u_w15",
+  "vo": "vo02",
+  "dur": 7.114
+ },
+ {
+  "kind": "sent",
+  "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+  "take": "standin.u_jump15",
+  "uid": "u_jump15",
+  "vo": "vo03",
+  "dur": 9.523
+ },
+ {
+  "kind": "sent",
+  "text": "The Sun crosses the whole sky in forty-five minutes.",
+  "take": "A.s058",
+  "uid": "s58",
+  "vo": "vo04",
+  "dur": 2.52
+ },
+ {
+  "kind": "cliff",
+  "text": "One more nudge, and something changes completely.",
+  "take": "V.p8_cliff",
+  "uid": "cliff",
+  "vo": "vo05",
+  "dur": 3.59
+ },
+ {
+  "kind": "closer",
+  "text": "Part eight of eight. Full video on YouTube.",
+  "take": "V.c8",
+  "uid": "tease",
+  "vo": "vo06",
+  "dur": 3.03
+ }
+]

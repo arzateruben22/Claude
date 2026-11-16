@@ -8,5 +8,65 @@
   "text": "The strongest gust ever measured was about two hundred and fifty miles an hour.",
   "file": "u_gust.wav",
   "dur": 4.233
+ },
+ "u_sea": {
+  "text": "At a twelve hour day the sea wants to stand about twenty miles higher at the equator.",
+  "file": "u_sea.wav",
+  "dur": 4.326
+ },
+ "u_depth": {
+  "text": "The ocean is only about two point three miles deep.",
+  "file": "u_depth.wav",
+  "dur": 2.705
+ },
+ "u_eq6": {
+  "text": "The equator moves at about forty-one hundred and fifty miles an hour.",
+  "file": "u_eq6.wav",
+  "dur": 3.893
+ },
+ "u_speed3": {
+  "text": "The ground moves at about eighty-three hundred miles an hour.",
+  "file": "u_speed3.wav",
+  "dur": 3.2
+ },
+ "u_w3": {
+  "text": "You weigh twenty-two percent less: a hundred and fifty pounds feels like a hundred and seventeen.",
+  "file": "u_w3.wav",
+  "dur": 5.587
+ },
+ "u_jump2": {
+  "text": "The jump that lifts you a foot and a half now lifts you about three feet.",
+  "file": "u_jump2.wav",
+  "dur": 3.78
+ },
+ "u_w15": {
+  "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen.",
+  "file": "u_w15.wav",
+  "dur": 7.114
+ },
+ "u_jump15": {
+  "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+  "file": "u_jump15.wav",
+  "dur": 9.523
+ },
+ "u_l03": {
+  "text": "Right now the ground carries you at about a thousand and forty miles an hour.",
+  "file": "u_l03.wav",
+  "dur": 4.111
+ },
+ "u_l05": {
+  "text": "The ground moves at about two thousand and eighty miles an hour, nearly three times the speed of sound.",
+  "file": "u_l05.wav",
+  "dur": 5.813
+ },
+ "u_l15": {
+  "text": "At a day of an hour and twenty-four minutes, the ground moves at about seventeen thousand seven hundred miles an hour, the speed of a satellite in low orbit.",
+  "file": "u_l15.wav",
+  "dur": 8.834
+ },
+ "u_l18": {
+  "text": "So the next time you stand still, remember you're already moving at a thousand miles an hour.",
+  "file": "u_l18.wav",
+  "dur": 5.126
  }
 }

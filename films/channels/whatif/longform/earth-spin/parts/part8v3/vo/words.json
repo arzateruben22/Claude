@@ -1,0 +1,563 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "A day now lasts about an hour and a half.",
+   "heard": "A day now lasts about an hour and a half.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.33,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.445,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "now",
+     "start": 0.805,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "lasts",
+     "start": 0.835,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.195,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 1.485,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 1.515,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.79,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.095,
+     "end": 2.145,
+     "heard": true
+    },
+    {
+     "w": "half.",
+     "start": 2.17,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen.",
+   "heard": "At an hour and a half you are almost weightless, about one-eighth of your weight, a hundred and fifty pounds becomes about eighteen.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "an",
+     "start": 0.24,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.32,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 0.56,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.735,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 0.765,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.06,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "are",
+     "start": 1.295,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "almost",
+     "start": 1.355,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "weightless,",
+     "start": 1.765,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 2.46,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "one",
+     "start": 2.765,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "eighth",
+     "start": 2.795,
+     "end": 3.28,
+     "heard": false
+    },
+    {
+     "w": "of",
+     "start": 3.245,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 3.275,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "weight:",
+     "start": 3.52,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.945,
+     "end": 4.16,
+     "heard": true
+    },
+    {
+     "w": "hundred",
+     "start": 4.065,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.375,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "fifty",
+     "start": 4.53,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "pounds",
+     "start": 4.84,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "becomes",
+     "start": 5.37,
+     "end": 5.76,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 5.84,
+     "end": 6.08,
+     "heard": true
+    },
+    {
+     "w": "eighteen.",
+     "start": 6.06,
+     "end": 6.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+   "heard": "A foot and a half jump carries you about thirteen feet higher than a basketball hoop and a cup falling off a table takes about three times as long to land.",
+   "words": [
+    {
+     "w": "A",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "foot-and-a-half",
+     "start": 0.09,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "jump",
+     "start": 0.825,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "carries",
+     "start": 1.18,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.6,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.895,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "thirteen",
+     "start": 2.225,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "feet,",
+     "start": 2.775,
+     "end": 3.04,
+     "heard": true
+    },
+    {
+     "w": "higher",
+     "start": 3.135,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 3.62,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.85,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "basketball",
+     "start": 3.89,
+     "end": 4.56,
+     "heard": true
+    },
+    {
+     "w": "hoop,",
+     "start": 4.56,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 4.975,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.165,
+     "end": 5.215,
+     "heard": true
+    },
+    {
+     "w": "cup",
+     "start": 5.195,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "falling",
+     "start": 5.405,
+     "end": 5.84,
+     "heard": true
+    },
+    {
+     "w": "off",
+     "start": 5.935,
+     "end": 6.0,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 6.08,
+     "end": 6.16,
+     "heard": true
+    },
+    {
+     "w": "table",
+     "start": 6.11,
+     "end": 6.56,
+     "heard": true
+    },
+    {
+     "w": "takes",
+     "start": 6.47,
+     "end": 6.8,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 6.68,
+     "end": 7.12,
+     "heard": true
+    },
+    {
+     "w": "three",
+     "start": 7.05,
+     "end": 7.28,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 7.36,
+     "end": 7.84,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 7.86,
+     "end": 8.08,
+     "heard": true
+    },
+    {
+     "w": "long",
+     "start": 8.025,
+     "end": 8.32,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 8.34,
+     "end": 8.56,
+     "heard": true
+    },
+    {
+     "w": "land.",
+     "start": 8.635,
+     "end": 9.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "The Sun crosses the whole sky in forty-five minutes.",
+   "heard": "The sun crosses the whole sky in 45 minutes.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "Sun",
+     "start": 0.09,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "crosses",
+     "start": 0.385,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.81,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "whole",
+     "start": 0.84,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "sky",
+     "start": 1.055,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 1.535,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "forty-five",
+     "start": 1.565,
+     "end": 2.08,
+     "heard": false
+    },
+    {
+     "w": "minutes.",
+     "start": 2.045,
+     "end": 2.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "One more nudge, and something changes completely.",
+   "heard": "One more nudge and something changes completely.",
+   "words": [
+    {
+     "w": "One",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.355,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "nudge,",
+     "start": 0.57,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.11,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "something",
+     "start": 1.185,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "changes",
+     "start": 1.6,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "completely.",
+     "start": 1.99,
+     "end": 3.28,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "heard": "Part 8 of 8. Full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.2,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 0.28,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.685,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.87,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "Full",
+     "start": 1.22,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.275,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.65,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.845,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

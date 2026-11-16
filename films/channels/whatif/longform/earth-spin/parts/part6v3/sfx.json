@@ -1,0 +1,92 @@
+{
+ "palette": "earth",
+ "cues": [
+  {
+   "at": 0.05,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 1,
+   "dur": 2.6
+  },
+  {
+   "at": 2.63,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 2,
+   "dur": 2.0
+  },
+  {
+   "at": 4.367,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 3
+  },
+  {
+   "at": 4.367,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 4,
+   "dur": 0.9
+  },
+  {
+   "at": 8.833,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 5
+  },
+  {
+   "at": 8.833,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 6,
+   "dur": 0.9
+  },
+  {
+   "at": 20.2,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 7
+  },
+  {
+   "at": 20.2,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 8,
+   "dur": 0.9
+  },
+  {
+   "at": 4.667,
+   "kind": "rumble",
+   "gain": -6,
+   "seed": 9,
+   "dur": 2.0
+  },
+  {
+   "at": 20.2,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 10,
+   "dur": 1.8
+  },
+  {
+   "at": 34.2,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 11,
+   "dur": 3.95
+  },
+  {
+   "at": 37.65,
+   "kind": "boom",
+   "gain": -4,
+   "seed": 12,
+   "dur": 2.2
+  },
+  {
+   "at": 39.56666666666667,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 13
+  }
+ ]
+}

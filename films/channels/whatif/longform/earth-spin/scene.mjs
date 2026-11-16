@@ -345,7 +345,7 @@ window.seek = function (t) {
     h3.style.opacity = String(vis.toFixed(3)); h3.querySelector("#h3d").textContent = "\u00d7" + (spin < 9.95 ? (Math.round(spin * 10) / 10).toString().replace(/\.0$/, "") : Math.round(spin));
     h3.querySelector("#h3s").textContent = "1 day = " + fmtT(T);
     if (H.speed) { const sp = H.speed, k = E.inout2(seg(t, sp.t0, sp.t0 + 1.6)), vis2 = E.inout2(seg(t, sp.t0 - 0.2, sp.t0)) * (1 - E.inout2(seg(t, sp.t1 - 0.3, sp.t1))); h3.querySelector("#h3sp").style.opacity = String(vis2.toFixed(3));
-      h3.querySelector("#h3spv").textContent = "\u2248" + (Math.round(1040 * (Math.round(spin * 20) / 20) * k / 10) * 10).toLocaleString("en-US") + " mph"; }
+      h3.querySelector("#h3spv").textContent = "\u2248" + ((sp.mph ? Math.round(sp.mph * k / 10) * 10 : Math.round(1040 * (Math.round(spin * 20) / 20) * k / 10) * 10)).toLocaleString("en-US") + " mph"; }
     const bar = h3.querySelector("#h3bar"); bar.style.opacity = String(E.inout2(seg(t, H.bar_t0 ?? 1e9, (H.bar_t0 ?? 1e9) + 0.4)).toFixed(3)); h3.querySelector("#h3f").style.width = (100 * clamp01((spin - 1) / 16)).toFixed(1) + "%"; h3.querySelector("#h3m").style.left = (100 * clamp01((spin - 1) / 16)).toFixed(1) + "%";
     const wb = h3.querySelector("#h3w"); wb.style.opacity = String(E.inout2(seg(t, H.weight_t0 ?? 1e9, (H.weight_t0 ?? 1e9) + 0.4)).toFixed(3));
     h3.querySelector("#h3wv").textContent = (wt >= 99.95 ? "100" : wt.toFixed(1)) + "%"; h3.querySelector("#h3wb").style.width = wt.toFixed(1) + "%";

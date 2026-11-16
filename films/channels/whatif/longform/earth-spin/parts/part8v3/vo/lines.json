@@ -1,0 +1,68 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "A day now lasts about an hour and a half.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.11,
+   "sha256": "0410c8a557c2f94fe5fdedd4d7fd024f252d38e63840a7c25acb28dd44712e4f"
+  },
+  {
+   "id": "vo02",
+   "beat": "u_w15",
+   "text": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 7.114,
+   "sha256": "1177063710eef6a0094f22ebcab02fe070f63624f5bcb2eb146c97a851a4accb"
+  },
+  {
+   "id": "vo03",
+   "beat": "u_jump15",
+   "text": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 9.523,
+   "sha256": "fb0e59822edb595e57d87126953173095f14b87fb539e7809577ee3d419d2c3c"
+  },
+  {
+   "id": "vo04",
+   "beat": "s58",
+   "text": "The Sun crosses the whole sky in forty-five minutes.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 2.52,
+   "sha256": "79a4ba5cfac0a80ecaf3b7435d25122081e12d07dff8efa693c27691577688d1"
+  },
+  {
+   "id": "vo05",
+   "beat": "cliff",
+   "text": "One more nudge, and something changes completely.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 3.59,
+   "sha256": "c2eaa67fb27f48f7b619d1dc6dbd5a5c86f72d66090fc0d9f74050d3aeac4cb3"
+  },
+  {
+   "id": "vo06",
+   "beat": "tease",
+   "text": "Part eight of eight. Full video on YouTube.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.03,
+   "sha256": "048a961038379d5e48b282c05b7bb1788fa36206522dbaf3ee3cd863788a9056"
+  }
+ ]
+}

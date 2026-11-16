@@ -1,0 +1,848 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "vo01",
+   "text": "Now a year has more than a thousand days in it.",
+   "heard": "Now our year has more than a thousand days in it.",
+   "words": [
+    {
+     "w": "Now",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.25,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "year",
+     "start": 0.56,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "has",
+     "start": 0.86,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "more",
+     "start": 0.89,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "than",
+     "start": 1.12,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.35,
+     "end": 1.4,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 1.38,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "days",
+     "start": 1.715,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "in",
+     "start": 2.08,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 2.215,
+     "end": 2.56,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo02",
+   "text": "At a six hour day, a year holds about fourteen hundred and sixty days.",
+   "heard": "At a six hour date, a year holds about 1460 days.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.015,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.07,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.295,
+     "end": 0.345,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.325,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "day,",
+     "start": 0.545,
+     "end": 0.8,
+     "heard": false
+    },
+    {
+     "w": "a",
+     "start": 0.725,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "year",
+     "start": 0.765,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "holds",
+     "start": 1.04,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "about",
+     "start": 1.27,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "fourteen",
+     "start": 1.445,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "hundred",
+     "start": 1.475,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "and",
+     "start": 1.515,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "sixty",
+     "start": 1.545,
+     "end": 2.56,
+     "heard": false
+    },
+    {
+     "w": "days.",
+     "start": 2.63,
+     "end": 2.88,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo03",
+   "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+   "heard": "By the end, over 6,000, with the sunrise every 84 minutes and you'd be asked to sleep eight times a day.",
+   "words": [
+    {
+     "w": "By",
+     "start": 0.025,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.13,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "end,",
+     "start": 0.205,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "over",
+     "start": 0.62,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.97,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "thousand,",
+     "start": 1.0,
+     "end": 1.68,
+     "heard": false
+    },
+    {
+     "w": "with",
+     "start": 1.805,
+     "end": 1.855,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 1.875,
+     "end": 2.0,
+     "heard": false
+    },
+    {
+     "w": "sunrise",
+     "start": 1.905,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 2.77,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "eighty-four",
+     "start": 3.035,
+     "end": 3.52,
+     "heard": false
+    },
+    {
+     "w": "minutes,",
+     "start": 3.495,
+     "end": 3.84,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.955,
+     "end": 4.08,
+     "heard": true
+    },
+    {
+     "w": "you'd",
+     "start": 3.985,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "be",
+     "start": 4.345,
+     "end": 4.48,
+     "heard": true
+    },
+    {
+     "w": "asked",
+     "start": 4.505,
+     "end": 4.72,
+     "heard": true
+    },
+    {
+     "w": "to",
+     "start": 4.685,
+     "end": 4.8,
+     "heard": true
+    },
+    {
+     "w": "sleep",
+     "start": 4.715,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "eight",
+     "start": 5.06,
+     "end": 5.36,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 5.27,
+     "end": 5.52,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 5.57,
+     "end": 5.62,
+     "heard": true
+    },
+    {
+     "w": "day.",
+     "start": 5.6,
+     "end": 5.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo04",
+   "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+   "heard": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.065,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.165,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 0.285,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.7,
+     "end": 0.75,
+     "heard": true
+    },
+    {
+     "w": "ground",
+     "start": 0.73,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "only",
+     "start": 0.85,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "turns",
+     "start": 1.125,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.42,
+     "end": 1.47,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.505,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "spot,",
+     "start": 1.625,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 2.005,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "people",
+     "start": 2.145,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "there",
+     "start": 2.275,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 2.575,
+     "end": 2.625,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 2.605,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.81,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 3.0,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 3.03,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "ever.",
+     "start": 3.335,
+     "end": 3.6,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo05",
+   "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong.",
+   "heard": "At forty five degrees north you move at seventy percent of the equator speed, and the push outward is half as strong.",
+   "words": [
+    {
+     "w": "At",
+     "start": 0.06,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "forty-five",
+     "start": 0.175,
+     "end": 0.56,
+     "heard": false
+    },
+    {
+     "w": "degrees",
+     "start": 0.47,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "north",
+     "start": 0.865,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.11,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "move",
+     "start": 1.375,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "at",
+     "start": 1.535,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "seventy",
+     "start": 1.565,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "percent",
+     "start": 1.89,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 2.23,
+     "end": 2.28,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 2.335,
+     "end": 2.385,
+     "heard": true
+    },
+    {
+     "w": "equator's",
+     "start": 2.365,
+     "end": 2.8,
+     "heard": false
+    },
+    {
+     "w": "speed,",
+     "start": 2.78,
+     "end": 3.12,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.14,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 3.295,
+     "end": 3.345,
+     "heard": true
+    },
+    {
+     "w": "push",
+     "start": 3.365,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "outward",
+     "start": 3.69,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 3.875,
+     "end": 4.0,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 3.905,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 4.195,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "strong.",
+     "start": 4.4,
+     "end": 4.64,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo06",
+   "text": "The farther from the equator, the longer you keep your weight.",
+   "heard": "from the equator the longer you keep your weight.",
+   "words": [
+    {
+     "w": "The",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": false
+    },
+    {
+     "w": "farther",
+     "start": 0.23,
+     "end": 0.28,
+     "heard": false
+    },
+    {
+     "w": "from",
+     "start": 0.26,
+     "end": 0.31,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.31,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "equator,",
+     "start": 0.54,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.05,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "longer",
+     "start": 1.14,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 1.545,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "keep",
+     "start": 1.66,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.69,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "weight.",
+     "start": 2.015,
+     "end": 2.48,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo07",
+   "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+   "heard": "But the water leaves the poles first, so the stillest place on earth would stand high and dry.",
+   "words": [
+    {
+     "w": "But",
+     "start": 0.06,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.155,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "water",
+     "start": 0.185,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "leaves",
+     "start": 0.385,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.8,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "poles",
+     "start": 0.83,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "first,",
+     "start": 1.185,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 1.66,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 1.69,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "stillest",
+     "start": 1.975,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "place",
+     "start": 2.235,
+     "end": 2.48,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 2.44,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 2.47,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "would",
+     "start": 2.685,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "stand",
+     "start": 3.105,
+     "end": 3.36,
+     "heard": true
+    },
+    {
+     "w": "high",
+     "start": 3.34,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 3.525,
+     "end": 3.68,
+     "heard": true
+    },
+    {
+     "w": "dry.",
+     "start": 3.73,
+     "end": 3.92,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo08",
+   "text": "And the day keeps getting shorter.",
+   "heard": "And the day keeps getting shorter.",
+   "words": [
+    {
+     "w": "And",
+     "start": 0.2,
+     "end": 0.25,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.3,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "day",
+     "start": 0.505,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "keeps",
+     "start": 0.745,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "getting",
+     "start": 0.975,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "shorter.",
+     "start": 1.295,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "vo09",
+   "text": "Part six of eight. Full video on YouTube.",
+   "heard": "Part six of a full video on YouTube.",
+   "words": [
+    {
+     "w": "Part",
+     "start": 0.265,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "six",
+     "start": 0.42,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "of",
+     "start": 0.595,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "eight.",
+     "start": 0.89,
+     "end": 1.12,
+     "heard": false
+    },
+    {
+     "w": "Full",
+     "start": 1.245,
+     "end": 1.295,
+     "heard": true
+    },
+    {
+     "w": "video",
+     "start": 1.275,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 1.77,
+     "end": 1.84,
+     "heard": true
+    },
+    {
+     "w": "YouTube.",
+     "start": 1.885,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

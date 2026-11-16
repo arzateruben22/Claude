@@ -10,6 +10,14 @@ MODELS = Path(os.environ.get("CINEMA_VOICE", str(Path.home() / ".cache/cinema-vo
 LINES = {  # id: text as it will be spoken (US units; the on-screen numbers match)
  "u_ground": "The ground moves through it at about a thousand and forty miles an hour.",
  "u_gust": "The strongest gust ever measured was about two hundred and fifty miles an hour.",
+ "u_sea": "At a twelve hour day the sea wants to stand about twenty miles higher at the equator.", "u_depth": "The ocean is only about two point three miles deep.",
+ "u_eq6": "The equator moves at about forty-one hundred and fifty miles an hour.", "u_speed3": "The ground moves at about eighty-three hundred miles an hour.",
+ "u_w3": "You weigh twenty-two percent less: a hundred and fifty pounds feels like a hundred and seventeen.", "u_jump2": "The jump that lifts you a foot and a half now lifts you about three feet.",
+ "u_w15": "At an hour and a half you are almost weightless, about one eighth of your weight: a hundred and fifty pounds becomes about eighteen.",
+ "u_jump15": "A foot-and-a-half jump carries you about thirteen feet, higher than a basketball hoop, and a cup falling off a table takes about three times as long to land.",
+ # long film only
+ "u_l03": "Right now the ground carries you at about a thousand and forty miles an hour.", "u_l05": "The ground moves at about two thousand and eighty miles an hour, nearly three times the speed of sound.",
+ "u_l15": "At a day of an hour and twenty-four minutes, the ground moves at about seventeen thousand seven hundred miles an hour, the speed of a satellite in low orbit.", "u_l18": "So the next time you stand still, remember you're already moving at a thousand miles an hour.",
 }
 from kokoro_onnx import Kokoro
 from kokoro_onnx.tokenizer import Tokenizer

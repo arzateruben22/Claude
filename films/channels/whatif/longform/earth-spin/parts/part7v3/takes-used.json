@@ -1,0 +1,79 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p7_open",
+   "sub_take": null,
+   "text": "Three hours, then two. A day is as long as a movie."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s049",
+   "sub_take": null,
+   "text": "At a three hour day the Sun crosses the sky in ninety minutes, sliding its own width every sixteen seconds."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "standin.u_speed3",
+   "sub_take": null,
+   "text": "The ground moves at about eighty-three hundred miles an hour."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "standin.u_w3",
+   "sub_take": null,
+   "text": "You weigh twenty-two percent less: a hundred and fifty pounds feels like a hundred and seventeen."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s052",
+   "sub_take": null,
+   "text": "At two hours, you weigh half."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "standin.u_jump2",
+   "sub_take": null,
+   "text": "The jump that lifts you a foot and a half now lifts you about three feet."
+  },
+  {
+   "line": "vo07",
+   "kind": "sent",
+   "take": "A.s054",
+   "sub_take": null,
+   "text": "The Sun crosses the whole sky in an hour."
+  },
+  {
+   "line": "vo08",
+   "kind": "sent",
+   "take": "A.s055",
+   "sub_take": null,
+   "text": "Every object near the equator is half as heavy as it should be, and buildings, bridges and oceans must hold on with half the force."
+  },
+  {
+   "line": "vo09",
+   "kind": "cta",
+   "take": "V.ask_follow",
+   "sub_take": "V.ask_sub",
+   "text": "If you're enjoying this, tap like and follow."
+  },
+  {
+   "line": "vo10",
+   "kind": "cliff",
+   "take": "V.p7_cliff",
+   "sub_take": null,
+   "text": "At an hour and a half, you're almost weightless."
+  }
+ ]
+}

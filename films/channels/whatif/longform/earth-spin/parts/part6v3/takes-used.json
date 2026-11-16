@@ -1,0 +1,72 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p6_open",
+   "sub_take": null,
+   "text": "Now a year has more than a thousand days in it."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s043",
+   "sub_take": null,
+   "text": "At a six hour day, a year holds about fourteen hundred and sixty days."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "A.s044",
+   "sub_take": null,
+   "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "A.s045",
+   "sub_take": null,
+   "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s046",
+   "sub_take": null,
+   "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s047",
+   "sub_take": null,
+   "text": "The farther from the equator, the longer you keep your weight."
+  },
+  {
+   "line": "vo07",
+   "kind": "sent",
+   "take": "A.s048",
+   "sub_take": null,
+   "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry."
+  },
+  {
+   "line": "vo08",
+   "kind": "cliff",
+   "take": "V.p6_cliff",
+   "sub_take": null,
+   "text": "And the day keeps getting shorter."
+  },
+  {
+   "line": "vo09",
+   "kind": "closer",
+   "take": "V.c6",
+   "sub_take": null,
+   "text": "Part six of eight. Full video on YouTube."
+  }
+ ]
+}

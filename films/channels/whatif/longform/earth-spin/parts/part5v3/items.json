@@ -1,0 +1,93 @@
+[
+ {
+  "kind": "open",
+  "text": "Storms are turning faster, and the days are six hours long.",
+  "take": "V.p5_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 4.3
+ },
+ {
+  "kind": "sent",
+  "text": "Storms are steered by the spin, and that steering grows with the spin rate.",
+  "take": "A.s034",
+  "uid": "s34",
+  "vo": "vo02",
+  "dur": 3.79
+ },
+ {
+  "kind": "sent",
+  "text": "At a six hour day it is four times stronger than today.",
+  "take": "A.s035",
+  "uid": "s35",
+  "vo": "vo03",
+  "dur": 2.39
+ },
+ {
+  "kind": "sent",
+  "text": "At the edge of floating, seventeen times.",
+  "take": "A.s036",
+  "uid": "s36",
+  "vo": "vo04",
+  "dur": 2.17
+ },
+ {
+  "kind": "sent",
+  "text": "The calm of an ordinary afternoon would be gone, and nobody could forecast it, because nobody has seen a planet like this.",
+  "take": "A.s037",
+  "uid": "s37",
+  "vo": "vo05",
+  "dur": 5.41
+ },
+ {
+  "kind": "sent",
+  "text": "At a six hour day the Sun crosses from horizon to horizon in three hours.",
+  "take": "A.s038",
+  "uid": "s38",
+  "vo": "vo06",
+  "dur": 7.69
+ },
+ {
+  "kind": "sent",
+  "text": "The equator moves at about forty-one hundred and fifty miles an hour.",
+  "take": "standin.u_eq6",
+  "uid": "u_eq6",
+  "vo": "vo07",
+  "dur": 3.893
+ },
+ {
+  "kind": "sent",
+  "text": "You are five and a half percent lighter.",
+  "take": "A.s040",
+  "uid": "s40",
+  "vo": "vo08",
+  "dur": 2.16
+ },
+ {
+  "kind": "sent",
+  "text": "Jumping takes you higher than it should, and every step feels slightly wrong.",
+  "take": "A.s041",
+  "uid": "s41",
+  "vo": "vo09",
+  "dur": 3.12
+ },
+ {
+  "kind": "cta",
+  "text": "If you're enjoying this, tap like and follow.",
+  "take": "V.ask_follow",
+  "sub_file": "vo/10-sub.wav",
+  "sub_text": "If you're enjoying this, tap like and subscribe.",
+  "take_sub": "V.ask_sub",
+  "uid": "cta",
+  "vo": "vo10",
+  "dur": 2.29
+ },
+ {
+  "kind": "cliff",
+  "text": "And the calendar is about to break.",
+  "take": "V.p5_cliff",
+  "uid": "cliff",
+  "vo": "vo11",
+  "dur": 2.95
+ }
+]

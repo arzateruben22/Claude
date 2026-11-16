@@ -1,0 +1,74 @@
+[
+ {
+  "kind": "open",
+  "text": "Now a year has more than a thousand days in it.",
+  "take": "V.p6_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 2.63
+ },
+ {
+  "kind": "sent",
+  "text": "At a six hour day, a year holds about fourteen hundred and sixty days.",
+  "take": "A.s043",
+  "uid": "s43",
+  "vo": "vo02",
+  "dur": 3.265
+ },
+ {
+  "kind": "sent",
+  "text": "By the end, over six thousand, with a sunrise every eighty-four minutes, and you'd be asked to sleep eight times a day.",
+  "take": "A.s044",
+  "uid": "s44",
+  "vo": "vo03",
+  "dur": 5.88
+ },
+ {
+  "kind": "sent",
+  "text": "At the poles the ground only turns on the spot, so people there would weigh the same as ever.",
+  "take": "A.s045",
+  "uid": "s45",
+  "vo": "vo04",
+  "dur": 3.65
+ },
+ {
+  "kind": "sent",
+  "text": "At forty-five degrees north you move at seventy percent of the equator's speed, and the push outward is half as strong.",
+  "take": "A.s046",
+  "uid": "s46",
+  "vo": "vo05",
+  "dur": 4.7
+ },
+ {
+  "kind": "sent",
+  "text": "The farther from the equator, the longer you keep your weight.",
+  "take": "A.s047",
+  "uid": "s47",
+  "vo": "vo06",
+  "dur": 2.53
+ },
+ {
+  "kind": "sent",
+  "text": "But the water leaves the poles first, so the stillest place on Earth would stand high and dry.",
+  "take": "A.s048",
+  "uid": "s48",
+  "vo": "vo07",
+  "dur": 3.97
+ },
+ {
+  "kind": "cliff",
+  "text": "And the day keeps getting shorter.",
+  "take": "V.p6_cliff",
+  "uid": "cliff",
+  "vo": "vo08",
+  "dur": 3.35
+ },
+ {
+  "kind": "closer",
+  "text": "Part six of eight. Full video on YouTube.",
+  "take": "V.c6",
+  "uid": "tease",
+  "vo": "vo09",
+  "dur": 2.47
+ }
+]
