@@ -1,8 +1,8 @@
 # Part 1 recording windows (for the owner's recording sheet)
 
 Picture length 63.172 s (end card from 59.572 s). Each line starts at the time shown (the picture holds the same beats whatever the take's exact length).
-**Speak within** = the scratch read's length + 0.5 s of slack (a line shorter than this fits as is; a longer one runs into the picture's hold, up to the window).
-A take shorter than the scratch read is fine: leave a little air; the picture does not move.
+**Speak within** = the scratch read's length + 0.5 s of slack. A take shorter than the scratch read is fine: leave a little air; the picture does not move.
+v2: only line 11 changed (new ending sentence); every window is unchanged from v1.
 
 | # | Line | Starts at | Speak within | Window (to next line) |
 |---|---|---|---|---|
@@ -16,4 +16,4 @@ A take shorter than the scratch read is fine: leave a little air; the picture do
 | 8 | Doubling sounds gentle. It isn't. | 40.1 s | **2.7 s** | 3.4 s |
 | 9 | Hour ten: a thousand times. Hour twenty: a million. | 43.5 s | **3.4 s** | 7.5 s |
 | 10 | Doing the math with me? Tap like and follow. | 51.0 s | **3.0 s** | 3.2 s |
-| 11 | Hour two: four times your weight. And standing up gets dangerous. | 54.2 s | **3.9 s** | 5.6 s |
+| 11 | Hour two: four times your weight. And by hour twenty… there's no Earth left. | 54.2 s | **4.7 s** | 5.6 s |

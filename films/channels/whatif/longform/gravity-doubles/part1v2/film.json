@@ -1,0 +1,667 @@
+{
+ "id": "possibility-lab-gravity-doubles-part1-v2-picture",
+ "theme": "../../../theme.json",
+ "scene": "../scene2.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 63.172,
+ "v2": true,
+ "poster": 44.5,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "l01"
+  },
+  {
+   "at": 59.572,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "l01",
+   "t0": 0.0,
+   "t1": 3.596,
+   "line": "l01",
+   "energy": 0.6
+  },
+  {
+   "id": "l02",
+   "t0": 3.596,
+   "t1": 10.469,
+   "line": "l02",
+   "energy": 0.6
+  },
+  {
+   "id": "l03",
+   "t0": 10.469,
+   "t1": 17.616,
+   "line": "l03",
+   "energy": 0.6
+  },
+  {
+   "id": "l04",
+   "t0": 17.616,
+   "t1": 21.421,
+   "line": "l04",
+   "energy": 0.6
+  },
+  {
+   "id": "l05",
+   "t0": 21.421,
+   "t1": 28.389,
+   "line": "l05",
+   "energy": 0.6
+  },
+  {
+   "id": "l06",
+   "t0": 28.389,
+   "t1": 34.382,
+   "line": "l06",
+   "energy": 0.6
+  },
+  {
+   "id": "l07",
+   "t0": 34.382,
+   "t1": 39.929,
+   "line": "l07",
+   "energy": 0.6
+  },
+  {
+   "id": "l08",
+   "t0": 39.929,
+   "t1": 43.304,
+   "line": "l08",
+   "energy": 0.6
+  },
+  {
+   "id": "l09",
+   "t0": 43.304,
+   "t1": 50.786,
+   "line": "l09",
+   "energy": 0.6
+  },
+  {
+   "id": "l10",
+   "t0": 50.786,
+   "t1": 53.951,
+   "line": "l10",
+   "energy": 0.6
+  },
+  {
+   "id": "l11",
+   "t0": 53.951,
+   "t1": 59.572,
+   "line": "l11",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    200.0,
+    23.934
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    200.0,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1e+29,
+  "eOrb": 6.2e+29
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 59.572,
+  "seed": 3
+ },
+ "badges": [],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "What If Gravity Doubled Every Hour?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 59.572,
+ "end": {
+  "title": "Full video on YouTube: *What If Gravity Doubled Every Hour?*",
+  "follow": "Possibility Lab · Part 1 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0,
+   "mode": "grav"
+  },
+  {
+   "t0": 3.496,
+   "mode": "wide",
+   "dur": 1.0
+  },
+  {
+   "t0": 10.369,
+   "mode": "grav",
+   "dur": 1.0
+  },
+  {
+   "t0": 17.616,
+   "mode": "grav2"
+  },
+  {
+   "t0": 21.221,
+   "mode": "step2"
+  },
+  {
+   "t0": 28.189,
+   "mode": "grav"
+  },
+  {
+   "t0": 34.181999999999995,
+   "mode": "tree"
+  },
+  {
+   "t0": 39.929,
+   "mode": "city",
+   "dur": 1.4
+  },
+  {
+   "t0": 43.004000000000005,
+   "mode": "wide",
+   "dur": 0.8
+  },
+  {
+   "t0": 48.15,
+   "mode": "grav",
+   "dur": 0.8
+  },
+  {
+   "t0": 53.951,
+   "mode": "hero",
+   "dur": 1.4
+  },
+  {
+   "t0": 57.75,
+   "mode": "wide",
+   "dur": 0.5
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0,
+   "pose": "toss",
+   "expr": "happy"
+  },
+  {
+   "t": 3.596,
+   "pose": "stand",
+   "expr": "happy"
+  },
+  {
+   "t": 10.469,
+   "pose": "toss",
+   "expr": "happy"
+  },
+  {
+   "t": 18.116,
+   "pose": "stand",
+   "expr": "wide"
+  },
+  {
+   "t": 19.116,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 21.721,
+   "pose": "trudge",
+   "expr": "squint"
+  },
+  {
+   "t": 23.421,
+   "pose": "stepUp",
+   "expr": "squint"
+  },
+  {
+   "t": 24.820999999999998,
+   "pose": "trudge",
+   "expr": "squint"
+  },
+  {
+   "t": 28.589,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 34.382,
+   "pose": "crouch",
+   "expr": "neutral"
+  },
+  {
+   "t": 39.929,
+   "pose": "crouch",
+   "expr": "worried"
+  },
+  {
+   "t": 43.304,
+   "pose": "stand",
+   "expr": "wide"
+  },
+  {
+   "t": 48.15,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 50.786,
+   "pose": "crouch",
+   "expr": "happy"
+  },
+  {
+   "t": 54.951,
+   "pose": "crouch",
+   "expr": "worried"
+  },
+  {
+   "t": 56.551,
+   "pose": "buckle",
+   "expr": "wide"
+  }
+ ],
+ "hook": {
+  "text": "Gravity doubles / every hour",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "chips": [
+  {
+   "t0": 6.45,
+   "t1": 7.45,
+   "text": "Simulation ahead: your skeleton"
+  },
+  {
+   "t0": 7.55,
+   "t1": 8.5,
+   "text": "Simulation ahead: a skyscraper"
+  },
+  {
+   "t0": 8.6,
+   "t1": 9.5,
+   "text": "Simulation ahead: the deep sea"
+  },
+  {
+   "t0": 9.6,
+   "t1": 10.4,
+   "text": "Simulation ahead: a mountain"
+  },
+  {
+   "t0": 44.05,
+   "t1": 44.7,
+   "text": "×8: the tower bows"
+  },
+  {
+   "t0": 44.8,
+   "t1": 45.4,
+   "text": "×16: sea dark, sky sinking"
+  },
+  {
+   "t0": 45.5,
+   "t1": 46.05,
+   "text": "×32: the mountain cracks"
+  }
+ ],
+ "captions": [],
+ "voice": [],
+ "grav": {
+  "ball": {
+   "x": 0.36,
+   "h0": 0.5,
+   "T0": 1.5,
+   "r": 0.05,
+   "wins": [
+    [
+     0,
+     21.321
+    ],
+    [
+     28.189,
+     34.282
+    ],
+    [
+     48.25,
+     59.572
+    ]
+   ],
+   "marks": [
+    {
+     "hour": 0,
+     "t0": 12.369,
+     "t1": 34.082
+    },
+    {
+     "hour": 1,
+     "t0": 29.889,
+     "t1": 34.082
+    }
+   ]
+  },
+  "hours": [
+   [
+    0,
+    0
+   ],
+   [
+    18.166,
+    0
+   ],
+   [
+    19.066,
+    1
+   ],
+   [
+    43.45,
+    1
+   ],
+   [
+    43.8,
+    2,
+    "lin"
+   ],
+   [
+    44.0,
+    2,
+    "lin"
+   ],
+   [
+    44.15,
+    3,
+    "lin"
+   ],
+   [
+    44.75,
+    3,
+    "lin"
+   ],
+   [
+    44.9,
+    4,
+    "lin"
+   ],
+   [
+    45.4,
+    4,
+    "lin"
+   ],
+   [
+    45.55,
+    5,
+    "lin"
+   ],
+   [
+    46.1,
+    5,
+    "lin"
+   ],
+   [
+    46.9,
+    20,
+    "lin"
+   ],
+   [
+    48.09,
+    20,
+    "lin"
+   ],
+   [
+    48.15,
+    1,
+    "lin"
+   ],
+   [
+    54.201,
+    1
+   ],
+   [
+    55.101000000000006,
+    2
+   ]
+  ],
+  "race": {
+   "t0": 43.45,
+   "t1": 46.9
+  },
+  "pins": [
+   [
+    46.9,
+    48.15
+   ],
+   [
+    57.9,
+    59.35
+   ]
+  ],
+  "rings": [
+   4.2,
+   5.3
+  ],
+  "rpos": [
+   {
+    "t": 0,
+    "s": 0
+   },
+   {
+    "t": 21.621,
+    "s": 0
+   },
+   {
+    "t": 22.6,
+    "s": 1
+   },
+   {
+    "t": 23.6,
+    "s": 2
+   },
+   {
+    "t": 24.6,
+    "s": 3
+   },
+   {
+    "t": 26.4,
+    "s": 3
+   },
+   {
+    "t": 27.4,
+    "s": 0
+   }
+  ],
+  "step": {
+   "x0": 0.12,
+   "tread": 0.12,
+   "rise": 0.055
+  },
+  "stairVis": {
+   "t0": 21.221,
+   "t1": 28.288999999999998
+  },
+  "ghost": {
+   "t0": 21.721,
+   "t1": 28.239
+  },
+  "skelB": {
+   "t0": 21.9,
+   "t1": 28.0,
+   "x": -0.3,
+   "l0": 1,
+   "l1": 2,
+   "tl0": 22.4,
+   "tl1": 24.0
+  },
+  "cup": {
+   "t0": 0.5,
+   "t1": 1.3,
+   "p0": 2.0,
+   "p1": 2.8,
+   "p2": 3.9,
+   "p3": 4.6,
+   "hide": 21.621
+  },
+  "tree": {
+   "t0": 34.282,
+   "t1": 40.0,
+   "x": -0.5,
+   "sag0": 35.782,
+   "sag1": 36.982,
+   "k": 0.32
+  },
+  "city": {
+   "t0": 40.5,
+   "t1": 43.35
+  },
+  "glims": [
+   {
+    "t0": 6.4,
+    "t1": 7.5,
+    "kind": "skel",
+    "load": [
+     1,
+     3
+    ]
+   },
+   {
+    "t0": 7.5,
+    "t1": 8.55,
+    "kind": "tower",
+    "load": [
+     1,
+     3
+    ]
+   },
+   {
+    "t0": 8.55,
+    "t1": 9.55,
+    "kind": "ocean",
+    "load": [
+     1,
+     8
+    ]
+   },
+   {
+    "t0": 9.55,
+    "t1": 10.469,
+    "kind": "mount"
+   },
+   {
+    "t0": 41.6,
+    "t1": 43.304,
+    "kind": "tower",
+    "load": [
+     2,
+     2.6
+    ]
+   },
+   {
+    "t0": 44.0,
+    "t1": 44.75,
+    "kind": "tower",
+    "load": [
+     3,
+     8
+    ],
+    "bow": [
+     0.1,
+     1.0
+    ]
+   },
+   {
+    "t0": 44.75,
+    "t1": 45.45,
+    "kind": "ocean",
+    "load": [
+     8,
+     16
+    ]
+   },
+   {
+    "t0": 45.45,
+    "t1": 46.1,
+    "kind": "mount"
+   }
+  ],
+  "dips": [
+   6.4,
+   7.5,
+   8.55,
+   9.55,
+   10.469,
+   41.6,
+   43.304,
+   44.0,
+   44.75,
+   45.45,
+   46.1
+  ],
+  "buckle": {
+   "t0": 56.551,
+   "t1": 59.372
+  }
+ }
+}

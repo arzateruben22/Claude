@@ -679,30 +679,30 @@
   },
   {
    "id": "l11",
-   "text": "Hour two: four times your weight. And standing up gets dangerous.",
-   "heard": "Hour 2, 4 times your weight. And standing up gets dangerous.",
+   "text": "Hour two: four times your weight. And by hour twenty… there's no Earth left.",
+   "heard": "Hour 2 four times your weight. And by hour 20, there's no earth left.",
    "words": [
     {
      "w": "Hour",
      "start": 0.02,
-     "end": 0.16,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "two:",
      "start": 0.25,
-     "end": 0.64,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "four",
-     "start": 0.72,
-     "end": 0.8,
+     "start": 0.56,
+     "end": 0.72,
      "heard": true
     },
     {
      "w": "times",
-     "start": 0.75,
+     "start": 0.72,
      "end": 1.04,
      "heard": true
     },
@@ -720,32 +720,50 @@
     },
     {
      "w": "And",
-     "start": 1.82,
+     "start": 1.825,
      "end": 1.92,
      "heard": true
     },
     {
-     "w": "standing",
-     "start": 1.965,
-     "end": 2.24,
+     "w": "by",
+     "start": 1.855,
+     "end": 2.08,
      "heard": true
     },
     {
-     "w": "up",
-     "start": 2.345,
+     "w": "hour",
+     "start": 2.07,
      "end": 2.4,
      "heard": true
     },
     {
-     "w": "gets",
-     "start": 2.385,
-     "end": 2.64,
+     "w": "twenty…",
+     "start": 2.32,
+     "end": 3.04,
      "heard": true
     },
     {
-     "w": "dangerous.",
-     "start": 2.655,
-     "end": 3.36,
+     "w": "there's",
+     "start": 3.155,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "no",
+     "start": 3.185,
+     "end": 3.52,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 3.575,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "left.",
+     "start": 3.805,
+     "end": 4.16,
      "heard": true
     }
    ]
