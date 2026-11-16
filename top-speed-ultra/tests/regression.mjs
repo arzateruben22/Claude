@@ -3321,27 +3321,38 @@ await group('phone', async (use) => {
       return best && { name: best.o.name, s: best.s, d: +best.d.toFixed(1), w: best.o.w, sun: [sd.x, sd.y, sd.z].map((v) => +v.toFixed(2)) };
     });
     expect(!!spot, 'no spot under an overpass on the I-405 North');
-    const at = async (s) => {
-      await game(page, (s) => {
+    const at = async (s, delta = 0) => {
+      await game(page, ([s, delta]) => {
         const g = window.__game, m = g.findMain('I-405 North'), p = g.phys;
         g.setPaused(false); g.placeCar(m, s, 1, 79.6); g.apLane = 1;
         for (let i = 0; i < 600; i++) { const a = g.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6), b = g.terrain.update(p.x, p.z, 3); if (a === 0 && b === 0) break; }
-        g.setPaused(true);
-      }, s);
+        g.setPaused(true); p.delta = delta;
+      }, [s, delta]);
       await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
       await frames(page, 12);
       return game(page, sleevesInPage);
     };
-    const open = await at(spot.s - 150), under = await at(spot.s);
+    // (since the seat camera came up and forward (2026-11-16) the wheel held straight shows the sleeves only as slivers
+    // at the frame's edges, about 0.6 % of it each, the left in the cabin's shade by the door in the open and under the
+    // deck alike (0.92); then both places are measured again at full lock, where they cover 10 % and 5.6 %: 0.73 and
+    // 0.70 there, and 1.0 and 1.0 with the deck test taken out of PlayerCar.updateSunShade, round 1's behaviour)
+    let open = await at(spot.s - 150), under = await at(spot.s), lock = '';
+    if (!(open.L && open.L.px / open.frame >= SLAB) && !(open.R && open.R.px / open.frame >= SLAB)) {
+      lock = ` (straight: L ${pc((open.L?.px ?? 0) / open.frame)}, R ${pc((open.R?.px ?? 0) / open.frame)} of the frame, L ${open.L?.mean} to ${under.L?.mean}, R ${open.R?.mean} to ${under.R?.mean}; at full lock)`;
+      open = await at(spot.s - 150, 0.6); under = await at(spot.s, 0.6);
+      await game(page, () => { window.__game.phys.delta = 0; });
+    }
     await game(page, () => { const g = window.__game; g.setPaused(false); g.updateSettings({ ...g.settings, quality: 'low' }); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     await page.setViewportSize({ width: 390, height: 844 });
     await frames(page, 2);
     const k = (a, b) => +(b / Math.max(1, a)).toFixed(2);
     const cab = k(open.cabin, under.cabin), L = open.L && under.L ? k(open.L.mean, under.L.mean) : null, R = open.R && under.R ? k(open.R.mean, under.R.mean) : null;
-    const msg = `under ${spot.name} (s ${spot.s}, the deck's shadow ${spot.d} m off, sun ${spot.sun}): the cabin ${open.cabin} to ${under.cabin} (${cab}); L sleeve ${open.L?.mean} to ${under.L?.mean} (${L}); R sleeve ${open.R?.mean} to ${under.R?.mean} (${R}); sun at the arms ${open.sun?.join(',')} to ${under.sun?.join(',')}`;
+    const msg = `under ${spot.name} (s ${spot.s}, the deck's shadow ${spot.d} m off, sun ${spot.sun})${lock}: the cabin ${open.cabin} to ${under.cabin} (${cab}); L sleeve ${open.L?.mean} to ${under.L?.mean} (${L}); R sleeve ${open.R?.mean} to ${under.R?.mean} (${R}); sun at the arms ${open.sun?.join(',')} to ${under.sun?.join(',')}`;
     expect(cab < 0.85, `the cabin didn't go dark under the deck: ${msg}`);
-    expect(L !== null && R !== null && L < 0.88 && R < 0.88, `the sleeves stayed lit under the deck: ${msg}`);
-    return msg;
+    // (a sleeve under SLAB of the frame in the open is reported, not held to it)
+    const big = (o) => o && o.px / open.frame >= SLAB, msg2 = `${msg}; in the open L ${pc((open.L?.px ?? 0) / open.frame)} of the frame, R ${pc((open.R?.px ?? 0) / open.frame)}`;
+    expect(L !== null && R !== null && (L < 0.88 || !big(open.L)) && (R < 0.88 || !big(open.R)) && (big(open.L) || big(open.R)), `the sleeves stayed lit under the deck: ${msg2}`);
+    return msg2;
   });
   // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
   // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb
