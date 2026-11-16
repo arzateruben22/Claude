@@ -326,6 +326,100 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
     on average; Retro's toon materials by 0.7. With the restore path: 0.02 to 0.13, inside the 0.02 to 0.28 two settled
     frames differ by, the sky camera's corner too. The render group's check holds it under 2.0 at Low and High.
 
+### Frame rate: the governor, the graphics check, the overlay (SMOOTH, 2026-11-16)
+
+- **The frame-time governor** (`render/governor.ts`, wired in `Game.ts`: govRungs, govLadder, applyGov, adapt).
+  Settings' "Adaptive quality (holds 60 fps)" (`settings.adaptive`) is its switch; it replaced the resolution-only
+  step. It aims at 60 fps (16.7 ms), or a steady 30 (the frame loop then draws every other display frame, still only
+  on requestAnimationFrame) once the whole ladder is down and frames still miss for 3 s, or from the start where the
+  graphics check found the device can't hold 60 (`lock30`). Rolling window of 30 frames:
+  - a step DOWN after 1 s of window means more than 10 % over the budget (18.3 ms at 60);
+  - a step UP after 4 s holding the target (mean within 4 %) with 25 % headroom on the frame's own work (under 12.5
+    ms at 60). The work is the frame function's CPU time, because a display locked to 60 Hz shows 16.7 ms intervals
+    however light the frame is; GPU time isn't measured yet (the `gpuMs` hook below);
+  - one step at a time, a 0.5 s settle after each (the window starts afresh); one or two frames over 250 ms are a
+    hitch and skipped, three in a row are load;
+  - a step down through a rung whose step up still stands and has held less than 120 s (`quietS`) is a bounce on
+    that rung, however late it comes (repair r2: before, only a step down within 10 s counted, so a heavy stretch 20
+    to 30 s later, an interchange or a cluster of traffic, never counted, the back-off stayed at 64 s and Bloom came
+    on and off every 90 s for ever). Each bounce makes the next step up wait 4x longer (4, 16, 64 s). Bounces are
+    forgotten only once a step up has HELD for 120 s: that clock runs only while the last step up stands, never
+    during a back-off wait (repair r1: before, the 120 s clock ran during the wait, so a graphics-bound scene popped
+    Bloom on and off every 1 to 2 minutes for ever). So a step up either holds 120 s (the bounces clear) or comes
+    back down (a bounce): nothing falls between. A rung that bounces twice is blocked
+    for 1,200 s (`blockS`, doubling on each further bounce), or until a new ladder (the preset, the mode or the
+    world changes: `gov.reset`). Paused, hidden, parked or on foot, or during the graphics check: not judged.
+  - **a display or browser cap is not load, but it is never taken on trust** (repair r1, probe in r2): iOS Low Power
+    Mode, a battery saver, a throttled iframe or a 50 Hz screen holds every frame at 33.3, 25 or 20 ms however light
+    it is, and a graphics chip that holds the game at exactly 30 with light CPU work looks the same. A suspected cap:
+    the window's mean within 4 % of one of those intervals (`capPeriod`), its frames within 1.5 ms (or 6 %) of each
+    other, the work under half the interval, and this device has never shown 10 frames in a row faster than 0.9 of
+    it (`capSeen`; every drawn frame counts: the menu, a pause, a venue; and the graphics check's rounds and earlier
+    visits, below). Then the governor PROBES: the whole ladder down at once ("Checking for a 30 fps cap, all steps
+    down"), judged for 1 s once its window is full (about 2.5 s in all). Frames faster than 0.85 of the interval
+    prove load: the ladder goes back to where it was ("Not a display cap, steps back") and walks down as usual.
+    The same frames: a cap; the probe is undone (no net step, the effects as before: "Display capped at 30 fps,
+    steps back") and the governor judges against it (`gov.capMs`): no steps down, no 30 <-> 60 cycling. Settings
+    and the overlay say "display capped at 30 fps" only after a probe confirmed it; while one runs they say "frames
+    steady at 30 fps: checking for a display cap". It lifts when frames get faster or the work heavy. Detection runs
+    only at the 60 target (at 30 the game paces its own frames).
+  - **what the display has shown is kept per device** (`tsu.display`, `settings.ts loadDisplay/saveDisplay`): the
+    fastest 10-frame mean drawn and the cap a probe confirmed. The governor is seeded from it and from the saved
+    graphics check's rounds (`Game.seedDisplay`: any round faster than 0.9 of a cap's interval rules that cap out),
+    so a device seen faster never probes, and one with a confirmed cap judges against it without a new probe.
+  - The probe's cost: for about 2.5 s, once per device (then `tsu.display` remembers the answer), the whole ladder is
+    down: a shorter draw distance, smaller shadows, no AO, MSAA or bloom, and the floor resolution; scenery and traffic
+    change only for what is built or spawned in those seconds. A player on a capped display sees one such dip.
+  - Limit (until a GPU timer feeds `gpuMs`): a chip that holds 30 even with the whole ladder down is, to the probe, a
+    cap; it keeps the preset in full at 30, which is what it would get anyway (nothing on the ladder made it
+    faster). A device whose cap was confirmed and which later showed faster frames (Low Power Mode turned off, then
+    on again) has its cap ruled out by those frames: it walks the ladder down to 30 and climbs back up at the 30
+    target (the frames are 30 throughout).
+  - a try at 60 from the top of the ladder (after `back60S` at 30) that misses with light work goes straight back to
+    30 without walking the ladder (the frames were 30 either way).
+- **The ladder** (costliest first, smallest visible loss first; only the rungs the preset has): AO off → shadow map
+  one size down (4096→2048, 2048→1024, 1024→512) → MSAA off (no FXAA: none) → bloom off → draw distance −20 % →
+  scenery density −25 % (tiles built from then on; nothing is rebuilt) → traffic one density step (Moderate and up,
+  never to None; never in Speed Survival, so its scores stay comparable) → render scale in 5 % steps. Up is the
+  reverse. With Moderate traffic or more: Ultra has 12 rungs, High 11, Medium 14, Low 13 (Low has no shadows or post).
+- **The floors** (`settings.ts GOV_FLOOR`): the render scale is a share of the preset's own resolution on this screen
+  (its clamped pixel ratio), never under 0.75 on High and Ultra, 0.5 on Low and Medium, and never under 0.5 device
+  pixels per CSS pixel. Retro keeps its own fixed picture (no ladder). Reduced motion isn't touched.
+- **The live preset.** Roads and Terrain hold `Game.live`, a copy of the preset the governor edits in place (draw
+  distance, scenery), so a step needs no rebuild. MSAA off sets the composer targets' samples to 0 and disposes them
+  (three reallocates them on the next frame); AO and bloom are their passes' `enabled`.
+- **The hooks for the SMOOTH CORE lane.** `gov.tick(intervalMs, workMs, gpuMs)`: a GPU timer query's time, when there
+  is one, counts toward the headroom. Each rung is one entry in `Game.govRungs` and one case in `Game.applyGov`, so an
+  effect with cost levels (shadow update rate, half-resolution effects, far LODs) adds rungs there, in its place in
+  the order, and the governor steps them like the rest. `Game.injectMs` adds artificial work to every frame (tests).
+- **The graphics check** (`Game.benchmark`, `App.tsx runBench`): on a device's first run (nothing saved, the player
+  hasn't chosen a preset; never on its own in an automated browser unless `?bench=1`), a card on the menu with Skip;
+  Settings > "Run graphics check" runs it again. It draws the menu's freeway drive with each preset's effects and
+  resolution in turn (Ultra, Ultra at 75 %, High, High at 75 %, Medium, Low; 0.25 s to settle, 0.65 s measured) and
+  stops at the first that holds 60 (mean within 10 % of 16.7 ms, at most a tenth of frames slow); if none does, the
+  costliest that holds 30. The world isn't rebuilt for it (draw distance and scenery stay the menu's). The pick is
+  saved as `tsu.bench` (`settings.ts saveBench`): the preset, its starting render scale and the target, and each
+  round's interval, work and slow share. The start scale applies only while Adaptive quality runs the preset and only
+  when the check chose it (repair r1): Adaptive off, or the player's own choice (`qualityChosen`), renders the preset
+  at full resolution, and Settings and the overlay say "starts at 75% resolution (graphics check)" when it applies.
+  A 30 pick sets `gov.lock30` before the ladder's reset, so the 30 target holds from the first frame. If every round
+  sits at a display cap with light work the result is `inconclusive` (the player's preset stays, no start scale,
+  never a 30 lock) and the toast says the frames sat at 30 fps in every round, so the check couldn't tell (it only
+  infers a cap). It becomes the Graphics preset unless the player chose one (`settings.qualityChosen`, set by
+  Settings' Graphics buttons); a Settings run is the player asking, so its pick applies. Skip on the first run saves a
+  `skipped` record so it doesn't ask again. On real hardware it takes about 5.4 s plus shader compiles; on SwiftShader
+  here it took 106 and 121 s.
+- **The overlay** (`ui/PerfOverlay.tsx`; Settings "Show performance", off by default, or `?perf` for one visit): fps
+  over the last 60 frames, the 1 % low (99th-percentile interval over the last 240), a frame-time graph against the
+  60 and 30 lines, the last frame's interval and work, the main view's draw calls and triangles (every pass of the
+  frame counted together: `info.autoReset` is off around the main render only), the pixel ratio, the label ("Ultra ·
+  auto") and the governor's level and last action ("MSAA off: frame 22 ms · 4 s ago"; shown only while the governor
+  runs). Every drawn frame feeds its ring (`gov.record`), governor on or off, so it shows real fps with Adaptive off,
+  on Retro and during the check. It reads `Game.perf` four times a second; it never takes a tap; it is a plain
+  `role="group"` (not a live region, so screen readers aren't sent its updates). Top right on a desktop, at 38 % down on an upright phone.
+- **Frame pacing basics, checked:** one requestAnimationFrame loop (the venues stop it); the simulation runs on the
+  fixed 1/120 s step with render interpolation (`acc / DT` into car.update and traffic.render), as before.
+
 ## UI
 
 - `src/ui/styles.css` is the "Chrome noir" stylesheet: every colour, font and gradient is a token at the top

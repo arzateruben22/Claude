@@ -4,7 +4,7 @@
 //   npm run build && npm test             every group
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
 //                                         progression, render, phone, nav-hud, launch, store, store-live, venues,
-//                                         venues-trips)
+//                                         venues-trips, perf)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
 //                                         group's page-error check); the group still opens its page
@@ -4643,6 +4643,353 @@ async function venuesPhone(page) {
     return `on the ramp to ${r.leads}`;
   });
 }
+
+// The frame-time governor, the graphics check and the performance overlay (SMOOTH, owner 2026-11-16: "make the graphics
+// stay high and not laggy"). SwiftShader's frames here take 0.1 to 30 s and say nothing about a real GPU, so the
+// governor's logic is fed synthetic frame times through its own tick (the frame loop stopped, Game.govFeed off) and
+// its actions land on the real composer, shadows, world and canvas; one check drives it with real frames and the
+// artificial frame cost hook (injectMs), which can only show the way down here.
+// in the page: feed the governor `seconds` of frames from model(level) -> [interval ms, work ms]; every action with
+// the frame time it happened at and the effects after it
+function govFeedInPage({ seconds, model }) {
+  const g = window.__game, gov = g.gov, f = eval(model), out = [];
+  let t = 0, a0 = gov.actions;
+  while (t < seconds * 1000) {
+    const [iv, wk] = f(gov.level, t);
+    const dir = gov.tick(iv, wk); t += iv;
+    if (gov.actions !== a0) { a0 = gov.actions; const s = g.govState; out.push({ t: Math.round(t) / 1000, dir, last: gov.last, level: gov.level, target: s.target, ao: s.ao, shadows: s.shadows, msaa: s.msaa, bloom: s.bloom, draw: s.drawDistance, props: s.props, traffic: s.traffic, scale: s.scale, pr: g.renderer.getPixelRatio() }); }
+  }
+  return out;
+}
+await group('perf', async (use) => {
+  // (a --check that names none of a context's checks skips opening it)
+  const wants = (...names) => !checkOnly || names.some((n) => checkOnly.split('|').some((c) => n.includes(c)));
+  if (wants('governor:', 'Settings: "Ultra', 'the performance overlay', 'Settings: a saved', 'graphics check: every round')) {
+  const { page } = await use({ settings: { quality: 'ultra', adaptive: true } });
+  // the frame loop stopped (each Ultra frame is many seconds in software), the governor fed only by these checks,
+  // from the top of Ultra's ladder
+  const stopLoop = () => game(page, () => { const g = window.__game; g.govFeed = false; cancelAnimationFrame(g.raf); g.raf = 0; g.govLadder(false); return g.govState; });
+  const s0 = await stopLoop();
+  await page.evaluate(`window.__govFeed = ${govFeedInPage.toString()}`);
+  const feed = (seconds, model) => game(page, (a) => window.__govFeed(a), { seconds, model });
+  const ULTRA = ['AO off', 'Shadows 2048', 'MSAA off', 'Bloom off', 'Draw distance 1920 m', 'Scenery -25%', 'Traffic Light', 'Resolution 95%', 'Resolution 90%', 'Resolution 85%', 'Resolution 80%', 'Resolution 75%'];
+  let down = [];
+  await check('governor: under slow frames it steps down Ultra\'s ladder in order, one step at a time, to the 0.75 floor, then aims at a steady 30', async () => {
+    expect(s0.on && s0.label === 'Ultra · auto' && s0.level === 0 && s0.ao && s0.bloom && s0.msaa === 4 && s0.shadows === 4096 && s0.scale === 1, `start ${JSON.stringify(s0)}`);
+    expect(JSON.stringify(s0.rungs) === JSON.stringify(ULTRA), `ladder ${JSON.stringify(s0.rungs)}`);
+    const pr0 = await game(page, () => window.__game.renderer.getPixelRatio());
+    down = await feed(40, '() => [40, 30]');     // 25 fps, the frame's own work 30 ms
+    const texts = down.map((d) => d.last.replace(/: frame.*/, ''));
+    expect(JSON.stringify(texts.slice(0, ULTRA.length)) === JSON.stringify(ULTRA), `order ${JSON.stringify(texts)}`);
+    expect(texts[ULTRA.length] === '30 fps target' && texts.length === ULTRA.length + 1, `after the ladder: ${JSON.stringify(texts.slice(ULTRA.length))}`);
+    const gaps = down.slice(1).map((d, i) => d.t - down[i].t);
+    expect(gaps.every((x) => x >= 1), `a step less than 1 s after the last: ${JSON.stringify(gaps)}`);
+    const one = (i, k) => down[i][k];
+    expect(!one(0, 'ao') && one(0, 'shadows') === 4096 && one(1, 'shadows') === 2048 && one(1, 'msaa') === 4 && one(2, 'msaa') === 0 && one(2, 'bloom') && !one(3, 'bloom')
+      && one(3, 'draw') === 2400 && one(4, 'draw') === 1920 && one(4, 'props') === 1.25 && one(5, 'props') === 0.9375 && one(5, 'traffic') === 'moderate' && one(6, 'traffic') === 'light' && one(6, 'scale') === 1, `effects per step ${JSON.stringify(down.slice(0, 8))}`);
+    const minScale = Math.min(...down.map((d) => d.scale)), minPr = Math.min(...down.map((d) => d.pr));
+    expect(minScale === 0.75 && minPr >= 0.75 * pr0 - 0.011, `floor: scale ${minScale}, pixel ratio ${minPr} of ${pr0}`);
+    const more = await feed(30, '() => [60, 50]');
+    expect(more.length === 0, `past the bottom of the ladder it still acted: ${JSON.stringify(more)}`);
+    return `${texts.join(' → ')} (steps ${fmt(Math.min(...gaps))}..${fmt(Math.max(...gaps))} s apart; last at ${down[down.length - 1].t} s of frames); scale floor ${minScale} (pixel ratio ${pr0} → ${minPr}); 30 more s at 17 fps: no further step`;
+  });
+  await check('governor: with headroom it steps back up in reverse, at least 4 s apart, to the full preset and 60', async () => {
+    const up = await feed(160, '() => [16.7, 6]');
+    const texts = up.map((d) => d.last.replace(/: frame.*/, ''));
+    const want = ['Resolution 80%', 'Resolution 85%', 'Resolution 90%', 'Resolution 95%', 'Resolution 100%', 'Traffic Moderate', 'Scenery full', 'Draw distance 2400 m', 'Bloom on', 'MSAA 4x', 'Shadows 4096', 'AO on', '60 fps target'];
+    expect(up.slice(0, -1).every((d) => d.dir === 1) && up[up.length - 1]?.dir === 2, `directions ${JSON.stringify(up.map((d) => d.dir))}`);
+    expect(JSON.stringify(texts) === JSON.stringify(want), `up ${JSON.stringify(texts)}`);
+    const gaps = up.slice(1).map((d, i) => d.t - up[i].t);
+    expect(gaps.slice(0, ULTRA.length - 1).every((x) => x >= 4), `gaps ${JSON.stringify(gaps)}`);
+    const s = await game(page, () => window.__game.govState);
+    expect(s.level === 0 && s.ao && s.bloom && s.msaa === 4 && s.shadows === 4096 && s.drawDistance === 2400 && s.props === 1.25 && s.traffic === 'moderate' && s.scale === 1 && s.target === 60, JSON.stringify(s));
+    return `${up.length} steps up, ${fmt(Math.min(...gaps.slice(0, ULTRA.length - 1)))}..${fmt(Math.max(...gaps.slice(0, ULTRA.length - 1)))} s apart, the 60 fps target ${fmt(gaps[gaps.length - 1])} s after the last; Ultra in full again`;
+  });
+  await check('governor: no oscillation, at a boundary (60 s) and with a step up that has to come back (900 s)', async () => {
+    // a device that holds 60 four steps down but has no 25 % headroom there: it settles, then 60 s without an action
+    await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+    const settleRun = await feed(20, '(l) => l >= 4 ? [17.5, 14] : [21, 17]');
+    const steady = await feed(60, '(l) => l >= 4 ? [17.5, 14] : [21, 17]');
+    // a scene that is light four steps down (headroom) but over budget with the fourth step back: each step up comes
+    // back down; each bounce makes the next try wait 4x longer, and the rung that bounced twice stays down
+    await game(page, () => window.__game.govLadder(false));
+    const b = await feed(900, '(l) => l >= 4 ? [16.7, 8] : [22, 18]');
+    const late = b.filter((d) => d.t > 60);
+    const ups = b.filter((d) => d.dir === 1).map((d) => d.t);
+    const upGaps = ups.slice(1).map((t, i) => t - ups[i]);
+    expect(settleRun.length === 4 && steady.length === 0, `boundary: ${settleRun.length} steps to settle, then ${steady.length} in 60 s ${JSON.stringify(steady.map((d) => d.last))}`);
+    expect(late.length <= 4 && upGaps.every((x) => x >= 16), `bounce: ${late.length} actions after 60 s of 900: ${JSON.stringify(b.map((d) => [d.t, d.last]))}`);
+    return `boundary: settled in ${settleRun.length} steps (by ${settleRun[settleRun.length - 1]?.t} s), then 0 actions in 60 s; bouncing scene, 900 s: ${b.length} actions, ${late.length} after the first 60 s (${b.map((d) => `${d.t} s ${d.last.replace(/: frame.*/, '')}`).join(', ')})`;
+  });
+  await check('governor: a scene light on the CPU but heavy on the graphics chip settles (20 min of frames, at most 2 bounces)', async () => {
+    // the frame's own work 5 ms throughout; 22 ms frames above four steps down, 16.7 ms at four or more (a phone's
+    // usual case: the graphics chip, not the CPU, is the limit)
+    await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+    const b = await feed(1200, '(l) => l >= 4 ? [16.7, 5] : [22, 5]');
+    const ups = b.filter((d) => d.dir === 1), bounces = b.filter((d, i) => d.dir === -1 && i > 0 && b[i - 1].dir === 1 && d.t - b[i - 1].t < 10);
+    const bloom = b.filter((d) => /^Bloom/.test(d.last));
+    const s = await game(page, () => window.__game.govState);
+    expect(bounces.length <= 2 && ups.length <= 2 && b.filter((d) => d.t > 60).length === 0 && s.level === 4 && !s.bloom, `${b.length} actions: ${JSON.stringify(b.map((d) => [d.t, d.last]))}; now ${JSON.stringify(s)}`);
+    return `${b.length} actions in 1,200 s of frames, all by ${b[b.length - 1]?.t} s: ${b.map((d) => `${d.t} s ${d.last.replace(/: frame.*/, '')}`).join(', ')}; ${bounces.length} bounces, Bloom changed ${bloom.length} times, then 0 actions for ${fmt(1200 - (b[b.length - 1]?.t ?? 0))} s (level ${s.level}, Bloom ${s.bloom ? 'on' : 'off'})`;
+  });
+  await check('governor: a heavy stretch that comes and goes (3 s in every 30 s, 6 s in every 40 s, 20 min each): no step up through the same rung more than twice after the first minute', async () => {
+    // 60 Hz vsync: in a heavy stretch half the frames drop (33.3 ms) above four steps down, none at four or more; out
+    // of it 30 % drop above two steps down, none at two or more. The frame's own work 6 ms throughout
+    const out = [];
+    for (const [heavyS, everyS] of [[3, 30], [6, 40]]) {
+      await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+      const model = `(() => { let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+        return (l, t) => { const heavy = (t % ${everyS * 1000}) < ${heavyS * 1000}; const p = heavy ? (l >= 4 ? 0 : 0.5) : (l >= 2 ? 0 : 0.3); return [r() < p ? 33.3 : 16.7, 6]; }; })()`;
+      const b = await feed(1200, model);
+      const late = b.filter((d) => d.t > 60), ups = {};
+      for (const d of late) if (d.dir === 1) ups[d.last.replace(/: frame.*/, '')] = (ups[d.last.replace(/: frame.*/, '')] || 0) + 1;
+      const most = Math.max(0, ...Object.values(ups));
+      expect(most <= 2 && late.length <= 8, `${heavyS} s every ${everyS} s: ${b.length} actions, ${late.length} after 60 s, ups after 60 s ${JSON.stringify(ups)}: ${JSON.stringify(b.map((d) => [d.t, d.last.replace(/: frame.*/, '')]))}`);
+      out.push(`${heavyS} s every ${everyS} s: ${b.length} actions, ${late.length} after the first minute (${late.map((d) => `${d.t} s ${d.last.replace(/: frame.*/, '')}`).join(', ')}), at most ${most} steps up through one rung, level ${b[b.length - 1]?.level}`);
+    }
+    return out.join('; ');
+  });
+  await check('governor: a graphics chip that holds exactly 30 fps from the first frame (light work) is load, not a cap: a probe, then the ladder to level 4, settled', async () => {
+    // 33.3 ms (+-0.4) frames with 6 ms of work above four steps down, 16.7 ms at four or more, and no faster frame ever
+    // recorded: it looks like a 30 Hz cap until the probe takes the ladder down
+    await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+    const b = await feed(600, '(l, t) => l >= 4 ? [16.7, 6] : [33.3 + 0.4 * Math.sin(t * 0.37), 6]');
+    const s = await game(page, () => { const g = window.__game; return { ...g.govState, cap: g.gov.capMs, detail: g.govDetail() }; });
+    const texts = b.map((d) => d.last.replace(/: frame.*/, ''));
+    const bounces = b.filter((d, i) => d.dir === -1 && i > 0 && b[i - 1].dir === 1 && !/cap/.test(b[i - 1].last)).length;
+    expect(/^Checking for a 30 fps cap/.test(texts[0]) && /^Not a display cap/.test(texts[1]) && s.level === 4 && !s.cap && bounces <= 2 && b.filter((d) => d.t > 60).length === 0 && !/capped/.test(s.detail), `${JSON.stringify(b.map((d) => [d.t, d.last]))}; now ${JSON.stringify(s)}`);
+    return `${b.length} actions, all by ${b[b.length - 1]?.t} s: ${b.map((d) => `${d.t} s ${d.last.replace(/: frame.*/, '')}`).join(', ')}; ${bounces} bounces; level ${s.level}, "${s.detail}"`;
+  });
+  await check('governor: a display cap is not load: 600 s of steady 30 fps (work 4 ms) and of 50 fps (work 5 ms): a probe, undone, then no steps and no 30 <-> 60 cycling; the next visit needs no probe', async () => {
+    const out = [];
+    for (const [iv, wk] of [[33.3, 4], [20, 5]]) {
+      await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+      const during = await game(page, async (m) => { const g = window.__game; for (let i = 0; i < 400 && !g.gov.probe; i++) g.gov.tick(m[0], m[1]); return { probe: g.gov.probe, level: g.gov.level, detail: g.govDetail() }; }, [iv, wk]);
+      const a = await feed(600, `() => [${iv}, ${wk}]`);
+      const r = await game(page, () => { const g = window.__game; return { s: g.govState, cap: g.gov.capMs, capOk: g.gov.capOk, fps: g.gov.fps, detail: g.govDetail() }; });
+      // a new ladder (as on the next visit: the cap this device confirmed is kept): no probe
+      await game(page, () => window.__game.govLadder(false));
+      const again = await feed(120, `() => [${iv}, ${wk}]`);
+      const fps = Math.round(1000 / iv);
+      expect(during.probe > 0 && during.level === 12 && new RegExp(`frames steady at ${fps} fps: checking for a display cap`).test(during.detail) && !/capped/.test(during.detail), `during the probe: ${JSON.stringify(during)}`);
+      expect(a.length === 1 && a[0].dir === 1 && new RegExp(`^Display capped at ${fps} fps`).test(a[0].last) && r.s.level === 0 && r.s.ao && r.s.bloom && r.s.msaa === 4 && r.s.shadows === 4096 && r.s.scale === 1 && r.s.drawDistance === 2400 && r.s.target === fps && new RegExp(`display capped at ${fps} fps`).test(r.detail), `[${iv}, ${wk}]: ${a.length} actions after the probe ${JSON.stringify(a.map((d) => [d.t, d.last]))}; ${JSON.stringify(r)}`);
+      expect(again.length === 0, `the next ladder probed again: ${JSON.stringify(again.map((d) => [d.t, d.last]))}`);
+      out.push(`[${iv} ms, work ${wk}]: probe "${during.detail}", then "${a[0].last}" (net 0 steps, Ultra in full), "${r.detail}", 0 actions over the rest of 600 s and 0 in 120 s on a new ladder`);
+    }
+    await game(page, () => { const g = window.__game; g.gov.forgetDisplay(); g.govLadder(false); });
+    return out.join('; ');
+  });
+  await check('governor: what the display showed is kept per device: a confirmed cap is saved; a graphics-check round faster than the cap rules it out (no probe, the ladder)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, gov = g.gov;
+      gov.forgetDisplay(); g.govLadder(false); localStorage.removeItem('tsu.display'); g.display = { minMs: 0, capMs: 0 };
+      for (let i = 0; i < 400; i++) gov.tick(33.3, 4);                  // probe, confirmed
+      g.adapt(0);                                                      // the frame loop's save (no frame recorded)
+      const saved = JSON.parse(localStorage.getItem('tsu.display'));
+      // a saved check whose Ultra round ran at 20 ms: a 30 cap is ruled out from the start
+      const b0 = g.benchPick;
+      gov.forgetDisplay(); g.display = { minMs: 0, capMs: 0 };
+      g.benchPick = { v: 1, quality: 'ultra', scale: 1, target: 60, inconclusive: true, at: '', rounds: [{ quality: 'ultra', scale: 1, ms: 20, work: 5, slow: 0 }] };
+      g.seedDisplay(); g.govLadder(false);
+      const a0 = gov.actions, texts = [];
+      for (let i = 0; i < 120; i++) { gov.tick(33.3, 4); if (gov.actions !== a0 + texts.length) texts.push(gov.last.replace(/: frame.*/, '')); }
+      const out = { saved, minMean: gov.minMean, texts, probe: gov.probe, cap: gov.capMs };
+      g.benchPick = b0; gov.forgetDisplay(); g.display = { minMs: 0, capMs: 0 }; localStorage.removeItem('tsu.display'); g.govLadder(false);
+      return out;
+    });
+    expect(r.saved && r.saved.capMs === 33.3 && r.minMean === 20 && r.texts[0] === 'AO off' && !r.texts.some((t) => /cap/.test(t)) && !r.cap, JSON.stringify(r));
+    return `saved ${JSON.stringify(r.saved)}; with a 20 ms check round seeded: fastest ${r.minMean} ms, no probe, ${r.texts.join(' → ')} in 4 s of 33.3 ms frames`;
+  });
+  await check('governor: no per-frame allocation (100,000 frames through tick and the frame loop\'s adapt, heap after GC)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, gov = g.gov;
+      g.govLadder(false);
+      for (let i = 0; i < 2000; i++) { gov.tick(16.7, 14); g.adapt(16.7); }   // warm (JIT); 16.7 ms with 14 ms work: no action either way
+      gc(); const a = performance.memory.usedJSHeapSize, n0 = gov.actions;
+      for (let i = 0; i < 100000; i++) { gov.tick(16.7, 14); g.adapt(16.7); }
+      gc(); const b = performance.memory.usedJSHeapSize;
+      return { grew: b - a, actions: gov.actions - n0 };
+    });
+    expect(r.actions === 0 && r.grew < 64 * 1024, JSON.stringify(r));
+    return `heap ${r.grew >= 0 ? '+' : ''}${r.grew} bytes over 200,000 calls, ${r.actions} actions`;
+  });
+  await check('Settings: "Ultra · auto" with the governor\'s level; Adaptive quality off reads "Ultra" and puts the preset back', async () => {
+    await game(page, () => { const g = window.__game; g.govLadder(false); window.__govFeed({ seconds: 9, model: '() => [40, 30]' }); });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.waitForSelector('.gov-now');
+    await page.waitForTimeout(700);
+    const on = await page.locator('.gov-now').innerText();
+    await page.locator('#set-graphics').scrollIntoViewIfNeeded();
+    await page.screenshot({ path: path.join(OUT, 'perf-settings-ultra-auto.png') });
+    await page.getByRole('switch', { name: 'Adaptive quality (holds 60 fps)' }).click();
+    await page.waitForTimeout(800);
+    const off = await page.locator('.gov-now').innerText();
+    const s = await game(page, () => window.__game.govState);
+    await page.getByRole('switch', { name: 'Adaptive quality (holds 60 fps)' }).click();
+    await page.waitForTimeout(300);
+    expect(/^Now: Ultra · auto · 3 of 12 steps down \(MSAA off\) · 60 fps target$/.test(on), `on: "${on}"`);
+    expect(/^Now: Ultra · fixed/.test(off) && !s.on && s.level === 0 && s.ao && s.msaa === 4 && s.shadows === 4096, `off: "${off}" ${JSON.stringify(s)}`);
+    return `"${on}"; off: "${off}", the preset back in full`;
+  });
+  await check('the performance overlay: Settings "Show performance" shows and hides it; measured numbers and the label', async () => {
+    const t = await page.getByRole('switch', { name: 'Show performance' });
+    const before = await page.locator('.perf').count();
+    await t.click(); await page.waitForSelector('.perf'); await page.waitForTimeout(600);
+    const text = await page.locator('.perf').innerText();
+    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings')).showPerf);
+    await t.click(); await page.waitForTimeout(400);
+    const after = await page.locator('.perf').count();
+    expect(before === 0 && after === 0 && saved === true && /Ultra · auto/.test(text) && /calls/.test(text) && /1% low/.test(text), `before ${before}, after ${after}, saved ${saved}, "${text}"`);
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    return `off → on → off; it read "${text.replace(/\n/g, ' | ')}"`;
+  });
+  await check('Settings: a saved graphics-check pick of Ultra at 75 %: Adaptive on starts there and says so; Adaptive off or the player\'s own Ultra renders it in full; a 30 pick locks 30 at once', async () => {
+    const pr1 = await game(page, () => window.__game.renderer.getPixelRatio());
+    const read = () => game(page, () => { const g = window.__game, s = g.govState; return { scale: s.scale, start: s.startScale, pr: g.renderer.getPixelRatio(), label: g.govLabel(), detail: g.govDetail(), floor: Math.min(...s.rungs.filter((t) => /^Resolution/.test(t)).map((t) => +t.match(/\d+/)[0])) }; });
+    await game(page, () => { const g = window.__game; g.benchPick = { v: 1, quality: 'ultra', scale: 0.75, target: 60, at: '', rounds: [] }; g.applyQuality(); });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await page.waitForSelector('.gov-now'); await page.waitForTimeout(700);
+    const on = { ...(await read()), ui: await page.locator('.gov-now').innerText() };
+    await page.getByRole('switch', { name: 'Adaptive quality (holds 60 fps)' }).click(); await page.waitForTimeout(700);
+    const off = { ...(await read()), ui: await page.locator('.gov-now').innerText() };
+    await page.getByRole('switch', { name: 'Adaptive quality (holds 60 fps)' }).click(); await page.waitForTimeout(700);
+    const back = await read();
+    await page.locator('.seg[aria-label="Graphics"]').getByRole('button', { name: 'Ultra', exact: true }).click(); await page.waitForTimeout(700);
+    const mine = { ...(await read()), chosen: await game(page, () => window.__game.settings.qualityChosen), ui: await page.locator('.gov-now').innerText() };
+    const lock = await game(page, () => { const g = window.__game; g.benchPick = { v: 1, quality: 'low', scale: 1, target: 30, at: '', rounds: [] }; g.govLadder(false); const r = { target: g.gov.fps, lock30: g.gov.lock30 }; g.benchPick = null; g.govLadder(false); return r; });
+    await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    expect(on.scale === 0.75 && Math.abs(on.pr - 0.75 * pr1) < 0.011 && /starts at 75% resolution \(graphics check\)/.test(on.ui) && !/full quality/.test(on.ui) && on.floor >= 75, `on: ${JSON.stringify(on)} (full ${pr1})`);
+    expect(off.scale === 1 && off.pr === pr1 && /^Now: Ultra · fixed/.test(off.ui), `off: ${JSON.stringify(off)}`);
+    expect(back.scale === 0.75, `on again: ${JSON.stringify(back)}`);
+    expect(mine.chosen && mine.scale === 1 && mine.pr === pr1 && /full quality/.test(mine.ui), `the player's own Ultra: ${JSON.stringify(mine)}`);
+    expect(lock.target === 30 && lock.lock30, `a 30 pick: ${JSON.stringify(lock)}`);
+    return `Adaptive on: scale ${on.scale}, pixel ratio ${on.pr} of ${pr1}, "${on.ui}" (no resolution step under the 75 % floor: ${on.floor === Infinity ? 'none left' : on.floor + ' %'}); off: scale ${off.scale}, pixel ratio ${off.pr}, "${off.ui}"; the player's own Ultra: scale ${mine.scale}, "${mine.ui}"; a 30 pick: target ${lock.target} straight after the ladder is built`;
+  });
+  await check('graphics check: every round at a 30 fps cap with light work is inconclusive (the preset stays, no start scale, no 30 lock)', async () => {
+    const r = await game(page, async () => {
+      const g = window.__game, q0 = g.settings.quality;
+      // the loop is stopped here: the check's frames are fed as a 30 Hz-capped display's (33.3 ms apart, 4 ms of work)
+      const feed = setInterval(() => { g.workMs = 4; g.adapt(33.3); }, 4);
+      let res; try { res = await g.benchmark(); } finally { clearInterval(feed); }
+      const s = g.govState, saved = JSON.parse(localStorage.getItem('tsu.bench'));
+      const out = { res, q0, q: g.settings.quality, start: s.startScale, target: s.target, lock30: g.gov.lock30, saved: !!saved?.inconclusive };
+      g.benchPick = null; localStorage.removeItem('tsu.bench'); g.govLadder(false);
+      return out;
+    });
+    expect(r.res && r.res.inconclusive && r.res.quality === r.q0 && r.res.scale === 1 && r.res.target === 60 && r.res.cap === 30 && r.res.rounds.length === 6 && r.q === r.q0 && r.start === 1 && r.target === 60 && !r.lock30 && r.saved, JSON.stringify(r));
+    return `${r.res.rounds.map((x) => `${x.quality}@${x.scale} ${x.ms} ms (work ${x.work})`).join(', ')}: inconclusive at a ${r.res.cap} fps cap; ${r.q} kept, start scale ${r.start}, target ${r.target}, no lock`;
+  });
+  // (the Ultra page's loop stays stopped: its frames would only slow the contexts below)
+  }
+  // real frames: Low at 1280 × 720 with ?perf, driving, and the artificial frame cost hook
+  if (wants('perf: ?perf shows the overlay; real frames', 'perf: the overlay at 1280', 'perf: Adaptive quality off', 'perf: Retro keeps')) {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+    const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
+    await p.goto(pathToFileURL(GAME).href + '?perf');
+    await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await check('perf: ?perf shows the overlay; real frames with 300 ms of injected work a frame step Low down its ladder in order', async () => {
+      await drive(p, 'Free Drive');
+      const s0 = await game(p, () => { const g = window.__game; g.govLadder(false); g.injectMs = 300; return g.govState; });
+      await p.waitForFunction(() => window.__game.gov.level >= 2, null, { timeout: 420000, polling: 1000 });
+      const r = await game(p, () => { const g = window.__game; g.injectMs = 0; return { s: g.govState, perf: { ...g.perf } }; });
+      const done = r.s.rungs.slice(0, r.s.level);
+      expect(JSON.stringify(done) === JSON.stringify(s0.rungs.slice(0, r.s.level)) && s0.rungs[0] === 'Draw distance 720 m' && r.s.drawDistance === 720 && r.perf.workMs >= 0, JSON.stringify(r));
+      expect(errs.length === 0, errs.join(' | '));
+      return `Low's ladder ${JSON.stringify(s0.rungs)}; real frames took ${done.join(', ')} (last "${r.s.last}"); the overlay read ${r.perf.fps} fps, 1% low ${r.perf.low1}, ${r.perf.calls} calls`;
+    });
+    await check('perf: the overlay at 1280 × 720, driving', async () => {
+      if (await game(p, () => window.__game.inAttract)) await drive(p, 'Free Drive');
+      await game(p, () => { const g = window.__game; g.injectMs = 0; g.govLadder(false); });
+      await frames(p, 3);
+      await p.screenshot({ path: path.join(OUT, 'perf-overlay-1280.png') });
+      const box = await p.locator('.perf').boundingBox();
+      expect(box && box.width > 100 && box.x >= 0 && box.y >= 0, JSON.stringify(box));
+      return `overlay ${Math.round(box.width)} × ${Math.round(box.height)} at (${Math.round(box.x)}, ${Math.round(box.y)})`;
+    });
+    await check('perf: Adaptive quality off, the overlay still shows real fps (every drawn frame feeds it)', async () => {
+      await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, adaptive: false }); g.gov.filled = 0; g.gov.head = 0; });
+      await frames(p, 15);
+      await p.waitForTimeout(600);
+      const r = await game(p, () => { const g = window.__game; return { fps: g.perf.fps, filled: g.gov.filled, detail: g.govDetail(), text: document.querySelector('.perf')?.innerText ?? '' }; });
+      await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, adaptive: true }); });
+      expect(r.fps > 0 && r.filled >= 15 && /Adaptive quality is off/.test(r.text) && !/^--/.test(r.text), JSON.stringify(r));
+      return `${r.fps} fps over ${r.filled} frames, overlay "${r.text.replace(/\n/g, ' | ')}"`;
+    });
+    await check('perf: Retro keeps its own picture (no governor ladder, full scale)', async () => {
+      const r = await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'retro' }); const s = g.govState; g.updateSettings({ ...g.settings, style: 'standard' }); return s; });
+      expect(!r.on && r.levels === 0 && r.scale === 1 && r.label === 'Low · Retro', JSON.stringify(r));
+      return `${r.label}: governor off, ${r.levels} steps, scale ${r.scale}`;
+    });
+    await ctx.close();
+  }
+  // the phone: 390 × 844 at DPR 3, ?perf, driving
+  if (wants('perf: the overlay on a 390')) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+    await p.goto(pathToFileURL(GAME).href + '?perf');
+    await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await check('perf: the overlay on a 390 × 844 phone (DPR 3), driving, clear of the HUD\'s controls', async () => {
+      await drive(p, 'Free Drive');
+      await frames(p, 3);
+      await p.waitForSelector('.toast', { timeout: 60000 }).catch(() => null);   // the one-time "Hold Pause" toast, if it comes: the overlay stays clear of it
+      await p.screenshot({ path: path.join(OUT, 'perf-overlay-phone.png') });
+      const r = await game(p, () => {
+        const o = document.querySelector('.perf').getBoundingClientRect(), hit = [];
+        for (const el of document.querySelectorAll('.tbar .tbtn, .corner, .hud-plate, .hud-speed, .hud-nav, .hud-road, .toast, .touch-steer, .pedal, .hud-ability, .venue-prompt')) {
+          const b = el.getBoundingClientRect();
+          if (b.width && b.right > o.left && b.left < o.right && b.bottom > o.top && b.top < o.bottom) hit.push(el.className);
+        }
+        return { o: { x: o.x, y: o.y, w: o.width, h: o.height }, hit, vw: innerWidth };
+      });
+      expect(r.o.w > 100 && r.o.x >= 0 && r.o.x + r.o.w <= r.vw && r.hit.length === 0, JSON.stringify(r));
+      return `overlay ${Math.round(r.o.w)} × ${Math.round(r.o.h)} at (${Math.round(r.o.x)}, ${Math.round(r.o.y)}), overlapping nothing it was checked against`;
+    });
+    await ctx.close();
+  }
+  // the graphics check: a first run (nothing saved) with ?bench=1 (it never starts on its own under automation)
+  if (wants('graphics check: on a first run', 'graphics check: the player')) {
+    const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
+    const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+    const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
+    await p.goto(pathToFileURL(GAME).href + '?bench=1');
+    await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await check('graphics check: on a first run it runs on its own, completes, saves a pick and applies it', async () => {
+      const t0 = Date.now();
+      await p.waitForSelector('.bench-card', { timeout: 60000 });
+      const card = await p.locator('.bench-card').innerText();
+      await p.waitForSelector('.bench-card', { state: 'detached', timeout: 600000 });
+      const r = await game(p, () => ({ bench: JSON.parse(localStorage.getItem('tsu.bench')), s: JSON.parse(localStorage.getItem('tsu.settings') || 'null'), q: window.__game.settings.quality }));
+      expect(r.bench && r.bench.v === 1 && !r.bench.skipped && r.bench.quality && r.bench.rounds.length >= 1 && r.s.quality === r.bench.quality && r.s.qualityChosen === false && r.q === r.bench.quality, JSON.stringify(r));
+      return `card "${card.replace(/\n/g, ' | ')}"; ${fmt((Date.now() - t0) / 1000)} s here; picked ${r.bench.quality} at ${r.bench.scale}, ${r.bench.target} fps; rounds ${r.bench.rounds.map((x) => `${x.quality}@${x.scale} ${x.ms} ms`).join(', ')}`;
+    });
+    await check('graphics check: the player\'s own choice wins (kept over a reload, never re-checked); Skip on a Settings run saves nothing', async () => {
+      const pick = await game(p, () => JSON.parse(localStorage.getItem('tsu.bench')));
+      const mine = pick.quality === 'medium' ? 'Low' : 'Medium';
+      await p.getByRole('button', { name: 'Settings', exact: true }).click();
+      await p.locator('.seg[aria-label="Graphics"]').getByRole('button', { name: mine, exact: true }).click();
+      await p.waitForFunction(() => !document.querySelector('.loadbar'), null, { timeout: 600000, polling: 500 });
+      await p.getByRole('button', { name: 'Run graphics check' }).click();
+      await p.waitForSelector('.bench-card');
+      await p.locator('.bench-card').getByRole('button', { name: 'Skip' }).click();
+      await p.waitForSelector('.bench-card', { state: 'detached' });
+      await p.waitForFunction(() => !window.__game.benchRunning(), null, { timeout: 60000, polling: 250 });
+      const mid = await game(p, () => ({ bench: localStorage.getItem('tsu.bench'), s: JSON.parse(localStorage.getItem('tsu.settings')) }));
+      await p.reload();
+      await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+      await p.waitForTimeout(3000);
+      const r = await game(p, () => ({ card: !!document.querySelector('.bench-card'), q: window.__game.settings.quality, chosen: window.__game.settings.qualityChosen, bench: localStorage.getItem('tsu.bench') }));
+      const want = mine.toLowerCase();
+      expect(mid.s.quality === want && mid.s.qualityChosen === true && mid.bench === JSON.stringify(pick), `after the pick and Skip: ${JSON.stringify(mid)}`);
+      expect(!r.card && r.q === want && r.chosen && r.bench === JSON.stringify(pick), `after a reload: ${JSON.stringify(r)}`);
+      expect(errs.length === 0, errs.join(' | '));
+      return `the check picked ${pick.quality}; the player chose ${mine}; Skip left the saved pick as it was; after a reload ${r.q} (chosen), no check card`;
+    });
+    await ctx.close();
+  }
+});
 
 await browser.close();
 
