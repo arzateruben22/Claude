@@ -68,7 +68,7 @@ site's address (that browser only); the dashboard follows the same switch.
    ```sh
    supabase secrets set STRIPE_SECRET_KEY=sk_live_... STRIPE_WEBHOOK_SECRET=whsec_... \
      SITE_URL=https://her-domain STUDIO_KEY="<a long phrase only Evelyn knows>" \
-     RESEND_API_KEY=re_... FROM_EMAIL="Lumevina <hello@her-domain>" OWNER_EMAIL=evelyn@... \
+     RESEND_API_KEY=re_... FROM_EMAIL="Lumevina Aesthetics Spa <hello@her-domain>" OWNER_EMAIL=evelyn@... \
      SITE_VERSION=v3
    # texts (optional; US texting needs an A2P 10DLC registration in Twilio first):
    supabase secrets set TWILIO_SID=AC... TWILIO_TOKEN=... TWILIO_FROM=+1...   # or TWILIO_MESSAGING_SID=MG...
