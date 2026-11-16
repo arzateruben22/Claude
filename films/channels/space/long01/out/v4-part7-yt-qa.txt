@@ -1,0 +1,34 @@
+duration 62.06 s OK
+true peak -1.6 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part7-yt-contact.jpg
+    0.32  caption: "There's a distance no moon survives."
+          speech : "There's a distance, no one survives."  <-- KNOWN recogniser ambiguity, a person should listen: recogniser hears 'no one' (also on his solo take): LISTEN
+    9.50  caption: '30,000.'
+          speech : 'Thirty thousand.'
+   10.52  caption: '25.'
+          speech : '25%.'
+   10.94  caption: '20.'
+          speech : 'Twenty five.'  <-- KNOWN recogniser ambiguity, a person should listen: 'Twenty.' in a fast count 30,000 / 25,000 / 20,000; recogniser merges it with 'Twenty-five': LISTEN
+   22.07  caption: "Around 18,000 km is the Roche limit: where Earth's tides"
+          speech : "Around eighteen thousand kilometers is a Roche limit, where Earth's tide"
+   26.95  caption: "pull harder than the Moon's own gravity holds it together."
+          speech : "Earth's tides pull harder than the moon's own gravity holds it together. That's the"
+   30.49  caption: "That's if the Moon acts like a fluid."
+          speech : "That's it, the moon acts like a fluid."
+   32.11  caption: 'A perfectly rigid Moon could come to about 9,500.'
+          speech : 'a perfectly rigged moon could come to about 9,500.'
+   40.83  caption: "At 18,000, it's more than 20× wider than tonight."
+          speech : "At 18,000, it's more than 20 times the wider than tonight."
+   45.31  caption: 'A wall of grey, straining.'
+          speech : 'A wall of grey straining.'
+   54.76  caption: 'Still looking up?'
+          speech : 'Still looking up? Tap'
+   55.96  caption: 'Tap like and subscribe.'
+          speech : 'Tap like and subscribe.'
+   58.63  caption: 'And then it does something no Moon should survive.'
+          speech : 'And then it does something no moon should survive.'
+caption = speech: OK
+QA PASS

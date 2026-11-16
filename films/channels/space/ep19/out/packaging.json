@@ -1,42 +1,42 @@
 {
  "version": 1,
  "format": "short",
- "hook": "Put the Moon closer than about 42,000 km and it circles faster than Earth turns, so it would rise in the west.",
+ "hook": "There is a distance where a moon is torn apart by tides; this film shows how close that is for our Moon, and stops just before it happens.",
  "titles": [
   {
-   "text": "The Moon Rises in the West",
-   "mechanism": "contradiction"
-  },
-  {
-   "text": "A Moon That Outruns the Sky",
-   "mechanism": "visual paradox"
-  },
-  {
-   "text": "Why a Close Enough Moon Would Rise in the West",
-   "mechanism": "knowledge gap"
-  },
-  {
-   "text": "The Distance Where the Moon Reverses Its Path",
+   "text": "The Distance No Moon Survives",
    "mechanism": "hidden mechanism"
   },
   {
-   "text": "The Moon Would Cross the Sky in Hours",
+   "text": "How Close Can the Moon Get Before It Breaks?",
+   "mechanism": "unanswered question"
+  },
+  {
+   "text": "The Roche Limit: Where a Moon Comes Apart",
+   "mechanism": "knowledge gap"
+  },
+  {
+   "text": "The Last Safe Distance for the Moon",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "A Moon That Fills the Sky and Is About to Break",
    "mechanism": "scale shock"
   }
  ],
  "thumbnails": [
   {
    "id": "A",
-   "subject": "a huge Moon low in the west over the sea with a faint arrow-free arc behind it",
+   "subject": "a Moon filling most of the frame over a thin beach, cracks of shadow",
    "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
    "lighting": "teal and violet night, silver road on the water",
    "trigger": "scale with a human anchor",
-   "text": "Faster than a day",
+   "text": "Too close",
    "complements": "the title states the idea; the picture shows it"
   },
   {
    "id": "B",
-   "subject": "a clock face and the Moon's path across the sky",
+   "subject": "the Moon stretched slightly egg-shaped",
    "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
    "lighting": "teal and violet night, silver road on the water",
    "trigger": "scale with a human anchor",
@@ -45,7 +45,7 @@
   },
   {
    "id": "C",
-   "subject": "the Moon rising where the Sun sets",
+   "subject": "a distance marker reading about 18,000 km",
    "composition": "owner's beach, the figure lower third, the Moon upper half, space for the words",
    "lighting": "teal and violet night, silver road on the water",
    "trigger": "scale with a human anchor",
@@ -58,7 +58,7 @@
    "title": 0,
    "thumbnail": "A",
    "scores": {
-    "scroll": 77,
+    "scroll": 78,
     "curiosity": 80,
     "clarity": 80,
     "synergy": 82,
@@ -67,7 +67,7 @@
     "mobile": 82,
     "satisfaction": 84
    },
-   "note": "Names the physical reason (the orbit outruns Earth's spin) without repeating the title."
+   "note": "One strong picture and a feeling, with the fix for the answer in the full video."
   },
   {
    "title": 1,
@@ -101,10 +101,10 @@
   }
  ],
  "winner": {
-  "title": "The Moon Rises in the West",
+  "title": "The Distance No Moon Survives",
   "thumbnail": "A",
-  "thumbnailText": "Faster than a day",
-  "why": "Names the physical reason (the orbit outruns Earth's spin) without repeating the title."
+  "thumbnailText": "Too close",
+  "why": "One strong picture and a feeling, with the fix for the answer in the full video."
  },
  "testAndCompare": [
   "A",
@@ -121,10 +121,10 @@
   "originality": true
  },
  "thumbnailFile": "one-more-orbit-s3-part7-cover.jpg",
- "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a huge Moon low in the west over the sea with a faint arrow-free arc behind it. Text: \"Faster than a day\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
+ "chatgptPrompt": "Create a YouTube Shorts / TikTok cover, 9:16 (1080x1920). Keep the focal point and the text inside the centre safe area. Subject: a Moon filling most of the frame over a thin beach, cracks of shadow. Text: \"Too close\" in a clean geometric sans (Lexend style), white with one teal word (#4FE3C6). Palette: indigo night (#0B0F2A), teal glow. Avoid arrows, circles, faces, logos, watermarks, anything that looks like a real NASA photo. It must read as a painted illustration. Scientific accuracy: this is a thought experiment, the real Moon is not coming closer.",
  "shortsCover": {
-  "frameSeconds": 45,
-  "text": "Faster than a day"
+  "frameSeconds": 30,
+  "text": "Too close"
  },
  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions."
 }

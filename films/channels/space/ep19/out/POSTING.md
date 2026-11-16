@@ -1,31 +1,31 @@
-# Posting sheet: One More Orbit S3, Part 7 of 8, "The Moon Rises in the West"
+# Posting sheet: One More Orbit S3, Part 7 of 8, "Then the Moon Comes Apart"
 
 ## YouTube Shorts
-Title: The Moon Rises in the West
+Title: Then the Moon Comes Apart
 
-Put the Moon closer than about 42,000 km and it circles faster than Earth turns, so it would rise in the west. A thought experiment.
+Inside about 18,000 km, tides can pull a Moon apart. The rock can spread into a ring.
 
-Closer than the synchronous distance, the Moon outruns the sky.
+Part 7 of the Moon film: what happens at the Roche limit, and why tonight's Moon is fine.
 
 Part 7 of 8. Full video on YouTube: How Close Can the Moon Get Before It Breaks?
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 #Shorts #space #moon #astronomy
 
 ## TikTok
-Put the Moon closer than about 42,000 km and it circles faster than Earth turns, so it would rise in the west. A thought experiment. Part 7 of 8. Full video on YouTube. #space #moon #learnontiktok #science
+Inside about 18,000 km, tides can pull a Moon apart. The rock can spread into a ring. Part 7 of 8. Full video on YouTube. #space #moon #learnontiktok #science
 
 ## Instagram
-Put the Moon closer than about 42,000 km and it circles faster than Earth turns, so it would rise in the west. A thought experiment.
+Inside about 18,000 km, tides can pull a Moon apart. The rock can spread into a ring.
 
-Closer than the synchronous distance, the Moon outruns the sky.
+Part 7 of the Moon film: what happens at the Roche limit, and why tonight's Moon is fine.
 
 Part 7 of 8. Full video on YouTube (link in bio).
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 ## Pinned comment
-Part 7 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Part 7 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
-Post the long film first, then one part a day.
+TODO: packaging.json (titles, thumbnails) for this part is not written; the coordinator makes the hook cover.
