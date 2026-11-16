@@ -524,3 +524,29 @@ Wherever the website, a receipt, an email, a text or a calendar invite names the
 **At launch:** set the email sender name to "Lumevina Aesthetics Spa" too (the FROM_EMAIL setting).
 
 **Texts are longer now.** The full name adds 15 characters, so a confirmation with its link may count as two texts, which roughly doubles its cost. To keep texts short, they can start with "Lumevina Spa:" instead; the rest of the site keeps the full name.
+
+## The iPhone app sample, brought up to date (Nov 16)
+
+The app sample on Everything Lumevina (`docs/app-sample`, the hub's app.html) now matches the website:
+
+- **Colours:** the warm neutral palette (ivory, soft white, stone, taupe, charcoal, near-black), with no pink or mauve. The Glow card is black with ivory type, and the tab bar is near-black with an ivory selected tab.
+- **The lock screen** shows the koi from the website, seen from above, as the wallpaper.
+- **The name:** Lumevina Aesthetics Spa, in the page title, the intro, the Glow card and the share text.
+- **Prices and times, from the website's menu:**
+  - Lumevina Custom Facial $200, 60 min
+  - Custom Facial + Dermaplaning $230, 60 min
+  - Ageless Grace Facial $240, 75 min
+  - New Clients Start Here $220, 60 min
+  - Monthly Acne Treatment $200, 70 min
+  - New Client Consultation + Treatment $220, 80 min
+  - Brazilian Wax $75, 40 min
+  - Brazilian Wax + Mini Vajacial $95, 50 min
+  - Underarm Wax $20, 20 min
+- **Membership:** Glow $175 and Ageless $225 (the founding rates). Glow covers the Custom Facial or the Monthly Acne Treatment. Ageless covers any of the facials, up to the Ageless Grace.
+- **Booking:** members book with no deposit, as the website's Glow perks say ("your card on file holds each booking"); there's no more 50% deposit. Points come after the visit, on what she pays.
+- **Hours:** the times offered follow her real hours (Tuesday 12 to 7, Wednesday and Thursday 11 to 7, Friday 10 to 5, Saturday 9:30 to 6).
+- **The shelf:** Le Mieux is no longer carried, so "Picked for your skin" shows the GlyMed+ Revitalizing Essence with NAD+ ($50, $45 for members). The Daily SPF 30 Plus is $36 ($32.40 for members).
+- **Rewards:** 1 point per $1 paid online or at the studio, and double points on Wednesdays.
+- **The app icon** (also the website's home-screen icon and favicon) had mauve line art. Its lines are now warm ivory on black.
+
+**Everything Lumevina itself** moved to the same palette. The card for the full website no longer mentions Skin School, and the card pictures were retaken from the pages as they are now.

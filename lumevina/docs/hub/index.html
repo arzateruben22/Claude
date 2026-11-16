@@ -1,6 +1,6 @@
 <title>Everything Lumevina</title>
 <meta name="color-scheme" content="light">
-<style>html, body { background: #F5F1EA; color-scheme: light; }
+<style>html, body { background: #F7F1EC; color-scheme: light; }
 body { transition: opacity .3s ease; }
 html.lv-enter body { opacity: 0; }</style>
 <script>document.documentElement.className += " lv-enter";</script>
@@ -8,18 +8,18 @@ html.lv-enter body { opacity: 0; }</style>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
 <style>
-/* Lumevina noir: the same black, porcelain cards and rose-to-sand light as the site */
+/* the website's warm neutral palette (Nov 16): warm ivory, soft white, stone, taupe, charcoal, near-black */
 :root {
   color-scheme: light;
-  --ground: #F5F1EA;
-  --card: #FFFFFF;
-  --card-hi: #F9F6F1;
-  --hair: rgba(74, 52, 42, 0.126);
-  --ink: #161412;
-  --ink-2: #4A342A;
-  --ink-3: #7D5A44;
-  --rose: #7D5A44;
-  --grad: linear-gradient(95deg, #7D5A44 0%, #161412 50%, #4A342A 100%);
+  --ground: #F6F4EF;
+  --card: #FBFAF7;
+  --card-hi: #F3F1EC;
+  --hair: rgba(64, 61, 57, 0.126);
+  --ink: #171717;
+  --ink-2: #403D39;
+  --ink-3: #6B625A;
+  --rose: #6B625A;
+  --grad: linear-gradient(95deg, #6B625A 0%, #171717 50%, #403D39 100%);
   --font: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
@@ -38,7 +38,7 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
 .card { grid-column: span 2; position: relative; display: flex; flex-direction: column; text-decoration: none; background: var(--card);
   border-radius: 24px; padding: 22px 22px 20px; overflow: hidden; box-shadow: inset 0 0 0 1px var(--hair);
   transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s, background-color .35s; }
-.card:hover { transform: translateY(-3px); background: var(--card-hi); box-shadow: inset 0 0 0 1px rgba(125, 90, 68, 0.3), 0 24px 60px -30px rgba(125, 90, 68, 0.45); }
+.card:hover { transform: translateY(-3px); background: var(--card-hi); box-shadow: inset 0 0 0 1px rgba(104, 98, 92, 0.3), 0 24px 60px -30px rgba(104, 98, 92, 0.45); }
 .card:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
 .card.big { grid-column: span 3; display: grid; grid-template-columns: 1fr 132px; gap: 18px; align-items: end; min-height: 250px; }
 .tag { font-size: .75rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--rose); }
@@ -54,27 +54,27 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
 .vers { display: grid; gap: 10px; margin-top: 14px; }
 .ver { display: block; text-decoration: none; color: var(--ink); background: var(--card-hi); border-radius: 14px; padding: 12px 14px;
   box-shadow: inset 0 0 0 1px var(--hair); transition: box-shadow .3s, background-color .3s; }
-.ver:hover { background: var(--card); box-shadow: inset 0 0 0 1px rgba(125, 90, 68, 0.35); }
+.ver:hover { background: var(--card); box-shadow: inset 0 0 0 1px rgba(104, 98, 92, 0.35); }
 .ver:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
 .ver b { display: block; font-size: .98rem; letter-spacing: -0.01em; }
 .ver > span { display: block; color: var(--ink-2); font-size: .88rem; line-height: 1.45; margin-top: 3px; }
 .ver .go { padding-top: 8px; color: var(--ink); font-size: .88rem; }
 .ver:hover .go span { transform: translateX(4px); }
 .phone { width: 132px; aspect-ratio: 9 / 19; border-radius: 22px; padding: 5px; background: #1d1d1f; align-self: end;
-  box-shadow: 0 0 0 1px #D7C9B8 inset, 0 24px 50px rgba(74, 52, 42, 0.27); transform: translateY(26px) rotate(-3deg); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+  box-shadow: 0 0 0 1px #D1CBC5 inset, 0 24px 50px rgba(63, 57, 51, 0.27); transform: translateY(26px) rotate(-3deg); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 .card:hover .phone { transform: translateY(18px) rotate(0); }
 .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 17px; }
 .grid .card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center;
-  background: radial-gradient(90% 140% at 100% 50%, rgba(125, 90, 68, 0.12), transparent 60%), var(--card); }
+  background: radial-gradient(90% 140% at 100% 50%, rgba(104, 98, 92, 0.12), transparent 60%), var(--card); }
 .pk { display: flex; align-items: flex-end; gap: 12px; padding-right: 6px; }
-.pk i { display: block; border: 1.5px dashed rgba(125, 90, 68, 0.55); border-radius: 6px; background: rgba(125, 90, 68, 0.06);
+.pk i { display: block; border: 1.5px dashed rgba(104, 98, 92, 0.55); border-radius: 6px; background: rgba(104, 98, 92, 0.06);
   transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 .pk i:first-child { border-radius: 12px; }
 .card:hover .pk i { transform: translateY(-5px); }
 .card:hover .pk i:nth-child(2) { transition-delay: .05s; } .card:hover .pk i:nth-child(3) { transition-delay: .1s; }
 .film { display: flex; gap: 6px; align-items: flex-end; }
-.film i { display: block; width: 34px; aspect-ratio: 9 / 16; border-radius: 7px; background: linear-gradient(170deg, #EDE5DA, #FFFFFF);
-  box-shadow: inset 0 0 0 1px rgba(125, 90, 68, 0.3); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.film i { display: block; width: 34px; aspect-ratio: 9 / 16; border-radius: 7px; background: linear-gradient(170deg, #ECE6E0, #FFFFFF);
+  box-shadow: inset 0 0 0 1px rgba(104, 98, 92, 0.3); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
 .film i:nth-child(2) { height: 72px; } .film i:nth-child(3) { background: var(--grad); color: #FFFFFF; }
 .card:hover .film i { transform: translateY(-5px); }
 .card:hover .film i:nth-child(2) { transition-delay: .05s; } .card:hover .film i:nth-child(3) { transition-delay: .1s; }
@@ -122,7 +122,7 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
   so book, join and tap around as much as you like.</p>
 
   <nav class="grid" aria-label="Everything for Lumevina">
-    <!-- two versions of the website side by side: the full one (js/site-config.js v3 + Skin School) and the
+    <!-- two versions of the website side by side: the full one (js/site-config.js v4: booking, membership, points) and the
          simpler one she runs now (v2: booking on GlossGenius, no membership or points) -->
     <div class="card big multi">
       <div class="copy">
@@ -132,7 +132,7 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
         <div class="vers">
           <a class="ver" href="site.html">
             <b>With booking and membership</b>
-            <span>Clients book here with a deposit, join a Glow Membership, earn Glow Points and take Skin School, plus the shop, gift certificates and Ask Lumevina.</span>
+            <span>Clients book here (members with no deposit), join a Glow Membership and earn Glow Points, plus the shop, gift certificates and Ask Lumevina.</span>
             <span class="go">Open this version <span aria-hidden="true">→</span></span>
           </a>
           <a class="ver" href="site-simple.html">
@@ -174,7 +174,7 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
       <div class="copy">
         <span class="tag">The iPhone app</span>
         <h2>Your spa on every client&rsquo;s phone.</h2>
-        <p>Flash openings as alerts, one-tap booking with a banked facial, Glow Rewards and the magic mirror.</p>
+        <p>Flash openings as alerts, one-tap booking with a banked facial, Glow Rewards and the EV surprise.</p>
         <span class="go">Open the app <span aria-hidden="true">→</span></span>
       </div>
       <div class="phone" aria-hidden="true"><img src="img/app.jpg" alt=""></div>
@@ -260,7 +260,7 @@ h1 { font-size: clamp(2.5rem, 7vw, 4.6rem); font-weight: 700; letter-spacing: -0
   </section>
 
   <footer class="fine">
-    <span>A private preview for Evelyn, updated October 22. Real payments, text reminders and the App Store come next.</span>
+    <span>A private preview for Evelyn, updated November 16. Real payments, text reminders and the App Store come next.</span>
     <span>Built by Ruben for Lumevina Aesthetics Spa, Woodland Hills.</span>
   </footer>
 </div>

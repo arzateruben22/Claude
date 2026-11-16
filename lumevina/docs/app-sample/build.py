@@ -30,6 +30,17 @@ def img(rel, width=None, height=None, fmt="WEBP", q=74):
     return uri(buf.getvalue(), "image/" + fmt.lower())
 
 
+def wallpaper(rel, width=760, aspect=390 / 844, q=72):
+    """The lock screen: a top-down water still turned upright (clockwise), cut to the phone's shape."""
+    im = Image.open(os.path.join(SITE, rel)).convert("RGB").transpose(Image.Transpose.ROTATE_270)
+    w = round(im.height * aspect)
+    left = max(0, min(im.width - w, round(im.width * 0.55 - w / 2)))   # the koi circle sits just right of centre
+    im = im.crop((left, 0, left + w, im.height)).resize((width, round(width / aspect)), Image.LANCZOS)
+    buf = io.BytesIO()
+    im.save(buf, "WEBP", quality=q)
+    return uri(buf.getvalue(), "image/webp")
+
+
 def raw(rel, mime):
     with open(os.path.join(SITE, rel), "rb") as f:
         return uri(f.read(), mime)
@@ -39,7 +50,7 @@ FIELDS = {
     "FONT": base64.b64encode(open(os.path.join(SITE, "fonts", "inter-var.woff2"), "rb").read()).decode(),
     "TYPOS_JS": open(os.path.join(SITE, "js", "ask-typos.js")).read(),   # shared with the website chat
     "ICON": raw("img/apple-touch-icon.png", "image/png"),
-    "LOGO": raw("img/logo-light.png", "image/png"),
+    "LOCK": wallpaper("img/water/koi.webp"),
     "S_CUSTOM": img("img/services/custom.webp", 480),
     "S_AGELESS": img("img/services/ageless.webp", 480),
     "S_DERMA": img("img/services/dermaplane.webp", 480),
@@ -48,7 +59,7 @@ FIELDS = {
     "S_BRAZIL": img("img/services/brazilian.webp", 480),
     "S_UNDERARM": img("img/services/underarm.webp", 480),
     "P_CLEANSER": img("img/retail/glymed-cleanser.webp", 336, 208),
-    "P_BOOSTER": img("img/retail/le-mieux-tgf-booster.webp", 336, 208),
+    "P_ESSENCE": img("img/products/glymed-plus-revitalizing-essence-nad.webp", 336, 208),
     "P_SPF": img("img/retail/daily-spf-30.webp", 336, 208),
 }
 
