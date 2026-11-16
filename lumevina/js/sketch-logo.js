@@ -15,24 +15,29 @@
   if (!img || !window.fetch || !window.DOMParser) return;
   var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var NS = "http://www.w3.org/2000/svg";
-  var GRAPHITE = "#4A3F38";
+  var GRAPHITE = "#2E2621";   /* deep, warm graphite: a soft 4B pencil */
 
   /* the pencil: a grain that lets the paper show through the line, and a
      slight wobble, as a hand never draws a perfect curve; the loose pass
      wobbles more, like the lighter first lines of a sketch */
   var FILTERS =
-    '<filter id="sk-pencil" x="-3%" y="-3%" width="106%" height="106%">' +
-      '<feTurbulence type="fractalNoise" baseFrequency="0.16" numOctaves="1" seed="4" result="grain"/>' +
-      '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.75" result="paper"/>' +
+    '<filter id="sk-pencil" x="-3%" y="-3%" width="106%" height="108%">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves="1" seed="4" result="grain"/>' +
+      '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.55" result="paper"/>' +
       '<feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="9" result="hand"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="hand" scale="7" xChannelSelector="R" yChannelSelector="G" result="drawn"/>' +
-      '<feComposite in="drawn" in2="paper" operator="in"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="hand" scale="4" xChannelSelector="R" yChannelSelector="G" result="drawn"/>' +
+      '<feComposite in="drawn" in2="paper" operator="in" result="line"/>' +
+      /* the shadow: the line pressed into the paper, a little below and soft */
+      '<feGaussianBlur in="line" stdDeviation="7" result="soft"/>' +
+      '<feOffset in="soft" dx="0" dy="9" result="low"/>' +
+      '<feColorMatrix in="low" type="matrix" values="0 0 0 0 0.18  0 0 0 0 0.13  0 0 0 0 0.1  0 0 0 0.32 0" result="shadow"/>' +
+      '<feMerge><feMergeNode in="shadow"/><feMergeNode in="line"/></feMerge>' +
     '</filter>' +
     '<filter id="sk-loose" x="-4%" y="-4%" width="108%" height="108%">' +
       '<feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="1" seed="2" result="grain"/>' +
       '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 1.6" result="paper"/>' +
       '<feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="2" seed="21" result="hand"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="hand" scale="16" xChannelSelector="G" yChannelSelector="R" result="drawn"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="hand" scale="10" xChannelSelector="G" yChannelSelector="R" result="drawn"/>' +
       '<feComposite in="drawn" in2="paper" operator="in"/>' +
     '</filter>';
 
@@ -59,13 +64,13 @@
     main.setAttribute("stroke", GRAPHITE);
     /* a slightly heavier hand than the traced lines, so the circle holds on a phone */
     Array.prototype.forEach.call(main.querySelectorAll("path"), function (p) {
-      p.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 6) * 1.35);
+      p.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 6) * 1.55);
     });
     main.setAttribute("filter", "url(#sk-pencil)");
     /* the lighter sketch line, a hair off the first */
     var loose = main.cloneNode(true);
     loose.setAttribute("filter", "url(#sk-loose)");
-    loose.setAttribute("opacity", "0.32");
+    loose.setAttribute("opacity", "0.24");
     loose.setAttribute("transform", "translate(5 3)");
     svg.insertBefore(loose, main);
     /* the words: graphite, shaded in last */
