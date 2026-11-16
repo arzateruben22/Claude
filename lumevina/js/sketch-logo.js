@@ -2,7 +2,8 @@
  *
  * The front page shows Evelyn's own logo (img/logo-full.svg: the lines traced
  * from her drawing, the words as shapes) as a pencil sketch: warm graphite
- * with a paper grain, a second, lighter sketch line just off the first, and,
+ * with a paper grain, a second, lighter sketch line just off the first, a
+ * very slight hint of pink chalk rubbed into the roses, and,
  * when the page opens, the lines drawing themselves in (the circle, then her
  * profile and the roses), with the words shaded in last. It stays still with
  * reduced motion. If the file can't be read, the plain logo (the <img> inside
@@ -33,6 +34,13 @@
       '<feColorMatrix in="low" type="matrix" values="0 0 0 0 0.18  0 0 0 0 0.13  0 0 0 0 0.1  0 0 0 0.32 0" result="shadow"/>' +
       '<feMerge><feMergeNode in="shadow"/><feMergeNode in="line"/></feMerge>' +
     '</filter>' +
+    '<filter id="sk-chalk" x="-6%" y="-6%" width="112%" height="112%">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.3" numOctaves="2" seed="13" result="grain"/>' +
+      '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.8 2.05" result="dust"/>' +
+      '<feGaussianBlur in="SourceGraphic" stdDeviation="9" result="soft"/>' +
+      '<feComposite in="soft" in2="dust" operator="in"/>' +
+    '</filter>' +
+    '<clipPath id="sk-roses"><ellipse cx="2262" cy="560" rx="340" ry="480"/></clipPath>' +
     '<filter id="sk-loose" x="-4%" y="-4%" width="108%" height="108%">' +
       '<feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="1" seed="2" result="grain"/>' +
       '<feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 1.6" result="paper"/>' +
@@ -73,6 +81,20 @@
     loose.setAttribute("opacity", "0.24");
     loose.setAttribute("transform", "translate(5 3)");
     svg.insertBefore(loose, main);
+    /* a very slight hint of pink chalk on the roses, under the graphite */
+    var chalk = main.cloneNode(true);
+    chalk.removeAttribute("filter");
+    chalk.setAttribute("stroke", "#E2A2A4");
+    Array.prototype.forEach.call(chalk.querySelectorAll("path"), function (p) {
+      p.setAttribute("stroke-width", (parseFloat(p.getAttribute("stroke-width")) || 9) * 7);
+    });
+    var chalkG = document.createElementNS(NS, "g");
+    chalkG.setAttribute("clip-path", "url(#sk-roses)");
+    chalkG.setAttribute("filter", "url(#sk-chalk)");
+    chalkG.setAttribute("class", "sketch-chalk");
+    chalkG.setAttribute("opacity", "0.36");
+    chalkG.appendChild(chalk);
+    svg.insertBefore(chalkG, loose);
     /* the words: graphite, shaded in last */
     var words = Array.prototype.slice.call(svg.children).filter(function (el) { return el.tagName.toLowerCase() === "path"; });
     var wordsG = document.createElementNS(NS, "g");
@@ -111,6 +133,7 @@
     plan(mainPaths, 0, 1);
     plan(loosePaths, 0.18, 1);
     wordsG.style.opacity = 0;
+    chalkG.style.opacity = 0;
     /* start on the next frame, once the starting state is painted */
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(function () {
@@ -121,6 +144,9 @@
         });
         wordsG.style.transition = "opacity 1.4s ease " + (at + 2.1) + "s";
         wordsG.style.opacity = 1;
+        /* the chalk is rubbed in last, once the roses are drawn */
+        chalkG.style.transition = "opacity 1.8s ease " + (at + 2.5) + "s";
+        chalkG.style.opacity = 0.36;
       });
     });
   }).catch(function () { /* the plain logo stays */ });
