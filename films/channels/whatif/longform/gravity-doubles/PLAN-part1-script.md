@@ -55,7 +55,7 @@ second as a teaser, then snaps back to hour one.]*
 **10. (like/follow, right after the payoff)** Doing the math with me? Tap like and follow.
 *(The YouTube file says "subscribe".)*
 
-**11. (cliffhanger)** Hour two: four times your weight. And standing up gets dangerous.
+**11. (cliffhanger)** Hour two: four times your weight. And by hour twenty… there's no Earth left. *(owner OK, 16 Nov)*
 
 About 100 words. That fits the "few words, let the visuals play out" style: the ball, the dial and the robot carry it.
 
@@ -83,7 +83,7 @@ Every claim stays OPEN until a person opens the source. Derivations carry no lin
 - **Doubling** (2¹⁰ = 1,024; 2²⁰ = 1,048,576): arithmetic.
 - **Weight doubles; bounce height halves** (h = v²/2g): derivation.
 - **Branches sag lower under twice the load:** derivation (said loosely: "a little lower").
-- **"Standing up gets dangerous" at 4 g:** OPEN. Needs an aerospace-medicine source on +Gz grey-out and blackout tolerance.
+- **"By hour twenty there's no Earth left":** OPEN. It stands on the white dwarf at hour 18.3 and the collapse by about hour 19.5 (below). ("Standing up gets dangerous" moved to Part 2.)
 - **Later parts:**
   - Sun is 332,946 Earth masses → hour 18.3.
   - Chandrasekhar limit about 1.4 Suns → hour 18.8.

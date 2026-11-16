@@ -34,9 +34,9 @@ numbers land.
 | 9 | Hour ten: **a thousand** times. Hour twenty: **a million.** | 3.4 s |
 | 10 | Doing the math with me? Tap like and **follow.** | 3.0 s |
 | 10b | Doing the math with me? Tap like and **subscribe.** *(the YouTube version)* | 3.0 s |
-| 11 | *(cliffhanger, a little slower, lift at the end)* Hour two: four times your weight. And standing up gets **dangerous.** | 3.9 s |
+| 11 | *(cliffhanger, a little slower, lift at the end)* Hour two: four times your weight. And by hour twenty… there's **no Earth left.** | 5.0 s |
 
-That's all of it, about a minute of reading. No "Part 1 of 8" line: odd parts don't have one now.
+Line 11 is new (the guide video still shows the old one, so read it from here). That's all of it, about a minute of reading. No "Part 1 of 8" line: odd parts don't have one now.
 
 *After you upload:* I cut the best takes, take out the breaths, lay your voice on the picture, and add the captions and the
 like/follow pop-up. No second render, so it's quick.
