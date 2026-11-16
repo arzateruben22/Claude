@@ -1,0 +1,28 @@
+duration 52.24 s SHORT of 61 s (flagged, not padded)
+true peak -2.0 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part2-contact.jpg
+    0.36  caption: 'Half the distance.'
+          speech : 'Half the distance now that'
+    1.50  caption: 'Now the ocean climbs.'
+          speech : 'Now the ocean climbs.'
+    9.91  caption: 'Half the distance.'
+          speech : 'Half the distance, twice.'
+   11.80  caption: 'Twice as wide.'
+          speech : 'Twice as wide.'
+   13.83  caption: '8× the tidal pull.'
+          speech : 'eight times the tidal pool.'
+   27.36  caption: 'Not a measured height.'
+          speech : 'not a measured height.'
+   33.45  caption: 'Just the idea: the whole ocean, lifted from above.'
+          speech : 'Just the idea. The whole ocean lifted from above.'
+   45.33  caption: 'And the night is about to change.'
+          speech : 'And the night is about to change.'
+   49.12  caption: 'Part 2 of 8.'
+          speech : 'Part 2 of 8.'
+   50.08  caption: 'Full video on YouTube.'
+          speech : 'Full video on YouTube.'
+caption = speech: OK
+QA PASS

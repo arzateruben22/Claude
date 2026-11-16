@@ -11,8 +11,8 @@ vo: Half the distance. Twice as wide. Eight times the tidal pull.
 vo: Not a measured height. Just the idea: the whole ocean, lifted from above.
 
 ## like/follow (86% of the runtime)
-no spoken ask in an even part (owner, 12 Nov 2026): the silent thumbs-up + bell pop-up only, in the pause before the cliffhanger
+no spoken ask in an even part (owner, 12-16 Nov 2026): the thumbs-up + bell pop-up only, in the pause before the cliffhanger
 
-## cliffhanger and closer
+## cliffhanger and closer (even part)
 vo: And the night is about to change.
 vo: Part two of eight. Full video on YouTube.

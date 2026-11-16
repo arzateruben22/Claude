@@ -50,7 +50,8 @@ function driftOverlay(t, G) {
 }
 function sceneComposite(t, d, ecl, moonAlpha, G) {
   const cam = 1.06 + 0.026 * Math.sin(t * 0.37) + 0.02 * (t / (TL.dur || 1)), ox = 12 * U * Math.sin(t * 0.43), oy = 9 * U * Math.sin(t * 0.31 + 1);   // overscan (>= 2.9%) is always larger than the largest pan, so the painting's edge never shows
-  const tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha, lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
+  let tide = clamp01(Math.log10(Math.pow(D0 / d, 3)) / Math.log10(900) + tideBoost(t)) * moonAlpha; if (TL.tides) tide = clamp01(tide * (0.55 + 0.45 * tideSweep(t)));   // the waterline sweeps up the sand and back
+  const lightx = 1 + (Math.pow(D0 / d, 2) - 1) * moonAlpha, mo = moonState(d, G); mo.cx += slideOff(t);
   ctx.save(); ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
   drawPlateWaves(IM[G.plate], 1, lapse(t), G, cam, ox, oy);
   // stars twinkle in the plate's sky (a few more than the painting has)
@@ -74,6 +75,10 @@ function sceneComposite(t, d, ecl, moonAlpha, G) {
     ctx.lineTo(W + 10, H + 10); ctx.closePath(); ctx.clip(); camT(cam, ox, oy); drawPlateWavesNoState(IM[G.flood], lapse(t), G); ctx.restore();
     ctx.save(); ctx.strokeStyle = "rgba(200,240,240,.55)"; ctx.lineWidth = 4 * U; ctx.beginPath(); for (let x = -10; x <= W + 10; x += 20) { const w = Math.sin(x / (230 * U) + t * 0.9) * amp * 0.5 + Math.sin(x / (97 * U) - t * 1.4) * amp * 0.25 + (1 - x / W) * 60 * U * (1 - tide); x === -10 ? ctx.moveTo(x, yTop + w) : ctx.lineTo(x, yTop + w); } ctx.stroke(); ctx.restore();
   }
+  if (TL.shadow && moonAlpha > 0.01) {   // our shadow on the sand (timeline.shadow): away from the Moon, darker as the moonlight grows (inverse square), a softer edge as its disc grows
+    const fg = figPos(), side = clamp01(Math.abs(mo.cx - fg.x) / (W * 0.5)) * Math.sign(fg.x - mo.cx || 1), L = (0.08 + 0.06 * (1 - 0.5 * side * side)) * H, al = (0.26 + 0.5 * clamp01(Math.log2(lightx) / 2.8)) * moonAlpha, bl = (1.5 + 7 * clamp01((mo.m - 1) / 3)) * U;
+    ctx.save(); camT(cam, ox, oy); ctx.filter = `blur(${bl}px)`; ctx.globalAlpha = al; ctx.fillStyle = "#03050f"; ctx.beginPath(); const ex = fg.x + side * L * 0.95, ey = fg.y + 0.012 * H + L * 0.12;
+    ctx.moveTo(fg.x - 10 * U, fg.y + 0.004 * H); ctx.quadraticCurveTo(lerp(fg.x, ex, 0.5), lerp(fg.y, ey, 0.5) - 7 * U, ex, ey); ctx.quadraticCurveTo(lerp(fg.x, ex, 0.5), lerp(fg.y, ey, 0.5) + 12 * U, fg.x + 10 * U, fg.y + 0.012 * H); ctx.closePath(); ctx.fill(); ctx.filter = "none"; ctx.restore(); }
   ctx.save(); camT(cam, ox, oy); ctx.drawImage(IM[MODE === "land" ? "figure-layer" : "figure-layer-9x16"], 0, 0, W, H); ctx.restore();   // the small figure stays upright on top of the moving sea
   // moonlight on the water: the silver road, wider and brighter as the light grows; the wet sand and the headland lit
   const bright = Math.max(clamp01(0.13 * Math.log2(lightx)), 0.07), roadW = Math.min(W * 0.5, mo.r * 0.9 + 90 * U);
@@ -96,6 +101,8 @@ function viewShift(t) {
 }
 
 // time-lapse: during a 'climb' beat the sea's own motion runs 6x faster (the phase stays continuous afterwards)
+// tides (timeline.tides): the water climbs the beach and falls back, the range following 1/distance^3 (in 'tide') and the period shortening with the orbit (T ~ distance^1.5, exaggerated: 24 s today, 4 s at the closest)
+function tideSweep(t) { let ph = 0; const dt = 0.25; for (let u = 0; u < t; u += dt) { const dd = Math.max(dVis(u), 17000), T = Math.max(4, 24 * Math.pow(dd / D0, 1.5)); ph += 6.283 * Math.min(dt, t - u) / T; } return 0.5 + 0.5 * Math.sin(ph - 1.2); }
 function lapse(t) { let e = 0; for (const b of (TL.beats || [])) if (b.kind === "climb") e += 5 * Math.max(0, Math.min(t, b.t1) - b.t0); return t + e; }
 
 // shooting stars (timeline.stars: [{t0, dur, x0, y0, x1, y1}] in fractions of the frame): a bright head with a fading tail, drawn in the sky
