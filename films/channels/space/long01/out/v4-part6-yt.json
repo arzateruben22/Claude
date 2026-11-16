@@ -12,21 +12,21 @@
   },
   {
    "id": "L16",
-   "file": "voice5/wav/L16.wav",
+   "file": "voice6/wav/L16.wav",
    "t": 9.82,
-   "dur": 3.23,
+   "dur": 3.5,
    "from": 0.0
   },
   {
    "id": "L16",
-   "file": "voice5/wav/L16.wav",
-   "t": 17.05,
-   "dur": 5.46,
-   "from": 3.23
+   "file": "voice6/wav/L16.wav",
+   "t": 17.32,
+   "dur": 5.19,
+   "from": 3.5
   },
   {
    "id": "L17",
-   "file": "voice5/wav/L17.wav",
+   "file": "voice6/wav/L17.wav",
    "t": 26.86,
    "dur": 3.76,
    "from": 0.0
@@ -62,43 +62,43 @@
    "spoken": "Watch it rise in the wrong place."
   },
   {
-   "t0": 10.02,
-   "t1": 11.29,
-   "text": "50,000.",
+   "t0": 9.85,
+   "t1": 11.5,
+   "text": "31,000.",
    "line": "L16",
-   "spoken": "Fifty thousand."
+   "spoken": "Thirty-one thousand."
   },
   {
-   "t0": 11.31,
-   "t1": 13.02,
+   "t0": 11.52,
+   "t1": 13.29,
    "text": "Nearly 8× wider.",
    "line": "L16",
    "spoken": "Nearly eight times wider."
   },
   {
-   "t0": 17.38,
-   "t1": 19.47,
+   "t0": 17.67,
+   "t1": 20.185,
    "text": "One lap takes about a day and a quarter,",
    "line": "L16",
    "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
   },
   {
-   "t0": 19.49,
-   "t1": 22.47,
+   "t0": 20.205,
+   "t1": 22.655,
    "text": "close to how fast the Earth turns.",
    "line": "L16",
    "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
   },
   {
-   "t0": 27.06,
-   "t1": 28.515,
-   "text": "42,000.",
+   "t0": 26.88,
+   "t1": 28.57,
+   "text": "26,000.",
    "line": "L17",
-   "spoken": "Forty-two thousand."
+   "spoken": "Twenty-six thousand."
   },
   {
-   "t0": 28.535,
-   "t1": 30.55,
+   "t0": 28.59,
+   "t1": 29.91,
    "text": "It hangs still.",
    "line": "L17",
    "spoken": "It hangs still."
@@ -147,11 +147,11 @@
    7.0
   ],
   [
-   26.764,
+   26.819,
    50000
   ],
   [
-   28.265,
+   28.32,
    42000,
    1.5
   ]
@@ -195,8 +195,8 @@
    "kind": "approach"
   },
   {
-   "t0": 13.05,
-   "t1": 17.05,
+   "t0": 13.32,
+   "t1": 17.32,
    "kind": "grow"
   },
   {
@@ -226,6 +226,8 @@
   "fade": 0.3
  },
  "units": "mi",
+ "shadow": true,
+ "tides": false,
  "breathe": true,
  "cta_at": 36.295,
  "cta_frac": 0.6,
