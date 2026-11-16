@@ -827,6 +827,79 @@ HC += 0.12 * stitch;
   return m;
 }
 
+// The sleeve's drape at the size it is seen. From the seat on a phone the forearm's sleeve is drawn about one pixel to the
+// millimetre (the iPhone's seat view, Low), so the weave (0.8 mm threads), the stitching and the geometry's shallow
+// folds (1-2 mm over a hand's width) were all below what a pixel shows, and the white cloth came out as one flat
+// shape. These are the creases a real shirt sleeve shows on a bent arm, 20-40 mm apart: two sets of diagonal drape
+// folds twisting up the forearm (soft ridges, sharp valleys), the slack bunching in rings into the crook of the elbow
+// on its inner side, the valleys a shade darker (less light reaches into them). A bump on the cloth's shading plus
+// that cavity tone, in the arm's own rest frame (each fragment's bind-pose position against its arm's wrist and
+// forearm axis), so the pattern rides with the sleeve as the arm moves and has no seam round the arm. The stiff
+// cuffs, the placket, the knit cuff and the rolled band stay as they are (only the sleeve's body, zone 0, past its
+// cuff). Cost: a few ALU per fragment, no texture.
+interface CreaseFrame { wrist: THREE.Vector3[]; axis: THREE.Vector3[]; up: THREE.Vector3[]; midX: number; elbow: number; cuff: number; amp: number }
+function creaseFrame(o: AccOptions, outfit: Outfit): CreaseFrame {
+  const A = o.anatomy, up = perp(A.foreUp, A.foreDir), female = A.scale < 1;
+  const v = (p: V3) => new THREE.Vector3(p[0], p[1], p[2]);
+  const sides = [0, 1];
+  return {
+    wrist: sides.map((s) => v(o.toCar(A.wrist, s))), axis: sides.map((s) => v(o.dirToCar(A.foreDir, s)).normalize()), up: sides.map((s) => v(o.dirToCar(up, s)).normalize()),
+    midX: (o.toCar(A.wrist, 0)[0] + o.toCar(A.wrist, 1)[0]) / 2, elbow: A.fore,
+    // where the body's creases start, from the sleeve's open end (mm): past the shirt's barrel cuff and the suit's knit
+    // cuff; on the work shirt past the roll (its band is 38 mm and the sleeve above starts under it)
+    cuff: outfit === 'shirt' ? (female ? 56 : 62) : outfit === 'suit' ? (female ? 46 : 52) : 40,
+    // the fire suit's heavier, ribbed cloth folds less sharply
+    amp: outfit === 'suit' ? 0.6 : 1,
+  };
+}
+function withCreases(m: THREE.MeshPhysicalMaterial, f: CreaseFrame) {
+  const u = {
+    uCrW: { value: f.wrist }, uCrA: { value: f.axis }, uCrU: { value: f.up },
+    uCrMid: { value: f.midX }, uCrElbow: { value: f.elbow }, uCrCuff: { value: f.cuff }, uCrAmp: { value: f.amp },
+  };
+  const prev = m.onBeforeCompile.bind(m), prevKey = m.customProgramCacheKey.bind(m);
+  m.customProgramCacheKey = () => prevKey() + '|creases';
+  m.onBeforeCompile = (sh, r) => {
+    prev(sh, r);
+    Object.assign(sh.uniforms, u);
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vRest;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvRest = position;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', /* glsl */ `#include <common>
+varying vec3 vRest; uniform vec3 uCrW[2]; uniform vec3 uCrA[2]; uniform vec3 uCrU[2]; uniform float uCrMid; uniform float uCrElbow; uniform float uCrCuff; uniform float uCrAmp;
+// the creases' height (mm, 0 at a valley's floor, up to about 1 on a ridge) and how much of it shows here
+float creaseH(vec4 cl, out float w) {
+  int k = vRest.x < uCrMid ? 1 : 0;
+  vec3 d = vRest - uCrW[k], ax = uCrA[k], up = uCrU[k];
+  float al = dot(d, ax) * 1000.0;                        // mm from the wrist toward the elbow
+  vec3 rr = d - ax * dot(d, ax);
+  float th = atan(dot(rr, cross(ax, up)), dot(rr, up));  // round the arm, 0 on its back
+  // broad soft puffs with narrow creases between them (|sin| to the quarter power, softened so a crease isn't a
+  // one-pixel line); the phases wander up the arm so the folds don't read as a coil spring
+  float wa = al / 7.0 + 2.0 * th + 0.6 + 1.3 * sin(al / 21.0 - th + 0.4) + 0.6 * sin(al / 9.0 + 3.0 * th);
+  float wb = al / 4.6 - 3.0 * th + 1.9 + 0.9 * sin(al / 17.0 + 2.0 * th);
+  float a = sin(wa), b = sin(wb);
+  float drape = pow(a * a + 0.02, 0.25), cross2 = pow(b * b + 0.03, 0.25);
+  float env = 0.55 + 0.45 * sin(al / 37.0 + th + 2.3);   // the folds come and go up the arm
+  float crook = exp(-pow((al - uCrElbow) / 48.0, 2.0)) * (0.5 - 0.5 * cos(th));
+  float rings = pow(pow(sin(al / 3.6 + 2.0 * th + 0.8 * sin(al / 11.0)), 2.0) + 0.03, 0.25);
+  w = smoothstep(4.0, 26.0, cl.z - uCrCuff) * (1.0 - step(0.5, cl.w)) * uCrAmp;
+  return (drape * 2.2 * env + cross2 * 0.9 * (1.0 - env) + rings * 1.4 * crook) / (2.2 * env + 0.9 * (1.0 - env) + 1.4 * crook);
+}`)
+      .replace('#include <normal_fragment_maps>', /* glsl */ `#include <normal_fragment_maps>
+{
+  float cw, ch = creaseH(vCloth, cw);
+  if (cw > 0.0) {
+    normal = bumpNormal(-vViewPosition, normal, ch * 3.2 * cw * 0.001, faceDirection);
+    diffuseColor.rgb *= 1.0 - 0.3 * cw * (1.0 - smoothstep(0.38, 0.95, ch));     // the creases a shade darker (it shows in the shade too)
+  }
+}`);
+  };
+  m.needsUpdate = true;
+  return m;
+}
+
 function dialTexture(kind: 'gold' | 'steel' | 'smart', time: [number, number, number], accent: number) {
   const n = 512, c = document.createElement('canvas'); c.width = c.height = n;
   const g = c.getContext('2d')!;
@@ -979,7 +1052,7 @@ export function buildAccessories(o: AccOptions): Accessories {
     if (!geo) { mat.dispose(); return; }
     const m = new THREE.SkinnedMesh(geo.clone(), mat); m.name = name; meshes.push(m);
   };
-  mk(G.cloth, clothMaterial(G.sleeveColor, G.outfit, q), 'sleeves');
+  mk(G.cloth, withCreases(clothMaterial(G.sleeveColor, G.outfit, q), creaseFrame(o, G.outfit)), 'sleeves');
   mk(G.patch, new THREE.MeshPhysicalMaterial({ map: patchTexture(G.sleeveColor, accent), vertexColors: true, roughness: 0.78, metalness: 0, sheen: 0.15, sheenColor: new THREE.Color(accent), sheenRoughness: 0.6, envMapIntensity: 0.6 }), 'patch');
   mk(G.metal, accMaterial(), 'metal');
   if (look.watch) {
