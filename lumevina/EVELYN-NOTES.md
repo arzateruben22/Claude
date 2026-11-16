@@ -656,3 +656,7 @@ The koi are gone from everything:
 - **The link-preview picture** (`img/share.jpg`, what shows when the site is shared in a text or on social media) is now the open water with her logo in near-black. `node scripts/build-share-image.cjs` remakes it.
 - **The koi files** are deleted from the site and from `marketing/source/`: `img/water/koi.webp`, `koi.mp4`, `water-koi.png`, `koi-two.mp4`. They're still in the repository's history if they're ever wanted back. The previews no longer use the koi clip.
 - **Everything Lumevina's** card pictures are retaken.
+
+## Services: the paragraph under "Your glow, on your schedule" (Nov 16)
+
+Now: "Explore treatments and pricing below. Tap 'Book' to view availability and book through GlossGenius. Any required deposit will be listed with the service. Gift certificates are available in any amount." ("Gift certificates" links to the gift card.) "Through GlossGenius" shows only while the Book buttons open GlossGenius. Once booking moves to the website, the sentence just says "book".
