@@ -721,11 +721,50 @@ A short scripted ballistic hop:
   - **Not covered headless.** `tests/dynamics.mjs` has no planner coverage (it never calls `planHop` or `hop()`): the
     hop is proven only in the browser, by the suite's abilities group and `tests/out/hyper-thrust/thrust.mjs`.
 
+- **A bigger hop (owner, 2026-11-16: "make the thrust jump be higher by about the measurement of being able to hop over
+  2 cars at 200 mph").** The numbers (`HOP`, `defaultPeak`, `hopCostFor`, `hopNeedAt` in `HyperAbility.ts`):
+  - **The default hop grows with the speed.** With nothing to clear it was 1.5 m at any speed (1.11 s up: at 200 mph
+    99 m of road, about 65 m on traffic at 30 m/s, so one car). Now its peak rises linearly from 1.5 m at 30 mph
+    (`peakV0`) to **3.5 m at 200 mph** (`peakHi`, `peakV1`) and stays there, in its natural ballistic time: 1.85 m and
+    1.23 s at 60 mph, 2.56 m and 1.44 s at 120 mph, **3.5 m and 1.69 s at 200 mph** (151 m of road, about 100 m on
+    traffic at 30 m/s: two sedans at the traffic's own following distance, 3 m + 1.25 s = 40.5 m bumper to bumper at
+    30 m/s). Never below the old 1.5 m.
+  - **The planner starts from that height.** `arcFor` takes the lowest peak to try (`base`); `planHop` tries the
+    default height first and, when no arc from there fits or the one that does is squeezed short (falling at over 1.3
+    g, a 3.5 m arc pulled down in about a second to land short of a vehicle), the lowest arc from 1.5 m when it falls
+    more gently: the same honest checks, a lower arc.
+  - **The longest arc stays 2.5 s** (`maxT`; `maxPeak` 7.5 m). At 200 mph that clears two sedans, SUVs or vans at the
+    traffic's following distance with the first up to 55 m ahead, all but a van pair at 35 m/s from 55 m. 2.8 s was
+    tried: it reached that pair too, but in natural traffic at +30 m/s from 50 m its longest arcs (2.5-2.6 s) came down
+    tight on the next vehicle, and one landing hit it 1.0 s after touchdown (the suite's natural-traffic check, seed 12).
+  - **Drag in the air is planned for.** The valve stays shut in the air, and the hypercar's drag at 200 mph takes
+    1.8 m/s every second (3.5 m of road over a 2 s hop). The first wide hops came down 0.34 m over the second sedan's
+    roof where 0.35 was planned; `planHop` now takes `ad` (the car's drag over its mass at take-off, from `Game`) and
+    every closing time allows for it.
+  - **The gas scales with the arc.** `hopCostFor(peak, T)`: 35 % of the tank for the old 1.5 m hop's take-off (5.42 m/s
+    upward), in proportion to the take-off's vertical speed above that, at most 1.6× (56 %). The default hop costs 39 %
+    at 60 mph, 46 % at 120 mph, 53 % at 200 mph; a planned arc that asks for more than the tank holds is refused
+    ("Thrust Hop: tank low", no gas spent). "Hop ready" means the tank holds the default hop's gas at this speed
+    (`hopNeedAt`, never under 40 %).
+  - **The landing.** The camera's dip is unchanged (12 cm, gone in half a second); its random shake on touchdown is
+    capped at the old 1.5 m hop's level (0.4), so the bigger landing (up to 8 m/s down) settles on the dip and the
+    springs, not on more jitter. The seat camera rides with the car (rigid in the cabin); the chase camera follows the
+    rise with its own 8/s smoothing.
+  - **Measured in the planner** (Node, the same `planHop` the game runs, with the drag; each arc then flown against the
+    vehicles at constant speed with the drag; the car at 200 mph, pairs at the traffic's following distance, the first
+    15/25/40/55 m ahead): sedans at 30 m/s cleared by at least 0.56-0.69 m (peaks 3.5-3.55 m, 1.46-2.29 s), SUVs
+    0.52-0.68 m, vans 0.48-0.83 m (peaks 3.75-5.85 m, up to 2.50 s); pairs at 35 m/s (47 m apart) 0.53-0.82 m, except
+    the van pair from 55 m ("No room to land"). Three sedans with the first 20 m ahead: 4.15 m / 2.44 s; from 40 m, and
+    **four** in a row from 20 or 40 m: refused "No room to land" (no arc clears them all, and there is no room to come
+    down between). At 134 mph, two sedans with the first 40 m ahead: refused "No room to land" (the closing speed is too
+    low to pass both in 2.5 s); from 20 m a 3.3 m arc over the first with "traffic on landing". The browser checks are
+    in the abilities group (PROJECT_OC_PROGRESS.md, 2026-11-16).
+
 ### 6.5 Controls
 
 | Device | Cold Thrust | Thrust Hop |
 | --- | --- | --- |
-| Phone | One **THRUST** button beside the driver's ability, over BRAKE (in `HUD.tsx`, shown only when the ability is live; held sideways, the two sit low in the middle). Thrust starts after 120 ms of holding (at once under 5 m/s), so a tap isn't a burst | A second tap within 300 ms. The button's ring is the tank gauge |
+| Phone | A **THRUST** key over GAS, the driver's ability over BRAKE (since 2026-11-16: keys in the pedals' own style, each as wide as its pedal and 10 px above it; held sideways, THRUST over the ability in a column left of BRAKE). In `HUD.tsx`, shown only when the ability is live. Thrust starts after 120 ms of holding (at once under 5 m/s), so a tap isn't a burst | A second tap within 300 ms. The bar along the key's foot is the tank |
 | Keyboard | Hold **Left Shift** | Double-tap Left Shift, or **J** (Shift is unused today; F stays the driver's ability) |
 | Gamepad | Hold D-pad up (button 12; unused today) | Double-tap D-pad up |
 
@@ -744,6 +783,13 @@ A short scripted ballistic hop:
   - The hop: a whoosh, then a landing thump.
 - **HUD.** A tank arc beside the speed ("THRUST 84 %"), a "GROUND LOCK" light while the fans run, "HOP READY" or the
   reason it's blocked, and the "Unleashed" chip.
+  - **As built since 2026-11-16 (owner: "make the thrust option and display more seamlessly integrated").** In the
+    seat view there is no HUD box: the car's own driver display (`car-dash.ts` hyperDash) shows THRUST left of the
+    speed: the tank's percentage large, its bar with the hop's 40 % mark, a GROUND LOCK chip (filled while the fans
+    run) and the hop's state (HOP READY, HOP CHARGING, HOP: TANK LOW, AIRBORNE, or for 2.5 s the reason a request was
+    refused). The profile, TCS and ABS move to the right block's foot (the trip and top speed are on the HUD). In the
+    chase and hood views a slim strip by the speed (`.hud-thr`: THRUST, the bar, the figure, LOCK, the hop): over the
+    speed block on a desktop, a line of the plate on a phone. The v19 box floated over the wheel's hub and cluster.
 - **Cockpit.** A 0–700 bar pressure gauge on the `'hyper'` display, the ambient strip pulsing blue while thrusting.
 
 ## 7. The Founder Edition exclusives
