@@ -16,7 +16,7 @@ answered: ""
 **Type:** Consults  
 **Size:** 15 minutes, by video or phone  
 **Price:** $35  
-**On the label:** Evelyn looks at your skin and what you use, builds the routine, and unlocks the actives you need. The $35 comes back as a code on your first order.
+**On the label:** Evelyn looks at your skin and what you use, and builds your routine with you. The $35 comes back as a code on your first order.
 
 Label facts above come from the product's own packaging. Everything below is Evelyn's.
 
