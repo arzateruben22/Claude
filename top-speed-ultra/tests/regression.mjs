@@ -4,7 +4,7 @@
 //   npm run build && npm test             every group
 //   npm test -- --only=modes,survival     some groups (boot, interchanges, survival, modes, abilities,
 //                                         progression, render, phone, nav-hud, launch, store, store-live, venues,
-//                                         venues-trips)
+//                                         venues-trips, venues-run)
 //   npm test -- --slow                    also render the High and Ultra presets (minutes per frame in SwiftShader)
 //   npm test -- --only=phone --check=wheel  in those groups, only the checks whose names contain that text (and the
 //                                         group's page-error check); the group still opens its page
@@ -4161,6 +4161,191 @@ await group('venues-trips', async (use) => {
     writeFileSync(path.join(OUT, 'venues-roundtrips.json'), JSON.stringify(rows, null, 1));
     return `heap ${base.heapMB} MB before, then ${h.join(', ')} MB after each trip; game renderer geometries ${g.map((x) => x.geometries).join('/')} (scene graph ${g.map((x) => x.sceneGeo).join('/')}), textures ${g.map((x) => x.textures).join('/')}, programs ${g.map((x) => x.programs).join('/')}; venue renderer at ready ${rows.map((r) => `${r.venue.geometries} geo ${r.venue.textures} tex`).join(', ')}`;
   });
+});
+// Running on foot (owner, 2026-11-15: "just make it run / speed walk seamlessly for both devices so maybe for computer
+// it comes with just double tapping and holding the up button"), in both venues mounted in the game (lot57/input.ts,
+// player.ts, run.ts). Real key events and touch pointer events reach the venue's own Input; the venue's frame loop is
+// frozen while they're read (so a 300 ms double-tap window isn't stretched by a software frame), and the body is
+// stepped on the live input with runWalk (unrendered, as a frame steps it). Then real frames for the hint and the FOV.
+await group('venues-run', async (use) => {
+  const { page } = await use({ settings: { time: 'sunset' } });
+  await drive(page, 'Free Drive');
+  for (const [venue, ramp] of [['Lot 57', 1142], ['Stoppage Time', 124]]) {
+    const tag = venue;
+    let ok = false;
+    await check(`run: ${tag}: mounted in the game`, async () => {
+      const a = await game(page, (r) => { const g = window.__game; const p = g.net.paths[r]; g.placeCar(p, r === 1142 ? 290 : p.len / 2, 0, 0); return g.arriveVenue(); }, ramp);
+      expect(a, 'no arrival');
+      await page.waitForTimeout(1500);
+      const o = await getOut(page);
+      expect(o.ok && o.ready && o.venue?.name === venue, JSON.stringify(o));
+      ok = true;
+      return `ready in ${o.s.toFixed(1)} s`;
+    });
+    if (!ok) continue;
+    const O = (f, a) => page.evaluate(f, a);
+    const gap = () => page.waitForTimeout(450);           // longer than the double-tap window between two sequences
+    // the venue's own frames (the game's loop is on hold while you're on foot)
+    const vframes = async (n) => { const f0 = await O(() => window.__onfoot.frames); await page.waitForFunction((t) => window.__onfoot.frames >= t, f0 + n, { timeout: FRAMES_MS }); };
+    await O(() => { window.__onfoot.freeze(true); window.__onfoot.view('first'); });
+    await page.focus('#onfoot-host canvas').catch(() => {});
+    // the walk: where the speed first reaches `v` (s), in a 0.05 s sample list
+    const reach = (sp, v, dir = 1) => { const i = sp.findIndex((x) => (dir > 0 ? x >= v - 0.02 : x <= v + 0.02)); return i < 0 ? null : +((i + 1) * 0.05).toFixed(2); };
+    await check(`run: ${tag}: a single W press walks (1.4 m/s); double-tap and hold W runs (4.5 m/s outdoors), D held with it keeps the run, releasing W drops to a walk within 0.3 s`, async () => {
+      const lane = await O(() => window.__onfoot.runLane(false, 12));
+      expect(lane && !lane.indoors, `no outdoor lane: ${JSON.stringify(lane)}`);
+      await page.keyboard.down('w');
+      const one = await O(() => window.__onfoot.runWalk(1.0));
+      await page.keyboard.up('w'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      await O(() => window.__onfoot.runLane(false, 12));
+      await page.keyboard.press('w'); await page.keyboard.down('w');
+      const two = await O(() => window.__onfoot.runWalk(1.0));
+      await page.keyboard.down('d');
+      const diag = await O(() => window.__onfoot.runWalk(0.4));
+      await page.keyboard.up('w');
+      const back = await O(() => window.__onfoot.runWalk(0.6));
+      await page.keyboard.up('d'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      expect(Math.abs(one.end.speed - 1.4) < 0.02 && !one.end.stick.run && one.end.by === '', `one press: ${JSON.stringify(one.end)}`);
+      expect(Math.abs(two.end.speed - 4.5) < 0.02 && two.end.by === 'double' && !two.end.indoors, `double-tap: ${JSON.stringify(two.end)}`);
+      const up = reach(two.speeds, 4.5);
+      expect(up !== null && up <= 0.5, `reached 4.5 m/s at ${up} s: ${two.speeds.join(' ')}`);
+      expect(diag.end.by === 'double' && Math.abs(diag.end.speed - 4.5) < 0.05, `W+D: ${JSON.stringify(diag.end)}`);
+      const down = reach(back.speeds, 1.4, -1);
+      expect(down !== null && down <= 0.3 && Math.abs(back.end.speed - 1.4) < 0.02 && !back.end.stick.run, `released W (D held): ${down} s, ${back.speeds.join(' ')}`);
+      return `one press ${one.end.speed} m/s; double-tap and hold ${two.end.speed} m/s (4.5 reached in ${up} s from a standstill: ${two.speeds.slice(0, 10).join(' ')}); W+D ${diag.end.speed} m/s still '${diag.end.by}'; W released with D held: ${back.end.speed} m/s within ${down} s`;
+    });
+    await check(`run: ${tag}: Shift held runs; indoors the run is a speed walk (2.6 m/s); near people it eases to a walk`, async () => {
+      await O(() => window.__onfoot.runLane(false, 12));
+      await page.keyboard.down('Shift'); await page.keyboard.down('w');
+      const sh = await O(() => window.__onfoot.runWalk(1.0));
+      await page.keyboard.up('Shift');
+      const rel = await O(() => window.__onfoot.runWalk(0.5));
+      await page.keyboard.up('w'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      const lane = await O(() => window.__onfoot.runLane(true, 6));
+      expect(lane && lane.indoors, `no indoor lane: ${JSON.stringify(lane)}`);
+      await page.keyboard.down('Shift'); await page.keyboard.down('w');
+      const ind = await O(() => window.__onfoot.runWalk(0.8));
+      await page.keyboard.up('w'); await page.keyboard.up('Shift'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      const near = await O(() => { const o = window.__onfoot; o.runLane(false, 12); const a = o.runNear(1.0); o.runLane(false, 12); const b = o.runNear(1.85); o.runLane(false, 12); const c = o.runNear(4); return [a, b, c]; });
+      expect(Math.abs(sh.end.speed - 4.5) < 0.02 && sh.end.by === 'shift', `Shift: ${JSON.stringify(sh.end)}`);
+      const down = reach(rel.speeds, 1.4, -1);
+      expect(down !== null && down <= 0.3 && Math.abs(rel.end.speed - 1.4) < 0.02, `Shift released: ${down} s ${rel.speeds.join(' ')}`);
+      expect(ind.end.indoors && Math.abs(ind.end.speed - 2.6) < 0.02, `indoors: ${JSON.stringify(ind.end)}`);
+      expect(near[0].top <= 1.41 && near[1].top > 1.5 && near[1].top < 4.4 && Math.abs(near[2].top - 4.5) < 0.02, `near people: ${JSON.stringify(near)}`);
+      return `Shift ${sh.end.speed} m/s, released: ${rel.end.speed} m/s within ${down} s; indoors ${ind.end.speed} m/s (target ${ind.end.target}); someone 1.0 m away: top ${near[0].top} m/s, 1.85 m: ${near[1].top}, 4 m: ${near[2].top}`;
+    });
+    await check(`run: ${tag}: the phone stick: double-tap and hold runs at once (RUN cue on the stick), easing back walks within 0.3 s; a push to the edge runs, easing in walks`, async () => {
+      await O(() => window.__onfoot.runLane(false, 12));
+      const r = await O(async () => {
+        const o = window.__onfoot, c = document.querySelector('#onfoot-host canvas'), x = 110, y = 560;
+        const P = (t, id, X, Y) => (t === 'pointerdown' ? c : window).dispatchEvent(new PointerEvent(t, { pointerId: id, pointerType: 'touch', clientX: X, clientY: Y, bubbles: true, cancelable: true, isPrimary: true }));
+        // (the cue as drawn, with its 0.15 s fade held off so the computed style is the end state)
+        const st = document.querySelector('#onfoot-host #stick'), tg = st.querySelector('.runtag');
+        st.style.transition = 'none'; tg.style.transition = 'none';
+        const tagShown = () => ({ stick: getComputedStyle(st).display !== 'none', run: st.classList.contains('run'), tag: Number(getComputedStyle(tg).opacity) > 0.5 && tg.textContent === 'RUN', glow: getComputedStyle(st).boxShadow !== 'none' });
+        // one tap, then a hold within 300 ms where the stick floated
+        P('pointerdown', 71, x, y); P('pointerup', 71, x, y);
+        await new Promise((res) => setTimeout(res, 110));
+        P('pointerdown', 72, x + 5, y + 4);
+        const held = o.runPoll(), cue = tagShown(), w1 = o.runWalk(1.0);
+        P('pointermove', 72, x + 5, y - 50); const out = o.runPoll();                     // steer it out: still a run
+        P('pointermove', 72, x + 5, y - 10); const eased = o.runPoll(), w2 = o.runWalk(0.6);   // ease it back: a walk
+        const cue2 = tagShown();
+        P('pointerup', 72, x + 5, y - 10); o.runWalk(0.4);
+        await new Promise((res) => setTimeout(res, 400));
+        // a plain touch pushed to the edge (60 px of a 56 px stick), then eased in to half
+        P('pointerdown', 73, x, y); P('pointermove', 73, x, y - 25); const half0 = o.runPoll();
+        P('pointermove', 73, x, y - 62); const edge = o.runPoll(), w3 = o.runWalk(1.0), cue3 = tagShown();
+        P('pointermove', 73, x, y - 30); const w4 = o.runWalk(0.6);
+        P('pointerup', 73, x, y - 30); const lifted = o.runPoll(); o.runWalk(0.4);
+        st.style.transition = ''; tg.style.transition = '';
+        return { held, cue, w1: w1.end, out, eased, w2: w2.speeds, w2end: w2.end, cue2, half0, edge, w3: w3.end, cue3, w4: w4.speeds, w4end: w4.end, lifted };
+      });
+      expect(r.held.stick.run && r.held.by === 'double' && r.held.cue && r.held.stickClass.includes('run') && r.cue.stick && r.cue.run && r.cue.tag && r.cue.glow, `double-tap hold: ${JSON.stringify(r.held)} ${JSON.stringify(r.cue)}`);
+      expect(Math.abs(r.w1.speed - 4.5) < 0.02, `held: ${r.w1.speed} m/s`);
+      expect(r.out.stick.run && !r.eased.stick.run && !r.eased.cue && !r.cue2.tag && !r.cue2.run && !r.cue2.glow, `eased back: ${JSON.stringify({ out: r.out.by, eased: r.eased, cue2: r.cue2 })}`);
+      const walkAt = r.w2.findIndex((v) => v <= 1.42);
+      expect(walkAt >= 0 && (walkAt + 1) * 0.05 <= 0.3 + 1e-9, `easing back: ${r.w2.join(' ')}`);
+      expect(!r.half0.stick.run && r.edge.stick.run && r.edge.by === 'edge' && r.edge.cue && r.cue3.tag && Math.abs(r.w3.speed - 4.5) < 0.02, `edge: ${JSON.stringify({ half0: r.half0.stick, edge: r.edge, w3: r.w3.speed })}`);
+      const walk4 = r.w4.findIndex((v) => v <= 1.42);
+      expect(walk4 >= 0 && (walk4 + 1) * 0.05 <= 0.3 + 1e-9 && !r.w4end.stick.run && !r.lifted.cue, `edge eased in: ${r.w4.join(' ')} ${JSON.stringify(r.lifted)}`);
+      return `double-tap and hold: run at once ('${r.held.by}', cue on: class "${r.held.stickClass}", glow and RUN tag), ${r.w1.speed} m/s; eased back: walk (${r.w2end.speed} m/s) within ${((walkAt + 1) * 0.05).toFixed(2)} s, cue off; edge push: '${r.edge.by}' ${r.w3.speed} m/s with the cue; eased to half: ${r.w4end.speed} m/s within ${((walk4 + 1) * 0.05).toFixed(2)} s`;
+    });
+    await check(`run: ${tag}: a gamepad: a full stick push runs, a half push walks, L3 toggles the run (off again at the centre)`, async () => {
+      await O(() => window.__onfoot.runLane(false, 12));
+      const r = await O(() => {
+        const o = window.__onfoot, keep = navigator.getGamepads;
+        const pad = { connected: true, axes: [0, 0, 0, 0], buttons: Array.from({ length: 17 }, () => ({ pressed: false, value: 0 })) };
+        navigator.getGamepads = () => [pad];
+        try {
+          const at = (ly, l3 = false) => { pad.axes[1] = ly; pad.buttons[10].pressed = l3; };
+          at(-1); const full = o.runWalk(1.0).end;
+          at(-0.6); const half = o.runWalk(0.6).end;
+          at(-0.6, true); o.runPoll(); at(-0.6, false); const l3 = o.runWalk(1.0).end;
+          at(0); o.runWalk(0.4); at(-0.6); const again = o.runWalk(0.6).end;
+          at(0); o.runWalk(0.4);
+          return { full, half, l3, again };
+        } finally { navigator.getGamepads = keep; }
+      });
+      expect(r.full.by === 'pad' && Math.abs(r.full.speed - 4.5) < 0.02, `full push: ${JSON.stringify(r.full)}`);
+      expect(!r.half.stick.run && r.half.speed < 1.45, `half push: ${JSON.stringify(r.half)}`);
+      expect(r.l3.by === 'pad' && Math.abs(r.l3.speed - 4.5) < 0.02, `L3: ${JSON.stringify(r.l3)}`);
+      expect(!r.again.stick.run && r.again.speed < 1.45, `after the centre: ${JSON.stringify(r.again)}`);
+      return `full push ${r.full.speed} m/s; half push ${r.half.speed} m/s; L3 with a half push ${r.l3.speed} m/s; after the stick came back to the centre a half push walks (${r.again.speed} m/s)`;
+    });
+    await check(`run: ${tag}: the gait: one walk clip sped up continuously into the run (no clip switch, no step where the mesh pops)`, async () => {
+      await O(() => { window.__onfoot.runLane(false, 14); window.__onfoot.view('third'); });
+      await page.keyboard.down('w');
+      const walk = await O(() => window.__onfoot.runGait(1.0));
+      await page.keyboard.up('w'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      await O(() => window.__onfoot.runLane(false, 14));
+      await page.keyboard.down('w'); await O(() => window.__onfoot.runGait(0.6));      // walking first
+      await page.keyboard.up('w'); await page.keyboard.down('w');                       // then the double-tap, held
+      const tr = await O(() => window.__onfoot.runGait(1.4));
+      await page.keyboard.up('w'); await O(() => { window.__onfoot.runWalk(0.5); window.__onfoot.view('first'); }); await gap();
+      expect(walk && tr && tr.bones > 10, 'no avatar');
+      const rows = tr.rows, anims = [...new Set(rows.map((x) => x.anim))];
+      const dk = Math.max(...rows.slice(1).map((x, i) => Math.abs(x.k - rows[i].k)));
+      const jerk = (rs) => Math.max(...rs.slice(1).map((x, i) => Math.abs(x.moveCm - rs[i].moveCm)));
+      const steady = rows.filter((x) => x.speed >= 4.49), trans = rows.filter((x) => x.speed < 4.49);
+      expect(anims.join() === 'walk' && rows.at(-1).speed >= 4.49 && rows[0].speed < 2, `clips ${anims.join()}, speeds ${rows[0].speed} -> ${rows.at(-1).speed}`);
+      // (the scale follows the eased speed: at most RUN_UP x STEP / 1.25 = 0.138 a step, the 0.3 s ease; a switch would jump)
+      expect(dk <= 0.17, `the clip's time scale jumped by ${dk} in one step`);
+      const jt = jerk(trans), js = jerk(steady), jw = jerk(walk.rows.filter((x) => x.speed >= 1.39));
+      expect(steady.length > 10 && jt <= Math.max(js, jw) * 1.25 + 0.5, `the bones' step-to-step change: ${jt} cm in the transition, ${js} cm at a steady run, ${jw} cm at a walk`);
+      return `${tr.bones} bones; clip '${anims.join()}' throughout, time scale ${rows[0].k} -> ${rows.at(-1).k} (largest step ${dk.toFixed(3)}); the bones' largest step-to-step change ${jt.toFixed(2)} cm over the ${trans.length}-step transition vs ${js.toFixed(2)} cm at a steady run and ${jw.toFixed(2)} cm at a walk`;
+    });
+    await check(`run: ${tag}: the one-time hint ('Double-tap and hold W to run') after a little walking, once; the touch words; the first-person FOV eases out with the run (real frames), not with reduced motion`, async () => {
+      // (the hint's clock runs with the unrendered steps: frames here can take seconds each)
+      await O(() => { const o = window.__onfoot; o.runHint(false, null, true); o.runLane(false, 30); o.hint(false); });
+      await page.keyboard.down('w');
+      const w1 = await O(() => window.__onfoot.runWalk(2.4, true));
+      await page.keyboard.up('w'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      const seen = await O(() => { const o = window.__onfoot; o.runHint(false); o.runLane(false, 30); return localStorage.getItem('oc.onfoot.runHint'); });
+      await page.keyboard.down('w');
+      const w2 = await O(() => window.__onfoot.runWalk(2.4, true));
+      await page.keyboard.up('w'); await O(() => window.__onfoot.runWalk(0.5)); await gap();
+      const touch = await O(() => { const o = window.__onfoot, t = o.runHint(true, 'touch').label; o.runHint(false); o.runLane(false, 30); return t; });
+      await page.keyboard.press('w'); await page.keyboard.down('w');
+      await O(() => window.__onfoot.runWalk(1.0));
+      await O(() => window.__onfoot.freeze(false)); await vframes(2);
+      const fov = await O(() => ({ ...window.__onfoot.run(), base: innerHeight > innerWidth ? 78 : 62 }));
+      await O(() => window.__onfoot.reducedMotion(true)); await vframes(2);
+      const rm = await O(() => { const o = window.__onfoot; o.freeze(true); return { ...o.run(), bob: o.bobRange() }; });
+      await page.keyboard.up('w');
+      await O(() => { const o = window.__onfoot; o.reducedMotion(false); o.runWalk(0.5); });
+      expect(w1.end.hint.shown && w1.end.hint.label === 'Double-tap and hold W to run' && seen === '1', `hint: ${JSON.stringify(w1.end.hint)} stored ${seen}`);
+      expect(!w2.end.hint.shown && w2.end.hint.done, `shown again: ${JSON.stringify(w2.end.hint)}`);
+      expect(touch === 'Double-tap and hold to run', `touch words: ${touch}`);
+      expect(fov.view === 'first' && fov.amount > 0.99 && Math.abs(fov.fov - (fov.base + 5)) < 0.05 && Math.abs(rm.fov - fov.base) < 0.05 && rm.bob === 0 && rm.amount > 0.99, `fov: running ${fov.fov} (base ${fov.base}), reduced motion ${rm.fov} (bob ${rm.bob}, run ${rm.amount})`);
+      return `"${w1.end.hint.label}" after 1.5 s of walking, stored, not shown again; touch words "${touch}"; first-person FOV ${fov.fov} at a full run (base ${fov.base}), ${rm.fov} with reduced motion (bob ${rm.bob})`;
+    });
+    await check(`run: ${tag}: back to the car`, async () => {
+      const r = await O(() => window.__game.drive());
+      await page.waitForFunction(() => !window.__game.venue(), null, { timeout: VENUE_MS });
+      return `drive() ${r}`;
+    });
+  }
 });
 // the phone, in a context of its own once the first has closed (booting a second game beside the first, still drawing,
 // timed out twice at a load of about 20: both share the one software GPU process)

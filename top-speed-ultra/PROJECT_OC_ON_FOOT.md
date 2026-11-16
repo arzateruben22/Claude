@@ -158,8 +158,8 @@ The owner wants big thumbs and no controls screen. On foot there are three thing
 once, for six seconds, on the first visit: "Drag left to walk · drag right to look · tap to go".
 
 **Phone (landscape or portrait):**
-- **Walk.** A floating stick appears wherever the left thumb lands, in the left 45% of the screen. A short push
-  walks (1.4 m/s); a full push jogs (3.0 m/s) outdoors. Inside the Shed it's walking only.
+- **Walk.** A floating stick appears wherever the left thumb lands, in the left 45% of the screen. A push walks
+  (up to 1.4 m/s). **Run:** push it to its edge, or double-tap and hold where it floats (see "Running" below).
 - **Look.** Drag anywhere on the right 55%. Pitch is limited to about 55° down and 45° up.
 - **Tap to go.** A quick tap on the world (under about 220 ms, under 12 px of movement) walks you there by a path
   round obstacles, shown as faint dots. Tap a seat to sit in it, a person or group to walk up to them, the bar or a
@@ -169,11 +169,49 @@ once, for six seconds, on the first visit: "Drag left to walk · drag right to l
   Leave, Play, Drive. A second, smaller button appears only when two make sense, such as Sit and Order at the bar.
 - **Top left:** "Car". **Top right:** the view switch (first or third person) and the pause menu.
 
-**Keyboard and mouse:** WASD or arrows to walk, hold Shift to jog, drag or pointer-lock to look, click to go or
-use, E for the action, Q for the second action, V for the view, C for the car, Esc to pause.
+**Keyboard and mouse:** WASD or arrows to walk, double-tap and hold W (or Up) to run, or hold Shift; drag or
+pointer-lock to look, click to go or use, E for the action, Q for the second action, V for the view, C for the car,
+Esc to pause.
 
-**Gamepad:** left stick to walk, right stick to look, A for the action, X for the second action, Y for the view, B to
-leave or stand, Back for the car.
+**Gamepad:** left stick to walk (a full push runs, L3 toggles the run), right stick to look, A for the action, X for
+the second action, Y for the view, B to leave or stand, Back for the car.
+
+### Running (owner, 2026-11-12 and 2026-11-15: "just make it run / speed walk seamlessly for both devices")
+
+Both venues (Lot 57 and Stoppage Time), in the game and on their own pages. No extra button: the run is a gesture on
+the controls you already hold.
+
+- **Computer.** Double-tap and hold W or Up: a second press within 300 ms of the first (or of letting go of it, so
+  from a walk you let go and press again) runs while it's held. A or D held with it keep the run; letting go of W
+  walks again. Shift held runs too.
+- **Phone.** Double-tap and hold where the stick floats: a touch within 300 ms of the last stick touch lifting, within
+  80 px of it, runs at once, straight ahead until the thumb steers. Easing the knob back toward the centre (under 30%
+  after over 55%) or lifting walks again. Pushing a plain stick to its edge (past 92%, until it eases under 85%) runs.
+- **Gamepad.** A full push runs; L3 toggles the run, which ends when the stick comes back to the centre.
+- **The cue.** The stick shows the run on itself: an accent glow on its ring and knob and a small "RUN" tag above it
+  (ice blue at Lot 57, the bar's lime at Stoppage Time), the driving touch controls' language (an accent line and
+  glow, a mono capital tag). The class is written only when it changes.
+- **The hint.** Once per device (localStorage `oc.onfoot.runHint`), after about 1.5 s of walking under your own
+  control without ever running, a chip says "Double-tap and hold W to run" (a computer), "Double-tap and hold to run"
+  (touch) or "Push the left stick all the way to run" (a gamepad), for 5 s. Running before it shows counts as
+  learned. `?runhint=1` shows it at once, `?runhint=0` never.
+- **Speeds.** A run is 4.5 m/s outdoors; indoors (the Shed, the bar) it's a speed walk, 2.6 m/s. Up from a walk in
+  about 0.3 s, back down to a walk in about 0.2 s; a stop from a run takes about 0.23 s (from a walk 0.07 s, as before).
+  Near people it eases back toward a walk: anyone on their feet within 1.3 m holds you to a walk, from 2.4 m the run
+  comes back in (Lot 57: the crowd's soft list; the bar: `crowd.nearestStanding`). Tap to go always walks. Collision,
+  pathing and the camera's pull-in are unchanged. No stamina.
+- **Feel.** First person: the FOV widens by up to 5 degrees with the run and the head bob grows a little; neither with
+  reduced motion. Third person: the camera stays rigidly placed, so it keeps up with no lag.
+- **The gait.** The people builder has one walk clip (`people/anim.ts` 'walk'); there is no run or jog clip, and its
+  cadence and stride (`Animator.speed`) aren't reachable through `Person`. The NPC "Jogger" plays the same walk. So
+  your avatar's walk is played faster with the speed (time scale speed / 1.25, 0.6 to 2.2), continuously, with no clip
+  switch, so nothing pops; above about 2.75 m/s the cadence is capped and the feet slide a little. A real run clip
+  (a longer stride, a lean, arms bent) needs a new AnimName or a stride parameter on `Person`, which belongs to the
+  people builder's lane.
+- **Code.** `lot57/input.ts` (the gestures, the cue), `lot57/player.ts` (RUN, BRISK, the ease, `crowdRoom`,
+  `crowdGap`, `runAmount`), `lot57/run.ts` (the hint, `runFov`, `gaitScale`, the test hooks `run`, `runPoll`,
+  `runWalk`, `runGait`, `runNear`, `runLane`, `runHint`), the pages' `main.ts` and the `#stick .runtag` and
+  `#runHint` styles in both HTML pages. Checks: the suite's `venues-run` group; frames: `tests/venues-run-shots.mjs`.
 
 ## Camera
 

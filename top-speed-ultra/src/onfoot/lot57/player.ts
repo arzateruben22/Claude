@@ -1,7 +1,9 @@
-// You, on foot (PROJECT_OC_ON_FOOT.md, "Camera" and "Movement and collisions"): a kinematic body of radius 0.3 m
-// that reaches its speed in about 0.25 s and stops in 0.15 s, walks at 1.4 m/s on a short push and jogs at 3.0 m/s
-// on a full one outdoors (walking only inside the Shed), and is pushed out of everything it overlaps, three passes a
-// step, so it slides along walls. The edge of the walkable area (kerbs except at crosswalks, the end of the hangout
+// You, on foot (PROJECT_OC_ON_FOOT.md, "Camera", "Movement and collisions" and "Running"): a kinematic body of radius
+// 0.3 m that reaches its walk in about 0.12 s and stops from it in 0.07 s, walks at 1.4 m/s, and runs (the stick's run: a
+// double-tap and hold of W or of the touch stick, Shift, a full push) at 4.5 m/s outdoors or speed-walks at 2.6 m/s
+// indoors (the Shed, the bar), easing up from a walk in about 0.3 s and back down in about 0.2 s; near people it eases
+// back to a walk (no running through a crowd); tap to go always walks. It's pushed out of everything it overlaps,
+// three passes a step, so it slides along walls. The edge of the walkable area (kerbs except at crosswalks, the end of the hangout
 // area) is the walk grid's blocked cells, pushed out of as squares. If anything ever leaves you inside a collider
 // you're moved to the nearest free cell. Tap to go follows an A* path; sitting snaps you to a seat.
 import * as THREE from 'three';
@@ -13,6 +15,11 @@ import type { Seat } from './venue';
 import type { Person } from '../people';
 
 export const WALK = 1.4, JOG = 3.0, ACCEL = JOG / 0.25, DECEL = JOG / 0.15;
+/** running (2026-11-15, the owner: "just make it run / speed walk seamlessly for both devices"): 4.5 m/s outdoors, a
+ *  speed walk of 2.6 m/s indoors; up from a walk in about 0.3 s, back down to it in about 0.2 s */
+export const RUN = 4.5, BRISK = 2.6, RUN_UP = (RUN - WALK) / 0.3, RUN_DOWN = (RUN - WALK) / 0.2;
+/** people closer than CROWD_NEAR (centre to centre, metres) hold you to a walk; from there to CROWD_FAR the run eases in */
+const CROWD_NEAR = 1.3, CROWD_FAR = 2.4;
 const STEP = 1 / 60;
 
 export interface Stick { x: number; y: number; run: boolean }      // y forward, x right; |stick| <= 1
@@ -50,6 +57,13 @@ export class Player {
   lastBlock = '';
   rescues = 0;
   person: Person | null = null;
+  /** the run asked for on the last step (the stick's run, or a full push), whether or not anything held you back */
+  runWanted = false;
+  /** a page whose people aren't in `soft` (the bar's crowd): the distance from (x, z) to the nearest person on their
+   *  feet, or anything >= r when nobody is that close */
+  crowdGap: ((x: number, z: number, r: number) => number) | null = null;
+  /** the speed the last step aimed for (m/s): RUN, BRISK, WALK or less */
+  wantSpeed = 0;
   private h: Hit = { d: 0, nx: 0, nz: 0 };
   private near: import('./collide').Collider[] = [];
   // camera scratch (no allocation per frame)
@@ -118,13 +132,21 @@ export class Player {
         const dx = fx * sy + rx * sx, dz = fz * sy + rz * sx, l = Math.hypot(dx, dz) || 1;
         tx = dx / l; tz = dz / l;
         const run = stick.run || mag > 0.92;
-        want = run && !this.indoors ? JOG : mag >= 0.75 || stick.run ? WALK : WALK * (0.35 + 0.65 * mag / 0.75);
-      }
+        this.runWanted = run;
+        if (run) {
+          // outdoors a run, indoors a speed walk; near people it eases back toward a walk (nobody is run through)
+          const top = this.indoors ? BRISK : RUN, k = this.crowdRoom();
+          want = WALK + (top - WALK) * k;
+        } else want = mag >= 0.75 ? WALK : WALK * (0.35 + 0.65 * mag / 0.75);
+      } else this.runWanted = false;
     }
-    // accelerate toward the wanted velocity (reach it in about 0.25 s, stop in 0.15 s)
-    const wx = tx * want, wz = tz * want;
+    if (this.path) this.runWanted = false;
+    this.wantSpeed = want;
+    // accelerate toward the wanted velocity: up to a walk in about 0.12 s, a walk to a run in about 0.3 s, a run back
+    // to a walk in about 0.2 s, and a stop from a walk in 0.07 s (from a run in 0.23 s)
+    const wx = tx * want, wz = tz * want, sp0 = this.speed;
     let ex = wx - this.vx, ez = wz - this.vz;
-    const el = Math.hypot(ex, ez), lim = (want > this.speed ? ACCEL : DECEL) * dt;
+    const el = Math.hypot(ex, ez), lim = (want > sp0 ? (sp0 < WALK ? ACCEL : RUN_UP) : want > 0.05 && sp0 > WALK ? RUN_DOWN : DECEL) * dt;
     if (el > lim) { ex *= lim / el; ez *= lim / el; }
     this.vx += ex; this.vz += ez;
     // move, then push out of everything, three passes, sliding along walls
@@ -179,8 +201,46 @@ export class Player {
     const sp = this.speed;
     if (sp > 0.1) this.turnTo(Math.atan2(this.vx, this.vz), dt * 9);
     else this.turnTo(this.yaw, dt * 6);          // standing: the body turns to face where you look
-    if (sp > 0.1 && !this.reducedMotion) this.bobPhase += dt * Math.PI * 2 * (1.7 + 0.3 * sp);
+    // the bob's rate follows the speed, more slowly above a walk (a run's stride is longer, not only quicker)
+    if (sp > 0.1 && !this.reducedMotion) this.bobPhase += dt * Math.PI * 2 * (1.7 + 0.3 * Math.min(sp, WALK) + 0.15 * Math.max(0, sp - WALK));
   }
+  /** 0 when someone is within CROWD_NEAR of you, 1 when nobody is within CROWD_FAR (the soft list: the people the page
+   *  refreshes each frame) */
+  private crowdRoom() {
+    let d = Infinity;
+    for (let i = 0; i < this.soft.length; i++) { const o = this.soft[i], e = Math.hypot(o.x - this.x, o.z - this.z) - o.r; if (e < d) d = e; }
+    if (this.crowdGap) d = Math.min(d, this.crowdGap(this.x, this.z, CROWD_FAR + 0.5) - 0.26);
+    return Math.max(0, Math.min(1, (d - CROWD_NEAR) / (CROWD_FAR - CROWD_NEAR)));
+  }
+  /**
+   * For the run checks: a clear straight lane of `len` metres from a free spot, indoors or out as asked (the walk grid
+   * free, the body's clearance kept, nobody in `soft` or crowdGap within CROWD_FAR of it, the same side of the door all
+   * the way), searched from (nearX, nearZ) outward. Returns the start and the yaw along it, or null.
+   */
+  findLane(indoors: boolean, len: number, nearX = this.x, nearZ = this.z): { x: number; z: number; yaw: number } | null {
+    const g = this.grid, x0 = this.x, z0 = this.z;
+    const ok = (x: number, z: number) => {
+      if (!g.isFree(x, z) || this.clearance(x, z) < RADIUS + 0.12) return false;
+      this.x = x; this.z = z; const inn = this.indoors; this.x = x0; this.z = z0;
+      if (inn !== indoors) return false;
+      for (const o of this.soft) if (Math.hypot(o.x - x, o.z - z) < CROWD_FAR + 0.6) return false;
+      return !this.crowdGap || this.crowdGap(x, z, CROWD_FAR + 0.6) >= CROWD_FAR + 0.6;
+    };
+    for (let r = 0; r < 80; r += 1) for (let a = 0; a < 16; a++) {
+      const ang = (a / 16) * Math.PI * 2 + r * 0.37, x = nearX + Math.sin(ang) * r, z = nearZ + Math.cos(ang) * r;
+      if (!ok(x, z)) continue;
+      for (let b = 0; b < 8; b++) {
+        const yaw = (b / 8) * Math.PI * 2, fx = Math.sin(yaw), fz = Math.cos(yaw);
+        let clear = true;
+        for (let d = 0.5; d <= len && clear; d += 0.5) clear = ok(x + fx * d, z + fz * d);
+        if (clear) return { x, z, yaw };
+      }
+      if (r === 0) break;
+    }
+    return null;
+  }
+  /** how far into a run you are, 0 at a walk or slower to 1 at RUN (the first-person FOV and bob ease with it) */
+  get runAmount() { return Math.max(0, Math.min(1, (this.speed - WALK) / (RUN - WALK))); }
   private turnTo(target: number, k: number) {
     let d = target - this.heading; d = Math.atan2(Math.sin(d), Math.cos(d));
     this.heading += d * Math.min(1, k);
@@ -228,7 +288,7 @@ export class Player {
   /** where the eyes are now (world, local metres) */
   eyePos(out = new THREE.Vector3()) {
     const sitEye = this.seat ? this.seat.y + 0.68 : 1.15;      // about 1.15 m on a bench, higher on a bar stool
-    const bob = this.reducedMotion || this.seat ? 0 : 0.015 * Math.sin(this.bobPhase * 2) * Math.min(1, this.speed / WALK);
+    const bob = this.reducedMotion || this.seat ? 0 : (0.015 + 0.012 * this.runAmount) * Math.sin(this.bobPhase * 2) * Math.min(1, this.speed / WALK);
     return out.set(this.x, this.y + (this.seat ? sitEye : this.eye) + bob, this.z);
   }
   lookDir(out = new THREE.Vector3()) {

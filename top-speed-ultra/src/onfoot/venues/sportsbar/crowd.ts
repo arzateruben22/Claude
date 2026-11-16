@@ -1665,6 +1665,19 @@ export class Crowd {
     for (const s of this.staff) add(s.body.p);
     return seen.size;
   }
+  /** the distance from (x, z) to the nearest guest on their feet (walking, or standing at a slot), r when nobody is
+   *  nearer: your run eases back to a walk near people (lot57/player.ts crowdGap). No allocation. */
+  nearestStanding(x: number, z: number, r: number) {
+    let d = r;
+    for (const n of this.npcs) {
+      if (n.mode !== 'live') continue;
+      const dx = n.x - x, dz = n.z - z;
+      if (Math.abs(dx) >= d || Math.abs(dz) >= d) continue;
+      if (!n.path && n.slot && this.slots.get(n.slot)?.seatId !== undefined) continue;
+      const e = Math.hypot(dx, dz); if (e < d) d = e;
+    }
+    return d;
+  }
   someoneNear(x: number, z: number, r: number) { for (const n of this.npcs) if (n.mode === 'live' && n.path && Math.abs(n.x - x) < r && Math.abs(n.z - z) < r && Math.hypot(n.x - x, n.z - z) < r) return true; return false; }
   statsBrief() {
     let seated = 0, walkers = 0;

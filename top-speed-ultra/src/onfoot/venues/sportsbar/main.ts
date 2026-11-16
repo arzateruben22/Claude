@@ -37,6 +37,7 @@ import { buildBarVenue } from './venue';
 import { buildBarLot, standInGeometry } from './lot';
 import { BarPlayer } from './player';
 import { BarInput, BarAction } from './input';
+import { RunHint, runFov, gaitScale, runHooks } from '../../engine/run';
 import { BarHud } from './hud';
 import { BarView, nextView } from './views';
 import { PRESET, LABEL } from './quality';
@@ -603,6 +604,9 @@ async function main() {
   if ((!firstVisit && !q.has('hint')) || q.get('hint') === '0') hud.hint(false);
   if (!coarse) { const el = document.getElementById('hint'); if (el) el.textContent = 'W A S D to walk · drag to look · click to go · E to act · V or O for the view'; }
   try { localStorage.setItem('sportsbar.seen', '1'); } catch { /* a convenience */ }
+  // running (lot57/run.ts): the one-time hint; and the bar's guests on their feet hold your run to a walk near them
+  const runHint = new RunHint(document.getElementById('runHint'), coarse, q);
+  player.crowdGap = (x, z, r) => life.nearestStanding(x, z, r);
   const _follow = new THREE.Vector3();
   const shownAct: [string | null, string | null] = [null, null];
   hud.setActions(null, null);
@@ -627,14 +631,17 @@ async function main() {
     setHiddenCaster(lod1, !third || close);
     lod1.castShadow = true; lod1.userData.maps = 1; lod1.onBeforeShadow = vis.before; lod1.onAfterShadow = vis.after;
   };
+  const gait = { anim: 'idle', k: 1 };
   const updateAvatar = (dt: number, hide: boolean) => {
     const p = person!; if (!p) return;
     p.group.position.set(player.x, player.seat ? Math.max(-0.1, player.seat.y - 0.47) : player.y, player.z);
     p.group.rotation.y = player.heading;
     const sp = player.speed;
-    p.play(player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle');
-    const k = sp > 0.15 && !player.seat ? clamp(sp / 1.25, 0.6, 2.2) : 1;
-    p.update(dt * k);
+    gait.anim = player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle';
+    p.play(gait.anim as 'walk');
+    // the walk clip's cadence follows the speed continuously into the run (lot57/run.ts gaitScale; no clip switch)
+    gait.k = sp > 0.15 && !player.seat ? gaitScale(sp) : 1;
+    p.update(dt * gait.k);
     const gameShow = !life.gameCamOn ? '' : life.gameHidesYou ? 'hide' : 'show';
     if (avDirty || avLast.view !== view || avLast.lod0 !== lod0Ready || avLast.quality !== quality || avLast.hide !== hide || avLast.game !== gameShow) {
       avDirty = false; avLast.view = view; avLast.lod0 = lod0Ready; avLast.quality = quality; avLast.hide = hide; avLast.game = gameShow;
@@ -660,7 +667,8 @@ async function main() {
     env.renderFlare();
   };
   const placeCamera = (dt: number) => {
-    const fov = innerHeight > innerWidth ? 78 : 62;
+    // (first person: the FOV eases out a little with the run; not with reduced motion, nor in a game's own view)
+    const fov = runFov(innerHeight > innerWidth ? 78 : 62, player, view === 'first' && !fixedCam && !life.gameCamOn, reduced);
     if (Math.abs(camera.fov - fov) > 0.01) camera.fov = fov;
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
     let hide = view === 'first';
@@ -705,6 +713,7 @@ async function main() {
       if (player.gaveUp) { hud.toast(`${THING[player.gaveUp.by] ?? 'Something'} is in the way. Stopped here.`, 3.5); player.gaveUp = null; showPath(null); }
     }
     if (hintT > 0) { hintT -= dt; if (hintT <= 0 && hud.hintVisible) hud.fadeHint(); }
+    runHint.update(dt, player, input, hud.paused || hud.orderOpen || hud.hintVisible || view === 'overhead');
     if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(false, true); } }
     // the blade sign cycles +1 to +5 slowly while open
     bladeT += dt; if (open && bladeT > 4) { bladeT = 0; bladeN = (bladeN % 5) + 1; mats.bladeSign.draw(bladeN, null); }
@@ -1130,6 +1139,8 @@ async function main() {
     switchSheet(qq: Quality) { if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const shown: string[] = []; const o = barHud.busy.bind(barHud); barHud.busy = (t: string | null) => { if (t) shown.push(t); o(t); }; switchQuality(qq); return new Promise((res) => { const w = () => { if (!preparingUltra) { barHud.busy = o; res({ quality, sheet: shown }); } else requestAnimationFrame(w); }; w(); }); },
   };
   Object.assign(hooks, life.hooks());
+  // running (lot57/run.ts): run, runPoll, runWalk, runGait, runNear, runLane, runHint
+  Object.assign(hooks, runHooks({ player, input, hint: runHint, camera, step: simStep, avatar: (dt) => updateAvatar(dt, avLast.hide), person: () => person, gait, blocked: () => hud.paused || hud.orderOpen || hud.hintVisible || view === 'overhead', STEP }));
   Object.defineProperty(hooks, 'frames', { get: () => frames });
   window.__onfoot = hooks as unknown as Record<string, unknown>;
 

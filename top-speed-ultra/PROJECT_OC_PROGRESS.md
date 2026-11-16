@@ -4,6 +4,44 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: Seamless run and speed walk on phone and laptop
+
+The owner (2026-11-12, refined 2026-11-15): "just make it run / speed walk seamlessly for both devices so maybe for
+computer it comes with just double tapping and holding the up button". Built in Lot 57 and Stoppage Time, in the game
+(embed mount) and on their own pages; details in PROJECT_OC_ON_FOOT.md, "Running".
+- Computer: double-tap and hold W or Up (a second press within 300 ms of the first, or of letting go) runs while held;
+  A/D with it keep the run; letting go of W walks. Shift held runs. Phone: double-tap and hold where the stick floats
+  runs at once; a push to the stick's edge runs; easing back or lifting walks. Gamepad: a full push runs, L3 toggles.
+- The stick shows it on itself (an accent glow on the ring and knob and a small RUN tag: ice blue at Lot 57, lime at the
+  bar); no extra button. A one-time hint chip teaches it ("Double-tap and hold W to run" / "Double-tap and hold to run").
+- 4.5 m/s outdoors, a 2.6 m/s speed walk indoors (before: a 3.0 m/s jog outdoors only); about 0.3 s up from a walk,
+  0.2 s back down; held to a walk near people on their feet (1.3 m, easing in to 2.4 m); tap to go walks. First person:
+  FOV +5 degrees and a slightly bigger bob at a full run, neither with reduced motion. No stamina.
+- Not built, said plainly: the people builder has no run or jog clip (the NPC "Jogger" plays the walk) and no stride
+  parameter on Person, so your avatar plays its one walk clip faster with the speed (time scale capped at 2.2, so above
+  about 2.75 m/s the feet slide a little). A run clip belongs to the people builder's lane (src/onfoot/people/*, not
+  touched). No stairs exist in either venue, so "slow on stairs" has nothing to act on. On a phone, the first tap of the
+  double-tap is still a tap to go for under 300 ms until the held touch cancels it.
+
+Checks: tsc (both configs) clean; npm run build OK with one data-build="owner-test"; both standalone builds OK
+(dist/onfoot/index.html 1,280.7 kB, dist/sportsbar/sportsbar.html 1,819.5 kB). Suite: boot 15/15; venues-run (new)
+17/17 in each of two runs (boot,venues-run 32/32); venues 13/13 (desktop 10 + phone 3). Standalone walks: Lot 57 4/4
+(1000 random walks, half of the stick legs running), Stoppage Time 3/3. Numbers from venues-run, both venues: one W
+press 1.4 m/s; double-tap and hold 4.5 m/s, reached in 0.45 s from a standstill; W released with D held: 1.4 m/s within
+0.25 s; Shift released: walk within 0.2 s; indoors 2.6 m/s; someone 1.0 m away holds the run to 1.4 m/s (1.85 m: 2.2);
+phone double-tap and hold: run at once with the cue, eased back: walk within 0.2 s, cue off; edge push 4.5 m/s, eased
+in: walk within 0.2 s; gamepad full push 4.5, L3 4.5; the gait: one clip ('walk') throughout, time scale 1.26 -> 2.2
+(at most 0.138 a step, the speed's own ease), the bones' largest step-to-step change 3.45 cm in the transition vs
+4.62 cm at a steady run (no pop); FOV 67 at a full run (base 62), 62 with reduced motion, bob 0.
+
+Frames (tests/venues-run-shots.mjs, standalone builds, Sat 12:00, Low): tests/out/run/phone-{lot57,bar}-stick-walk.png
+and phone-{lot57,bar}-stick-run.png (390x844, DPR 3), laptop-{lot57,bar}-hint.png (1280x720), the third-person strip
+tests/out/run/strip.png (strip-1..6.png: walking 1.4, then +0.1/0.2/0.3/0.45/0.7 s after the double-tap at
+2.43/3.47/4.5/4.5/4.5 m/s).
+
+Review: it passed a ux lens (real keyboard input on a 1280x720 laptop and CDP touches on a 390x844 phone, both
+venues, no page errors) and a code lens.
+
 ## 2026-11-11: Final live merge 4: fixes
 
 Went live: origin/claude/fix-road at a662f46 (the freeway debris fix), merged as f2e8e67 on top of v15 (5cf7212). For

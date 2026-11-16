@@ -43,6 +43,17 @@
   #hint { position: absolute; left: 50%; bottom: calc(126px + var(--safe-b)); transform: translateX(-50%); padding: 10px 16px; font-size: 15px; font-weight: 600; text-align: center; max-width: calc(100% - 40px); transition: opacity 0.6s; pointer-events: none; }
   /* the toasts sit under the top centre column and the screens chip (--tcb, their measured bottom: hud.ts), never over
      the "Simulated crowd" chip; in a game they sit just above the game's bar (--gbt, measured by games.ts) */
+  /* running (lot57/run.ts, input.ts): the stick shows the run on itself, an accent glow on its ring and a small RUN
+     tag, in the driving touch controls' language (an accent line and glow, a mono capital tag); no extra button.
+     The one-time hint chip teaches it. */
+  #stick { --run: #C3F23A; --run-line: rgba(195, 242, 58, 0.62); --run-glow: rgba(195, 242, 58, 0.36); transition: border-color 0.16s, box-shadow 0.16s; }
+  #stick .runtag { position: absolute; left: 50%; top: -24px; transform: translate(-50%, 4px); padding: 4px 7px 4px 9px; border-radius: 4px; background: var(--run); color: #05080c; font: 800 10px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; letter-spacing: 0.24em; opacity: 0; transition: opacity 0.14s, transform 0.14s; }
+  #stick.run { border-color: var(--run); box-shadow: 0 0 0 1px var(--run-line), 0 0 22px var(--run-glow), inset 0 0 16px var(--run-glow); }
+  #stick.run #knob { background: #ecffb8; box-shadow: 0 0 14px var(--run-glow), 0 2px 10px rgba(0,0,0,0.3); }
+  #stick.run .runtag { opacity: 1; transform: translate(-50%, 0); }
+  #runHint { position: absolute; left: 50%; bottom: calc(126px + var(--safe-b)); transform: translate(-50%, 6px); display: flex; align-items: center; gap: 10px; padding: 8px 16px 8px 9px; border-radius: 22px; border-color: rgba(195, 242, 58, 0.62); box-shadow: 0 0 18px rgba(195, 242, 58, 0.16); font-size: 14px; font-weight: 700; white-space: nowrap; opacity: 0; transition: opacity 0.35s, transform 0.35s; pointer-events: none; }
+  #runHint::before { content: "RUN"; padding: 4px 6px 4px 8px; border-radius: 4px; background: #C3F23A; color: #05080c; font: 800 10px/1 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; letter-spacing: 0.24em; }
+  #runHint.on { opacity: 1; transform: translate(-50%, 0); }
   #toast { position: absolute; left: 50%; top: calc(var(--tcb, 128px) + 6px); transform: translateX(-50%); padding: 10px 16px; font-size: 14px; font-weight: 600; max-width: calc(100% - 40px); text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
   #toast.on { opacity: 1; }
   #hud.gaming #toast { top: auto; bottom: var(--gbt, 120px); padding: 6px 14px; font-size: 13px; }
@@ -211,7 +222,7 @@
     #needsSheet .go, #guide .go { margin-top: 4px; min-height: 42px; }
     #act { bottom: calc(30px + var(--safe-b)); }
     #act2 { bottom: calc(38px + var(--safe-b)); }
-    #hint { bottom: calc(96px + var(--safe-b)); }
+    #hint, #runHint { bottom: calc(96px + var(--safe-b)); }
   }
 </style>
 </head>
@@ -230,10 +241,11 @@
     <button id="menu" class="pill" aria-label="Pause and settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button></div>
     <button id="tvchip" aria-haspopup="dialog" aria-label="What's on the screens (G)"><span class="dot" aria-hidden="true"></span><span id="tvText">Screens · simulated</span></button>
   </div>
-  <div id="stick" aria-hidden="true"><div id="knob"></div></div>
+  <div id="stick" aria-hidden="true"><div id="knob"></div><span class="runtag">RUN</span></div>
   <button id="act2" aria-label="Second action"></button>
   <button id="act" aria-label="Action"></button>
   <div id="hint" class="panel" role="note">Drag left to walk · drag right to look · tap to go</div>
+  <div id="runHint" class="panel" role="note" aria-live="polite"></div>
   <div id="toast" class="panel" role="status" aria-live="polite"></div>
   <div id="caption" class="panel" role="status" aria-live="polite"></div>
   <div id="chips" role="group" aria-label="Your reply"><button id="reply0" data-r="0"></button><button id="reply1" data-r="1"></button></div>

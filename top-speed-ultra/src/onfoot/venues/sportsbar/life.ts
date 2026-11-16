@@ -141,6 +141,8 @@ export class BarLife {
   }
   overheadTarget() { return this.ctx.overheadTarget(); }
   /** a guest or one of the staff within r metres of (x, z) (the doors open for them) */
+  /** the distance to the nearest guest on their feet, r when nobody is nearer (your run eases to a walk near people) */
+  nearestStanding(x: number, z: number, r: number) { return this.crowd ? this.crowd.nearestStanding(x, z, r) : r; }
   someoneNear(x: number, z: number, r: number) { return !!this.crowd && this.crowd.someoneNear(x, z, r); }
   /** the crowd's counts for stats() */
   crowdStats() { return this.crowd ? this.crowd.statsBrief() : { npcs: 0, groups: 0, seated: 0, walkers: 0 }; }

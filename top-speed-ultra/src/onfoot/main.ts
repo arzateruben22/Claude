@@ -25,6 +25,7 @@ import { truckWheel } from './lot57/wheels';
 import { WalkGrid, RADIUS } from './lot57/walkgrid';
 import { Player, STEP, View, Goal } from './lot57/player';
 import { Input, Action } from './lot57/input';
+import { RunHint, runFov, gaitScale, runHooks } from './lot57/run';
 import { Hud, loading, doneLoading } from './lot57/hud';
 import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
 import * as C from './lot57/clock';
@@ -548,6 +549,8 @@ async function main() {
   // the hint speaks to what you hold: thumbs on a touch screen, keys and a mouse on a desktop
   if (!coarse) { const el = document.getElementById('hint'); if (el) el.textContent = 'W A S D to walk · drag to look · click to go · E to act'; }
   try { localStorage.setItem('lot57.seen', '1'); } catch { /* a convenience */ }
+  // the one-time run hint (lot57/run.ts): after a little walking, how to run, in the words for what you hold
+  const runHint = new RunHint(document.getElementById('runHint'), coarse, q);
   const _eye = new THREE.Vector3(), _follow = new THREE.Vector3(), liveDate = new Date();
   const shownAct: [string | null, string | null] = [null, null];
   hud.setActions(null, null);
@@ -589,16 +592,19 @@ async function main() {
     p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra); m.receiveShadow = true; } });
     if (close && !ultra && g1) { g1.visible = true; g1.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(1); m.castShadow = true; } }); }
   };
+  const gait = { anim: 'idle', k: 1 };
   const updateAvatar = (dt: number) => {
     const p = person!; if (!p) return;
     // seated: the builder's sitting pose is for a 0.46 m seat; a bar stool lifts you (feet on the rail)
     p.group.position.set(player.x, player.seat ? Math.max(-0.1, player.seat.y - 0.47) : player.y, player.z);
     p.group.rotation.y = player.heading;
     const sp = player.speed;
-    p.play(player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle');
-    // the walk cycle's cadence matched to the speed (the builder's walk is tuned for 1.25 m/s)
-    const k = sp > 0.15 && !player.seat ? clamp(sp / 1.25, 0.6, 2.2) : 1;
-    p.update(dt * k);
+    gait.anim = player.seat ? 'sit' : sp > 0.15 ? 'walk' : 'idle';
+    p.play(gait.anim as 'walk');
+    // the walk cycle's cadence matched to the speed, continuously into the run (lot57/run.ts gaitScale: the builder's
+    // one walk clip, played faster; no switch, so no pop)
+    gait.k = sp > 0.15 && !player.seat ? gaitScale(sp) : 1;
+    p.update(dt * gait.k);
     // holding something: the right hand comes up with it (the shadow shows it in first person too)
     doings.poseAvatar(p, player.heading, player.view === 'third' || !!fixedCam);
     const third = player.view === 'third', key = (third ? 1 : 0) + (lod0Ready ? 2 : 0) + (quality === 'low' ? 0 : quality === 'hd' ? 4 : 8);
@@ -659,6 +665,7 @@ async function main() {
       if (player.gaveUp) { hud.toast(`${THING[player.gaveUp.by] ?? 'Something'} is in the way. Stopped here.`, 3.5); player.gaveUp = null; showPath(null); }
     }
     if (hintT > 0) { hintT -= dt; if (hintT <= 0 && hud.hintVisible) hud.fadeHint(); }
+    runHint.update(dt, player, input, hud.paused || hud.orderOpen || hud.hintVisible);
     if (live) { liveT -= dt; if (liveT <= 0) { liveT = 60; applyClock(false, false); } }
     // (the people's CPU this frame: their talk, walks and animation here, how they're drawn in render())
     crowdMs = 0;
@@ -666,7 +673,8 @@ async function main() {
     updateAvatar(dt);
     parked.update(player.x, player.z);
     // the camera
-    const fov = innerHeight > innerWidth ? 78 : 62;
+    // (first person: the FOV eases out a little with the run; not with reduced motion)
+    const fov = runFov(innerHeight > innerWidth ? 78 : 62, player, player.view === 'first' && !fixedCam, reduced);
     if (Math.abs(camera.fov - fov) > 0.01) { camera.fov = fov; camera.updateProjectionMatrix(); }
     camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
     let hideAvatar = player.view === 'first';
@@ -879,6 +887,18 @@ async function main() {
       return out;
     },
     render() { render(); return { calls: stats.calls, triangles: stats.tris }; },
+    /** a frame's camera and avatar as they are now (no time passes), drawn: for frames shot between unrendered steps
+     *  (the run strip) */
+    drawNow() {
+      camera.fov = runFov(innerHeight > innerWidth ? 78 : 62, player, player.view === 'first' && !fixedCam, reduced);
+      camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+      const c = player.camera(camera);
+      if (person) person.group.visible = !(c.hide && player.view === 'third');
+      updateAvatar(0);
+      env.follow(_follow.set(player.x, player.y, player.z), camera, performance.now() / 1000, 0);
+      render();
+      return { fov: +camera.fov.toFixed(2), speed: +player.speed.toFixed(3), view: player.view };
+    },
     /** stop drawing frames (for long unrendered test runs on a slow software renderer); false resumes */
     freeze(on: boolean) { frozen = on; return frozen; },
     reducedMotion(on: boolean) { hud.onMotion(on); return { reduced, bobOff: player.reducedMotion, transitionsOff: document.body.classList.contains('rm') }; },
@@ -943,6 +963,8 @@ async function main() {
     }
     return { path, blocks, end: hooks.pos() };
   };
+  // running (lot57/run.ts): run, runPoll, runWalk, runGait, runNear, runLane, runHint
+  Object.assign(hooks, runHooks({ player, input, hint: runHint, camera, step: simStep, avatar: (dt) => updateAvatar(dt), person: () => person, gait, blocked: () => hud.paused || hud.orderOpen || hud.hintVisible, STEP }));
   Object.defineProperty(hooks, 'frames', { get: () => frames });
   window.__onfoot = hooks as unknown as Record<string, unknown>;
 

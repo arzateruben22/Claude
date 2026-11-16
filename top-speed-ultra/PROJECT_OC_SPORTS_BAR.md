@@ -1709,7 +1709,10 @@ things to see what you can do"), after Lot 57's.
 - The radial menu shrinks to 48 px pills on an 80 px circle.
 
 **Desktop:**
-- WASD or the arrows to walk, Shift to jog outdoors, drag or pointer-lock to look.
+- WASD or the arrows to walk; double-tap and hold W (or Up), or hold Shift, to run (4.5 m/s outside, a 2.6 m/s speed
+  walk inside, back to a walk near guests on their feet); drag or pointer-lock to look. On a phone, double-tap and
+  hold the stick, or push it to its edge; the stick glows lime with a RUN tag. Details: PROJECT_OC_ON_FOOT.md,
+  "Running" (2026-11-15).
 - Click to go or open a menu. Keys 1 to 6 pick menu items.
 - E for the action, Q for the second action.
 - V cycles the views; O goes straight to overhead.
