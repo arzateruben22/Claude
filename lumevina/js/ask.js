@@ -160,7 +160,7 @@
       return "Acne starts with the New Client Consultation + Treatment, " + price("new-client-consultation-acne", 220) + " (80 min, $50 deposit). Then it’s the Acne Bootcamp: the Monthly Acne Treatment " +
         price("monthly-acne-treatment", 200) + ", and the Bi-Weekly Acne Treatment " + price("biweekly-acne-treatment", 115) + " when Evelyn recommends it."; } },
     { k: /consult/, a: function () {
-      return "A Personalized Skin Consultation is " + price("in-person-consultation", 75) + ", online or in person: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps. Book it from the consultation card in the shop. " +
+      return "A Personalized Skin Consultation is " + price("in-person-consultation", 75) + ", online or in person: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps. Book it on her GlossGenius page: the consultation card in the shop opens it. " +
         "Want a facial too? New clients start with New Clients Start Here, " + price("new-client-consultation", 220) + "."; } },
     { k: /underarm|armpit/, a: function () { return "An underarm wax is " + price("underarm-wax", 20) + ", or " + price("brow-underarm-wax", 45) + " with a brow wax."; } },
     { k: /\bbrows?\b|eyebrow/, a: function () { return "Brow wax and tweeze is " + price("brow-wax-tweeze", 25) + ", or " + price("brow-underarm-wax", 45) + " with an underarm wax."; } },

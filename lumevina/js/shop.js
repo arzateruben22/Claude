@@ -672,13 +672,13 @@
   INV.onChange(paintAll);
   /* Evelyn approved an active for this client: its button turns into Add to cart */
   document.addEventListener("lumevina:consult-changed", function () { paintGrid(); paintRail(); });
-  /* the consultation card above the shelf (online or in person, $75): one tap puts it in the bag; Evelyn sets the time after */
-  document.addEventListener("click", function (e) {
-    var b = e.target.closest && e.target.closest("[data-consult-add]");
-    if (!b || !window.LumevinaCart) return;
-    var r = window.LumevinaCart.add("svc-online-consult");
-    if (r.ok || r.reason === "max") window.LumevinaCart.open();
-  });
+  /* the consultation card above the shelf (online or in person, $75): its button opens her GlossGenius page,
+     where it's booked; the link follows js/site-config.js (booking.glossgenius) if that ever changes */
+  (function () {
+    var cfg = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking) || {};
+    var url = /^https:\/\//.test(cfg.glossgenius || "") ? cfg.glossgenius : null;
+    if (url) Array.prototype.forEach.call(document.querySelectorAll("[data-consult-book]"), function (a) { a.href = url; });
+  })();
   if (shop) shop.classList.add("is-live");
   paintAll();
 

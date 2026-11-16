@@ -612,3 +612,5 @@ The card above the shop now reads:
 ## The GlossGenius booking card: no deposit line (Nov 16)
 
 "Some treatments take a deposit ($20 to $50) when you book…" is removed from the booking card, where booking runs on GlossGenius. The card keeps "New here?" and "Been before?" and the "See openings and book" button. The deposits themselves are unchanged: GlossGenius still takes them, and each one still shows on the menu, in the policies and in the chat.
+
+**Later the same day:** "Book a Consultation · $75" now opens her GlossGenius page (lumevina.glossgenius.com) in a new tab, in both versions of the site, instead of adding the consultation to the bag. The link follows the GlossGenius address in `js/site-config.js`. The chat says to book it on GlossGenius too. On GlossGenius, the In-Person and Virtual Consultations should be $75 so the two match.

@@ -6830,7 +6830,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .sh-consult-k { margin: 0 0 .2rem; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #68625C; }
 .sh-consult-card h3 { margin: 0 0 .3rem; font-size: 1.1rem; line-height: 1.2; }
 .sh-consult-card p:last-child { margin: 0; font-size: .92rem; line-height: 1.45; color: #4a433d; max-width: 54ch; }
-.sh-consult-card .btn { flex: 0 0 auto; white-space: nowrap; }
+.sh-consult-card .btn { flex: 0 0 auto; white-space: nowrap; justify-content: center; text-align: center; }   /* a link now (to GlossGenius): centred like a button */
 @media (max-width: 640px) { .sh-consult-card { flex-direction: column; align-items: stretch; } .sh-consult-card .btn { width: 100%; } }
 .cs .pd-inner { display: block; max-width: 560px; }
 .cs-inner { padding: 1.4rem 1.4rem 1.6rem; }
