@@ -4,6 +4,45 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: SMOOTH: a frame-time governor, a first-run graphics check, a performance overlay (claude/smooth, base c7b0943 = v19)
+
+The owner: "how do we make the fps stay high and keep gameplay smooth with high graphics setting chosen", then "after
+Chad package if you can squeeze in making the graphics stay high and not laggy and then pause". This is the routine
+part; shadow caching, half-resolution effects, far LODs, shader warm-up and worker streaming stay with the SMOOTH CORE
+lane (the hooks are in PROJECT_OC_TECHNICAL_NOTES.md, Rendering > Frame rate). Uncommitted on claude/smooth.
+
+- **Governor** (`src/game/render/governor.ts`, `Game.ts`): replaces the resolution-only step under the same switch,
+  now "Adaptive quality (holds 60 fps)". Down after 1 s over budget, up after 4 s with 25 % headroom, one step at a
+  time, bounces back off 4x each. Ladder: AO, shadow map size, MSAA, bloom, draw distance −20 %, scenery −25 %,
+  traffic one step (not in Speed Survival), render scale to the floor (0.75 of the preset's resolution on High and
+  Ultra, 0.5 on Low and Medium); then a steady 30. Retro has no ladder.
+- **Graphics check** (`Game.benchmark`, App's card with Skip; Settings > "Run graphics check"): first run only, saved
+  per device (`tsu.bench`); the player's own preset choice (`qualityChosen`) always wins.
+- **Overlay** (`src/ui/PerfOverlay.tsx`; Settings > "Show performance", or `?perf`): fps, 1 % low, a frame-time graph,
+  frame and work ms, draw calls, triangles, pixel ratio, "Ultra · auto", the level and the last action. Measured
+  numbers only. Settings shows "Now: Ultra · auto · 3 of 12 steps down (MSAA off) · 60 fps target".
+- **Checked, not changed:** one rAF loop; physics on the fixed 1/120 s step with render interpolation.
+
+Suite (new group `perf`, 12 checks and its page-error check, run in pieces because each Playwright run here must stay under 10 minutes; all
+passed): the ladder in order on Ultra under synthetic 40 ms frames (AO off → Shadows 2048 → MSAA off → Bloom off →
+Draw distance 1920 m → Scenery −25 % → Traffic Light → Resolution 95..75 % → 30 fps target, steps 2.68..4.68 s apart,
+scale floor 0.75, pixel ratio 1 → 0.75, then 30 s at 17 fps with no further step); back up in reverse with headroom
+(13 steps, 4.99 s apart, 60 fps 21 s after the last); no oscillation (a boundary scene: 4 steps, then 0 actions in 60
+s; a scene that punishes a step up: 4 actions in 60 s, the second try 17 s after the first, the next not before 64 s);
+heap −5,828 and +11,284 bytes in two runs over 200,000 governor calls each (100,000 frames through tick and adapt, after GC; the check allows 64 KB); Settings label and
+Adaptive off; the overlay on and off; real frames with `injectMs = 300` stepped Low down "Draw distance 720 m" then
+"Scenery −25 %" (SwiftShader can't show a step up with real frames: its frames are 0.1 to 50 s); the overlay at 1280 ×
+720 and at 390 × 844 DPR 3 clear of the HUD's controls and toasts; Retro off the ladder; the graphics check ran on a
+first run (106 and 121 s on SwiftShader: every round's mean was over 80 ms, so it picked Low at a steady 30) and saved its
+pick, and the player's Medium stayed over a reload with no second check; Skip on a Settings run saved nothing.
+Regression: boot 15/15 (two runs: the long scans, then the menu and field-of-view checks), modes 10/10, render 18/18
+(four runs, then the preset rebuild and context-restore checks again after the last Game.ts change), phone 21/21 (chunks, each with the check that starts the drive; "reach" needs Go to before it and
+"THRUST" needs Retro before it, on v19 too). tsc clean on both configs; one data-build="owner-test" in the build.
+
+Frames: tests/out/perf-overlay-1280.png, tests/out/perf-overlay-phone.png, tests/out/perf-settings-ultra-auto.png;
+before/after Settings (Low, 1280 × 720) and the check's card in the session scratchpad (smooth/before-settings-graphics.png,
+after-settings-graphics.png, after-bench-card.png). Not measured: any real GPU or phone frame rate.
+
 ## 2026-11-11: Final live merge 5: Stoppage Time S4, the dashboard and the wheel centre
 
 What went live on claude/final-live (base d08eee0, v16): origin/claude/sports-bar cafc5a3 gives Stoppage Time its S4
