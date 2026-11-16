@@ -447,7 +447,7 @@ Also fixed on the way: the hidden icon set at the top of the page (the EV mark) 
 
 The hero's water now runs through the rest of the page, in the same cream and light:
 
-- **Book:** a cream rose resting on water (`img/water/rose.webp`). On desktop the rose sits to the right of the booking card; on phones it's a band across the top of the section.
+- **Book:** two koi circling in the water, seen from above (`img/water/koi.webp`, from ChatGPT, Nov 16; it replaced the rose). On desktop they swim just right of the booking card; on phones they're a band across the top of the section. A clip of them swimming can replace the still later, the same way as the hero's.
 - **FAQ and Contact:** one stretch of open water (`img/water/open.webp`), with the sunbeams over the FAQ and the ripples under Contact.
 - **Shop, Services and Skin science:** a soft band of water and light behind each heading, fading out before the content. About keeps its own light.
 - **Moving light** (`js/water.js`): light drifts slowly across the water, drawn in code, so there's nothing to download. A ring spreads wherever someone taps open background, including on the hero, but never on a button, link, field or text. It only runs while that part of the page is on screen, and stands still with reduced motion on.

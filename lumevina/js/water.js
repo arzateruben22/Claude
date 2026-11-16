@@ -1,7 +1,7 @@
 /* Lumevina — the water (Nov 15)
  *
  * The hero's water carried down the page, drawn in code (nothing to download):
- *   - over the water pictures behind Book, FAQ and Contact: light that
+ *   - over the water pictures behind Book (the koi), FAQ and Contact: light that
  *     shimmers and travels across the water, the way sun does on a pool
  *   - at the top of the plainer sections (Shop, Services, Skin science): a
  *     soft band of the same water and light, fading out before the words
@@ -22,7 +22,7 @@
   var SPOTS = [
     { sel: ".hero", mode: "ripple" },
     { sel: "#shop", mode: "band" },
-    { sel: "#book", mode: "water", from: 0.38 },
+    { sel: "#book", mode: "water", from: 0, strength: 0.45 },   /* the koi pond, seen from above: water everywhere, and its own sparkle, so less light on top */
     { sel: "#services", mode: "band" },
     { sel: "#watch", mode: "band" },
     { sel: "#policies", mode: "water", from: 0.4 },
@@ -93,8 +93,8 @@
       /* two layers at different sizes, drifting different ways, with a slow sway, so
          the net never reads as a pattern: just light moving on water */
       var sway = Math.sin(t / 2600) * 14 * r;
-      layer(c, sp.pat, W, H, 2.6 * r, t * 0.011 * r + sway, t * 0.004 * r, sp.mode === "band" ? 0.42 : 0.22);
-      layer(c, sp.pat, W, H, 3.7 * r, -t * 0.007 * r, t * 0.006 * r - sway * 0.6, sp.mode === "band" ? 0.3 : 0.15);
+      layer(c, sp.pat, W, H, 2.6 * r, t * 0.011 * r + sway, t * 0.004 * r, (sp.mode === "band" ? 0.42 : 0.22) * sp.strength);
+      layer(c, sp.pat, W, H, 3.7 * r, -t * 0.007 * r, t * 0.006 * r - sway * 0.6, (sp.mode === "band" ? 0.3 : 0.15) * sp.strength);
       /* where the light shows: fades in from `from` (water) or out by the band's foot */
       var m = c.createLinearGradient(0, 0, 0, H);
       if (sp.mode === "band") { m.addColorStop(0, "rgba(0,0,0,1)"); m.addColorStop(0.35, "rgba(0,0,0,0.75)"); m.addColorStop(1, "rgba(0,0,0,0)"); }
@@ -179,7 +179,7 @@
     var scrim = host.querySelector(":scope > .hero-scrim");
     if (scrim) scrim.parentNode.insertBefore(cv, scrim.nextSibling);
     else host.insertBefore(cv, host.firstChild);
-    var sp = { host: host, cv: cv, ctx: cv.getContext("2d"), mode: s.mode, from: s.from || 0, ripples: [], visible: !seen, dirty: true, r: res() };
+    var sp = { host: host, cv: cv, ctx: cv.getContext("2d"), mode: s.mode, from: s.from || 0, strength: s.strength || 1, ripples: [], visible: !seen, dirty: true, r: res() };
     sp.pat = sp.ctx.createPattern(tile, "repeat");
     spots.push(sp);
     host.addEventListener("click", function (e) {
