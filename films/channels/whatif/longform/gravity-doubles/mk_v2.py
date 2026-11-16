@@ -88,6 +88,7 @@ rep("  // the HUD\n", '''  // glimpses: one set piece at a time, far from the gl
 rep("const hookA = FILM.hook", "const dipP = Math.max(0, ...(GR.dips || []).map((d) => 1 - Math.abs(t - d) / 0.12)); const hookA = FILM.hook")
 rep("dipEl.style.opacity = String((0.42 * pinU).toFixed(3));", "dipEl.style.opacity = String(Math.max(0.42 * pinU, 0.92 * dipP).toFixed(3)); badgeEl.style.opacity = String((E.inout2(seg(t, 0.3, 0.7)) * (1 - E.inout2(seg(t, 4.5, 5.0))) * vis).toFixed(3));")
 rep("gd.style.transform =", "gd.style.letterSpacing = txt.length > 7 ? \".012em\" : \"-.02em\"; gd.style.transform =")
+rep("  gd.style.color = inRace ? MAG", "  { const clk = gc.parentElement, lim = clk.offsetLeft - 0.0222 * W, sc = 1 + 0.32 * thud; let fs = fsz; for (let i = 0; i < 8 && gd.offsetLeft + gd.offsetWidth * sc > lim; i++) { fs *= 0.93; gd.style.fontSize = fs + \"vh\"; } }\n  gd.style.color = inRace ? MAG")
 rep("const robotOn = pScale > 0.5;", "const robotOn = pScale > 0.5;\n  const lerp1 = (a, b, u) => a + (b - a) * u;")
 (H / "scene_tail2.mjs").write_text(s)
 (H / "scene2.mjs").write_text((H / "scene_head.mjs").read_text() + "\n" + s)

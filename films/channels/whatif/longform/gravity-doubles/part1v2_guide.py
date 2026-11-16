@@ -19,5 +19,5 @@ for i, l in enumerate(Wn["lines"], 1):
     a, b = l["speech_t0"], l["speech_t0"] + l["speak_window"]
     vf.append(f"drawbox=x=60:y=ih-24:w='(iw-120)*clip((t-{a})/{b - a:.3f}\\,0\\,1)':h=10:color=0xEB63FF@0.95:t=fill:enable='between(t\\,{l['t0']}\\,{l['t1']})'")
 vf.append(f"drawbox=x=60:y=ih-24:w=iw-120:h=10:color=white@0.18:t=fill")
-subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(pic), "-i", str(D / "audio/guide-mix.wav"), "-vf", ",".join(vf), "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "20", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)], check=True)
+subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(pic), "-i", str(D / "audio/guide-mix.m4a"), "-vf", ",".join(vf), "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "20", "-preset", "medium", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-shortest", str(out)], check=True)
 print("guide", out, round(out.stat().st_size / 1e6, 1), "MB")

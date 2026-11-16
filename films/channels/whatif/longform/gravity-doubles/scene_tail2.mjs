@@ -217,6 +217,7 @@ window.seek = function (t) {
   h3.style.opacity = String(vis.toFixed(3));
   const N = Math.pow(2, dIdx), txt = "×" + N.toLocaleString("en-US"); if (gd.textContent !== txt) gd.textContent = txt;
   const fsz = txt.length <= 3 ? 11 : txt.length <= 5 ? 9.4 : txt.length <= 7 ? 7.4 : txt.length <= 9 ? 6.0 : 4.6; gd.style.fontSize = fsz + "vh"; gd.style.letterSpacing = txt.length > 7 ? ".012em" : "-.02em"; gd.style.transform = "scale(" + (1 + 0.32 * thud).toFixed(3) + ")";
+  { const clk = gc.parentElement, lim = clk.offsetLeft - 0.0222 * W, sc = 1 + 0.32 * thud; let fs = fsz; for (let i = 0; i < 8 && gd.offsetLeft + gd.offsetWidth * sc > lim; i++) { fs *= 0.93; gd.style.fontSize = fs + "vh"; } }
   gd.style.color = inRace ? MAG : "#fff"; gd.style.textShadow = inRace ? "0 0 2.4vh rgba(235,99,255,.8)" : "";
   gc.textContent = fmtClock(Math.min(h, 24)); gc.style.color = inRace ? MAG : "#fff";
   const wpc = 100 * G, wopa = 1 - E.inout2(seg(t, RC.t0 - 0.1, RC.t0 + 0.3)) * (inRace || t < RC.t1 ? 1 : 0) + E.inout2(seg(t, RC.t1, RC.t1 + 0.3)) * 0;
