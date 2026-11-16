@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Game } from '../game/Game';
 import type { Path } from '../game/world/Path';
 import { STARTS } from '../game/settings';
+import { Ico } from './Icons';
 
 // the network's projection (tools/oc-network/common.py): metres east (x) and south (z) of 33.72 N, 117.83 W
 const LAT0 = 33.72, LON0 = -117.83, KX = 111320 * Math.cos((LAT0 * Math.PI) / 180), KZ = 110574;
@@ -35,6 +36,7 @@ interface Props {
   game: Game; driving: boolean; navTarget: string | null;
   onClose: () => void; onNavigate: (label: string | null) => void;
   onStartFreeway: (label: string) => void; onStartExit: (key: string) => void;
+  onGoTo?: () => void;  // while driving: the Go to card (a place, or a freeway and direction), the pause screen's old "Go to a freeway"
   focusHome?: string;   // open on the Places tab, centred on this home (the Lifestyle panel's "On the map")
 }
 
@@ -60,7 +62,7 @@ function fit(b: { x0: number; x1: number; z0: number; z1: number }, w: number, h
   return { cx: (b.x0 + b.x1) / 2 - (r.x + r.w / 2 - w / 2) * mpp, cz: (b.z0 + b.z1) / 2 - (r.y + r.h / 2 - h / 2) * mpp, mpp };
 }
 
-export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, focusHome }: Props) {
+export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStartFreeway, onStartExit, onGoTo, focusHome }: Props) {
   const cv = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null);
   const fh = focusHome ? homeById(focusHome) : undefined, fxz = fh ? homeXZ(fh) : null;
   const [tab, setTab] = useState<Tab>(fh ? 'places' : 'freeways');
@@ -263,6 +265,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
             ? <button type="button" className="btn" onClick={() => onNavigate(null)}>Clear route</button>
             : <button type="button" className="btn primary" onClick={() => onNavigate(place)}>Navigate to {place}</button>)}
           {tab === 'places' && fh && fxz && owned.includes(fh.id) && !driving && (() => { const ex = game.nearestExit(fxz.x, fxz.z); return ex && <button type="button" className="btn primary" onClick={() => onStartExit(ex.exit.key)}>Start from {fh.name}</button>; })()}
+          {driving && onGoTo && <button type="button" className="btn wm-goto" onClick={onGoTo}><Ico name="nav" />Go to a freeway</button>}
           <button type="button" className="btn" onClick={onClose}>Back</button>
         </div>
       </aside>
