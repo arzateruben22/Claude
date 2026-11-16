@@ -274,3 +274,4 @@ STATE 13:55 UTC: SMOOTH repair running; waiting for the owner's cast choice.
 OWNER (~14:00 UTC Nov 16 = 6 AM PT Mon): 'Yes fix chad and the characters' -> LAUNCHED CAST FX5 wmdkmqlwy / wf_8713d2a1-421 (Fable builder + Fable repair; brief wf/brief-castpk5.md with the explicit people/* permission and the art judge's list in wf/castpk4-judge-art.json; tsu-cast, claude/cast). On kept: DROP 4 (cast + run f5edf2c [+ smooth if kept]) on 1f9dd89 or newer -> publish -> then pause.
 STATE 14:25 UTC: weekly 0.54, 5h 0.07. CAST FX5 building (14:24, Fable). SMOOTH re-judging after repair (14:24).
 STATE 14:52 UTC: weekly 0.55, 5h 0.11. CAST FX5 building (14:51). SMOOTH repair2 (14:50).
+STATE 15:22 UTC: weekly 0.56, 5h 0.14. CAST FX5 building (15:19). SMOOTH repair2 done, final re-judge running (15:21).
