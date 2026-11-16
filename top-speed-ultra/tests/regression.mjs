@@ -2740,6 +2740,54 @@ function hudBoxesInPage() {
   return { layout: app.dataset.hud, boxes: bx.length, overlaps, outside, labels, has, safe: { l: sa.left, t: sa.top, r: sa.right, b: sa.bottom }, side: document.documentElement.scrollWidth > W };
 }
 
+// in the page: the driver's sleeves as the seat sees them. The nearest sleeve vertex in view (skinned, camera space)
+// against the near plane and how many in view sit nearer than it; then one frame read from the drawing buffer and a mask
+// render (the sleeves red, everything else black) at the same size: per side of the screen the sleeve pixels'
+// luminance spread (5th to 95th percentile), local detail (mean |Laplacian| of luminance inside the sleeve) and share
+// of clipped white; the wheel's angle, the field of view and the arms' sun shade
+function sleevesInPage() {
+  const g = window.__game, cam = g.camera, car = g.car, arms = car.arms, r = g.renderer, gl = r.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
+  g.draw(performance.now(), 0); r.setRenderTarget(null);
+  const fr = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, fr);
+  cam.updateMatrixWorld(true); arms.group.updateMatrixWorld(true);
+  const sl = arms.group.children.find((m) => m.name === 'sleeves'), pos = sl.geometry.attributes.position, v = cam.position.clone();
+  const tanV = Math.tan((cam.fov * Math.PI) / 360), tanH = tanV * cam.aspect;
+  let minDepth = 1e9, nearer = 0;
+  for (let i = 0; i < pos.count; i++) {
+    sl.getVertexPosition(i, v); v.applyMatrix4(sl.matrixWorld).applyMatrix4(cam.matrixWorldInverse);
+    const d = -v.z, m = Math.max(d, cam.near);
+    if (Math.abs(v.x) <= m * tanH && Math.abs(v.y) <= m * tanV) { if (d < cam.near) nearer++; else minDepth = Math.min(minDepth, d); }
+  }
+  const Basic = car.pool.material.constructor, saved = [], hid = [];
+  const red = new Basic({ color: 0xff0000, fog: false, toneMapped: false }), black = new Basic({ color: 0x000000, fog: false, toneMapped: false });
+  g.scene.traverse((o) => {
+    if (!o.visible) return;
+    // (a mesh with its own shader, such as a live mirror, keeps its material and is hidden: its onBeforeRender reads
+    // that material's uniforms)
+    if (o.isMesh && !o.material.isShaderMaterial) { saved.push([o, o.material]); o.material = o === sl ? red : black; }
+    else if (o.isMesh || o.isPoints || o.isLine || o.isSprite) { hid.push(o); o.visible = false; }
+  });
+  const bg = g.scene.background, fog = g.scene.fog; g.scene.background = null; g.scene.fog = null;
+  r.setClearColor(0x000000, 1); r.clear(); r.render(g.scene, cam);
+  const mk = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, mk);
+  for (const [o, m] of saved) o.material = m; for (const o of hid) o.visible = true; g.scene.background = bg; g.scene.fog = fog; red.dispose(); black.dispose();
+  const Y = (i) => 0.2126 * fr[i] + 0.7152 * fr[i + 1] + 0.0722 * fr[i + 2], isS = (x, y) => mk[(y * W + x) * 4] > 128;
+  const side = (L) => {
+    const ys = []; let clip = 0, lap = 0, nl = 0;
+    for (let y = 1; y < H - 1; y++) for (let x = L ? 1 : W >> 1; x < (L ? W >> 1 : W - 1); x++) {
+      if (!isS(x, y)) continue;
+      const i = (y * W + x) * 4, l = Y(i); ys.push(l);
+      if (fr[i] >= 250 && fr[i + 1] >= 250 && fr[i + 2] >= 250) clip++;
+      if (isS(x - 1, y) && isS(x + 1, y) && isS(x, y - 1) && isS(x, y + 1)) { lap += Math.abs(4 * l - Y(i - 4) - Y(i + 4) - Y(i - 4 * W) - Y(i + 4 * W)); nl++; }
+    }
+    if (ys.length < 200) return null;
+    ys.sort((a, b) => a - b);
+    const q = (f) => ys[Math.min(ys.length - 1, Math.floor(f * ys.length))];
+    return { px: ys.length, spread: Math.round(q(0.95) - q(0.05)), detail: +(lap / Math.max(1, nl)).toFixed(2), clip: +(clip / ys.length).toFixed(3) };
+  };
+  return { L: side(true), R: side(false), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
+}
+
 await group('phone', async (use) => {
   // Modern, so the controls stay put while the checks press them (a phone's first run is Minimal; the last check here
   // covers its tuck and wake)
@@ -2890,6 +2938,46 @@ await group('phone', async (use) => {
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     return out.join('; ');
+  });
+  // the sleeves from the seat on a phone (owner, 2026-11-16, v18 on an iPhone: "The left arm still needs to be fixed",
+  // the white shirt sleeve "one oversized, flat, untextured white slab"). The OC Hypercar's seat view at the iPhone's
+  // 393 x 852, the Closer's white shirt, at speed (the +10 field of view and the speed's widening), paused, wheel straight
+  // and at full lock: no sleeve vertex in view nearer the lens than 2x the near plane (no slicing: b2c4cfcc's nearest
+  // is 6.6x straight, 3.6x at full lock, the same with the fix); each sleeve's pixels (a mask render) spread at least
+  // 30 levels of luminance from their 5th to their 95th percentile (b2c4cfcc's evenly sunlit right sleeve: 22 straight,
+  // 20 at full lock; the fix: 66-69 and 39-40) with a local detail (the mean |Laplacian| of luminance inside the sleeve) of at
+  // least 3 (b2c4cfcc: 2.06 and 1.95 there, 2.23 on the left sleeve at full lock, whose spread of 39 alone would pass;
+  // the fix: 4.0 to 7.8 over two runs), and at most 2% clipped white (0 in both builds here; High's bloom is the risk). Also the
+  // cabin's sun shade at the arms (hands-sun.ts), for the record.
+  await check('sleeves from the seat on a phone: in front of the near plane, shaded and creased, not clipped white', async () => {
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');   // (run on its own with --check)
+    await page.setViewportSize({ width: 393, height: 852 });
+    await game(page, () => {
+      const g = window.__game;
+      g.updateSettings({ ...g.settings, driver: 'closer', presentation: 'm' });
+      g.car.configure({ ...g.car.config, car: 'oc-hyper' }); g.setCam('cockpit'); g.fastForward(6, {}, 79.6); g.setPaused(true);
+    });
+    await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+    const out = [], fails = [];
+    for (const [name, delta] of [['straight', 0], ['full lock', 0.6]]) {
+      await game(page, (d) => { window.__game.phys.delta = d; }, delta);
+      await frames(page, 12);
+      const r = await game(page, sleevesInPage);
+      for (const side of ['L', 'R']) {
+        const s = r[side];
+        if (!s) { fails.push(`${name}: no ${side} sleeve pixels`); continue; }
+        if (s.spread < 30) fails.push(`${name} ${side}: luminance spread ${s.spread}`);
+        if (s.detail < 3) fails.push(`${name} ${side}: detail ${s.detail}`);
+        if (s.clip > 0.02) fails.push(`${name} ${side}: ${pc(s.clip)} clipped white`);
+      }
+      if (r.nearer > 0 || r.margin < 2) fails.push(`${name}: nearest sleeve vertex ${r.minDepth} m (${r.margin}x the near plane), ${r.nearer} nearer than it`);
+      out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
+    }
+    await game(page, () => { const g = window.__game; g.phys.delta = 0; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    expect(fails.length === 0, fails.join('; ') + ' | ' + out.join(' | '));
+    return out.join(' | ');
   });
   // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
   // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb
