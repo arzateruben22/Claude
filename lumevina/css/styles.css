@@ -18,41 +18,44 @@
      sand       gold                 blush      tinted surface */
 :root {
   color-scheme: light;
-  /* Evelyn's coffee neutrals (Linen, Khaki, Camel, Cocoa, Espresso) with
-     classic black for headings, buttons and the words that matter */
-  --khaki: #D7C9B8;
-  --camel: #B2967D;
-  --cocoa: #7D5A44;
-  --espresso: #4A342A;
-  --linen: #F5F1EA;
-  --linen-2: #E6DCCF;
-  --porcelain: #FFFFFF;
-  --surface-2: #F9F6F1;
-  --field: #FFFFFF;
-  --panel-edge: rgba(74, 52, 42, 0.16);
-  --panel-edge-soft: rgba(74, 52, 42, 0.09);
+  /* Nov 16: a warm neutral palette, like the spa: warm ivory, soft white,
+     stone greige, mushroom taupe, warm charcoal and near-black, no pink or
+     mauve. (The token names are the old ones: --linen is the ivory, --khaki
+     the greige, --camel the taupe, --espresso the charcoal, --ink the black;
+     --cocoa is a deeper taupe for small accents that have to read.) */
+  --khaki: #D8D4CD;
+  --camel: #9A8E82;
+  --cocoa: #6B625A;
+  --espresso: #403D39;
+  --linen: #F6F4EF;
+  --linen-2: #D8D4CD;
+  --porcelain: #FBFAF7;
+  --surface-2: #FBFAF7;
+  --field: #FBFAF7;
+  --panel-edge: rgba(64, 61, 57, 0.16);
+  --panel-edge-soft: rgba(64, 61, 57, 0.09);
   /* text: black first; secondary text in Espresso, quiet notes in Cocoa
      (both clear 4.5:1 on linen and on white) */
-  --ink: #161412;
-  --ink-60: #4A342A;
-  --ink-35: #7D5A44;
-  --ink-15: rgba(74, 52, 42, 0.16);
+  --ink: #171717;
+  --ink-60: #403D39;
+  --ink-35: #6B625A;
+  --ink-15: rgba(64, 61, 57, 0.16);
   /* the accent is the black itself (white on it is 18:1); sage marks "in stock" */
-  --mauve: #161412;
-  --plum: #0E0D0C;
-  --rose: #4A342A;
-  --blush: #EDE5DA;
-  --sand: #7D5A44;
+  --mauve: #171717;
+  --plum: #0F0F0F;
+  --rose: #403D39;
+  --blush: #E7E4DE;
+  --sand: #9A8E82;
   --sage: #4E6A45;
   --danger: #A4432F;
   --on-accent: #FFFFFF;
-  --grad-rose: linear-gradient(95deg, #7D5A44 0%, #161412 50%, #4A342A 100%);
+  --grad-rose: linear-gradient(95deg, #6B625A 0%, #171717 50%, #403D39 100%);
   /* channels, for tints at any strength: Camel tints, Espresso shadows */
-  --accent-rgb: 178, 150, 125;
-  --gold-rgb: 125, 90, 68;
-  --line-rgb: 22, 20, 18;
-  --shadow-rgb: 74, 52, 42;
-  --glass-rgb: 255, 255, 255;
+  --accent-rgb: 154, 142, 130;
+  --gold-rgb: 107, 98, 90;
+  --line-rgb: 23, 23, 23;
+  --shadow-rgb: 64, 61, 57;
+  --glass-rgb: 251, 250, 247;
   --sage-rgb: 78, 106, 69;
   --danger-rgb: 164, 67, 47;
   --font-display: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif;
@@ -368,7 +371,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   letter-spacing: -0.022em;
 }
 
-.nav-ev { font-style: normal; color: var(--cocoa); }
+.nav-ev { font-style: normal; color: inherit; }   /* Nov 16: the whole name in near-black */
 .ev-ico { display: inline-block; width: 1.3em; height: 0.7em; vertical-align: 0; fill: currentColor; }   /* the EV mark: wide, sitting on the baseline at cap height */
 .nav-brand-sub {
   font-family: var(--font-body);
@@ -376,7 +379,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   font-weight: 400;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--ink-35);
+  color: var(--ink-60);
 }
 
 .nav-links {
@@ -615,8 +618,8 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
    originals are in marketing/source/. ─── */
 .hero {
   background:
-    radial-gradient(55% 42% at 10% 2%, rgba(255, 247, 235, 0.95), rgba(255, 247, 235, 0) 70%),
-    linear-gradient(180deg, var(--linen) 0%, var(--linen) 52%, #F4E2D2 80%, #F1D6C0 100%);
+    radial-gradient(55% 42% at 10% 2%, rgba(254, 248, 242, 0.95), rgba(254, 248, 242, 0) 70%),
+    linear-gradient(180deg, var(--linen) 0%, var(--linen) 52%, #ECE6E0 80%, #E2DCD6 100%);
 }
 /* the paper's tooth, very faint */
 .hero::before {
@@ -972,9 +975,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 
 .visual-ageless    { background: linear-gradient(135deg, var(--plum), var(--mauve) 55%, var(--rose)); }
 .visual-custom     { background: linear-gradient(135deg, var(--mauve), var(--rose) 60%, var(--blush)); }
-.visual-dermaplane { background: linear-gradient(135deg, #EAD8C6, #D9BFA5 60%, #C4A486); }
-.visual-peel       { background: linear-gradient(135deg, #EBD3C7, #DDB8A6 60%, var(--blush)); }
-.visual-lash       { background: linear-gradient(135deg, #E3DCCF, #CFC3B0 60%, #B8A991); }
+.visual-dermaplane { background: linear-gradient(135deg, #E1DBD5, #CAC4BE 60%, #B0AAA4); }
+.visual-peel       { background: linear-gradient(135deg, #DFD9D3, #C7C1BB 60%, var(--blush)); }
+.visual-lash       { background: linear-gradient(135deg, #E3DDD7, #CAC4BE 60%, #B1ABA5); }
 .product-name {
   font-family: var(--font-display);
   font-size: 1.32rem;
@@ -1001,20 +1004,20 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 /* ─── The gift certificate: pick an amount, add it to the cart ───
    (generated by scripts/build-services.mjs; js/cart.js keeps the button in step) */
 .gift-zone { margin-top: var(--space-5); }
-/* sandy pearl: a soft pink-sand ground (#F2E2D9), a pearl sheen from the top left, a faint
+/* sandy pearl: a soft pink-sand ground (#ECE6E0), a pearl sheen from the top left, a faint
    shimmer across it like nacre, and the finest grain; her black for the words */
 .gift-cert {
-  --sand: #F2E2D9; --sand-hi: #FCF6F2; --sand-low: #E6CDBF; --sand-edge: rgba(122, 88, 72, 0.24);
+  --sand: #ECE6E0; --sand-hi: #FCF7F2; --sand-low: #D9D3CD; --sand-edge: rgba(102, 96, 90, 0.24);
   position: relative; display: grid; gap: 1.1rem; align-items: center;
   max-width: 52rem; margin: 0 auto;
   padding: 1.4rem 1.25rem 1.3rem; border-radius: 22px; overflow: hidden;
   background:
-    linear-gradient(118deg, rgba(255, 255, 255, 0) 30%, rgba(255, 244, 236, 0.55) 46%, rgba(236, 222, 240, 0.28) 54%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(118deg, rgba(255, 255, 255, 0) 30%, rgba(252, 246, 240, 0.55) 46%, rgba(236, 222, 240, 0.28) 54%, rgba(255, 255, 255, 0) 70%),
     radial-gradient(85% 70% at 22% 0%, var(--sand-hi), transparent 70%),
     radial-gradient(70% 60% at 100% 100%, var(--sand-low), transparent 72%),
     var(--sand);
   color: var(--ink);
-  box-shadow: 0 18px 40px rgba(122, 88, 72, 0.16);
+  box-shadow: 0 18px 40px rgba(102, 96, 90, 0.16);
 }
 /* the grain: a fixed-seed noise tile, multiplied in very lightly */
 .gift-cert::before {
@@ -1040,7 +1043,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .gift-amounts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.4rem; margin: 0 auto 0.9rem; max-width: 26rem; }
 .gift-amt {
   min-height: 44px; padding: 0.5rem 0.2rem; border-radius: 12px; cursor: pointer;
-  border: 1px solid rgba(74, 52, 42, 0.32); background: rgba(255, 255, 255, 0.28); color: var(--ink);
+  border: 1px solid rgba(63, 57, 51, 0.32); background: rgba(255, 255, 255, 0.28); color: var(--ink);
   font: inherit; font-size: 0.95rem; font-weight: 600; font-variant-numeric: tabular-nums;
   transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
 }
@@ -1052,7 +1055,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .gift-custom-label { font-size: 0.85rem; color: var(--espresso); }
 .gift-custom-field {
   display: inline-flex; align-items: center; gap: 0.25rem; padding: 0 0.8rem; min-height: 44px; border-radius: 12px;
-  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(74, 52, 42, 0.32); color: var(--ink); font-weight: 600;
+  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(63, 57, 51, 0.32); color: var(--ink); font-weight: 600;
 }
 .gift-custom-field:focus-within { border-color: var(--ink); }
 .gift-custom-field input {
@@ -1060,7 +1063,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   font: inherit; font-size: 1rem; font-weight: 600; font-variant-numeric: tabular-nums; -moz-appearance: textfield;
 }
 .gift-custom-field input::-webkit-outer-spin-button, .gift-custom-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-.gift-custom-field input::placeholder { color: rgba(74, 52, 42, 0.5); }
+.gift-custom-field input::placeholder { color: rgba(63, 57, 51, 0.5); }
 .gift-custom-hint { flex-basis: 100%; font-size: 0.78rem; color: var(--espresso); }
 .gift-custom-hint.is-error { color: var(--danger); font-weight: 600; }
 .gift-cert-add { width: 100%; max-width: 26rem; background: var(--ink); border-color: var(--ink); color: var(--linen); font-weight: 600; }
@@ -1075,10 +1078,10 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .gift-check-row { display: flex; gap: 0.4rem; }
 .gift-check-row input {
   flex: 1; min-width: 0; min-height: 44px; padding: 0 0.8rem; border-radius: 12px;
-  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(74, 52, 42, 0.32); color: var(--ink);
+  background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(63, 57, 51, 0.32); color: var(--ink);
   font: inherit; font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase;
 }
-.gift-check-row input::placeholder { color: rgba(74, 52, 42, 0.5); text-transform: none; letter-spacing: 0; }
+.gift-check-row input::placeholder { color: rgba(63, 57, 51, 0.5); text-transform: none; letter-spacing: 0; }
 .gift-check-row input:focus { outline: none; border-color: var(--ink); }
 .gift-check-go { flex: none; min-height: 44px; padding: 0 1rem; border-radius: 12px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
 .gift-check-go:hover { background: rgba(255, 255, 255, 0.4); }
@@ -1776,9 +1779,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   box-shadow: inset 0 0 0 1px rgba(var(--line-rgb), 0.03);
 }
 
-.thumb-instagram { background: linear-gradient(135deg, #E9D2C2, #D7AE96 55%, #C08B6F); }
-.thumb-facebook  { background: linear-gradient(135deg, #E4DED3, #CBBFAE); }
-.thumb-book      { background: linear-gradient(135deg, #EEDCC4, #D8B98F); }
+.thumb-instagram { background: linear-gradient(135deg, #DDD7D1, #BEB8B2 55%, #9E9892); }
+.thumb-facebook  { background: linear-gradient(135deg, #E5DFD9, #C7C1BB); }
+.thumb-book      { background: linear-gradient(135deg, #E5DFD9, #C3BDB7); }
 .thumb-mail      { background: linear-gradient(135deg, #DCE3D2, #B5C3A6); }
 
 .stack-text { min-width: 0; display: flex; flex-direction: column; gap: 0.2rem; }
@@ -1905,7 +1908,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .retail-visual.has-photo {
   position: relative;
   overflow: hidden;
-  background: #EAE3DA;
+  background: #EAE4DE;
 }
 .retail-visual.has-photo img {
   position: absolute;
@@ -1920,9 +1923,9 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   .retail-visual.has-photo img, .retail-card:hover .retail-visual.has-photo img { transition: none; transform: none; }
 }
 /* dark swatches, each lit from one corner in its product's color */
-.rt-tint-1 { background: radial-gradient(120% 120% at 85% 10%, rgba(var(--accent-rgb), 0.22), transparent 60%), #F3EAE1; }
-.rt-tint-2 { background: radial-gradient(120% 120% at 85% 10%, rgba(120, 108, 92, 0.22), transparent 60%), #F1ECE4; }
-.rt-tint-3 { background: radial-gradient(120% 120% at 85% 10%, rgba(var(--gold-rgb), 0.24), transparent 60%), #F4ECDF; }
+.rt-tint-1 { background: radial-gradient(120% 120% at 85% 10%, rgba(var(--accent-rgb), 0.22), transparent 60%), #F2ECE6; }
+.rt-tint-2 { background: radial-gradient(120% 120% at 85% 10%, rgba(116, 110, 104, 0.22), transparent 60%), #F3EDE7; }
+.rt-tint-3 { background: radial-gradient(120% 120% at 85% 10%, rgba(var(--gold-rgb), 0.24), transparent 60%), #F3EDE7; }
 .rt-tint-4 { background: radial-gradient(120% 120% at 85% 10%, rgba(var(--sage-rgb), 0.22), transparent 60%), #EEEFE5; }
 .retail-body { display: flex; flex-direction: column; min-width: 0; padding: 0.15rem 0.1rem 0 0; }
 .retail-name {
@@ -3012,11 +3015,11 @@ html.svc-open { overflow: hidden; }
 
 .tl-meta { font-size: 0.75rem; color: var(--ink-60); }
 
-.tl-tint-1 { background: #F3E6DD; border-color: var(--mauve); }
-.tl-tint-2 { background: #F4E5DF; border-color: #B57A66; }
-.tl-tint-3 { background: #F2EADC; border-color: #A88454; }
+.tl-tint-1 { background: #EFE9E3; border-color: var(--mauve); }
+.tl-tint-2 { background: #EFE9E3; border-color: #8F8983; }
+.tl-tint-3 { background: #F1EBE5; border-color: #8F8983; }
 .tl-tint-4 { background: #E9EDE2; border-color: #6F8A63; }
-.tl-tint-5 { background: #EEE8E1; border-color: #8C7B6B; }
+.tl-tint-5 { background: #EFE9E3; border-color: #847E78; }
 
 .tl-end { align-items: center; }
 .tl-end .tl-time { padding-top: 0; }
@@ -3329,7 +3332,7 @@ html.svc-open { overflow: hidden; }
 .mirror-ico { width: 1.45rem; height: 1.45rem; overflow: visible; }
 .mirror-glass { fill: rgba(var(--accent-rgb), 0.238); animation: mirror-glint 3s ease-in-out infinite; }
 .mirror-shine { stroke: #fff; stroke-width: 1.2; stroke-linecap: round; fill: none; opacity: 0.85; }
-.mirror-btn.is-lit .mirror-glass { animation: none; fill: #E7CDBE; filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.9)); }
+.mirror-btn.is-lit .mirror-glass { animation: none; fill: #D9D3CD; filter: drop-shadow(0 0 6px rgba(var(--accent-rgb), 0.9)); }
 .mirror-btn.is-lit .mirror-wrap { animation: none; }
 @keyframes mirror-sway {
   0%, 100% { transform: rotate(-7deg); }
@@ -4817,7 +4820,7 @@ p.install-steps { padding-left: 0; }
 }
 .mem-plan:hover { transform: translateY(-3px); border-color: var(--panel-edge); }
 .mem-plan.is-popular {
-  background: linear-gradient(165deg, #F3E7DC 0%, var(--porcelain) 60%);
+  background: linear-gradient(165deg, #EFE9E3 0%, var(--porcelain) 60%);
   border-color: rgba(var(--accent-rgb), 0.297);
 }
 .mem-tag {
@@ -5524,9 +5527,9 @@ html:not(.book-site) .bk-move { display: none; }
 }
 
 /* the ladder: dusk rose → petal → pearl */
-.mem-plan[data-tier="1"] { --lum: 0.3;  --t1: #9A6650; --t2: #845240; --tier: 154, 102, 80; }
-.mem-plan[data-tier="2"] { --lum: 0.62; --t1: #8C6A3E; --t2: #7A5D36; --tier: 140, 106, 62; }
-.mem-plan[data-tier="3"] { --lum: 1;    --t1: #4A3A2E; --t2: #2C241E; --tier: 74, 58, 46; }
+.mem-plan[data-tier="1"] { --lum: 0.3;  --t1: #79736D; --t2: #655F59; --tier: 154, 102, 80; }
+.mem-plan[data-tier="2"] { --lum: 0.62; --t1: #756F69; --t2: #67615B; --tier: 140, 106, 62; }
+.mem-plan[data-tier="3"] { --lum: 1;    --t1: #433D37; --t2: #2C2620; --tier: 74, 58, 46; }
 
 .mem-plan[data-tier] {
   border-color: rgba(var(--tier), calc(0.14 + 0.34 * var(--lum)));
@@ -5565,7 +5568,7 @@ html:not(.book-site) .bk-move { display: none; }
 }
 /* Ageless: pearl with a slow sheen and a soft halo */
 .mem-plan[data-tier="3"] .mem-amt {
-  background: linear-gradient(100deg, #2C241E 0%, #8C6A3E 28%, #4A3A2E 50%, #8C6A3E 72%, #2C241E 100%);
+  background: linear-gradient(100deg, #2C2620 0%, #756F69 28%, #433D37 50%, #756F69 72%, #2C2620 100%);
   background-size: 250% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -5664,7 +5667,7 @@ html:not(.book-site) .bk-move { display: none; }
 .mem-hint:hover { color: var(--rose); border-color: var(--rose); }
 /* on the photo of the phone's lead card, the link reads light */
 @media (max-width: 600px) {
-  .product-card--hero .mem-hint { color: #F1DCCB; border-color: rgba(241, 220, 203, 0.5); }
+  .product-card--hero .mem-hint { color: #E6E0DA; border-color: rgba(230, 224, 218, 0.5); }
 }
 .mem-hint.is-mine { color: var(--ink-60); border-bottom-color: transparent; }
 .mem-hint[hidden] { display: none; }
@@ -6116,7 +6119,7 @@ html:not(.book-site) .bk-move { display: none; }
 /* ShinyText: a slow light across a line, 2.4s across then a pause.
    It takes the text's own color, so it works on any line. */
 .rb-shiny {
-  background-image: linear-gradient(120deg, currentColor 0%, currentColor 35%, #B9AFA4 50%, currentColor 65%, currentColor 100%);
+  background-image: linear-gradient(120deg, currentColor 0%, currentColor 35%, #B7B1AB 50%, currentColor 65%, currentColor 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -6312,19 +6315,19 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 }
 
 /* ─── Book a facial: every opening on one calendar ─── */
-.section-book { background: #EFE8DE; border-top: 1px solid rgba(125, 90, 68, 0.45); border-bottom: 1px solid rgba(125, 90, 68, 0.3); }
-.section-book .bkl-cal, .section-book .bkl-pick, .section-book .bk-notice, .section-book .slot-btn, .section-book .sh-chip { border-color: rgba(125, 90, 68, 0.5); }
-.section-book .bkl-cal { border-width: 1.5px; border-radius: 12px; background: var(--porcelain); box-shadow: 0 10px 30px rgba(74, 52, 42, 0.08); }
+.section-book { background: #EFE9E3; border-top: 1px solid rgba(104, 98, 92, 0.45); border-bottom: 1px solid rgba(104, 98, 92, 0.3); }
+.section-book .bkl-cal, .section-book .bkl-pick, .section-book .bk-notice, .section-book .slot-btn, .section-book .sh-chip { border-color: rgba(104, 98, 92, 0.5); }
+.section-book .bkl-cal { border-width: 1.5px; border-radius: 12px; background: var(--porcelain); box-shadow: 0 10px 30px rgba(63, 57, 51, 0.08); }
 .section-book .bkl-pick { border-width: 1.5px; border-radius: 10px; }
 .section-book .bk-notice { border-left-width: 4px; border-left-color: var(--cocoa); border-radius: 10px; }
 .section-book .slot-btn { border-radius: 8px; font-weight: 600; background: var(--porcelain); }
-.section-book .slot-btn:hover:not(:disabled) { border-color: var(--cocoa); background: rgba(125, 90, 68, 0.06); }
+.section-book .slot-btn:hover:not(:disabled) { border-color: var(--cocoa); background: rgba(104, 98, 92, 0.06); }
 .section-book .slot-btn.selected { background: var(--cocoa); border-color: var(--cocoa); color: #fff; }
 .section-book .cal-day { border-radius: 8px; }
-.section-book .cal-day.is-open { border-color: rgba(125, 90, 68, 0.28); background: rgba(255, 255, 255, 0.7); }
-.section-book .cal-day.is-few { border-color: rgba(125, 90, 68, 0.55); background: rgba(125, 90, 68, 0.08); }
+.section-book .cal-day.is-open { border-color: rgba(104, 98, 92, 0.28); background: rgba(255, 255, 255, 0.7); }
+.section-book .cal-day.is-few { border-color: rgba(104, 98, 92, 0.55); background: rgba(104, 98, 92, 0.08); }
 .section-book .cal-day.is-selected, .section-book .cal-day.is-selected:hover { background: var(--cocoa); border-color: var(--cocoa); }
-.section-book .cal-day.is-today { box-shadow: inset 0 0 0 1.5px rgba(125, 90, 68, 0.6); }
+.section-book .cal-day.is-today { box-shadow: inset 0 0 0 1.5px rgba(104, 98, 92, 0.6); }
 .section-book .cal-wd { color: var(--cocoa); }
 .section-book .cal-title { color: var(--ink); }
 .section-book .sh-chip[aria-pressed="true"], .section-book .sh-chip.on { background: var(--cocoa); border-color: var(--cocoa); color: #fff; }
@@ -6439,7 +6442,7 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 }
 
 /* ─── Shop sections, product photos, the detail view ─── */
-:root { --photo-ground: #FAF6F0; }
+:root { --photo-ground: #FCF7F2; }
 .sh-grid { display: block; }
 .sh-sec:focus { outline: none; }
 .sh-sec + .sh-sec { margin-top: 2.75rem; }
@@ -6821,9 +6824,9 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .sh-consult { border-style: dashed; }
 .sh-consult.is-waiting { opacity: .72; cursor: default; }
 .sh-consult-card { display: flex; align-items: center; justify-content: space-between; gap: 1.2rem; margin: 0 0 1.2rem; padding: 1.1rem 1.3rem; border-radius: 18px;
-  background: linear-gradient(135deg, #f7f1e8, #efe3d2); border: 1px solid rgba(22,20,18,.08); }
+  background: linear-gradient(135deg, #F8F2EC, #EBE5DF); border: 1px solid rgba(22,20,18,.08); }
 .sh-consult-text { min-width: 0; }
-.sh-consult-k { margin: 0 0 .2rem; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #7d5a44; }
+.sh-consult-k { margin: 0 0 .2rem; font-size: .78rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #68625C; }
 .sh-consult-card h3 { margin: 0 0 .3rem; font-size: 1.1rem; line-height: 1.2; }
 .sh-consult-card p:last-child { margin: 0; font-size: .92rem; line-height: 1.45; color: #4a433d; max-width: 54ch; }
 .sh-consult-card .btn { flex: 0 0 auto; white-space: nowrap; }
@@ -6835,8 +6838,8 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .cs-form label, .cs-lab { display: block; margin: .8rem 0 .3rem; font-size: .88rem; font-weight: 600; }
 .cs-form input, .cs-form textarea { width: 100%; padding: .72rem .85rem; border: 1px solid rgba(22,20,18,.18); border-radius: 12px; font: inherit; font-size: 1rem; background: #fff; color: inherit; }
 .cs-form input:focus, .cs-form textarea:focus { outline: 2px solid #161412; outline-offset: 1px; }
-.cs-hint { margin: .5rem 0 0; font-size: .82rem; line-height: 1.4; color: #7d5a44; }
-.cs-status { min-height: 1.2em; margin: .6rem 0 0; font-size: .9rem; color: #7d5a44; }
+.cs-hint { margin: .5rem 0 0; font-size: .82rem; line-height: 1.4; color: #68625C; }
+.cs-status { min-height: 1.2em; margin: .6rem 0 0; font-size: .9rem; color: #68625C; }
 .cs-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
 .cs-actions .btn { flex: 1 1 auto; }
 
@@ -6849,7 +6852,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .watch-item.no-src video { pointer-events: none; opacity: .85; }
 .watch-item figcaption { margin-top: .6rem; font-size: .92rem; line-height: 1.4; }
 .watch-item figcaption b { display: block; font-weight: 650; }
-.watch-item figcaption span { color: #7d5a44; font-size: .82rem; }
+.watch-item figcaption span { color: #68625C; font-size: .82rem; }
 .watch-more { margin: 1.6rem 0 0; max-width: 42rem; font-size: 0.98rem; line-height: 1.5; color: var(--ink-60); }
 @media (max-width: 760px) { .watch-grid { grid-template-columns: 1fr; gap: 1.4rem; } }
 
@@ -6864,7 +6867,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .app-store small { font-size: 0.7rem; letter-spacing: 0.02em; opacity: 0.8; }
 .app-store b { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; }
 .app-phone { margin: 0; justify-self: center; width: min(18rem, 100%); }
-.app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(74, 52, 42, 0.28)); }
+.app-phone img { display: block; width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(63, 57, 51, 0.28)); }
 .app-copy .section-sub { margin-bottom: 0; }
 @media (max-width: 800px) {
   .app-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -6889,10 +6892,10 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   border-top: 0;
   border-bottom: 0;
   background:
-    linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 7rem),
+    linear-gradient(180deg, var(--linen) 0, rgba(247, 241, 236, 0) 7rem),
     linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 6rem),
     url("../img/water/koi.webp") 100% 50% / cover no-repeat,
-    #EDC9AC;
+    #D6CFC4;
 }
 .book-glossgenius .bkl-gg {
   background: rgba(255, 255, 255, 0.88);
@@ -6911,11 +6914,11 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .section-book {
     padding-top: max(var(--space-7), 46vw);
     background:
-      linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 2.5rem),
+      linear-gradient(180deg, var(--linen) 0, rgba(247, 241, 236, 0) 2.5rem),
       linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 5rem),
-      linear-gradient(180deg, rgba(237, 201, 172, 0) calc(56.3vw - 4rem), #EDC9AC 56.3vw),
+      linear-gradient(180deg, rgba(214, 207, 196, 0) calc(56.3vw - 4rem), #D6CFC4 56.3vw),
       url("../img/water/koi.webp") 50% 0 / 100% auto no-repeat,
-      #EDC9AC;
+      #D6CFC4;
   }
 }
 
@@ -6945,16 +6948,16 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .section-policies {
   border-top: 0;
   background:
-    linear-gradient(180deg, var(--linen) 0, rgba(245, 241, 234, 0) 6rem),
-    linear-gradient(0deg, #F4D2B9 0, rgba(244, 210, 185, 0) 7rem),
+    linear-gradient(180deg, var(--linen) 0, rgba(247, 241, 236, 0) 6rem),
+    linear-gradient(0deg, #DED7CD 0, rgba(222, 215, 205, 0) 7rem),
     url("../img/water/open.webp") 50% 0 / cover no-repeat,
-    #F4D2B9;
+    #DED7CD;
 }
 .section-contact {
   border-top: 0;
   background:
-    linear-gradient(180deg, #F4D2B9 0, rgba(244, 210, 185, 0) 7rem),
-    linear-gradient(0deg, var(--linen) 0, rgba(245, 241, 234, 0) 6rem),
+    linear-gradient(180deg, #DED7CD 0, rgba(222, 215, 205, 0) 7rem),
+    linear-gradient(0deg, var(--linen) 0, rgba(247, 241, 236, 0) 6rem),
     url("../img/water/open.webp") 50% 100% / cover no-repeat,
-    #F4D2B9;
+    #DED7CD;
 }

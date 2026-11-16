@@ -489,3 +489,22 @@ Skin School is off every version of the website:
 - The share picture is now the koi still (`img/share.jpg`), not a lesson frame.
 
 The course itself (`school.html` and `docs/school/`) is untouched, and so is its card on Everything Lumevina. To bring Skin School back, add "school" to the features in `js/site-config.js`.
+
+## The warm neutral palette (Nov 16)
+
+The website moved off the rosy beige and grey to a warm neutral palette, like the spa, with stronger contrast and no pink or mauve:
+
+| Colour | Hex | Used for |
+|---|---|---|
+| Warm ivory | #F6F4EF | the main background (`--linen`) |
+| Soft white | #FBFAF7 | product cards and lighter sections (`--porcelain`, `--field`) |
+| Stone greige | #D8D4CD | secondary sections, borders, dividers (`--khaki`, `--linen-2`) |
+| Mushroom taupe | #9A8E82 | subtle accents (`--camel`, `--sand`) |
+| Near-black | #171717 | headings, buttons, the logo (`--ink`) |
+| Warm charcoal | #403D39 | body text (`--ink-60`, `--espresso`) |
+
+- **Small text accents** (eyebrows, notes, the headline's second line) use a deeper taupe, #6B625A. Mushroom taupe itself is too light to read at small sizes on ivory, while #6B625A reads at 5:1.
+- **The other hard-coded shades:** about 90 peach, rose and cocoa shades in `css/styles.css` became the warm neutral of the same lightness (`marketing`-free script, logic in the commit). The red for errors and the green for "In stock" stay.
+- **The logo:** LUMEVINA is all near-black. The header's "ev" and the drawn logo's EV no longer fade to grey. AESTHETICS SPA is warm charcoal, kept distinct by its small size and wide letter spacing. The pink chalk on the drawn roses is off.
+- **The water pictures** (the koi, still and clip, and the open water) and the share picture were re-tinted from peach to warm stone (saturation down to 28%). The koi are now pearl white. The originals are unchanged in `marketing/source/`. The water band behind the headings is stone greige.
+- **Unchanged:** the service and product photos keep their natural colours.

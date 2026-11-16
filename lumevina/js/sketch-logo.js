@@ -2,8 +2,7 @@
  *
  * The front page shows Evelyn's own logo (img/logo-full.svg: the lines traced
  * from her drawing, the words as shapes) as a pencil sketch: warm graphite
- * with a paper grain, a second, lighter sketch line just off the first, a
- * very slight hint of pink chalk rubbed into the roses, and,
+ * with a paper grain, a second, lighter sketch line just off the first, and,
  * when the page opens, the lines drawing themselves in (the circle, then her
  * profile and the roses), with the words shaded in last. It stays still with
  * reduced motion. If the file can't be read, the plain logo (the <img> inside
@@ -16,7 +15,7 @@
   if (!img || !window.fetch || !window.DOMParser) return;
   var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var NS = "http://www.w3.org/2000/svg";
-  var GRAPHITE = "#2E2621";   /* deep, warm graphite: a soft 4B pencil */
+  var GRAPHITE = "#171717";   /* near-black (Nov 16 palette): the logo reads strong, the pencil grain keeps it soft */
 
   /* the pencil: a grain that lets the paper show through the line, and a
      slight wobble, as a hand never draws a perfect curve; the loose pass
@@ -94,7 +93,9 @@
     chalkG.setAttribute("class", "sketch-chalk");
     chalkG.setAttribute("opacity", "0.36");
     chalkG.appendChild(chalk);
-    svg.insertBefore(chalkG, loose);
+    /* Nov 16: no pink or mauve anywhere, so the chalk is off (kept here to bring back) */
+    var CHALK = false;
+    if (CHALK) svg.insertBefore(chalkG, loose);
     /* the words: graphite, shaded in last */
     var words = Array.prototype.slice.call(svg.children).filter(function (el) { return el.tagName.toLowerCase() === "path"; });
     var wordsG = document.createElementNS(NS, "g");
@@ -102,6 +103,7 @@
     wordsG.setAttribute("class", "sketch-words");
     words.forEach(function (p) {
       p.setAttribute("fill", GRAPHITE);
+      p.removeAttribute("fill-opacity");   /* the EV no longer fades to grey: the whole name is near-black */
       if (p.getAttribute("stroke")) p.setAttribute("stroke", GRAPHITE);
       wordsG.appendChild(p);
     });

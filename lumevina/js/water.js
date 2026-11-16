@@ -42,7 +42,7 @@
   ];
   var BAND = 300;                 /* px: the strip at the top of a plain section */
   var FLAT = 0.42;                /* the water is seen at an angle: its light is flatter than it is wide */
-  var TINT = "245, 213, 189";     /* the bands' water, the cream of the pictures */
+  var TINT = "216, 212, 205";     /* the bands' water: stone greige (Nov 16 palette) */
   var STEP = 7;                   /* px between the points the light is worked out at */
   /* the waves that bend the light: wavelength (px), direction (degrees), speed (px/s), strength */
   var WAVES = [[270, 12, 16, 0.42], [200, 74, 12, 0.36], [160, 131, 19, 0.3], [340, 197, 9, 0.4], [130, 286, 14, 0.24], [220, 333, 11, 0.32]];
@@ -115,7 +115,7 @@
         var e = 1 - Math.pow(1 - a, 3), rad = (rp.big ? 30 : 8) * r + reach * e * r, fade = Math.pow(1 - a, 2) * (rp.small ? 0.7 : 1);
         c.beginPath();
         c.ellipse(rp.x, rp.y + 2 * r, rad * 1.04, rad * flat * 1.04, 0, 0, Math.PI * 2);
-        c.strokeStyle = "rgba(120, 92, 70, " + (fade * 0.3) + ")";
+        c.strokeStyle = "rgba(100, 94, 88, " + (fade * 0.3) + ")";
         c.lineWidth = Math.max(0.7, 2.6 * (1 - a)) * r;
         c.stroke();
         c.beginPath();
