@@ -6730,6 +6730,7 @@ a.book-btn { text-align: center; }
   display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin: 1rem 0 0; max-width: 44rem;
   font-size: 1rem; line-height: 1.5; color: var(--ink-60);
 }
+.bk-soon-text { flex-basis: 100%; }   /* the words on their own line, under the tag */
 .bk-soon-tag {
   display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 999px;
   font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;

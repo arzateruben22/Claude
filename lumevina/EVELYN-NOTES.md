@@ -614,3 +614,16 @@ The card above the shop now reads:
 "Some treatments take a deposit ($20 to $50) when you book…" is removed from the booking card, where booking runs on GlossGenius. The card keeps "New here?" and "Been before?" and the "See openings and book" button. The deposits themselves are unchanged: GlossGenius still takes them, and each one still shows on the menu, in the policies and in the chat.
 
 **Later the same day:** "Book a Consultation · $75" now opens her GlossGenius page (lumevina.glossgenius.com) in a new tab, in both versions of the site, instead of adding the consultation to the bag. The link follows the GlossGenius address in `js/site-config.js`. The chat says to book it on GlossGenius too. On GlossGenius, the In-Person and Virtual Consultations should be $75 so the two match.
+
+## The booking section's wording (Nov 16)
+
+While booking runs on GlossGenius, the Book section reads:
+
+> 02 · Book a facial
+> **Book your appointment *at Lumevina Aesthetics Spa.***
+> [COMING SOON] Online booking directly through the website is coming soon. For now, book through GlossGenius using the button below.
+> **New clients:** Choose "New Clients Start Here." For acne, choose "Acne Bootcamp's New Client Consultation + Treatment."
+> **Returning clients:** Choose your service and preferred time.
+> [Book through GlossGenius]
+
+The deposit wording is gone from the section: "same calendar, same deposits" and "Evelyn's calendar, deposits and reminders are on GlossGenius". In the version that books on the website, "(some treatments take a small deposit)" is gone too. Each deposit still shows beside its treatment on the menu and in the policies. "Opens lumevina.glossgenius.com" stays under the button.
