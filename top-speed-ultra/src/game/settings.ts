@@ -15,7 +15,7 @@ export type TimeOfDay = 'live' | 'sunrise' | 'day' | 'sunset' | 'night';
 export type Weather = 'clear' | 'cloudy' | 'rain' | 'fog' | 'mist' | 'changing';
 export type Transmission = 'auto' | 'manual';
 export type HudStyle = 'modern' | 'minimal';
-export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low (temporary switch until RS2 makes it Low itself)
+export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low; with Low, the default for a new player (SETTINGS_V 3)
 
 export type Look = 'ultra' | 'hd';
 export interface Settings {
@@ -62,7 +62,10 @@ export interface Settings {
 // (-10..+15) starts at +10. It was 0; readSettings moves a saved 0 made under the old default to +10, once (SETTINGS_V).
 export const FOV_DEFAULT = 10;
 // 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
-export const SETTINGS_V = 2;
+// 3: Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): settings saved before
+// it by a player who never picked the Graphics preset themselves (qualityChosen false) move to Low + Retro once; a
+// player who picked keeps their preset and style as they were.
+export const SETTINGS_V = 3;
 
 export interface QualityPreset {
   label: string;
@@ -118,7 +121,7 @@ export function customLine(h: number): string {
 
 // RS1, the Retro style on Low: Low's world (draw distance, scenery, textures) at full resolution, the device's pixel
 // ratio up to 2 and never under 1, with hard one-step sun shadows and its own single post pass (no composer)
-export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Low · Retro', renderScale: 1, maxPixelRatio: 2, minPixelRatio: 1, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0 };
+export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Retro · Low', renderScale: 1, maxPixelRatio: 2, minPixelRatio: 1, shadows: 1024, post: false, bloom: false, ao: false, msaa: 0 };
 export const retroOn = (s: Pick<Settings, 'quality' | 'style'>) => s.quality === 'low' && s.style === 'retro';
 export const presetFor = (s: Pick<Settings, 'quality' | 'style'>): QualityPreset => (retroOn(s) ? RETRO : QUALITY[s.quality]);
 
@@ -197,18 +200,17 @@ export const STARTS: { label: string; at: number; blurb: string }[] = [
 // a phone's first run starts in the Minimal HUD (it tucks the map and the icons after 4 s of just driving); a saved choice wins
 const firstHud = (): HudStyle => (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches ? 'minimal' : 'modern');
 
-function guessQuality(): Quality {
-  const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
-  if (coarse) return 'low';
-  const cores = navigator.hardwareConcurrency || 4;
-  return cores >= 8 ? 'high' : 'medium';
-}
+// A new player starts on Retro Low (owner, 2026-11-16), on any device: the Retro style over Low's world. The first-run
+// graphics check (Game.benchmark) still measures this device and saves what it holds (settings.ts saveBench), for a
+// hint in Settings, but it never changes this preset: only the player's own pick in Settings does (qualityChosen).
+export const DEFAULT_QUALITY: Quality = 'low';
+export const DEFAULT_STYLE: Style = 'retro';
 
 export function defaults(): Settings {
   return {
-    quality: guessQuality(), adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
+    quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
+    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
 }
 
@@ -259,10 +261,15 @@ function readSettings(): { s: Settings; migrated: boolean } {
     // the old default, never moved: saved before SETTINGS_V 2 at exactly 0, it takes the new default (+10). Once saved
     // at v 2, a 0 is the player's own choice and stays.
     if (from < 2 && fov === 0) fov = FOV_DEFAULT;
+    // Retro Low became the default at SETTINGS_V 3: saved before it without the player's own pick, the preset moves to
+    // Low + Retro, once (written back at this version, so a later change of theirs stays). Saved before it with their
+    // own pick (qualityChosen): their quality and style as they were (a style never saved reads as the old 'standard')
+    const chose = v.qualityChosen === true, toRetro = from < 3 && !chose;
+    const style: Style = toRetro ? 'retro' : v.style === 'retro' || v.style === 'standard' ? v.style : from < 3 ? 'standard' : d.style;
     const s: Settings = {
       ...d, ...v,
       fov, v: SETTINGS_V,
-      quality: v.quality && v.quality in QUALITY ? v.quality : d.quality,
+      quality: toRetro ? 'low' : v.quality && v.quality in QUALITY ? v.quality : d.quality,
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
@@ -277,9 +284,9 @@ function readSettings(): { s: Settings; migrated: boolean } {
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
       adaptive: v.adaptive !== false,
-      qualityChosen: v.qualityChosen === true,
+      qualityChosen: chose,
       showPerf: v.showPerf === true,
-      style: v.style === 'retro' ? 'retro' : 'standard',
+      style,
       look: v.look === 'hd' ? 'hd' : 'ultra',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},

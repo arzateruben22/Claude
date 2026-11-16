@@ -4,6 +4,74 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: Retro Low by default, a jump-only THRUST, and a store of three
+
+The owner (2026-11-16, with a Settings screenshot): "Make the style retro low as the new default, also just make the
+thrust option to only have the ability to jump over and also remove any additional store options other than the chad
+package, oc hypercar, and color kit" (the colour kit: the planned Colour Studio, $4.99). Branch claude/trim from
+f715bf6 (v21). Not committed.
+
+- **Retro Low is the default.** A new player (nothing saved) starts on quality Low in the Retro style on any device
+  (`settings.ts` DEFAULT_QUALITY / DEFAULT_STYLE; `guessQuality` is gone). The first-run graphics check still runs on
+  its own and saves what it measured (`tsu.bench`), but no longer changes the preset: its toast says what the device
+  holds and that Retro · Low stays, and Settings shows a hint ("The graphics check found this device holds ... Pick it
+  above if you want it") when its pick differs. Asked for from Settings ("Run graphics check") it applies its pick, as
+  before. While it runs, the Retro style is off so its rounds measure the standard presets; Retro comes back when it
+  ends. Settings version 3 (`SETTINGS_V`): settings saved before it by a player who never picked the Graphics preset
+  (`qualityChosen` false) move to Low + Retro once, written back at v3, so a change of theirs afterwards stays. **A
+  player who picked a preset themselves sees no change**: their quality and style as they were (a style never saved
+  reads as Standard, the old default). Settings reads "Now: Retro · Low · Retro keeps its own fixed picture" (the
+  preset's label is now "Retro · Low", also on the performance overlay), the toggle is "Style: Retro" (the old
+  "(preview of the new Low)" dropped), Low/Medium/High/Ultra stay, and with Adaptive quality on a line says it waits on
+  Retro (the governor never stepped Retro; that is unchanged and now said). Picking the style counts as the player's
+  own choice (`qualityChosen`).
+- **THRUST is the jump only.** A press of THRUST (the on-screen key, Left Shift, D-pad up; J as before) asks for one
+  Thrust Hop at once; holding asks for nothing more. Cold Thrust (the hold-to-boost push, its 120 ms hold delay, the
+  double-tap, its tank drain, the valve, its hiss/roar sound and its held jets) is gone: `HyperAbility.step` holds
+  `ext.fx` at 0 and never reads the control. Kept as they were: the hop's planner, cooldown/landing rules and refusals,
+  its gas and the tank (the hop's and Ground Lock's), the compressor, Ground Lock, the hop's take-off puff of the jets
+  and its whoosh. The key reads "Jump" (aria "Thrust jump: tap to hop over the traffic ahead. Tank N %"), the chase
+  view's strip "Jump", the car's cluster "JUMP" beside the tank's bar ("JUMP OFF" without it), the dash gauge has no
+  THRUST state. Physics.ts was not touched (the boost was only the caller's `ext.fx`).
+- **The store shows three things.** `listed: false` on every catalog item but the OC Hypercar Founder Edition and the
+  new Colour Studio (sku `colour-studio`, $4.99, "9 body colours and 9 accent colours for every car", `available:
+  false`, its one grant `colour-studio-palette` status build). The store is one ordered list (`catalog.ts`
+  STORE_LIST, `store-order.ts`): a listed `pack` other than the hypercar first (claude/cast's character pack lands
+  there when it merges; nothing faked here), then the hypercar, then the rest. The Colour Studio is a coming-soon card:
+  price, reason, "No pre-orders.", no button. Unlisted items stay in the catalog: owned ones keep working (Your items,
+  badges, the run-card frame, the hypercar's garage grant), but `saleState` refuses them ("Not in the store.") and so
+  does the server (`_shared/store.ts` sellable; `listed` is in the server copy). The hypercar card names the Founder
+  Pack only to someone who owns it. `store:check` knows `listed` (a listed unavailable sku needs its reason; the server
+  must refuse unlisted), takes $4.99 as the owner's second price exception, and accepts the garage's free rims
+  ('mesh', 'blade', `cars.ts` WHEELS), which failed the check at f715bf6 already. PROJECT_OC_MONETIZATION.md has the
+  trim at the top.
+
+**Checked** (headless Chromium, SwiftShader; 4 shared cores with other lanes' browsers, load average 5 to 17):
+`npx tsc --noEmit` and `-p tsconfig.game.json` clean; `npm run build` with one `data-build="owner-test"` in
+dist/artifact.html; `npm run store:sync`, `npm run store:check` ("catalog ok: 23 skus (12 available; 2 listed in the
+store: hypercar-founder, colour-studio (coming soon)), 46 entitlements"; "server catalog in sync"). Suite groups, each
+split with `--check` into runs under 10 minutes, one Playwright at a time: boot 14/14 + 2/2 + 3/3, modes 10/10,
+abilities 9/9 + 6/6 + 11/11, store 7/7 + 12/12 (and 7/7 again), phone 8/8 + 9/9 + 10/10, perf 15/15 + 4/4 + 1/1 + 2/2,
+store-live 7/7. New or rewritten checks: a fresh device boots Retro · Low, a pre-v3 High with no pick moves to it once
+(saved at v3) and a later Standard stays over a reload, a pre-v3 pick (High; standard Low) stays (boot); the first-run
+check runs, saves a pick (Low at 30 fps here) and the preset stays Retro · Low (perf); the overlay reads "Retro · Low"
+(perf); a press asks for 1 hop, 1 s of holding 0 more, a second press 1; 0-60 1.3417 s held or not, 0 N; flat out
+336.34 mph held or not; the tank refills the same with THRUST held (abilities); the phone key: a press hops at once, held
+through the landing 0 N and no second hop (phone); the store lists exactly hypercar-founder $9.99 then colour-studio
+$4.99 (coming soon, 0 buttons), an unlisted item's checkout says "Not in the store.", the order rule puts claude/cast's
+`cast-pack-duo` first, an earlier Founder Pack still shows its 9 paints and the Founder '26 badge (store). One full
+store run before the splits failed "a Founder Pack bought before the trim still works" with the account reading "Not
+signed in" after the reload; it passed in three later runs and the cause was not found.
+
+Frames (looked at): a fresh profile's first drive at 390 × 844, DPR 3, in Retro Low (`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after-fresh-drive-390.png`;
+before: standard Low, `/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/before-fresh-drive-390.png`); Settings on a fresh profile (`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after2-settings-fresh-390.png`,
+`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after2-settings-fresh-1280.png`; before: Low · auto on the phone, Medium · auto at 1280,
+`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/before-settings-fresh-1280.png`); the cluster's JUMP tile and the Jump key (`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after-jump-seat-390.png`,
+`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after-jump-seat-1280.png`; before: THRUST, `/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/before2-jump-seat-390.png`); a hop over two sedans at 200 mph,
+3.5 m apex, 0 contacts (`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after-hop-over-sedan-1.png`, `/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after-hop-over-sedan-2.png`); the store
+(`/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after3-store-390-last.png`, `/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/after3-store-1280-cards.png`; before: twelve items, `/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/proof/before-store-1280-cards.png`).
+(The scratchpad is not kept; the suite writes its own to tests/out.)
+
 ## 2026-11-11: The OC Hypercar's Thrust built into the cockpit, and a hop that clears two cars at 200 mph
 
 Reviewed: it passed a play lens (keep; the hop cleared two cars in two runs with the reviewer's own placements) and a code lens.

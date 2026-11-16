@@ -17,9 +17,12 @@
 //   - an available sku grants nothing still marked 'build' (except the Founder and tip badges, built with the store)
 //   - every store wheel style (cosmetics.json wheel_styles) is in the WheelStyle type in car-wheel.ts (src/preview/, or
 //     src/game/vehicle/ if it moves); a style in that type the store doesn't list is valid only as a car's own factory
-//     wheel (a `wheel:` in car-shape.ts, like the OC Hypercar's 'multi'), and no paid setup uses it; no paid setup
-//     repeats a factory wheel
+//     wheel (a `wheel:` in car-shape.ts, like the OC Hypercar's 'multi') or as a free rim in the garage's Wheels tab
+//     (src/game/cars.ts WHEELS, like 'mesh' and 'blade'), and no paid setup uses it; no paid setup repeats a factory wheel
 //   - the tip's custom amount sits above Stripe's $0.50 minimum
+//   - `listed` (shown in the store; absent means yes) is true or false; a listed sku that isn't available says why in
+//     its unavailable_reason (the store's "coming soon" card shows it); the server's copy carries it, and the server
+//     sells no unlisted sku (server/supabase/functions/_shared/store.ts sellable)
 //   - no real brand word appears anywhere in either file
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -32,7 +35,8 @@ const cosmetics = JSON.parse(read('src/store/cosmetics.json'));
 const { FOUNDER_UNTIL } = JSON.parse(read('src/store/founder.json'));
 const errs = [];
 // the owner's price exceptions to the whole-dollar rule (PROJECT_OC_MONETIZATION.md §5): this sku at this price only
-const PRICE_EXCEPTIONS = { 'hypercar-founder': 999 };
+// (and the Colour Studio at $4.99, the owner's choice of 2026-11-16; not on sale until it is in the game)
+const PRICE_EXCEPTIONS = { 'hypercar-founder': 999, 'colour-studio': 499 };
 const FOUNDER_SKUS = new Set(['founder-pack-2026', 'hypercar-founder']);
 const until = Date.parse(FOUNDER_UNTIL);
 if (Number.isNaN(until)) errs.push(`founder.json: FOUNDER_UNTIL ${FOUNDER_UNTIL} is not a date`);
@@ -69,6 +73,8 @@ for (const c of catalog) {
   } else if (FOUNDER_SKUS.has(s)) errs.push(`${s}: a founder offer without the founder window`);
   if ('unavailable_reason' in c && (typeof c.unavailable_reason !== 'string' || !c.unavailable_reason || c.available)) errs.push(`${s}: unavailable_reason is for an unavailable item, in words`);
   if ('caveat' in c && (typeof c.caveat !== 'string' || !c.caveat)) errs.push(`${s}: caveat must be words`);
+  if ('listed' in c && typeof c.listed !== 'boolean') errs.push(`${s}: listed must be true or false`);
+  if (c.listed !== false && !c.available && !c.unavailable_reason) errs.push(`${s}: listed but not available, with no unavailable_reason for its coming-soon card`);
   if ('serial' in c) {
     if (c.serial !== true || c.mode !== 'payment') errs.push(`${s}: serial is for a one-time payment (serial: true)`);
     const seeded = readdirSync(join(root, 'server/supabase/migrations')).filter((f) => f.endsWith('.sql')).some((f) => new RegExp(`serial_counters[^;]*'${s}'`).test(read('server/supabase/migrations/' + f)));
@@ -124,13 +130,16 @@ const codeStyles = new Set(m ? [...m[1].matchAll(/'(\w+)'/g)].map((x) => x[1]) :
 // the styles cars wear from the factory: each car's `wheel: 'x'` in car-shape.ts, followed by a comma, a brace or the
 // line's end (the type's own line, `wheel: 'twin5' | 'five' | ...;`, is followed by `|` or `;` and doesn't count)
 const factoryStyles = new Set(shapeTs ? [...read(shapeTs).matchAll(/\bwheel:\s*'(\w+)'\s*(?=[,}\r\n])/g)].map((x) => x[1]) : []);
+// the free rims the garage's Wheels tab offers (cars.ts WHEELS: `style: 'x'`), free to every player, so never sold
+const wheelsBlock = carsTs.match(/export const WHEELS[^=]*=\s*\{([\s\S]*?)\n\};/);
+const garageStyles = new Set(wheelsBlock ? [...wheelsBlock[1].matchAll(/\bstyle:\s*'(\w+)'/g)].map((x) => x[1]) : []);
 const styles = new Set(Object.keys(cosmetics.wheel_styles).filter((k) => k !== 'note'));
 const carOnly = new Set([...codeStyles].filter((st) => !styles.has(st)));
 for (const st of styles) if (!codeStyles.has(st)) errs.push(`wheel style ${st} is in cosmetics.json but not in the WheelStyle type in ${wheelTs ?? 'car-wheel.ts'}`);
-for (const st of carOnly) if (!factoryStyles.has(st)) errs.push(`wheel style ${st} is in ${wheelTs}, but the store doesn't list it (cosmetics.json wheel_styles) and no car in ${shapeTs ?? 'car-shape.ts'} wears it`);
+for (const st of carOnly) if (!factoryStyles.has(st) && !garageStyles.has(st)) errs.push(`wheel style ${st} is in ${wheelTs}, but the store doesn't list it (cosmetics.json wheel_styles), no car in ${shapeTs ?? 'car-shape.ts'} wears it and the garage's Wheels tab (cars.ts WHEELS) doesn't offer it`);
 for (const e of ents.values()) {
   if (e.type === 'wheels') {
-    if (carOnly.has(e.style)) errs.push(`${e.id}: ${e.style} is a car's own wheel (car-only), not a store style in cosmetics.json wheel_styles`);
+    if (carOnly.has(e.style)) errs.push(`${e.id}: ${e.style} is a car's own wheel or a free garage rim, not a store style in cosmetics.json wheel_styles`);
     else if (!styles.has(e.style)) errs.push(`${e.id}: unknown style ${e.style}`);
     const f = cosmetics.factory_wheels[e.car];
     if (!f) errs.push(`${e.id}: unknown car ${e.car}`);
@@ -145,6 +154,11 @@ const BANNED = ['ferrari', 'porsche', 'lamborghini', 'mclaren', 'bmw', 'mercedes
 const text = (JSON.stringify(catalog) + JSON.stringify(cosmetics)).toLowerCase();
 for (const b of BANNED) if (text.includes(b)) errs.push(`real brand word: ${b}`);
 
+// the server's copy keeps `listed`, so the server refuses what the store doesn't show
+const serverStore = read('server/supabase/functions/_shared/store.ts');
+if (!/listed === false/.test(serverStore)) errs.push('server/supabase/functions/_shared/store.ts: sellable() must refuse an unlisted sku (listed === false)');
+
 const avail = catalog.filter((c) => c.available).length;
 if (errs.length) { console.log(`catalog: ${errs.length} problem(s)`); for (const e of errs) console.log('  ' + e); process.exit(1); }
-console.log(`catalog ok: ${catalog.length} skus (${avail} available), ${ents.size} entitlements; wheel styles: ${styles.size} in the store${carOnly.size ? `, car-only ${[...carOnly].join(', ')}` : ''}`);
+const shown = catalog.filter((c) => c.listed !== false);
+console.log(`catalog ok: ${catalog.length} skus (${avail} available; ${shown.length} listed in the store: ${shown.map((c) => c.sku + (c.available ? '' : ' (coming soon)')).join(', ')}), ${ents.size} entitlements; wheel styles: ${styles.size} in the store${carOnly.size ? `, car-only ${[...carOnly].join(', ')}` : ''}`);
