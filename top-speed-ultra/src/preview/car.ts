@@ -44,8 +44,12 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   const flake = oc ? 0.2 : vela ? 0.1 : 0.15, lines = mirror ? [] : B.shutLines(), key = mirror ? id + '-mirror' : id;
   // the OC Hypercar: a bright, cool light silver and its gloss-black two-tone drawn by the paint shader (P.masks, body only)
   const masks = oc && !mirror ? P.masks : undefined;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift } : { key, flake, rough: vela ? 0.3 : undefined });
-  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
+  // (G1, 'high' only: the pearl's flake map at the tier's size under the clear coat, and a calmer orange peel, so the
+  // reflections run unbroken over the bonnet and the fenders; see car-mats paint)
+  const g1 = oc && q === 'high' ? { flakeMap: M.hyperFlake(), peel: 0.25 } : {};
+  const gk = oc && q === 'high' ? '|G1' + M.hyperTier() : '';
+  if (!finish) return M.paint(paint, q, lines, oc ? { key: key + gk, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift, ...g1 } : { key, flake, rough: vela ? 0.3 : undefined });
+  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks, ...(oc && q === 'high' ? { key: gk, ...(finish.flake ? g1 : { peel: 0.25 }) } : {}) });
 }
 
 // every material the car's kit can file geometry under
@@ -87,8 +91,12 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     // arcs that read as struts across the canopy)
     frit: oc ? once('m.fritOC', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.35, envMapIntensity: 0.5 }), { name: 'gloss' }))) : M.gloss(0x050505),
     trim: M.gloss(0x070708), dark,
-    glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // (G1, the hypercar on 'high': the owner's references' dark tinted canopy, with the sky and the road clearly in it,
+    // and the outside carbon with its weave visible under the clear coat at the tier's map size: a lighter, cooler tint
+    // than M1b's near-black one, so the references' grey twill reads in daylight)
+    glass: oc && q === 'high' ? M.glass('tintG1', 0.9, { env: 0.9, spec: 0.85, color: 0x020509 })
+      : P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
+    carbon: oc && q === 'high' ? M.carbonG1(0.05, { tint: 0xdde3ee, k: 1.7, cc: 0.04 }) : P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),

@@ -18,6 +18,109 @@ function tiled(maps: X.SurfaceMaps, tile: number) {
 }
 const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : phone);
 
+// ------------------------------------------------------------------------------------------------ the OC Hypercar's G1 tier
+// The G1 graphics pass (the owner's "super ultra 4K HD", 2026-11-15) gives the OC Hypercar its own, finer surface maps
+// on the 'high' build, generated here at run time (no image files, no size in the single-file build): HD (the game's
+// High) 1024 px maps, Ultra 2048 px. The 'phone' build (Low and Medium) keeps the shared 256-512 px maps, and no other
+// car ever takes these (their materials, keys and maps are untouched). Each map is built once and cached; a change of
+// tier frees the other tier's maps and materials (setHyperTier). Every map is mipmapped and filtered at the GPU's
+// maximum anisotropy. GPU memory (RGBA8 with mips, x 4/3): a 1024 map 5.6 MB, a 2048 map 22.4 MB.
+//   HD:    carbon (albedo, normal, roughness, anisotropy) 4 x 1024, Alcantara 3 x 1024, leather 3 x 1024, brushed
+//          3 x 1024, flake 1 x 1024, stitching 1 x 512 x 64: about 78 MB
+//   Ultra: carbon 4 x 2048, Alcantara 3 x 2048, leather 3 x 2048, brushed 3 x 1024, flake 1 x 2048, stitching
+//          1 x 1024 x 128: about 263 MB (desktop only in practice: a touch screen on Ultra still builds these, and the
+//          frame-rate cap is the pixel ratio's, settings.ts phonePixelRatio)
+export type HyperTier = 'hd' | 'ultra';
+export const HYPER_MAPS: Record<HyperTier, { carbon: number; alc: number; leather: number; brushed: number; flake: number; stitch: number }> = {
+  hd: { carbon: 1024, alc: 1024, leather: 1024, brushed: 1024, flake: 1024, stitch: 512 },
+  ultra: { carbon: 2048, alc: 2048, leather: 2048, brushed: 1024, flake: 2048, stitch: 1024 },
+};
+let TIER: HyperTier = 'hd', ANISO = 16;
+export const hyperTier = () => TIER;
+// set before the hypercar is built (PlayerCar.configure; the preview's &tier=). maxAniso: the renderer's
+// capabilities.getMaxAnisotropy(). Returns how many cached maps and materials of the old tier it freed.
+export function setHyperTier(t: HyperTier, maxAniso = ANISO) {
+  ANISO = Math.max(1, maxAniso);
+  if (t === TIER) return 0;
+  const old = HYPER_MAPS[TIER], keep = HYPER_MAPS[t];
+  // the old tier's maps that the new one doesn't use (only the hypercar ever builds maps this size: the others' are
+  // 256 and 512 px)
+  const drop = new Set<string>();
+  for (const k of Object.keys(old) as (keyof typeof old)[]) if (old[k] !== keep[k]) drop.add(({ carbon: 'carbon', alc: 'alcantara', leather: 'leather', brushed: 'brushed', flake: 'flake', stitch: 'stitchHD' } as const)[k] + old[k]);
+  let n = X.forgetMaps((key) => [...drop].some((d) => key === d || (key.startsWith(d) && /^(true|false)$/.test(key.slice(d.length)))));
+  const tag = '|G1' + TIER;
+  for (const [k, m] of [...memo]) if (k.includes(tag)) { memo.delete(k); m.dispose(); n++; }
+  TIER = t;
+  return n;
+}
+// a G1 map set retiled (clones share the GPU image), at full anisotropy
+function tiledG1(maps: X.SurfaceMaps, tile: number) {
+  for (const t of [maps.map, maps.normalMap, maps.roughnessMap, maps.anisotropyMap]) if (t) t.anisotropy = ANISO;
+  return tiled(maps, tile);
+}
+// carbon fibre with a visible 2x2 twill under a deep clear coat. tint: the outside carbon's darker, less metallic weave
+// (as carbon() takes it); without, the cabin's
+export function carbonG1(tile = 0.064, o: { tint?: number; k?: number; env?: number; cc?: number } = {}) {
+  return once('carbonG1' + tile + JSON.stringify(o) + '|G1' + TIER, () => {
+    const t = tiledG1(X.carbonMaps(HYPER_MAPS[TIER].carbon), tile), tint = o.tint;
+    const m = new THREE.MeshPhysicalMaterial({
+      color: tint === undefined ? new THREE.Color(1.9, 1.9, 2.0) : new THREE.Color(tint).multiplyScalar(o.k ?? 1), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.7, 0.7),
+      roughnessMap: t.roughnessMap, roughness: 1, metalness: tint === undefined ? 0.55 : 0.3, clearcoat: 1, clearcoatRoughness: o.cc ?? 0.03,
+      anisotropy: 0.8, anisotropyMap: t.anisotropyMap, envMapIntensity: o.env ?? 1,
+    });
+    m.name = 'carbon';
+    return withAO(m);
+  });
+}
+export function alcantaraG1(color = 0x2a2a2c, tile = 0.08) {
+  return once('alcG1' + color + '|' + tile + '|G1' + TIER, () => {
+    const t = tiledG1(X.alcantaraMaps(HYPER_MAPS[TIER].alc), tile);
+    const c = new THREE.Color(color);
+    const m = new THREE.MeshPhysicalMaterial({
+      color: c, map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.45, 0.45), roughness: 1, metalness: 0,
+      sheen: 1, sheenRoughness: 0.75, sheenColor: c.clone().lerp(new THREE.Color(0xffffff), 0.4).multiplyScalar(0.95), envMapIntensity: 0.45,
+      specularIntensity: 0.3, side: THREE.DoubleSide,
+    });
+    m.name = 'alcantara';
+    return withAO(m);
+  });
+}
+export function leatherG1(color: number, o: { perforated?: boolean; tile?: number; sheen?: number } = {}) {
+  return once('leatherG1' + color + JSON.stringify(o) + '|G1' + TIER, () => {
+    const t = tiledG1(X.leatherMaps(HYPER_MAPS[TIER].leather, !!o.perforated), o.tile ?? 0.1);
+    const c = new THREE.Color(color);
+    const m = new THREE.MeshPhysicalMaterial({
+      color: c, map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.6, 0.6), roughnessMap: t.roughnessMap,
+      roughness: 0.95, sheen: o.sheen ?? 0.4, sheenRoughness: 0.5, sheenColor: c.clone().lerp(new THREE.Color(0xffffff), 0.25).multiplyScalar(0.6),
+      clearcoat: 0.08, clearcoatRoughness: 0.4, envMapIntensity: 0.7, side: THREE.DoubleSide,
+    });
+    m.name = 'leather';
+    return withAO(m);
+  });
+}
+// brushed (or machined) metal: streaks along u, anisotropic
+export function brushedG1(color = 0xc8ccd1, o: { tile?: number; rough?: number; aniso?: number; env?: number } = {}) {
+  return once('brushedG1' + color + JSON.stringify(o) + '|G1' + TIER, () => {
+    const t = tiledG1(X.brushedMaps(HYPER_MAPS[TIER].brushed), o.tile ?? 0.12);
+    const m = new THREE.MeshPhysicalMaterial({
+      color, metalness: 1, roughness: o.rough ?? 1.1, roughnessMap: t.roughnessMap, map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.15, 0.15),
+      anisotropy: o.aniso ?? 0.85, envMapIntensity: o.env ?? 1,
+    });
+    m.name = 'brushed';
+    return withAO(m);
+  });
+}
+// contrast stitching from the HD stitch map, lit a little so the blue thread reads at night
+export function stitchG1(color: number, glow = 0) {
+  return once('stitchG1' + color + '|' + glow + '|G1' + TIER, () => {
+    const t = X.stitchTexHD(HYPER_MAPS[TIER].stitch); t.anisotropy = ANISO;
+    return withAO(Object.assign(new THREE.MeshStandardMaterial({ color, map: t, alphaTest: 0.5, roughness: 0.7, side: THREE.DoubleSide, envMapIntensity: 0.5,
+      emissive: glow ? color : 0x000000, emissiveMap: glow ? t : null, emissiveIntensity: glow }), { name: 'stitch' }));
+  });
+}
+// the paint's flake map at this tier's size (paint() o.flakeMap)
+export const hyperFlake = () => HYPER_MAPS[TIER].flake;
+
 // ------------------------------------------------------------------------------------------------ interior
 // o.env / o.cc: a calmer reflection (envMapIntensity, clearcoat roughness), e.g. the sport steering wheel's rim, whose
 // carbon read pale grey at night under the full sky reflection
@@ -256,7 +359,11 @@ void paintMasks(float pix) {
 // metallic paint: a base coat with flakes under a clear coat; the flakes are a per-pixel random tilt of the base
 // layer's normal, hashed in the car's own space (so they stay put as you move) at about the size of a pixel
 // coat and coatRough set the clear coat (default 1 and 0.03): the store's gloss, satin and pearl finishes use them
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number } = {}) {
+// o.flakeMap (the OC Hypercar's G1 pearl, 'high' only): a flake normal map this many px across (car-tex flakeNormal),
+// tiled every o.flakeTile metres (default 0.05) under the clear coat, on top of the shader's own flake; o.peel scales the
+// clear coat's orange peel (default 1: the M1b hypercar's broken, wavy reflections were the peel's 1 cm ripples at a
+// grazing angle, so G1 runs it at 0.25). Without them the material is exactly as before.
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number; flakeMap?: number; flakeTile?: number; peel?: number } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
@@ -264,6 +371,12 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
       clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.05, 0.05),
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
+    if (o.peel !== undefined) m.clearcoatNormalScale.setScalar(0.05 * o.peel);
+    if (o.flakeMap) {
+      const fl = X.flakeNormal(o.flakeMap); fl.anisotropy = ANISO;
+      const ft = fl.clone(); ft.repeat.setScalar(1 / (o.flakeTile ?? 0.05)); ft.needsUpdate = true;
+      m.normalMap = ft; m.normalScale = new THREE.Vector2(0.55, 0.55);
+    }
     m.name = 'paint';
     const masks = o.masks ?? [], M = masks.length > 0;
     // lift (the OC Hypercar, M1b): the base coat drawn this much lighter than its colour (linear, capped at 0.97), in the

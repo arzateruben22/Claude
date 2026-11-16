@@ -236,6 +236,112 @@ export function hyperDash(q: 'phone' | 'high'): DashPainter {
   });
 }
 
+// ------------------------------------------------------------------------------------------------ the OC Hypercar, G1
+// The G1 graphics pass (the owner's interior reference of 2026-11-15): a tall portrait touchscreen in the console and a
+// head-up display reflected in the windscreen. Real game data only, as the cluster: the next turn and the destination
+// (or the road you're on), the car's tune and its Thrust tank, the profile and the assists, the clock; never fuel,
+// battery, tyre or oil figures (the game simulates none of them).
+//   hyperConsole(q)  the console's portrait screen (512 x 768 on High, 256 x 384 on phones)
+//   hyperHud()       the windscreen's head-up display (High only): the speed and the next turn, ice blue on black,
+//                    shown additively, so black is clear glass
+export function hyperConsole(q: 'phone' | 'high'): DashPainter {
+  return once('dash.hyperConsole' + q, () => {
+    const low = q === 'phone', k = low ? 0.5 : 1, W = 512 * k, H = 768 * k;
+    const [c, g] = canvas(W, H);
+    const t = tex(c), w = watch(12);
+    const { ICE, DEEP, HOT, TXT, DIM, OFF } = HY;
+    const p: DashPainter = {
+      tex: t, draws: 0, shown: {},
+      update(r, lowNow) {
+        const cur = w.cur;
+        cur[0] = r.dest ? r.turn : ''; cur[1] = navQ(r); cur[2] = r.dest; cur[3] = r.dest ? qMi(r.destMi) : 0; cur[4] = r.dest ? '' : r.road;
+        cur[5] = r.tune || r.mode; cur[6] = Math.round(clamp01(r.tank) * 50); cur[7] = ON(r.thrustLive); cur[8] = r.profile; cur[9] = ON(r.tcs); cur[10] = ON(r.abs); cur[11] = r.clock;
+        if (!w.changed()) return false;
+        g.save(); g.scale(k, k);
+        g.fillStyle = '#02040a'; g.fillRect(0, 0, 512, 768);
+        if (!lowNow) { const gr = g.createLinearGradient(0, 0, 0, 768); gr.addColorStop(0, 'rgba(30,80,150,0.22)'); gr.addColorStop(0.5, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(30,80,150,0.16)'); g.fillStyle = gr; g.fillRect(0, 0, 512, 768); }
+        // the frame and the top bar: the OC mark, the clock
+        g.strokeStyle = DEEP; g.lineWidth = 4; g.beginPath(); g.roundRect(10, 10, 492, 748, 26); g.stroke();
+        g.strokeStyle = ICE; g.lineWidth = 1.5; g.beginPath(); g.roundRect(20, 20, 472, 728, 20); g.stroke();
+        drawOcMark(g, 40, 40, 84, 28, TXT);
+        if (r.clock) text(g, r.clock, 472, 54, 26, TXT, 600, 'right', 200);
+        g.fillStyle = OFF; g.fillRect(40, 88, 432, 2);
+        // GO TO: the next turn's arrow and distance, the destination and its distance; or the road you're on
+        text(g, 'GO TO', 40, 122, 20, DIM, 700, 'left');
+        let nav = '';
+        if (r.dest) {
+          g.strokeStyle = ICE; g.lineWidth = 2; g.beginPath(); g.roundRect(40, 146, 150, 150, 18); g.stroke();
+          turnArrow(g, 115, 221, 92, r.turn, ICE);
+          nav = miles(r.nextMi);
+          text(g, nav, 212, 190, 48, '#f4f8ff', 300, 'left', 260);
+          text(g, r.turn === 'left' ? 'KEEP LEFT' : r.turn === 'right' ? 'KEEP RIGHT' : 'STRAIGHT ON', 214, 250, 20, ICE, 700, 'left', 260);
+          text(g, r.dest, 40, 340, 30, TXT, 600, 'left', 432, 18);
+          text(g, miles(r.destMi), 40, 380, 26, ICE, 700, 'left', 432);
+        } else {
+          text(g, 'NO ROUTE', 40, 186, 34, DIM, 600, 'left');
+          if (r.road) text(g, r.road, 40, 236, 30, TXT, 600, 'left', 432, 18);
+          text(g, 'Choose a destination in Go To', 40, 290, 18, DIM, 500, 'left', 432);
+        }
+        g.fillStyle = OFF; g.fillRect(40, 418, 432, 2);
+        // the tune: the car from above (its outline: a canopy teardrop between the pods, the wing), the tune's name
+        const tune = (r.tune || r.mode || '').toUpperCase();
+        text(g, 'TUNE', 40, 452, 20, DIM, 700, 'left');
+        g.save(); g.translate(120, 560); g.strokeStyle = ICE; g.lineWidth = 2.5; g.lineJoin = 'round';
+        g.beginPath(); g.moveTo(0, -78); g.bezierCurveTo(30, -76, 42, -50, 40, -26); g.bezierCurveTo(30, -6, 30, 20, 44, 40); g.bezierCurveTo(46, 62, 34, 76, 0, 78);
+        g.bezierCurveTo(-34, 76, -46, 62, -44, 40); g.bezierCurveTo(-30, 20, -30, -6, -40, -26); g.bezierCurveTo(-42, -50, -30, -76, 0, -78); g.stroke();
+        g.beginPath(); g.ellipse(0, -8, 14, 34, 0, 0, Math.PI * 2); g.stroke();
+        g.beginPath(); g.moveTo(-46, 70); g.lineTo(46, 70); g.stroke();
+        g.restore();
+        text(g, tune || 'SPORT', 210, 520, 30, ICE, 700, 'left', 270);
+        text(g, profileWord(r.profile), 210, 562, 22, TXT, 700, 'left', 270);
+        chip(g, 210, 584, 66, 30, 'TCS', r.tcs, ICE, 17, lowNow); chip(g, 290, 584, 66, 30, 'ABS', r.abs, ICE, 17, lowNow);
+        // the Thrust tank
+        const pct = Math.round(clamp01(r.tank) * 100);
+        text(g, 'THRUST', 40, 670, 20, DIM, 700, 'left');
+        text(g, r.thrustLive ? `${pct}%` : 'OFF', 472, 670, 26, r.thrustLive ? TXT : DIM, 700, 'right');
+        g.fillStyle = OFF; g.fillRect(40, 694, 432, 12);
+        if (r.thrustLive && pct > 0) { g.fillStyle = pct < 25 ? '#ffb347' : lowNow ? ICE : HOT; g.fillRect(40, 694, 432 * (pct / 100), 12); }
+        g.restore();
+        t.needsUpdate = true; p.draws++;
+        p.shown.next = nav; p.shown.dest = r.dest; p.shown.turn = r.dest ? r.turn : ''; p.shown.tune = tune; p.shown.thrust = r.thrustLive ? `${pct}%` : 'off';
+        return true;
+      },
+    };
+    p.update(Object.assign(dashReadout(), { tune: 'Unleashed', tank: 1, thrustLive: true }), low);
+    return p;
+  });
+}
+export function hyperHud(): DashPainter {
+  return once('dash.hyperHud', () => {
+    const [c, g] = canvas(512, 160);
+    const t = tex(c), w = watch(5);
+    const { ICE, HOT } = HY;
+    const p: DashPainter = {
+      tex: t, draws: 0, shown: {},
+      update(r) {
+        const cur = w.cur;
+        cur[0] = Math.round(r.mph); cur[1] = r.dest ? r.turn : ''; cur[2] = navQ(r); cur[3] = r.gear; cur[4] = ON(r.redline);
+        if (!w.changed()) return false;
+        g.fillStyle = '#000000'; g.fillRect(0, 0, 512, 160);
+        const mph = String(Math.round(r.mph));
+        text(g, mph, 200, 74, 84, r.redline ? '#ff6a5c' : HOT, 300, 'right');
+        text(g, 'MPH', 208, 104, 20, ICE, 700, 'left');
+        text(g, r.gear || 'N', 208, 54, 30, ICE, 700, 'left');
+        let nav = '';
+        if (r.dest) {
+          turnArrow(g, 330, 72, 62, r.turn, ICE);
+          nav = miles(r.nextMi); text(g, nav, 372, 76, 34, HOT, 600, 'left', 136);
+        }
+        t.needsUpdate = true; p.draws++;
+        p.shown.mph = mph; p.shown.next = nav; p.shown.turn = r.dest ? r.turn : '';
+        return true;
+      },
+    };
+    p.update(dashReadout(), false);
+    return p;
+  });
+}
+
 // ------------------------------------------------------------------------------------------------ the Vela E
 const VE = { BLUE: '#4fb3ff', GREEN: '#2bd17e', TXT: '#e8ecef', DIM: '#8f98a3', OFF: '#1d2733', RED: '#ff3b30', REDOFF: '#3a1416' };
 const VARC = { x: 650, y: 150, r: 96, a0: Math.PI + 0.3, a1: Math.PI * 2 - 0.3, red: 0.88 };

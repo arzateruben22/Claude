@@ -951,7 +951,10 @@ export class Game {
   private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
     const q = QUALITY[this.settings.quality];
-    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
+    // (Ultra, G1: native up to 4K on a desktop screen, a phone's held to its own cap; see QualityPreset)
+    const coarse = q.phonePixelRatio !== undefined && typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    let pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, coarse ? q.phonePixelRatio! : q.maxPixelRatio);
+    if (q.maxPixels && w * h * pr * pr > q.maxPixels) pr = Math.max(0.5, Math.sqrt(q.maxPixels / Math.max(1, w * h)));
     const cv = this.renderer.domElement, a = this.applied;
     if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
     a.w = w; a.h = h; a.pr = pr;

@@ -72,6 +72,13 @@ if (debug) {
   frame = stage.driverView(st.s0 + Number(q.get('s') ?? 1500));
 }
 const L = (x: number, y: number, z: number) => frame.localToWorld(new THREE.Vector3(x, y, z));
+// &tier=hd|ultra (G1): the OC Hypercar's surface-map tier on 'high' (car-mats setHyperTier; the game sets it from
+// its quality: High hd, Ultra ultra); default hd
+{
+  const { setHyperTier } = await import('./car-mats');
+  setHyperTier(q.get('tier') === 'ultra' ? 'ultra' : 'hd', renderer.capabilities.getMaxAnisotropy());
+  log.tier = q.get('tier') === 'ultra' ? 'ultra' : 'hd';
+}
 // the same in the driver's frame (moved by this car's seat offset)
 const SO = seatOffset(shapeFor(car)), EYE_C = EYE.clone().add(new THREE.Vector3(...SO));
 const Ld = (x: number, y: number, z: number) => L(x + SO[0], y + SO[1], z + SO[2]);
@@ -155,6 +162,11 @@ if (interior) {
   // ahead of the car's middle, a 58 degree horizontal lens; the panel is this frame scaled 1.848x, rows 246 to 706)
   if (view === 'hero-sheet') look(L(-3.23, 0.53, -4.43), L(0.03, 0.45, -0.55));
   if (view === 'rear34') look(L(-5.4, 1.1, 7.6), L(0.1, 0.5, -0.1));
+  // G1: the owner's four references of 2026-11-15 (1672 x 941): a low front three-quarter from the left, the left side
+  // a little ahead of the middle, a low rear three-quarter from the right (matched by eye to their framing)
+  if (view === 'ref-front34') { camera.fov = 34; look(L(-3.3, 0.62, -4.9), L(0.25, 0.5, -0.2)); }
+  if (view === 'ref-side') { camera.fov = 26; look(L(-9.6, 0.72, -0.2), L(0, 0.6, -0.2)); }
+  if (view === 'ref-rear34') { camera.fov = 34; look(L(3.4, 0.8, 5.4), L(-0.3, 0.55, 0.4)); }
   // the wing up close from behind and above the left end plate: the carbon, a swan neck, the plates and their LEDs
   if (view === 'wing') look(L(-1.75, 1.62, 3.55), L(-0.3, 0.98, 1.95));
   if (view === 'back-ortho') look(L(0, cy, 14), L(0, 0.62 - (cy - 0.75) * 0.3, 0));
