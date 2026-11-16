@@ -30,8 +30,8 @@ export async function create(args) {
   const warm = mkGlow(1, 0xff9a55)[0]; warm.scale.set(36, 10, 1); warm.position.set(0, -7.5, -2.4); warm.material.opacity = 0.12; warm.material.fog = false; scene.add(warm);
 
   // ── the seal (pale amber slab of rounded cells in the gap), new surface cells, cleaning cells, repair cells, fibres ────────────────────────────────────
-  const seal = []; for (let x = GX0; x <= GX1; x++) for (let y = -1; y >= GY; y--) for (let z = -2; z <= 0; z++) if (y !== -1 || true) seal.push({ x, y, z, th: hash(x * 5 + y * 11 + z * 3) });
-  const sealM = mat({ color: 0xe9c48c, roughness: 0.3, emissive: 0xc88a30, emissiveIntensity: 0.35, transparent: true, opacity: 0.6, depthWrite: false }), sealI = new THREE.InstancedMesh(rbox(0.94, 0.14, 3), sealM, seal.length); sealI.frustumCulled = false; scene.add(sealI);
+  const seal = []; for (let x = GX0; x <= GX1; x++) for (let y = -1; y >= GY; y--) for (let z = -2; z <= 0; z++) if (y !== -1) seal.push({ x, y, z, th: hash(x * 5 + y * 11 + z * 3) });
+  const sealM = mat({ color: 0xedd0b6, roughness: 0.3, emissive: 0xa88468, emissiveIntensity: 0.22, transparent: true, opacity: 0.55, depthWrite: false }), sealI = new THREE.InstancedMesh(rbox(0.94, 0.14, 3), sealM, seal.length); sealI.frustumCulled = false; scene.add(sealI);
   const topC = []; for (let x = GX0; x <= GX1; x++) for (let z = 0; z >= -7; z--) topC.push({ x, z, th: hash(x * 9 + z * 5), e: x <= -1 ? -1 : 1 });
   const newM = mat({ color: 0xffffff, roughness: 0.5, emissive: 0x4a2a1a, emissiveIntensity: 0.2 }), newI = new THREE.InstancedMesh(rbox(0.97, 0.13, 3), newM, topC.length); newI.frustumCulled = false; scene.add(newI);
   const NI = 12, crewM = mat({ color: 0xe6f6f2, roughness: 0.3, emissive: 0x3fbfae, emissiveIntensity: 0.4, transparent: true, opacity: 0.92 }), crew = new THREE.InstancedMesh(new THREE.SphereGeometry(0.5, 16, 12), crewM, NI); crew.frustumCulled = false; scene.add(crew);
