@@ -220,3 +220,4 @@ STATE 04:17 UTC: weekly 0.34, 5h 0.32 (04:14). Since 22:22 = 5.5 %/h (under 6); 
 STATE 04:35 UTC: weekly 0.35, 5h 0.35 (04:33; 5.4 %/h since 22:22, last 20 min ~3 %/h: no pause). DROP 3: 3 results (merger + 2 judges), 2 more judges running (04:34). CAST FX4 04:27, hgfx 04:34, pause 04:31. Load 21.
 STATE 04:52 UTC: weekly 0.35, 5h 0.38 (04:47; ~5.3 %/h since 22:22, slowing). DROP 3: merger + 2 judges done, judges cars + venues running (04:47). CAST FX4 04:48, hgfx 04:44, pause 04:41.
 STATE 05:09 UTC: weekly 0.36, 5h 0.41 (05:04; ~5.2 %/h since 22:22). DROP 3 judges cars + venues still running (05:03). CAST FX4 05:05, hgfx 05:04, pause 05:07. round.sh done 05:08.
+STATE 05:25 UTC: weekly 0.36, 5h 0.43 (05:20; ~4.9 %/h since 22:22). DROP 3: 2 judges kept, cars + venues judges still running (05:20). PAUSE: builder DONE (1 result), judges starting (05:24). CAST FX4 05:20, hgfx 05:14. Owner told v18 ~10:30-11 PM PT.
