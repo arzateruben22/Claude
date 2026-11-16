@@ -6,16 +6,17 @@
 // Shoes are the foot offset plus a sole (and a heel block for heels). A collar is a band added after the clip.
 // Frame: the rest pose of body.ts (metres, y up, +z forward, +x the person's left).
 import { Field, Sdf, smin } from './field';
-import { Rig, B } from './body';
+import { Rig, B, buildRig } from './body';
 import { Garment, GarmentKind, BodyShape } from './params';
 import { V3, clamp, lerp, mirror, norm, smooth, DEG } from './math';
 
 export type Region = (x: number, y: number, z: number) => number;   // < 0 inside (kept)
 
 // (the cast's kinds, 2026-11-11, are appended: sandals .. workBoots, cargo .. workPants, bomber .. workJacket)
-const SHOES: GarmentKind[] = ['sneakers', 'boots', 'heels', 'loafers', 'flats', 'sandals', 'deckShoes', 'lowHeels', 'chunkySneakers', 'workBoots'];
-const BOTTOMS: GarmentKind[] = ['jeans', 'trousers', 'skirt', 'shorts', 'cargo', 'chinoShorts', 'workPants'];
-const OUTER: GarmentKind[] = ['jacket', 'leather', 'blazer', 'cardigan', 'bomber', 'overshirt', 'workJacket'];
+// (the pack's kinds, 2026-11-12, are appended: stilettos, oxfords; suitTrousers; suitJacket, shrug)
+const SHOES: GarmentKind[] = ['sneakers', 'boots', 'heels', 'loafers', 'flats', 'sandals', 'deckShoes', 'lowHeels', 'chunkySneakers', 'workBoots', 'stilettos', 'oxfords'];
+const BOTTOMS: GarmentKind[] = ['jeans', 'trousers', 'skirt', 'shorts', 'cargo', 'chinoShorts', 'workPants', 'suitTrousers'];
+const OUTER: GarmentKind[] = ['jacket', 'leather', 'blazer', 'cardigan', 'bomber', 'overshirt', 'workJacket', 'suitJacket', 'shrug'];
 export const isBottom = (k: GarmentKind) => BOTTOMS.includes(k);
 /** a shoe with a light sole in its accent colour (the others' soles are a darker shade of the upper) */
 export const lightSole = (k: GarmentKind) => k === 'sneakers' || k === 'chunkySneakers' || k === 'deckShoes';
@@ -38,6 +39,10 @@ export class Drape {
 export class GarmentSdf implements Sdf {
   n: number; maxK: number;
   private bufA: Int32Array; private bufX: Int32Array;
+  /** (graphics pass) X's own offset (tailored sleeves: a slimmer arm's field, offset like A); 0: X as it is, as before */
+  tX = 0;
+  /** (repair 2026-11-16) a neck band: the shell this much thicker (m) within `rimW` of the neckline (`rim` > 0 on the cloth's side of it). Unset: none, as before */
+  rim: Region | null = null; rimT = 0; rimW = 0.014;
   constructor(public A: Field, public t: number, public drape: Drape | null, public k: number, public region: Region, public X: Field | null = null, public kx = 0.004, public extra: Region | null = null) {
     this.n = A.n + (X ? X.n : 0) + 1;
     this.maxK = Math.max(A.maxK, X ? X.maxK : 0, k);
@@ -45,8 +50,8 @@ export class GarmentSdf implements Sdf {
   }
   /** the extra prim (index n-1) stands for the drape, region and extra functions */
   prim(i: number, x: number, y: number, z: number) {
-    if (i < this.A.n) return this.A.prim(i, x, y, z) - this.t;
-    if (this.X && i < this.A.n + this.X.n) return this.X.prim(i - this.A.n, x, y, z);
+    if (i < this.A.n) return this.A.prim(i, x, y, z) - this.t - this.rimT;
+    if (this.X && i < this.A.n + this.X.n) return this.X.prim(i - this.A.n, x, y, z) - this.tX;
     let d = this.drape ? this.drape.d(x, y, z) : 1e9;
     if (this.extra) d = Math.min(d, this.extra(x, y, z));
     return d;
@@ -59,6 +64,7 @@ export class GarmentSdf implements Sdf {
       for (let j = 0; j < nAct; j++) if (act[j] < this.A.n) this.bufA[na++] = act[j];
       a = na ? this.A.eval(x, y, z, this.bufA, na) - this.t : 1e9;
     }
+    if (this.rim) { const r = this.rim(x, y, z); if (r < this.rimW + 0.004) a -= this.rimT * smooth(this.rimW, 0.003, r); }
     if (this.drape) a = smin(a, this.drape.d(x, y, z), this.k);
     return a;
   }
@@ -70,7 +76,7 @@ export class GarmentSdf implements Sdf {
       let nx = 0;
       if (act) { for (let j = 0; j < nAct; j++) { const i = act[j] - this.A.n; if (i >= 0 && i < this.X.n) this.bufX[nx++] = i; } }
       const xd = act ? (nx ? this.X.eval(x, y, z, this.bufX, nx) : 1e9) : this.X.eval(x, y, z, null, 0);
-      d = smin(d, xd, this.kx);
+      d = smin(d, xd - this.tX, this.kx);
     }
     return d;
   }
@@ -143,6 +149,49 @@ function collarLoft(rig: Rig, shirt: GarmentSdf, open: boolean, polo: boolean) {
   return { pos, idx, neckW, edge };
 }
 
+/** (pack, 2026-11-12) a double-breasted jacket's peak lapels and the collar's front ends: strips lying on the jacket's
+ *  shell along the edges of its V opening (bottom at yV, the edge at |x| = (y - yV) tanV), one cloth thickness proud
+ *  with a slight roll, the lapel's outer corner drawn up into a peak beside the collar's end. Built like a shirt's
+ *  collar (the same lofted-strip mesh and material), weighted to the chest */
+function lapelLoft(rig: Rig, jacket: GarmentSdf, yV: number, tanV: number, xEdge: ((y: number) => number) | null = null, peak = true, yFrom = yV) {
+  const s = rig.s, ws = rig.ws, jug = rig.joints[B.neck][1];
+  const yN = jug + 0.012 * s, yPeak = lerp(yV, yN, 0.6);
+  const onShell = (x: number, y: number, off: number): V3 => {
+    // in from the front along -z onto the jacket's shell, then out by `off` along its gradient
+    let z = 0.4;
+    for (let i = 0; i < 80; i++) { const d = jacket.shell(x, y, z, null, 0); if (d < 0.0004) break; z -= Math.max(d * 0.9, 0.0006); if (z < -0.02) { z = -0.02; break; } }   // (a miss, past the shoulder: stop at the body's middle, never a spike behind it)
+    const e = 0.001, d0 = jacket.shell(x, y, z, null, 0);
+    const n = norm([jacket.shell(x + e, y, z, null, 0) - d0, jacket.shell(x, y + e, z, null, 0) - d0, jacket.shell(x, y, z + e, null, 0) - d0]);
+    return [x + n[0] * off, y + n[1] * off, z + n[2] * off];
+  };
+  const M = 6, pos: number[] = [], neckW: number[] = [], edge: number[] = [], idx: number[] = [];
+  const strip = (sg: number, y0: number, y1: number, n: number, width: (t: number) => number, rise: (t: number, v: number) => number, nw: number) => {
+    const base = pos.length / 3;
+    for (let i = 0; i <= n; i++) {
+      const t = i / n, y = lerp(y0, y1, t), xe = Math.max(0, (y - yV) * tanV, xEdge ? xEdge(y) : 0) + 0.0015, w = width(t);   // (xEdge: an open front's own edge)
+      for (let j = 0; j <= M; j++) {
+        const v = j / M;
+        const p = onShell(sg * (xe + v * w), y + rise(t, v), 0.0035 + 0.0045 * Math.sin(Math.PI * Math.min(1, v * 1.15)));
+        pos.push(p[0], p[1], p[2]); neckW.push(nw * t); edge.push(j === 0 || j === M || i === 0 || i === n ? 0.004 : 0.012);
+      }
+    }
+    for (let i = 0; i < n; i++) for (let j = 0; j < M; j++) {
+      const a = base + i * (M + 1) + j, b = a + 1, c = a + M + 1, d = c + 1;
+      // (wound to face out: +z in front; the left and right sides mirror)
+      if (sg > 0) idx.push(a, b, d, a, d, c); else idx.push(a, d, b, a, c, d);
+    }
+  };
+  for (const sg of [1, -1]) {
+    // the lapel: widening from the button point up to the peak, whose outer corner rises beside the collar
+    // (a notch lapel, graphics pass: narrower, its outer corner level instead of drawn up into a peak)
+    strip(sg, yFrom + 0.004 * s, yPeak, 10, (t) => lerp(0.012, peak ? 0.08 : 0.062, Math.pow(t, 0.85)) * ws, (t, v) => (peak ? 0.034 : 0.006) * s * smooth(0.5, 1, t) * v * v, 0);
+    // the collar's front end, from the notch up to the side of the neck, its outer edge falling a little
+    if (!xEdge) strip(sg, yPeak + 0.002 * s, yN, 5, (t) => lerp(0.05, 0.032, t) * ws, (_t, v) => -0.012 * s * v, 0.25);
+    else strip(sg, yPeak + 0.002 * s, yN - 0.01 * s, 4, (t) => lerp(0.04, 0.02, t) * ws, (_t, v) => -0.008 * s * v, 0.25);
+  }
+  return { pos: Float32Array.from(pos), idx, neckW: Float32Array.from(neckW), edge: Float32Array.from(edge) };
+}
+
 const inter = (...rs: Region[]): Region => (x, y, z) => { let d = -1e9; for (const r of rs) { const v = r(x, y, z); if (v > d) d = v; } return d; };
 export const union = (...rs: Region[]): Region => (x, y, z) => { let d = 1e9; for (const r of rs) { const v = r(x, y, z); if (v < d) d = v; } return d; };
 const not = (r: Region): Region => (x, y, z) => -r(x, y, z);
@@ -178,7 +227,7 @@ function extents(f: Field, y: number, ws: number) {
 }
 
 /** a drape that hangs from what is above it: drape(y) 0 follows the body, 1 falls straight from the widest point */
-function makeDrape(f: Field, yLo: number, yHi: number, ws: number, ease: number, drapeAt: (y: number) => number, flare = 0, flareFrom = yHi, p = 2.5) {
+function makeDrape(f: Field, yLo: number, yHi: number, ws: number, ease: number, drapeAt: (y: number) => number, flare = 0, flareFrom = yHi, p = 2.5, sideK = 1, fade = 0) {
   const dy = 0.015, n = Math.max(2, Math.ceil((yHi - yLo) / dy) + 1);
   const zc = new Float64Array(n), rd = new Float64Array(n), rw = new Float64Array(n);
   let mf = -1, mb = 1, ms = 0;
@@ -190,14 +239,17 @@ function makeDrape(f: Field, yLo: number, yHi: number, ws: number, ease: number,
     mf = Math.max(mf, e.front); mb = Math.min(mb, e.back); ms = Math.max(ms, e.side);
     const dr = drapeAt(y), fl = flare * Math.max(0, flareFrom - y);
     const front = lerp(e.front, mf, dr) + ease + fl * 0.7, back = lerp(e.back, mb, dr) - ease - fl * 0.7;
-    const side = lerp(e.side, ms, dr * 0.75) + ease + fl;
-    zc[i] = (front + back) / 2; rd[i] = Math.max(0.02, (front - back) / 2); rw[i] = Math.max(0.03, side);
+    const side = lerp(e.side, ms, dr * 0.75 * sideK) + ease + fl;   // (sideK < 1: cut closer at the sides, the front and back still hang)
+    // (fade > 0: toward its top the profile draws in under the body's own surface, so it has no flat top face to show
+    // through the cloth as a ledge across the chest)
+    const fk = fade > 0 ? lerp(0.8, 1, smooth(yHi, yHi - fade, y)) : 1;
+    zc[i] = (front + back) / 2; rd[i] = Math.max(0.02, (front - back) / 2 * fk); rw[i] = Math.max(0.03, side * fk);
   }
   return new Drape(yLo, dy, zc, rd, rw, p);
 }
 
 /** the garments for an outfit, inner layers first */
-export function buildGarments(rig: Rig, body: BodyShape, outfit: Garment[]): GarmentBuild[] {
+export function buildGarments(rig: Rig, bodyShape: BodyShape, outfit: Garment[]): GarmentBuild[] {
   const s = rig.s, ws = rig.ws, D = rig.dims, L = rig.limb, J = rig.joints, F = rig.field;
   const fatT = rig.fat.T;
   const jug = J[B.neck][1];
@@ -227,6 +279,16 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
     };
     return lr(mk);
   };
+  /** (pack) the plane across the arm at `dist` along it from the shoulder joint (> 0 past it), without the armpit plane */
+  const armCut = (dist: number): Region => lr((sg) => {
+    let c: V3, ax: V3;
+    if (dist <= D.upperArm) { ax = sg > 0 ? L.dU : mirror(L.dU); const sh = sg > 0 ? L.sh : mirror(L.sh); c = [sh[0] + ax[0] * dist, sh[1] + ax[1] * dist, sh[2] + ax[2] * dist]; }
+    else { ax = sg > 0 ? L.dFore : mirror(L.dFore); const el = sg > 0 ? L.el : mirror(L.el); const d2 = dist - D.upperArm; c = [el[0] + ax[0] * d2, el[1] + ax[1] * d2, el[2] + ax[2] * d2]; }
+    const [c0, c1, c2] = c, [x0, x1, x2] = ax;
+    return (x, y, z) => (x - c0) * x0 + (y - c1) * x1 + (z - c2) * x2;
+  });
+  /** (pack) > 0 on the arm's side of the armpit plane */
+  const armSide: Region = lr((sg) => { const a = sg > 0 ? armpitL : mirror(armpitL), n: V3 = sg > 0 ? nPit : [-nPit[0], nPit[1], 0]; return (x, y, z) => (x - a[0]) * n[0] + (y - a[1]) * n[1] + (z - a[2]) * n[2]; });
   // ---- necklines: the part to remove (< 0 inside it)
   const nb = L.neckBase, nR = L.neckR;
   const neckHole = (frontY: number, backY: number, widen = 0): Region => {
@@ -251,6 +313,8 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
       case 'scoop': return union(neckHole(jug - 0.01 * s, jug + 0.03 * s, 0.025), (x, y, z) => (Math.hypot(x / (0.085 * ws), (y - jug - 0.01) / (0.075 * s * deep), (z - nb[2] - 0.13) / 0.15) - 1) * 0.07);
       case 'square': return union(neckHole(jug, jug + 0.03 * s, 0.02), (x, y, z) => Math.max(Math.abs(x) - 0.072 * ws, jug - 0.085 * s * deep - y, nb[2] - z));
       case 'collar': return neckHole(jug - 0.002 * s, jug + 0.034 * s, -0.004);
+      // (graphics pass) a crew neck that sits high and close round the base of the neck (a tee's ribbed collar), not a dip
+      case 'crewHigh': return neckHole(jug + 0.006 * s, jug + 0.03 * s, -0.012);
       default: return crew;
     }
   };
@@ -277,8 +341,8 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
     const k = g.kind;
     if (isShoe(k)) { out.push(shoe(rig, g)); continue; }
     if (BOTTOMS.includes(k)) {
-      const top = k === 'skirt' ? D.waistY + 0.01 * s : D.hipY + (body.sex === 'm' ? 0.05 : 0.06) * s;
-      const t = k === 'jeans' ? 0.003 : k === 'trousers' ? 0.0045 : k === 'workPants' ? 0.011 : k === 'cargo' ? 0.0095 : k === 'chinoShorts' ? 0.0048 : 0.0035;
+      const top = k === 'skirt' ? D.waistY + 0.01 * s : D.hipY + (bodyShape.sex === 'm' ? 0.05 : 0.06) * s;
+      const t = k === 'jeans' ? 0.003 : k === 'trousers' ? 0.0045 : k === 'suitTrousers' ? 0.0085 : k === 'workPants' ? 0.011 : k === 'cargo' ? 0.0095 : k === 'chinoShorts' ? 0.0048 : 0.0035;
       const shortLeg = k === 'shorts' || k === 'chinoShorts';
       // (cast) a cropped leg: g.length < 1 lifts the hem up the shin; a roll shows at the hem in the accent colour
       const lift = k !== 'skirt' && !shortLeg && g.length !== undefined && g.length < 1 ? (1 - g.length) * (D.kneeY - D.ankleY) : 0;
@@ -296,7 +360,7 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
         const legCut = (sg: number): Region => {
           const ax = sg > 0 ? L.dL : mirror(L.dL);
           const c = shortLeg ? (sg > 0 ? L.hip : mirror(L.hip)).map((v, i) => v + ax[i] * (D.thigh * (k === 'chinoShorts' ? 0.86 : 0.62))) as V3
-            : (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - ax[i] * ((k === 'jeans' ? 0.03 : 0.022) * s + lift)) as V3;
+            : (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - ax[i] * ((k === 'jeans' ? 0.03 : k === 'suitTrousers' ? -0.014 : 0.022) * s + lift)) as V3;   // (suit trousers break over the shoe)
           const [c0, c1, c2] = c, [x0, x1, x2] = ax;
           return (x, y, z) => (x - c0) * x0 + (y - c1) * x1 + (z - c2) * x2;
         };
@@ -305,7 +369,7 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
         if (g.roll) { const band = 0.042 * s; legAccent = (x, y, z) => (lr(legCut)(x, y, z) > -band ? 1 : 0); }
       }
       const folds = [...knees(k === 'jeans' ? 0.8 : 0.6), ...hipCrease(0.6)];
-      if (k === 'jeans' || k === 'trousers') for (const sg of [1, -1]) folds.push({ c: (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - (sg > 0 ? L.dL : mirror(L.dL))[i] * 0.06 * s) as V3, ax: sg > 0 ? L.dL : mirror(L.dL), r: 0.05 * s, w: k === 'jeans' ? 0.9 : 0.5 });
+      if (k === 'jeans' || k === 'trousers' || k === 'suitTrousers') for (const sg of [1, -1]) folds.push({ c: (sg > 0 ? L.ankle : mirror(L.ankle)).map((v, i) => v - (sg > 0 ? L.dL : mirror(L.dL))[i] * 0.06 * s) as V3, ax: sg > 0 ? L.dL : mirror(L.dL), r: 0.05 * s, w: k === 'jeans' ? 0.9 : 0.5 });
       const wear = k === 'jeans' ? (p: V3) => {
         const sg = p[0] >= 0 ? 1 : -1, hp = sg > 0 ? L.hip : mirror(L.hip), kn = sg > 0 ? L.knee : mirror(L.knee);
         const front = smooth(0.0, 0.05, p[2] - lerp(hp[2], kn[2], 0.5));
@@ -318,8 +382,10 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
       if (k === 'cargo') {
         const pk = (sg: number): Region => {
           const hp = sg > 0 ? L.hip : mirror(L.hip), kn = sg > 0 ? L.knee : mirror(L.knee);
-          const c: V3 = [lerp(hp[0], kn[0], 0.55) + sg * (D.thighR * 0.62 + 0.006), lerp(hp[1], kn[1], 0.55), lerp(hp[2], kn[2], 0.55) + 0.004];
-          const hx = 0.014, hy = 0.07 * s, hz = 0.06 * s, r = 0.008;
+          // (cast, 2026-11-12: on a straight or relaxed leg (g.leg) the pockets sit out on the fuller leg's side)
+          const out = g.leg ? 0.013 : 0;
+          const c: V3 = [lerp(hp[0], kn[0], 0.55) + sg * (D.thighR * 0.62 + 0.006 + out), lerp(hp[1], kn[1], 0.55), lerp(hp[2], kn[2], 0.55) + 0.004];
+          const hx = g.leg ? 0.018 : 0.014, hy = 0.07 * s, hz = 0.06 * s, r = 0.008;
           return (x, y, z) => {
             const qx = Math.abs(x - c[0]) - hx + r, qy = Math.abs(y - c[1]) - hy + r, qz = Math.abs(z - c[2]) - hz + r;
             return Math.hypot(Math.max(qx, 0), Math.max(qy, 0), Math.max(qz, 0)) + Math.min(Math.max(qx, qy, qz), 0) - r;
@@ -327,39 +393,150 @@ const armpitL: V3 = [D.chestHalf + 0.004 + 0.8 * rig.fat.T, D.shoulderY - 0.1 * 
         };
         pockets = lr(pk);
       }
+      // (pack) tailored trousers: a straight leg. Each leg hangs as a tube from the thigh, a little narrower at the
+      // knee and the hem, instead of following the knee, the calf and the ankle
+      // (cast, 2026-11-12) the same leg for any trousers with g.leg set: 'straight', or 'relaxed' a little fuller
+      if (k === 'suitTrousers' || (g.leg && !shortLeg && k !== 'skirt')) {
+        const full = g.leg === 'relaxed' ? 1.1 : 1;
+        const Lleg = D.thigh + D.shin, rT = D.thighR * 0.9 + t, rK = (0.07 * ws + 0.3 * rig.fat.thigh) * full, rH = 0.061 * ws * full;
+        const tube = (sg: number): Region => {
+          const hp = sg > 0 ? L.hip : mirror(L.hip), ax = sg > 0 ? L.dL : mirror(L.dL);
+          return (x, y, z) => {
+            const px = x - hp[0], py = y - hp[1], pz = z - hp[2], u = px * ax[0] + py * ax[1] + pz * ax[2];
+            if (u < D.thigh * 0.3) return 1e9;
+            const rad = Math.hypot(px - ax[0] * u, py - ax[1] * u, pz - ax[2] * u);
+            const r = u < D.thigh ? lerp(rT, rK, smooth(D.thigh * 0.3, D.thigh, u)) : lerp(rK, rH, (u - D.thigh) / D.shin);
+            return Math.max(rad - r, u - Lleg - 0.03);
+          };
+        };
+        pockets = pockets ? union(pockets, lr(tube)) : lr(tube);   // (cargo keeps its side pockets)
+      }
       out.push({ g, layer: 1, sdf: new GarmentSdf(A, t, drape, 0.03 * s, keep, null, 0.006 * s, pockets), keep, bones, box: [[-0.6, yLo, -0.5], [0.6, top + 0.02, 0.5]], sigma: k === 'skirt' ? 2.2 : 1.3, accent: legAccent, folds, wear, h: 0.013 });
+      continue;
+    }
+    // ---- (pack, 2026-11-12) an off-the-shoulder faux-fur shrug: two deep-piled sleeves from below the shoulder to
+    // the middle of the forearm, joined by a band across the back from the shoulder blades to the waist; the chest,
+    // the shoulders and the front are bare. The pile is rolls round the arm and across the back (the tiers the fur is
+    // sewn in), over a thin lining
+    if (k === 'shrug') {
+      const A = sub_(bonesOf([...TORSO, ...ARMS]));
+      const d0 = 0.075 * s, d1 = D.upperArm + 0.56 * D.foreArm, rt = 0.027 * s;
+      const cut0 = armCut(d0), cut1 = armCut(d1);
+      const yLo = D.waistY - 0.005 * s, yHi = (x: number) => D.chestY + 0.05 * s - 0.035 * s * Math.exp(-((x / (0.07 * ws)) ** 2));
+      const zB = -0.03 * s;
+      const armBand: Region = (x, y, z) => Math.max(-armSide(x, y, z), -cut0(x, y, z), cut1(x, y, z));
+      const backBand: Region = (x, y, z) => Math.max(armSide(x, y, z) - 0.02, z - zB, yLo - y, y - yHi(x));
+      const keep = union(armBand, backBand);
+      // the rolls: on each arm, rings round its axis every 6.5 cm; across the back, three level rolls on the body
+      const armR = (dist: number) => (dist <= D.upperArm ? lerp(0.05, 0.04, dist / D.upperArm) : lerp(0.04, 0.03, (dist - D.upperArm) / D.foreArm)) * ws + 0.6 * rig.fat.arm;
+      const rings: { c: V3; ax: V3; R: number }[] = [];
+      // (2026-11-12, after the renders: rolls 6.4 cm apart at a 3.1 cm tube read as a stack of tyres; now 3.8 cm apart,
+      // blended into each other (a smooth minimum), a shallow tier rather than a groove)
+      for (let d = d0 + rt * 0.9; d <= d1 - rt * 0.6; d += 0.038 * s) {
+        const up = d <= D.upperArm, ax = up ? L.dU : L.dFore, o = up ? L.sh : L.el, dd = up ? d : d - D.upperArm;
+        rings.push({ c: [o[0] + ax[0] * dd, o[1] + ax[1] * dd, o[2] + ax[2] * dd], ax, R: armR(d) + 0.006 });
+      }
+      // (fifth pass 2026-11-16: the back is one deep roll of fur, tiers 3 cm apart blended into each other; three rolls up
+      // to 9 cm apart left the dress showing between them as dark bands)
+      const nB = Math.max(3, Math.ceil((D.chestY + 0.012 * s - yLo - rt * 0.85) / (0.03 * s)) + 1);
+      const backY = Array.from({ length: nB }, (_, i) => lerp(yLo + rt * 0.85, D.chestY + 0.012 * s, i / (nB - 1)));
+      const pile: Region = (x, y, z) => {
+        let d = 1e9;
+        const ax = Math.abs(x);
+        if (armSide(x, y, z) > -0.05) for (const r of rings) {
+          const px = ax - r.c[0], py = y - r.c[1], pz = z - r.c[2], al = px * r.ax[0] + py * r.ax[1] + pz * r.ax[2];
+          const rad = Math.hypot(px - r.ax[0] * al, py - r.ax[1] * al, pz - r.ax[2] * al);
+          d = smin(d, Math.hypot(rad - r.R, al) - rt, 0.02 * s);
+        }
+        if (z < zB + 0.05 && y > yLo - 0.06 && y < D.chestY + 0.09 * s) {
+          const b = torsoOnly.eval(x, y, z, null, 0) - 0.006;
+          for (const yb of backY) d = smin(d, Math.hypot(y - yb, b) - rt * 0.92, 0.03 * s);
+        }
+        // only inside the shrug's own region (a little past it, so the cut ends stay round)
+        return Math.max(d, keep(x, y, z) - 0.004);
+      };
+      out.push({ g, layer: 3, sdf: new GarmentSdf(A, 0.008, null, 0.03 * s, keep, null, 0.014 * s, pile), keep, bones: bonesOf(ARMS), box: [[-0.8, yLo - 0.06, -0.5], [0.8, D.shoulderY + 0.03, 0.5]], sigma: 1.6, accent: null, folds: [], wear: null, h: 0.0125 });
       continue;
     }
     // ---- tops, dresses, outer layers
     const outer = OUTER.includes(k);
     const dress = k === 'dress';
     const sleeve = g.sleeve ?? (outer ? 1 : 0.25);
-    const neck = g.neck ?? (k === 'shirt' || k === 'polo' || k === 'overshirt' || k === 'workJacket' ? 'collar' : 'crew');
+    const neck = g.neck ?? (k === 'suitJacket' ? 'v' : k === 'shirt' || k === 'polo' || k === 'overshirt' || k === 'workJacket' ? 'collar' : 'crew');
     const strap = neck === 'strap';
-    const t = outer ? (k === 'cardigan' ? 0.011 : k === 'leather' ? 0.013 : k === 'overshirt' ? 0.0095 : k === 'bomber' ? 0.016 : 0.015) : dress ? (g.fabric === 'satin' ? 0.003 : 0.004) : k === 'fitted' || k === 'tank' ? 0.0055 : 0.0065;
-    const drapeAmt = outer ? 0.9 : dress ? (g.fabric === 'satin' ? 0.3 : 0.45) : k === 'fitted' || k === 'tank' ? 0.22 : k === 'blouse' ? 0.6 : k === 'shirt' ? 0.75 : 0.7;
+    const body = dress && g.fit === 'body';   // (pack) a bodycon dress
+    const t = outer ? (k === 'cardigan' ? 0.011 : k === 'leather' ? 0.013 : k === 'overshirt' ? 0.0095 : k === 'bomber' ? 0.016 : k === 'suitJacket' ? 0.0095 : 0.015) : body ? 0.0032 : dress ? (g.fabric === 'satin' ? 0.003 : 0.004) : k === 'fitted' || k === 'tank' ? 0.0055 : 0.0065;
+    const drapeAmt = (g.drapeK ?? 1) * (k === 'suitJacket' ? 0.6 : outer ? 0.9 : body ? 0.14 : dress ? (g.fabric === 'satin' ? 0.3 : 0.45) : k === 'fitted' || k === 'tank' ? 0.22 : k === 'blouse' ? 0.6 : k === 'shirt' ? 0.75 : 0.7);
     let hem: number;
     if (dress) hem = D.hipY - (g.length ?? 0.4) * (D.hipY - D.ankleY);
-    else if (outer) hem = k === 'leather' ? D.hipY + 0.005 * s : k === 'blazer' ? D.crotchY + 0.01 * s : k === 'bomber' ? D.waistY - 0.035 * s : k === 'workJacket' ? D.hipY + 0.012 * s : k === 'overshirt' ? D.hipY - 0.06 * s : D.hipY - 0.05 * s;
+    else if (outer) hem = k === 'suitJacket' ? D.crotchY - 0.022 * s : k === 'leather' ? D.hipY + 0.005 * s : k === 'blazer' ? D.crotchY + 0.01 * s : k === 'bomber' ? D.waistY - 0.035 * s : k === 'workJacket' ? D.hipY + 0.012 * s : k === 'overshirt' ? D.hipY - 0.06 * s : D.hipY - 0.05 * s;
     else hem = k === 'fitted' || k === 'tank' || k === 'blouse' ? D.hipY - 0.005 * s : k === 'shirt' ? D.hipY - 0.055 * s : D.hipY - 0.035 * s;
     if (!dress && !hasBottom) hem = Math.min(hem, D.crotchY - 0.05);
     const armDist = strap || k === 'tank' ? -0.035 * s : sleeve <= 0 ? -0.012 * s : sleeve * Larm - (sleeve >= 0.95 ? 0.022 * s : 0);
     const armBones = (strap || k === 'tank' || sleeve <= 0 ? [] : sleeve < 0.4 ? ['armL', 'armR'] : ARMS) as (keyof typeof B)[];
     const bones = bonesOf([...TORSO, ...armBones, 'thighL', 'thighR', ...(dress ? LEGS : [])]);
-    const A = sub_(bonesOf([...TORSO, ...armBones, 'thighL', 'thighR', ...(dress ? LEGS : [])]));
+    // (graphics pass) tailored sleeves: the arms of a slimmer body (the same skeleton) carry the sleeves; the torso is the
+    // wearer's own
+    const tail = armBones.length ? clamp(g.tailored ?? 0) : 0;
+    let slimArms: Field | null = null;
+    if (tail > 0) {
+      const slim = buildRig({ ...bodyShape, muscle: bodyShape.muscle * (1 - 0.9 * tail), fat: bodyShape.fat * (1 - 0.6 * tail) }, rig.head.face, rig.heel);
+      const ab = bonesOf(armBones);
+      // (and without the deltoid, the first primitive of each upper arm: the sleeve's head is the arm's own tube, set into
+      // the shoulder, not a ball on top of it)
+      const first = new Map<number, number>();
+      for (let i = 0; i < slim.field.n; i++) { const b = slim.field.bone[i]; if ((b === B.armL || b === B.armR) && !first.has(b)) first.set(b, i); }
+      const delt = new Set(tail >= 0.5 ? first.values() : []);
+      slimArms = slim.field.subset((i) => ab.has(slim.field.bone[i]) && !delt.has(i));
+    }
+    const A = sub_(bonesOf([...TORSO, ...(slimArms ? [] : armBones), 'thighL', 'thighR', ...(dress ? LEGS : [])]));
     let keep: Region = inter(above(hem), sleeveKeep(armDist));
-    if (strap) keep = inter(keep, strapKeep(D.chestY + (body.sex === 'f' ? 0.06 : 0.065) * s, 0.0075 * s));
-    else keep = inter(keep, not(neckRemoval(neck, outer ? 1.6 : k === 'blouse' ? 1.15 : 1)));
+    if (strap) keep = inter(keep, strapKeep(D.chestY + (bodyShape.sex === 'f' ? 0.06 : 0.065) * s, (body ? 0.0045 : 0.0075) * s));
+    else keep = inter(keep, not(neckRemoval(neck, k === 'suitJacket' ? 1.75 : outer ? 1.6 : k === 'blouse' ? 1.15 : 1)));
+    // (pack) the top buttons undone: a narrow V under the collar
+    if (g.unbutton && neck === 'collar' && !strap) { const yU = jug - 0.105 * s * g.unbutton, tn = Math.tan(13 * DEG); keep = inter(keep, (x, y, z) => -Math.max(Math.abs(x) - (y - yU) * tn, nb[2] - z)); }
     if (g.open) keep = inter(keep, openFront(outer ? 0.07 * ws : 0.03 * ws, outer ? 0.2 * ws : 0.12 * ws, hem, jug));
-    const dTop = D.chestY + 0.06 * s;
+    // (graphics pass: a cut garment, fitK or drapeK set, hangs from the collarbones, bridging the groove between the
+    // pectorals, and its profile fades in at the top; the others as before)
+    const cut = !dress && (g.fitK !== undefined || g.drapeK !== undefined);
+    const dTop = cut ? jug - 0.012 * s : D.chestY + 0.06 * s;
     const drapeLo = dress ? hem - 0.03 : hem - 0.03;
-    const drape = makeDrape(torsoOnly, drapeLo, dTop, ws, t * 0.6, (y) => (dress ? lerp(drapeAmt, 1, smooth(D.hipY + 0.02, D.crotchY - 0.02, y)) : drapeAmt) * smooth(dTop, dTop - 0.06 * s, y),
-      dress ? (g.fabric === 'satin' ? 0.05 : 0.08) : outer ? 0.03 : 0.02, dress ? D.crotchY : D.waistY);
+    const drape = makeDrape(torsoOnly, drapeLo, dTop, ws, t * 0.6, (y) => (dress ? lerp(drapeAmt, body ? 0.86 : 1, smooth(D.hipY + 0.02, D.crotchY - 0.02, y)) : drapeAmt) * smooth(dTop, dTop - 0.06 * s, y),
+      body ? 0 : dress ? (g.fabric === 'satin' ? 0.05 : 0.08) : k === 'suitJacket' ? 0.012 : outer ? 0.03 : 0.02, dress ? D.crotchY : D.waistY, 2.5, g.fitK ?? 1, cut ? 0.07 * s : 0);
     const collarOn = neck === 'collar' && !strap;
     const folds = [...elbows(sleeve > 0.45 ? 0.8 : 0), ...waistFold(0.35 + 1.4 * fatT / 0.057), ...(dress ? hipCrease(0.5) : [])];
-    const sdf = new GarmentSdf(A, t, drape, 0.035 * s, keep);
-    const gb: GarmentBuild = { g, layer: outer ? 3 : 2, sdf, keep, bones, box: [[-0.75, drapeLo, -0.5], [0.75, jug + 0.1 * s, 0.5]], sigma: dress ? 1.8 : outer ? 1.6 : 1.4, accent: null, folds, wear: null, h: dress || strap ? 0.008 : 0.0105 };
-    if (collarOn) gb.collar = collarLoft(rig, sdf, !!g.open, k === 'polo');
+    const sdf = new GarmentSdf(A, t, drape, 0.035 * s, keep, slimArms, slimArms ? 0.03 * s : 0.004);
+    if (slimArms) sdf.tX = t * (1 - 0.35 * tail);
+    // (repair 2026-11-16) a cut tee's neck band stands 3.5 mm proud: the shell is offset from the torso alone, and at the base of the
+    // neck the skin's own blend into the neck came through it along a ragged line
+    if (!outer && !strap && !dress && (g.fitK !== undefined || g.drapeK !== undefined) && (neck === 'crew' || neck === 'crewHigh' || neck === 'scoop')) { const nr = neckRemoval(neck, 1); sdf.rim = nr; sdf.rimT = 0.0035 * s; }
+    const gb: GarmentBuild = { g, layer: outer ? 3 : 2, sdf, keep, bones, box: [[-0.75, drapeLo, -0.5], [0.75, jug + 0.1 * s, 0.5]], sigma: dress ? 1.8 : outer ? 1.6 : 1.4, accent: null, folds, wear: null, h: dress || strap ? 0.008 : k === 'suitJacket' ? 0.0092 : 0.0105 };
+    if (collarOn) gb.collar = collarLoft(rig, sdf, !!g.open || !!g.unbutton, k === 'polo');
+    // (pack) a double-breasted jacket's peak lapels, along the V the neckline cuts (neckRemoval 'v', deep 1.75, 21 degrees)
+    // (pack) a tailored shoulder: a pad from the side of the neck out over the shoulder point and a little down the
+    // arm, so the jacket runs straight from the collar to the sleeve head instead of dipping between the trapezius
+    // and the deltoid and rounding over it
+    if (k === 'suitJacket') {
+      const pad = (sg: number): Region => {
+        // (2026-11-12, after the renders: the pad ran 2 cm past the shoulder point at 4.3 to 5 cm and puffed the sleeve
+        // heads out like a costume's; now it stops at the shoulder point, slimmer, so the line is square, not padded out)
+        const a: V3 = [sg * 0.07 * ws, D.shoulderY + 0.01 * s, -0.03 * s], b: V3 = [sg * (D.shoulderX + (slimArms ? 0.014 : -0.004) * ws), D.shoulderY + (slimArms ? 0.004 : 0.0) * s, -0.026 * s];   // (tailored sleeves: the pad runs out over the sleeve's head, which has no deltoid under it)
+        const ab: V3 = [b[0] - a[0], b[1] - a[1], b[2] - a[2]], l2 = ab[0] * ab[0] + ab[1] * ab[1] + ab[2] * ab[2];
+        return (x, y, z) => {
+          const u = clamp(((x - a[0]) * ab[0] + (y - a[1]) * ab[1] + (z - a[2]) * ab[2]) / l2);
+          const qx = x - a[0] - ab[0] * u, qy = y - a[1] - ab[1] * u, qz = z - a[2] - ab[2] * u;
+          const R = lerp(0.036, 0.033, u) * s;
+          return (Math.hypot(qx / R, qy / (0.62 * R), qz / (1.25 * R)) - 1) * 0.62 * R;
+        };
+      };
+      sdf.extra = lr(pad); if (!slimArms) sdf.kx = 0.02 * s;
+    }
+    if (k === 'suitJacket' && neck === 'v') gb.collar = lapelLoft(rig, sdf, jug - 0.105 * s * 1.75, Math.tan(21 * DEG));
+    // (graphics pass) notch lapels on another outer layer (Garment.lapel): along its V and, worn open, its front edge
+    else if (outer && g.lapel === 'notch' && neck === 'v') {
+      const gLo = 0.07 * ws, gHi = 0.2 * ws;
+      gb.collar = lapelLoft(rig, sdf, jug - 0.105 * s * 1.6, Math.tan(21 * DEG), g.open ? (y) => Math.min(0.07 * ws, lerp(gLo, gHi, clamp((y - hem) / (jug - hem))) / 2) : null, false, g.open ? lerp(hem, jug, 0.45) : jug - 0.105 * s * 1.6);
+    }
     // (cast) trim in the accent colour: a henley's placket; a bomber's ribbed hem, cuffs and collar; a rolled sleeve's roll
     const A0 = armpitL, onArm: Region = lr((sg) => (x, y, z) => { const a = sg > 0 ? A0 : mirror(A0), n: V3 = sg > 0 ? nPit : [-nPit[0], nPit[1], 0]; return (x - a[0]) * n[0] + (y - a[1]) * n[1] + (z - a[2]) * n[2]; });
     const trims: Region[] = [];
@@ -382,28 +559,33 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
   const s = rig.s, L = rig.limb, F = rig.field, k = g.kind;
   const A = F.subset((i) => [B.footL, B.toeL, B.footR, B.toeR, B.shinL, B.shinR].includes(F.bone[i]));
   const t = k === 'boots' || k === 'workBoots' ? 0.0045 : 0.0035;
-  const soleT = (k === 'sneakers' ? 0.024 : k === 'chunkySneakers' ? 0.036 : k === 'boots' ? 0.014 : k === 'workBoots' ? 0.02 : k === 'loafers' ? 0.011 : k === 'deckShoes' ? 0.012 : k === 'sandals' ? 0.014 : 0.006) * s;
+  const point = k === 'stilettos';   // (pack) a pointed toe
+  const soleT = (k === 'stilettos' ? 0.004 : k === 'oxfords' ? 0.01 : k === 'sneakers' ? 0.024 : k === 'chunkySneakers' ? 0.036 : k === 'boots' ? 0.014 : k === 'workBoots' ? 0.02 : k === 'loafers' ? 0.011 : k === 'deckShoes' ? 0.012 : k === 'sandals' ? 0.014 : 0.006) * s;
   const wide = k === 'chunkySneakers' ? 0.006 : k === 'workBoots' ? 0.004 : 0;
   // body point -> the foot's own frame (unpitched, in units of s); the right foot mirrored onto the left
   const an = L.ankle, cp = Math.cos(-rig.pitch), spn = Math.sin(-rig.pitch), Q: V3 = [0, 0, 0];
+  const bend = rig.toeBend, cb = Math.cos(bend), sb = Math.sin(bend), chb = Math.cos(bend / 2), shb = Math.sin(bend / 2), YB = -0.066, ZB = 0.122;
   const local = (x: number, y: number, z: number): V3 => {
     const dx = Math.abs(x) - an[0], dy = y - an[1], dz = z - an[2];
     Q[0] = dx / s; Q[1] = (dy * cp - dz * spn) / s; Q[2] = (dy * spn + dz * cp) / s;
+    // (toes flat, rig.toeBend) ahead of the ball the shoe lies flat too: unbend those points back into the foot's frame
+    if (bend) { const vy = Q[1] - YB, vz = Q[2] - ZB; if (vz * chb + vy * shb > 0) { Q[1] = YB + (-vz * sb + vy * cb); Q[2] = ZB + (vz * cb + vy * sb); } }
     return Q;
   };
   // the sole: a rounded slab under the foot's outline, in the foot's own (unpitched) frame
   const sole: Region = (x, y, z) => {
     const q = local(x, y, z);
-    const zz = clamp(q[2], -0.055, 0.2), w = 0.038 + wide + 0.012 * smooth(-0.04, 0.12, zz) - 0.012 * smooth(0.17, 0.215, q[2]);
-    const lx = Math.abs(q[0] - 0.004) - w, lz = Math.max(-0.062 - q[2], q[2] - 0.205);
+    const zz = clamp(q[2], -0.055, 0.2), w = point ? (0.027 + 0.014 * smooth(-0.04, 0.12, zz)) * (1 - 0.92 * Math.pow(smooth(0.13, 0.262, q[2]), 1.3)) : 0.038 + wide + 0.012 * smooth(-0.04, 0.12, zz) - 0.012 * smooth(0.17, 0.215, q[2]);
+    const lx = Math.abs(q[0] - 0.004) - w, lz = Math.max(-0.062 - q[2], q[2] - (point ? 0.262 : 0.205));
     const yb = -0.079 - soleT / s, yt = -0.07;
     const ly = Math.max(yb - q[1], q[1] - yt);
     const e = Math.max(lx, lz, ly);
     return e * s - 0.004;
   };
   // heels: a block (or a slim heel) from under the heel to the ground
-  const heelish = k === 'heels' || k === 'lowHeels';
-  const extra: Region | null = heelish || k === 'boots' || k === 'workBoots' ? (() => {
+  const heelish = k === 'heels' || k === 'lowHeels' || k === 'stilettos';
+  const blockHeel = k === 'boots' || k === 'workBoots' || k === 'oxfords';
+  const heelX: Region | null = heelish || blockHeel ? (() => {
     const heelTop = (sg: number): V3 => {
       // the heel's bottom in body coords: the foot frame point (footX, -0.079 - sole, -0.04) pitched back
       const pL: V3 = [L.ankle[0], 0, 0];
@@ -412,7 +594,7 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
       return sg > 0 ? p : mirror(p);
     };
     const ground = -rig.heel * 0.92 + 0.002;
-    const rTop = (k === 'boots' || k === 'workBoots' ? 0.022 : k === 'lowHeels' ? 0.013 : 0.011) * s, rBot = (k === 'boots' || k === 'workBoots' ? 0.02 : k === 'lowHeels' ? 0.0085 : 0.0055) * s;
+    const rTop = (k === 'oxfords' ? 0.027 : blockHeel ? 0.022 : k === 'lowHeels' ? 0.013 : k === 'stilettos' ? 0.0105 : 0.011) * s, rBot = (k === 'oxfords' ? 0.026 : blockHeel ? 0.02 : k === 'lowHeels' ? 0.0085 : k === 'stilettos' ? 0.0042 : 0.0055) * s;
     return (x: number, y: number, z: number) => {
       const top = heelTop(x >= 0 ? 1 : -1), bot: V3 = [top[0], ground, top[2] - (heelish ? 0.006 : 0)];
       if (y > top[1] + 0.01) return y - top[1];
@@ -422,6 +604,16 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
       return Math.max(d, bot[1] - y);
     };
   })() : null;
+  // (pack) the pointed toe box: the upper drawn forward past the toes to a point, low over the sole
+  const toeX: Region | null = point ? (x: number, y: number, z: number) => {
+    // (2026-11-15: longer, 4.5 cm past the toes, and the toes themselves are drawn together in a high heel's rig, so the
+    // box is a point from above and from the front, not a round cap with a tip)
+    const q = local(x, y, z), t = clamp((q[2] - 0.13) / 0.132);
+    const wx = lerp(0.039, 0.003, Math.pow(t, 1.15)), hy = lerp(0.02, 0.004, t), yc = lerp(-0.058, -0.075, t);
+    const d = (Math.hypot((q[0] - 0.004) / wx, (q[1] - yc) / hy) - 1) * Math.min(wx, hy);
+    return Math.max(d, 0.13 - q[2], q[2] - 0.262) * s;
+  } : null;
+  const extra: Region | null = heelX && toeX ? (x, y, z) => Math.min(heelX(x, y, z), toeX(x, y, z)) : heelX ?? toeX;
   // the upper's cut, in the foot frame
   const keepUpper: Region = (() => {
     if (k === 'boots') return (_x: number, y: number) => y - (rig.dims.kneeY - 0.13 * s);
@@ -433,14 +625,15 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
       const strap = Math.min(Math.abs(q[2] - 0.045) - 0.017, Math.abs(q[2] - 0.098) - 0.016);
       return Math.max(strap, -0.06 - q[1]) * s;
     };
-    if (k === 'heels' || k === 'flats' || k === 'lowHeels') return (x: number, y: number, z: number) => {
+    if (k === 'heels' || k === 'flats' || k === 'lowHeels' || k === 'stilettos') return (x: number, y: number, z: number) => {
       const q = local(x, y, z);
-      const cup = Math.max(q[1] - lerp(-0.038, -0.058, smooth(-0.05, 0.08, q[2])), q[2] - 0.11);
-      const toe = Math.max(0.098 - q[2], q[1] + 0.035);
+      // (a pump's closed heel counter, up to under the ankle bone: the pack's stilettos; the others as before)
+      const cup = Math.max(q[1] - lerp(k === 'stilettos' ? -0.004 : -0.038, -0.058, smooth(-0.05, k === 'stilettos' ? 0.075 : 0.08, q[2])), q[2] - 0.11);
+      const toe = k === 'stilettos' ? Math.max(0.082 + 0.026 * (1 - clamp(Math.abs(q[0] - 0.004) / 0.034) ** 2) - q[2], q[1] + 0.02) : Math.max(0.098 - q[2], q[1] + 0.035);   // (a pump's vamp covers the toes to their base)
       return Math.min(cup, toe) * s;
     };
-    const collarY = k === 'loafers' || k === 'deckShoes' ? -0.03 : -0.016;
-    return (x: number, y: number, z: number) => { const q = local(x, y, z); return (q[1] - (collarY + 0.026 * smooth(-0.01, 0.06, q[2]) * (k === 'sneakers' || k === 'chunkySneakers' ? 1 : 0.4))) * s; };
+    const collarY = k === 'loafers' || k === 'deckShoes' ? -0.03 : k === 'oxfords' ? -0.006 : -0.016;
+    return (x: number, y: number, z: number) => { const q = local(x, y, z); return (q[1] - (collarY + 0.026 * smooth(-0.01, 0.06, q[2]) * (k === 'sneakers' || k === 'chunkySneakers' ? 1 : k === 'oxfords' ? 0.5 : 0.4))) * s; };
   })();
   const keep: Region = keepUpper;
   const sdf = new GarmentSdf(A, t, null, 0.004, keep, null, 0.006 * s, extra ? (x, y, z) => Math.min(sole(x, y, z), extra(x, y, z)) : sole);
@@ -449,7 +642,10 @@ function shoe(rig: Rig, g: Garment): GarmentBuild {
     return Math.min(a, b) < 0.0015 ? 1 : 0;
   };
   return {
-    g, layer: 0, sdf, keep: (x, y, z) => Math.min(keep(x, y, z), sole(x, y, z)), bones: new Set([B.footL, B.toeL, B.footR, B.toeR]),
-    box: [[-0.4, -rig.heel - 0.03, -0.3], [0.4, k === 'boots' ? rig.dims.kneeY : k === 'workBoots' ? rig.dims.ankleY + 0.12 * s : rig.dims.ankleY + 0.06, 0.45]], sigma: 1, accent, folds: [], wear: null, h: 0.0075,
+    // (repair 2026-11-16, sandals: the footbed is kept with a 3 mm margin. Its own surface, blended with the straps' shell, lies a hair outside the slab's zero set, so the slab was clipped away but for ragged slivers round its edge)
+    g, layer: 0, sdf, keep: k === 'sandals' ? (x, y, z) => Math.min(keep(x, y, z), sole(x, y, z) - 0.003) : (x, y, z) => Math.min(keep(x, y, z), sole(x, y, z)), bones: new Set([B.footL, B.toeL, B.footR, B.toeR]),
+    // (2026-11-15: the box follows the ankles: a very heavy body's feet stand more than 0.4 m out in the rest pose, and the
+    // fixed box cut the outer half of a shoe away)
+    box: [[-Math.max(0.4, L.ankle[0] + 0.1), -rig.heel - 0.03, -0.3], [Math.max(0.4, L.ankle[0] + 0.1), k === 'boots' ? rig.dims.kneeY : k === 'workBoots' ? rig.dims.ankleY + 0.12 * s : rig.dims.ankleY + 0.06, 0.45]], sigma: 1, accent, folds: [], wear: null, h: 0.0075,
   };
 }
