@@ -581,3 +581,9 @@ The "Your EV" section on the app's Rewards tab (tap the EV for a surprise) is re
 ## The line under the products (Nov 16)
 
 The line under the hero's products, "As featured in CanvasRebel · Medical-grade skincare", now reads **"The products I use and recommend · Shop medical-grade skincare"**. "Shop medical-grade skincare" links to the shop, and on a phone it stays together on its own line. The CanvasRebel interview is still linked from her photo in Meet Evelyn ("Featured in CanvasRebel →").
+
+## The shop's heading (Nov 16)
+
+- **Heading:** "Professional skincare *for your at-home routine.*" (was "The skincare Evelyn uses, for home.")
+- **Paragraph,** in Evelyn's voice: "Browse by brand or skin concern to find the products I stock and recommend for my clients. If something is out of stock, you can request it and I'll order it for you." The shop's search already understands skin concerns (acne, dark spots, sensitive, oily, wrinkles and more), and the brands sit right under it.
+- **Pickup:** "📍 Local pickup is free at the Woodland Hills studio—during your appointment or on an open day. Shipping is $8 per order." The dash stays with "studio" on a phone.
