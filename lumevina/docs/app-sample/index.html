@@ -449,26 +449,7 @@ h1, h2, h3, p { margin: 0; }
 .prog .t span { color: var(--ink-2); }
 .bar { height: 8px; border-radius: 4px; background: rgba(63, 57, 51, 0.14); margin-top: 10px; overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 4px; background: var(--grad); transition: width .9s var(--ease); color: #FFFFFF; }
-.petal { position: relative; display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: center; background: var(--card);
   border-radius: 22px; padding: 14px 16px; overflow: hidden; }
-.mirror-btn { position: relative; width: 110px; height: 118px; border: 0; background: radial-gradient(circle at 50% 42%, rgba(104, 98, 92, 0.2), transparent 62%); padding: 0; }
-.mirror-btn svg { width: 110px; height: 118px; overflow: visible; }
-.mirror-btn .lit { opacity: 0; transition: opacity .8s ease .15s; }
-.mirror-btn .shine { transform-box: fill-box; animation: shine 3.2s ease-in-out infinite; }
-.mirror-btn svg path { filter: drop-shadow(0 4px 8px rgba(63, 57, 51, 0.25)); }
-@keyframes shine { 0%, 55% { transform: translateX(-40px) rotate(24deg); } 85%, 100% { transform: translateX(60px) rotate(24deg); } }
-.mirror-btn.bloom .lit { opacity: 1; }
-.mirror-btn.bloom .shine { animation: none; opacity: 0; }
-.mirror-btn.bloom svg { filter: drop-shadow(0 0 18px rgba(229, 223, 217, .7)); transition: filter .8s ease; }
-.mirror-btn:not(.bloom) { animation: sway 3.2s ease-in-out infinite; transform-origin: 50% 90%; }
-@keyframes sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
-@keyframes breathe { 50% { transform: scale(1.05); } }
-.spark { position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: #68625C; opacity: 0; pointer-events: none; }
-.mirror-btn.bloom .spark { animation: burst .9s var(--ease) forwards; }
-@keyframes burst { 0% { opacity: 1; transform: translate(0, 0) scale(1); } 100% { opacity: 0; transform: translate(var(--x), var(--y)) scale(.4); } }
-.petal .t b { display: block; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; }
-.petal .t span { display: block; color: var(--ink-2); font-size: 13.5px; line-height: 1.4; margin-top: 4px; }
-.petal .won { color: var(--rose); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; margin-top: 6px; }
 .list { background: var(--card-2); border-radius: 16px; overflow: hidden; }
 .li { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; font-size: 15px; width: 100%;
   text-align: left; border: 0; background: none; }
@@ -746,25 +727,6 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <div class="bar"><i id="bar" style="width:40%"></i></div>
                 </div>
 
-                <div class="sec"><h2>Your EV</h2></div>
-                <div class="petal" id="petal">
-                  <button class="mirror-btn" id="rose" type="button" aria-label="Tap the EV for your surprise">
-                    <svg viewBox="655.7 777.7 362.3 205.4" aria-hidden="true"><!-- the EV letters' own outline with air around it, centred in the button -->
-                      <defs>
-                        <linearGradient id="mfr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#A29C96"/><stop offset="1" stop-color="#3F3933"/></linearGradient>
-                        <linearGradient id="mlit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EFE9E3"/><stop offset="1" stop-color="#A29C96"/></linearGradient>
-                      </defs>
-                      <path d="M669.6 965.8Q679.3 965.8 683.7 964.4Q688.2 963.0 689.7 958.8Q691.3 954.7 691.3 946.1V813.9Q691.3 805.3 689.7 801.3Q688.2 797.3 683.6 795.7Q679.0 794.2 669.6 794.2Q668.7 794.2 668.7 792.4Q668.7 790.7 669.6 790.7H788.4Q791.3 790.7 791.3 793.3L791.9 830.4Q791.9 831.0 790.3 831.2Q788.7 831.3 788.4 830.4Q781.6 798.2 749.0 798.2H737.3Q726.7 798.2 722.6 801.9Q718.4 805.6 718.4 814.4V945.0Q718.4 954.4 722.0 958.1Q725.6 961.8 734.7 961.8H748.7Q787.0 961.8 797.3 925.0Q797.3 924.4 798.7 924.4Q800.7 924.4 800.7 925.3Q797.9 947.0 797.9 965.0Q797.9 967.3 797.0 968.3Q796.1 969.3 793.6 969.3H669.6Q668.7 969.3 668.7 967.6Q668.7 965.8 669.6 965.8ZM745.6 880.1H705.6V872.7H745.9Q777.3 872.7 777.3 851.6Q777.3 850.7 778.9 850.7Q780.4 850.7 780.4 851.6L780.1 876.4L780.4 889.9Q781.0 899.0 781.0 904.7Q781.0 905.3 779.3 905.3Q777.6 905.3 777.6 904.7Q777.6 880.1 745.6 880.1Z M1004.1 794.2Q994.1 794.2 985.5 801.9Q977.0 809.6 971.5 824.2L915.8 969.0Q915.5 970.1 912.7 970.1Q909.8 970.1 909.5 969.0L837.3 814.4Q832.1 803.9 827.0 799.0Q821.9 794.2 814.7 794.2Q813.9 794.2 813.9 792.4Q813.9 790.7 814.7 790.7L822.1 791.0Q829.0 791.6 836.4 791.6Q856.4 791.6 872.4 791.0Q877.0 790.7 883.8 790.7Q884.7 790.7 884.7 792.4Q884.7 794.2 883.8 794.2Q875.3 794.2 870.7 797.3Q866.1 800.4 866.1 806.4Q866.1 811.6 869.0 817.3L924.1 936.7L912.4 956.4L963.8 823.0Q966.4 816.2 966.4 810.7Q966.4 802.7 961.1 798.4Q955.8 794.2 945.5 794.2Q944.7 794.2 944.7 792.4Q944.7 790.7 945.5 790.7L958.7 791.0Q970.1 791.6 979.0 791.6Q984.4 791.6 992.4 791.0L1004.1 790.7Q1005.0 790.7 1005.0 792.4Q1005.0 794.2 1004.1 794.2Z" fill="url(#mfr)"/>
-                      <path class="lit" d="M669.6 965.8Q679.3 965.8 683.7 964.4Q688.2 963.0 689.7 958.8Q691.3 954.7 691.3 946.1V813.9Q691.3 805.3 689.7 801.3Q688.2 797.3 683.6 795.7Q679.0 794.2 669.6 794.2Q668.7 794.2 668.7 792.4Q668.7 790.7 669.6 790.7H788.4Q791.3 790.7 791.3 793.3L791.9 830.4Q791.9 831.0 790.3 831.2Q788.7 831.3 788.4 830.4Q781.6 798.2 749.0 798.2H737.3Q726.7 798.2 722.6 801.9Q718.4 805.6 718.4 814.4V945.0Q718.4 954.4 722.0 958.1Q725.6 961.8 734.7 961.8H748.7Q787.0 961.8 797.3 925.0Q797.3 924.4 798.7 924.4Q800.7 924.4 800.7 925.3Q797.9 947.0 797.9 965.0Q797.9 967.3 797.0 968.3Q796.1 969.3 793.6 969.3H669.6Q668.7 969.3 668.7 967.6Q668.7 965.8 669.6 965.8ZM745.6 880.1H705.6V872.7H745.9Q777.3 872.7 777.3 851.6Q777.3 850.7 778.9 850.7Q780.4 850.7 780.4 851.6L780.1 876.4L780.4 889.9Q781.0 899.0 781.0 904.7Q781.0 905.3 779.3 905.3Q777.6 905.3 777.6 904.7Q777.6 880.1 745.6 880.1Z M1004.1 794.2Q994.1 794.2 985.5 801.9Q977.0 809.6 971.5 824.2L915.8 969.0Q915.5 970.1 912.7 970.1Q909.8 970.1 909.5 969.0L837.3 814.4Q832.1 803.9 827.0 799.0Q821.9 794.2 814.7 794.2Q813.9 794.2 813.9 792.4Q813.9 790.7 814.7 790.7L822.1 791.0Q829.0 791.6 836.4 791.6Q856.4 791.6 872.4 791.0Q877.0 790.7 883.8 790.7Q884.7 790.7 884.7 792.4Q884.7 794.2 883.8 794.2Q875.3 794.2 870.7 797.3Q866.1 800.4 866.1 806.4Q866.1 811.6 869.0 817.3L924.1 936.7L912.4 956.4L963.8 823.0Q966.4 816.2 966.4 810.7Q966.4 802.7 961.1 798.4Q955.8 794.2 945.5 794.2Q944.7 794.2 944.7 792.4Q944.7 790.7 945.5 790.7L958.7 791.0Q970.1 791.6 979.0 791.6Q984.4 791.6 992.4 791.0L1004.1 790.7Q1005.0 790.7 1005.0 792.4Q1005.0 794.2 1004.1 794.2Z" fill="url(#mlit)"/>
-                    </svg>
-                    <span class="spark" style="--x:-44px;--y:-30px"></span><span class="spark" style="--x:40px;--y:-40px"></span>
-                    <span class="spark" style="--x:-50px;--y:14px"></span><span class="spark" style="--x:48px;--y:18px"></span>
-                    <span class="spark" style="--x:-10px;--y:-54px"></span><span class="spark" style="--x:16px;--y:50px"></span>
-                    <span class="spark" style="--x:-30px;--y:44px"></span><span class="spark" style="--x:30px;--y:-52px"></span>
-                  </button>
-                  <div class="t" id="petal-t"><b>A little something</b><span>A surprise after every confirmed visit. Tap the EV.</span></div>
-                </div>
-
                 <div class="sec"><h2>Ways to earn</h2></div>
                 <div class="list">
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Everything you pay<span class="sub">1 point per $1, online or at the studio</span></span><span class="r pos">1×</span></div>
@@ -821,7 +783,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                 <div class="list">
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><span>Flash openings</span><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Flash openings"></button></div>
                   <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg></span><span>Visit reminders</span><button class="toggle" type="button" role="switch" aria-checked="true" aria-label="Visit reminders"></button></div>
-                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Rewards and the EV surprise</span><button class="toggle" type="button" role="switch" aria-checked="false" aria-label="Rewards and the EV surprise"></button></div>
+                  <div class="li"><span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span>Glow Points and rewards</span><button class="toggle" type="button" role="switch" aria-checked="false" aria-label="Glow Points and rewards"></button></div>
                   <button class="li" type="button" id="send-alert"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4"/></svg></span><span>Send a sample flash alert</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 5l7 7-7 7"/></svg></button>
                 </div>
 
@@ -939,7 +901,6 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     <ul class="try-list">
       <li><button class="try-btn" type="button" data-try="lock"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 2h16zM10 21h4"/></svg></span><span><b>Replay the flash alert</b><span class="t">Starts on the lock screen, like a real push.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="credit"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span><span><b>Book with a banked facial</b><span class="t">The membership covers it, so nothing is due today.</span></span><span class="go" aria-hidden="true">›</span></button></li>
-      <li><button class="try-btn" type="button" data-try="rose"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4z"/></svg></span><span><b>Ask the EV surprise</b><span class="t">The small surprise after every visit.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="ask"><span class="try-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.6 7.1L4 20l1-4.2A8 8 0 1 1 20 12z"/></svg></span><span><b>Ask Evelyn a skin question</b><span class="t">Instant answers, and Evelyn herself for anything personal.</span></span><span class="go" aria-hidden="true">›</span></button></li>
       <li><button class="try-btn" type="button" data-try="alert"><span class="try-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span><span><b>Send a flash alert in the app</b><span class="t">How a freed-up slot reaches clients first.</span></span><span class="go" aria-hidden="true">›</span></button></li>
     </ul>
@@ -1308,7 +1269,7 @@ window.LUMEVINA_ASK_BUNDLE = {"builtAt": "2026-11-16", "prompt": "You are Ask Lu
     DAYS.forEach(function (d, k) { if (!d.m) d.m = "Sep"; d.date = new Date(base.getFullYear(), base.getMonth(), base.getDate() + k); });
   })();
 
-  var S = { points: 240, credits: 1, petal: false, cat: "facials", svc: null, day: 0, time: null, useCredit: false,
+  var S = { points: 240, credits: 1, cat: "facials", svc: null, day: 0, time: null, useCredit: false,
             next: { when: "Sat, Sep 26 · 10:00 AM", what: "Lumevina Custom Facial with Evelyn", chip: "Membership", order: 2.4 } };
 
   var money = function (n) { return "$" + (Math.round(n * 100) % 100 ? n.toFixed(2) : String(Math.round(n))); };
@@ -1821,7 +1782,7 @@ window.LUMEVINA_ASK_BUNDLE = {"builtAt": "2026-11-16", "prompt": "You are Ask Lu
     laT = setTimeout(function () { island.classList.remove("expanded"); island.classList.add("compact"); }, 3200);
   };
 
-  /* ── rewards: card tilt + the EV surprise ── */
+  /* ── rewards: the card tilts under a finger ── */
   var card = $("#gcard");
   if (!calm) {
     card.addEventListener("pointermove", function (e) {
@@ -1837,18 +1798,6 @@ window.LUMEVINA_ASK_BUNDLE = {"builtAt": "2026-11-16", "prompt": "You are Ask Lu
       card.style.setProperty("--rx", "0deg"); card.style.setProperty("--ry", "0deg");
     });
   }
-  var rose = $("#rose");
-  rose.addEventListener("click", function () {
-    if (S.petal) return;
-    S.petal = true;
-    rose.classList.add("bloom");
-    rose.setAttribute("aria-label", "Your surprise is in");
-    setTimeout(function () {
-      $("#petal-t").innerHTML = '<b>Lucky you</b><span>Added to your Glow Points.</span><p class="won">+30 points</p>';
-      var from = S.points; countTo(from, from + 30);
-    }, calm ? 0 : 650);
-  });
-
   /* ── me: switches + sample alert ── */
   $$("#v-me .toggle").forEach(function (t) {
     t.addEventListener("click", function () { t.setAttribute("aria-checked", String(t.getAttribute("aria-checked") !== "true")); });
@@ -2172,11 +2121,6 @@ window.LUMEVINA_ASK_BUNDLE = {"builtAt": "2026-11-16", "prompt": "You are Ask Lu
       if (k === "credit") {
         openDetail("custom", 2, "11:00 AM");
         setTimeout(function () { S.useCredit = S.credits > 0; openSheet(); }, calm ? 0 : 520);
-      } else if (k === "rose") {
-        pop(); tab("rewards");
-        var sc = $("#v-rewards .scroll");
-        setTimeout(function () { sc.scrollTo({ top: $("#petal").offsetTop - 120, behavior: calm ? "auto" : "smooth" }); }, 50);
-        setTimeout(function () { rose.click(); }, calm ? 60 : 800);
       } else if (k === "alert") {
         setTimeout(alertIn, 250);
       } else if (k === "ask") {

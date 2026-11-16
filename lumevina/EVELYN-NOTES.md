@@ -573,3 +573,7 @@ The cleanser in "Picked for your skin" uses the shop's own photo. The "Included 
 - **When Claude answers in the preview,** answers stream in with follow-up buttons, and with "Add" buttons when it names a product.
 - **Without Claude** (where the viewer's account can't answer), the built-in answers reply instead. These were also brought up to date: hours, shipping, the change and cancel rules, running late, and Saturdays.
 - **A fix on the website too:** the full version (with booking and membership) was giving its chat the "book on GlossGenius" facts. Now it gets the "book right here" facts, on the website and on the server.
+
+## The app: the EV surprise is off (Nov 16)
+
+The "Your EV" section on the app's Rewards tab (tap the EV for a surprise) is removed, with its "Try this" button beside the phone. The notification switch for it now reads "Glow Points and rewards". The Rewards tab goes straight from the points bar to Ways to earn. The website never had it.
