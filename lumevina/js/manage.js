@@ -78,7 +78,7 @@
     var gcal = box.querySelector(".mg-gcal");
     if (gcal) {
       var stamp = function (k, m) { return k.replace(/-/g, "") + "T" + ("0" + Math.floor(m / 60)).slice(-2) + ("0" + (m % 60)).slice(-2) + "00"; };
-      gcal.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent("Lumevina — " + v.names) +
+      gcal.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent("Lumevina Aesthetics Spa — " + v.names) +
         "&dates=" + stamp(v.date, v.start_min) + "/" + stamp(v.date, v.start_min + v.dur_min) + "&ctz=America/Los_Angeles" +
         "&location=" + encodeURIComponent("Lumevina Aesthetics Spa, Woodland Hills, CA");
     }

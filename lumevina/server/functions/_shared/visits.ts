@@ -134,7 +134,7 @@ export async function completeVisit(db: any, b: any, input: VisitInput, pay: { m
   const rows = q.lines.map((l) => `<tr><td style="padding:5px 0;border-bottom:1px solid #D7C9B8">${esc(l.label)}</td><td style="padding:5px 0;border-bottom:1px solid #D7C9B8;text-align:right">${l.cents < 0 ? "−" : ""}${money(Math.abs(l.cents))}</td></tr>`).join("");
   const tipRow = q.tip_cents ? `<tr><td style="padding:5px 0">Tip</td><td style="padding:5px 0;text-align:right">${money(q.tip_cents)}</td></tr>` : "";
   const paidWith = pay.method === "card" ? `Charged to ${esc(b.card_label ?? "your card on file")}` : pay.method === "link" ? "Paid on your phone" : pay.method === "cash" ? "Paid in cash" : "Paid at the studio";
-  await sendEmail(email, "Your Lumevina receipt", page(`Thank you${b.guest_name ? ", " + String(b.guest_name).split(" ")[0] : ""}.`,
+  await sendEmail(email, "Your Lumevina Aesthetics Spa receipt", page(`Thank you${b.guest_name ? ", " + String(b.guest_name).split(" ")[0] : ""}.`,
     `<p style="font-size:14px;color:#7D5A44">${esc(fmtWhen(b.date, b.start_min))}</p>` +
     `<table style="width:100%;border-collapse:collapse;font-size:15px">${rows}${tipRow}<tr><td style="padding:10px 0;font-weight:700">Total</td><td style="padding:10px 0;font-weight:700;text-align:right">${money(q.charge_cents)}</td></tr></table>` +
     `<p style="font-size:14px">${paidWith}.${got.points ? ` ✦ ${got.points} Glow Points earned.` : ""}</p>`), Deno.env.get("OWNER_EMAIL") ?? undefined);

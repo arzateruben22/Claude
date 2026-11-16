@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
 
   const lines: string[] = [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Owner//EN",
-    "X-WR-CALNAME:Lumevina Appointments", "X-PUBLISHED-TTL:PT1H",
+    "X-WR-CALNAME:Lumevina Aesthetics Spa Appointments", "X-PUBLISHED-TTL:PT1H",
   ];
   for (const b of rows ?? []) {
     const svc = (b.services as string[]).map((id) => CATALOG[id]?.name ?? id).join(" + ");

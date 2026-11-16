@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lumevina — Owner Dashboard</title>
+  <title>Lumevina Aesthetics Spa — Owner Dashboard</title>
   <meta name="robots" content="noindex, nofollow">
   <!-- Lumevina Studio: on her phone's home screen, with notifications (studio.webmanifest, sw.js) -->
   <link rel="manifest" href="studio.webmanifest">
@@ -2548,7 +2548,7 @@
         var pad = function (n) { return (n < 10 ? "0" : "") + n; };
         var stamp = function (dk, mins) { var d = new Date(dk + "T00:00:00"); d.setMinutes(mins || 0);
           return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00"; };
-        var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Owner//EN", "X-WR-CALNAME:Lumevina Appointments"];
+        var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Lumevina//Owner//EN", "X-WR-CALNAME:Lumevina Aesthetics Spa Appointments"];
         src.forEach(function (b, i) {
           var svc = (b.services || []).map(svcName).join(" + ");
           lines.push("BEGIN:VEVENT", "UID:lum-own-" + i + "-" + b.date + "@lumevina",

@@ -85,7 +85,7 @@
 
   var body = function (reason) {
     var lead = reason === "booked"
-      ? "Your visit is saved. Keep Lumevina one tap away for rebooking and your Glow Rewards."
+      ? "Your visit is saved. Keep Lumevina Aesthetics Spa one tap away for rebooking and your Glow Rewards."
       : "Book, rebook and check your Glow Rewards in one tap, right from your home screen.";
     if (inAppBrowser) {
       return '<p class="install-lead">' + lead + "</p>" +
@@ -107,11 +107,11 @@
     card = document.createElement("aside");
     card.className = "install-card";
     card.setAttribute("role", "dialog");
-    card.setAttribute("aria-label", "Add Lumevina to your home screen");
+    card.setAttribute("aria-label", "Add Lumevina Aesthetics Spa to your home screen");
     card.innerHTML =
       '<img class="install-icon" src="img/apple-touch-icon.png" alt="" width="52" height="52">' +
       '<div class="install-copy">' +
-        '<p class="install-title">Add Lumevina to your home screen</p>' +
+        '<p class="install-title">Add Lumevina Aesthetics Spa to your home screen</p>' +
         body(reason) +
         '<div class="install-actions">' +
           (deferredPrompt && !isIOS

@@ -354,7 +354,7 @@
     var card = gc.create({
       amount: plan.value, serviceId: plan.primary, label: plan.facial,
       recipientName: (to && to.name) || "", recipientEmail: (to && to.email) || "",
-      message: "A facial from " + (r.name || "a Lumevina member") + ", gifted from their membership.",
+      message: "A facial from " + (r.name || "a Lumevina Aesthetics Spa member") + ", gifted from their membership.",
       boughtBy: r.email, source: "membership"
     });
     r.credits -= 1;

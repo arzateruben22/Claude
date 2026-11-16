@@ -197,7 +197,7 @@
       } else say("Copy this: " + all);
     };
     if (navigator.share) {
-      navigator.share({ title: "Lumevina", text: text, url: url }).then(function () {
+      navigator.share({ title: "Lumevina Aesthetics Spa", text: text, url: url }).then(function () {
         say("Sent. They get $15 off, and you earn " + REFERRAL_BONUS + " Glow Points when their first visit is done.");
       }, function (e) { if (!(e && e.name === "AbortError")) copy(); });
     } else copy();

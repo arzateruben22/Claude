@@ -48,7 +48,7 @@ export async function emailGift(card: { code: string; amount_cents: number; reci
     `<p style="margin:4px 0 0;font-size:15px">${card.kind === "service" ? `One ${esc(card.label ?? "treatment")}, on the house` : `${money(card.amount_cents)} toward any treatment`}, and it never expires.</p>` +
     `</div>` +
     `<p style="font-size:14px;line-height:1.5;color:#4A342A">Book with Evelyn${site() ? ` at <a href="${esc(site())}#services" style="color:#161412">${esc(site().replace(/^https?:\/\//, ""))}</a>` : ""}, and show this code at your visit. Anything left stays on it for next time; if the visit costs more, you pay only the difference.</p>`;
-  return sendEmail(to, card.deliver_to_buyer ? "Your Lumevina gift certificate" : "A gift for you from Lumevina", page("A gift of glow", body));
+  return sendEmail(to, card.deliver_to_buyer ? "Your Lumevina Aesthetics Spa gift certificate" : "A gift for you from Lumevina Aesthetics Spa", page("A gift of glow", body));
 }
 
 export async function fulfillOrder(db: any, session: any): Promise<string> {
@@ -135,7 +135,7 @@ export async function fulfillOrder(db: any, session: any): Promise<string> {
   // the shelf products, back in the bag in one tap next time (js/cart.js reads ?reorder=; Buy again in My Lumevina does the same signed in)
   const shelfIds = shelf.map((i: any) => i.id).filter((id: string) => !isConsultItem(id));
   const again = shelfIds.length && site() ? `<p style="font-size:14px;line-height:1.5;margin-top:14px;color:#4A342A">Running low later? <a href="${esc(site())}/?reorder=${encodeURIComponent(shelfIds.join(","))}#shop" style="color:#161412">Put these back in your bag</a> in one tap, or sign in and open Buy again under My Lumevina.</p>` : "";
-  await sendEmail(order.email, studio ? "Your Lumevina receipt" : `Your Lumevina order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
+  await sendEmail(order.email, studio ? "Your Lumevina Aesthetics Spa receipt" : `Your Lumevina Aesthetics Spa order ${order.ref}`, page(`Thank you${name ? ", " + name.split(" ")[0] : ""}!`,
     `<p style="margin:0 0 12px;font-size:13px;color:#7D5A44">Order number <strong style="color:#161412;letter-spacing:.04em">${esc(order.ref)}</strong></p>` + table +
     (next || track ? `<p style="font-size:15px;line-height:1.5;margin-top:16px">${esc(next)}${track}</p>` : "") + again));
 

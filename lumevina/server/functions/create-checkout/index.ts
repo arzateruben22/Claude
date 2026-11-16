@@ -128,7 +128,7 @@ Deno.serve(async (req) => {
   f.set("cancel_url", back + "?order=cancelled#shop");
   f.set("metadata[order_id]", order.id);
   f.set("payment_intent_data[metadata][order_id]", order.id);
-  f.set("payment_intent_data[description]", "Lumevina order");
+  f.set("payment_intent_data[description]", "Lumevina Aesthetics Spa order");
   let n = 0;
   const line = (name: string, cents: number, qty: number, code: string) => {
     f.set(`line_items[${n}][quantity]`, String(qty));
@@ -140,7 +140,7 @@ Deno.serve(async (req) => {
     n++;
   };
   items.forEach((i) => services.has(i.id) ? line(i.name, i.price_cents, i.qty, TAX_SERVICES) : line(i.name + (rate ? ` (member ${Math.round(rate * 100)}% off)` : ""), i.price_cents, i.qty, TAX_GOODS));
-  gifts.forEach((g) => line(`Lumevina e-gift certificate · $${g.amount_cents / 100}` + (g.recipient_name ? ` for ${g.recipient_name}` : ""), g.amount_cents, 1, TAX_NONE));
+  gifts.forEach((g) => line(`Lumevina Aesthetics Spa e-gift certificate · $${g.amount_cents / 100}` + (g.recipient_name ? ` for ${g.recipient_name}` : ""), g.amount_cents, 1, TAX_NONE));
   if (delivery === "ship") {
     f.set("shipping_address_collection[allowed_countries][0]", "US");
     f.set("shipping_options[0][shipping_rate_data][type]", "fixed_amount");

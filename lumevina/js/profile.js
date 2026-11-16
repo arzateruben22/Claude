@@ -220,7 +220,7 @@
     return '<div class="pf-progress" aria-hidden="true"><span style="width:100%"></span></div>' +
       '<p class="pf-k">Your skin profile · all set</p><h2 class="pf-q" id="pf-q">Look it over</h2>' +
       '<ul class="pf-review" role="list">' + rows + "</ul>" +
-      '<label class="pf-consent"><input type="checkbox" class="pf-ok"' + (st.consent ? " checked" : "") + '> <span>Save this to my Lumevina profile. Evelyn and the chat use it to answer my questions, and I can change or delete it any time.</span></label>' +
+      '<label class="pf-consent"><input type="checkbox" class="pf-ok"' + (st.consent ? " checked" : "") + '> <span>Save this to my Lumevina Aesthetics Spa profile. Evelyn and the chat use it to answer my questions, and I can change or delete it any time.</span></label>' +
       '<p class="pf-err" role="alert">' + esc(st.err) + "</p>" +
       '<div class="pf-nav"><button type="button" class="btn btn-ghost pf-back">Back</button><button type="button" class="btn btn-solid pf-save"' + (st.saving ? " disabled" : "") + ">" +
       (st.saving ? "Saving…" : "Save my profile") + "</button></div>";

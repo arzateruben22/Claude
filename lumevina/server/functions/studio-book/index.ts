@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
         description: kind === "no_show" ? "No-show fee" : "Late cancellation fee", metadata: { kind: "fee", booking_id: b.id }, key: `fee-${b.id}` });
       if (!r.ok) return json({ reason: r.reason }, 402);
       await db.from("bookings").update({ fee_cents: cents, fee_kind: kind, ...(kind === "no_show" && b.status === "held" ? { status: "no_show" } : {}) }).eq("id", b.id);
-      await sendEmail(norm(b.guest_email), kind === "no_show" ? "Your missed Lumevina appointment" : "Your late cancellation at Lumevina",
+      await sendEmail(norm(b.guest_email), kind === "no_show" ? "Your missed Lumevina Aesthetics Spa appointment" : "Your late cancellation at Lumevina Aesthetics Spa",
         page(kind === "no_show" ? "We missed you." : "About your cancellation.",
           `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. As the booking policy says, a ${money(cents)} fee was charged to ${esc(card.label ?? "your card on file")}.</p>` +
           `<p style="font-size:15px;line-height:1.55">Questions? Just reply to this email.</p>`), Deno.env.get("OWNER_EMAIL") ?? undefined);

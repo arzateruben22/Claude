@@ -340,7 +340,7 @@
           t.disabled = false;
           if (res.url) {
             q("msg").innerHTML = 'Pay link ready: <a href="' + esc(res.url) + '" target="_blank" rel="noopener">open it</a> · <button type="button" class="settle-btn" data-copy="' + esc(res.url) + '">Copy</button>' +
-              (r.phone ? ' · <a href="sms:' + esc(String(r.phone).replace(/[^\d+]/g, "")) + "?&body=" + encodeURIComponent("Your Lumevina visit: " + res.url) + '">Text it to ' + esc(String(r.name || "").split(" ")[0]) + "</a>" : "") +
+              (r.phone ? ' · <a href="sms:' + esc(String(r.phone).replace(/[^\d+]/g, "")) + "?&body=" + encodeURIComponent("Your Lumevina Aesthetics Spa visit: " + res.url) + '">Text it to ' + esc(String(r.name || "").split(" ")[0]) + "</a>" : "") +
               ". It’s checked out once they pay.";
             return;
           }

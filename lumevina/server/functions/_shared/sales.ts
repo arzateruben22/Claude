@@ -75,7 +75,7 @@ export async function recordSale(db: any, input: SaleInput) {
       mode: "payment", customer_email: email,
       success_url: `${back}/?paid=studio`, cancel_url: `${back}/?paid=cancelled`,
       expires_at: Math.floor(Date.now() / 1000) + 24 * 3600,
-      metadata: { order_id: order.id }, payment_intent_data: { metadata: { order_id: order.id }, description: "Lumevina, at the studio" },
+      metadata: { order_id: order.id }, payment_intent_data: { metadata: { order_id: order.id }, description: "Lumevina Aesthetics Spa, at the studio" },
       line_items: items.filter((i) => i.price_cents > 0).map((i) => ({ quantity: i.qty, price_data: { currency: "usd", unit_amount: i.price_cents, product_data: { name: i.name } } })),
       ...(discount ? { discounts: [] } : {}),
     });
@@ -93,7 +93,7 @@ export async function recordSale(db: any, input: SaleInput) {
     if (!contact?.stripe_customer || !contact?.payment_method) return { ok: false as const, reason: "no_card" };
     if (total > 0) {
       const r = await chargeOnFile({ customer: contact.stripe_customer, paymentMethod: contact.payment_method, cents: total,
-        description: `Lumevina, at the studio: ${items.filter((i) => !i.kind).map((i) => i.name).join(", ") || "visit"}`, metadata: { kind: "sale", order_id: order.id }, key: `sale-${order.id}` });
+        description: `Lumevina Aesthetics Spa, at the studio: ${items.filter((i) => !i.kind).map((i) => i.name).join(", ") || "visit"}`, metadata: { kind: "sale", order_id: order.id }, key: `sale-${order.id}` });
       if (!r.ok) { await db.from("orders").update({ status: "cancelled" }).eq("id", order.id); return { ok: false as const, reason: r.reason }; }
       pi = r.id;
     }

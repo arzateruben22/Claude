@@ -357,7 +357,7 @@
 
   /* the slips as a file of their own: open it and it prints */
   var slipDocument = function (list) {
-    return "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lumevina packing slips</title>" +
+    return "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Lumevina Aesthetics Spa packing slips</title>" +
       "<style>@page{size:4in 6in;margin:0}body{margin:0;background:#fff}" + SLIP_CSS + "</style></head><body>" + list.map(slip).join("") +
       "<script>addEventListener('load',function(){setTimeout(function(){print()},300)})<\/script></body></html>";
   };

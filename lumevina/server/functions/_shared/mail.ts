@@ -2,7 +2,7 @@
 // clients or to Evelyn. Without RESEND_API_KEY it does nothing, so the rest
 // still works while email isn't set up.
 //
-// Secrets: RESEND_API_KEY, FROM_EMAIL ("Lumevina <hello@her-domain>")
+// Secrets: RESEND_API_KEY, FROM_EMAIL ("Lumevina Aesthetics Spa <hello@her-domain>")
 
 export const esc = (t: unknown) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
 export const money = (cents: number) => "$" + (cents / 100).toLocaleString("en-US", { minimumFractionDigits: cents % 100 ? 2 : 0, maximumFractionDigits: 2 });
@@ -14,7 +14,7 @@ export async function sendEmail(to: string, subject: string, html: string, reply
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: Deno.env.get("FROM_EMAIL") ?? "Lumevina <hello@lumevina.com>",
+      from: Deno.env.get("FROM_EMAIL") ?? "Lumevina Aesthetics Spa <hello@lumevina.com>",
       to, subject, html,
       ...(replyTo ? { reply_to: replyTo } : {}),
     }),

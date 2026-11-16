@@ -862,7 +862,7 @@
     var total = orderTotal();
     payBtn.disabled = true;
     checkoutStatus.textContent = "Processing…";
-    pay.process({ amount: total, description: "Lumevina order" },
+    pay.process({ amount: total, description: "Lumevina Aesthetics Spa order" },
       function (err, result) {
         payBtn.disabled = false;
         if (err) {
@@ -885,7 +885,7 @@
         var rw = window.LumevinaRewards;
         var earnedEl = modal.querySelector(".rw-earned-cart");
         if (rw && earnedEl) {
-          var q = rw.award(total, {}, "Lumevina order");
+          var q = rw.award(total, {}, "Lumevina Aesthetics Spa order");
           earnedEl.textContent = "✦ +" + q.points +
             " Glow Points earned · balance " + rw.points() + " ✦";
           earnedEl.hidden = false;

@@ -64,7 +64,7 @@ Deno.serve(async (req) => {
       if (await sendBookingMessage(db, b, "reminder")) sent.reminder++;
     }
     if (b.sms_ok && b.phone && h > 2 && h <= 26 && await claim("text_reminder", b.id, b.guest_email)) {
-      if (await sendSMS(b.phone, `Lumevina: see you ${fmtWhen(b.date, b.start_min).replace(/^\w+, /, "")} for ${names(b.services)}. Wait in your car and text when you arrive. Need to change it? ${manageUrl(b)}`)) sent.text_reminder++;
+      if (await sendSMS(b.phone, `Lumevina Aesthetics Spa: see you ${fmtWhen(b.date, b.start_min).replace(/^\w+, /, "")} for ${names(b.services)}. Wait in your car and text when you arrive. Need to change it? ${manageUrl(b)}`)) sent.text_reminder++;
     }
   }
 

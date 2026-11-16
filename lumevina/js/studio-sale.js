@@ -130,7 +130,7 @@
         st.busy = false; btn.disabled = false;
         if (res.url) {
           msg.innerHTML = 'Pay link ready: <a href="' + esc(res.url) + '" target="_blank" rel="noopener">open it</a> · <button type="button" class="settle-btn" data-copy="' + esc(res.url) + '">Copy</button>' +
-            (w.phone ? ' · <a href="sms:' + esc(String(w.phone).replace(/[^\d+]/g, "")) + "?&body=" + encodeURIComponent("Your Lumevina purchase: " + res.url) + '">Text it to ' + esc(w.name.split(" ")[0] || "them") + "</a>" : "") +
+            (w.phone ? ' · <a href="sms:' + esc(String(w.phone).replace(/[^\d+]/g, "")) + "?&body=" + encodeURIComponent("Your Lumevina Aesthetics Spa purchase: " + res.url) + '">Text it to ' + esc(w.name.split(" ")[0] || "them") + "</a>" : "") +
             ". Stock, the receipt and their points follow once they pay.";
           return;
         }

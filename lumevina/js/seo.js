@@ -42,7 +42,7 @@
     openingHoursSpecification: hours.length ? hours : undefined
   };
 
-  var brandName = function (p) { return (CAT.brands && CAT.brands[p.brandId] && CAT.brands[p.brandId].name) || p.brand || "Lumevina"; };
+  var brandName = function (p) { return (CAT.brands && CAT.brands[p.brandId] && CAT.brands[p.brandId].name) || p.brand || "Lumevina Aesthetics Spa"; };
   var products = INV.live().filter(function (p) { return p.kind !== "consult"; }).map(function (p, i) {
     var s = INV.status(p);
     return {
@@ -65,7 +65,7 @@
       }
     };
   });
-  var shelf = { "@context": "https://schema.org", "@type": "ItemList", name: "The shelf at Lumevina", numberOfItems: products.length, itemListElement: products };
+  var shelf = { "@context": "https://schema.org", "@type": "ItemList", name: "The shelf at Lumevina Aesthetics Spa", numberOfItems: products.length, itemListElement: products };
 
   var put = function (id, data) {
     var el = document.getElementById(id);

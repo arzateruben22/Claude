@@ -248,10 +248,10 @@ export async function offerWaitlist(db: any, date: string, freed?: { start_min: 
   for (const w of list ?? []) {
     const when = freed ? fmtWhen(date, freed.start_min) : fmtWhen(date, 720).replace(/ at .*/, "");
     const link = `${site()}/?book=${encodeURIComponent((w.services ?? [])[0] ?? "")}&day=${date}#book`;
-    const ok = await sendEmail(w.email, "A time just opened at Lumevina", page(`A time opened, ${esc(String(w.name).split(" ")[0])}`,
+    const ok = await sendEmail(w.email, "A time just opened at Lumevina Aesthetics Spa", page(`A time opened, ${esc(String(w.name).split(" ")[0])}`,
       `<p style="font-size:15px;line-height:1.55">Someone cancelled, and ${esc(when)} is open now. The first to book it gets it.</p>` +
       `<p style="margin:20px 0"><a href="${esc(link)}" style="background:#161412;color:#F5F1EA;padding:12px 20px;border-radius:999px;text-decoration:none;font-weight:600">See the time and book</a></p>`));
-    if (w.sms_ok && w.phone) await sendSMS(w.phone, `Lumevina: a time opened on ${when}. First to book gets it: ${link}`);
+    if (w.sms_ok && w.phone) await sendSMS(w.phone, `Lumevina Aesthetics Spa: a time opened on ${when}. First to book gets it: ${link}`);
     if (ok) sent++;
     await db.from("waitlist").update({ status: "offered", offered_at: new Date().toISOString() }).eq("id", w.id);
   }
@@ -287,14 +287,14 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     subject = `You're booked: ${svc}`;
     title = `You're booked${first ? ", " + first : ""}.`;
     body = details + pts + formLine + arrive + manage + policy;
-    sms = `Lumevina: you're booked for ${svc}, ${when}. Change it up to 48h before: ${manageUrl(b)} Reply STOP to stop texts.`;
+    sms = `Lumevina Aesthetics Spa: you're booked for ${svc}, ${when}. Change it up to 48h before: ${manageUrl(b)} Reply STOP to stop texts.`;
   } else if (kind === "reminder") {
     subject = `See you ${when.replace(/,.*? at /, " at ")}`;
     title = `See you soon${first ? ", " + first : ""}.`;
     body = details + formLine + `<p style="font-size:14px;line-height:1.5">Before a facial: pause retinol and acids (glycolic, lactic, salicylic, mandelic) for 3 to 5 days, a prescription retinoid about a week, and no waxing your face for 2 days. Keep your cleanser, moisturizer and SPF.</p>` + arrive + manage + policy;
-    sms = `Lumevina reminder: ${svc} ${when}. Need to change it? ${manageUrl(b)}`;
+    sms = `Lumevina Aesthetics Spa reminder: ${svc} ${when}. Need to change it? ${manageUrl(b)}`;
   } else if (kind === "cancelled") {
-    subject = "Your Lumevina appointment is cancelled";
+    subject = "Your Lumevina Aesthetics Spa appointment is cancelled";
     title = "Your appointment is cancelled.";
     const deposit = !b.paid_cents ? "" : extra.kind === "in_time" ? `Your ${money(b.paid_cents)} deposit carries over to a new date this month: it comes off automatically when you book with this email.`
       : extra.kind === "late" ? `It was within 48 hours (or a Saturday), so the ${money(b.paid_cents)} deposit is kept, as the policy says.`
@@ -302,14 +302,14 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     body = `<p style="font-size:15px;line-height:1.55">${esc(svc)}, ${esc(when)}.</p>` + (deposit ? `<p style="font-size:15px;line-height:1.55">${deposit}</p>` : "") +
       (b.membership_id && extra.kind !== "late" ? `<p style="font-size:15px;line-height:1.55">Your membership facial is back on your account.</p>` : "") +
       button(`${site()}/#book`, "Book another time");
-    sms = `Lumevina: your ${when} appointment is cancelled.`;
+    sms = `Lumevina Aesthetics Spa: your ${when} appointment is cancelled.`;
   } else if (kind === "moved") {
     subject = `Moved: ${svc}, ${when}`;
     title = "Your appointment moved.";
     body = `<p style="font-size:15px;line-height:1.55">It's now ${esc(when)}.${extra.from ? ` (It was ${esc(extra.from)}.)` : ""}</p>` + details + manage + policy;
-    sms = `Lumevina: your appointment moved to ${when}.`;
+    sms = `Lumevina Aesthetics Spa: your appointment moved to ${when}.`;
   } else {
-    subject = "One step to hold your Lumevina appointment";
+    subject = "One step to hold your Lumevina Aesthetics Spa appointment";
     title = `Almost done${first ? ", " + first : ""}.`;
     body = `<p style="font-size:15px;line-height:1.55">Evelyn booked ${esc(svc)} for you, ${esc(when)}. Every appointment holds a card on file; nothing is charged to it now.</p>` +
       button(extra.url, "Add my card") + details + policy;

@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
   const email = norm(url.searchParams.get("e"));
   const token = url.searchParams.get("t") ?? "";
   const html = (title: string, body: string, status = 200) =>
-    new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lumevina</title>` + page(title, body),
+    new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lumevina Aesthetics Spa</title>` + page(title, body),
       { status, headers: { "Content-Type": "text/html; charset=utf-8" } });
   if (!email || token.length !== 32 || token !== (await emailToken(email))) {
     return html("That link didn't work.", `<p style="font-size:15px">Reply to any email from Evelyn and she'll take you off the list.</p>`, 400);

@@ -508,3 +508,19 @@ The website moved off the rosy beige and grey to a warm neutral palette, like th
 - **The logo:** LUMEVINA is all near-black. The header's "ev" and the drawn logo's EV no longer fade to grey. AESTHETICS SPA is warm charcoal, kept distinct by its small size and wide letter spacing. The pink chalk on the drawn roses is off.
 - **The water pictures** (the koi, still and clip, and the open water) and the share picture were re-tinted from peach to warm stone (saturation down to 28%). The koi are now pearl white. The originals are unchanged in `marketing/source/`. The water band behind the headings is stone greige.
 - **Unchanged:** the service and product photos keep their natural colours.
+
+## The full name everywhere (Nov 16)
+
+Wherever the website, a receipt, an email, a text or a calendar invite names the business, it now says **Lumevina Aesthetics Spa**:
+
+- **The website:** the footer reads "Lumevina Aesthetics Spa" with "Where glow begins." under it. Also the About text ("the licensed esthetician behind Lumevina Aesthetics Spa", "Lumevina Aesthetics Spa begins with a conversation"), the shop note, the app section, the consent lines on the booking form, the "Back to" buttons, the referral question and the social and email buttons.
+- **The chat:** its greeting ("Hello, and welcome to Lumevina Aesthetics Spa") and its built-in answers.
+- **What clients receive:** email subjects (receipts, orders, gift certificates, cancellations, an opened time), texts (confirmations, reminders, the waitlist), calendar invites, the card statement line and Stripe's order description. The email sender name defaults to "Lumevina Aesthetics Spa <hello@…>".
+- **The other pages:** the privacy page, the shipping kit, the sample receipt, the owner dashboard's title and its calendar feed name.
+- **On a phone's home screen** the app is called "Lumevina Spa", because the full name is cut off under the icon. Its full name, "Lumevina Aesthetics Spa", shows everywhere else.
+
+**Kept as they are:** the names of features and treatments (Ask Lumevina, My Lumevina, the Lumevina Custom Facial, Lumevina Studio), the email address, the Instagram handle, and the `ref=Lumevina` code in the brand links, which the brands use to credit her.
+
+**At launch:** set the email sender name to "Lumevina Aesthetics Spa" too (the FROM_EMAIL setting).
+
+**Texts are longer now.** The full name adds 15 characters, so a confirmation with its link may count as two texts, which roughly doubles its cost. To keep texts short, they can start with "Lumevina Spa:" instead; the rest of the site keeps the full name.

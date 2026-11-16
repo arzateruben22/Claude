@@ -158,10 +158,10 @@ Deno.serve(async (req) => {
       if (!took?.length) return json({ reason: "try_again" }, 409);
       const card = await issueGift(db, {
         amountCents: plan.value_cents, recipientName: toName, recipientEmail: to, buyerEmail: signedIn,
-        message: `A ${plan.facial}, from ${m.name || "a Lumevina member"}'s membership.`, source: "membership",
+        message: `A ${plan.facial}, from ${m.name || "a Lumevina Aesthetics Spa member"}'s membership.`, source: "membership",
         kind: "service", serviceId: plan.primary, label: plan.facial,
       });
-      await emailGift(card, m.name || "A Lumevina member");
+      await emailGift(card, m.name || "A Lumevina Aesthetics Spa member");
       await db.from("gift_cards").update({ delivered_at: new Date().toISOString() }).eq("code", card.code);
       await db.from("membership_ledger").insert({ membership_id: m.id, kind: "gifted", gift_code: card.code });
       return json({ member: await fresh(), sent_to: toName });

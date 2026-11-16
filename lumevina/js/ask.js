@@ -188,7 +188,7 @@
       return "Evelyn works with a budget in mind. In her words: “If you’re working with a budget, we can absolutely start with the essentials: cleanser, hydrator, moisturizer, and SPF, then gradually introduce additional products as you’re ready.” Starting with the essentials can mean slower progress, since not every concern is addressed right away. Her goal is a routine that’s both effective and realistic for you, and she’s happy to talk through your priorities and budget together.";
     }, acts: [["Essentials for dry skin", "t:My skin is dry or normal. What are the essentials?"], ["Essentials for oily skin", "t:My skin is oily or combination. What are the essentials?"]] },
     { id: "hi", k: /^(hi+|hey+|hello+|helo|heyo|hiya|yo|sup|what'?s up|good (morning|afternoon|evening))[\s!.,]*(there|evelyn|lumevina)?[\s!.?]*$/, a: function () {
-      return "Hello, and welcome to Lumevina. I can help with your skin, your products, prices, booking, preparation and aftercare at any time, from Evelyn’s own guidance. For anything personal, she is always available."; } },
+      return "Hello, and welcome to Lumevina Aesthetics Spa. I can help with your skin, your products, prices, booking, preparation and aftercare at any time, from Evelyn’s own guidance. For anything personal, she is always available."; } },
     { id: "thanks", k: /thank|appreciate|\bthanks\b|you'?re the best|life ?saver/, a: function () { return "You’re very welcome. Is there anything else I can help you with?"; } },
     { id: "bye", k: /^(bye+|see you|see ya|talk (later|soon)|talk to you later|good ?night|have a good (one|day|night)|ttyl|later)[\s!.]*$/, a: function () {
       return "Thank you for visiting. We look forward to seeing you at the studio."; } },
@@ -237,7 +237,7 @@
       if (!who) return "Sign in to My Lumevina and I’ll know what you’ve bought here, so I can talk about your own products by name.";
       if (!mine.length) return "Nothing bought here under " + who.email + " yet. Once you do, I’ll know your products by name: how and when Evelyn uses them, and when a bottle may be running low.";
       var low = mine.filter(function (b) { return b.soon; });
-      return "Your Lumevina products: " + mine.map(function (b) { return b.name + " (" + b.where + ", " + boughtOn(b.at) + ")"; }).join("; ") + "." +
+      return "Your products from Lumevina Aesthetics Spa: " + mine.map(function (b) { return b.name + " (" + b.where + ", " + boughtOn(b.at) + ")"; }).join("; ") + "." +
         (low.length ? " Probably running low: " + low.map(function (b) { return b.name; }).join(", ") + ". Buy again puts them back in your bag." : "") +
         " Ask me how to use any of them, or what to pause before a visit."; },
       acts: [["Buy again", "account"], ["Before my facial", "n:before"], ["After my facial", "n:after"]] },
@@ -258,7 +258,7 @@
         " Outside those hours, or on a closed day, she takes after-hours visits for an extra $50; ask her first."; },
       acts: [["Book", "book"]] },
     { id: "where", k: /where|address|locat|park|direction|arriv|get there/, a: function () {
-      return "Lumevina is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
+      return "Lumevina Aesthetics Spa is in Woodland Hills. The exact address comes in your confirmation email. There’s a free parking lot; when you arrive, wait in your car and send a text before coming up."; } },
     { id: "refer", k: /\brefer|referral|invite a friend|friend'?s code|code from (a|my) friend|share my code/, a: function () {
       return "Share your code from Glow Rewards: your friend gets $15 off their first visit, and you get 150 points ($15) once it’s done. Got a friend’s code? Enter it when you book your first visit."; },
       acts: [["Book", "book"]] },
@@ -289,7 +289,7 @@
       return "Evelyn’s shelf is on this site: Face Reality, GlyMed Plus, Mixi and Circadia, the lines she uses in the room. Shipping is $8 an order, or pick up free at your visit. Not sure what’s right for your skin? Tell me if it’s more dry or oily and I’ll show you her routine for it."; },
       acts: [["See the shop", "#shop"], ["Show me her routine", "t:Which products should I use for my skin?"]] },
     { id: "lashes", k: /lash|nails?\b|manicure|pedicure|tint|lamination/, a: function () {
-      return "Lumevina’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }
+      return "Lumevina Aesthetics Spa’s menu is facials, peels and waxing. For lashes, brows and nails, Evelyn is happy to point you to artists she trusts."; } }
   ];
 
   /* ── what goes to Evelyn: the shared rules (js/ask-rules.js), the same on the server ── */
@@ -1019,7 +1019,7 @@
     logEl.innerHTML = "";
     var who = me();
     var st = status();
-    bubble("bot", esc((who ? "Hello " + who.name.split(" ")[0] + ". " : "Hello, and welcome to Lumevina. ") + (myPlan()
+    bubble("bot", esc((who ? "Hello " + who.name.split(" ")[0] + ". " : "Hello, and welcome to Lumevina Aesthetics Spa. ") + (myPlan()
       ? "I have the skin plan Evelyn wrote for you, so ask me what to use morning or night, what to avoid, or what’s next. Prices, booking and aftercare too. Anything new about your skin, I’ll pass to Evelyn."
       : myProfile() ? "I have your skin profile, so ask me about prep, aftercare, products or booking and I’ll keep your routine in mind. Changes to your routine, I’ll pass to Evelyn."
       : st ? "Ask me about your skin, your products, prices, booking, prep or aftercare. I answer from Evelyn’s own playbook, and she’s a tap away."
@@ -1347,11 +1347,11 @@
      homework. One courteous line and the topic buttons; never Evelyn's inbox, never a lecture, never a joke. A few in a
      row and it offers the buttons only; a few more and it goes quiet for ten minutes. ── */
   var OFF_LINES = {
-    flirt: ["Thank you, but I’m here only for Lumevina: your skin, Evelyn’s treatments and booking. How may I help?", "I can help with treatments, products and booking. What would you like to know?", "I’m here for your skin and your visit. Would prices, booking or aftercare help?"],
+    flirt: ["Thank you, but I’m here only for Lumevina Aesthetics Spa: your skin, Evelyn’s treatments and booking. How may I help?", "I can help with treatments, products and booking. What would you like to know?", "I’m here for your skin and your visit. Would prices, booking or aftercare help?"],
     abuse: ["I’m here whenever you’d like help with your skin or a visit.", "I’m happy to help with treatments, products or booking whenever you’re ready.", "I’m here when you’d like help with prices, booking or aftercare."],
-    jailbreak: ["I’m Lumevina’s assistant, here for Evelyn’s treatments, her products and your skin. How may I help?", "I can help only with the studio: treatments, products, booking and skin care. What would you like to know?", "I’m here for questions about your skin and your visit. Would prices, booking or aftercare help?"],
-    identity: ["I’m Lumevina’s virtual assistant, not a person. I answer from Evelyn’s own guidance on her treatments, her products and your skin. How may I help?", "I’m the studio’s virtual assistant, here for skin care, treatments and booking. What would you like to know?", "I’m a virtual assistant, here for your skin and your visit. Would prices, booking or products help?"],
-    unrelated: ["I can help only with Lumevina: Evelyn’s treatments, her products, booking and your skin. Would any of those help?", "That’s outside what I can help with here. I’d be glad to help with treatments, products or booking.", "I’ll keep to skin care and the studio. Here’s what I can help with:"]
+    jailbreak: ["I’m Lumevina Aesthetics Spa’s assistant, here for Evelyn’s treatments, her products and your skin. How may I help?", "I can help only with the studio: treatments, products, booking and skin care. What would you like to know?", "I’m here for questions about your skin and your visit. Would prices, booking or aftercare help?"],
+    identity: ["I’m Lumevina Aesthetics Spa’s virtual assistant, not a person. I answer from Evelyn’s own guidance on her treatments, her products and your skin. How may I help?", "I’m the studio’s virtual assistant, here for skin care, treatments and booking. What would you like to know?", "I’m a virtual assistant, here for your skin and your visit. Would prices, booking or products help?"],
+    unrelated: ["I can help only with Lumevina Aesthetics Spa: Evelyn’s treatments, her products, booking and your skin. Would any of those help?", "That’s outside what I can help with here. I’d be glad to help with treatments, products or booking.", "I’ll keep to skin care and the studio. Here’s what I can help with:"]
   };
   var QUIET_MIN = 10;
   var offLine = function (kind, n) { var L = OFF_LINES[kind] || OFF_LINES.unrelated; return L[Math.min(L.length - 1, Math.max(0, n - 1))]; };

@@ -108,7 +108,7 @@ export async function addBooking(b: { id: string; date: string; start_min: numbe
     headers: { Authorization: `Bearer ${await accessToken()}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       summary: b.title,
-      description: (b.note ? b.note + "\n\n" : "") + "Booked on the Lumevina website.",
+      description: (b.note ? b.note + "\n\n" : "") + "Booked on the Lumevina Aesthetics Spa website.",
       start: { dateTime: `${b.date}T${hhmm(b.start_min)}`, timeZone: TZ },
       end: { dateTime: `${end >= 1440 ? nextDay(b.date) : b.date}T${hhmm(end % 1440)}`, timeZone: TZ },
       transparency: "opaque",

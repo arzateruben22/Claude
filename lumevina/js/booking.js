@@ -32,6 +32,7 @@
 
 (function () {
   "use strict";
+  var F_NAME = "Lumevina Aesthetics Spa";   /* the full name, on calendar invites */
 
   var STORAGE_KEY = "lumevina_bookings";
 
@@ -1837,7 +1838,7 @@
 
       /* remember this booking for add-to-calendar + the pre-visit form */
       lastBooking = {
-        title: "Lumevina — " + sessionName(),
+        title: F_NAME + " — " + sessionName(),
         start: state.dayKey, startMin: state.slot, durMin: totalDur(),
         name: nameInput.value.trim(), email: emailInput.value.trim()
       };
@@ -1900,7 +1901,7 @@
         "has been paid; the balance is due at your visit.",
       "LOCATION:Lumevina Aesthetics Spa\\, Woodland Hills\\, CA",
       "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY",
-      "DESCRIPTION:Lumevina appointment tomorrow", "END:VALARM",
+      "DESCRIPTION:Lumevina Aesthetics Spa appointment tomorrow", "END:VALARM",
       "END:VEVENT", "END:VCALENDAR"
     ];
     if (window.LumevinaSave) {
@@ -2056,7 +2057,7 @@
     refNoteEl.hidden = true;
     var sub = modal.querySelector(".booking-success-sub");
     if (sub) sub.textContent = "A confirmation email is on its way, with a link to move or cancel up to 48 hours before. The balance is due at your visit.";
-    lastBooking = { title: "Lumevina — " + v.names, start: v.date, startMin: v.start_min, durMin: v.dur_min,
+    lastBooking = { title: F_NAME + " — " + v.names, start: v.date, startMin: v.start_min, durMin: v.dur_min,
       name: v.name || nameInput.value.trim(), email: emailInput.value.trim() };
     if (gcalLink) {
       gcalLink.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(lastBooking.title) +
