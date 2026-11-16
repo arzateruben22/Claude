@@ -266,7 +266,7 @@
       return "Evelyn’s Skin School is her online course: 40 short lessons in three levels, from your first routine to acne, dark spots and aging. The first five lessons are free. The full course is $149, with a starter kit $229, or $449 with a 1-on-1 video call with Evelyn. Members get Skin Basics free and 25% off. Prefer in person? Skin School Live is a two-hour class at the studio for $129."; },
       acts: [["Start the free lessons", "go:school.html#learn-8-2"], ["See the courses", "go:school.html#tiers"], ["Class dates", "go:school.html#live"]] },
     { id: "gift", node: "gift", k: /gift|certificate|present for/, a: function () {
-      return "Gift certificates come in $50, $100, $200, $400 or any amount you choose, work toward any treatment and never expire. At the visit Evelyn takes it off the bill: anything left stays on it, and if the visit costs more you pay only the difference."; },
+      return "Gift certificates come in $50, $100, $200, $400 or any amount you choose, and go toward any treatment. Use the balance toward your treatment: any remaining amount stays on the gift certificate, and you can pay the difference if your treatment costs more."; },
       acts: [["Send a gift", "#gift"]] },
     { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
       return "Some treatments take a non-refundable deposit when you book: $50 for the acne consultation, $49 for a consultation, $20 or $30 for waxing and acne treatments; facials and peels have none. It goes toward your total, and with 48 hours’ notice it moves to a new date in the same month. If anything comes up after your visit, reach out within 24 hours."; } },
@@ -395,7 +395,7 @@
     "m-bank": info("Busy month? Your facial waits. Up to two bank at a time, and with two waiting we don’t bill you until you book one, so you never pay for a facial you can’t use. You can also send a banked facial to a friend as a gift.", [["Something else", "n:member"]]),
     "m-pause": info("Pause one month a year at no charge. After the 3-month minimum, cancel online any time from My Lumevina.", [["Something else", "n:member"]]),
     "m-ask": info("Members can ask Evelyn anything, any time. Everyday questions are answered right here, and anything about your skin gets her own reply within 24 hours.", [["Join", "#membership"], ["Something else", "n:member"]]),
-    gift: info("Gift certificates never expire. What would you like to know?", [["Sending one", "n:g-any"], ["Using one", "n:g-use"], ["What's left on mine", "n:g-left"]]),
+    gift: info("Gift certificates go toward any treatment. What would you like to know?", [["Sending one", "n:g-any"], ["Using one", "n:g-use"], ["What's left on mine", "n:g-left"]]),
     "g-any": info("Choose $50, $100, $200, $400 or your own amount ($25 to $1,000). It's emailed with its own code and goes toward any treatment.", [["Send a gift", "#gift"], ["Something else", "n:gift"]]),
     "g-use": info("Show the code at your visit and Evelyn takes it off the bill. If it's worth more than the visit, the rest stays on it for next time; if the visit costs more, you pay only the difference.", [["Book", "n:book"], ["Something else", "n:gift"]]),
     "g-left": info("Type the code from the certificate email here (it looks like LUM-AB12-CD34) and I'll check what's left.", [["Something else", "n:gift"]])
@@ -451,9 +451,9 @@
     if (c.status === "redeemed" || !(c.balance > 0)) return { answer: "The certificate ending " + end + " has been used in full.", acts: [["Send a gift", "#gift"]] };
     var m = function (n) { return "$" + Number(n).toLocaleString("en-US", { minimumFractionDigits: n % 1 ? 2 : 0 }); };
     return { answer: c.kind === "service"
-      ? "The certificate ending " + end + " covers " + (c.label || "one treatment") + " and hasn’t been used yet. It never expires: show the code at your visit."
+      ? "The certificate ending " + end + " covers " + (c.label || "one treatment") + " and hasn’t been used yet. Show the code at your visit."
       : "The certificate ending " + end + " has " + m(c.balance) + " left" + (c.amount && c.amount !== c.balance ? " of " + m(c.amount) : "") +
-        ", toward any treatment. It never expires: show the code at your visit and Evelyn takes it off the bill.", acts: [["Book", "book"]] };
+        ", toward any treatment. Show the code at your visit and Evelyn takes it off the bill.", acts: [["Book", "book"]] };
   };
   var giftCheck = function (text) {
     var m = GIFT_CODE.exec(text), G = window.LumevinaGiftCards;

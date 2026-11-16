@@ -629,3 +629,21 @@ While booking runs on GlossGenius, the Book section reads:
 The deposit wording is gone from the section: "same calendar, same deposits" and "Evelyn's calendar, deposits and reminders are on GlossGenius". In the version that books on the website, "(some treatments take a small deposit)" is gone too. Each deposit still shows beside its treatment on the menu and in the policies. "Opens lumevina.glossgenius.com" stays under the button.
 
 **Simplified the same day:** the heading is now "Book your next appointment." The tag reads "Online booking coming soon", followed by one line: "For now, book through GlossGenius using the button below." Nothing repeats where the calendar is or how deposits work, and nothing suggests booking on the website is already open.
+
+## The gift certificate's wording, and no expiry promise (Nov 16)
+
+The card in Services now reads:
+
+> E-GIFT CERTIFICATE
+> **The gift of glow**
+> Redeemable toward any treatment at Lumevina Aesthetics Spa. Delivered by email with a unique code.
+> *(amounts and Add to cart)*
+> Use the balance toward your treatment. Any remaining amount stays on the gift certificate, and you can pay the difference if your treatment costs more.
+
+**"It never expires" is gone from everywhere a client could read it**, and no expiration was added. Evelyn is confirming with a legal source whether a six-month expiration is allowed (California generally doesn't allow expiration dates on gift certificates, with a few exceptions, so it's worth checking before adding one). Removed from:
+- the card, the note under the services menu and the FAQ
+- the chat: its answers, the balance look-up, and its instructions, which now tell it never to say whether a certificate expires and to offer to ask Evelyn
+- the gift email and the server's balance look-up
+- the gift ad (the square and story images were redrawn without "No expiry.") and the Instagram and campaign drafts
+
+`node marketing/ads/build-ads.mjs gift` now redraws just one ad concept.

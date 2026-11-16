@@ -79,7 +79,7 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
 A Personalized Skin Consultation is $75, online or in person; book it from the shop.
-Gift certificates never expire, and anything left after a visit stays on them.
+Gift certificates go toward any treatment, and anything left after a visit stays on them.
 
 
 

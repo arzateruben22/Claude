@@ -48,7 +48,7 @@ Everything here is ready to paste into Ads Manager and Google Ads. Budgets are s
 
 ### Campaign 3: gift certificates (November 15 to December 23, and the week before Mother's Day)
 - Objective: Sales. Budget $8/day. Audience: 25–65, the LA radius, interests: gifts, spa, skincare; and anyone who visited the site in 90 days (retargeting).
-- Creatives: `gift-square/story`. Primary text: "A facial they'll actually use. A gift certificate for any treatment or amount, emailed today or on the day you choose. No expiry."
+- Creatives: `gift-square/story`. Primary text: "A facial they'll actually use. A gift certificate for any treatment or amount, emailed today or on the day you choose."
 
 ### Retargeting (always on, $5/day)
 Website visitors in the last 30 days who didn't buy or book: the `pickup` creative with "Still thinking it over? Pick it up free at the studio." Cart abandoners get the shelf creative.

@@ -108,6 +108,6 @@ export async function giftBalance(db: any, code: unknown) {
     kind: p.kind === "service" ? "covers one treatment, used all at once" : "a dollar amount that draws down",
     amount: money(data.amount_cents),
     left: money(data.balance_cents),
-    status: p.status === "void" ? "cancelled" : p.status === "redeemed" || data.balance_cents <= 0 ? "fully used" : "active, never expires",
+    status: p.status === "void" ? "cancelled" : p.status === "redeemed" || data.balance_cents <= 0 ? "fully used" : "active",
   };
 }

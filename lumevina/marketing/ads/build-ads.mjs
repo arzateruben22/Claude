@@ -32,7 +32,7 @@ const CONCEPTS = [
     products: [], hero: "img/services/custom.webp", cta: "Book on the website" },
   { id: "acne", eyebrow: "Acne Bootcamp", h: "Breakouts? Start a plan, not a product.", sub: "A consultation and treatment, a home routine Evelyn adjusts with you, and a visit every few weeks. She tells everyone: give it 90 days.",
     products: [], hero: "img/services/acne.webp", cta: "Book the consultation" },
-  { id: "gift", eyebrow: "The gift of glow", h: "A facial they'll actually use.", sub: "A gift certificate for any treatment or amount, emailed today or on the day you choose. No expiry.",
+  { id: "gift", eyebrow: "The gift of glow", h: "A facial they'll actually use.", sub: "A gift certificate for any treatment or amount, emailed today or on the day you choose.",
     products: [], hero: "img/services/ageless.webp", cta: "Send a gift certificate", tone: "sand" },
   { id: "wax", eyebrow: "Wax Wednesday", h: "Brazilian, $65 on Wednesdays.", sub: "Hard wax, one on one, 40 minutes. Woodland Hills, free parking, a card holds your time.",
     products: [], hero: "img/services/brazilian.webp", cta: "Book on the website" },
@@ -81,7 +81,9 @@ import { createRequire } from "node:module";
 const { chromium } = createRequire(path.join(process.env.PLAYWRIGHT_DIR || root, "x.js"))("playwright");
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || undefined });
 let made = 0;
-for (const c of CONCEPTS) {
+// node marketing/ads/build-ads.mjs gift   → only the concepts named (all six without a name)
+const only = process.argv.slice(2);
+for (const c of CONCEPTS.filter((c) => !only.length || only.includes(c.id))) {
   for (const [size, w, h] of [["square", 1080, 1080], ["story", 1080, 1920]]) {
     const file = path.join(tmp, `${c.id}-${size}.html`);
     fs.writeFileSync(file, html(c, w, h, size === "story"));

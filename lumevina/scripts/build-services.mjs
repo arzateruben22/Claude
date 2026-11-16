@@ -109,7 +109,7 @@ const giftHtml = `        <!-- the gift certificate: pick an amount (js/cart.js)
             <div class="gift-cert-body">
               <p class="gift-cert-k">E-Gift Certificate</p>
               <h3 class="gift-cert-title">The gift of glow</h3>
-              <p class="gift-cert-desc">Toward any treatment, sent by email with its own code. It never expires.</p>
+              <p class="gift-cert-desc">Redeemable toward any treatment at Lumevina Aesthetics Spa. Delivered by email with a unique code.</p>
               <div class="gift-amounts" role="group" aria-label="Gift amount">
 ${GIFT_AMOUNTS.map((n) => `                <button class="gift-amt" type="button" data-amount="${n}" aria-pressed="${n === GIFT_DEFAULT}">${money(n)}</button>`).join("\n")}
                 <button class="gift-amt" type="button" data-amount="custom" aria-pressed="false" aria-controls="gift-custom">Custom</button>
@@ -121,7 +121,7 @@ ${GIFT_AMOUNTS.map((n) => `                <button class="gift-amt" type="button
               </div>
               <button class="btn gift-cert-add add-to-cart gift-add" type="button"
                 data-id="gift-any-${GIFT_DEFAULT}" data-name="Gift Card · ${money(GIFT_DEFAULT)} value" data-price="${GIFT_DEFAULT}">Add ${money(GIFT_DEFAULT)} gift to cart</button>
-              <p class="gift-cert-fine">Used at the visit: anything left stays on it, and you pay only what's over.</p>
+              <p class="gift-cert-fine">Use the balance toward your treatment. Any remaining amount stays on the gift certificate, and you can pay the difference if your treatment costs more.</p>
               <button class="linklike gift-check-toggle" type="button" aria-expanded="false" aria-controls="gift-check">Check a gift balance</button>
               <form class="gift-check" id="gift-check" hidden>
                 <label class="gift-custom-label" for="gift-check-code">Certificate code</label>

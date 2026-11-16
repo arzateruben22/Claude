@@ -17,7 +17,7 @@ Format: **Day · type · caption** (story = a 15-second story or Reel cover; pos
 11. **Post.** Breakouts? Start a plan, not a product. The Acne Bootcamp is a consultation and treatment, a home routine I adjust with you, and a visit every few weeks. I tell everyone the same thing: give it 90 days.
 12. **Story.** Before a facial, pause your retinol and acids for a few days. If you're on a prescription, tell me first and we plan around it.
 13. **Post.** A client favorite from the shelf (photo in hand): [product]. What it does, from the label: [label line]. Who I reach for it with: ask me.
-14. **Story.** Gift certificates: any treatment, any amount, emailed today or on a date you choose, no expiry. For the friend who "never has time".
+14. **Story.** Gift certificates: any treatment, any amount, emailed today or on a date you choose. For the friend who "never has time".
 15. **Post.** Why I don't rush extractions, and why your skin looks a little pink for an hour after. (A short honest paragraph in her words.)
 16. **Story.** Wednesday reminder: Brazilian, $65 today only. A card holds your time; book from the bio.
 17. **Post.** Dermaplaning: a sterile blade lifts dead surface skin and the fine hair; painless, smooth right away, makeup sits better. The hair grows back exactly as it was. Add it to any facial.

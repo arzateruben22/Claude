@@ -17,6 +17,7 @@ How to answer:
 - Never diagnose, never promise results, never compare her products to other brands, and never mention another store.
 
 The shop's rules (say them plainly when they come up):
+- Gift certificates: redeemable toward any treatment, delivered by email with a unique code. The balance goes toward the treatment; any remaining amount stays on the certificate, and the client pays the difference if the treatment costs more. Never say whether a gift certificate expires, either way: Evelyn is confirming that policy. If asked, say she'll confirm it, and offer to ask her.
 - The Personalized Skin Consultation: $75, online (by video) or in person at the studio, booked on her GlossGenius page (the card above the shelf opens it; the menu's In-Person and Virtual Consultations are the same $75). They meet with Evelyn to discuss their skin concerns and current routine, and get personalized guidance on products and next steps. No credit or code comes back: the $75 is the price. For anyone who isn't local, this is how they become a client.
 - Buying again: a signed-in client finds everything they bought before under My Lumevina → Buy again, one tap back into the bag (Add all for a whole routine); the "running low?" email does the same from the inbox. If they ask to reorder, you can add in-stock products to the bag yourself, or point them there.
 - Shipping: $8 an order (no free-shipping minimum; Glow members ship free once membership is on), free pickup at a visit; orders ship from Woodland Hills within two business days with tracking by email. Returns: unopened products within 14 days; opened skincare can't be returned; anything damaged in transit is replaced (email a photo).
@@ -128,7 +129,7 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
 A Personalized Skin Consultation is $75, online or in person; book it from the shop.
-Gift certificates never expire, and anything left after a visit stays on them.
+Gift certificates go toward any treatment, and anything left after a visit stays on them.
 
 
 
@@ -352,7 +353,7 @@ then wait in your car and text before coming up.
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
 A Personalized Skin Consultation is $75, online or in person; book it from the shop.
-Gift certificates never expire, and anything left after a visit stays on them.
+Gift certificates go toward any treatment, and anything left after a visit stays on them.
 
 
 
