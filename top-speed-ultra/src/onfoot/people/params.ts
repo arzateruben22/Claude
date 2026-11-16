@@ -22,6 +22,12 @@ export interface BodyShape {
   legs: number;         // -1 short legs .. +1 long legs
   posture: number;      // 0 upright .. 1 stooped (older posture)
   soft: number;         // 0 toned .. 1 soft and out of shape
+  /** (graphics pass, 2026-11-15) muscle past the builder's old maximum, 0..1: a bodybuilder's chest, shoulders, arms,
+   *  back and neck on top of `muscle`. 0 or unset: as before */
+  bulk?: number;
+  /** (fifth pass, 2026-11-16) a man's pectorals as plates, 0..1: less deep, set a little higher and back, so a big chest
+   *  reads as muscle in profile and not as a bust. 0 or unset: as before */
+  chestFlat?: number;
 }
 
 export interface FaceShape {
@@ -33,6 +39,23 @@ export interface FaceShape {
   eyeSize: number; eyeSpacing: number; eyeTilt: number; hooded: number;
   brow: number; forehead: number;         // brow ridge; forehead slope back
   earSize: number; earOut: number;
+  /** (pack, 2026-11-12) soft tissue over the jaw: fills the hollow between the cheek, the jaw's body and the chin, so a
+   *  lean face's jaw is one line instead of a ridge with a notch beside the chin. 0 or unset: as before; about 1 */
+  jawSoft?: number;
+  // (graphics pass, 2026-11-15: optional, unset on every existing face, which builds exactly as before)
+  /** soft tissue at the side of the face, from under the cheekbone and its arch down to the jaw's angle (the parotid and
+   *  masseter's cover): the face's side is one surface from the cheekbone to the jaw instead of a ledge under the
+   *  cheekbone that shades as a dark band. 0 or unset: as before; about 1 */
+  cheekFill?: number;
+  /** the nose stands this much further out of the face at its tip, in units of 6 mm (the dorsum and the wings follow):
+   *  a profile with a nose, not a flat one. 0 or unset: as before; 0.5 to 1 */
+  noseProj?: number;
+  /** a round, full face: the cheeks and the lower face filled out to the jaw line and under it, the jaw's corner and the
+   *  chin's edges buried (a heavyset face). 0 or unset: as before; about 1 */
+  round?: number;
+  /** the jaw's angle (the corner under the ear) set this much higher, in units of 1 cm: the jaw's lower edge rises from the
+   *  chin to the ear instead of running level, the line of a lean, defined jaw. 0 or unset: as before; 0.6 to 1 */
+  jawRise?: number;
 }
 
 export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | 'bald' | 'ponytail' | 'receding'
@@ -41,11 +64,20 @@ export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | '
   | 'lowPonytail'      // a low, loose tail at the nape, with loose face-framing strands
   | 'fade'             // a skin fade: the sides and back clipped to the scalp, a textured (curly) top
   | 'sidePart'         // a side-parted undercut: clipped sides, the top long and swept over from the parting
-  | 'waves';           // shoulder-length waves from a side parting
+  | 'waves'            // shoulder-length waves from a side parting
+  // (added 2026-11-12 for the pack characters, cast.ts CAST_PACK: new values only)
+  | 'curlsMedium'      // medium-length loose curls: full on top and at the sides, over the tops of the ears, to the nape
+  | 'longWaves'        // long, loosely waved hair from a centre parting, down the back to the shoulder blades
+  // (added 2026-11-15 for the graphics pass: new values only)
+  | 'wavesFlow'        // shoulder-length waves from a side parting as flowing hair (layered ends, the parting's fall over the temple)
+  | 'curlsUnderCap';   // thick curls worn under a cap: they show below the cap's band at the sides and the back
 export type FacialHair = 'none' | 'stubble' | 'beard' | 'moustache' | 'goatee'
   // (cast, 2026-11-11) a short full beard with volume: the beard's shading plus a short hair shell over it (hair.ts
   // buildBeardVolume), so it reads at a distance and on dark skin. 'beard' is unchanged
-  | 'fullBeard';
+  | 'fullBeard'
+  // (pack, 2026-11-12) a day's growth: the stubble's shading at about half its strength, so it reads as a shadow and
+  // fine dots rather than a dark patch. 'stubble' is unchanged
+  | 'lightStubble';
 
 export interface Look {
   skin: number;               // sRGB hex
@@ -61,9 +93,32 @@ export interface Look {
   freckles: number;           // 0..1
   tattoo: 'none' | 'sleeveL' | 'forearmR' | 'forearmL';
   nails: number | null;       // painted nails
+  // (added 2026-11-12 for the pack characters: optional, so every existing look builds exactly as before)
+  /** a lighter colour toward the hair's tips (sun-lightened ends); unset or null: one colour, as before */
+  hairTips?: number | null;
+  /** brow fullness: a multiplier on the brow's width (1 as before; 1.3 strong, full brows) */
+  browThick?: number;
+  /** (cast, 2026-11-12) a healed scar: 'browR' a short pale line up through the right eyebrow (the brow parted where it
+   *  crosses). Unset or null: none, as before */
+  scar?: 'browR' | null;
+  /** (graphics pass, 2026-11-15) a clean-shaven man's beard shadow as a share of the builder's own (1 or unset: as
+   *  before; 0.3: barely there). Only with facialHair 'none' */
+  beardShadow?: number;
+  /** (fifth pass, 2026-11-16) the coarse levels (LOD 1 and 2) cut along the lines where one look meets another (an open
+   *  jacket over the shirt, the collar, the cuffs, the hairline), so those lines are clean edges, not ragged blends between
+   *  coarse vertices. Unset: the levels are built exactly as before */
+  cleanLod?: boolean;
+  /** (fifth pass, 2026-11-16) facialHair 'stubble' only: how strong the stubble's shade is, 0.75 when unset (as before); up to 0.84 */
+  stubbleAmt?: number;
+  /** (graphics pass, 2026-11-15) softer skin shading, 0..1: less of the baked occlusion on the lit side and a paler,
+   *  less red scatter where the light falls off, so the cheek's and the jaw's turn away from the light is a soft tone
+   *  and not a dark red-brown patch. 0 or unset: as before */
+  softShade?: number;
 }
 
-export type Fabric = 'satin' | 'cotton' | 'denim' | 'leather' | 'knit' | 'wool' | 'linen';
+export type Fabric = 'satin' | 'cotton' | 'denim' | 'leather' | 'knit' | 'wool' | 'linen'
+  // (pack, 2026-11-12) faux fur: a deep soft pile (cloth.ts); nothing else uses it
+  | 'fur';
 export type GarmentKind =
   | 'dress' | 'tee' | 'fitted' | 'tank' | 'shirt' | 'blouse' | 'polo'
   | 'jeans' | 'trousers' | 'skirt' | 'shorts'
@@ -73,7 +128,12 @@ export type GarmentKind =
   | 'bomber' | 'overshirt' | 'workJacket'            // outer layers: a cropped bomber with ribbed hem and cuffs, an open overshirt, a canvas work jacket
   | 'henley'                                         // a tee with a short buttoned placket
   | 'cargo' | 'chinoShorts' | 'workPants'            // trousers with side pockets, shorts just above the knee, straight work trousers
-  | 'sandals' | 'deckShoes' | 'lowHeels' | 'chunkySneakers' | 'workBoots';
+  | 'sandals' | 'deckShoes' | 'lowHeels' | 'chunkySneakers' | 'workBoots'
+  // (added 2026-11-12 for the pack characters: new values only)
+  | 'suitJacket'                                     // a closed double-breasted jacket with peak lapels (the buttons and pocket square are Accessories)
+  | 'suitTrousers'                                   // tailored trousers with a straight leg
+  | 'shrug'                                          // an off-the-shoulder shrug: sleeves from below the shoulder to the forearm, joined across the back
+  | 'stilettos' | 'oxfords';                         // pointed-toe pumps on a high slim heel (sole in the upper's own colour); lace-up shoes with a low heel
 
 export interface Garment {
   kind: GarmentKind;
@@ -81,12 +141,36 @@ export interface Garment {
   fabric: Fabric;
   sleeve?: number;            // 0 sleeveless .. 1 to the wrist
   length?: number;            // dress/skirt: hem height as a share of the leg (0 at the hip .. 1 at the ankle)
-  neck?: 'crew' | 'v' | 'square' | 'scoop' | 'collar' | 'strap';
+  neck?: 'crew' | 'v' | 'square' | 'scoop' | 'collar' | 'strap'
+    | 'crewHigh';             // (graphics pass, 2026-11-15) a crew neck high and close round the base of the neck
   open?: boolean;             // jackets and shirts worn open
   accent?: number;            // a second colour (soles, buttons, trim)
   /** (cast, 2026-11-11) a turned-up roll at the sleeve's or the trouser leg's end, shown in the accent colour.
    *  Unset: no roll, as before */
   roll?: boolean;
+  /** (cast, 2026-11-12) trousers' leg line: 'straight' hangs as a tube from the thigh (a little narrower at the knee and
+   *  the hem), 'relaxed' the same a little fuller; for jeans, trousers, work pants, cargo pants and chinos that should not
+   *  read as leggings. Unset: the leg follows the knee, calf and ankle, as before (suitTrousers is always straight) */
+  leg?: 'straight' | 'relaxed';
+  /** (pack, 2026-11-12) a dress cut close to the body (a bodycon knit: little ease, no hanging drape below the hip, thin
+   *  straps). Unset: the dress hangs as before */
+  fit?: 'body';
+  /** (pack, 2026-11-12) a collared shirt worn with its top buttons undone: a narrow V below the collar, this deep as a
+   *  share of a V neck's depth (1 is about 10 cm), the collar spread. Unset: buttoned to the collar, as before */
+  unbutton?: number;
+  /** (graphics pass, 2026-11-15) tailored sleeves, 0..1: the sleeves are cut round a slimmer arm than the wearer's own
+   *  (less of the deltoid's ball and the biceps under the cloth), so a jacket's or a shirt's sleeve hangs as a slim tube
+   *  from the shoulder seam instead of ballooning over the muscle. Unset: the sleeve follows the arm, as before */
+  tailored?: number;
+  /** (graphics pass, 2026-11-15) how much of the hanging drape a top or an outer layer keeps at its SIDES, 0..1 (1: the
+   *  kind's own drape): lower, and it is cut closer to the waist, while the front and back still hang. Unset: as before */
+  fitK?: number;
+  /** (graphics pass, 2026-11-15) lapels on an outer layer worn open or with a V front: 'notch' (a blazer's), lying along
+   *  the front edge from the button point to the collar. Unset: none, as before (a suitJacket always has peak lapels) */
+  lapel?: 'notch';
+  /** (graphics pass, 2026-11-15) how much of its kind's hanging drape a top or an outer layer has all round, 0..1 (1 or
+   *  unset: as before): lower, and the cloth lies closer to the chest and the belly (a fitted cut) */
+  drapeK?: number;
 }
 
 export interface Accessories {
@@ -103,6 +187,25 @@ export interface Accessories {
   sunglassesUp?: number | null;
   /** an elastic hair tie worn on the right wrist (its colour) */
   hairTie?: number | null;
+  // (added 2026-11-12 for the pack characters: optional, so every existing preset and caller builds as before)
+  /** the hoops' size as a share of the standard hoop (0.5: small hoops); unset: 1 */
+  hoopSize?: number;
+  /** the watch on the right wrist instead of the left */
+  watchRight?: boolean;
+  /** several plain bands on the fingers of both hands (their colour); unset or null: none */
+  rings?: number | null;
+  /** a folded pocket square showing above the left breast pocket of the outer layer (its colour) */
+  pocketSquare?: number | null;
+  /** a double-breasted jacket's six front buttons, and three on each cuff (their colour) */
+  buttons?: number | null;
+  // (added 2026-11-15 for the graphics pass: optional, so every existing preset and caller builds as before)
+  /** a fitted cap with a curved brim (the crown's colour); unset or null: none */
+  cap?: number | null;
+  /** the cap's under-brim colour (grey when unset) */
+  capUnder?: number;
+  /** our own small embroidered 'OC' mark on the cap's front (its colour); unset or null: a plain cap. No other mark is
+   *  ever drawn: no side flag, no back logo */
+  capMark?: number | null;
 }
 
 export interface PersonOptions {
