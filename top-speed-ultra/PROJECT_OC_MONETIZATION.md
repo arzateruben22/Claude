@@ -15,6 +15,30 @@ refuses stripe.com), so Stripe's figures come from Stripe's own pages as indexed
 
 ---
 
+## What the store lists now (the owner's trim, 2026-11-16)
+
+The owner: "remove any additional store options other than the chad package, oc hypercar, and color kit" (the colour
+kit is the planned **Colour Studio**). The store shows, in this order (`catalog.ts` STORE_LIST, the rule in
+`src/store/store-order.ts`):
+
+1. **The character pack** (the "Chad & Chadaline" pack, sku `cast-pack-duo`, kind `pack`). It lives on branch
+   claude/cast and is not in this tree. Nothing was added for it here: once that branch merges, its catalog entry (no
+   `listed` field, so listed) shows first by the rule "a listed `pack` that isn't the OC Hypercar goes first". On that
+   branch it is `available: false` (its characters aren't made), so it would show as a coming-soon card.
+2. **The OC Hypercar Founder Edition**, $9.99, on sale in the founder window, as before.
+3. **The Colour Studio**, $4.99: "9 body colours and 9 accent colours for every car". Not built, so `available: false`:
+   a coming-soon card with its price and the reason, no buy button, no pre-sale, no waitlist (the rule: nothing is sold,
+   or pre-sold, before it exists in the game). $4.99 is a second owner exception to the whole-dollar rule
+   (`tools/store-check-catalog.mjs` PRICE_EXCEPTIONS).
+
+Everything else (the Founder Pack, both paint packs, the livery pack, the four wheel sets, the three driver styles, Fuel
+the Build, the aero kits, the Rossini GT Spider, the Lot 57 outfits, the OC Ultra Club) carries `"listed": false`. It
+stays in the catalog so anything already owned keeps working (test-mode purchases on the owner's devices: paints in
+Your items, the Founder '26 badge, the run-card frame) and the server can still restore, refund and renew it; it is
+not shown and not sold: `saleState` refuses it on the page ("Not in the store.") and the server's `sellable` refuses an
+unlisted sku (the server copy carries `listed`). Nothing free was removed: the garage's own paints and rims, every
+car you can earn and every mode stay free. The sections below are the full plan as written before the trim.
+
 ## The short version
 
 - **The rule.** Payments are built but in test mode. Nothing is charged until the owner connects Stripe and Supabase

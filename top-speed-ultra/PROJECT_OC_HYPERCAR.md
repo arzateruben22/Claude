@@ -539,6 +539,11 @@ at 30 fps.
 
 ## 6. The ability: Cold Thrust, Ground Lock, Thrust Hop
 
+> **2026-11-16: Cold Thrust was removed** (the owner: "make the thrust option to only have the ability to jump over").
+> THRUST is now the jump only: a tap asks for one Thrust Hop, holding does nothing more, and `ext.fx` stays 0. Ground
+> Lock and the hop are as below; §6.2 and the Cold Thrust columns elsewhere in this file describe the removed boost
+> (kept as history). See PROJECT_OC_PROGRESS.md, 2026-11-16.
+
 The inspiration, as reported on 2026-10-15 (manufacturer claims, not verified): a sports car with rear cold-gas
 thrusters fed by compressed-air tanks for brutal launches, fans that suck it to the road for about 2 g of cornering,
 and a thruster-assisted hop over other vehicles.
