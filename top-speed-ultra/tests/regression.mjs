@@ -72,7 +72,9 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   const ctx = await browser.newContext(phone
     ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: dpr }
     : { viewport: { width: size[0], height: size[1] } });
-  const base = { quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
+  // standard Low, saved at this settings version (a profile saved without its version reads as one from before Retro Low
+  // became the default, and moves to Retro Low; settings.ts SETTINGS_V): the suite's checks were tuned on standard Low
+  const base = { quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
   await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
   const page = await ctx.newPage();
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
@@ -324,7 +326,7 @@ function thrustViewInPage() {
     const e = document.querySelector(q); if (!e) return null;
     const r = e.getBoundingClientRect(); let shown = !e.hidden && r.width > 0 && r.height > 0;
     for (let a = e; a && shown && a !== document.body; a = a.parentElement) { const cs = getComputedStyle(a); if (cs.display === 'none' || cs.visibility === 'hidden') shown = false; }
-    return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), shown, text: e.textContent };
+    return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), shown, text: e.textContent, aria: e.getAttribute('aria-label') };
   };
   const view = document.querySelector('.hud').dataset.view, seat = view === 'cockpit' || view === 'free';
   const hub = seat ? box(hubs) : null, cluster = seat ? box([grp.getObjectByName('cluster')].filter(Boolean)) : null;
@@ -340,7 +342,7 @@ function clusterThrustInPage() {
   const g = window.__game;
   g.sendHud(); g.car.interior.update(1);
   const sh = g.car.interior.group.userData.dash.main.shown;
-  return { thrust: sh.thrust, lock: sh.lock, hop: sh.hop, pct: Math.round(g.hyper.tank * 100), state: g.hopState() };
+  return { control: sh.control, thrust: sh.thrust, lock: sh.lock, hop: sh.hop, pct: Math.round(g.hyper.tank * 100), state: g.hopState() };
 }
 // start a mode in the OC Hypercar (owner mode for the test, no traffic) and pause it; the tune it latched
 const hyperIn = (page, mode) => game(page, async (mode) => {
@@ -957,10 +959,51 @@ await group('boot', async (use) => {
       const base = { quality: 'low', adaptive: false, density: 'none' };
       const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
       expect(fresh.first.fov === 10, `a new device starts at ${fresh.first.fov}`);
-      expect(old0.first.fov === 10 && old0.first.savedFov === 10 && old0.first.savedV === 2 && old0.again.fov === 10, `the old default 0 saved before: ${JSON.stringify(old0)}`);
+      expect(old0.first.fov === 10 && old0.first.savedFov === 10 && old0.first.savedV === 3 && old0.again.fov === 10, `the old default 0 saved before: ${JSON.stringify(old0)}`);
       expect(old5.first.fov === 5 && old5.again.fov === 5, `+5 saved before: ${JSON.stringify(old5)}`);
       expect(mine0.first.fov === 0 && mine0.again.fov === 0 && mine0.again.savedFov === 0, `0 saved at version 2: ${JSON.stringify(mine0)}`);
       return `new device +${fresh.first.fov}; old 0 → +${old0.first.fov} (saved ${old0.first.savedFov}, version ${old0.first.savedV}), still +${old0.again.fov} after a reload; old +5 kept; a 0 saved at version 2 kept (${mine0.again.fov})`;
+    } finally { await game(page, () => window.__game.hold(false)); }
+  });
+  // Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): a new device boots
+  // Low in the Retro style (whatever the device; the graphics check never replaces it, the perf group checks that on a
+  // first run; the phone frames are the proof script's); a profile saved before settings version 3 without the player's
+  // own pick moves to Retro Low once (the move is written back, and a change of theirs after it stays); one where the
+  // player picked keeps its preset and style.
+  // Each in its own page, the boot group's game held meanwhile.
+  await check('Retro Low by default: a new device boots Low in the Retro style; an older profile with no pick of its own moves to it once; a saved pick stays', async () => {
+    const boot = async (saved) => {
+      const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
+      try {
+        // written once: the mark is kept in localStorage (a reload of a file:// page here has not kept sessionStorage)
+        await ctx.addInitScript((s) => { if (!localStorage.getItem('suite.seeded')) { localStorage.setItem('suite.seeded', '1'); if (s) localStorage.setItem('tsu.settings', JSON.stringify(s)); else localStorage.removeItem('tsu.settings'); } }, saved);
+        const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+        const read = async () => {
+          await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+          return p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || 'null'); return { q: g.settings.quality, style: g.settings.style, chosen: g.settings.qualityChosen, retro: !!g.style, label: g.govLabel(), saved: s && { q: s.quality, style: s.style, v: s.v } }; });
+        };
+        await p.goto(pathToFileURL(GAME).href);
+        const first = await read();
+        // a player's own change after the move is kept over a reload (the move happens once)
+        if (saved && !saved.qualityChosen && (saved.v ?? 1) < 3) await p.evaluate(() => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); localStorage.setItem('tsu.settings', JSON.stringify(g.settings)); });
+        await p.reload();
+        return { first, again: await read() };
+      } finally { await ctx.close(); }
+    };
+    await game(page, () => window.__game.hold(true));
+    try {
+      const base = { adaptive: false, density: 'none' };
+      const fresh = await boot(null);
+      const oldHigh = await boot({ ...base, quality: 'high' });                                   // before v3, the device's guess
+      const oldMine = await boot({ ...base, quality: 'high', qualityChosen: true });              // before v3, the player's pick
+      const oldMineLow = await boot({ ...base, quality: 'low', qualityChosen: true });            // ...standard Low, theirs
+      const isRetro = (x) => x.q === 'low' && x.style === 'retro' && x.retro && x.label === 'Retro · Low';
+      expect(isRetro(fresh.first) && !fresh.first.chosen && isRetro(fresh.again), `a new device: ${JSON.stringify(fresh)}`);
+      expect(isRetro(oldHigh.first) && oldHigh.first.saved?.q === 'low' && oldHigh.first.saved?.style === 'retro' && oldHigh.first.saved?.v === 3, `High saved before v3, no pick: ${JSON.stringify(oldHigh.first)}`);
+      expect(oldHigh.again.q === 'low' && oldHigh.again.style === 'standard' && !oldHigh.again.retro, `the player's change after the move: ${JSON.stringify(oldHigh.again)}`);
+      expect(oldMine.first.q === 'high' && oldMine.first.style === 'standard' && oldMine.first.chosen && oldMine.again.q === 'high' && !oldMine.again.retro, `High picked before v3: ${JSON.stringify(oldMine)}`);
+      expect(oldMineLow.first.q === 'low' && oldMineLow.first.style === 'standard' && !oldMineLow.first.retro && oldMineLow.first.label === 'Low', `standard Low picked before v3: ${JSON.stringify(oldMineLow.first)}`);
+      return `a new device: ${fresh.first.label} (Retro ${fresh.first.retro ? 'on' : 'off'}), again after a reload; High saved before v3 with no pick: ${oldHigh.first.label}, saved as ${JSON.stringify(oldHigh.first.saved)}, and a later Standard kept over a reload (${oldHigh.again.label}); High picked before: ${oldMine.first.label} kept; standard Low picked before: ${oldMineLow.first.label} kept`;
     } finally { await game(page, () => window.__game.hold(false)); }
   });
 });
@@ -1372,8 +1415,8 @@ await group('abilities', async (use) => {
     expect(r.name === 'Locked In' && Math.abs(r.during - 1.3) < 1e-6 && Math.abs(r.after - 1) < 1e-6, JSON.stringify(r));
     return `grip ×${fmt(r.during)} during, ×${fmt(r.after)} after`;
   });
-  // ---- the OC Hypercar's own ability (PROJECT_OC_HYPERCAR.md §6): Cold Thrust (hold THRUST), Ground Lock (the fans,
-  // automatic) and Thrust Hop (double-tap THRUST), part of its Unleashed tune in Free Drive only. Owner mode puts the
+  // ---- the OC Hypercar's own ability (PROJECT_OC_HYPERCAR.md §6): Ground Lock (the fans, automatic) and Thrust Hop
+  // (a tap of THRUST: the control's one job since 2026-11-16), part of its Unleashed tune in Free Drive only. Owner mode puts the
   // car in the garage for the test; nothing is bought.
   await game(page, hyperHelpers);
   await check('OC Hypercar: THRUST comes with its Unleashed tune in Free Drive, and with no other car', async () => {
@@ -1430,83 +1473,78 @@ await group('abilities', async (use) => {
     expect(!seat.oldBox && !seat.strip.shown, `seat view: the old box ${seat.oldBox ? 'exists' : 'gone'}, the strip ${seat.strip.shown ? 'shown' : 'hidden'}`);
     expect(seat.keys.thrust.shown && seat.keys.ability.shown && seat.hits.length === 0 && seat.small.length === 0, `keys ${JSON.stringify(seat.keys)} on ${seat.hits.join(', ')} (hub ${JSON.stringify(seat.hub)}, cluster ${JSON.stringify(seat.cluster)}); under 44 px: ${seat.small.join(', ')}`);
     const w = (x) => `${x.thrust}/${x.lock}/${x.hop}`;
-    expect(dash.ready.thrust === '93%' && dash.ready.lock === 'idle' && dash.ready.hop === 'HOP READY', `ready: ${JSON.stringify(dash.ready)}`);
+    expect(dash.ready.control === 'JUMP' && dash.ready.thrust === '93%' && dash.ready.lock === 'idle' && dash.ready.hop === 'HOP READY', `ready: ${JSON.stringify(dash.ready)}`);
+    // THRUST reads as the jump (owner, 2026-11-16): the key "Jump", the chase view's strip "Jump", the key's name says tap
+    expect(seat.keys.thrust.text === 'Jump' && /^Jump/.test(chase.strip.text) && /^Thrust jump: tap to hop/.test(seat.keys.thrust.aria ?? ''), `the words: key "${seat.keys.thrust.text}" (${seat.keys.thrust.aria}), strip "${chase.strip.text}"`);
     expect(dash.lock.lock === 'on' && dash.low.thrust === '30%' && dash.low.hop === 'HOP: TANK LOW' && dash.charging.hop === 'HOP CHARGING', `lock ${w(dash.lock)}, low ${w(dash.low)}, charging ${w(dash.charging)}`);
     expect(dash.refusedRes === 'Need more speed' && dash.refused.hop === 'NEED MORE SPEED' && dash.hopRes === 'ok' && dash.air.hop === 'AIRBORNE', `refused "${dash.refusedRes}" → ${dash.refused.hop}; hop ${dash.hopRes} → ${dash.air.hop}`);
     expect(chase.view === 'chase' && chase.strip.shown && chase.speed.shown && chase.strip.b <= chase.speed.t + 0.5 && chase.speed.t - chase.strip.b <= 12 && Math.abs(chase.strip.r - chase.speed.r) <= 1, `chase: strip ${JSON.stringify(chase.strip)} by the speed ${JSON.stringify(chase.speed)}`);
     return `seat: no HUD box; THRUST key ${seat.keys.thrust.l}-${seat.keys.thrust.r} × ${seat.keys.thrust.t}-${seat.keys.thrust.b}, the ability ${seat.keys.ability.l}-${seat.keys.ability.r}, clear of the hub ${seat.hub.l}-${seat.hub.r} × ${seat.hub.t}-${seat.hub.b} and the cluster ${seat.cluster.l}-${seat.cluster.r} × ${seat.cluster.t}-${seat.cluster.b}; the cluster reads ${w(dash.ready)}, Ground Lock ${dash.lock.lock}, ${w(dash.low)}, ${dash.charging.hop}, "${dash.refused.hop}", "${dash.air.hop}"; chase: the strip "${chase.strip.text}" ${chase.speed.t - chase.strip.b} px over the speed`;
   });
-  await check('Cold Thrust: 0-60 in 0.8 s with THRUST held on the real key, at least 0.4 s quicker than on its tyres and fans', async () => {
+  // THRUST is the jump only (owner, 2026-11-16: "make the thrust option to only have the ability to jump over"): a press
+  // asks for one Thrust Hop, holding asks nothing more, and nothing the control does adds speed (Cold Thrust is gone)
+  await check('THRUST is the jump only: a press on the real key asks for one hop (holding asks nothing more); held through 0-60 and flat out it adds no speed and no force: the same 0-60 and top speed as not held', async () => {
     const r = await game(page, () => {
-      const g = window.__game, st = window.findStraight('I-405 North', 900), m = g.findMain(st.label), out = {};
-      // tyres only (the ability off), Ground Lock only (THRUST not held), THRUST held as the controls set it, and
-      // THRUST held on Left Shift through the input layer (input.setThrust + input.update each step, as a frame runs them)
-      for (const [k, live, thrust, key] of [['tyres', false, 0, false], ['lock', true, 0, false], ['thrust', true, 1, false], ['key', true, null, true]]) {
-        g.setHyper(live); g.placeCar(m, st.s0 + 50, 1, 0); g.apLane = 1;
-        if (key) { g.input.clear(); g.input.setThrust('key', true); }
-        let t = 0, t60 = -1, peak = 0, v0 = 0;
-        window.run(4, thrust === null ? { throttle: 1, brake: 0 } : { throttle: 1, brake: 0, thrust }, 200, () => {
-          t += 1 / 120; peak = Math.max(peak, ((g.phys.vx - v0) * 120) / 9.81); v0 = g.phys.vx;
-          if (g.phys.vx >= 26.8224) { t60 = t; return false; }
-        }, key);
-        if (key) { g.input.setThrust('key', false); g.input.update(1 / 120, 0); }
-        out[k] = { t60: +t60.toFixed(3), peak: +peak.toFixed(2), tank: +g.hyper.tank.toFixed(3) };
-      }
-      // on the move the hold delay is back (it tells a hold from a double-tap's first press): pressed at 10 m/s, how
-      // long until the controls say THRUST
-      g.setHyper(true); g.placeCar(m, st.s0 + 50, 1, 10); g.apLane = 1; g.input.clear(); g.input.setThrust('key', true);
-      let wait = -1, tt = 0;
-      window.run(0.5, { throttle: 0.3, brake: 0 }, 0, () => { tt += 1 / 120; if (g.input.c.thrust === 1) { wait = tt; return false; } }, true);
+      const g = window.__game, st = window.findStraight('I-405 North', 2600), m = g.findMain(st.label), p = g.phys, out = {};
+      // the key: one press, one request; 1 s of holding through the input layer, none more; let go and press again, one more
+      g.setHyper(true); g.placeCar(m, st.s0 + 50, 1, 30); g.apLane = 1; g.input.clear(); g.input.takeActions();
+      g.input.setThrust('key', true);
+      const press = g.input.takeActions().filter((a) => a === 'hop').length;
+      for (let i = 0; i < 120; i++) g.input.update(1 / 120, 30);
+      const hold = g.input.takeActions().filter((a) => a === 'hop').length, held = g.input.c.thrust;
+      g.input.setThrust('key', false); g.input.setThrust('key', true);
+      const again = g.input.takeActions().filter((a) => a === 'hop').length;
       g.input.setThrust('key', false); g.input.update(1 / 120, 0); g.input.clear(); g.input.takeActions();
-      out.rollingWait = +wait.toFixed(3);
+      out.keys = { press, hold, again, held };
+      // 0-60 on the hypercar's tyres and fans: THRUST not held, held on Left Shift through the input layer (as a frame
+      // runs it), and held as the controls set it
+      for (const [k, thrust, key] of [['free', 0, false], ['key', null, true], ['set', 1, false]]) {
+        g.setHyper(true); g.placeCar(m, st.s0 + 50, 1, 0); g.apLane = 1;
+        if (key) { g.input.clear(); g.input.setThrust('key', true); g.input.takeActions(); }
+        let t = 0, t60 = -1, fx = 0;
+        window.run(4, thrust === null ? { throttle: 1, brake: 0 } : { throttle: 1, brake: 0, thrust }, 200, () => {
+          t += 1 / 120; fx = Math.max(fx, Math.abs(p.ext.fx));
+          if (p.vx >= 26.8224) { t60 = t; return false; }
+        }, key);
+        if (key) { g.input.setThrust('key', false); g.input.update(1 / 120, 0); g.input.clear(); g.input.takeActions(); }
+        out[k] = { t60: +t60.toFixed(4), fx };
+      }
+      // flat out from 150 m/s for 11 s, THRUST not held and then held all the way (the car's own top speed is the cap)
+      for (const [k, thrust] of [['flat', 0], ['heldTop', 1]]) {
+        g.setHyper(true); g.placeCar(m, st.s0 + 20, 1, 150); g.apLane = 1;
+        let peak = 0, fx = 0;
+        window.run(11, { throttle: 1, brake: 0, thrust }, 200, () => { peak = Math.max(peak, p.vx); fx = Math.max(fx, Math.abs(p.ext.fx)); });
+        out[k] = { mph: +(peak * 2.236936).toFixed(2), fx };
+      }
       g.setHyper(true);
       return out;
     });
-    expect(r.key.t60 > 0 && r.key.t60 <= 0.8 && r.thrust.t60 > 0 && r.thrust.t60 <= 0.8, `0-60 with THRUST: ${r.key.t60} s on the key, ${r.thrust.t60} s set directly`);
-    expect(r.lock.t60 - r.key.t60 >= 0.4 && r.tyres.t60 > r.lock.t60, `0-60: tyres ${r.tyres.t60} s, fans ${r.lock.t60} s, THRUST ${r.key.t60} s`);
-    // the fans spin up for a hard launch and cost a few % (the compressor pauses while they run); THRUST costs far more
-    expect(r.key.peak >= 3 && r.tyres.tank === 1 && r.lock.tank < 1 && r.lock.tank > 0.9 && r.key.tank < r.lock.tank - 0.05, `peak ${r.key.peak} g, tank ${r.tyres.tank} / ${r.lock.tank} / ${r.key.tank}`);
-    expect(r.rollingWait >= 0.115 && r.rollingWait <= 0.14, `pressed at 10 m/s: THRUST after ${r.rollingWait} s`);
-    return `0-60: ${r.tyres.t60} s on its tyres, ${r.lock.t60} s with Ground Lock, ${r.key.t60} s with THRUST held on Left Shift (${r.thrust.t60} s set directly; peak ${r.key.peak} g; tank left ${Math.round(r.lock.tank * 100)} % after the fans' launch, ${Math.round(r.key.tank * 100)} % after THRUST's); pressed at 10 m/s it opens after ${r.rollingWait} s`;
+    expect(r.keys.press === 1 && r.keys.hold === 0 && r.keys.again === 1 && r.keys.held === 1, `the key: ${JSON.stringify(r.keys)}`);
+    expect(r.free.t60 > 0 && Math.abs(r.key.t60 - r.free.t60) < 0.005 && Math.abs(r.set.t60 - r.free.t60) < 0.005 && r.free.fx === 0 && r.key.fx === 0 && r.set.fx === 0, `0-60: ${JSON.stringify({ free: r.free, key: r.key, set: r.set })}`);
+    expect(r.flat.mph > 300 && r.heldTop.mph <= r.flat.mph + 0.05 && r.heldTop.fx === 0, `flat out ${r.flat.mph} mph, THRUST held ${r.heldTop.mph} mph (${r.heldTop.fx} N)`);
+    return `a press asks for ${r.keys.press} hop, 1 s of holding ${r.keys.hold} more, a second press ${r.keys.again}; 0-60 ${r.free.t60} s not held, ${r.key.t60} s held on Left Shift, ${r.set.t60} s held in the controls (0 N along the car in all three); flat out ${r.flat.mph} mph, ${r.heldTop.mph} mph with THRUST held`;
   });
-  await check('Cold Thrust: a full tank is about 6 s, refills 1/12 a second driving and 1/6 braking, never stopped, opens at 10 %', async () => {
+  await check('the tank (the hop\'s gas and Ground Lock\'s): refills 1/12 a second driving and 1/6 braking, never stopped; THRUST held spends none', async () => {
     const r = await game(page, () => {
-      const g = window.__game, st = window.findStraight('I-405 North', 900), m = g.findMain(st.label), p = g.phys, h = g.hyper;
-      g.setHyper(true); g.placeCar(m, st.s0 + 50, 1, 40); g.apLane = 1;
-      let open = 0, shut = -1;
-      window.run(8, { throttle: 0.4, brake: 0, thrust: 1 }, 0, (t) => { if (h.thrust > 0.5) open += 1 / 120; else if (open > 1 && shut < 0) { shut = t; return false; } });
-      const left = h.tank;
+      const g = window.__game, st = window.findStraight('I-405 North', 900), m = g.findMain(st.label), h = g.hyper;
+      g.setHyper(true);
       g.placeCar(m, st.s0 + 50, 1, 30); h.tank = 0.5;
       window.run(3, { thrust: 0 }, 30);
       const cruise = h.tank;
+      g.placeCar(m, st.s0 + 50, 1, 30); h.tank = 0.5;
+      window.run(3, { thrust: 1 }, 30);
+      const held = h.tank;
       g.placeCar(m, st.s0 + 50, 1, 60); h.tank = 0.5;
       window.run(1, { throttle: 0, brake: 0.4, thrust: 0 }, 0);
       const braking = h.tank;
       g.placeCar(m, st.s0 + 50, 1, 0); h.tank = 0.5;
-      window.run(2, { throttle: 0, brake: 0, thrust: 0 }, 0);
+      window.run(2, { throttle: 0, brake: 0, thrust: 1 }, 0);
       const stopped = h.tank;
-      g.placeCar(m, st.s0 + 50, 1, 0); h.tank = 0.08;
-      window.run(0.5, { throttle: 0, brake: 0, thrust: 1 }, 0);
-      const low = { tank: h.tank, thrust: h.thrust, fx: p.ext.fx };
       g.setHyper(true);
-      return { open, left, cruise, braking, stopped, low };
+      return { cruise, held, braking, stopped };
     });
-    expect(Math.abs(r.open - 6) < 0.35 && r.left < 0.02, `the valve open ${fmt(r.open)} s, ${fmt(r.left * 100)} % left`);
-    expect(Math.abs(r.cruise - 0.75) < 0.03 && Math.abs(r.braking - (0.5 + 1 / 6)) < 0.02 && r.stopped === 0.5, `50 % → ${fmt(r.cruise * 100)} % after 3 s driving, ${fmt(r.braking * 100)} % after 1 s braking, ${fmt(r.stopped * 100)} % after 2 s stopped`);
-    expect(r.low.thrust === 0 && r.low.fx === 0 && r.low.tank === 0.08, `at 8 %: thrust ${r.low.thrust}, force ${r.low.fx} N`);
-    return `full tank ${fmt(r.open)} s; from 50 %: ${fmt(r.cruise * 100)} % after 3 s driving, ${fmt(r.braking * 100)} % after 1 s braking, ${r.stopped * 100} % stopped; at 8 % the valve stays shut`;
-  });
-  await check('Cold Thrust: a tank of THRUST lifts the top speed', async () => {
-    const r = await game(page, () => {
-      const g = window.__game, st = window.findStraight('I-405 North', 2600), m = g.findMain(st.label), p = g.phys;
-      g.setHyper(true); g.placeCar(m, st.s0 + 20, 1, 150); g.apLane = 1;
-      window.run(4, { throttle: 1, brake: 0, thrust: 0 }, 200);
-      const flat = p.vx; let peak = 0;
-      window.run(7, { throttle: 1, brake: 0, thrust: 1 }, 200, () => { peak = Math.max(peak, p.vx); });
-      return { flat: flat * 2.236936, peak: peak * 2.236936, walls: g.collisions, tank: g.hyper.tank };
-    });
-    expect(r.flat > 320 && r.peak - r.flat >= 3, `flat out ${fmt(r.flat)} mph, with THRUST ${fmt(r.peak)} mph`);
-    return `flat out ${fmt(r.flat)} mph, ${fmt(r.peak)} mph on a tank of THRUST`;
+    expect(Math.abs(r.cruise - 0.75) < 0.03 && Math.abs(r.held - r.cruise) < 1e-9 && Math.abs(r.braking - (0.5 + 1 / 6)) < 0.02 && r.stopped === 0.5, `50 % → ${fmt(r.cruise * 100)} % after 3 s driving (${fmt(r.held * 100)} % with THRUST held), ${fmt(r.braking * 100)} % after 1 s braking, ${fmt(r.stopped * 100)} % after 2 s stopped with THRUST held`);
+    return `from 50 %: ${fmt(r.cruise * 100)} % after 3 s driving, the same ${fmt(r.held * 100)} % with THRUST held; ${fmt(r.braking * 100)} % after 1 s braking; ${r.stopped * 100} % after 2 s stopped`;
   });
   await check('Ground Lock: about 2 g at 25 m/s, and at 40 m/s in Simulation, more than the tyres alone, and it costs tank', async () => {
     const r = await game(page, () => {
@@ -1713,7 +1751,7 @@ await group('abilities', async (use) => {
   // past the touchdown and planned every vehicle at the traffic's extremes). Untouched seeded traffic on a straight with
   // no other freeway on its pavement; a vehicle counts when nothing from any road reaches into its lane between it and
   // the car, and nothing stands over the hop's track (structures refuse it by design, counted apart in the result).
-  await check('Thrust Hop in natural traffic: lined up behind a vehicle at +30 m/s (and a sedan at +15 m/s from 15 m), most double-taps go over it with 0 contacts on the same road; casual double-taps at 55 m/s granted', async () => {
+  await check('Thrust Hop in natural traffic: lined up behind a vehicle at +30 m/s (and a sedan at +15 m/s from 15 m), most taps go over it with 0 contacts on the same road; casual taps at 55 m/s granted', async () => {
     const r = await game(page, () => {
       const g = window.__game, p = g.phys, h = g.hyper, T = g.traffic, st = window.findClean(['I-5 North', 'I-405 South', 'I-5 South', 'I-405 North'], 2500);
       if (!st) return { none: true };
@@ -1750,7 +1788,7 @@ await group('abilities', async (use) => {
       };
       out.ahead30 = lined(30, 50);
       out.sedan15 = lined(15, 15, 'sedan');
-      // casual: cruising on the autopilot at 55 m/s, a double-tap every 2.5 s
+      // casual: cruising on the autopilot at 55 m/s, a tap every 2.5 s
       const c55 = { tries: 0, ok: 0, air: 0, res: {} };
       for (const seed of [7, 8]) {
         g.setHyper(true); g.placeCar(m, st.s0, 1, 55); g.apLane = 1; h.tank = 1; T.reseed(seed); T.fill(g.view());
@@ -1775,7 +1813,7 @@ await group('abilities', async (use) => {
     }
     expect(r.casual55.ok * 10 >= r.casual55.tries * 3 && r.casual55.air === 0, `casual at 55 m/s: ${r.casual55.ok} of ${r.casual55.tries} granted, ${r.casual55.air} contacts in the air (${JSON.stringify(r.casual55.res)})`);
     const line = (x) => `${x.over} of ${x.tries} over it (${pct(x.over, x.tries)} %), ${x.ok} granted, ${x.warn} with traffic on landing, at least ${x.clearMin} m over the roof, 0 contacts, the same road; refused ${JSON.stringify(Object.fromEntries(Object.entries(x.res).filter(([k]) => k !== 'ok')))}; ${x.under} under a structure not tried`;
-    return `${r.site}, moderate: +30 m/s from 50 m: ${line(r.ahead30)}. A sedan at +15 m/s from 15 m: ${line(r.sedan15)}. Cruising at 55 m/s: ${r.casual55.ok} of ${r.casual55.tries} double-taps granted (${pct(r.casual55.ok, r.casual55.tries)} %), 0 contacts in the air`;
+    return `${r.site}, moderate: +30 m/s from 50 m: ${line(r.ahead30)}. A sedan at +15 m/s from 15 m: ${line(r.sedan15)}. Cruising at 55 m/s: ${r.casual55.ok} of ${r.casual55.tries} taps granted (${pct(r.casual55.ok, r.casual55.tries)} %), 0 contacts in the air`;
   });
   // the driver's ability and the car's, together: The Ace's Focus Time (the world at 0.7x) and a hop over a moving semi
   // in heavy traffic, through the real ability path. The hop is planned for the traffic at the pace it took off in, so
@@ -1892,7 +1930,7 @@ await group('abilities', async (use) => {
     expect(over.ok && over.over > 0 && over.altMin >= over.roof + 0.45 && over.contacts === 0 && over.hits === 0, `over the roof: ${JSON.stringify(over)}`);
     return `under: contact at ${under.first.alt} m up (roof ${under.roof} m), ${under.contacts} contacts, ${under.hits} hits, stopped ${under.behind ? 'behind' : 'past'} it; over: ${over.over} steps over the trailer at ${over.altMin}-${over.altMax} m, 0 contacts`;
   });
-  await check('Thrust Hop with THRUST held through the air (double-tap and hold): the valve stays shut, it lands inside the planned stretch, no contact', async () => {
+  await check('Thrust Hop with THRUST held through the air (a tap and hold): nothing pushes the car, in the air or after, it lands inside the planned stretch, no contact', async () => {
     const r = await game(page, () => {
       const g = window.__game, st = window.findStraight('I-405 North', 1500), m = g.findMain(st.label), p = g.phys, T = g.traffic, h = g.hyper, out = [];
       for (const [kind, v, gap] of [['semi', 25, 30], ['sedan', 25, 22]]) {
@@ -1905,29 +1943,28 @@ await group('abilities', async (use) => {
         // the hop, then THRUST held on Left Shift through the air and the landing, through the input layer
         const res = window.hop();
         g.input.clear(); g.input.setThrust('key', true);
-        let airThrust = 0, airFx = 0, sLand = -1, clear = 1e9, t = 0, landed = -1, groundThrust = 0;
+        let airFx = 0, sLand = -1, clear = 1e9, t = 0, landed = -1, groundFx = 0, held = 0;
         if (res === 'ok') window.run(4, { throttle: 0.3, brake: 0, steer: 0 }, 0, () => {
-          t += 1 / 120;
-          if (p.airborne) { airThrust = Math.max(airThrust, h.thrust); airFx = Math.max(airFx, Math.abs(p.ext.fx)); }
+          t += 1 / 120; held = Math.max(held, g.input.c.thrust);
+          if (p.airborne) airFx = Math.max(airFx, Math.abs(p.ext.fx));
           if (Math.abs(car.s - p.s) < cl.len / 2 + 2.36 && Math.abs(car.d - p.d) < cl.wid / 2 + 1.02) clear = Math.min(clear, p.altitude - cl.height);
           if (!p.airborne && landed < 0 && t > 0.05) { landed = t; sLand = p.s; }
-          if (landed >= 0) { groundThrust = Math.max(groundThrust, h.thrust); if (t - landed > 0.6) return false; }
+          if (landed >= 0) { groundFx = Math.max(groundFx, Math.abs(p.ext.fx)); if (t - landed > 0.6) return false; }
         }, true);
         g.input.setThrust('key', false); g.input.update(1 / 120, 0); g.input.clear(); g.input.takeActions();
         T.collide = orig; window.removePlaced();
         const planned = v0 * g.hopLog.T;
-        out.push({ kind, v, res, peak: +g.hopLog.peak.toFixed(2), T: +g.hopLog.T.toFixed(2), airThrust: +airThrust.toFixed(3), airFx: Math.round(airFx), flew: +(sLand - s0).toFixed(1), planned: +planned.toFixed(1), track: +(planned + 20).toFixed(1), clear: +clear.toFixed(2), contacts, hits: g.collisions - col0, groundThrust: +groundThrust.toFixed(2) });
+        out.push({ kind, v, res, peak: +g.hopLog.peak.toFixed(2), T: +g.hopLog.T.toFixed(2), held, airFx: Math.round(airFx), flew: +(sLand - s0).toFixed(1), planned: +planned.toFixed(1), track: +(planned + 20).toFixed(1), clear: +clear.toFixed(2), contacts, hits: g.collisions - col0, groundFx: Math.round(groundFx) });
       }
       g.setHyper(true);
       return out;
     });
     for (const x of r) {
       expect(x.res === 'ok', `${x.kind} at ${x.v} m/s: ${x.res}`);
-      expect(x.airThrust === 0 && x.airFx === 0, `${x.kind}: thrust in the air ${x.airThrust}, ${x.airFx} N`);
+      expect(x.held === 1 && x.airFx === 0 && x.groundFx === 0, `${x.kind}: THRUST held ${x.held}, ${x.airFx} N in the air, ${x.groundFx} N after the landing`);
       expect(x.flew > 0 && x.flew <= x.planned + 0.5 && x.clear > 0.3 && x.contacts === 0 && x.hits === 0, `${x.kind}: ${JSON.stringify(x)}`);
-      expect(x.groundThrust > 0.5, `${x.kind}: the valve didn't open again on the ground (${x.groundThrust})`);
     }
-    return r.map((x) => `${x.kind} at ${x.v} m/s: peak ${x.peak} m, flew ${x.flew} m of the planned ${x.planned} m, ${x.clear} m over its roof, 0 contacts, no thrust in the air, the valve open again ${x.groundThrust} on landing`).join('; ');
+    return r.map((x) => `${x.kind} at ${x.v} m/s: peak ${x.peak} m, flew ${x.flew} m of the planned ${x.planned} m, ${x.clear} m over its roof, 0 contacts, THRUST held: 0 N in the air and after the landing`).join('; ');
   });
   await check('Thrust Hop refused under an overpass and a sign gantry (with a toast), and with the tank under 40 %', async () => {
     const r = await game(page, () => {
@@ -1963,66 +2000,76 @@ await group('abilities', async (use) => {
     expect(/tank low/.test(r.low.res) && !r.low.air && r.low.tank === 0.3, `low tank: ${JSON.stringify(r.low)}`);
     return `under ${r.overpass.name}: "${r.overpass.res}"; before the ${r.gantry.exit} gantry: "${r.gantry.res}"; at 30 %: "${r.low.res}"; no gas spent`;
   });
-  await check('THRUST does nothing while paused (Left Shift held and double-tapped)', async () => {
-    await game(page, () => { const g = window.__game, m = g.findMain('I-405 North'); g.setHyper(true); g.placeCar(m, 5000, 1, 30); g.setPaused(true); window.__p0 = { v: g.phys.vx, s: g.phys.s, tank: g.hyper.tank, hops: g.hopLog.n }; });
+  await check('THRUST does nothing while paused (Left Shift tapped, then held)', async () => {
+    await game(page, () => { const g = window.__game, m = g.findMain('I-405 North'); g.setHyper(true); g.placeCar(m, 5000, 1, 30); g.setPaused(true); window.__p0 = { v: g.phys.vx, s: g.phys.s, tank: g.hyper.tank, hops: g.hopLog.n, refused: g.hopLog.refusedN }; });
     await page.keyboard.press('ShiftLeft'); await page.keyboard.down('ShiftLeft');
     await frames(page, 6, 900000);
-    const r = await game(page, () => { const g = window.__game; return { ...window.__p0, v1: g.phys.vx, s1: g.phys.s, tank1: g.hyper.tank, hops1: g.hopLog.n, thrust: g.hyper.thrust, c: g.input.c.thrust, fx: g.phys.ext.fx }; });
+    const r = await game(page, () => { const g = window.__game; return { ...window.__p0, v1: g.phys.vx, s1: g.phys.s, tank1: g.hyper.tank, hops1: g.hopLog.n, refused1: g.hopLog.refusedN, fx: g.phys.ext.fx }; });
     await page.keyboard.up('ShiftLeft');
-    expect(r.v1 === r.v && r.s1 === r.s && r.tank1 === r.tank && r.hops1 === r.hops && r.thrust === 0 && r.c === 0 && r.fx === 0, JSON.stringify(r));
-    return `6 frames paused with Shift held after a double-tap: speed, position and tank unchanged, no hop, no force`;
+    // (a press while paused is dropped, not kept for later: resumed, no hop follows)
+    await game(page, () => { const g = window.__game; g.setPaused(false); });
+    await frames(page, 2, 900000);
+    const after = await game(page, () => { const g = window.__game; g.setPaused(true); return { hops: g.hopLog.n, refused: g.hopLog.refusedN }; });
+    expect(r.v1 === r.v && r.s1 === r.s && r.tank1 === r.tank && r.hops1 === r.hops && r.refused1 === r.refused && r.fx === 0, JSON.stringify(r));
+    expect(after.hops === r.hops && after.refused === r.refused, `after resuming: ${JSON.stringify(after)} (before ${r.hops} hops, ${r.refused} refusals)`);
+    return `6 frames paused with Shift tapped then held: speed, position and tank unchanged, no hop and no refusal, no force; resumed, still no hop`;
   });
-  await check('the jets flow only while the hypercar thrusts in Free Drive; another car gets no jets, no thrust and no thrust sound', async () => {
-    // the hypercar, Free Drive, rendered frames with Left Shift held on a clear straight
+  await check('the jets puff only at a hop\'s take-off: THRUST held makes no jet of its own; another car gets no jets, no force and no hypercar sound', async () => {
+    // the hypercar, Free Drive, rendered frames on a clear straight: Left Shift pressed (a hop) and held after it
     await game(page, () => {
-      const g = window.__game, st = window.findStraight('I-405 North', 900), m = g.findMain(st.label);
-      g.setHyper(true); g.placeCar(m, st.s0 + 100, 1, 20); g.apLane = 1; g.traffic.clearAround(g.phys.x, g.phys.z, 400);
-      g.setPaused(false);
+      const g = window.__game, m = g.findMain('I-405 North');
+      let s = 5200; while (s < m.len - 800 && g.structureOver(m, s, m.laneCenter(1), 400)) s += 100;
+      g.setHyper(true); g.placeCar(m, s, 1, 30); g.apLane = 1; g.traffic.clearAround(g.phys.x, g.phys.z, 600);
+      window.__h0 = g.hopLog.n; g.setPaused(false);
     });
     await frames(page, 3, 900000);
-    const idle = await game(page, () => ({ live: window.__game.jets.live, thrust: window.__game.hyper.thrust }));
+    const idle = await game(page, () => ({ live: window.__game.jets.live }));
     await page.keyboard.down('ShiftLeft');
-    await page.waitForFunction(() => window.__game.hyper.thrust > 0.5 && window.__game.jets.live > 0, null, { timeout: 900000, polling: 100 });
-    const on = await game(page, () => ({ live: window.__game.jets.live, thrust: +window.__game.hyper.thrust.toFixed(2) }));
+    await page.waitForFunction(() => window.__game.hopLog.n > window.__h0 && window.__game.jets.live > 0, null, { timeout: 900000, polling: 100 });
+    const puff = await game(page, () => ({ live: window.__game.jets.live, hops: window.__game.hopLog.n - window.__h0 }));
+    // still held: the puff fades and nothing more flows, on the ground again
+    await page.waitForFunction(() => !window.__game.phys.airborne && window.__game.jets.live === 0, null, { timeout: 900000, polling: 250 });
+    await frames(page, 4, 900000);
+    const after = await game(page, () => { const g = window.__game; return { live: g.jets.live, c: g.input.c.thrust, fx: g.phys.ext.fx, hops: g.hopLog.n - window.__h0 }; });
     await page.keyboard.up('ShiftLeft');
-    await page.waitForFunction(() => window.__game.hyper.thrust === 0 && window.__game.jets.live === 0, null, { timeout: 900000, polling: 250 });
-    // another car in Free Drive: the same key held over rendered frames; the hiss's gain counted as the frames send it
+    // another car in Free Drive: the same key held over rendered frames; the hypercar's sounds (the fans' whine) counted
+    // as the frames send them
     const other = await game(page, async () => {
       const g = window.__game;
       g.setPaused(true); g.chooseOwnerCar('rossini-gt'); await g.start('free'); g.setPaused(true);
       const st = window.findStraight('I-405 North', 900), m = g.findMain(st.label);
       g.placeCar(m, st.s0 + 100, 1, 20); g.apLane = 1; g.traffic.clearAround(g.phys.x, g.phys.z, 400);
-      const a = g.audio, hiss = a.hissG?.gain; window.__hissCalls = 0;
-      if (hiss) { const o = hiss.setTargetAtTime.bind(hiss); hiss.setTargetAtTime = (...x) => { window.__hissCalls++; return o(...x); }; }
+      const a = g.audio, fan = a.fanG?.gain; window.__fanCalls = 0;
+      if (fan) { const o = fan.setTargetAtTime.bind(fan); fan.setTargetAtTime = (...x) => { window.__fanCalls++; return o(...x); }; }
       g.setPaused(false);
       return { car: g.driving, live: g.hyper.live, keys: g.input.thrustLive, audio: a.ctx?.state ?? 'none' };
     });
     await frames(page, 3, 900000);                      // the switch's one update that sends the zeros, then counted
-    await game(page, () => { window.__hissCalls = 0; });
+    await game(page, () => { window.__fanCalls = 0; });
     await page.keyboard.down('ShiftLeft');
     await frames(page, 8, 900000);
-    const held = await game(page, () => { const g = window.__game; return { live: g.jets.live, c: g.input.c.thrust, thrust: g.hyper.thrust, fx: g.phys.ext.fx, hiss: window.__hissCalls, frames: g.frames }; });
+    const held = await game(page, () => { const g = window.__game; return { live: g.jets.live, c: g.input.c.thrust, fx: g.phys.ext.fx, fan: window.__fanCalls, hops: g.hopLog.n, frames: g.frames }; });
     await page.keyboard.up('ShiftLeft');
     await game(page, () => window.__game.setPaused(true));
     await hyperIn(page, 'free');
-    expect(idle.live === 0 && idle.thrust === 0, `the hypercar idling: ${JSON.stringify(idle)}`);
-    expect(on.live > 0 && on.thrust > 0.5, `the hypercar thrusting: ${JSON.stringify(on)}`);
+    expect(idle.live === 0, `the hypercar idling: ${JSON.stringify(idle)}`);
+    expect(puff.live > 0 && puff.hops === 1 && after.live === 0 && after.c === 1 && after.fx === 0 && after.hops === 1, `the hypercar: the hop's puff ${JSON.stringify(puff)}, then held ${JSON.stringify(after)}`);
     expect(other.car === 'rossini-gt' && !other.live && !other.keys, `another car: ${JSON.stringify(other)}`);
-    expect(held.live === 0 && held.c === 0 && held.thrust === 0 && held.fx === 0 && held.hiss === 0, `another car with Shift held: ${JSON.stringify(held)} (audio ${other.audio})`);
-    return `the hypercar: ${on.live} sprites alive while thrusting, 0 idle; the ${other.car} with Left Shift held over 8 frames: 0 sprites, 0 N, ${held.hiss} thrust-sound updates (audio ${other.audio})`;
+    expect(held.live === 0 && held.c === 0 && held.fx === 0 && held.fan === 0, `another car with Shift held: ${JSON.stringify(held)} (audio ${other.audio})`);
+    return `the hypercar: 0 sprites idle, ${puff.live} in the hop's puff, 0 again with THRUST still held after the landing (0 N, one hop); the ${other.car} with Left Shift held over 8 frames: 0 sprites, 0 N, ${held.fan} hypercar-sound updates (audio ${other.audio})`;
   });
   await check('the dash pressure gauge redraws at most 4 times a second on the phone build (10 on High), not at all outside the seat view; the hop\'s label says charging only while it charges', async () => {
     const r = await game(page, () => {
       const g = window.__game, car = g.car, gg = car.gauge, p = g.phys, h = g.hyper;
-      // two seconds at 60 frames a second with the tank draining from 100 % to 50 % under thrust (a new 10-bar step
-      // almost every frame), seen from the seat, then the same two seconds from the chase camera; then a 12 s recharge
+      // two seconds at 60 frames a second with the tank falling from 100 % to 50 % (a new 10-bar step almost every
+      // frame; faster than the hop and Ground Lock ever spend it), seen from the seat, then the same two seconds from the chase camera; then a 12 s recharge
       // from empty, seen from the seat (the suite runs Low quality: the phone build)
       const d0 = car.gaugeDraws;
-      for (let i = 0; i < 120; i++) car.setThrustGauge(true, 1 - (0.5 * i) / 120, 1, false, false, true, 1 / 60);
+      for (let i = 0; i < 120; i++) car.setThrustGauge(true, 1 - (0.5 * i) / 120, false, false, true, 1 / 60);
       const seat = car.gaugeDraws - d0, d1 = car.gaugeDraws;
-      for (let i = 0; i < 120; i++) car.setThrustGauge(true, 0.5 - (0.5 * i) / 120, 1, false, false, false, 1 / 60);
+      for (let i = 0; i < 120; i++) car.setThrustGauge(true, 0.5 - (0.5 * i) / 120, false, false, false, 1 / 60);
       const chase = car.gaugeDraws - d1, d2 = car.gaugeDraws;
-      for (let i = 0; i < 720; i++) car.setThrustGauge(true, i / 720, 0, false, false, true, 1 / 60, true);
+      for (let i = 0; i < 720; i++) car.setThrustGauge(true, i / 720, false, false, true, 1 / 60, true);
       const recharge = car.gaugeDraws - d2;
       // the HUD's hop label with 30 % in the tank: stopped (nothing charges), then driving (the compressor fills it)
       const st = window.findStraight('I-405 North', 900), m = g.findMain(st.label), label = () => { g.sendHud(); return document.querySelector('.hud-hop').textContent; };
@@ -2048,11 +2095,11 @@ await group('abilities', async (use) => {
       // 3 s of driving: no force, no tank change, no hop (no mode has a countdown since Races went)
       const run = await game(page, () => {
         const g = window.__game, p = g.phys;
-        let fx = 0, thrust = 0, steps = 0;
+        let fx = 0, steps = 0;
         const t0 = 0;
-        for (let t = 0; t < t0 + 3; t += 1 / 120) { g.autopilot(g.input.c, 60); Object.assign(g.input.c, { throttle: 1, thrust: 1 }); g.simulate(1 / 120); fx = Math.max(fx, Math.abs(p.ext.fx), Math.abs(p.ext.fz)); thrust = Math.max(thrust, g.hyper.thrust); steps++; }
+        for (let t = 0; t < t0 + 3; t += 1 / 120) { g.autopilot(g.input.c, 60); Object.assign(g.input.c, { throttle: 1, thrust: 1 }); g.simulate(1 / 120); fx = Math.max(fx, Math.abs(p.ext.fx), Math.abs(p.ext.fz)); steps++; }
         g.setPaused(false); const hop = g.thrustHop(); g.setPaused(true);
-        return { fx, thrust, tank: g.hyper.tank, hop, air: p.airborne, steps };
+        return { fx, tank: g.hyper.tank, hop, air: p.airborne, steps };
       });
       // the real key, with frames running: nothing reaches the controls
       await game(page, () => window.__game.setPaused(false));
@@ -2061,7 +2108,7 @@ await group('abilities', async (use) => {
       await page.keyboard.up('ShiftLeft');
       const dom = await game(page, () => ({ btn: !document.querySelector('.hud-thrustbtn').hidden, strip: !document.querySelector('.hud-thr').hidden, box: !!document.querySelector('.hud-thrust'), chip: [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune') }));
       expect(!r.live && !r.keys && r.car === 'oc-hyper' && r.grip === 1.04, `${mode}: ${JSON.stringify(r)}`);
-      expect(run.fx === 0 && run.thrust === 0 && run.tank === 1 && run.hop === 'off' && !run.air && key.c === 0 && key.fx === 0 && key.jets === 0, `${mode}: ${JSON.stringify(run)} key ${JSON.stringify(key)}`);
+      expect(run.fx === 0 && run.tank === 1 && run.hop === 'off' && !run.air && key.c === 0 && key.fx === 0 && key.jets === 0, `${mode}: ${JSON.stringify(run)} key ${JSON.stringify(key)}`);
       expect(!dom.btn && !dom.strip && !dom.box, `${mode}: THRUST on screen ${JSON.stringify(dom)}`);
       out.push(`${mode}: race tune (grip ${r.grip}), chip "${dom.chip}", no button, THRUST held: 0 N, no jets`);
     }
@@ -2328,7 +2375,7 @@ await group('progression', async (use) => {
     const marked = /<div id="root" data-build="owner-test">/.test(readFileSync(ART, 'utf8')), plain = !/data-build=/.test(readFileSync(GAME, 'utf8'));
     expect(marked && plain, `artifact marked ${marked}, top-speed-ultra.html unmarked ${plain}`);
     const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
-    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
+    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
     const pg = await ctx.newPage(); pg.setDefaultTimeout(240000);
     await game(page, () => window.__game.setPaused(true));   // the group's own page stays still while this one boots
     const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
@@ -3667,7 +3714,7 @@ await group('phone', async (use) => {
   await page.keyboard.press('Escape');
   // THRUST and the ability are keys of the control row (owner, 2026-11-16: "make the thrust option and display more
   // seamlessly integrated"): THRUST over GAS, the ability over BRAKE, each as wide as its pedal and 10 px above it
-  await check('OC Hypercar THRUST key at 390 × 844: over GAS (the ability over BRAKE), clear of the pedals; hold for thrust, double-tap to hop', async () => {
+  await check('OC Hypercar THRUST key at 390 × 844: over GAS (the ability over BRAKE), clear of the pedals; a tap is a hop, holding adds nothing', async () => {
     await game(page, hyperHelpers);
     await hyperIn(page, 'free');
     // a clear straight: nothing overhead for the hop's track, no traffic, 30 m/s
@@ -3688,28 +3735,30 @@ await group('phone', async (use) => {
     expect(!hit(btn, abil) && !hit(btn, gas) && !hit(btn, brk) && !hit(abil, gas) && !hit(abil, brk), `overlap: ${JSON.stringify({ btn, abil, gas, brk })}`);
     expect(over(btn, gas) && over(abil, brk), `THRUST ${JSON.stringify(btn)} over GAS ${JSON.stringify(gas)}, the ability ${JSON.stringify(abil)} over BRAKE ${JSON.stringify(brk)}`);
     expect(btn.l >= 0 && btn.r <= w && btn.b <= hgt && btn.r - btn.l >= 44 && btn.b - btn.t >= 44 && abil.b - abil.t >= 44, `THRUST ${JSON.stringify(btn)}, the ability ${JSON.stringify(abil)}`);
-    // hold: thrust after the 120 ms delay, off on release
+    // a press on the real pointer: a Thrust Hop at once; held after it, nothing more (no push, no second hop)
     const cx = (btn.l + btn.r) / 2, cy = (btn.t + btn.b) / 2;
-    const tank0 = await game(page, () => window.__game.hyper.tank);
+    const n0 = await game(page, () => ({ hops: window.__game.hopLog.n, refused: window.__game.hopLog.refusedN, v: window.__game.phys.vx }));
     await page.mouse.move(cx, cy); await page.mouse.down();
-    await page.waitForFunction(() => window.__game.input.c.thrust === 1 && window.__game.hyper.thrust > 0.3, null, { timeout: 900000, polling: 500 });
+    await page.waitForFunction((h) => window.__game.hopLog.n > h.hops || window.__game.hopLog.refusedN > h.refused, n0, { timeout: 900000, polling: 250 });
+    const air = await game(page, () => { const g = window.__game; return { n: g.hopLog.n, air: g.phys.airborne, refused: g.hopLog.refused, c: g.input.c.thrust }; });
     await page.screenshot({ path: path.join(OUT, 'phone-thrust.png') });
+    await page.waitForFunction(() => !window.__game.phys.airborne, null, { timeout: 900000, polling: 250 });
+    await frames(page, 3, 900000);
+    const held = await game(page, () => { const g = window.__game; return { n: g.hopLog.n, refused: g.hopLog.refusedN, fx: g.phys.ext.fx, c: g.input.c.thrust, mph: +(g.phys.vx * 2.236936).toFixed(1) }; });
     await page.mouse.up();
-    await page.waitForFunction(() => window.__game.input.c.thrust === 0, null, { timeout: 900000, polling: 500 });
-    const held = await game(page, () => ({ tank: window.__game.hyper.tank, hops: window.__game.hopLog.n, refused: window.__game.hopLog.refusedN }));
-    expect(held.tank < tank0, `tank ${fmt(tank0)} → ${fmt(held.tank)} while held`);
-    // double-tap: a Thrust Hop. The two taps go to the button in one task, so a slow software frame between them can't
-    // stretch the gap past the 300 ms window (the hold above used the real pointer)
+    expect(air.n === n0.hops + 1 && air.c === 1, `the press: ${JSON.stringify(air)}`);
+    expect(held.n === air.n && held.refused === n0.refused && held.fx === 0 && held.c === 1, `held after the hop: ${JSON.stringify(held)}`);
+    // a second tap: a second hop (the two pointer events go to the button in one task)
     await game(page, () => {
       window.__game.hyper.tank = 1;
       const b = document.querySelector('.hud-thrustbtn'), r = b.getBoundingClientRect(), at = { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2, bubbles: true, pointerId: 7, pointerType: 'touch', isPrimary: true };
-      for (const type of ['pointerdown', 'pointerup', 'pointerdown', 'pointerup']) b.dispatchEvent(new PointerEvent(type, at));
+      for (const type of ['pointerdown', 'pointerup']) b.dispatchEvent(new PointerEvent(type, at));
     });
-    await page.waitForFunction((h) => window.__game.hopLog.n > h.hops || window.__game.hopLog.refusedN > h.refused, held, { timeout: 900000, polling: 500 });
-    const hop = await game(page, () => { const g = window.__game; const r = { n: g.hopLog.n, refused: g.hopLog.refused, air: g.phys.airborne, peak: g.hopLog.peak }; g.setPaused(true); return r; });
-    expect(hop.n === held.hops + 1, `double-tap: ${JSON.stringify(hop)}`);
+    await page.waitForFunction((h) => window.__game.hopLog.n > h.n || window.__game.hopLog.refusedN > h.refused, held, { timeout: 900000, polling: 250 });
+    const hop = await game(page, () => { const g = window.__game; const r = { n: g.hopLog.n, refused: g.hopLog.refused, air: g.phys.airborne, peak: g.hopLog.peak, label: document.querySelector('.hud-thrustbtn').textContent }; g.setPaused(true); return r; });
+    expect(hop.n === held.n + 1 && hop.label === 'Jump', `the second tap: ${JSON.stringify(hop)}`);
     expect(await noSideScroll(), 'the page scrolls sideways');
-    return `THRUST ${Math.round(btn.r - btn.l)} × ${Math.round(btn.b - btn.t)} px over GAS (${Math.round(gas.t - btn.b)} px above it), the ability over BRAKE; held: tank ${fmt(tank0 * 100)} → ${fmt(held.tank * 100)} %; double-tap: a ${fmt(hop.peak)} m hop`;
+    return `"${hop.label}" ${Math.round(btn.r - btn.l)} × ${Math.round(btn.b - btn.t)} px over GAS (${Math.round(gas.t - btn.b)} px above it), the ability over BRAKE; a press: a hop at once, held through the landing: 0 N, no second hop (${held.mph} mph); a second tap: a ${fmt(hop.peak)} m hop`;
   });
   // the seat view at 390 x 844 (owner, 2026-11-16, his iPhone portrait screenshot of v19: a floating THRUST box over
   // the wheel's centre, THRUST and CLEAR PATH hexagons over its bottom spoke): no HUD box over the car, the cluster
@@ -3738,9 +3787,9 @@ await group('phone', async (use) => {
     expect(seat.view === 'cockpit' && seat.hub && seat.cluster && !seat.oldBox && !seat.strip.shown, `seat: ${JSON.stringify({ view: seat.view, hub: seat.hub, cluster: seat.cluster, oldBox: seat.oldBox, strip: seat.strip })}`);
     expect(seat.hits.length === 0 && seat.small.length === 0 && lay.cluster.hits.length === 0 && lay.overlaps.length === 0, `keys ${JSON.stringify(seat.keys)} on ${seat.hits.join(', ')}; the cluster under ${lay.cluster.hits.join(', ')}; overlapping ${lay.overlaps.join(', ')}; under 44 px ${seat.small.join(', ')}`);
     expect(seat.keys.thrust.t >= lay.ctlTop * lay.H - 0.5 && lay.ctlTop >= 0.7, `the control row from ${pct(lay.ctlTop)}, THRUST at ${seat.keys.thrust.t} px`);
-    expect(dash.thrust === '93%' && dash.lock === 'on' && dash.hop === 'HOP READY', `the cluster: ${JSON.stringify(dash)}`);
+    expect(dash.control === 'JUMP' && dash.thrust === '93%' && dash.lock === 'on' && dash.hop === 'HOP READY' && seat.keys.thrust.text === 'Jump', `the cluster: ${JSON.stringify(dash)}, the key "${seat.keys.thrust.text}"`);
     expect(chase.strip.shown && chase.strip.t >= plate.t && chase.strip.b <= plate.b && clay.area <= 0.125 && clay.band.length === 0, `chase: the strip ${JSON.stringify(chase.strip)} in the plate ${JSON.stringify(plate)}; the HUD ${pct(clay.area)}, in the open view: ${clay.band.join(', ')}`);
-    return `seat: THRUST ${seat.keys.thrust.l}-${seat.keys.thrust.r} × ${seat.keys.thrust.t}-${seat.keys.thrust.b}, the ability ${seat.keys.ability.l}-${seat.keys.ability.r} × ${seat.keys.ability.t}-${seat.keys.ability.b}; the hub ${seat.hub.l}-${seat.hub.r} × ${seat.hub.t}-${seat.hub.b}, the cluster ${seat.cluster.l}-${seat.cluster.r} × ${seat.cluster.t}-${seat.cluster.b}; no HUD box; the cluster "${dash.thrust}", Ground Lock ${dash.lock}, "${dash.hop}"; chase: the strip "${chase.strip.text}" in the plate, the HUD ${pct(clay.area)}`;
+    return `seat: THRUST ${seat.keys.thrust.l}-${seat.keys.thrust.r} × ${seat.keys.thrust.t}-${seat.keys.thrust.b}, the ability ${seat.keys.ability.l}-${seat.keys.ability.r} × ${seat.keys.ability.t}-${seat.keys.ability.b}; the hub ${seat.hub.l}-${seat.hub.r} × ${seat.hub.t}-${seat.hub.b}, the cluster ${seat.cluster.l}-${seat.cluster.r} × ${seat.cluster.t}-${seat.cluster.b}; no HUD box; the cluster "${dash.control} ${dash.thrust}", Ground Lock ${dash.lock}, "${dash.hop}"; chase: the strip "${chase.strip.text}" in the plate, the HUD ${pct(clay.area)}`;
   });
   // the same phone turned sideways: THRUST over the ability in a column left of BRAKE, as tall together as BRAKE; the
   // systems' strip a line of the plate (chase view)
@@ -4137,7 +4186,8 @@ async function storeCard(sheet, number) {
 await group('store', async (use) => {
   const { page, requests } = await use({ size: [1440, 900] });
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
-  const sale = cat.filter(storeOnSale), founder = cat.find((s) => s.sku === 'founder-pack-2026'), hyper = cat.find((s) => s.sku === 'hypercar-founder');
+  // the store's list (the owner's trim, 2026-11-16): the listed skus; on sale, those of them available and in their window
+  const listed = cat.filter((s) => s.listed !== false), sale = listed.filter(storeOnSale), founder = cat.find((s) => s.sku === 'founder-pack-2026'), hyper = cat.find((s) => s.sku === 'hypercar-founder'), colour = cat.find((s) => s.sku === 'colour-studio');
   const sheet = page.locator('.store-sheet .panel');
 
   await check('catalog: the two files agree with each other, the code and the server copy', () => {
@@ -4173,29 +4223,41 @@ await group('store', async (use) => {
     return `RFC 4231 ok; good and rolled-secret headers pass; tampered, wrong key, ±301 s, missing and malformed fail (${old.reason}); form encoding ok`;
   });
 
-  await check('the store opens from the menu with every available item and its price', async () => {
+  await check('the store order rule: a character pack first when there is one, then the OC Hypercar, then the rest, each in catalog order', async () => {
+    const { storeOrder } = await importServerTs('src/store/store-order.ts');
+    const ids = (xs) => storeOrder(xs, 'hypercar-founder').map((x) => x.sku).join(', ');
+    const now = ids(listed);
+    // the Chad & Chadaline pack lives on claude/cast (sku cast-pack-duo, kind pack): a pack merged in after the others
+    const merged = ids([...listed, { sku: 'cast-pack-duo', kind: 'pack' }]);
+    const two = ids([{ sku: 'colour-studio', kind: 'livery' }, { sku: 'pack-b', kind: 'pack' }, { sku: 'hypercar-founder', kind: 'pack' }, { sku: 'pack-a', kind: 'pack' }]);
+    expect(now === 'hypercar-founder, colour-studio', `this tree's list: ${now}`);
+    expect(merged === 'cast-pack-duo, hypercar-founder, colour-studio', `with a character pack: ${merged}`);
+    expect(two === 'pack-b, pack-a, hypercar-founder, colour-studio', `two packs: ${two}`);
+    return `this tree: ${now}; with claude/cast's pack: ${merged}; two packs keep their order: ${two}`;
+  });
+
+  await check('the store lists exactly the OC Hypercar Founder Edition, then the Colour Studio (coming soon: $4.99, no buy button), nothing else', async () => {
     await holdGame(page);
     await page.getByRole('button', { name: 'Store', exact: true }).click();
     await page.waitForSelector('.store-panel');
     const banner = (await page.locator('.store-panel .store-mode').innerText()).replace(/\s+/g, ' ');
     expect(/test mode/i.test(banner) && banner.includes('Nothing is charged. Use 4242 4242 4242 4242.'), `banner: ${banner}`);
-    // "Coming soon" cards (data-soon) are shown but not sold; the hypercar's has its own check below
-    const shown = await page.$$eval('.store-panel [data-sku]:not([data-soon])', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), price: e.querySelector('.store-price')?.textContent?.trim() })));
-    for (const s of sale) {
-      const x = shown.find((y) => y.sku === s.sku);
-      expect(x, `${s.sku} is not shown`);
-      expect(x.price === storePrice(s), `${s.sku} shows "${x.price}", the catalog says "${storePrice(s)}"`);
-    }
-    const extra = shown.filter((x) => !sale.some((s) => s.sku === x.sku));
-    expect(!extra.length, `shown but not on sale: ${extra.map((x) => x.sku).join(', ')}`);
+    const shown = await page.$$eval('.store-panel [data-sku]', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), soon: e.getAttribute('data-soon'), price: e.querySelector('.store-price')?.textContent?.trim(), buttons: e.querySelectorAll('button').length, text: e.textContent.replace(/\s+/g, ' ') })));
+    expect(shown.map((x) => x.sku).join(', ') === 'hypercar-founder, colour-studio', `shown: ${shown.map((x) => x.sku).join(', ')}`);
+    const h = shown[0], c = shown[1];
+    expect(h.soon === null && h.price === storePrice(hyper) && h.buttons === 1, `the hypercar: ${JSON.stringify(h).slice(0, 200)}`);
+    expect(!colour.available && c.soon === 'true' && c.price === '$4.99' && c.buttons === 0 && /Coming soon/.test(c.text) && /No pre-orders/.test(c.text) && c.text.includes('9 body colours and 9 accent colours for every car'), `the Colour Studio: ${JSON.stringify(c)}`);
+    // nothing else is shown or offered: no group headings, no Founder Pack card, no Buy for anything but the hypercar
+    const extra = await page.evaluate(() => ({ groups: document.querySelectorAll('.store-panel .store-group').length, buys: [...document.querySelectorAll('.store-panel button')].map((b) => b.getAttribute('aria-label') || b.textContent).filter((t) => /^(Buy|Support|Join)/.test(t)) }));
+    expect(!extra.groups && extra.buys.length === 1 && /^Buy OC Hypercar Founder Edition/.test(extra.buys[0]), `extra: ${JSON.stringify(extra)}`);
+    // an unlisted item can't be bought even asked for directly: the checkout says so and pays nothing
+    await game(page, () => window.__store.open('paint-pack-coast'));
+    await sheet.locator('.store-note.bad').waitFor();
+    const why = await sheet.locator('.store-note.bad').innerText();
+    await game(page, () => window.__store.close());
+    expect(/Not in the store/.test(why), `an unlisted item's checkout: "${why}"`);
     await storeShot(page, 'store-1440.png');
-    const brio = await page.locator('[data-sku="wheels-rossini-brio"] .store-act').textContent();
-    expect(/Earn the Rossini Brio first/.test(brio), `Brio wheel set: "${brio}"`);
-    const paintBefore = await page.locator('[data-paint="paint-founders-sunset"]').count();
-    expect(paintBefore === 0, 'Founders Sunset is offered before it is bought');
-    const when = await page.locator('[data-sku="founder-pack-2026"] .store-founder-when').innerText();
-    expect(/December 31, 2026/i.test(when), `Founder window: ${when}`);
-    return `${shown.length} items with their prices (${sale.length} on sale; ${cat.length - sale.length} not offered); "${banner}"; Brio wheels: "${brio}"`;
+    return `${shown.length} cards: ${shown.map((x) => `${x.sku} ${x.price}${x.soon ? ' (coming soon, no button)' : ''}`).join(', ')}; ${cat.length - listed.length} unlisted; an unlisted item asked for directly: "${why}"; "${banner}"`;
   });
 
   await check('the OC Hypercar Founder Edition card: $9.99 and on sale (the owner, 2026-11-11), the founder window, its plaque and paint, not in the Founder Pack', async () => {
@@ -4212,8 +4274,10 @@ await group('store', async (use) => {
     expect(r.tracks === 1, `the card's grid has ${r.tracks} columns`);
     // on sale since the owner's 2026-11-11 decision ($9.99; the car has been in the game since v15): a buy button, no "Coming soon"
     expect(hyper.available && hyper.price_cents === 999 && r.soon === null && r.buttons >= 1 && !r.text.includes('Coming soon'), `available ${hyper.available}, ${hyper.price_cents} cents, data-soon ${r.soon}, ${r.buttons} buttons`);
-    for (const k of ['OC Hypercar Founder Edition', '$9.99', 'Founder Edition · sold until Dec 31, 2026', 'The $10 Founder Pack does not include this car'])
+    for (const k of ['OC Hypercar Founder Edition', '$9.99', 'Founder Edition · sold until Dec 31, 2026'])
       expect(r.text.includes(k), `the card lacks "${k}": ${r.text.slice(0, 300)}`);
+    // (the Founder Pack isn't in the store: the card names it only to someone who has it)
+    expect(!r.text.includes('Founder Pack does not include'), `the card names the Founder Pack to a player without it: ${r.text.slice(0, 300)}`);
     expect(r.grants.some((g) => /Founder Edition plaque/.test(g)) && r.grants.some((g) => /Glacier Silver paint/.test(g) && /Founder Ice lights/.test(g)), `grants: ${r.grants.join(' | ')}`);
     // the two founder offers keep apart: none of the pack's names on this card's grants, and no sunset look
     expect(!r.grants.some((g) => /Founders Sunset|Founder '26|run-card frame/.test(g)), `grants: ${r.grants.join(' | ')}`);
@@ -4235,7 +4299,7 @@ await group('store', async (use) => {
       const card = page.locator('.store-panel [data-sku="hypercar-founder"]');
       await card.evaluate((el) => el.scrollIntoView({ block: 'start' }));
       await storeShot(page, 'store-hypercar-1280x720.png');
-      await page.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await page.locator('.store-panel [data-sku="colour-studio"]').evaluate((el) => el.scrollIntoView({ block: 'start' }));
       await storeShot(page, 'store-items-1280x720.png');
       const items = await storePriceTags(page);
       const sideways = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
@@ -4248,48 +4312,74 @@ await group('store', async (use) => {
   });
 
   await check('4000 0000 0000 0002 is declined and grants nothing', async () => {
-    await page.getByRole('button', { name: /^Buy Coast Paint Pack/ }).click();
+    await page.getByRole('button', { name: /^Buy OC Hypercar Founder Edition/ }).click();
     await storeSignIn(sheet, 'founder@example.com');
     await sheet.getByLabel(/18 or over/).check();
     await storeCard(sheet, '4000 0000 0000 0002');
-    await sheet.getByRole('button', { name: /^Pay \$3\.00/ }).click();
+    await sheet.getByRole('button', { name: /^Pay \$9\.99/ }).click();
     const err = await sheet.locator('.store-err').innerText();
     expect(/declined/i.test(err) && /Nothing was charged/.test(err), `message: ${err}`);
     const o = await ownedIds(page);
     expect(o.length === 0, `owned after a decline: ${o.join(', ')}`);
     // a card that isn't one of Stripe's test cards is refused unread
     await storeCard(sheet, '4111 1111 1111 1111');
-    await sheet.getByRole('button', { name: /^Pay \$3\.00/ }).click();
+    await sheet.getByRole('button', { name: /^Pay \$9\.99/ }).click();
     await page.waitForFunction(() => /test cards only/.test(document.querySelector('.store-sheet .store-err')?.textContent ?? ''));
     expect((await ownedIds(page)).length === 0, 'a non-test card granted something');
     await sheet.getByRole('button', { name: 'Cancel' }).click();
     return `"${err}"; a non-test card is refused; 0 items`;
   });
 
-  await check('buying the Founder Pack with 4242 grants its entitlements and shows a receipt', async () => {
-    await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+  await check('buying the OC Hypercar Founder Edition with 4242 grants its entitlements and shows a receipt', async () => {
+    await page.getByRole('button', { name: /^Buy OC Hypercar Founder Edition/ }).click();
     await sheet.getByLabel(/18 or over/).check();
-    await sheet.getByLabel(/Founders roll/).check();
-    await sheet.getByLabel(/Name on the roll/).fill('Test Founder');
     await storeCard(sheet, '4242 4242 4242 4242');
     const sheetTags = await storePriceTags(page, '.store-sheet');
     expect(sheetTags.prices === 1 && !sheetTags.bad.length, `checkout price: ${sheetTags.prices} prices; ${sheetTags.bad.join(' | ')}`);
-    await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).scrollIntoViewIfNeeded();
+    await sheet.getByRole('button', { name: /^Pay \$9\.99/ }).scrollIntoViewIfNeeded();
     await storeShot(page, 'store-checkout-1440.png');
-    await sheet.getByRole('button', { name: /^Pay \$10\.00/ }).click();
+    await sheet.getByRole('button', { name: /^Pay \$9\.99/ }).click();
     await sheet.locator('.store-receipt').waitFor();
     const text = (await sheet.locator('.store-receipt').innerText()).replace(/\s+/g, ' ');
-    expect(/Test mode: nothing was charged/i.test(text) && text.includes('$10.00') && text.includes('Visa •••• 4242') && text.includes('Test Founder'), `receipt: ${text}`);
-    const o = await ownedIds(page), missing = founder.grants.filter((g) => !o.includes(g));
+    expect(/Test mode: nothing was charged/i.test(text) && text.includes('$9.99') && text.includes('Visa •••• 4242') && text.includes('OC Hypercar Founder Edition'), `receipt: ${text}`);
+    const o = await ownedIds(page), missing = hyper.grants.filter((g) => !o.includes(g));
     expect(!missing.length, `not granted: ${missing.join(', ')}`);
     const stored = await game(page, () => JSON.stringify({ ...localStorage }) + JSON.stringify({ ...sessionStorage }));
     expect(!stored.includes('4242424242424242') && !stored.includes('4242 4242 4242 4242'), 'the card number was stored');
     await storeShot(page, 'store-receipt-1440.png');
-    return `${founder.grants.length} of ${founder.grants.length} entitlements; receipt: ${text.slice(0, 150)}`;
+    await sheet.getByRole('button', { name: 'Done' }).click();
+    return `${hyper.grants.length} of ${hyper.grants.length} entitlements; receipt: ${text.slice(0, 150)}`;
+  });
+
+  // an item bought in test mode before the trim (the owner's devices): the Founder Pack, unlisted since 2026-11-16,
+  // written to the test-mode ledger as its purchase wrote it. Its grants still work: the paints in Your items, the
+  // badge on the account, the frame on the run card (the checks below)
+  await check('a Founder Pack bought before the trim still works: Your items lists its paints, the account its badge, though the store no longer shows it', async () => {
+    const pre = await game(page, () => localStorage.getItem('ocu.store.session'));
+    await game(page, (grants) => {
+      const sess = JSON.parse(localStorage.getItem('ocu.store.session')), book = JSON.parse(localStorage.getItem('ocu.store.owned') || '{}');
+      const mine = book[sess.userId] ?? { items: [], at: 0 };
+      mine.items.push(...grants.map((g) => ({ entitlement: g, sku: 'founder-pack-2026', granted_at: new Date().toISOString() })));
+      book[sess.userId] = mine; localStorage.setItem('ocu.store.owned', JSON.stringify(book));
+    }, founder.grants);
+    await page.reload();
+    await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+    await holdGame(page);
+    await page.getByRole('button', { name: 'Store', exact: true }).click();
+    await page.waitForSelector('.store-panel');
+    const r = await page.evaluate(() => ({
+      cards: [...document.querySelectorAll('.store-panel [data-sku]')].map((e) => e.getAttribute('data-sku')),
+      paints: [...document.querySelectorAll('.store-locker [data-paint]')].map((e) => e.getAttribute('data-paint')),
+      who: document.querySelector('.store-account')?.textContent.replace(/\s+/g, ' ') ?? '',
+      not: document.querySelector('.store-hyper-not')?.textContent ?? '',
+      sess: localStorage.getItem('ocu.store.session'),
+    }));
+    r.pre = pre;
+    expect(r.cards.join(', ') === 'hypercar-founder, colour-studio' && r.paints.includes('paint-founders-sunset') && r.who.includes("Founder '26") && /Your Founder Pack does not include this car/.test(r.not), JSON.stringify(r));
+    return `cards ${r.cards.join(', ')}; Your items: ${r.paints.length} paints (${r.paints.slice(0, 3).join(', ')}…); "${r.who.slice(0, 80)}"; the hypercar card: "${r.not.slice(0, 60)}…"`;
   });
 
   await check('the Founders Sunset paint becomes selectable and goes on the car (pearl finish on every body-paint mesh)', async () => {
-    await sheet.getByRole('button', { name: 'Done' }).click();
     const btn = page.locator('.store-locker [data-paint="paint-founders-sunset"]');
     await btn.click();
     expect(await btn.getAttribute('aria-pressed') === 'true', 'not pressed');
@@ -4307,23 +4397,6 @@ await group('store', async (use) => {
     expect(off.finish === null && off.color !== 'e8622c' && off.off === 0, `factory: ${JSON.stringify(off)}`);
     await btn.click();
     return `on: #${on.color}, metalness ${on.metal}, roughness ${on.rough}, clear coat ${on.coat}/${on.coatRough}, ${on.meshes} paint meshes; factory: #${off.color}`;
-  });
-
-  await check('the tip is pay what you want from $2, one badge at any amount', async () => {
-    await page.getByRole('button', { name: /^Support Fuel the Build/ }).click();
-    await sheet.getByLabel(/18 or over/).check();
-    await sheet.getByLabel(/Or type an amount/).fill('1');
-    await storeCard(sheet, '4242424242424242');
-    await sheet.getByRole('button', { name: /^Pay \$1\.00/ }).click();
-    const err = await sheet.locator('.store-err').innerText();
-    expect(/from \$2/.test(err), `under the floor: ${err}`);
-    expect(!(await ownedIds(page)).includes('badge-supporter'), 'badge granted under the floor');
-    await sheet.getByLabel(/Or type an amount/).fill('7');
-    await sheet.getByRole('button', { name: /^Pay \$7\.00/ }).click();
-    await sheet.locator('.store-receipt').waitFor();
-    expect((await ownedIds(page)).includes('badge-supporter'), 'no badge after $7');
-    await sheet.getByRole('button', { name: 'Done' }).click();
-    return `$1 refused ("${err}"); $7 grants the badge`;
   });
 
   await check('a subscription shows its price and renewal terms before an unticked checkbox (preview; the club is not on sale)', async () => {
@@ -4348,14 +4421,14 @@ await group('store', async (use) => {
     const paint = await game(page, () => window.__game.car.config.paint);
     await page.getByRole('button', { name: 'Store', exact: true }).click();
     await page.waitForSelector('.store-panel');
-    const act = await page.locator('[data-sku="founder-pack-2026"] .store-act').textContent();
+    const act = await page.locator('[data-sku="hypercar-founder"] .store-act').textContent();
     const who = (await page.locator('.store-account').innerText()).replace(/\s+/g, ' ');
-    const o = await ownedIds(page), missing = founder.grants.filter((g) => !o.includes(g));
+    const o = await ownedIds(page), missing = [...hyper.grants, ...founder.grants].filter((g) => !o.includes(g));
     expect(/Owned/i.test(act) && !missing.length, `after reload: "${act}", missing ${missing.join(', ')}`);
     expect(who.includes('founder@example.com') && who.includes("Founder '26"), `account: ${who}`);
     expect(paint === 0xe8622c, `car paint after reload #${paint.toString(16)}`);
     await page.getByRole('button', { name: 'Done', exact: true }).click();
-    return `Founder Pack "${act}"; ${o.length} entitlements; the car still wears #${paint.toString(16)}; "${who.slice(0, 80)}"`;
+    return `the OC Hypercar Founder Edition "${act}"; ${o.length} entitlements (its own and the earlier Founder Pack's); the car still wears #${paint.toString(16)}; "${who.slice(0, 80)}"`;
   });
 
   await check('the car in Founders Sunset, and the Founder badge and frame on the run card', async () => {
@@ -4390,13 +4463,7 @@ await group('store', async (use) => {
   });
 
   await check('the hypercar grant: oc-hyper joins the garage outside the slot count, is never sold for credits, leaves on sign-out and comes back on sign-in', async () => {
-    // a test-mode ledger entry for the signed-in account, as a purchase would write it (the sku can't be bought yet)
-    await game(page, (grants) => {
-      const sess = JSON.parse(localStorage.getItem('ocu.store.session')), book = JSON.parse(localStorage.getItem('ocu.store.owned') || '{}');
-      const mine = book[sess.userId] ?? { items: [], at: 0 };
-      mine.items.push(...grants.map((g) => ({ entitlement: g, sku: 'hypercar-founder', granted_at: new Date().toISOString() })));
-      book[sess.userId] = mine; localStorage.setItem('ocu.store.owned', JSON.stringify(book));
-    }, hyper.grants);
+    // (bought above with the 4242 test card)
     await page.reload();
     await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
     await holdGame(page);
@@ -4453,19 +4520,21 @@ await group('store', async (use) => {
       await storeCrop(p, hc, 'store-hypercar-card-390.png');
       const hcText = (await hc.textContent()).replace(/\s+/g, ' ');
       expect(!hcText.includes('Coming soon') && hcText.includes('$9.99') && hcText.includes('Test mode · nothing is charged'), `phone hypercar card: ${hcText.slice(0, 200)}`);
-      await p.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await p.locator('.store-panel [data-sku="colour-studio"]').evaluate((el) => el.scrollIntoView({ block: 'start' }));
       await storeShot(p, 'store-items-390x844.png');
+      const soon = (await p.locator('.store-panel [data-sku="colour-studio"]').textContent()).replace(/\s+/g, ' ');
+      expect(/Coming soon/.test(soon) && soon.includes('$4.99') && !(await p.locator('.store-panel [data-sku="colour-studio"] button').count()), `phone Colour Studio card: ${soon.slice(0, 200)}`);
       const itemTags = await storePriceTags(p);
       expect(!itemTags.bad.length && itemTags.inView > 0, `phone item prices: ${itemTags.bad.join(' | ')}; ${itemTags.inView} in view`);
       await p.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
-      await p.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      await p.getByRole('button', { name: /^Buy OC Hypercar Founder Edition/ }).click();
       await storeSignIn(sh, 'phone@example.com');
       await sh.getByLabel(/18 or over/).check();
       await storeCard(sh, '4242 4242 4242 4242');
       await sh.getByLabel('Card number').scrollIntoViewIfNeeded();
       await storeShot(p, 'store-checkout-390.png');
       const b = await noSide();
-      await sh.getByRole('button', { name: /^Pay \$10\.00/ }).click();
+      await sh.getByRole('button', { name: /^Pay \$9\.99/ }).click();
       await sh.locator('.store-receipt').waitFor();
       await storeShot(p, 'store-receipt-390.png');
       const c = await noSide();
@@ -4506,11 +4575,12 @@ await group('store-live', async () => {
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const SITE = `http://127.0.0.1:${server.address().port}/index.html`;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
+  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
   const errors = [], calls = [];
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
-  const founder = cat.find((s) => s.sku === 'founder-pack-2026');
-  const db = { purchases: [], entitlements: [] };
+  // the one item on sale since the owner's trim (2026-11-16): the OC Hypercar Founder Edition
+  const hyper = cat.find((s) => s.sku === 'hypercar-founder');
+  const db = { purchases: [], entitlements: [] }, mock = { refuse: false, cancel: false };
   const reply = (route, status, body) => route.fulfill({ status, contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify(body) });
   await ctx.route(`${MOCK}/**`, async (route) => {
     const r = route.request(), u = new URL(r.url()), auth = r.headers()['authorization'] ?? '';
@@ -4526,8 +4596,8 @@ await group('store-live', async () => {
     if (u.pathname === '/functions/v1/create-checkout') {
       const b = JSON.parse(r.postData() || '{}');
       if (auth !== 'Bearer at-1') return reply(route, 401, { error: 'Sign in again to buy.' });
-      if (b.sku === 'wheels-rossini-gt') return reply(route, 409, { error: 'Not on sale yet: it goes on sale once it is in the game.' });
-      return reply(route, 200, { url: `https://checkout.stripe.com/c/pay/cs_test_mock${b.sku === founder.sku ? 'F' : 'X'}` });
+      if (mock.refuse) return reply(route, 409, { error: 'Not on sale yet: it goes on sale once it is in the game.' });
+      return reply(route, 200, { url: `https://checkout.stripe.com/c/pay/cs_test_mock${b.sku === hyper.sku && !mock.cancel ? 'F' : 'X'}` });
     }
     return reply(route, 404, { error: 'not mocked: ' + u.pathname });
   });
@@ -4537,8 +4607,8 @@ await group('store-live', async () => {
     calls.push({ method: 'GET', path: 'stripe:' + id });
     const cancel = id.endsWith('X');
     if (!cancel) {
-      db.purchases.push({ stripe_session_id: id, sku: founder.sku, amount_cents: founder.price_cents, currency: 'usd', status: 'paid', created_at: new Date().toISOString() });
-      db.entitlements = founder.grants.map((g) => ({ entitlement: g, sku: founder.sku, granted_at: new Date().toISOString() }));
+      db.purchases.push({ stripe_session_id: id, sku: hyper.sku, amount_cents: hyper.price_cents, currency: 'usd', status: 'paid', created_at: new Date().toISOString() });
+      db.entitlements = hyper.grants.map((g) => ({ entitlement: g, sku: hyper.sku, granted_at: new Date().toISOString() }));
     }
     const back = cancel ? `${SITE}?checkout=cancel` : `${SITE}?checkout=success&session_id=${id}`;
     return route.fulfill({ status: 200, contentType: 'text/html', body: `<!doctype html><title>Stripe Checkout (mock)</title><p>Paying…</p><script>location.replace(${JSON.stringify(back)})</script>` });
@@ -4566,7 +4636,7 @@ await group('store-live', async () => {
     });
 
     await check('live: the sign-in link is requested from Supabase Auth and comes back to the game', async () => {
-      await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      await page.getByRole('button', { name: /^Buy OC Hypercar Founder Edition/ }).click();
       await sheet.getByLabel('Month', { exact: true }).selectOption('3');
       await sheet.getByLabel('Year', { exact: true }).fill('1988');
       await sheet.getByRole('button', { name: 'Continue' }).click();
@@ -4589,7 +4659,7 @@ await group('store-live', async () => {
     });
 
     await check('live: checkout sends the token and the sku (no price), shows no card form, and goes to Stripe', async () => {
-      await page.getByRole('button', { name: /^Buy Founder Pack/ }).click();
+      await page.getByRole('button', { name: /^Buy OC Hypercar Founder Edition/ }).click();
       expect(await sheet.getByLabel('Card number').count() === 0, 'a card form in live mode');
       await sheet.getByLabel(/18 or over/).check();
       await storeShot(page, 'store-live-checkout-1280.png');
@@ -4599,7 +4669,7 @@ await group('store-live', async () => {
       const co = calls.find((c) => c.path === '/functions/v1/create-checkout' && c.method === 'POST');
       const b = JSON.parse(co.body);
       expect(co.auth === 'Bearer at-1', `auth ${co.auth}`);
-      expect(b.sku === founder.sku && b.adult_or_guardian === true, co.body);
+      expect(b.sku === hyper.sku && b.adult_or_guardian === true, co.body);
       const priceKeys = Object.keys(b).filter((k) => /price|amount|cents|total/i.test(k));
       expect(!priceKeys.length, `the page sent ${priceKeys.join(', ')}`);
       expect(calls.some((c) => c.path === 'stripe:cs_test_mockF'), 'never reached Stripe');
@@ -4610,27 +4680,28 @@ await group('store-live', async () => {
       await loaded();
       await page.waitForSelector('.store-panel .store-receipt', { timeout: 120000 });
       const r = (await page.locator('.store-panel .store-receipt').innerText()).replace(/\s+/g, ' ');
-      expect(r.includes('$10.00') && /test mode/i.test(r) && r.includes('Founder Pack'), `receipt: ${r}`);
-      await page.locator('.store-locker [data-paint="paint-founders-sunset"]').click();
-      const paint = await page.evaluate(() => window.__game.car.config.paint);
+      expect(r.includes('$9.99') && /test mode/i.test(r) && r.includes('OC Hypercar Founder Edition'), `receipt: ${r}`);
+      await page.waitForFunction(() => window.__game.profile.p.vehicles.includes('oc-hyper'), null, { timeout: 120000 });
       const url = await page.evaluate(() => location.href);
-      expect(paint === 0xe8622c, `paint #${paint.toString(16)}`);
       expect(!/checkout=|session_id=/.test(url), `address not cleaned: ${url}`);
       const polled = calls.filter((c) => c.path === '/rest/v1/purchases').length;
       await storeShot(page, 'store-live-receipt-1280.png');
-      return `receipt "${r.slice(0, 110)}"; ${polled} purchase read(s); Founders Sunset on the car`;
+      return `receipt "${r.slice(0, 110)}"; ${polled} purchase read(s); the OC Hypercar in the garage`;
     });
 
     await check('live: a refused item shows the server\'s reason; a cancelled checkout says nothing was charged', async () => {
-      // (the Founder Pack covers both paint packs, so they show as owned now)
-      await page.getByRole('button', { name: /^Buy Rossini GT Wheel Set/ }).click();
+      // (the hypercar is the one item on sale, and owned now: its checkout is opened directly, with the mock server
+      // refusing it once, then handing back a checkout the player cancels)
+      mock.refuse = true;
+      await game(page, () => window.__store.open('hypercar-founder'));
       await sheet.getByLabel(/18 or over/).check();
       await sheet.getByRole('button', { name: /^Checkout/ }).click();
       const err = await sheet.locator('.store-err').innerText();
       expect(/goes on sale once it is in the game/.test(err), err);
       await sheet.getByRole('button', { name: 'Cancel' }).click();
+      mock.refuse = false; mock.cancel = true;
       await Promise.all([page.waitForURL(/checkout=cancel/, { timeout: 120000 }), (async () => {
-        await page.getByRole('button', { name: /^Buy Night Shift Driver Style/ }).click();
+        await game(page, () => window.__store.open('hypercar-founder'));
         await sheet.getByLabel(/18 or over/).check();
         await sheet.getByRole('button', { name: /^Checkout/ }).click();
       })()]);
@@ -5123,7 +5194,7 @@ await group('perf', async (use) => {
   // real frames: Low at 1280 × 720 with ?perf, driving, and the artificial frame cost hook
   if (wants('perf: ?perf shows the overlay; real frames', 'perf: the overlay at 1280', 'perf: Adaptive quality off', 'perf: Retro keeps')) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 3, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
     await p.goto(pathToFileURL(GAME).href + '?perf');
@@ -5157,16 +5228,17 @@ await group('perf', async (use) => {
       return `${r.fps} fps over ${r.filled} frames, overlay "${r.text.replace(/\n/g, ' | ')}"`;
     });
     await check('perf: Retro keeps its own picture (no governor ladder, full scale)', async () => {
-      const r = await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'retro' }); const s = g.govState; g.updateSettings({ ...g.settings, style: 'standard' }); return s; });
-      expect(!r.on && r.levels === 0 && r.scale === 1 && r.label === 'Low · Retro', JSON.stringify(r));
-      return `${r.label}: governor off, ${r.levels} steps, scale ${r.scale}`;
+      const r = await game(p, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'retro' }); const s = { ...g.govState, detail: g.govDetail(), overlay: g.perf.label }; g.updateSettings({ ...g.settings, style: 'standard' }); return s; });
+      expect(!r.on && r.levels === 0 && r.scale === 1 && r.label === 'Retro · Low' && /Retro keeps its own fixed picture/.test(r.detail ?? ''), JSON.stringify(r));
+      expect(r.overlay === 'Retro · Low', `the overlay's label: "${r.overlay}"`);
+      return `${r.label} (the overlay "${r.overlay}"; "${r.detail}"): governor off, ${r.levels} steps, scale ${r.scale}`;
     });
     await ctx.close();
   }
   // the phone: 390 × 844 at DPR 3, ?perf, driving
   if (wants('perf: the overlay on a 390')) {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 3, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     await p.goto(pathToFileURL(GAME).href + '?perf');
     await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
@@ -5195,18 +5267,24 @@ await group('perf', async (use) => {
     const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
     await p.goto(pathToFileURL(GAME).href + '?bench=1');
     await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
-    await check('graphics check: on a first run it runs on its own, completes, saves a pick and applies it', async () => {
+    // (Retro Low is a new player's preset, owner 2026-11-16: the check measures and saves its pick, and changes nothing)
+    await check('graphics check: on a first run it runs on its own, completes and saves a pick, and the preset stays Retro Low', async () => {
       const t0 = Date.now();
+      // (while the check runs its rounds are the standard presets: the Retro style is off until it ends)
+      const before = await game(p, () => ({ q: window.__game.settings.quality, style: window.__game.settings.style, running: window.__game.benchRunning(), retro: !!window.__game.style }));
       await p.waitForSelector('.bench-card', { timeout: 60000 });
       const card = await p.locator('.bench-card').innerText();
       await p.waitForSelector('.bench-card', { state: 'detached', timeout: 600000 });
-      const r = await game(p, () => ({ bench: JSON.parse(localStorage.getItem('tsu.bench')), s: JSON.parse(localStorage.getItem('tsu.settings') || 'null'), q: window.__game.settings.quality }));
-      expect(r.bench && r.bench.v === 1 && !r.bench.skipped && r.bench.quality && r.bench.rounds.length >= 1 && r.s.quality === r.bench.quality && r.s.qualityChosen === false && r.q === r.bench.quality, JSON.stringify(r));
-      return `card "${card.replace(/\n/g, ' | ')}"; ${fmt((Date.now() - t0) / 1000)} s here; picked ${r.bench.quality} at ${r.bench.scale}, ${r.bench.target} fps; rounds ${r.bench.rounds.map((x) => `${x.quality}@${x.scale} ${x.ms} ms`).join(', ')}`;
+      await p.waitForTimeout(500);
+      const r = await game(p, () => ({ bench: JSON.parse(localStorage.getItem('tsu.bench')), s: JSON.parse(localStorage.getItem('tsu.settings') || 'null'), q: window.__game.settings.quality, style: window.__game.settings.style, retro: !!window.__game.style, label: window.__game.govLabel(), toast: document.querySelector('.toast')?.textContent ?? '' }));
+      expect(before.q === 'low' && before.style === 'retro' && (before.running ? !before.retro : before.retro), `a new player's preset before the check: ${JSON.stringify(before)}`);
+      expect(r.bench && r.bench.v === 1 && !r.bench.skipped && r.bench.quality && r.bench.rounds.length >= 1, `the saved pick: ${JSON.stringify(r.bench)}`);
+      expect(r.q === 'low' && r.style === 'retro' && r.retro && r.label === 'Retro · Low' && (!r.s || (r.s.quality === 'low' && r.s.style === 'retro' && r.s.qualityChosen !== true)), `after the check: ${JSON.stringify({ q: r.q, style: r.style, retro: r.retro, label: r.label, saved: r.s })}`);
+      return `card "${card.replace(/\n/g, ' | ')}"; ${fmt((Date.now() - t0) / 1000)} s here; it found ${r.bench.quality} at ${r.bench.scale}, ${r.bench.target} fps (rounds ${r.bench.rounds.map((x) => `${x.quality}@${x.scale} ${x.ms} ms`).join(', ')}); the preset stays ${r.label}; toast "${r.toast}"`;
     });
     await check('graphics check: the player\'s own choice wins (kept over a reload, never re-checked); Skip on a Settings run saves nothing', async () => {
       const pick = await game(p, () => JSON.parse(localStorage.getItem('tsu.bench')));
-      const mine = pick.quality === 'medium' ? 'Low' : 'Medium';
+      const mine = 'Medium';                                      // (the preset is Retro Low: the player picks another)
       await p.getByRole('button', { name: 'Settings', exact: true }).click();
       await p.locator('.seg[aria-label="Graphics"]').getByRole('button', { name: mine, exact: true }).click();
       await p.waitForFunction(() => !document.querySelector('.loadbar'), null, { timeout: 600000, polling: 500 });
@@ -5224,7 +5302,7 @@ await group('perf', async (use) => {
       expect(mid.s.quality === want && mid.s.qualityChosen === true && mid.bench === JSON.stringify(pick), `after the pick and Skip: ${JSON.stringify(mid)}`);
       expect(!r.card && r.q === want && r.chosen && r.bench === JSON.stringify(pick), `after a reload: ${JSON.stringify(r)}`);
       expect(errs.length === 0, errs.join(' | '));
-      return `the check picked ${pick.quality}; the player chose ${mine}; Skip left the saved pick as it was; after a reload ${r.q} (chosen), no check card`;
+      return `the check found ${pick.quality}; the player chose ${mine}; Skip left the saved pick as it was; after a reload ${r.q} (chosen), no check card`;
     });
     await ctx.close();
   }

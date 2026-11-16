@@ -174,20 +174,21 @@ function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, sh
   text(g, gear, 512, 216, gear.length > 1 ? 18 : 26, TXT, 700, 'center');
   // left of the arc (right-aligned toward the speed): with THRUST live (the Unleashed tune in Free Drive) the car's own
   // systems, big enough to read from the seat on a phone (owner, 2026-11-16: "make the thrust option and display more
-  // seamlessly integrated"; the HUD's floating THRUST box is gone from the seat view): THRUST, the tank's percentage
-  // large, its bar with the hop's mark (the least a hop asks for), Ground Lock's chip (filled while the fans run) and the
-  // hop's state (ready, charging, in the air, or why the last request was refused). The profile, TCS and ABS move to the
-  // right block's foot. Without THRUST: the profile, TCS and ABS, the tune and THRUST OFF, as before
+  // seamlessly integrated"; the HUD's floating THRUST box is gone from the seat view): JUMP (THRUST is the jump only
+  // since 2026-11-16), the tank's percentage large, its bar with the hop's mark (the least a hop asks for), Ground
+  // Lock's chip (filled while the fans run) and the hop's state (ready, charging, in the air, or why the last request
+  // was refused). The profile, TCS and ABS move to the right block's foot. Without THRUST: the profile, TCS and ABS,
+  // the tune and JUMP OFF
   const prof = profileWord(r.profile), tune = (r.tune || r.mode || '').toUpperCase();
   const pct = Math.round(clamp01(r.tank) * 100), live = r.thrustLive;
   let hopWord = '';
   if (live) {
     // (what the seat shows of the display, measured on the 390 x 844 phone frames: left of the speed from about x 245
     // under the rim from y 130, the rim and the left thumb over the rest; the rev arc's first tick reaches x 403 at y 152,
-    // so the bar and the chip stop at 396): the percentage under the rim, the word THRUST beside the bar
+    // so the bar and the chip stop at 396): the percentage under the rim, the word JUMP beside the bar
     const lowTank = pct < 25, x0 = 262, x1 = 404, xb = 396, bx = 330;
     text(g, `${pct}%`, x1, 112, 40, lowTank ? '#ffb347' : '#f4f8ff', 700, 'right', x1 - x0);
-    text(g, 'THRUST', x0, 142, 16, ICE, 800, 'left', bx - x0 - 6);
+    text(g, 'JUMP', x0, 142, 16, ICE, 800, 'left', bx - x0 - 6);
     // the tank's bar: the fill, and the hop's mark at 40 %
     g.fillStyle = HY.OFF; g.fillRect(bx, 137, xb - bx, 10);
     if (pct > 0) { g.fillStyle = lowTank ? '#ffb347' : ICE; g.fillRect(bx, 137, (xb - bx) * (pct / 100), 10); }
@@ -206,7 +207,7 @@ function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, sh
     text(g, prof, 404, 106, 20, ICE, 800, 'right', 92);
     chip(g, 318, 124, 40, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 364, 124, 40, 20, 'ABS', r.abs, ICE, 12, low);
     if (tune) text(g, tune, 404, 164, 14, HOT, 800, 'right', 92);
-    text(g, 'THRUST', 314, 190, 11, DIM, 600, 'left');
+    text(g, 'JUMP', 314, 190, 11, DIM, 600, 'left');
     text(g, 'OFF', 404, 190, 15, DIM, 700, 'right');
     g.fillStyle = HY.OFF; g.fillRect(314, 204, 90, 6);
   }
@@ -245,7 +246,7 @@ function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, sh
   text(g, 'ABS', 716 + 124, 256 + 150, 18, r.abs ? TXT : '#ff9a5c', 600, 'center');
   text(g, 'TCS', 716 + 184, 256 + 150, 18, r.tcs ? TXT : '#ff9a5c', 600, 'center');
   shown.mph = mph; shown.gear = gear; shown.profile = prof; shown.tcs = r.tcs ? 'on' : 'off'; shown.abs = r.abs ? 'on' : 'off'; shown.tune = tune;
-  shown.thrust = live ? `${pct}%` : 'off'; shown.lock = live ? (r.lock ? 'on' : 'idle') : ''; shown.hop = hopWord; shown.turn = r.dest ? r.turn : ''; shown.next = navLine; shown.dest = r.dest; shown.redline = r.redline ? 'lit' : 'dark';
+  shown.thrust = live ? `${pct}%` : 'off'; shown.control = 'JUMP'; shown.lock = live ? (r.lock ? 'on' : 'idle') : ''; shown.hop = hopWord; shown.turn = r.dest ? r.turn : ''; shown.next = navLine; shown.dest = r.dest; shown.redline = r.redline ? 'lit' : 'dark';
   shown.clock = r.clock; shown.trip = r.tripMi.toFixed(1); shown.top = String(Math.round(r.topMph));
 }
 export function hyperDash(q: 'phone' | 'high'): DashPainter {
