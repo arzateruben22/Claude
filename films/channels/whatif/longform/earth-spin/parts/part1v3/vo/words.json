@@ -459,97 +459,55 @@
   },
   {
    "id": "vo07",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-   "heard": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "text": "If you're enjoying this, tap like and follow.",
+   "heard": "If you're enjoying this, tap like and follow.",
    "words": [
     {
-     "w": "Hang",
-     "start": 0.2,
-     "end": 0.4,
-     "heard": true
-    },
-    {
-     "w": "on.",
-     "start": 0.495,
-     "end": 0.72,
-     "heard": true
-    },
-    {
      "w": "If",
-     "start": 0.815,
-     "end": 0.88,
+     "start": 0.005,
+     "end": 0.16,
      "heard": true
     },
     {
      "w": "you're",
-     "start": 0.89,
-     "end": 1.04,
+     "start": 0.08,
+     "end": 0.32,
      "heard": true
     },
     {
      "w": "enjoying",
-     "start": 0.92,
-     "end": 1.36,
+     "start": 0.315,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "this,",
-     "start": 1.43,
-     "end": 1.6,
+     "start": 0.62,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "tap",
-     "start": 1.685,
-     "end": 1.92,
+     "start": 0.875,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "like",
-     "start": 1.86,
-     "end": 2.08,
+     "start": 1.05,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.065,
-     "end": 2.24,
+     "start": 1.2,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "follow.",
-     "start": 2.13,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "Okay,",
-     "start": 2.735,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "back",
-     "start": 3.405,
-     "end": 3.52,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 3.435,
-     "end": 3.6,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.55,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "math.",
-     "start": 3.83,
-     "end": 4.8,
+     "start": 1.32,
+     "end": 1.84,
      "heard": true
     }
    ]
@@ -623,61 +581,6 @@
      "w": "up.",
      "start": 2.68,
      "end": 3.12,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo09",
-   "text": "Part one of eight. Full video on YouTube.",
-   "heard": "Part one of a full video on YouTube.",
-   "words": [
-    {
-     "w": "Part",
-     "start": 0.315,
-     "end": 0.48,
-     "heard": true
-    },
-    {
-     "w": "one",
-     "start": 0.485,
-     "end": 0.64,
-     "heard": true
-    },
-    {
-     "w": "of",
-     "start": 0.68,
-     "end": 0.8,
-     "heard": true
-    },
-    {
-     "w": "eight.",
-     "start": 0.89,
-     "end": 1.12,
-     "heard": false
-    },
-    {
-     "w": "Full",
-     "start": 1.205,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "video",
-     "start": 1.32,
-     "end": 1.84,
-     "heard": true
-    },
-    {
-     "w": "on",
-     "start": 1.815,
-     "end": 2.0,
-     "heard": true
-    },
-    {
-     "w": "YouTube.",
-     "start": 2.0,
-     "end": 3.04,
      "heard": true
     }
    ]

@@ -19,11 +19,8 @@ vo: What you feel is a tiny push outward: the spin makes you about a third of a 
 vo: Now the spin speeds up. {-}
 
 ## cta {shot: see v2.py · energy: 0.6} (__)
-vo: Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. {-}
+vo: If you're enjoying this, tap like and follow. {-}
 
 ## cliff {shot: see v2.py · energy: 0.6} (__)
 vo: And then the spin has only just begun to speed up. {-}
-
-## tease {shot: see v2.py · energy: 0.6} (__)
-vo: Part one of eight. Full video on YouTube. {-}
 

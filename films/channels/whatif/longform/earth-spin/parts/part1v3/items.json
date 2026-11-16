@@ -49,14 +49,14 @@
  },
  {
   "kind": "cta",
-  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-  "take": "V.cta_follow",
+  "text": "If you're enjoying this, tap like and follow.",
+  "take": "V.ask_follow",
   "sub_file": "vo/07-sub.wav",
-  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
-  "take_sub": "V.cta_sub",
+  "sub_text": "If you're enjoying this, tap like and subscribe.",
+  "take_sub": "V.ask_sub",
   "uid": "cta",
   "vo": "vo07",
-  "dur": 5.11
+  "dur": 2.29
  },
  {
   "kind": "cliff",
@@ -65,13 +65,5 @@
   "uid": "cliff",
   "vo": "vo08",
   "dur": 3.43
- },
- {
-  "kind": "closer",
-  "text": "Part one of eight. Full video on YouTube.",
-  "take": "V.c1",
-  "uid": "tease",
-  "vo": "vo09",
-  "dur": 3.35
  }
 ]

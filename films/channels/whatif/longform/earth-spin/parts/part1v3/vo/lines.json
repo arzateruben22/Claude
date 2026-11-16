@@ -67,12 +67,12 @@
   {
    "id": "vo07",
    "beat": "cta",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
+   "text": "If you're enjoying this, tap like and follow.",
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 5.11,
-   "sha256": "e4527cfda3ba53e27b28101ffb005b988c52d0b5303f8e46e603f9aa22aa6f3e"
+   "dur": 2.29,
+   "sha256": "73b778bf4dd15e38a4097afd993ecce229d7152cd7301b90517dd966554b4f9c"
   },
   {
    "id": "vo08",
@@ -83,16 +83,6 @@
    "file": "08.wav",
    "dur": 3.43,
    "sha256": "56107facdd38922e10f1d7f0e50b0de27f03ac04d13759495380112647fbe01d"
-  },
-  {
-   "id": "vo09",
-   "beat": "tease",
-   "text": "Part one of eight. Full video on YouTube.",
-   "stars": [],
-   "phonemes": null,
-   "file": "09.wav",
-   "dur": 3.35,
-   "sha256": "c71dba491687572826e602bd15885c140034971e457c77314bc7c33cb7f3c7fd"
   }
  ]
 }
