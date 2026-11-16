@@ -262,3 +262,4 @@ STATE 10:23 UTC: weekly 0.48, 5h 0.17. CAST FX4 repair1 (10:14), THRUST (10:17),
 STATE 10:45 UTC: weekly 0.48, 5h 0.20. CAST FX4 repair1 (10:35), THRUST (10:38), SMOOTH (10:40).
 STATE 11:07 UTC: weekly 0.49, 5h 0.23. CAST FX4 repair1 (11:05). THRUST builder DONE -> judges (11:01). SMOOTH (10:57).
 STATE 11:28 UTC: weekly 0.50, 5h 0.26. CAST FX4 repair1 (11:27). THRUST: 1 judge done, 2nd running (11:26). SMOOTH (11:27).
+STATE 11:52 UTC: weekly 0.51, 5h 0.28. CAST FX4 repair1 (11:42). THRUST: judge 1 kept, judge 2 running (11:48). SMOOTH: built; code judge REJECTED (governor bounce never ends: quietT resets bounces; overlay broken in one case) -> its repair runs next. 
