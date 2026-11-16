@@ -44,8 +44,18 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   const flake = oc ? 0.2 : vela ? 0.1 : 0.15, lines = mirror ? [] : B.shutLines(), key = mirror ? id + '-mirror' : id;
   // the OC Hypercar: a bright, cool light silver and its gloss-black two-tone drawn by the paint shader (P.masks, body only)
   const masks = oc && !mirror ? P.masks : undefined;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift } : { key, flake, rough: vela ? 0.3 : undefined });
-  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
+  // (G1, 'high' only: the pearl's flake map at the tier's size under the clear coat, and a calmer orange peel, so the
+  // reflections run unbroken over the bonnet and the fenders; see car-mats paint)
+  // The M1b hero's grey, torn patches on the bonnet and the front fenders, traced in G1: the base coat's own specular
+  // (rough, 0.28) reflecting the environment at a grazing angle, where the camera looks along the bonnet and Fresnel
+  // takes it near 1, from the environment's low-resolution rough mip, magnified into blocks. They are the same with the
+  // car's shadows off, with the plain sky in place of the preview's local probe, with the masks off and with a softer
+  // clear coat (tests/out/hyper-gfx/probe/). G1 turns the base coat's specular down to a pearl's (the clear coat over
+  // it carries the sharp reflection, as on a real car), which removes them; the phone build keeps M1b's paint.
+  const g1 = oc && q === 'high' ? { flakeMap: M.hyperFlake(), peel: 0.25, spec: 0.15 } : {};
+  const gk = oc && q === 'high' ? '|G1' + M.hyperTier() : '';
+  if (!finish) return M.paint(paint, q, lines, oc ? { key: key + gk, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift, ...g1 } : { key, flake, rough: vela ? 0.3 : undefined });
+  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks, ...(oc && q === 'high' ? { key: gk, ...(finish.flake ? g1 : { peel: 0.25 }) } : {}) });
 }
 
 // every material the car's kit can file geometry under
@@ -87,8 +97,12 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     // arcs that read as struts across the canopy)
     frit: oc ? once('m.fritOC', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.35, envMapIntensity: 0.5 }), { name: 'gloss' }))) : M.gloss(0x050505),
     trim: M.gloss(0x070708), dark,
-    glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // (G1, the hypercar on 'high': the owner's references' dark tinted canopy, with the sky and the road clearly in it,
+    // and the outside carbon with its weave visible under the clear coat at the tier's map size: a lighter, cooler tint
+    // than M1b's near-black one, so the references' grey twill reads in daylight)
+    glass: oc && q === 'high' ? M.glass('tintG1', 0.9, { env: 0.9, spec: 0.85, color: 0x020509 })
+      : P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
+    carbon: oc && q === 'high' ? M.carbonG1(0.05, { tint: 0xdde3ee, k: 1.7, cc: 0.04 }) : P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
@@ -106,13 +120,25 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
 
 // a heuristic for ambient occlusion outside: the underside and the wheel wells are dark, the lower body a little
 export function aoFor(B: CarBody) {
+  // (G1, the OC Hypercar only: the wells' darkening below takes only surfaces that face into the well, toward the
+  // wheel. Its big round arches bring the outer skin inside the test's radius, and there the per-vertex darkening drew
+  // the grey, stepped patches on the bonnet's edges, the front fenders and the flanks behind the front wheels that
+  // M1b's hero showed (traced in G1: the same with the shadows, the masks and the reflections off). Every other car
+  // keeps the test exactly as it was.)
+  const facing = B.P.id === 'oc-hyper';
   return (p: V3, n: V3) => {
     let a = 0.62 + 0.38 * sstep(0.08, 0.7, p.y);
-    if (n.y < -0.4) a *= 0.55;
+    // (the hypercar: faces turning down darken over a ramp, not at a step, so the scoop's and the fenders' lower
+    // faces shade smoothly instead of in steps along the triangles)
+    if (facing) a *= 1 - 0.45 * sstep(-0.2, -0.6, n.y);
+    else if (n.y < -0.4) a *= 0.55;
     // inside the wheel wells, above the axle: the liner and the top of the tyre sit in the dark
     for (const A of B.ARCHES) {
       const d = Math.hypot(p.z - A.z, p.y - A.yc);
-      if (Math.abs(p.x) > 0.45 && Math.abs(p.x) < 1.0 && d < A.R + 0.01 && p.y > 0.4) a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
+      if (Math.abs(p.x) > 0.45 && Math.abs(p.x) < 1.0 && d < A.R + 0.01 && p.y > 0.4) {
+        if (facing && (n.y * (A.yc - p.y) + n.z * (A.z - p.z)) / Math.max(d, 1e-6) < 0.2) continue;
+        a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
+      }
     }
     return clamp(a, 0.15, 1);
   };

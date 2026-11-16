@@ -12,6 +12,18 @@ export function once<V>(key: string, make: () => V): V {
   if (!cache.has(key)) cache.set(key, make());
   return cache.get(key) as V;
 }
+// drop (and dispose) every cached map whose key passes test: the OC Hypercar's big G1 maps of a tier that is no longer
+// in use (car-mats setHyperTier), so a quality change frees their memory; anything still drawn with one re-uploads it
+export function forgetMaps(test: (key: string) => boolean) {
+  let n = 0;
+  for (const [k, v] of [...cache]) {
+    if (!test(k)) continue;
+    cache.delete(k); n++;
+    const vs = v && typeof v === 'object' ? Object.values(v as Record<string, unknown>) : [];
+    for (const t of [v, ...vs]) if (t && (t as THREE.Texture).isTexture) (t as THREE.Texture).dispose();
+  }
+  return n;
+}
 
 // ------------------------------------------------------------------------------------------------ noise
 function hash(x: number, y: number, s: number) {
@@ -228,6 +240,42 @@ export function peelNormal(n = 256): THREE.Texture {
     const h = new Float32Array(n * n);
     for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) h[y * n + x] = fbm(x / n * 24, y / n * 24, 24, 24, 2, 71);
     return normals(h, n, n, 0.35);
+  });
+}
+
+// metallic flake (the OC Hypercar's pearl, G1): a tangent-space normal map of tiny flat platelets, each tilted at random
+// (most a little, a few a lot, so a few catch the light as sparkles), about 3 texels across, between them the binder
+// (flat). Tiled small under the clear coat; its mips average to flat, so at a distance it reads as a smooth pearl.
+export function flakeNormal(n = 1024): THREE.Texture {
+  return once('flake' + n, () => {
+    const d = new Uint8Array(n * n * 4), cell = 3, cells = Math.floor(n / cell);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const cx = Math.min(cells - 1, Math.floor(x / cell)), cy = Math.min(cells - 1, Math.floor(y / cell));
+      const a = hash(cx, cy, 91), b = hash(cx, cy, 92), c = hash(cx, cy, 93);
+      // a platelet covers most of its cell; the gaps are binder
+      const on = hash(cx, cy, 94) < 0.82;
+      const tilt = on ? (c < 0.9 ? 0.18 * a : 0.55 * a) : 0, ang = b * Math.PI * 2;
+      const nx = Math.sin(tilt) * Math.cos(ang), ny = Math.sin(tilt) * Math.sin(ang), nz = Math.cos(tilt);
+      const i = (y * n + x) * 4;
+      d[i] = (nx * 0.5 + 0.5) * 255; d[i + 1] = (ny * 0.5 + 0.5) * 255; d[i + 2] = (nz * 0.5 + 0.5) * 255; d[i + 3] = 255;
+    }
+    return dataTex(d, n, n, false);
+  });
+}
+// HD stitching (G1): a row of 8 stitches drawn at n px across (the cockpit's 256 px map, sharper for 4K close-ups)
+export function stitchTexHD(n = 1024): THREE.Texture {
+  return once('stitchHD' + n, () => {
+    const k = n / 256, [c, g] = canvas(n, 32 * k);
+    g.clearRect(0, 0, n, 32 * k);
+    for (let i = 0; i < 8; i++) {
+      const x0 = (i * 32 + 5) * k, x1 = (i * 32 + 27) * k;
+      const gr = g.createLinearGradient(0, 6 * k, 0, 26 * k); gr.addColorStop(0, '#9a9a9a'); gr.addColorStop(0.5, '#ffffff'); gr.addColorStop(1, '#8a8a8a');
+      g.fillStyle = gr; g.beginPath(); g.moveTo(x0 + 4 * k, 7 * k); g.lineTo(x1 - 4 * k, 7 * k); g.quadraticCurveTo(x1, 16 * k, x1 - 4 * k, 25 * k); g.lineTo(x0 + 4 * k, 25 * k); g.quadraticCurveTo(x0, 16 * k, x0 + 4 * k, 7 * k); g.fill();
+      // the thread's twist
+      g.strokeStyle = 'rgba(0,0,0,0.25)'; g.lineWidth = 1.2 * k;
+      for (let q = x0 + 3 * k; q < x1 - 2 * k; q += 4 * k) { g.beginPath(); g.moveTo(q, 8 * k); g.lineTo(q + 4 * k, 24 * k); g.stroke(); }
+    }
+    const t = canvasTex(c, true, true); t.wrapT = THREE.ClampToEdgeWrapping; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; return t;
   });
 }
 

@@ -4,6 +4,80 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: OC Hypercar G1 graphics pass ("super ultra 4K HD"), to the owner's four references (`claude/hyper-gfx`, not committed)
+
+The owner (2026-11-15): "let's also start fixing the graphics for the OC hyper car both outside and inside the car";
+"Like to make it super ultra 4k hd ... Interior cockpit needs to look more HD and futuristic and not plain and simple";
+"Use these images from ChatGPT to use as references and keep rendering" (four 1672 x 941 renders: front34, side, rear34,
+interior). **Those four references now define the car** (`PROJECT_OC_HYPERCAR.md` G1 row). Still a procedural model
+built in code. Base: 572111a (rebuilt from the machine reset's backup: the earlier builder had left only the pixel-ratio
+edits in `Game.ts` and `settings.ts`, kept).
+
+What changed (details in the G1 row):
+- **4K on Ultra**: native pixel ratio up to 3 with the drawing buffer capped at 3840 x 2160 pixels; a touch screen on
+  Ultra held to 2 (the phone frames below: 780 x 1688 at DPR 3). MSAA x4 and the sky's PMREM were already there.
+- **Run-time surface maps for the hypercar by tier** (High 1024 px, Ultra 2048 px; Low and Medium keep the shared
+  256-512 px maps): carbon weave under a clear coat, Alcantara, leather, brushed metal, a flake normal map in the paint,
+  HD stitching; mipmapped at the GPU's maximum anisotropy, built once, freed on a tier change. GPU memory about 78 MB
+  (High) and 263 MB (Ultra), and the same again without mips in the JS heap; the Ultra cockpit and body build took
+  9.9 s in the loaded software renderer here (once, on choosing Ultra or the car).
+- **The M1b hero's bonnet and fender patches traced and fixed**: not the shadows, the masks, the probe, the clear coat or
+  the base coat's specular (each switched off in turn: `tests/out/hyper-gfx/probe/`, the same patches every time); the
+  wheel wells' per-vertex occlusion heuristic darkened the outer skin over this car's big round arches, and downward
+  faces at a step. Fixed for the hypercar only (`car.ts` `aoFor`); the paint-only debug render shows the bonnet and the
+  flanks clean (`probe/dbg-ao2.png` against `probe/dbg-paintonly.png`).
+- **Outside, toward the references**: pearl flake and a calmer peel, a lighter carbon tint so the weave reads, a darker
+  more reflective canopy, five tall carbon fins out behind the tail, twin round tips on the centre line, a taller
+  honeycomb panel, the plate moved up, two ice-blue blades over the red bar.
+- **Inside, toward `interior.png`**: white leather bolsters and armrests with blue stitching, black Alcantara, carbon door
+  cards, a slimmer A-pillar trim and frit, ice-blue lines along the dash crest and the console, a lit glass cover on
+  the cluster, three knurled dials, a portrait console touchscreen and a windscreen head-up display (both real data
+  only: Go To's next turn and destination, the tune, the profile and assists, the Thrust tank, the clock; the HUD the
+  speed, gear and next turn; no fuel or other unsimulated values), toggle switches and the start button.
+
+Checked (headless Chromium, SwiftShader, one browser at a time; the machine's load average was 13 to 23 on 4 cores):
+- `npx tsc --noEmit` and `npx tsc --noEmit -p tsconfig.game.json`: clean. `npm run build`: built, "artifact page marked
+  as the owner test build (owner mode on)" once; 3,704 KB js against 3,691 KB at 572111a.
+- **The other four cars unchanged**: `tools/car-hash.ts` (geometry: every mesh's positions, normals, uvs, indices and
+  placement; materials: every setting and texture size) for the full car, the shell and the cockpit on `high` and
+  `phone`: GT, Brio, Corsa and Vela E identical to 572111a (`tests/out/hyper-gfx/hash/`); the Corsa's side render 0
+  pixels different; the lineup differs only inside the hypercar's columns (x 1296-1582 of 1600).
+- **Budget** (section 10's side view, 960 x 540): hypercar `high` 29 calls / 258,794 triangles (572111a: 28 / 257,966;
+  budget 40 / 260,000), `phone` 29 / 121,008 (28 / 120,180; budget 36 / 135,000). The extra call is the tips' titanium
+  material. The same on HD and Ultra (the tier changes maps, not geometry).
+- In-game frames (`tests/out/hyper-gfx/after/ingame/`, Free Drive, owner mode, Go To set to CA-55 North): the console and
+  the HUD report the live readout (e.g. "68" mph, "4.9 mi", turn right, "UNLEASHED", Thrust "100%"), 0 page errors.
+- Suites (each run under the machine's load, one browser at a time): `npm test -- --only=boot` 6/6 passed (126 s).
+  `--only=render`: the first 12 checks and "no page errors" passed before the run's own 25-minute limit closed the browser
+  under the last three; each of those then passed alone (`--check=` "recovers from a lost WebGL context" 2/2, "High and
+  Ultra presets rebuild mid-drive" 2/2, "the Founder Edition's lights wake" 2/2). `--only=phone` 18/20 in 1,316 s: the
+  cluster check failed on a bug of this pass (the phone build's cockpit listed a missing HUD display as null); fixed,
+  rebuilt, and `--check=cluster` then passed. The other failure, "sky camera: a sharp live picture", timed out, and it
+  times out the same way on 572111a run alone under the same load (as does "seat view: horizon" run alone, which passed
+  in the full run: horizon 36.7 %).
+- Smoothness, a 60 s seat-view drive steering to full lock both ways, 3 alternating 572111a/G1 pairs
+  (`tools/hyper-gfx-perf.mjs`, `tests/out/hyper-gfx/after/perf/`):
+  - **Phone** (390 x 844, DPR 3, touch, CPU throttled 4x; Low): p50 median 1,133 ms against 1,100 (+3 %), p95 5,983 ms
+    against 6,050; heap flat (97 MB at the end of every run): **pass** (inside +10 %).
+  - **Desktop** (1280 x 720, Ultra): **fails** in this software renderer: p50 median 9,883 ms against 2,250 (base runs
+    1,300 to 8,416), p95 31,099 against 36,482 (inside the base's own spread); 6 to 7 frames in the minute against 7
+    to 11. The JS heap holds the Ultra maps' 2048 px arrays: 355 MB against 157 MB, flat through the drive. The likely
+    cost is SwiftShader sampling the new maps at 16x anisotropy and their size; a GPU does both in hardware, so
+    this needs a real desktop GPU to judge. High (1024 px maps) was not measured.
+- 4K on Ultra (`tests/out/hyper-gfx/after/4k/`): the front three-quarter at 3840 x 2160 (662 s to render here) and a
+  100 % crop (`front34-4k-crop100.png`: the pearl's flake on the fender, the honeycomb, the blade and fang LEDs; still
+  wrong there: a torn edge where the lip meets the recessed face, and the fins' weave only faint at this distance). The
+  seat view and the rear three-quarter at 4K were still rendering when this was written.
+- Reference side by sides (`tests/out/hyper-gfx/sbs/`: front34, side, rear34, seat, each the owner's reference, 572111a
+  and G1 at 1672 x 941; `wheel.png`: the owner's three wheel pictures beside the seat-side wheel view, G1 and 572111a).
+  Read by eye: the outside is recognisably the references' car from the front and rear three-quarters (fins, tips,
+  blades, LEDs, carbon, louvres); the side silhouette is unchanged (lower, flatter haunches than the reference's) and
+  the side intake reads smaller; from the game's seat camera the cockpit changes are modest (lines, HUD, slimmer
+  pillar trim): `interior.png` is taken from higher and further back, and most of the new centre stack is under the
+  seat view's frame (it shows on a portrait phone's lower half and in the free-look views). The wheel is the
+  sport-wheel lane's and still differs from the owner's wheel pictures (no hexagonal pad, no silver three-spoke frame,
+  no carbon sections top and bottom).
+
 ## 2026-11-11: A richer digital dashboard and a premium wheel centre
 
 The owner asked for a digital dashboard with more information and a more stylish, premium steering wheel centre, with

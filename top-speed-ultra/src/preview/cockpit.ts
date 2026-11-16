@@ -200,6 +200,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the live clusters (car-dash.ts): the Vela's and the hypercar's wide displays, the Rossinis' side displays
     screenV: once('m.scrV2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.velaDash(q).tex, emissiveIntensity: 0.95, roughness: 0.12 })),
     screenH: once('m.scrH2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.hyperDash(q).tex, emissiveIntensity: 1.0, roughness: 0.12 })),
+    // (G1) the hypercar's portrait console screen (car-dash hyperConsole)
+    consoleScreen: once('m.scrC' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.hyperConsole(q).tex, emissiveIntensity: 0.95, roughness: 0.1 })),
     tach: once('m.tach' + q + P.brand, () => new THREE.MeshStandardMaterial({ map: tachT.map, emissiveMap: tachT.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.85, roughness: 0.55 })),
     screenL: once('m.scrL2' + T.disp + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.rossiniDash(T.disp, q).left.tex, emissiveIntensity: 0.9, roughness: 0.18 })),
     screenR: once('m.scrR2' + T.disp + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.rossiniDash(T.disp, q).right.tex, emissiveIntensity: 0.9, roughness: 0.18 })),
@@ -209,6 +211,19 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     dust: once('m.dust', () => new THREE.MeshBasicMaterial({ map: windscreenDust(1024, 512, 1.53, 1.05, [[0.705, 0.0], [1.365, 0.0]], 0.58), color: 0x6e665e, transparent: true, opacity: 0.13, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })),
   };
   for (const k of ['alc', 'nappa', 'tan', 'tanPerf', 'carpet', 'plastic']) (mats[k] as THREE.Material).side = THREE.DoubleSide;
+  // G1 (the hypercar's graphics pass, 2026-11-15, after the owner's interior reference): white leather bolsters and
+  // armrests with the blue stitching, black Alcantara elsewhere; on 'high' (the game's High and Ultra) every surface
+  // takes the tier's finer maps (car-mats HYPER_MAPS: 1024 px on High, 2048 on Ultra), the carbon its visible weave
+  // under a deep clear coat, the thread a little glow. The 'phone' build (Low, Medium) keeps the shared maps.
+  const g1 = hyper && high;
+  if (hyper) {
+    mats.tan = g1 ? M.leatherG1(0xd4d7dc, { tile: 0.11, sheen: 0.45 }) : M.leather(q, 0xcfd2d7, { tile: 0.12, sheen: 0.45 });
+    (mats.tan as THREE.Material).side = THREE.DoubleSide;
+    if (g1) {
+      mats.alc = M.alcantaraG1(0x1d1d20); mats.tanPerf = M.alcantaraG1(0x19191b, 0.06); mats.nappa = M.leatherG1(0x2a2a2d, { tile: 0.12 });
+      mats.carbon = M.carbonG1(0.05, { cc: 0.035 }); mats.alu = M.brushedG1(0xc6cace); mats.stitch = M.stitchG1(stitchC, 0.35);
+    }
+  }
   // the screen binnacle's display: the Vela's atlas, or the hypercar's own
   const scrK = hyper ? 'screenH' : 'screenV';
   mats.cluster = mats[scrK];   // the driver's display, built as its own mesh (one draw call more) so it can be found by name
@@ -224,6 +239,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.dashTop = T.dash === 'alc' ? mats.alc : mats.nappa;
   mats.band = T.band === 'carbon' ? mats.carbon : mats.alu;
   mats.doorLow = T.door === 'carbon' ? mats.carbon : mats.nappa;
+  // (G1: the hypercar's door cards carbon low down, under a calm clear coat, so at their grazing angle a hand's width
+  // from the eye they don't mirror the sky as the M2 card's gloss did)
+  if (g1) mats.doorLow = M.carbonG1(0.05, { env: 0.3, cc: 0.14 });
   // the sport wheels' Alcantara grips (a shade lighter than the dash's, so the grips and their stitching still read on
   // a phone at night)
   mats.alcW = M.alcantara(q, 0x353539, 0.05);
@@ -276,7 +294,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // header, stays as narrow as the others' and above the seat camera's frame, portrait included)
   const NS = high ? 30 : 18, NT = hyper ? (high ? 28 : 18) : high ? 18 : 10;
   const wsRows: V3[][] = [];
-  for (let i = 0; i <= NT; i++) { const r: V3[] = []; for (let j = 0; j <= NS; j++) r.push(wsPoint(-1 + 2 * (j / NS), i / NT, -0.006)); wsRows.push(r); }
+  // (G1, the hypercar: the frit columns down the screen's sides a quarter of the others' width, 8 mm, so the pillars read slim)
+  const wsU = (j: number) => !hyper || j === 0 || j === NS ? j / NS : 0.25 / NS + (j - 1) * (1 - 0.5 / NS) / (NS - 2);
+  for (let i = 0; i <= NT; i++) { const r: V3[] = []; for (let j = 0; j <= NS; j++) r.push(wsPoint(-1 + 2 * wsU(j), i / NT, -0.006)); wsRows.push(r); }
   {
     const g = gridGeo(wsRows, { flip: true });
     const uv = g.attributes.uv as THREE.BufferAttribute;
@@ -284,7 +304,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const [clear, frit] = splitGrid(g, NT + 1, NS + 1, (i, j) => i === 0 || j === 0 || i === NT - 1 || j === NS - 1 || (!hyper && i >= NT - 3 && Math.abs(j - NS / 2 - 1) <= 1));
     kit.add('glass', clear); kit.add('frit', frit);
     // the dust film, just inside the glass (UV 0..1 across and up, as the dust texture expects)
-    const dRows = wsRows.map((r, i) => r.map((_, j) => wsPoint(-1 + 2 * (j / NS), i / NT, -0.0075)));
+    const dRows = wsRows.map((r, i) => r.map((_, j) => wsPoint(-1 + 2 * wsU(j), i / NT, -0.0075)));
     const d = gridGeo(dRows, { flip: true });
     const duv = d.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i <= NT; i++) for (let j = 0; j <= NS; j++) duv.setXY(i * (NS + 1) + j, j / NS, i / NT);
@@ -334,12 +354,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       kit.add('band', b, null, T.band === 'alu' ? 0.12 : 'keep');
       const l = new THREE.BoxGeometry(x1 - x0, 0.0025, 0.004); l.rotateX(-0.12); l.translate((x0 + x1) / 2, 0.735, -0.655); kit.add('alu', l, null, 0.05);
     };
-    band(-(D - 0.006), -0.64); band(T.binnacle === 'screen' ? 0.06 : -0.1, D - 0.006);
+    band(-(D - 0.006), -0.64); band(T.binnacle === 'screen' ? (hyper ? 0.17 : 0.06) : -0.1, D - 0.006);
     });
   }
   // round vents: brushed bezel, dark throat, five vanes, a knob (and the centre stack under them)
   moved(0, sY, sZ, () => {
-  for (const [x, y, s] of [[-(D - 0.086), 0.705, 0.95], [0.03, 0.7, 1.0], [D - 0.076, 0.705, 0.95]] as [number, number, number][]) {
+  // (G1, the hypercar: no centre vent; its three knurled dials sit there, below)
+  for (const [x, y, s] of ([[-(D - 0.086), 0.705, 0.95], [0.03, 0.7, 1.0], [D - 0.076, 0.705, 0.95]] as [number, number, number][]).filter(([x]) => !hyper || Math.abs(x - 0.03) > 0.01)) {
     const m = mat(x, y, -0.652, -0.12, 0, 0, s);
     kit.add('alu', latheGeo([[0.04, -0.004], [0.046, 0.006], [0.053, 0.011], [0.0565, 0.008], [0.057, -0.004]], high ? 48 : 28, 'z', { flip: true, uRepeat: 1, vScale: 0.05 }), m);
     kit.add('gloss', latheGeo([[0.0405, -0.004], [0.04, -0.05]], 32, 'z', { flip: true }), m, 0.05);
@@ -349,9 +370,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   }
   // centre stack: a carbon panel under the centre vent with three knobs and a hazard switch
   {
-    const p = new RoundedBoxGeometry(0.22, 0.2, 0.014, 2, 0.006); p.rotateX(-0.45); p.translate(0, 0.565, -0.6);
-    kit.add(T.band === 'alu' ? 'gloss' : 'carbon', p);
-    if (T.binnacle === 'screen') {
+    if (!hyper) { const p = new RoundedBoxGeometry(0.22, 0.2, 0.014, 2, 0.006); p.rotateX(-0.45); p.translate(0, 0.565, -0.6); kit.add(T.band === 'alu' ? 'gloss' : 'carbon', p); }
+    if (hyper) { /* (G1: the hypercar's portrait screen and its switches, below) */ }
+    else if (T.binnacle === 'screen') {
       // the Vela's centre touchscreen (the lower part of its display atlas)
       const sc = new THREE.PlaneGeometry(0.19, 0.17); const su = sc.attributes.uv as THREE.BufferAttribute;
       for (let i = 0; i < su.count; i++) su.setXY(i, 0.7 + 0.3 * su.getX(i), su.getY(i) * 0.5);
@@ -381,6 +402,59 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     gaugeAt = { at: v3(0, 0, 0.003).applyMatrix4(gm), normal: v3(0, 0, 1).transformDirection(gm), r };
   }
 
+  // ---------------------------------------------------------------- G1: the hypercar's centre stack, light lines, stitching
+  // (the owner's interior reference of 2026-11-15: three knurled dials at the top of the centre stack, a tall portrait
+  // touchscreen under them in a carbon frame lit round its edge, a row of toggle switches and the start button under
+  // that; ice-blue light lines tracing the dash top, the console and the doors; double blue stitching across the dash.
+  // Everything here moves with the hypercar's lower, forward seat (sY, sZ), as the dash does. The 'phone' build gets the
+  // screen, the dials and the switches, without the extra light lines and stitching.)
+  if (hyper) moved(0, sY, sZ, () => {
+    // the three dials: a knurled aluminium ring round a dark face with an ice ring, tilted to the driver
+    for (const x of [-0.035, 0.045, 0.125]) {
+      const m = mat(x, 0.745, -0.66, -0.18);
+      kit.add('swKnurl', latheGeo([[0.024, 0.0], [0.0265, 0.003], [0.0265, 0.022], [0.024, 0.025]], high ? 48 : 24, 'z', { flip: true, vScale: 0.02 }), m);
+      const f = new THREE.CircleGeometry(0.024, 32); f.translate(0, 0, 0.0252); kit.add('gloss', f, m, 0.05);
+      if (mats.amb) { const ring = new THREE.RingGeometry(0.016, 0.0175, 40, 1); ring.translate(0, 0, 0.0258); kit.add('amb', ring, m); }
+      const tick = new THREE.BoxGeometry(0.0022, 0.009, 0.001); tick.translate(0, 0.0115, 0.0259); kit.add('alu', tick, m, 0.02);
+      const well = latheGeo([[0.031, -0.004], [0.031, 0.0]], 32, 'z', { flip: true }); kit.add('gloss', well, m, 0.05);
+    }
+    // the portrait screen: a carbon frame, the gloss bezel, the screen ('consoleScreen', its own mesh), a glow line
+    // round it; tilted back 0.25 rad, standing on the console's front (moved back for it) up to just under the dials
+    const sm = mat(0.045, 0.585, -0.617, -0.25);
+    const fr = new RoundedBoxGeometry(0.168, 0.248, 0.018, 3, 0.008); fr.translate(0, 0, -0.012); kit.add('carbon', fr, sm);
+    const bz = extrude(roundRect(0.142, 0.21, 0.01), 0.004, 0.0015); bz.translate(0, 0, -0.003); kit.add('gloss', bz, sm, 0.05);
+    const sc = new THREE.PlaneGeometry(0.132, 0.198); sc.translate(0, 0, 0.0016); kit.add('consoleScreen', sc, sm);
+    if (mats.amb) {
+      const o = new THREE.Shape(roundRect(0.152, 0.22, 0.012).getPoints(4)); o.holes.push(new THREE.Path(roundRect(0.146, 0.214, 0.011).getPoints(4)));
+      const gl = new THREE.ShapeGeometry(o, 4); gl.translate(0, 0, 0.0012); kit.add('amb', gl, sm);
+    }
+    // the toggle switches (five, in a gloss strip) and the start button under the screen
+    const tm = mat(0.045, 0.548, -0.535, -1.0);
+    const strip = new RoundedBoxGeometry(0.17, 0.05, 0.012, 2, 0.005); strip.translate(0, 0, -0.006); kit.add('gloss', strip, tm, 0.05);
+    for (let k = 0; k < 5; k++) {
+      const x = -0.064 + k * 0.032, base = new RoundedBoxGeometry(0.02, 0.026, 0.006, 2, 0.002); base.translate(x, 0, 0.002); kit.add('carbon', base, tm, 0.05);
+      const lever = new RoundedBoxGeometry(0.008, 0.02, 0.012, 2, 0.003); lever.rotateX(0.35); lever.translate(x, 0.003, 0.009); kit.add('alu', lever, tm, 0.02);
+      if (mats.amb && high) { const dot = new THREE.PlaneGeometry(0.006, 0.0018); dot.translate(x, -0.0105, 0.0052); kit.add('amb', dot, tm); }
+    }
+    const bm = mat(0.045, 0.548, -0.47, -1.1);
+    kit.add('alu', latheGeo([[0.019, -0.006], [0.021, 0.0], [0.021, 0.008], [0.019, 0.01]], 32, 'z', { flip: true, vScale: 0.02 }), bm);
+    const cap = new THREE.CircleGeometry(0.0175, 32); cap.translate(0, 0, 0.0102); kit.add('start', cap, bm);
+    if (mats.amb) { const ring = new THREE.RingGeometry(0.0185, 0.0195, 40, 1); ring.translate(0, 0, 0.0104); kit.add('amb', ring, bm); }
+    if (!high || !mats.amb) return;
+    // light lines: along the dash top's crest (a contour 8 cm in from the glass), down each side of the console,
+    // round the cluster's plinth; double blue stitching along the dash top's seam
+    const crest = range(-(D - 0.03), D - 0.03, 48).map((x) => v3(x, 0.8635, -0.8));
+    kit.add('amb', ambLine(crest, v3(0, 0.15, 1).normalize(), 0.0035));
+    for (const sd of [-1, 1]) {
+      const cl = range(0, 1, 16).map((t) => v3(sd * 0.087, lerp(0.47, 0.3, t), lerp(-0.46, 0.05, t)));
+      kit.add('amb', ambLine(cl, v3(0, 1, 0.4).normalize(), 0.003));
+    }
+    for (const off of [-0.0032, 0.0032]) {
+      const path = xs.filter((x) => Math.abs(x) < D - 0.02).map((x) => v3(x, 0.8605 + 0.0005, -0.74 + off));
+      kit.add('stitch', stitchRow(path, path.map(() => v3(0, 0, 1)), path.map(() => v3(0, 1, 0))));
+    }
+  });
+
   // ---------------------------------------------------------------- the binnacle: tach, two displays, the cowl
   const clM = mat(-0.37 + sX, 0.835 + sY, -0.62 + sZ, -0.41);
   if (T.binnacle === 'screen') {
@@ -393,6 +467,15 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
     scr.translate(0, 0, -0.0018); kit.add('cluster', scr, vM);   // the driver's display: its own mesh, named 'cluster'
+    // (G1, the hypercar: a glass cover over the display that takes the cabin's reflections, and an ice-blue line lit
+    // round the bezel's edge)
+    if (hyper) {
+      const gl = new THREE.PlaneGeometry(0.625 * ds, 0.155 * ds); gl.translate(0, 0, -0.0006); kit.add('gaugeGlass', gl, vM);
+      if (mats.amb) {
+        const o = new THREE.Shape(roundRect(0.648 * ds, 0.176 * ds, 0.02).getPoints(4)); o.holes.push(new THREE.Path(roundRect(0.64 * ds, 0.168 * ds, 0.018).getPoints(4)));
+        const eg = new THREE.ShapeGeometry(o, 4); eg.translate(0, 0, -0.0024); kit.add('amb', eg, vM);
+      }
+    }
     const plinth = new RoundedBoxGeometry(0.34 * ds, 0.07, 0.1, 3, 0.02); plinth.translate((hyper ? -0.37 : -0.17) + sX, 0.81 + dy + sY, -0.68 + sZ); kit.add(hyper ? 'carbon' : 'nappa', plinth);
     ghost.push(bez.clone().applyMatrix4(vM));
   } else {
@@ -588,9 +671,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const pw = wsPoint(sd, Math.min(1, t), -0.006), ps = sgInner(0, Math.min(1, t), sd, 0.008);
       const mid = pw.clone().lerp(ps, 0.5), D = CENTRE.clone().sub(mid).normalize();
       const r: V3[] = [];
-      for (const u of range(-0.12, 1.12, 10)) {
+      // (G1, the hypercar: a slim pillar, its trim standing 1 cm into the cabin instead of 3.8 and wrapping 3 mm round
+      // the glass instead of 1 cm: its pillar runs a hand's width from the driver's eye, where the old one read as a
+      // black slab across the top left of the seat view)
+      const [uo, bulge, base0] = hyper ? [0.04, 0.006, 0.004] : [0.12, 0.03, 0.008];
+      for (const u of range(-uo, 1 + uo, 10)) {
         const b = Math.sin(Math.PI * clamp(u, 0, 1));
-        r.push(pw.clone().lerp(ps, clamp(u, 0, 1)).addScaledVector(D, 0.008 + 0.03 * b + (u < 0 || u > 1 ? -0.004 : 0)).addScaledVector(pw.clone().sub(ps).normalize(), u < 0 ? -u * 0.08 : u > 1 ? -(u - 1) * 0.08 : 0));
+        r.push(pw.clone().lerp(ps, clamp(u, 0, 1)).addScaledVector(D, base0 + bulge * b + (u < 0 || u > 1 ? -0.004 * (base0 / 0.008) : 0)).addScaledVector(pw.clone().sub(ps).normalize(), u < 0 ? -u * 0.08 : u > 1 ? -(u - 1) * 0.08 : 0));
       }
       rows.push(r);
     }
@@ -666,7 +753,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // its trim: its grid has twice the columns, so the frit is the others' width)
   for (const sd of [-1, 1] as const) {
     const nu = (high ? 22 : 12) * (hyper ? 2 : 1), nv = high ? 9 : 5, rows: V3[][] = [];
-    for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(sgInner(j / nu, i / nv, sd)); rows.push(r); }
+    // (G1, the hypercar: the frit column along the glass's front edge, beside the A-pillar, a quarter of the others' width)
+    const sgU = (j: number) => !hyper || j === 0 ? j / nu : 0.25 / nu + (j - 1) * (1 - 0.25 / nu) / (nu - 1);
+    for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(sgInner(sgU(j), i / nv, sd)); rows.push(r); }
     const [clear, frit] = splitGrid(gridGeo(rows, { flip: sd > 0 }), nv + 1, nu + 1, (i, j) => i === nv - 1 || j === 0 || j === nu - 1);
     kit.add('sideGlass', clear); kit.add('frit', frit);
   }
@@ -792,9 +881,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // (the hypercar's console: narrower between its closer seats, and lower with them)
     const cw = hyper ? 0.7 : 1, w = kit.warp;
     if (hyper) kit.warp = (p) => { p.x *= cw; p.y += seatY; p.z += sZ; return true; };
-    const con = new RoundedBoxGeometry(0.24, 0.36, 1.0, 3, 0.03); con.translate(0, 0.27, -0.13); kit.add('nappa', con);
-    const lid = new RoundedBoxGeometry(0.21, 0.014, 0.94, 2, 0.005); lid.translate(0, 0.452, -0.13); kit.add('carbon', lid);
-    const bridge = new RoundedBoxGeometry(0.08, 0.04, 0.3, 4, 0.016); bridge.translate(0, 0.475, -0.38); kit.add('alu', bridge);
+    // (G1: the hypercar's console starts 6 cm further back, under its portrait screen and switches)
+    const cb = hyper ? 0.06 : 0;
+    const con = new RoundedBoxGeometry(0.24, 0.36, 1.0 - cb, 3, 0.03); con.translate(0, 0.27, -0.13 + cb / 2); kit.add('nappa', con);
+    const lid = new RoundedBoxGeometry(0.21, 0.014, 0.94 - cb, 2, 0.005); lid.translate(0, 0.452, -0.13 + cb / 2); kit.add('carbon', lid);
+    const bridge = new RoundedBoxGeometry(0.08, 0.04, 0.3, 4, 0.016); bridge.translate(0, 0.475, -0.38 + cb); if (!hyper) kit.add('alu', bridge);
     kit.warp = w;
     const floor = new THREE.PlaneGeometry(1.74, 1.6); floor.rotateX(-Math.PI / 2); floor.translate(0, 0.12 + floorY, -0.25); kit.add('carpet', floor);
     const toe = new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27 + floorY, -1.12); kit.add('carpet', toe);
@@ -885,6 +976,20 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const outside = new THREE.Group(); outside.name = 'body'; group.add(outside);
   bk.build(mats, outside, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'dark' });
   for (const k of ['glass', 'sideGlass', 'gaugeGlass', 'dust']) { const m = group.getObjectByName(k); if (m) { m.renderOrder = k === 'dust' ? 4 : 2; m.castShadow = false; } }
+  // (G1, the hypercar on High and Ultra) the head-up display: the speed and the next turn reflected in the windscreen
+  // low in the driver's view, just over the nose (centred 11 degrees under the eye line, 13 x 4 degrees: over the
+  // first few metres of road, clear of the lanes ahead), ice blue, added to the glass (black is clear)
+  if (hyper && high) {
+    const sAt = clamp(eye.x / WS.xb, -1, 1), dir = v3(0, -Math.tan(11 * Math.PI / 180), -1).normalize();
+    // where that line of sight meets the windscreen: step along it (from under the glass) until it reaches the glass
+    let hp = eye.clone().addScaledVector(dir, 0.85);
+    for (let k = 1; k < 400; k++) { const p = eye.clone().addScaledVector(dir, k * 0.005); const tt = (p.z - WS.zb) / (WS.zt - WS.zb); if (tt < 1 && tt > 0 && p.y >= wsPoint(sAt, tt).y) { hp = p; break; } }
+    const hudM = once('m.hud', () => new THREE.MeshBasicMaterial({ map: DS.hyperHud().tex, color: 0xffffff, transparent: true, opacity: 0.62, blending: THREE.AdditiveBlending, depthWrite: false, fog: false, toneMapped: false }));
+    const d = hp.distanceTo(eye) - 0.012, w = 2 * d * Math.tan(6.5 * Math.PI / 180);
+    const hud = new THREE.Mesh(new THREE.PlaneGeometry(w, w * 160 / 512), hudM);
+    hud.position.copy(eye).addScaledVector(dir, d); hud.lookAt(eye); hud.name = 'hud-reflection'; hud.renderOrder = 5;
+    group.add(hud);
+  }
   // names the HUD and the suite look for: the cluster (the driver's display, or the tach's face) and the windscreen
   { const t = T.binnacle === 'tach' ? group.getObjectByName('tach') : null; if (t) t.name = 'cluster'; const w = group.getObjectByName('glass'); if (w) w.name = 'windscreen'; }
 
@@ -937,12 +1042,14 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // redrawn only when what it shows changed. The hypercar's and the Vela's wide displays, or the Rossinis' tach window
   // and two side displays.
   const dash = DS.dashReadout();
-  const painters: DS.DashPainter[] = hyper ? [DS.hyperDash(q)] : T.binnacle === 'screen' ? [DS.velaDash(q)] : rossini ? [rossini.window, rossini.left, rossini.right] : [];
+  // (G1, the hypercar: the console's portrait screen, and on High and Ultra the windscreen's head-up display, each
+  // looked at as often as the cluster)
+  const painters: DS.DashPainter[] = hyper ? [DS.hyperDash(q), DS.hyperConsole(q), ...(high ? [DS.hyperHud()] : [])] : T.binnacle === 'screen' ? [DS.velaDash(q)] : rossini ? [rossini.window, rossini.left, rossini.right] : [];
   // one display a tick, in turn: each is looked at dashEvery apart, never two on the same frame (a redraw and its
   // texture upload each), so the Rossinis' three don't stack their work on one frame
   const dashEvery = high ? 1 / 15 : 1 / 8, dashStep = dashEvery / Math.max(1, painters.length);
   let dashT = 1, dashI = 0;
-  group.userData.dash = hyper ? { main: painters[0] } : T.binnacle === 'screen' ? { main: painters[0] } : rossini;
+  group.userData.dash = hyper ? { main: painters[0], console: painters[1], ...(painters[2] ? { hud: painters[2] } : {}) } : T.binnacle === 'screen' ? { main: painters[0] } : rossini;
   // the sport wheel's displays: the latest profile, gear, TCS, tank and tune, looked at 10 times a second and drawn
   // only when one of them changed (wheel-sport wheelDials)
   const wd = { t: 1 };

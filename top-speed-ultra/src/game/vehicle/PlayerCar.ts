@@ -22,6 +22,7 @@ import type { DashReadout } from '../../preview/car-dash';
 import { buildDriverArms, DriverArms, HandPose } from '../../preview/hands';
 import { addWheel, type WheelStyle } from '../../preview/car-wheel';
 import { Kit, mat } from '../../preview/car-kit';
+import { setHyperTier, type HyperTier } from '../../preview/car-mats';
 import { bodyFor } from '../../preview/car-body';
 import type { CarBody } from '../../preview/car-body';
 import { CarId, shapeFor, rearR, seatOffset } from '../../preview/car-shape';
@@ -45,7 +46,9 @@ export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
 // finish: a store paint's finish (gloss, metallic, satin, pearl); null or absent is the car's factory metallic flake
 // wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
-export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
+// tier (G1): the OC Hypercar's surface-map tier on the 'high' build, 'hd' (the game's High) or 'ultra' (car-mats
+// setHyperTier); a change rebuilds the car and its cockpit. Other cars ignore it.
+export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle; tier?: HyperTier }
 // paused: the game is paused (the hands' off-wheel blend and wave hold still)
 // handling, tank and tcs feed the sport steering wheel's displays: the handling value (its profile on the left dial),
 // the hypercar's Thrust tank (0..1) and whether the traction control is on (the right dial)
@@ -109,6 +112,8 @@ export class PlayerCar {
   private prev = { x: 0, y: 0, z: 0, psi: 0 };
   private cur = { x: 0, y: 0, z: 0, psi: 0 };
 
+  // the renderer's maximum anisotropy, for the hypercar's G1 maps (Game sets it)
+  maxAniso = 16;
   constructor() {
     this.root.rotation.order = 'YXZ';
     // A narrow, soft cone aimed a touch above level: the road under the bumper sits outside it, so the beams reach
@@ -145,7 +150,9 @@ export class PlayerCar {
   // build what changed
   configure(c: CarConfig) {
     const o = this.cfg;
-    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
+    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors || (c.car === 'oc-hyper' && c.quality === 'high' && (o.tier ?? 'hd') !== (c.tier ?? 'hd'));
+    // (G1: the hypercar's map tier, set before it is built; the other tier's maps are freed)
+    if (carChanged) setHyperTier(c.tier ?? 'hd', this.maxAniso);
     const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
     const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
