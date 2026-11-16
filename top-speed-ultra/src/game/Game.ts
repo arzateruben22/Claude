@@ -23,7 +23,7 @@ import { CAR_IDS, shapeFor } from '../preview/car-shape';
 import type { CarId } from '../preview/car-shape';
 import { buildReveal, RevealStage, RevealKind, REVEAL_SECONDS, WAKE_ONLY_SECONDS } from '../preview/reveal';
 import { WAKE } from '../preview/car-wake';
-import { FOUNDER_CAR, FOUNDER_UNTIL, GLACIER_SILVER, FOUNDER_ICE, founderSerial, plaqueLine, plaqueNumber, finishesFor, paintFor as founderPaint } from './founder';
+import { FOUNDER_CAR, FOUNDER_UNTIL, GLACIER_SILVER, FOUNDER_ICE, founderSerial, setFounderSerial, plaqueLine, plaqueNumber, finishesFor, paintFor as founderPaint } from './founder';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
 import { AudioEngine } from './audio/AudioEngine';
@@ -41,7 +41,7 @@ import type { TrafficCar } from './traffic/Traffic';
 const fmtClock = (t: number) => `${Math.floor(Math.max(0, t) / 60)}:${String(Math.floor(Math.max(0, t) % 60)).padStart(2, '0')}`;
 import { equippedPaint } from '../store/locker';
 import { onStoreChange } from '../store/bus';
-import { syncGarage } from '../store/entitlements';
+import { syncGarage, serialOf } from '../store/entitlements';
 import { VENUES, Venue, VenueExit, VenueRamp, venueByName, venueRamps, toStreet, venueQuality, venueClock } from './venues';
 import { mountVenue, fade } from './onfoot';
 import type { Mounted } from '../onfoot/embed';
@@ -264,10 +264,11 @@ export class Game {
     this.driving = this.carId;
     this.applyDriver();
     syncGarage(this.profile);                                     // a car from the store, outside the slot count
+    setFounderSerial(serialOf('plaque-founder-edition'));         // the plaque's number: the server's, on the entitlement row
     this.applyCarChoice();
     // a store paint equipped or no longer owned; a store car bought, restored on sign-in, refunded or signed out (the
     // car you drive changes on the menu at once, and mid-run at the next start, like the garage)
-    this.offStore = onStoreChange(() => { if (syncGarage(this.profile) && this.attract) this.applyCarChoice(); else this.configureCar(); });
+    this.offStore = onStoreChange(() => { setFounderSerial(serialOf('plaque-founder-edition')); if (syncGarage(this.profile) && this.attract) this.applyCarChoice(); else this.configureCar(); });
     this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
@@ -1475,6 +1476,7 @@ export class Game {
     const best = loadBest(this.mode), newBest = score > best;
     if (newBest) saveBest(this.mode, score);
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
+    const rc = this.runCar(); if (rc.tune) run.tune = rc.tune;      // the hypercar's runs carry their tune (the board marks Unleashed)
     const board = recordRun(run);
     const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
     this.errand = null;

@@ -6,6 +6,9 @@ import type { Mode } from './settings';
 export interface Run {
   mode: Mode; score: number; distance: number; top: number; streak: number; nearMisses: number; overtakes: number;
   collisions: number; when: number; road: string;
+  /** the OC Hypercar's tune for its runs ('Unleashed' in Free Drive, 'Race tune' in Speed Survival); absent for every
+   *  other car. The board marks the Unleashed runs (PROJECT_OC_MONETIZATION.md rule 3a) */
+  tune?: string;
 }
 export interface Leaderboard { mode: Mode; runs: Run[]; rank: number }
 
