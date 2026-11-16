@@ -1,0 +1,415 @@
+{
+ "id": "reality-rulebook-s3p5v3",
+ "fps": 30,
+ "bpm": 112.5,
+ "dur": 49.49,
+ "poster": 0.0,
+ "_doc": "Compiled by build.py from script.md, vo/ and the direction in build.py. Do not edit by hand.",
+ "scene": "../lf01/scene.mjs",
+ "part": 5,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "hook"
+  }
+ ],
+ "beats": [
+  {
+   "id": "body",
+   "t0": 0.0,
+   "t1": 49.49,
+   "line": "vo01",
+   "energy": 0.7
+  }
+ ],
+ "cue": {
+  "cuts": {
+   "hook": 0.0
+  }
+ },
+ "spine": [
+  {
+   "t0": 1000000.0,
+   "t1": 2000000.0,
+   "label": ""
+  }
+ ],
+ "spineAt": [
+  [
+   -1000000000.0,
+   {
+    "16x9": [
+     0.2,
+     0.3
+    ],
+    "9x16": [
+     0.5,
+     0.245
+    ]
+   }
+  ]
+ ],
+ "factorKeys": [
+  [
+   0.0,
+   4.0
+  ]
+ ],
+ "ramp": 1.1,
+ "labelKeys": [
+  [
+   -1000000000.0,
+   "1 real second now lasts 2.8 hours"
+  ]
+ ],
+ "ev": {
+  "fly1": 1000000000.0,
+  "fly2": 1000000000.0,
+  "fly3": 1000000000.0,
+  "fly4": 1000000000.0,
+  "wire": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "bird": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "blur": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "cupfly": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "fly100": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "mosq": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "tapdrop": [
+   1000000000.0,
+   1000000000.0,
+   1000000000.0
+  ],
+  "settle": 1000000000.0,
+  "kernel": {
+   "jump": 1000000000.0,
+   "pop": 1000000000.0,
+   "foamEnd": 1000000000.0
+  },
+  "bubble": {
+   "in": 1000000000.0,
+   "pop": 1000000000.0
+  },
+  "clap": 1000000000.0,
+  "bullet": {
+   "enter": 23.82,
+   "approach": 17.32,
+   "s5": 30.58
+  },
+  "storm": 1000000000.0,
+  "leader": {
+   "t0": 1000000000.0,
+   "stepEvery": 3.0,
+   "steps": 8,
+   "ground": 1000000000.0
+  },
+  "flash8": 1000000000.0,
+  "light9": 1000000000.0,
+  "chip": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "ruler": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "hair": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "pulse": 1000000000.0,
+  "lab": [
+   1000000000.0,
+   1000000000.0
+  ],
+  "back": 1000000000.0,
+  "fades": []
+ },
+ "cam": [
+  {
+   "t": 0.0,
+   "look": [
+    0.8,
+    0.98,
+    -1.0
+   ],
+   "fitW": 1.1,
+   "yaw": 6.0,
+   "pitch": 3.0,
+   "ease": "p2"
+  },
+  {
+   "t": 17.8617,
+   "look": [
+    0.8,
+    0.98,
+    -1.0
+   ],
+   "fitW": 0.3,
+   "yaw": -6.0,
+   "pitch": 3.0,
+   "ease": "p2"
+  },
+  {
+   "t": 22.195,
+   "look": [
+    0.8,
+    0.98,
+    -1.0
+   ],
+   "fitW": 0.3,
+   "yaw": 4.0,
+   "pitch": 3.0,
+   "ease": "sine"
+  },
+  {
+   "t": 25.0926,
+   "look": [
+    0.9,
+    0.98,
+    -1.0
+   ],
+   "fitW": 0.4,
+   "yaw": 5.0,
+   "pitch": 3.0,
+   "ease": "sine"
+  },
+  {
+   "t": 27.1923,
+   "look": [
+    1.1,
+    1.0,
+    -1.0
+   ],
+   "fitW": 1.1,
+   "yaw": -5.0,
+   "pitch": 3.0,
+   "ease": "sine"
+  },
+  {
+   "t": 38.7515,
+   "look": [
+    0.4,
+    1.0,
+    -1.0
+   ],
+   "fitW": 3.0,
+   "yaw": 3.0,
+   "pitch": 3.0,
+   "ease": "p2"
+  }
+ ],
+ "calc": {
+  "c": 299792458.0,
+  "hz": {
+   "hum": 50.0,
+   "fly": 200.0,
+   "mosq": 500.0
+  },
+  "bubble_t": 0.011107207345395914,
+  "bullet": {
+   "v": 850.0,
+   "apple_m": 0.08,
+   "t_s": 9.411764705882353e-05,
+   "slow_1e4_s": 0.9411764705882354,
+   "mach": 2.478134110787172,
+   "table_s": 0.001176470588235294,
+   "table_slow_1e4_s": 11.76470588235294
+  },
+  "sound": 343.0,
+  "leader": {
+   "step_s": 1e-06,
+   "step_m": 50.0,
+   "slow_1e6_step_s": 1.0,
+   "pause_slow_1e6_s": [
+    30.0,
+    50.0
+   ],
+   "descent_s": 0.02,
+   "descent_slow_1e6_s": 20000.0,
+   "descent_slow_1e6_h": 5.555555555555555
+  },
+  "light": 0.29979245800000004,
+  "hair_m": 0.0001
+ },
+ "badges": [
+  {
+   "id": "lab0",
+   "kind": "tag",
+   "text": "Drawn by code \u00b7 model",
+   "t0": 1.0,
+   "t1": 6.0,
+   "slot": "tl"
+  },
+  {
+   "id": "lab1",
+   "kind": "tag",
+   "text": "Drawn by code \u00b7 model",
+   "t0": 40.63,
+   "t1": 43.63,
+   "slot": "tl"
+  }
+ ],
+ "captionY": {
+  "9x16": 0.62,
+  "16x9": 0.77
+ },
+ "title": {
+  "series": "Reality Rulebook \u00b7 Season 3 \u00b7 Part 5 of 8",
+  "title": "A bullet, through an apple, slowly"
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "aiVisuals": true
+ },
+ "drifts": null,
+ "plates": [
+  {
+   "id": "applep",
+   "file": "../lf01/art/owner/plates/plate-06-apple-16x9.png",
+   "file9": "../lf01/art/owner/plates/plate-06-apple-9x16.png",
+   "push": 0.04,
+   "parallax": 0,
+   "fade": 0.3,
+   "shift9": {
+    "x": 0.1391,
+    "ppm": 1790.0
+   },
+   "cam3": {
+    "pos": [
+     0,
+     0.4,
+     0
+    ],
+    "target": [
+     0,
+     0.396,
+     -1
+    ],
+    "fov": 29.5
+   },
+   "anchor": {
+    "rig": {
+     "kind": "apple",
+     "pos": [
+      0.1095,
+      0.3751,
+      -1.0
+     ],
+     "scale": 2.3324,
+     "rotX": 0
+    }
+   },
+   "p9": {
+    "native9": true,
+    "shift": {
+     "x": 0.0,
+     "y": 0.0,
+     "ppm": 2350
+    },
+    "shift9": {
+     "x": 0.0,
+     "y": 0.0,
+     "ppm": 2350
+    },
+    "cam3": {
+     "pos": [
+      0,
+      0.4,
+      0
+     ],
+     "target": [
+      0,
+      0.396,
+      -1
+     ],
+     "fov": 38.9
+    },
+    "anchor": {
+     "rig": {
+      "kind": "apple",
+      "pos": [
+       -0.0002,
+       0.3238,
+       -1.0
+      ],
+      "scale": 1.7553,
+      "rotX": 0,
+      "uvf": {
+       "cx": 470.5,
+       "cy": 836,
+       "ppm": 2350,
+       "w": 941,
+       "h": 1672
+      },
+      "skin": [
+       0.6110520722635494,
+       0.55622009569378,
+       0.05844845908607864,
+       0.07177033492822966
+      ]
+     }
+    }
+   },
+   "t0": 0.0,
+   "t1": 40.63
+  }
+ ],
+ "captions": [],
+ "endShow": 1000000.0,
+ "endCard": 1000000.0,
+ "end": {
+  "title": "Part 5 of *8*",
+  "follow": "Full video on YouTube \u00b7 Follow Reality Rulebook",
+  "foot": "Reality Rulebook \u00b7 Season 3"
+ },
+ "voice": [],
+ "theme": "../theme.json",
+ "_ladder": [
+  [
+   "1\u00d7",
+   "real time",
+   "one apple",
+   0.0,
+   16.04
+  ],
+  [
+   "10,000\u00d7",
+   "slower",
+   "one bullet, one apple",
+   17.24,
+   30.58
+  ],
+  [
+   "50,000\u00d7",
+   "slower",
+   "one bullet, one apple",
+   30.58,
+   40.83
+  ],
+  [
+   "50,000\u00d7",
+   "up next",
+   "a storm",
+   40.83,
+   49.49
+  ]
+ ],
+ "labels": null
+}

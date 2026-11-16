@@ -597,7 +597,7 @@ window.seek = function (t) {
     { const on = r > 0 && r < 0.052, Rs = CAL.sound * r; for (const m of [waveRing, waveFill]) { m.visible = on && sm && !(an && an.proxy); m.position.set(CLAPX, CLAPY, CLAPZ); m.scale.setScalar(Math.max(Rs, 1e-3)); m.lookAt(camera.position); } waveRing.material.opacity = 0.3 * (1 - seg(r, 0.03, 0.052)); waveFill.material.opacity = 0.035 * (1 - seg(r, 0.03, 0.052)); }
     const Rr = CAL.sound * r; WV.uSR1.value = r > 0 ? Rr : -9; WV.uSR2.value = r > 0 ? Rr : -9; WV.uSOn.value = r > 0 && r < 0.052 ? 1 : 0; }
   // the bullet, the apple's spray
-  { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ax = bullet.parent === plateRig ? 0 : APPX, ay = bullet.parent === plateRig ? 0 : APPY, az = bullet.parent === plateRig ? 0 : CUPZ, ap = ax - 0.04, speed = CAL.bullet.v;
+  ((t) => { const Bt = EV.bullet, r = (t - Bt.enter) / 1e4, ax = bullet.parent === plateRig ? 0 : APPX, ay = bullet.parent === plateRig ? 0 : APPY, az = bullet.parent === plateRig ? 0 : CUPZ, ap = ax - 0.04, speed = CAL.bullet.v;
     const x = ap + speed * r - 0.0, show = t >= Bt.approach - 1.0 && t < Bt.enter + 70 && x < 3.4;
     bullet.visible = show && !(Math.abs(x - APPX) < 0.0 && false); bullet.position.set(x, ay, az); cone.visible = show;
     const inRig = bullet.parent === plateRig, L = inRig ? 0.09 : 0.22; coneM.opacity = inRig ? 0.0 : 0.12; if (inRig) cone.visible = false; cone.scale.set(L * Math.tan(HALFANG) * 1.0, L, L * Math.tan(HALFANG) * 1.0); cone.rotation.z = Math.PI / 2; cone.position.set(x - L / 2 - 0.006, ay, az);
@@ -612,7 +612,7 @@ window.seek = function (t) {
       { const P = mistGeo.attributes.position, rx = (t - tEx) / 1e4, rn = rEn - 0.08 / speed - 0.00003; mistPts.visible = rx > 0 || rEn > 0.08 / speed + 0.00001;
         for (let k = 0; k < mistV.length; k++) { const q = mistV[k], r0 = q.back ? Math.max(0, (t - Bt.enter - 0.0) / 1e4 - 0.0 ) : rx; const age = q.back ? Math.max(0, rEn - 0.0) * 0.18 : Math.max(0, rx); const kk = 4, ox = q.back ? -0.04 : 0.04; P.setXYZ(k, ox + q.d[0] * q.sp * age * kk, q.d[1] * q.sp * age * kk, q.d[2] * q.sp * age * kk); void r0; }
         { const C = cloudGeo.attributes.position, age = Math.max(0, rx); cloudPts.visible = rx > 0; for (let k = 0; k < cloudN; k++) { const q = cloudV[k]; const f = (0.4 + 0.6 * (k % 5) / 4) * q.sp * age * 2.4 + 0.0015 * (k % 3); C.setXYZ(k, 0.040 + q.d[0] * f, q.d[1] * f * 0.9, q.d[2] * f * 0.9); } C.needsUpdate = true; cloudPts.material.size = 0.035 + 0.12 * Math.min(1, age / 0.0008); cloudPts.material.opacity = 0.9 * Math.max(0, 1 - age / 0.0011); }
-        P.needsUpdate = true; mistPts.material.opacity = 0.85 * Math.max(0, 1 - Math.max(0, rx) / 0.0009); } appleP.position.set(0, 0, 0); appleU.uExit.value = seg(t, tEx - 0.05, tEx + 0.3); appleU.uEntry.value = seg(t, Bt.enter - 0.05, Bt.enter + 0.25); } }
+        P.needsUpdate = true; mistPts.material.opacity = 0.85 * Math.max(0, 1 - Math.max(0, rx) / 0.0009); } appleP.position.set(0, 0, 0); appleU.uExit.value = seg(t, tEx - 0.05, tEx + 0.3); appleU.uEntry.value = seg(t, Bt.enter - 0.05, Bt.enter + 0.25); } })(EV.bullet.s5 != null && t > EV.bullet.s5 ? EV.bullet.s5 + (t - EV.bullet.s5) / 5 : t);   // a part's second stage can be 5x slower again: the bullet's own clock slows from s5
   // the storm's leader: a step every 3 s (1 s of growth, then a skipped wait), branches, the return stroke
   { const Lt = SL.t0, ground = SL.ground, every = SL.stepEvery; let flashV = 0;
     const retK = seg(t, ground, ground + 30), inL = t >= Lt && t < T.light + 6;
