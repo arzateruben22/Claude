@@ -33,7 +33,7 @@
   },
   {
    "id": "L26",
-   "file": "voice5/wav/L26.wav",
+   "file": "voice6/wav/L26.wav",
    "t": 42.47,
    "dur": 6.64,
    "from": 0.0
@@ -97,15 +97,15 @@
    "spoken": "Just a bright band, horizon to horizon."
   },
   {
-   "t0": 42.67,
-   "t1": 46.93,
-   "text": "The real Moon is still drifting away, 3.8 cm a year.",
+   "t0": 42.505,
+   "t1": 47.2,
+   "text": "The real Moon is still drifting away, an inch and a half a year.",
    "line": "L26",
-   "spoken": "The real Moon is still drifting away, three point eight centimeters a year."
+   "spoken": "The real Moon is still drifting away, an inch and a half a year."
   },
   {
-   "t0": 46.95,
-   "t1": 49.04,
+   "t0": 47.365,
+   "t1": 49.28,
    "text": "Tonight's Moon is fine.",
    "line": "L26",
    "spoken": "Tonight's Moon is fine."
@@ -131,11 +131,11 @@
    17000
   ],
   [
-   45.789,
+   46.029,
    17000
   ],
   [
-   48.79,
+   49.03,
    384400,
    3.0
   ]
@@ -197,11 +197,11 @@
     1
    ],
    [
-    46.75,
+    47.165,
     1
    ],
    [
-    48.95,
+    49.365,
     0
    ]
   ],
@@ -211,11 +211,11 @@
     0
    ],
    [
-    46.75,
+    47.165,
     0
    ],
    [
-    48.95,
+    49.365,
     1
    ]
   ]
@@ -248,6 +248,8 @@
   "fade": 0.3
  },
  "units": "mi",
+ "shadow": false,
+ "tides": false,
  "breathe": true,
  "cta_at": 42.295,
  "cta_frac": 0.715,

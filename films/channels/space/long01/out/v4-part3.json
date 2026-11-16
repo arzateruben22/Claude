@@ -12,17 +12,17 @@
   },
   {
    "id": "L9",
-   "file": "voice5/wav/L9.wav",
+   "file": "voice6/wav/L9.wav",
    "t": 10.42,
-   "dur": 4.62,
+   "dur": 4.43,
    "from": 0.0
   },
   {
    "id": "L9",
-   "file": "voice5/wav/L9.wav",
-   "t": 22.04,
-   "dur": 3.62,
-   "from": 4.62
+   "file": "voice6/wav/L9.wav",
+   "t": 21.85,
+   "dur": 3.81,
+   "from": 4.43
   },
   {
    "id": "L10",
@@ -69,22 +69,22 @@
    "spoken": "The night is getting too bright."
   },
   {
-   "t0": 10.82,
-   "t1": 12.48,
-   "text": "150,000.",
+   "t0": 10.44,
+   "t1": 10.48,
+   "text": "93,000.",
    "line": "L9",
-   "spoken": "One hundred fifty thousand."
+   "spoken": "Ninety-three thousand."
   },
   {
-   "t0": 12.5,
-   "t1": 15.02,
+   "t0": 10.5,
+   "t1": 14.82,
    "text": "6.5× the moonlight.",
    "line": "L9",
    "spoken": "Six and a half times the moonlight."
   },
   {
-   "t0": 22.3,
-   "t1": 25.59,
+   "t0": 22.215,
+   "t1": 24.95,
    "text": "Your shadow is sharp on the sand.",
    "line": "L9",
    "spoken": "Your shadow is sharp on the sand."
@@ -186,8 +186,8 @@
    "kind": "approach"
   },
   {
-   "t0": 15.04,
-   "t1": 22.04,
+   "t0": 14.85,
+   "t1": 21.85,
    "kind": "bright"
   },
   {

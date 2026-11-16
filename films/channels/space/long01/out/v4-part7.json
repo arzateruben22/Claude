@@ -12,21 +12,21 @@
   },
   {
    "id": "L19",
-   "file": "voice5/wav/L19.wav",
+   "file": "voice6/wav/L19.wav",
    "t": 9.12,
    "dur": 7.42,
    "from": 0.0
   },
   {
    "id": "L20",
-   "file": "voice5/wav/L20.wav",
+   "file": "voice6/wav/L20.wav",
    "t": 21.89,
    "dur": 13.51,
    "from": 0.0
   },
   {
    "id": "L21",
-   "file": "voice5/wav/L21.wav",
+   "file": "voice6/wav/L21.wav",
    "t": 40.75,
    "dur": 6.458,
    "from": 0.0
@@ -55,63 +55,63 @@
    "spoken": "There's a distance no moon survives."
   },
   {
-   "t0": 9.5,
-   "t1": 10.5,
-   "text": "30,000.",
+   "t0": 9.14,
+   "t1": 9.18,
+   "text": "19,000.",
    "line": "L19",
-   "spoken": "Thirty thousand."
+   "spoken": "Nineteen thousand."
   },
   {
-   "t0": 10.52,
-   "t1": 10.92,
-   "text": "25.",
+   "t0": 9.2,
+   "t1": 9.21,
+   "text": "16.",
    "line": "L19",
-   "spoken": "Twenty-five."
+   "spoken": "Sixteen."
   },
   {
-   "t0": 10.94,
-   "t1": 11.45,
-   "text": "20.",
+   "t0": 9.23,
+   "t1": 9.67,
+   "text": "12.",
    "line": "L19",
-   "spoken": "Twenty."
+   "spoken": "Twelve."
   },
   {
-   "t0": 22.065,
-   "t1": 26.935,
-   "text": "Around 18,000 km is the Roche limit: where Earth's tides",
+   "t0": 21.91,
+   "t1": 25.7,
+   "text": "Around 11,000 miles is the Roche limit: where Earth's tides",
    "line": "L20",
-   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+   "spoken": "Around eleven thousand miles is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
   },
   {
-   "t0": 26.955,
-   "t1": 30.47,
+   "t0": 25.72,
+   "t1": 29.86,
    "text": "pull harder than the Moon's own gravity holds it together.",
    "line": "L20",
-   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+   "spoken": "Around eleven thousand miles is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
   },
   {
-   "t0": 30.49,
-   "t1": 32.09,
+   "t0": 29.88,
+   "t1": 32.305,
    "text": "That's if the Moon acts like a fluid.",
    "line": "L20",
    "spoken": "That's if the Moon acts like a fluid."
   },
   {
-   "t0": 32.11,
-   "t1": 35.545,
-   "text": "A perfectly rigid Moon could come to about 9,500.",
+   "t0": 32.325,
+   "t1": 35.24,
+   "text": "A perfectly rigid Moon could come to about 6,000.",
    "line": "L20",
-   "spoken": "A perfectly rigid Moon could come to about nine and a half thousand."
+   "spoken": "A perfectly rigid Moon could come to about six thousand."
   },
   {
-   "t0": 40.83,
-   "t1": 45.29,
-   "text": "At 18,000, it's more than 20× wider than tonight.",
+   "t0": 40.87,
+   "t1": 45.0,
+   "text": "At 11,000, it's more than 20× wider than tonight.",
    "line": "L21",
-   "spoken": "At eighteen thousand, it's more than twenty times wider than tonight."
+   "spoken": "At eleven thousand, it's more than twenty times wider than tonight."
   },
   {
-   "t0": 45.31,
+   "t0": 45.02,
    "t1": 47.353,
    "text": "A wall of grey, straining.",
    "line": "L21",
@@ -149,34 +149,34 @@
    42000
   ],
   [
+   7.959,
+   42000
+  ],
+  [
+   8.419,
+   42000
+  ],
+  [
    8.945,
    30000,
    5.5
   ],
   [
-   9.669,
-   30000
-  ],
-  [
-   10.199,
-   30000
-  ],
-  [
-   10.67,
+   8.96,
    25000,
    1.0
   ],
   [
-   11.2,
+   9.42,
    20000,
    1.0
   ],
   [
-   28.719,
+   28.109,
    20000
   ],
   [
-   30.22,
+   29.61,
    18000,
    1.5
   ]
@@ -241,6 +241,8 @@
   "fade": 0.3
  },
  "units": "mi",
+ "shadow": false,
+ "tides": false,
  "breathe": true,
  "cta_at": 54.558,
  "cta_frac": 0.891,

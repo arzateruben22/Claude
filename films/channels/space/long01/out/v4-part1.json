@@ -19,7 +19,7 @@
   },
   {
    "id": "L2",
-   "file": "voice5/wav/L2.wav",
+   "file": "voice6/wav/L2.wav",
    "t": 12.29,
    "dur": 13.44,
    "from": 0.0
@@ -33,17 +33,17 @@
   },
   {
    "id": "L4",
-   "file": "voice5/wav/L4.wav",
+   "file": "voice6/wav/L4.wav",
    "t": 35.95,
-   "dur": 4.67,
+   "dur": 3.77,
    "from": 0.0
   },
   {
    "id": "L4",
-   "file": "voice5/wav/L4.wav",
-   "t": 43.62,
-   "dur": 3.55,
-   "from": 4.67
+   "file": "voice6/wav/L4.wav",
+   "t": 42.72,
+   "dur": 4.45,
+   "from": 3.77
   },
   {
    "id": "D1",
@@ -90,22 +90,29 @@
    "spoken": "And it never stops."
   },
   {
-   "t0": 12.73,
-   "t1": 20.535,
-   "text": "Right now it's about 384,000 km away, drifting off 3.8 cm a year.",
+   "t0": 12.31,
+   "t1": 15.745,
+   "text": "Right now it's about 239,000 miles away,",
    "line": "L2",
-   "spoken": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year."
+   "spoken": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year."
   },
   {
-   "t0": 20.555,
-   "t1": 22.46,
+   "t0": 15.765,
+   "t1": 20.195,
+   "text": "drifting off an inch and a half a year.",
+   "line": "L2",
+   "spoken": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year."
+  },
+  {
+   "t0": 20.215,
+   "t1": 22.645,
    "text": "Tonight, it reverses.",
    "line": "L2",
    "spoken": "Tonight, it reverses."
   },
   {
-   "t0": 22.57,
-   "t1": 25.66,
+   "t0": 22.665,
+   "t1": 25.98,
    "text": "A thought experiment, built from real physics.",
    "line": "L2",
    "spoken": "A thought experiment, built from real physics."
@@ -125,22 +132,22 @@
    "spoken": "It only goes down."
   },
   {
-   "t0": 36.04,
-   "t1": 38.275,
-   "text": "288,000.",
+   "t0": 36.035,
+   "t1": 38.455,
+   "text": "179,000.",
    "line": "L4",
-   "spoken": "Two hundred eighty-eight thousand."
+   "spoken": "One hundred seventy-nine thousand."
   },
   {
-   "t0": 38.295,
-   "t1": 40.5,
+   "t0": 38.475,
+   "t1": 39.69,
    "text": "A third wider.",
    "line": "L4",
    "spoken": "A third wider."
   },
   {
-   "t0": 43.64,
-   "t1": 47.1,
+   "t0": 43.02,
+   "t1": 47.28,
    "text": "And the sea already feels it: more than twice the tidal pull.",
    "line": "L4",
    "spoken": "And the sea already feels it: more than twice the tidal pull."
@@ -172,7 +179,7 @@
   [
    35.775,
    288300,
-   15.22
+   15.56
   ]
  ],
  "tracks": {
@@ -219,8 +226,8 @@
    "kind": "approach"
   },
   {
-   "t0": 40.62,
-   "t1": 43.62,
+   "t0": 39.72,
+   "t1": 42.72,
    "kind": "grow"
   },
   {
@@ -242,9 +249,9 @@
  "cta_frac": 0.85,
  "cliff": "L5",
  "drift": {
-  "a": 12.53,
-  "b": 20.555,
-  "c": 21.955
+  "a": 12.11,
+  "b": 20.215,
+  "c": 21.615
  },
  "camera": [
   {
@@ -253,12 +260,12 @@
    "pv": "moon"
   },
   {
-   "t": 20.555,
+   "t": 20.215,
    "s": 1.0,
    "pv": "moon"
   },
   {
-   "t": 22.555,
+   "t": 22.215,
    "s": 1.12,
    "pv": "moon"
   }
@@ -273,7 +280,7 @@
    "y1": 0.385
   },
   {
-   "t0": 17.23,
+   "t0": 16.81,
    "dur": 0.9,
    "x0": 0.04,
    "y0": 0.3,
