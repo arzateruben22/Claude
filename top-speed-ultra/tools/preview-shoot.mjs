@@ -23,7 +23,9 @@ const dir = path.join(ROOT, 'tests', 'out', 'preview', 'build', name);
 mkdirSync(dir, { recursive: true });
 mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
 const t0 = Date.now();
-await build({ entryPoints: [path.resolve(entry)], bundle: true, format: 'esm', target: 'es2022', outfile: path.join(dir, 'main.js'), logLevel: 'warning', loader: { '.json': 'json' } });
+await build({ entryPoints: [path.resolve(entry)], bundle: true, format: 'esm', target: 'es2022', outfile: path.join(dir, 'main.js'), logLevel: 'warning', loader: { '.json': 'json' },
+  // (the store's build settings read import.meta.env, which only Vite fills in: an empty one here, so test mode)
+  define: { 'import.meta.env': '{}' } });
 // inlined: a module script can't be loaded from file:// (CORS)
 const js = readFileSync(path.join(dir, 'main.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
 writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title></head><body><script type="module">${js}</script></body></html>`);
@@ -33,10 +35,10 @@ const page = await browser.newPage({ viewport: { width: w, height: h } });
 const logs = [];
 page.on('pageerror', (e) => logs.push('pageerror: ' + e.message));
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') logs.push(`${m.type()}: ${m.text()}`); });
+// stop at the first page error rather than waiting out the timeout (listening before the page loads)
+const failed = new Promise((res) => page.on('pageerror', () => res('pageerror')));
 await page.goto(pathToFileURL(path.join(dir, 'index.html')).href + (query ? `?${query}` : ''));
 let ok = true;
-// stop at the first page error rather than waiting out the timeout
-const failed = new Promise((res) => page.on('pageerror', () => res('pageerror')));
 const r = await Promise.race([
   page.waitForFunction(() => window.__previewReady || window.__previewError, null, { timeout, polling: 500 }).then(() => 'ready', () => 'timeout'),
   failed,
@@ -45,7 +47,7 @@ if (r !== 'ready') { ok = false; if (r === 'timeout') logs.push(`timeout: not re
 const err = await page.evaluate(() => window.__previewError ?? null);
 if (err) { ok = false; logs.push('error: ' + err); }
 const info = await page.evaluate(() => window.__stage?.info() ?? null).catch(() => null);
-await page.screenshot({ path: path.resolve(out), timeout: 300000 });
+await page.screenshot({ path: path.resolve(out), timeout });   // (the --timeout: under load a software frame can take minutes)
 await browser.close();
 console.log(JSON.stringify({ ok, out, seconds: Math.round((Date.now() - t0) / 1000), info, logs: logs.slice(0, 20) }));
 process.exit(ok ? 0 : 1);
