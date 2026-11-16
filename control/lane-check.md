@@ -258,3 +258,4 @@ STATE 08:56 UTC: weekly 0.45, 5h 0.07. CAST FX4 repair1 (08:55), THRUST (08:55),
 STATE 09:18 UTC: weekly 0.46, 5h 0.10. CAST FX4 repair1 (09:17), THRUST (09:14), SMOOTH (09:15). round.sh 09:09 pushed cast/smooth/thrust WIP.
 STATE 09:40 UTC: weekly 0.46 (burn slowed ~2 %/h), 5h 0.13. CAST FX4 repair1 (09:35), THRUST (09:38), SMOOTH (09:38).
 STATE 10:01 UTC: weekly 0.47, 5h 0.15. CAST FX4 repair1 (09:58), THRUST (09:59), SMOOTH (09:59).
+STATE 10:23 UTC: weekly 0.48, 5h 0.17. CAST FX4 repair1 (10:14), THRUST (10:17), SMOOTH (10:21).
