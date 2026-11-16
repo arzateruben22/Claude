@@ -6,6 +6,18 @@
 //            forearm (our own badge, no team or brand); the racing gloves are the skin shader's (hands-skin.ts)
 //   'work'   the Wrench: an olive work shirt rolled up past the forearm (a neat roll, turned up twice, with its hem stitch; a felled seam
 //            with its double row of stitching, a twill), the smart watch with its green grip readout on a sport band
+// (2026-11-12, the pack characters; new option values only, the three outfits above are unchanged)
+//   'jacket' a tailored suit jacket's plain wool sleeve with three small buttons at the cuff, over a sliver of the
+//            shirt's cuff (look.cuff: its colour) showing at the wrist
+//   'fur'    an off-the-shoulder faux-fur shrug's sleeve: deep-piled rolls from the middle of the forearm up; the wrist
+//            and the lower forearm bare (the watch and the ring show)
+// (2026-11-12, the six base characters, src/onfoot/cast.ts; new option values only, every outfit above is unchanged)
+//   'workcuff' a canvas work jacket's sleeve down to the wrist: a plain turned hem with an edge stitch, one button, the
+//            felled seam under the arm, no shirt cuff (Mateo)
+//   'blazer' a tailored blazer's plain sleeve to the wrist bone, two small buttons, no shirt cuff showing (Leila)
+//   'short'  a short sleeve ending a few centimetres above the elbow: the forearms and the elbow bare (Marcus)
+//   'bomber' a bomber's plain sleeve gathered into a ribbed knit cuff at the wrist, no patch (Jas)
+//   look.hairTie (a colour): an elastic hair tie on the right wrist, which any outfit can wear (Jas)
 // Everything is built round the arm's actual skin (rays cast into the hand's distance field), in the grip frame G
 // (mm) as the right arm, and mirrored to the left where it's worn there. All of it is skinned to the arm's bones.
 // Cloth seams, stitches, the knit cuff's and the suit's ribs are drawn by the cloth shader from a per-vertex seam coordinate
@@ -16,7 +28,7 @@ import { Anatomy, V3, add, cross, dot, len, madd, mul, norm, perp, sub, lerp3, G
 import { BUMP_GLSL, Quality, rollAt } from './hands-skin';
 import { EYE } from './spec';
 
-export type Outfit = 'shirt' | 'suit' | 'work';
+export type Outfit = 'shirt' | 'suit' | 'work' | 'jacket' | 'fur' | 'workcuff' | 'blazer' | 'short' | 'bomber';
 export function outfitOf(look: DriverLook): Outfit { return look.outfit ?? (look.sleeve === null ? 'work' : look.gloves !== null ? 'suit' : 'shirt'); }
 export function accentOf(look: DriverLook): number { return look.accent ?? (outfitOf(look) === 'suit' ? 0xb9a6ff : outfitOf(look) === 'work' ? 0x7dffa8 : 0xffd166); }
 
@@ -181,7 +193,7 @@ function armFrame(A: Anatomy) {
 }
 
 // ------------------------------------------------------------------------------------------------ sleeves
-interface SleeveSpec { kind: Outfit; color: number; end: number }
+interface SleeveSpec { kind: Outfit; color: number; end: number; /** (jacket's shirt cuff) build only this many mm of it, from its end */ stop?: number }
 interface Station { c: V3; ax: V3; along: number; s: number; up: V3; lat: V3 }
 // the sleeve's surface as built: rings of nT points per station, for draping things on it (the placket, the patch)
 interface SleeveSurf { rings: V3[][]; st: Station[]; nT: number; cuffLen: number; thPk: number }
@@ -206,14 +218,15 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number): Sl
   const upDir = norm(sub(A.shoulder, A.elbow));
   const rnd = (k: number) => Math.sin(seed * 12.9898 + k * 78.233) * 0.5 + 0.5;
   const female = A.scale < 1;
-  const cuffLen = s.kind === 'shirt' ? (female ? 56 : 62) : s.kind === 'suit' ? (female ? 46 : 52) : 0;
+  const cuffLen = s.kind === 'shirt' ? (female ? 56 : 62) : s.kind === 'suit' || s.kind === 'bomber' ? (female ? 46 : 52) : 0;
   // stations along the arm: forearm from the sleeve's end to the elbow (close together through the cuff and the
   // gather above it), then the upper arm to the shoulder
   const st: Station[] = [];
   const start = s.end;
   const mk = (c: V3, ax: V3, along: number): Station => { const up = perp(fu, ax); return { c, ax, along, s: along - start, up, lat: cross(ax, up) }; };
-  for (let a = start; a < elbowAlong; a += a - start < cuffLen + 24 || a < start + 40 ? 4 : 9) st.push(mk(madd(A.wrist, fd, a), fd, a));
-  for (let t = 0; t <= upperLen + 1; t += 14) {
+  const lim = s.stop !== undefined ? Math.min(elbowAlong, start + s.stop) : elbowAlong;
+  for (let a = start; a < lim; a += a - start < cuffLen + 24 || a < start + 40 ? 4 : 9) st.push(mk(madd(A.wrist, fd, a), fd, a));
+  if (s.stop === undefined) for (let t = Math.max(0, start - elbowAlong); t <= upperLen + 1; t += 14) {
     const k = Math.min(1, t / 60), ax = norm(lerp3(fd, upDir, k * k * (3 - 2 * k)));
     st.push(mk(madd(A.elbow, upDir, t), ax, elbowAlong + t));
   }
@@ -244,6 +257,16 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number): Sl
       else if (s.kind === 'suit') { ease = inCuff ? 2.0 + 0.6 * S.s / cuffLen : 4.5 + 6 * Math.min(1, (S.s - cuffLen) / 80); zone = inCuff ? 3 : 0; foldK = inCuff ? 0 : 0.45; }
       // (the rolled sleeve's body starts under the roll: its folds come in over the first 30 mm, or the crook's folds
       // pushed its open end out through the roll as a sharp fin)
+      // (pack) a tailored jacket sleeve: clear of the shirt cuff inside it, few folds; a fur sleeve: deep rolls round
+      // the arm every 58 mm, uneven round it, no cloth folds
+      else if (s.kind === 'jacket') { ease = 6.6 + 6.5 * Math.min(1, S.s / 90); foldK = 0.5 * Math.min(1, S.s / 40); }
+      // (the six) a canvas work sleeve to the wrist; a blazer's sleeve; a short sleeve above the elbow; a bomber's
+      // sleeve over its knit cuff (the knit cuff as the fire suit's, the sleeve fuller and softer above it)
+      else if (s.kind === 'workcuff') { ease = 5.2 + 6.5 * Math.min(1, S.s / 90); foldK = 0.75 * Math.min(1, S.s / 30); }
+      else if (s.kind === 'blazer') { ease = 5.6 + 5.5 * Math.min(1, S.s / 90); foldK = 0.45 * Math.min(1, S.s / 40); }
+      else if (s.kind === 'short') { ease = 5.5 + 3 * Math.min(1, S.s / 40); foldK = 0.6; }
+      else if (s.kind === 'bomber') { ease = inCuff ? 2.0 + 0.6 * S.s / cuffLen : 5 + 8 * Math.min(1, (S.s - cuffLen) / 60); zone = inCuff ? 3 : 0; foldK = inCuff ? 0 : 0.8; }
+      else if (s.kind === 'fur') { ease = 11 + 9 * Math.abs(Math.sin(Math.PI * (S.s + 10) / 58)) * Math.min(1, 0.45 + S.s / 30) + 2.2 * Math.sin(th * 3 + S.s * 0.11 + rnd(6) * 6) + 1.2 * Math.sin(th * 7 - S.s * 0.23); foldK = 0; }
       else { ease = 3.2 + 10 * Math.min(1, S.s / 90); foldK = Math.min(1, S.s / 30) ** 2; }
       // folds: drape and twist up the forearm, crumple in the crook of the elbow, bunching above a cuff
       const crook = Math.exp(-(((S.along - elbowAlong) / 45) ** 2)) * Math.max(0, -Math.cos(th) * 0.8 + 0.4);
@@ -255,10 +278,11 @@ function sleeve(mb: MB, A: Anatomy, s: SleeveSpec, q: Quality, seed: number): Sl
       r = r + ease + fold;
       ring.push(madd(S.c, dir, r));
       uvr.push([(j / nT) * (2 * Math.PI * rRef), S.along]);
-      sh.push(Math.max(0.55, Math.min(1.08, 1 + fold * 0.05 - crook * 0.12 - (bunch ? 0.05 * (0.5 + 0.5 * Math.cos(th * 9 + rnd(5) * 6)) : 0))));
+      const furSh = s.kind === 'fur' ? 0.72 + 0.28 * Math.abs(Math.sin(Math.PI * (S.s + 10) / 58)) : 1;   // the valleys between the rolls darker
+      sh.push(Math.max(0.55, Math.min(1.08, 1 + fold * 0.05 - crook * 0.12 - (bunch ? 0.05 * (0.5 + 0.5 * Math.cos(th * 9 + rnd(5) * 6)) : 0))) * furSh);
       // the seam coordinates: lateral mm to the felled seam, mm to the nearest ring seam (the cuff's edge stitch, the cuff seam)
-      const seamL = s.kind === 'suit' ? 99 : r * angDiff(th, thSeam);
-      const ringSeams = s.kind === 'shirt' ? [3, cuffLen] : s.kind === 'suit' ? [cuffLen] : [];
+      const seamL = s.kind === 'suit' || s.kind === 'jacket' || s.kind === 'fur' || s.kind === 'blazer' || s.kind === 'bomber' ? 99 : r * angDiff(th, thSeam);
+      const ringSeams = s.kind === 'shirt' ? [3, cuffLen] : s.kind === 'suit' || s.kind === 'bomber' ? [cuffLen] : s.kind === 'workcuff' ? [4] : s.kind === 'short' ? [5] : [];
       let seamR = 99; for (const rs of ringSeams) if (Math.abs(S.s - rs) < Math.abs(seamR)) seamR = S.s - rs;
       cl.push([seamL, seamR, S.s, zone]);
     }
@@ -346,6 +370,18 @@ function cuffFastener(mb: MB, S: SleeveSurf, female: boolean, shirt: number) {
     mb.color = shade(lin(shirt), 0.85); mb.rough = 0.7;
     mb.box(madd(c, n, 1.95), mul(norm(add(x, y)), 1.65), mul(norm(sub(x, y)), 0.2), mul(n, 0.16));
     mb.box(madd(c, n, 1.95), mul(norm(sub(x, y)), 1.65), mul(norm(add(x, y)), 0.2), mul(n, 0.16));
+  }
+}
+
+// (pack) a jacket sleeve's three cuff buttons: small dark discs in a row up from the sleeve's end, on the outer side of
+// the wrist
+function sleeveButtons(mb: MB, S: SleeveSurf, female: boolean, count = 3) {
+  mb.bone = 1; mb.w2 = 0;
+  for (let i = 0; i < count; i++) {
+    const along = S.st[0].along + 13 + i * 12.5, { p, n } = onSleeve(S, along, S.thPk);
+    const c = madd(p, n, 0.2), x = perp(S.st[0].ax, n), k = female ? 0.9 : 1;
+    mb.color = [0.035, 0.035, 0.04]; mb.metal = 0; mb.rough = 0.3;
+    mb.lathe(c, n, x, [[0.01, 0], [4.2 * k, 0], [4.6 * k, 0.5], [4.6 * k, 1.2], [3.9 * k, 1.8], [2.4 * k, 1.9], [0.01, 1.75]], 20);
   }
 }
 
@@ -689,18 +725,45 @@ function bangle(mb: MB, A: Anatomy, q: Quality) {
   }
 }
 
+// (the six) an elastic hair tie on the right wrist: one soft loop of fabric-covered elastic, a little proud of the skin,
+// on the wrist itself (8 mm up the arm: below a bomber's knit cuff, which starts at 16 mm), riding a little further up
+// on the back of the wrist
+function hairTie(mb: MB, A: Anatomy, q: Quality, color: number) {
+  const { fd, fu } = armFrame(A);
+  const along = 8, n = q === 'high' ? 64 : 40, m = q === 'high' ? 10 : 6;
+  const up = perp(fu, fd), lat = cross(fd, up);
+  const centre: { p: V3; n: V3 }[] = [];
+  for (let i = 0; i < n; i++) {
+    const th = (i / n) * Math.PI * 2, dir = norm(add(mul(up, Math.cos(th)), mul(lat, Math.sin(th))));
+    const a = along + 3 * Math.cos(th);
+    let r = skinR(A, a, dir); if (r < 0) r = 28;
+    centre.push({ p: madd(madd(A.wrist, fd, a), dir, r + 1.5 + 0.8 * (1 - Math.cos(th)) * 0.5), n: dir });
+  }
+  mb.bone = 1; mb.w2 = 0; mb.color = lin(color); mb.metal = 0; mb.rough = 0.75;
+  const rows: V3[][] = [];
+  for (let i = 0; i <= n; i++) {
+    const c = centre[i % n], t = norm(sub(centre[(i + 1) % n].p, centre[(i - 1 + n) % n].p)), b = cross(t, c.n);
+    const row: V3[] = [];
+    // a flattened tube (2.6 mm along the arm, 1.8 mm thick), slightly crimped where the elastic is gathered
+    const crimp = 1 + 0.08 * Math.sin((i / n) * Math.PI * 2 * 18);
+    for (let j = 0; j < m; j++) { const a = (j / m) * Math.PI * 2; row.push(madd(madd(c.p, c.n, Math.cos(a) * 0.9 * crimp), b, Math.sin(a) * 1.3 * crimp)); }
+    rows.push(row);
+  }
+  mb.grid(rows, true, undefined, true);
+}
+
 // ------------------------------------------------------------------------------------------------ materials
 // the weaves: a height field drawn on a canvas tile of `mm` millimetres, as a colour map (the threads' shading) and a
 // normal map; the sleeve's UVs are in millimetres, so the tile repeats 1/mm times per unit
 interface Weave { map: THREE.Texture; normalMap: THREE.Texture; mm: number }
 let weaveCache: Map<string, Weave> | null = null;
-function weave(kind: 'oxford' | 'twill' | 'ripstop'): Weave {
+function weave(kind: 'oxford' | 'twill' | 'ripstop' | 'fur'): Weave {
   weaveCache ??= new Map();
   const hit = weaveCache.get(kind);
   if (hit) return hit;
   const n = 256, h = new Float32Array(n * n);
   // the tile in mm and the height at (x, y) mm
-  const mm = kind === 'oxford' ? 3.2 : kind === 'twill' ? 4 : 6;
+  const mm = kind === 'oxford' ? 3.2 : kind === 'twill' ? 4 : kind === 'fur' ? 16 : 6;
   const hash = (x: number, y: number) => (Math.sin(x * 12.9898 + y * 78.233) * 43758.5453) % 1;
   for (let yi = 0; yi < n; yi++) for (let xi = 0; xi < n; xi++) {
     const x = (xi / n) * mm, y = (yi / n) * mm;
@@ -716,6 +779,11 @@ function weave(kind: 'oxford' | 'twill' | 'ripstop'): Weave {
       const d = ((x + y) / 1.333) % 1;
       v = 0.3 + 0.7 * Math.pow(Math.sin(d * Math.PI), 1.5);
       v *= 0.85 + 0.15 * Math.sin(((x - y) / 0.5) * Math.PI);
+    } else if (kind === 'fur') {
+      // (pack) a pile: tufts and locks leaning down the sleeve, as sums of waves with whole periods so the tile repeats
+      const u = (x / mm) * Math.PI * 2, w2 = (y / mm) * Math.PI * 2;
+      const lock = Math.sin(u * 3 + 1.7 * Math.sin(w2 * 2)) * Math.sin(w2 * 2 + 0.8 * Math.sin(u * 2)), tuft = Math.sin(u * 9 + 2.2 * Math.sin(w2 * 5 + u)) * Math.sin(w2 * 7 + 1.4 * Math.sin(u * 4));
+      v = 0.5 + 0.28 * lock + 0.2 * tuft + 0.12 * Math.sin(u * 23 + w2 * 3) * Math.sin(w2 * 19);
     } else {
       // ripstop: a fine plain weave with a heavier thread every 6 mm each way
       const fx = Math.sin((x / 0.45) * Math.PI), fy = Math.sin((y / 0.45) * Math.PI);
@@ -730,10 +798,10 @@ function weave(kind: 'oxford' | 'twill' | 'ripstop'): Weave {
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
     const o = (y * n + x) * 4, v = hAt(x, y);
     // the colour: threads lit from above, the dips between them darker (a faint weave, not a checkerboard)
-    const c = 255 * (0.88 + 0.12 * v);
+    const c = 255 * (kind === 'fur' ? 0.62 + 0.38 * Math.min(1, Math.max(0, v)) : 0.88 + 0.12 * v);
     col[o] = col[o + 1] = col[o + 2] = c; col[o + 3] = 255;
     const hx = hAt(x + 1, y) - hAt(x - 1, y), hy = hAt(x, y + 1) - hAt(x, y - 1);
-    const s = kind === 'ripstop' ? 1.4 : 2.2, nx = -hx * s, ny = -hy * s, l = Math.hypot(nx, ny, 1);
+    const s = kind === 'ripstop' ? 1.4 : kind === 'fur' ? 5.5 : 2.2, nx = -hx * s, ny = -hy * s, l = Math.hypot(nx, ny, 1);
     nrm[o] = ((nx / l) * 0.5 + 0.5) * 255; nrm[o + 1] = ((ny / l) * 0.5 + 0.5) * 255; nrm[o + 2] = ((1 / l) * 0.5 + 0.5) * 255; nrm[o + 3] = 255;
   }
   const tex = (d: Uint8Array, srgb: boolean) => {
@@ -763,23 +831,26 @@ function accMaterial() {
 // the felled seam's ridge with its two rows of stitching, the cuff's edge stitch and the cuff seam, the placket's
 // edge stitch, the knit cuff's ribs, the fire suit's ribs round the arm. Thread and stitches
 // fade out where a pixel is wider than a thread, so nothing sparkles from the seat.
-function clothMaterial(color: number, outfit: Outfit, q: Quality) {
-  const kind = outfit === 'shirt' ? 'oxford' : outfit === 'work' ? 'twill' : 'ripstop';
+function clothMaterial(color: number, outfit: Outfit, q: Quality, cuff = 0xf2f2f0) {
+  const kind = outfit === 'shirt' || outfit === 'short' ? 'oxford' : outfit === 'work' || outfit === 'jacket' || outfit === 'workcuff' || outfit === 'blazer' || outfit === 'bomber' ? 'twill' : outfit === 'fur' ? 'fur' : 'ripstop';
   const w = weave(kind);
   // the sheen: a soft cotton halo on the shirts; the fire suit's black stays black (a strong pale sheen greyed it)
-  const sheenC = new THREE.Color(color).lerp(new THREE.Color(1, 1, 1), outfit === 'suit' ? 0.12 : 0.35);
+  const sheenC = new THREE.Color(color).lerp(new THREE.Color(1, 1, 1), outfit === 'suit' || outfit === 'jacket' || outfit === 'blazer' ? 0.12 : 0.35);
   // (the olive twill gets little: a strong pale sheen washed the roll out to a whitish green)
-  const sheen = (outfit === 'suit' ? 0.3 : outfit === 'work' ? 0.25 : 0.7) * (q === 'high' ? 1 : 0.45);
+  const sheen = (outfit === 'suit' || outfit === 'jacket' || outfit === 'blazer' ? 0.3 : outfit === 'work' || outfit === 'workcuff' ? 0.25 : outfit === 'bomber' ? 0.4 : outfit === 'fur' ? 0.4 : 0.7) * (q === 'high' ? 1 : 0.45);   // (fur 0.4, was 1: the perf pairs' slowest frames, 2026-11-12)
   const m = new THREE.MeshPhysicalMaterial({
     // (the display colour as an albedo a touch darker, as the skin does: the pressed white otherwise burnt out flat)
     color: new THREE.Color(0.88, 0.88, 0.88),
-    vertexColors: true, roughness: outfit === 'suit' ? 0.8 : 0.86, metalness: 0, sheen, sheenColor: sheenC, sheenRoughness: 0.55,
-    map: w.map, normalMap: w.normalMap, normalScale: new THREE.Vector2(0.7, 0.7), envMapIntensity: 0.7,
+    vertexColors: true, roughness: outfit === 'suit' ? 0.8 : outfit === 'fur' ? 1 : 0.86, metalness: 0, sheen, sheenColor: sheenC, sheenRoughness: outfit === 'fur' ? 0.9 : 0.55,
+    map: w.map, normalMap: w.normalMap, normalScale: outfit === 'fur' ? new THREE.Vector2(1.2, 1.2) : new THREE.Vector2(0.7, 0.7), envMapIntensity: outfit === 'fur' ? 0.4 : 0.7,
   });
   // the thread: a tone of the cloth on the shirt, grey on the suit, a contrasting tan triple-stitch on the work shirt
-  const thread = new THREE.Color(outfit === 'shirt' ? color : outfit === 'suit' ? 0x45454b : 0xc9a86a);
-  if (outfit === 'shirt') thread.multiplyScalar(0.82);
-  const uniforms = { uThread: { value: thread }, uOutfit: { value: outfit === 'shirt' ? 0 : outfit === 'suit' ? 1 : 2 } };
+  // (pack: the jacket's own cloth has no stitching drawn; the thread is the shirt cuff's, a tone of it; the fur has none)
+  // (the six: the work jacket's and the short sleeve's thread a tone of their cloth; the blazer and the bomber none drawn)
+  const thread = new THREE.Color(outfit === 'shirt' || outfit === 'short' || outfit === 'workcuff' || outfit === 'blazer' || outfit === 'bomber' ? color : outfit === 'suit' ? 0x45454b : outfit === 'jacket' ? cuff : outfit === 'fur' ? color : 0xc9a86a);
+  if (outfit === 'shirt' || outfit === 'jacket' || outfit === 'short') thread.multiplyScalar(0.82);
+  if (outfit === 'workcuff') thread.multiplyScalar(1.35);
+  const uniforms = { uThread: { value: thread }, uOutfit: { value: outfit === 'shirt' || outfit === 'short' ? 0 : outfit === 'suit' ? 1 : outfit === 'jacket' || outfit === 'blazer' ? 3 : outfit === 'fur' ? 4 : outfit === 'bomber' ? 5 : 2 } };
   m.customProgramCacheKey = () => `hands-cloth-${outfit}`;
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, uniforms);
@@ -929,17 +1000,22 @@ function patchTexture(suit: number, accent: number) {
 // ------------------------------------------------------------------------------------------------ assemble
 // The accessories' geometry (sampled from the arm's field, the slow part) is kept per presentation, quality and look;
 // each build clones it, so a second driver with the same look costs only the materials.
-interface AccGeo { cloth: THREE.BufferGeometry | null; patch: THREE.BufferGeometry | null; metal: THREE.BufferGeometry | null; dial: THREE.BufferGeometry | null; glass: THREE.BufferGeometry | null; sleeveFrom: number; outfit: Outfit; sleeveColor: number }
+interface AccGeo { cuff: number; cloth: THREE.BufferGeometry | null; patch: THREE.BufferGeometry | null; metal: THREE.BufferGeometry | null; dial: THREE.BufferGeometry | null; glass: THREE.BufferGeometry | null; sleeveFrom: number; outfit: Outfit; sleeveColor: number }
 const accCache = new Map<string, AccGeo>();
 function accGeometry(o: AccOptions): AccGeo {
   const A = o.anatomy, look = o.look, q = o.quality, outfit = outfitOf(look), accent = accentOf(look);
-  const key = [A.pres, q, look.sleeve, look.gloves, look.watch, look.ring, look.bracelet, o.female, outfit, accent, o.watchTime.join(':')].join('|');
+  const key = [A.pres, q, look.sleeve, look.gloves, look.watch, look.ring, look.bracelet, o.female, outfit, accent, o.watchTime.join(':'), look.cuff ?? '', look.hairTie ?? ''].join('|');
   const hit = accCache.get(key);
   if (hit) return hit;
   const metal = new MB(0, o), dial = new MB(0, o), glass = new MB(0, o), cloth = new MB(0, o), patchMB = new MB(0, o);
   // ---- sleeves
   const color = look.sleeve ?? 0x55603c;
-  const kinds: SleeveSpec = outfit === 'suit' ? { kind: 'suit', color, end: 16 } : outfit === 'shirt' ? { kind: 'shirt', color, end: 52 } : { kind: 'work', color, end: rollAt(o.female) };
+  const cuff = look.cuff ?? 0xf2f2f0;
+  const kinds: SleeveSpec = outfit === 'suit' ? { kind: 'suit', color, end: 16 } : outfit === 'shirt' ? { kind: 'shirt', color, end: 52 }
+    : outfit === 'jacket' ? { kind: 'jacket', color, end: 63 } : outfit === 'fur' ? { kind: 'fur', color, end: Math.round(A.fore * 0.5) }
+    : outfit === 'workcuff' ? { kind: 'workcuff', color, end: 30 } : outfit === 'blazer' ? { kind: 'blazer', color, end: 40 }
+    : outfit === 'short' ? { kind: 'short', color, end: Math.round(A.fore + 60 * (o.female ? 0.9 : 1)) } : outfit === 'bomber' ? { kind: 'bomber', color, end: 16 }
+    : { kind: 'work', color, end: rollAt(o.female) };
   const clothSides = [new MB(0, o), new MB(1, o)], metalSides = [new MB(0, o), new MB(1, o)], patchSides = [new MB(0, o), new MB(1, o)];
   for (let side = 0; side < 2; side++) {
     const mb = clothSides[side];
@@ -947,13 +1023,21 @@ function accGeometry(o: AccOptions): AccGeo {
       // rolled up past the forearm: the sleeve body starts above the roll
       sleeve(mb, A, { ...kinds, end: kinds.end + 12 }, q, side + 1);
       roll(mb, A, kinds.end + 4, kinds.color, q, side + 3);
+    } else if (kinds.kind === 'jacket') {
+      // (pack) the shirt's cuff first (its first 34 mm: the rest is inside the jacket's sleeve), then the sleeve over it
+      sleeve(mb, A, { kind: 'shirt', color: cuff, end: 51, stop: 34 }, q, side + 1);
+      sleeveButtons(metalSides[side], sleeve(mb, A, kinds, q, side + 1), o.female);
+    } else if (kinds.kind === 'fur' || kinds.kind === 'short' || kinds.kind === 'bomber') {
+      sleeve(mb, A, kinds, q, side + 1);
+    } else if (kinds.kind === 'workcuff' || kinds.kind === 'blazer') {
+      sleeveButtons(metalSides[side], sleeve(mb, A, kinds, q, side + 1), o.female, kinds.kind === 'workcuff' ? 1 : 2);
     } else {
       const S = sleeve(mb, A, kinds, q, side + 1);
       if (kinds.kind === 'shirt') { placket(mb, S, kinds.color, q); cuffFastener(metalSides[side], S, o.female, kinds.color); }
       if (kinds.kind === 'suit') patch(patchSides[side], S, o.female, accent);
     }
   }
-  const sleeveFrom = kinds.kind === 'work' ? kinds.end + 30 : kinds.end + 22;
+  const sleeveFrom = kinds.kind === 'work' ? kinds.end + 30 : kinds.kind === 'jacket' ? 51 + 22 : kinds.kind === 'short' ? kinds.end + 28 : kinds.end + 22;
   for (const c of clothSides) cloth.append(c);
   for (const p of patchSides) patchMB.append(p);
   // ---- the watch, ring and bangle
@@ -962,11 +1046,12 @@ function accGeometry(o: AccOptions): AccGeo {
   const metalR = new MB(0, o), glassR = new MB(0, o);
   if (look.ring) { const mL = new MB(1, o), gL = new MB(1, o); ring(mL, gL, A, o.female, q); metalL.append(mL); glassL.append(gL); }
   if (look.bracelet) bangle(metalR, A, q);
+  if (look.hairTie !== undefined && look.hairTie !== null) hairTie(metalR, A, q, look.hairTie);
   metal.append(metalL); metal.append(metalR); for (const m of metalSides) metal.append(m);
   dial.append(dialL); glass.append(glassL); glass.append(glassR);
 
   const g = (mb: MB) => (mb.idx.length ? mb.geometry() : null);
-  const res: AccGeo = { cloth: g(cloth), patch: g(patchMB), metal: g(metal), dial: g(dial), glass: g(glass), sleeveFrom, outfit, sleeveColor: kinds.color };
+  const res: AccGeo = { cuff, cloth: g(cloth), patch: g(patchMB), metal: g(metal), dial: g(dial), glass: g(glass), sleeveFrom, outfit, sleeveColor: kinds.color };
   accCache.set(key, res);
   return res;
 }
@@ -979,7 +1064,7 @@ export function buildAccessories(o: AccOptions): Accessories {
     if (!geo) { mat.dispose(); return; }
     const m = new THREE.SkinnedMesh(geo.clone(), mat); m.name = name; meshes.push(m);
   };
-  mk(G.cloth, clothMaterial(G.sleeveColor, G.outfit, q), 'sleeves');
+  mk(G.cloth, clothMaterial(G.sleeveColor, G.outfit, q, G.cuff), 'sleeves');
   mk(G.patch, new THREE.MeshPhysicalMaterial({ map: patchTexture(G.sleeveColor, accent), vertexColors: true, roughness: 0.78, metalness: 0, sheen: 0.15, sheenColor: new THREE.Color(accent), sheenRoughness: 0.6, envMapIntensity: 0.6 }), 'patch');
   mk(G.metal, accMaterial(), 'metal');
   if (look.watch) {

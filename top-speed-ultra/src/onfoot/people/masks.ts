@@ -36,6 +36,14 @@ export function scalpCover(style: HairStyle, l: V3, age: number, male: boolean) 
   return c;
 }
 
+/** (pack, 2026-11-12) how far a head-local point is above the hairline of scalpCover (m; negative below it), for
+ *  hair that tapers into its edge. The same hairline and recession as scalpCover; the ears are not looked at */
+export function hairlineDepth(style: HairStyle, l: V3, age: number, male: boolean) {
+  const phi = Math.abs(Math.atan2(l[0], l[2] + 0.06));
+  const rec = style === 'receding' ? 1 : male ? clamp((age - 35) / 40) * 0.4 : 0;
+  return l[1] - hairlineY(phi, male) - rec * (0.022 * smooth(1.2, 0.0, phi) + 0.012 * Math.exp(-(((phi - 0.75) / 0.3) ** 2)));
+}
+
 export interface FaceMask { red: number; lip: number; thin: number; blush: number; beard: number; eyeA: number; mouth: number; scalp: number; wrink: number; freck: number }
 
 /** lips: the vermilion above and below the slit, plus their wet inner faces (faceMasks().lip) */
@@ -77,11 +85,13 @@ function beardAt(x: number, y: number, z: number, hf: HeadFrame, look: Look, lip
   // it in front of the lobe, then along the back of the jaw
   const zEar = -0.0625 + 0.0185 * (hf.face.earSize - 1);
   const zBack = zEar + 0.0005 - 0.0075 * smooth(-0.045, -0.062, y);   // (below the lobe it may reach 7.5 mm further back)
-  const back = smooth(zBack, zBack + 0.005, z);
+  // (2026-11-12, the full beard's box at yaw 45 degrees and more: a 5 mm ramp drew the beard's back edge as a hard line
+  // down the front of the ear; now it fades over 10 mm and is full only a centimetre ahead of the ear)
+  const back = smooth(zBack + 0.001, zBack + 0.011, z);
   // the neckline: under the jaw's angle at the back, falling forward to the throat
   const yNeck = -0.091 - 0.032 * smooth(-0.074, -0.026, z);
   const neck = smooth(yNeck - 0.007, yNeck + 0.003, y);
-  const lower = smooth(yLine + 0.004, yLine - 0.004, y) * back * neck;
+  const lower = smooth(yLine + 0.007, yLine - 0.007, y) * back * neck;   // (the cheek line over 14 mm, was 8: no edge across the cheek)
   const must = ax < 0.03 && y > mY + 0.003 && y < -0.046 && z > 0.008 ? smooth(0.03, 0.022, ax) * smooth(mY + 0.003, mY + 0.006, y) * smooth(-0.046, -0.049, y) : 0;
   // the sideburn: from the cheek line up into the scalp's hairline (a bald head's ends at the top of the ear), its
   // front edge 2 cm ahead of the ear at the top and widening into the cheek at the bottom (worked out only where it
