@@ -126,6 +126,19 @@ function splitGrid(g: THREE.BufferGeometry, ni: number, nj: number, isFrit: (i: 
   const ga = g.clone(); ga.setIndex(a); const gb = g.clone(); gb.setIndex(b);
   return [ga, gb];
 }
+// The hypercar's frit, a band of fixed width round the windscreen (sides 20 mm, header 30 mm, base 10 mm) instead of the
+// grid's outer cells: its narrow canopy puts the glass's edge a hand's width from the eye, where a whole 50 mm cell
+// (Low's 18 columns) drew a black A-pillar across a third of the portrait seat view, and the base row stood over the cowl
+// and hid the bonnet (owner, 2026-11-16: "the hood being more presented")
+function slimFrit(wsPoint: (s: number, t: number, off?: number) => V3, WS: { xb: number; xt: number }, nt: number) {
+  const off = -0.0068, hw = (t: number) => WS.xb + (WS.xt - WS.xb) * t, len = wsPoint(0, 0).distanceTo(wsPoint(0, 1));
+  const ts = range(0, 1, nt), ss = range(-1, 1, 24), parts: THREE.BufferGeometry[] = [];
+  parts.push(gridGeo(ts.map((t) => [wsPoint(-1, t, off), wsPoint(-1 + 0.02 / hw(t), t, off)]), { flip: true }));
+  parts.push(gridGeo(ts.map((t) => [wsPoint(1 - 0.02 / hw(t), t, off), wsPoint(1, t, off)]), { flip: true }));
+  parts.push(gridGeo([0, 0.01 / len].map((t) => ss.map((s) => wsPoint(s, t, off))), { flip: true }));
+  parts.push(gridGeo([1 - 0.03 / len, 1].map((t) => ss.map((s) => wsPoint(s, t, off))), { flip: true }));
+  return parts;
+}
 // the reflection of a geometry in a plane (point p0, normal n)
 function reflectMatrix(p0: V3, n: V3) {
   const d = n.dot(p0), m = new THREE.Matrix4();
@@ -281,8 +294,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const g = gridGeo(wsRows, { flip: true });
     const uv = g.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i <= NT; i++) for (let j = 0; j <= NS; j++) uv.setXY(i * (NS + 1) + j, j / NS, i / NT);
-    const [clear, frit] = splitGrid(g, NT + 1, NS + 1, (i, j) => i === 0 || j === 0 || i === NT - 1 || j === NS - 1 || (!hyper && i >= NT - 3 && Math.abs(j - NS / 2 - 1) <= 1));
-    kit.add('glass', clear); kit.add('frit', frit);
+    const [clear, frit] = splitGrid(g, NT + 1, NS + 1, (i, j) => !hyper && (i === 0 || j === 0 || i === NT - 1 || j === NS - 1 || (i >= NT - 3 && Math.abs(j - NS / 2 - 1) <= 1)));
+    kit.add('glass', clear);
+    for (const f of hyper ? slimFrit(wsPoint, WS, NT) : [frit]) kit.add('frit', f);
     // the dust film, just inside the glass (UV 0..1 across and up, as the dust texture expects)
     const dRows = wsRows.map((r, i) => r.map((_, j) => wsPoint(-1 + 2 * (j / NS), i / NT, -0.0075)));
     const d = gridGeo(dRows, { flip: true });
@@ -301,6 +315,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const sh = (pts: [number, number][]): [number, number][] => pts.map(([z, y]) => [z + sZ, y + sY]);
   const dashTop = (x: number): [number, number][] => {
     const [zb, yb] = glassBase(x);
+    // (the hypercar's falls from its crest straight to the glass: from its seat the others' shelf stood over the cowl
+    // and hid the bonnet's rear half)
+    if (hyper) return [[zb, yb], [zb + 0.06, Math.min(yb + 0.004, 0.85 + sY)], ...sh([[-0.78, 0.861], [-0.73, 0.858], [-0.69, 0.847]])];
     return [[zb, yb], [zb + 0.06, Math.min(yb + 0.006, 0.85 + sY)], ...sh([[-0.93, 0.855], [-0.81, 0.861], [-0.73, 0.858], [-0.69, 0.847]])];
   };
   const LIP = sh([[-0.69, 0.847], [-0.674, 0.836], [-0.664, 0.818], [-0.665, 0.795]]);
@@ -385,9 +402,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const clM = mat(-0.37 + sX, 0.835 + sY, -0.62 + sZ, -0.41);
   if (T.binnacle === 'screen') {
     // the Vela's wide display, free-standing over the dash on a leather-wrapped plinth (the hypercar's: the same
-    // display centred on its driver, 12 % smaller and 2 cm lower so the whole screen sits between the rim's top and
-    // the hub from its low seat, on a carbon plinth, with its own screen)
-    const ds = hyper ? 0.88 : 1, dy = hyper ? -0.02 : 0;
+    // display centred on its driver, 12 % smaller and 5 cm lower in the driver's frame so the whole screen sits between
+    // the rim's top and the hub from its seat camera, under the line over the cowl, on a carbon plinth, with its own
+    // screen; 2 cm lower until 2026-11-16, when the driver sat 5 cm lower: in the car it is now 2 cm higher)
+    const ds = hyper ? 0.88 : 1, dy = hyper ? -0.05 : 0;
     const vM = mat((hyper ? -0.37 : -0.17) + sX, 0.862 + dy + sY, -0.635 + sZ, -0.36);
     const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;

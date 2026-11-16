@@ -94,6 +94,7 @@ export interface ShapeParams {
   ventsQ?: [number, number][][];         // louvred vents as quads on the top surface (x, z: inner-front, outer-front, outer-rear, inner-rear; mirrored)
   hoodY?: number;                        // the game's hood camera's height (1.0 m; the hypercar's bonnet sits lower)
   seatX?: number;                        // the seats' |x| (0.37, the shared driver's frame): the driver, the wheel and both seats move to it
+  eyeNudge?: [number, number, number];   // the seat camera only, off this car's eye (x, y, z m): the driver sitting up and leaning in
   seatFwd?: number;                      // how far this car's driver sits ahead of the shared frame: the eye, the wheel, the hands, the
                                          // seats and the dash move forward (-z) by it (seatOffset); the dash's front edge stays on the glass
   deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
@@ -327,15 +328,21 @@ const HYPER: ShapeParams = {
   wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
   // the Corsa's carbon buckets, harnesses and roll hoop with the hypercar's own trim (cockpit.ts 'hyper')
   interior: 'hyper',
-  // the driver sits 0.20 m lower, 0.10 m further in and 0.10 m further forward than the shared frame (eye at
-  // (-0.27, 0.96, 0.0) m; decision 1 in PROJECT_OC_HYPERCAR.md, built to the 1.12 m roof): at the plan's 0.15 m drop
-  // the old header (1.03-1.05 m at the driver's x) lay 2-6 degrees above the eye line, across the road at the
-  // horizon; at 0.20 m there is 0.12 m to the headliner over the eye. Forward, the eye sits under the roof's peak and
-  // looks down more steeply over the fixed cowl (more road over the dash), and the windscreen's top (WS above) lies
-  // 0.09 m ahead of it and 0.13 m above (the header's lip 42 degrees up; the Corsa's is 14), out of the seat camera's
-  // frame. The sheet's occupants sit about 0.25 m off the centreline; M2's 0.27 m is kept (at 0.25 the narrowed
-  // buckets' inner bolsters would sink another 2 cm into the console)
-  sidewall: 0.75, seatDrop: 0.2, seatX: 0.27, seatFwd: 0.1,
+  // the driver sits 0.15 m lower, 0.10 m further in and 0.10 m further forward than the shared frame (eye at
+  // (-0.27, 1.01, 0.0) m; decision 1 in PROJECT_OC_HYPERCAR.md, built to the 1.12 m roof). It was 0.20 m (eye at
+  // 0.96 m) until 2026-11-16, when the owner's iPhone at 207 mph (v19) still showed only the fenders' tips: from 0.96 m
+  // the sunken bonnet falls away at the same 14 degrees as the line over the cowl (0.645 m at the driver's x), so it
+  // drew as a 2-degree sliver ("the hood being more presented"). 0.15 m was the plan's drop; its objection (the old
+  // header 2-6 degrees above the eye line, across the road) went when the windscreen ran up to z -0.10 (WS above),
+  // and the seat camera sits ahead of that header (eyeNudge). The wheel, the hands, the dash's rear and the display
+  // rise with the driver, so the display still reads through the rim; 0.07 m stays to the headliner over the eye.
+  // The sheet's occupants sit about 0.25 m off the centreline; M2's 0.27 m is kept (at 0.25 the narrowed buckets'
+  // inner bolsters would sink another 2 cm into the console)
+  sidewall: 0.75, seatDrop: 0.15, seatX: 0.27, seatFwd: 0.1,
+  // the seat camera, 1 cm higher and 12 cm further forward than that eye (the driver leaning in): the header's lip
+  // (z -0.10) is then over the camera, out of frame both ways up, the left A-pillar's foot leaves the frame's top
+  // left, and the bonnet's rear half and nose stand over the cowl. The hands, wheel and dash stay where they are
+  eyeNudge: [0, 0.01, -0.12],
   // its bonnet is 0.25 m lower than the others': the hood camera comes down 0.15 m so its crests and V stay in frame
   hoodY: 0.85,
   // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps

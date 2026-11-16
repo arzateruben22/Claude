@@ -81,8 +81,9 @@ const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-
 const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const HOP_SAY = 2500;              // a hop refusal's reason stays on the HUD's strip and the car's cluster this long (ms)
 const ARRIVE_M = 80;               // a venue's ramp: how far before the street the fade parks you (the plans' 80 m)
-// the seat view on a portrait screen: its horizontal field of view (degrees) and where the horizon sits (from the top)
-const SEAT_HFOV_P = 50, SEAT_HORIZON_P = 0.37, DEG = Math.PI / 180;
+// the seat view on a portrait screen: its horizontal field of view (degrees), the cap on its vertical base (degrees,
+// before the player's setting and the speed's widening) and where the horizon sits (from the top)
+const SEAT_HFOV_P = 50, SEAT_VMAX_P = 76, SEAT_HORIZON_P = 0.31, DEG = Math.PI / 180;
 // read when it's needed (the Founder Edition's wake-up and reveal), so a change in the system setting is honoured
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -1855,20 +1856,24 @@ export class Game {
       this.car.eye.getWorldPosition(this.wantP);
       this.car.body.getWorldQuaternion(this.wantQ);
       this.tmpV.set(this.head.x, 0, this.head.z).applyQuaternion(this.wantQ); this.wantP.add(this.tmpV);
-      // portrait: aim for a 50-degree horizontal view (Three's fov is vertical, so it follows the aspect, 62..84
-      // degrees, clamped at 84 on tall phones) with the horizon 37% from the top. The old 96 degrees took in a 61-degree
+      // portrait: aim for a 50-degree horizontal view (Three's fov is vertical, so it follows the aspect, 62..76
+      // degrees, clamped at 76 on tall phones) with the horizon 31% from the top. The old 96 degrees took in a 61-degree
       // width at the owner's phone aspect: the door and the flank through the side window crowded the left edge and the
-      // cluster was drawn small mid-screen; this one draws it about 1.25x larger under the road, the door at the edge.
-      // Landscape is unchanged.
-      const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, 84) : 58;
-      // the horizon sits 37% of the way down the part of the screen below the top safe area (the notch or Dynamic
-      // Island when the page runs edge to edge): with a 59 px inset the HUD comes down 59 px and the windscreen with it
+      // cluster was drawn small mid-screen. The cap was 84 until 2026-11-16 (owner, v19 at 207 mph on an iPhone: "the
+      // hood being more presented"): with the default +10 and the speed's +4 that drew 98 degrees, a 56-degree width,
+      // and the bonnet and fenders a sliver at the dash's corners; at 76 the default draws 90 (a 50-degree width) and
+      // the hood 1.1x larger. Landscape is unchanged.
+      const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, SEAT_VMAX_P) : 58;
+      fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
+      // the horizon sits 31% of the way down the part of the screen below the top safe area (the notch or Dynamic
+      // Island when the page runs edge to edge): with a 59 px inset the HUD comes down 59 px and the windscreen with it.
+      // The pitch is aimed with the field of view drawn (the setting and the speed in it), so the horizon stays put
+      // as they change; aimed with the base alone, the default +10 put it at 40% (owner, v19: the top 45% sky)
       const hz = SEAT_HORIZON_P + (1 - SEAT_HORIZON_P) * this.topInsetFrac();
-      const basePitch = portrait ? -Math.atan((0.5 - hz) * 2 * Math.tan((vBase / 2) * DEG)) : -0.085;
+      const basePitch = portrait ? -Math.atan((0.5 - hz) * 2 * Math.tan((fov / 2) * DEG)) : -0.085;
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
-      fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
     } else if (view === 'hood') {
       this.car.hood.getWorldPosition(this.wantP); this.car.root.getWorldQuaternion(this.wantQ);
       this.tmpQ.setFromEuler(this.tmpE.set(-0.04 + c.lookPitch, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);

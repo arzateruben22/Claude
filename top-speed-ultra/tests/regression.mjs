@@ -2659,7 +2659,9 @@ await group('render', async (use) => {
     await frames(page, 3, 240000);
     const warm = (Date.now() - tw) / 1000;
     expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
-    expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 0.96) < 0.005, `the hypercar's eye at ${r.eye.map(fmt)} (want -0.27, 0.96)`);
+    // (the seat camera: the driver's eye at (-0.27, 1.01, 0.0) since 2026-11-16 (0.96 m before), 1 cm up and 12 cm
+    // forward of it, car-shape seatDrop and eyeNudge)
+    expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 1.02) < 0.005 && Math.abs(r.eye[2] + 0.12) < 0.005, `the hypercar's seat camera at ${r.eye.map(fmt)} (want -0.27, 1.02, -0.12)`);
     // (the beam starts on the blade: within 4 cm of a vertex of its lit face, in the car's frame (0.023 m measured; 0.028
     // at b49f7f3), low and outboard, not at the shared default (0.62, 0.55, -2.2). Was z < -2.2 until M1b, whose plan V
     // (PROJECT_OC_HYPERCAR.md, M1b item 1) moved the blade's outer half back about 0.1 m: the beam's point on it is now
@@ -2956,6 +2958,42 @@ function hudBoxesInPage() {
   return { layout: app.dataset.hud, boxes: bx.length, overlaps, outside, labels, has, safe: { l: sa.left, t: sa.top, r: sa.right, b: sa.bottom }, side: document.documentElement.scrollWidth > W };
 }
 
+// in the page: the hood as the seat sees it. A mask render: the car's own body ahead of the cowl (the bonnet, the
+// fenders' crowns and the nose: z < -1.15 m and under 1 m in the car's frame) white, everything else black, the sky's
+// background and the see-through glass left out. The bonnet's share of the frame's pixels, the rows (CSS px) with at
+// least 2 % of the width of it, and the highest of them (from the top, a share of the height)
+function hoodInPage() {
+  const g = window.__game, cam = g.camera, car = g.car, r = g.renderer, gl = r.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
+  car.root.updateMatrixWorld(true); cam.updateMatrixWorld(true);
+  const Basic = car.pool.material.constructor, black = new Basic({ color: 0x000000, fog: false, toneMapped: false });
+  const ext = new Basic({ color: 0xffffff, fog: false, toneMapped: false, side: 2 }), inv = car.body.matrixWorld.clone().invert();
+  ext.onBeforeCompile = (sh) => {
+    sh.uniforms.uInv = { value: inv };
+    sh.vertexShader = 'uniform mat4 uInv; varying vec3 vL;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\nvL = (uInv * modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = 'varying vec3 vL;\n' + sh.fragmentShader.replace('vec4 diffuseColor = vec4( diffuse, opacity );', 'vec4 diffuseColor = (vL.z < -1.15 && vL.y < 1.0) ? vec4(1.0) : vec4(0.0, 0.0, 0.0, 1.0);');
+  };
+  ext.customProgramCacheKey = () => 'suite-hood';
+  const inside = (o, root) => { for (let a = o; a; a = a.parent) if (a === root) return true; return false; };
+  const saved = [], hid = [];
+  g.scene.traverse((o) => {
+    if (!o.visible) return;
+    const m = o.isMesh && (Array.isArray(o.material) ? o.material[0] : o.material);
+    if (o.isMesh && !m.isShaderMaterial && m.depthTest !== false && m.colorWrite !== false && !(m.transparent && m.opacity < 0.95) && !/glass|windscreen|dust/i.test(o.name)) {
+      saved.push([o, o.material]); o.material = inside(o, car.exterior) ? ext : black;
+    } else if (o.isMesh || o.isPoints || o.isLine || o.isSprite) { hid.push(o); o.visible = false; }
+  });
+  const bg = g.scene.background, fog = g.scene.fog; g.scene.background = null; g.scene.fog = null;
+  r.setRenderTarget(null); r.setClearColor(0x000000, 1); r.clear(); r.render(g.scene, cam);
+  const px = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px);
+  for (const [o, m] of saved) o.material = m; for (const o of hid) o.visible = true; g.scene.background = bg; g.scene.fog = fog; black.dispose(); ext.dispose();
+  let n = 0, rows = 0, top = -1;
+  for (let y = H - 1; y >= 0; y--) {
+    let k = 0; for (let x = 0; x < W; x++) if (px[(y * W + x) * 4] > 128) k++;
+    n += k; if (k >= 0.02 * W) { rows++; if (top < 0) top = H - 1 - y; }
+  }
+  return { share: n / (W * H), rows: Math.round(rows * innerHeight / H), top: top < 0 ? null : top / H, fov: +cam.fov.toFixed(1), mph: Math.round(Math.abs(g.phys.vx) * 2.236936) };
+}
+
 // in the page: the driver's sleeves as the seat sees them. The nearest sleeve vertex in view (skinned, camera space)
 // against the near plane and how many in view sit nearer than it; then one frame read from the drawing buffer and a mask
 // render (the sleeves red, everything else black) at the same size: per side of the screen the sleeve pixels'
@@ -3004,7 +3042,7 @@ function sleevesInPage() {
   };
   let cs = 0, cn = 0;
   for (let y = 0; y < Math.floor(H * 0.4); y++) for (let x = 0; x < W; x++) if (!isS(x, y)) { cs += Y((y * W + x) * 4); cn++; }
-  return { L: side(true), R: side(false), cabin: +(cs / Math.max(1, cn)).toFixed(1), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
+  return { L: side(true), R: side(false), frame: W * H, cabin: +(cs / Math.max(1, cn)).toFixed(1), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
 }
 
 await group('phone', async (use) => {
@@ -3137,7 +3175,9 @@ await group('phone', async (use) => {
     await frames(page, 2);
     return sizes.join('; ');
   });
-  // the seat view (HUD_POV_SPEC 5.2): the horizon at 35-40% at 60 mph on I-405 North, the car's own display under the
+  // the seat view (HUD_POV_SPEC 5.2): the horizon at 29-33% at 60 mph on I-405 North (35-40% until 2026-11-16, when the
+  // owner's iPhone at 207 mph showed the top 45% sky: the pitch was aimed with the base field of view, not the one drawn
+  // with his +10, and the horizon sat at 39-40%; now 30.6% on both cars, 6196bd6e 38.7% and 39.0%), the car's own display under the
   // road and above the controls with nothing over it, nothing of the HUD on the windscreen below the horizon; the
   // hypercar's display shows the speed, so the HUD drops its own; the Rossini GT's gauges don't, so it keeps it
   await check('seat view: horizon, cluster and windscreen clear; the duplicate speed only where the car shows none', async () => {
@@ -3149,7 +3189,7 @@ await group('phone', async (use) => {
       // camera was before those 3 s (some 80 m back), so 6 quick frames can leave it a metre or more behind the eye
       await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
       const m = await game(page, hudLayoutInPage);
-      expect(m.horizon >= 0.35 && m.horizon <= 0.4, `${car}: the horizon at ${pct(m.horizon)}`);
+      expect(m.horizon >= 0.29 && m.horizon <= 0.33, `${car}: the horizon at ${pct(m.horizon)}`);
       expect(m.cluster && m.cluster.mid >= 0.53 && m.cluster.bottom <= m.ctlTop && m.cluster.hits.length === 0, `${car}: the cluster ${JSON.stringify(m.cluster)}, controls from ${pct(m.ctlTop)}`);
       expect(m.onGlass.length === 0, `${car}: on the windscreen: ${m.onGlass.join(', ')}`);
       expect(m.speed === (car !== 'oc-hyper'), `${car}: the HUD's speed ${m.speed ? 'shown' : 'hidden'}`);
@@ -3157,6 +3197,29 @@ await group('phone', async (use) => {
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     return out.join('; ');
+  });
+  // the hood from the seat on the owner's iPhone (owner, 2026-11-16, v19 at 207 mph in portrait: "the hood being more
+  // presented"; his frame showed the top 45 % sky, a black A-pillar over the top-left third and only the fenders' white
+  // tips at the dash's corners). The OC Hypercar at 393 x 852, the default +10, cruising (about 125 mph after the 6 s
+  // run-up): the body ahead of the cowl (bonnet, fender crowns, nose) covers at least 1.6 % of the frame and its top row
+  // is above 45 % of the height, with the road over it (6196bd6e: 1.0 %, 53 rows, from 45.0 %; the reframe: 2.0 %,
+  // 82 rows, from 40.3 %)
+  await check('the hood from the seat on an iPhone: bonnet and fenders in view over the cowl', async () => {
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
+    await page.setViewportSize({ width: 393, height: 852 });
+    await game(page, () => {
+      const g = window.__game;
+      g.car.configure({ ...g.car.config, car: 'oc-hyper' }); g.setCam('cockpit'); g.fastForward(6, {}, 89.4); g.setPaused(true);
+    });
+    await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+    await frames(page, 12);
+    const r = await game(page, hoodInPage);
+    await game(page, () => { const g = window.__game; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    const out = `bonnet ${pc(r.share)} of the frame, ${r.rows} rows, from ${pc(r.top ?? 1)} down (fov ${r.fov}, ${r.mph} mph)`;
+    expect(r.share >= 0.016 && r.top !== null && r.top < 0.45, out);
+    return out;
   });
   // the sleeves from the seat on a phone (owner, 2026-11-16, v18 on an iPhone: "The left arm still needs to be fixed",
   // the white shirt sleeve "one oversized, flat, untextured white slab"). The OC Hypercar's seat view at the iPhone's
@@ -3171,6 +3234,10 @@ await group('phone', async (use) => {
   // Also the cabin's sun shade at the arms (hands-sun.ts), for the record.
   // (b2c4cfcc's mean luminance of the Ace's sleeves in this check, measured with it)
   const ACE_MEAN = { straight: { L: 12.3, R: 25.5 }, 'full lock': { L: 25.1, R: 26.9 } };
+  // (SLAB: since the seat camera came up and forward (2026-11-16) the wheel held straight shows the sleeves only at the
+  // frame's edges, 0.4 % and 0.8 % of it (6196bd6e: 2.3 % and 2.7 %), the right one a cuff in full sun with a spread of
+  // 25; at full lock they cover 10.3 % and 5.4 %, and are held to the spread and the detail there)
+  const SLAB = 0.015;
   await check('sleeves from the seat on a phone: in front of the near plane, shaded and creased, not clipped white', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');   // (run on its own with --check)
     await page.setViewportSize({ width: 393, height: 852 });
@@ -3188,12 +3255,14 @@ await group('phone', async (use) => {
       for (const side of ['L', 'R']) {
         const s = r[side];
         if (!s) { fails.push(`${name}: no ${side} sleeve pixels`); continue; }
-        if (s.spread < 30) fails.push(`${name} ${side}: luminance spread ${s.spread}`);
-        if (s.detail < 2.6) fails.push(`${name} ${side}: detail ${s.detail}`);
+        // (a sleeve that shows only as a sliver at the frame's edge can't read as a slab: the spread and the detail are
+        // asked of one that covers at least SLAB of the frame)
+        if (s.px / r.frame >= SLAB && s.spread < 30) fails.push(`${name} ${side}: luminance spread ${s.spread}`);
+        if (s.px / r.frame >= SLAB && s.detail < 2.6) fails.push(`${name} ${side}: detail ${s.detail}`);
         if (s.clip > 0.02) fails.push(`${name} ${side}: ${pc(s.clip)} clipped white`);
       }
       if (r.nearer > 0 || r.margin < 2) fails.push(`${name}: nearest sleeve vertex ${r.minDepth} m (${r.margin}x the near plane), ${r.nearer} nearer than it`);
-      out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
+      out.push(`${name} (wheel ${r.wheel} rad, fov ${r.fov}): nearest ${r.minDepth} m (${r.margin}x near); L ${pc((r.L?.px ?? 0) / r.frame)} of the frame, R ${pc((r.R?.px ?? 0) / r.frame)}; L mean ${r.L?.mean} spread ${r.L?.spread} detail ${r.L?.detail} clip ${r.L?.clip}; R mean ${r.R?.mean} spread ${r.R?.spread} detail ${r.R?.detail} clip ${r.R?.clip}; sun at the arms ${r.sun?.join(',')}`);
     }
     // the Ace's dark fire suit keeps its form: each sleeve's mean luminance at least 3/4 of b2c4cfcc's here, or a spread
     // of 20 (round 1 of the fix took the suit to near black: about 0.4 of b2c4cfcc's mean at full lock)
