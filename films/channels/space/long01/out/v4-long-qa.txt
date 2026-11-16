@@ -1,0 +1,138 @@
+duration 433.39 s OK (long film)
+true peak -1.7 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-long-contact.jpg
+    0.53  caption: 'Tonight, the Moon starts coming closer.'
+          speech : 'Tonight, the moon starts coming closer and it'
+    3.62  caption: 'And it never stops.'
+          speech : 'And it never stops.'
+    6.72  caption: "Right now it's about 384,000 km away, drifting off 3.8 cm a year."
+          speech : "Right now, it's about 384,000 kilometers away, drifting off 3.8 centimeters a year."
+   14.54  caption: 'Tonight, it reverses.'
+          speech : 'Tonight it reverses a'
+   16.56  caption: 'A thought experiment, built from real physics.'
+          speech : 'A thought experiment built from real physics.'
+   20.27  caption: 'Watch the number.'
+          speech : 'Watch the number. It only'
+   21.51  caption: 'It only goes down.'
+          speech : 'It only goes down.'
+   30.03  caption: '288,000.'
+          speech : '288,000.'
+   32.28  caption: 'A third wider.'
+          speech : 'a third wider.'
+   37.63  caption: 'And the sea already feels it: more than twice the tidal pull.'
+          speech : 'and the sea already fills it more than twice the tidal pool.'
+   45.09  caption: 'Halve the distance, and the water starts to climb.'
+          speech : 'Half the distance and the water starts to climb.'
+   56.34  caption: 'Half the distance.'
+          speech : 'Half the distance, twice.'
+   58.23  caption: 'Twice as wide.'
+          speech : 'Twice as wide.'
+   60.26  caption: '8× the tidal pull.'
+          speech : 'eight times the tidal pool.'
+   73.78  caption: 'Not a measured height.'
+          speech : 'not a measured height.'
+   79.89  caption: 'Just the idea: the whole ocean, lifted from above.'
+          speech : 'Just the idea. The whole ocean lifted from above.'
+   91.76  caption: 'And the night is about to change.'
+          speech : 'And the night is about to change.'
+  103.25  caption: '150,000.'
+          speech : '150,000.'
+  104.93  caption: '6.5× the moonlight.'
+          speech : 'six and a half times the moonlight.'
+  114.73  caption: 'Your shadow is sharp on the sand.'
+          speech : 'Your shadow is sharp on the sand.'
+  124.60  caption: "And it's faster."
+          speech : "And it's faster."
+  130.56  caption: 'One lap takes about 7 days, not 27.'
+          speech : 'One lap takes about seven days, not twenty-seven.'
+  143.06  caption: "It's bigger than the Sun now."
+          speech : "It's bigger than the sun now."
+  150.56  caption: 'So what happens when they line up?'
+          speech : 'So what happens when they line up?'
+  160.57  caption: '100,000.'
+          speech : '100,000 nearly 100.'
+  161.66  caption: 'Nearly 4× wider.'
+          speech : 'Nearly four times wider.'
+  168.96  caption: 'Its shadow on Earth is wider, and eclipses come far more often.'
+          speech : 'The shadow on Earth is wider, and eclipses come far more often.'
+  180.72  caption: 'Not every month, because the orbit is tilted.'
+          speech : 'Not every month because the orbit is tilted.'
+  189.09  caption: 'But often.'
+          speech : 'But often.'
+  197.80  caption: 'If that made the sky feel bigger, tap like and subscribe.'
+          speech : 'If that made the sky feel bigger, tap like and subscribe.'
+  201.78  caption: 'Closer.'
+          speech : 'Closer, faster.'
+  202.93  caption: 'Faster.'
+          speech : 'Faster.'
+  208.32  caption: 'And the ground feels it too.'
+          speech : 'And the ground fills it too.'
+  218.68  caption: '70,000.'
+          speech : '70,000'
+  225.81  caption: "More than 160× today's tidal pull."
+          speech : "More than 160 times today's tidal pool."
+  236.19  caption: 'The solid ground already rises and falls tens of centimeters a day.'
+          speech : 'the solid ground already rises and falls tens of centimetres a day.'
+  248.38  caption: 'Here, it would flex far more.'
+          speech : 'Here, it would flex far more.'
+  260.45  caption: 'Soon, the Moon rises on the wrong side of the sky.'
+          speech : 'Soon, the moon rises on the wrong side of the sky.'
+  272.53  caption: '50,000.'
+          speech : 'Fifty thousand nearly'
+  273.82  caption: 'Nearly 8× wider.'
+          speech : 'nearly eight times wider.'
+  279.89  caption: 'One lap takes about a day and a quarter, close to how fast the Earth turns.'
+          speech : 'One lap takes about a day and a quarter close to how fast the Earth turns.'
+  289.57  caption: '42,000.'
+          speech : '42,000. It hangs'
+  291.05  caption: 'It hangs still.'
+          speech : 'It hangs still.'
+  299.12  caption: 'Then it slides the wrong way.'
+          speech : 'Then it slides the wrong way.'
+  309.97  caption: 'It rises in the west.'
+          speech : 'It rises in the west.'
+  325.48  caption: '30,000.'
+          speech : 'Thirty thousand.'
+  326.50  caption: '25.'
+          speech : '25%.'
+  326.92  caption: '20.'
+          speech : 'Twenty five.'  <-- KNOWN recogniser ambiguity, a person should listen: 'Twenty.' in a fast count 30,000 / 25,000 / 20,000; recogniser merges it with 'Twenty-five': LISTEN
+  338.05  caption: "Around 18,000 km is the Roche limit: where Earth's tides"
+          speech : "Around eighteen thousand kilometers is a Roche limit, where Earth's tide"
+  342.94  caption: "pull harder than the Moon's own gravity holds it together."
+          speech : "Earth's tides pull harder than the moon's own gravity holds it together. That's the"
+  346.47  caption: "That's if the Moon acts like a fluid."
+          speech : "That's it, the moon acts like a fluid."
+  348.09  caption: 'A perfectly rigid Moon could come to about 9,500.'
+          speech : 'a perfectly rigged moon could come to about 9,500.'
+  356.81  caption: "At 18,000, it's more than 20× wider than tonight."
+          speech : "At 18,000, it's more than 20 times the wider than tonight."
+  361.29  caption: 'A wall of grey, straining.'
+          speech : 'A wall of grey straining.'
+  370.74  caption: 'And then it does something no Moon should survive.'
+          speech : 'And then it does something no moon should survive.'
+  373.71  caption: 'It comes apart.'
+          speech : 'It comes apart.'
+  374.88  caption: 'Not an explosion.'
+          speech : 'Not an explosion. A stretch.'
+  376.18  caption: 'A stretch.'
+          speech : 'A stretch.'
+  387.86  caption: 'The rock spreads along its old orbit, and over time it can flatten into a ring.'
+          speech : 'The rock spreads along its old orbit, and over time it could flatten into a ring.'  <-- KNOWN recogniser ambiguity, a person should listen: recogniser hears 'could' (script: 'can'), also on his solo take: LISTE
+  402.88  caption: 'No Moon.'
+          speech : 'No moon.'
+  411.89  caption: 'Just a bright band, horizon to horizon.'
+          speech : 'Just a bright band, horizon to horizon.'
+  416.12  caption: 'The real Moon is still drifting away, 3.8 cm a year.'
+          speech : 'The real moon is still drifting away 3.8 centimeters a year tonight.'
+  420.40  caption: "Tonight's Moon is fine."
+          speech : "Tonight's moon is fine."
+  429.11  caption: 'Still looking up?'
+          speech : 'Still looking up? Tap'
+  430.31  caption: 'Tap like and subscribe.'
+          speech : 'Tap like and subscribe.'
+caption = speech: OK
+QA PASS

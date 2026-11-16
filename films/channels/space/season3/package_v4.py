@@ -49,11 +49,11 @@ def fix(s):
     if src_n and src_n != n:
         s = s.replace(f"Part {src_n} of 8", f"Part {n} of 8").replace(f"Part {src_n} of the Moon film", f"Part {n} of the Moon film").replace(f"part{src_n}", f"part{n}").replace(f'"part": {src_n}', f'"part": {n}')
     return s
-if src_n:
+if src_n and not os.environ.get("KEEP_PACK"):
     for f in ("packaging.json", "posting.json", "POSTING.md"):
         p = f"{src_ep}/out/{f}"
         if os.path.exists(p): txt = fix(open(p).read()); open(f"{out}/{f}", "w").write(txt)
-else:
+elif not src_n:
     full = "How Close Can the Moon Get Before It Breaks?"; lab = "Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered."
     hook = "Inside about 18,000 km, tides can pull a Moon apart. The rock can spread into a ring."; take = "Part 8 of the Moon film: what happens at the Roche limit, and why tonight's Moon is fine."
     P = {"generated": "2026-11-16", "part": 8, "of": 8,
