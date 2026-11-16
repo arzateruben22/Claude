@@ -433,7 +433,7 @@ export class PlayerCar {
   // one ray from the middle of the arms up toward the sun, four samples 3 to 25 m along it, each asking whether a
   // street bridge's deck, or another road's surface well over the cabin, lies over that spot between the cabin's roof
   // and the ray's height there (the ray having risen from under the roof to there, a deck over that spot is one it
-  // crossed); any deck found shades every point, eased the same way. (Without it the arms, taking no shadow map, stayed in full sun
+  // crossed); any deck found shades every point, eased four times faster (a 40 ms time constant). (Without it the arms, taking no shadow map, stayed in full sun
   // under an overpass while the cabin and the road went dark.)
   private sunCab = new Float32Array(6).fill(1);
   private sunWorld = 1;
@@ -467,7 +467,9 @@ export class PlayerCar {
         if (decks.overpassAt(x, z, t.c.y + 1.2, t.q.y + 0.5, 0) || decks.pavedAt(x, z, t.c.y + 3, t.q.y + 0.5, null, 0)) { world = 0; break; }
       }
     }
-    this.sunWorld += (world - this.sunWorld) * k;
+    // (the deck's shadow eases far faster than the cabin's: at 178 mph a deck's shadow is crossed in a few tenths of a
+    // second, and at the cabin's 6/s the arms darkened and brightened about 0.3 s behind the dash and the road)
+    this.sunWorld += (world - this.sunWorld) * (instant ? 1 : 1 - Math.exp(-Math.max(0, dt) * 25));
     arms.setSunVisibility(this.sunCab, this.sunWorld);
   }
   /** the sun's visibility at the arms' six sample points (right knuckles, wrist, elbow, then the left's) through the
