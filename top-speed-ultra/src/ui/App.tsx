@@ -11,7 +11,7 @@ import { Game, Result, CORNER_PX } from '../game/Game';
 import type { Hud as HudData } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
+import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, presetFor, retroOn, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -197,8 +197,8 @@ export function App() {
 
   const inMenu = screen === 'menu' && !busy && !error;
   // The graphics check: on this device's first run it starts on its own on the menu (about 5 s, Skip on its card); Settings
-  // runs it again. Its pick becomes the Graphics preset unless the player chose one themselves; asked for from Settings,
-  // the player asked for its pick
+  // runs it again. Run on its own it only measures: the preset stays (Retro Low for a new player, owner 2026-11-16) and
+  // the pick is saved for the governor and Settings' hint. Asked for from Settings, the player asked for its pick
   const runBench = useCallback(async (manual: boolean) => {
     const g = game.current;
     if (!g || g.benchRunning() || !g.inAttract) return;
@@ -208,10 +208,10 @@ export function App() {
     benchCancel.current = null; setBench(null);
     if (!r) return;
     if (r.inconclusive) { toast(`Graphics check: frames sat at ${r.cap ?? 30} fps in every round, so the check couldn't tell (the display may cap them). Your settings stay`, 'info'); return; }
-    const mine = settingsRef.current.qualityChosen && !manual;
-    if (!mine) update({ quality: r.quality, qualityChosen: false });
     const what = `${QUALITY[r.quality].label}${r.scale < 1 ? ` at ${Math.round(r.scale * 100)}% resolution` : ''}${r.target === 30 ? ', a steady 30 fps' : ''}`;
-    toast(mine ? `Graphics check: this device holds ${what}. Your own choice stays` : `Graphics check: ${what}`, 'info');
+    if (manual) { update({ quality: r.quality, qualityChosen: false }); toast(`Graphics check: ${what}`, 'info'); return; }
+    const now = settingsRef.current, cur = presetFor(now).label;
+    toast(`Graphics check: this device holds ${what}. ${now.qualityChosen ? 'Your own choice stays' : `${cur} stays; Settings > Graphics has the rest`}`, 'info');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toast]);
   const skipBench = () => {
@@ -435,14 +435,16 @@ export function App() {
                   <h3 className="sect">Graphics</h3>
                   <div className="field"><label>Look</label><Seg label="Look" value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
                   <div className="field"><label>Graphics</label><Seg label="Graphics" value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q, qualityChosen: true })} /></div>
-                  <p className="fine">{qualityNote(settings.quality)}</p>
+                  <p className="fine">{retroOn(settings) ? RETRO_NOTE : qualityNote(settings.quality)}</p>
                   <GovNow game={game.current} />
+                  <BenchHint quality={settings.quality} />
                   <div className="toggles">
-                    {settings.quality === 'low' && <Toggle label="Style: Retro (preview of the new Low)" value={settings.style === 'retro'} onChange={(v) => update({ style: v ? 'retro' : 'standard' })} />}
+                    {settings.quality === 'low' && <Toggle label="Style: Retro" value={settings.style === 'retro'} onChange={(v) => update({ style: v ? 'retro' : 'standard', qualityChosen: true })} />}
                     <Toggle label="Adaptive quality (holds 60 fps)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                     <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
                     <Toggle label="Show performance" value={settings.showPerf} onChange={(v) => update({ showPerf: v })} />
                   </div>
+                  {retroOn(settings) && settings.adaptive && <p className="fine">On Retro, Adaptive quality waits: it steps the other presets (and Low without Retro), and Retro's picture stays as it is.</p>}
                   <p className="fine">Adaptive quality turns effects down one at a time when frames run long (ambient occlusion first, then shadows, MSAA, bloom, draw distance, scenery, traffic, and resolution last, never under {settings.quality === 'high' || settings.quality === 'ultra' ? 'three quarters' : 'half'} of the preset's), and back up when there's room. Your preset stays your choice.</p>
                   {screen === 'menu' && <div className="row"><button type="button" className="btn" disabled={!!bench} onClick={() => void runBench(true)}>Run graphics check</button></div>}
                   <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
@@ -947,6 +949,15 @@ function GovNow({ game }: { game: Game | null }) {
   return <p className="fine gov-now">Now: <b>{t[0]}</b> · {t[1]}</p>;
 }
 
+// what the graphics check measured on this device (saved by Game.benchmark), as a hint beside the preset: it never
+// picks the preset by itself (a new player starts on Retro Low; owner, 2026-11-16)
+function BenchHint({ quality }: { quality: Quality }) {
+  const b = loadBench();
+  if (!b || b.skipped || b.inconclusive || b.quality === quality) return null;
+  return <p className="fine bench-hint">The graphics check found this device holds {QUALITY[b.quality].label}{b.scale < 1 ? ` at ${Math.round(b.scale * 100)}% resolution` : ''}{b.target === 30 ? ' at a steady 30 fps' : ''}. Pick it above if you want it.</p>;
+}
+
+const RETRO_NOTE = 'The default: Low\'s world in the Retro style, cel-shaded with hard sun shadows, at full resolution; 0.9 km of road.';
 function qualityNote(q: Quality) {
   return {
     low: 'For phones: no shadows or post-processing, 0.9 km of road.',

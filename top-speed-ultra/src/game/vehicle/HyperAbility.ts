@@ -1,14 +1,15 @@
 // The OC Hypercar's own systems (PROJECT_OC_HYPERCAR.md §6), all fed by one compressed-air tank. Our own names:
-//   Cold Thrust (hold THRUST): rear cold-gas thrust, about 2 g more than the tyres give off the line, fading with
-//     speed to a 0.05 g floor.
+//   (Cold Thrust, the hold-to-boost push, is gone: the owner, 2026-11-16: "make the thrust option to only have the
+//     ability to jump over". The THRUST control is the jump alone, and no ability adds speed.)
 //   Ground Lock (automatic): fans that press the car onto the road when the driver asks for more than 0.8 g sideways
 //     or launches hard: 0.8 of the car's weight to 90 mph, falling to 0.3 by 200 mph (where the wing has taken over),
 //     for about 2 g of cornering at low and middle speeds.
-//   Thrust Hop (double-tap THRUST): a short ballistic hop bound to the road, its height and air time chosen to clear
-//     the vehicles ahead in the car's lane. The valve stays shut in the air (the arc is planned at the take-off speed).
+//   Thrust Hop (a tap of THRUST, or J): a short ballistic hop bound to the road, its height and air time chosen to
+//     clear the vehicles ahead in the car's lane (the arc is planned at the take-off speed).
 // Pure logic, no three.js (the headless dynamics harness can drive it). Each step it writes the physics' caller-owned
-// inputs, `ext.fx` (thrust, N) and `ext.fz` (fan suction, N); the hop's arc goes to `CarPhysics.hop`. It is live only
-// for the hypercar on its Unleashed tune in Free Drive; everywhere else the game keeps it off and both forces at zero.
+// inputs: `ext.fz` (fan suction, N), and `ext.fx` (a body force along the car) held at zero, since nothing pushes the
+// car along any more; the hop's arc goes to `CarPhysics.hop`. It is live only for the hypercar on its Unleashed tune in
+// Free Drive; everywhere else the game keeps it off and both forces at zero.
 
 import { clamp, lerp, smoothstep } from '../util';
 import type { Controls } from '../input';
@@ -18,21 +19,13 @@ import { IDM } from '../traffic/limits';
 
 const G = 9.81;
 export const TANK = {
-  fullS: 6,               // seconds of full thrust in a full tank (the valve's flow, whatever the speed)
   recharge: 1 / 12,       // per second while driving above 5 m/s (the compressor)
   rechargeBrake: 1 / 6,   // per second under braking (the compressor on regen)
-  minStart: 0.1,          // the valve opens only with this much in the tank
   lockCost: 0.03,         // per second of Ground Lock at full spin
   lockMin: 0.05,          // Ground Lock stops below this
   hopNeed: 0.4, hopCost: 0.35,   // the least a hop asks for, and the old 1.5 m hop's cost (hopCostFor scales it with the arc)
   bar: 700,               // the pressure gauge's full scale
 };
-// Cold Thrust's push at full valve (m/s²): 2.6 g of the car's weight at a standstill, about 2 g at 60 mph, gone by
-// 180 mph but for a 0.05 g floor. Under that much acceleration the load moves onto the rear axle: the front unloads and
-// the traction control trims the drive to what it can still take, so the car nets about 2 g more than on its tyres
-// and fans alone at launch (measured in Arcade: 1.86 g from 5 to 10 m/s, 1.55 g from 10 to 15, 1.3 g by 20 m/s): the
-// design's "about 2 g extra", fading with speed.
-export const thrustAccel = (v: number) => G * (2.6 * (1 - smoothstep(0, 80, v)) + 0.05);
 // Ground Lock's suction at full spin (N): fan-car levels, 0.8 of the car's weight (tyre load sensitivity takes back part
 // of each newton; this is what reaches about 2 g at 25 m/s), easing to 0.3 between 90 and 200 mph
 export const fanLoad = (mass: number, v: number) => mass * G * lerp(0.8, 0.3, smoothstep(40.2, 89.4, v));
@@ -84,7 +77,7 @@ function closeIn(gap: number, vc: number, a: number) {
   return t > 0 ? t : Infinity;
 }
 // the same for a vehicle at speed v braking at `b` until it stops (a parked car can't come back toward the car); `ad`:
-// the car's own slowing in the air (its drag: the valve is shut up there), which takes from the closing speed
+// the car's own slowing in the air (its drag: nothing pushes it up there), which takes from the closing speed
 function closeInBraking(gap: number, vc: number, b: number, v: number, ad = 0) {
   const t = closeIn(gap, vc, b - ad), ts = Math.max(0, v) / b;
   if (t <= ts) return t;
@@ -243,19 +236,17 @@ export function planHop(vx: number, halfL: number, halfW: number, cars: HopVehic
 
 export class HyperAbility {
   live = false;           // the hypercar on its Unleashed tune in Free Drive (latched at run start)
-  tank = 1;               // 0..1 (0..700 bar)
-  thrust = 0;             // the valve's opening, 0..1
+  tank = 1;               // 0..1 (0..700 bar): the hop's gas and Ground Lock's
   fan = 0;                // the fans' spin, 0..1
   lock = false;           // Ground Lock commanded
   demand = 0;             // the lateral g the wheel angle asks for (what Ground Lock watches)
   charging = false;       // the compressor is filling the tank (for its hum)
-  // edges for the sound and the HUD: counts that only go up (the valve opening, the tank reaching full)
-  valveOpens = 0; fulls = 0;
-  private open = false;
+  // an edge for the sound: a count that only goes up (the tank reaching full)
+  fulls = 0;
   private lockHold = 0;
 
   reset(live: boolean) {
-    this.live = live; this.tank = 1; this.lastTank = 1; this.thrust = 0; this.fan = 0; this.lock = false; this.open = false; this.lockHold = 0; this.demand = 0;
+    this.live = live; this.tank = 1; this.lastTank = 1; this.fan = 0; this.lock = false; this.lockHold = 0; this.demand = 0;
   }
   get pressure() { return Math.round(this.tank * TANK.bar); }
   get hopReady() { return this.live && this.tank >= TANK.hopNeed; }
@@ -263,27 +254,17 @@ export class HyperAbility {
   // one 120 Hz step, before `p.step`. `on`: the run allows it now (not counting down, not over); paused runs don't step
   step(dt: number, p: CarPhysics, c: Controls, on: boolean) {
     const live = this.live && on;
-    const k = 1 - Math.exp(-dt * 30), kFan = 1 - Math.exp(-dt * 12);   // the valve opens in about 0.1 s, the fans spin up in 0.25 s
+    const kFan = 1 - Math.exp(-dt * 12);   // the fans spin up in 0.25 s
+    // no push along the car, ever: THRUST is the jump only (holding it adds nothing; c.thrust is never read here)
+    p.ext.fx = 0;
     if (!live) {
-      this.open = false; this.lock = false; this.lockHold = 0; this.charging = false;
-      this.thrust += (0 - this.thrust) * k; this.fan += (0 - this.fan) * kFan;
-      if (this.thrust < 1e-3) this.thrust = 0;
+      this.lock = false; this.lockHold = 0; this.charging = false;
+      this.fan += (0 - this.fan) * kFan;
       if (this.fan < 1e-3) this.fan = 0;
-      p.ext.fx = 0; p.ext.fz = 0;
+      p.ext.fz = 0;
       return;
     }
     const v = Math.abs(p.vx), m = SPEC.mass;
-    // Cold Thrust: held, forward, off the brake, on the road, with gas in the tank; the valve shuts on release, the brake,
-    // empty, or in the air (a hop's arc and its landing room are planned at the take-off speed: thrust held through the
-    // air would carry the car past both)
-    const want = c.thrust > 0.05 && c.brake < 0.1 && p.gear > 0 && p.vx > -0.5 && !p.airborne;
-    if (!this.open && want && this.tank >= TANK.minStart) { this.open = true; this.valveOpens++; }
-    if (this.open && (!want || this.tank <= 0)) this.open = false;
-    this.thrust += ((this.open ? clamp(c.thrust, 0, 1) : 0) - this.thrust) * k;
-    if (this.thrust < 1e-3) this.thrust = 0;
-    const a = thrustAccel(Math.max(0, p.vx)) * this.thrust;
-    p.ext.fx = m * a;
-    this.tank -= (this.thrust / TANK.fullS) * dt;
 
     // Ground Lock: on when the wheel asks for more than 0.8 g sideways or the car launches hard (full throttle under
     // 30 m/s with the drive axles at their traction limit), held 0.4 s after, and never in the air
@@ -297,9 +278,9 @@ export class HyperAbility {
     p.ext.fz = p.airborne ? 0 : fanLoad(m, v) * this.fan;
     this.tank -= TANK.lockCost * this.fan * dt;
 
-    // the compressor: while driving with the valve shut and the fans idle (they share its drive), faster under braking;
-    // nothing at a standstill. So Ground Lock's 3 % a second is a real cost through a long corner
-    this.charging = this.thrust < 0.02 && this.fan < 0.05 && v > 5 && this.tank < 1;
+    // the compressor: while driving with the fans idle (they share its drive), faster under braking; nothing at a
+    // standstill. So Ground Lock's 3 % a second is a real cost through a long corner
+    this.charging = this.fan < 0.05 && v > 5 && this.tank < 1;
     if (this.charging) this.tank += (c.brake > 0.1 ? TANK.rechargeBrake : TANK.recharge) * dt;
     const was = this.tank;
     this.tank = clamp(this.tank, 0, 1);
@@ -308,11 +289,10 @@ export class HyperAbility {
   }
   private lastTank = 1;
 
-  // spend the hop's gas (the game has already planned and launched the arc), and shut the valve at once: no thrust is
-  // left to carry the car past the stretch the plan checked
-  // (`cost`: hopCostFor the planned arc)
+  // spend the hop's gas (the game has already planned and launched the arc; `cost`: hopCostFor the planned arc). No
+  // force along the car is left to carry it past the stretch the plan checked
   spendHop(p: CarPhysics, cost = TANK.hopCost) {
     this.tank = Math.max(0, this.tank - cost); this.lastTank = this.tank;
-    this.open = false; this.thrust = 0; p.ext.fx = 0;
+    p.ext.fx = 0;
   }
 }
