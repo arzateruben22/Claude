@@ -3,8 +3,8 @@
 S=/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad
 cd /home/user/Claude || exit 1
 git fetch -q origin 'refs/heads/claude/wip-*:refs/remotes/origin/claude/wip-*' 2>/dev/null
-declare -A WT=( [hyper]=tsu-hyper [fix-road]=tsu-fix-road [bar]=tsu-bar [wheel]=tsu-wheel [navhud]=tsu-navhud [final-live]=tsu-live [cast]=tsu-cast [run]=tsu-run [hgfx]=tsu-hgfx [fov]=tsu-fov [scar]=tsu-scar [livechat]=tsu-livechat [vv]=tsu-vv [lastmile]=tsu-lastmile [diamond]=tsu-diamond [smooth]=tsu-smooth [smoothcore]=tsu-smoothcore [thrust]=tsu-thrust )
-for name in hyper fix-road bar wheel navhud final-live cast run hgfx fov scar livechat vv lastmile diamond smooth smoothcore thrust; do
+declare -A WT=( [hyper]=tsu-hyper [fix-road]=tsu-fix-road [bar]=tsu-bar [wheel]=tsu-wheel [navhud]=tsu-navhud [final-live]=tsu-live [cast]=tsu-cast [run]=tsu-run [hgfx]=tsu-hgfx [fov]=tsu-fov [scar]=tsu-scar [livechat]=tsu-livechat [vv]=tsu-vv [lastmile]=tsu-lastmile [diamond]=tsu-diamond [smooth]=tsu-smooth [smoothcore]=tsu-smoothcore [thrust]=tsu-thrust [trim]=tsu-trim [wtier]=tsu-wtier [hero]=tsu-hero )
+for name in hyper fix-road bar wheel navhud final-live cast run hgfx fov scar livechat vv lastmile diamond smooth smoothcore thrust trim wtier hero; do
   wt=/home/user/Claude/${WT[$name]}
   [ -d "$wt" ] || { echo "$name: no worktree"; continue; }
   prev=$(git rev-parse -q --verify origin/claude/wip-$name 2>/dev/null)
