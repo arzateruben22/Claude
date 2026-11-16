@@ -11,7 +11,7 @@ import { Game, Result, CORNER_PX } from '../game/Game';
 import type { Hud as HudData } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
-import { Settings, loadSettings, saveSettings, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
+import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, ownerFromHash, ownerTestBuild, QUALITY, DENSITY, MODES, STARTS, Mode, Quality, Density, TimeOfDay, Weather, HudStyle, Look, loadBest, PROFILES, PROFILE_IDS, profileOf, customLine } from '../game/settings';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
@@ -32,6 +32,7 @@ import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
 import { Phone, PhoneApp } from './Phone';
 import { RadialMenu, RadialPick } from './RadialMenu';
+import { PerfOverlay } from './PerfOverlay';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
@@ -45,6 +46,12 @@ const SET_SECTIONS: [string, string][] = [['graphics', 'Graphics'], ['hud', 'HUD
 // the mode cards' one-line subtitles (the menu). Two modes only (owner, 2026-11-08: "lets get rid of these play modes
 // all entirely and only stick to free drive and try to stay over 100mph game mode"): Races and Time Trial are gone.
 const MODE_SUB: Record<Mode, string> = { free: 'Explore Orange County', survival: 'Stay over 100 mph' };
+// `?perf` in the address: the performance overlay for this visit (not saved); `?bench=1` lets the first-run graphics
+// check run in an automated browser too (it never runs on its own under automation: SwiftShader's frames say nothing
+// about a real device)
+const QUERY = (() => { try { return new URLSearchParams(location.search); } catch { return new URLSearchParams(); } })();
+const PERF_URL = QUERY.has('perf');
+const BENCH_URL = QUERY.get('bench') === '1';
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 // our own venues in the Go to sheet (src/game/venues.ts; the World Map's Places tab lists them too)
 const VENUE_LIST = [{ name: 'Lot 57', blurb: 'Taproom and yard · Orangewood Ave, Anaheim' }, { name: 'Stoppage Time', blurb: 'Sports bar · Claudina Way, Anaheim' }];
@@ -90,6 +97,8 @@ export function App() {
   // the venues (Game.arriveVenue, getOut, drive): on a venue's ramp, its name for the prompt; parked there, its name
   const [venueUi, setVenueUi] = useState({ prompt: '', parked: '', note: '' });
   const getOutRef = useRef<HTMLButtonElement>(null);
+  const resumeRef = useRef<HTMLButtonElement>(null);                   // the pause screen's Resume: the keyboard lands on it
+  const [navFrom, setNavFrom] = useState<Panel>(null);                 // the Go to card opened from the World Map goes Back to it
   const [setSec, setSetSec] = useState('graphics');                  // the Settings rail's current section
   // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
   const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
@@ -102,6 +111,9 @@ export function App() {
   const toastId = useRef(0);
   const settingsRef = useRef(settings);
   settingsRef.current = settings;
+  // the graphics check (Game.benchmark): its progress while it runs, and how to stop it
+  const [bench, setBench] = useState<null | { i: number; n: number; label: string; manual: boolean }>(null);
+  const benchCancel = useRef<{ cancelled: boolean } | null>(null);
 
   // the sheet: its scroll area, the content in it, and the layer the outgoing content fades out on
   const sheetMain = useRef<HTMLDivElement>(null), sheetScroll = useRef<HTMLDivElement>(null), sheetBody = useRef<HTMLDivElement>(null), ghost = useRef<HTMLDivElement>(null);
@@ -163,6 +175,10 @@ export function App() {
   // parked at a venue: the keyboard lands on Get out
   // (and the route is done: the Go to button stops showing one)
   useEffect(() => { if (venueUi.parked) { setNavTarget(null); getOutRef.current?.focus({ preventScroll: true }); } }, [venueUi.parked]);
+  // the pause screen (and back on it from a card): the keyboard lands on Resume, so Enter carries on driving (Esc too, input.ts)
+  useEffect(() => { if (screen === 'paused' && !panel) resumeRef.current?.focus({ preventScroll: true }); }, [screen, panel]);
+  // (the Go to card remembers the World Map only while it is up: Esc, a pick or the HUD's Go to start afresh)
+  useEffect(() => { if (panel !== 'nav') setNavFrom(null); }, [panel]);
   // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
   useEffect(() => {
     const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };
@@ -180,6 +196,36 @@ export function App() {
   }, [loadingOn]);
 
   const inMenu = screen === 'menu' && !busy && !error;
+  // The graphics check: on this device's first run it starts on its own on the menu (about 5 s, Skip on its card); Settings
+  // runs it again. Its pick becomes the Graphics preset unless the player chose one themselves; asked for from Settings,
+  // the player asked for its pick
+  const runBench = useCallback(async (manual: boolean) => {
+    const g = game.current;
+    if (!g || g.benchRunning() || !g.inAttract) return;
+    const cancel = { cancelled: false }; benchCancel.current = cancel;
+    setBench({ i: 0, n: 6, label: '', manual });
+    const r = await g.benchmark((i, n, label) => setBench({ i, n, label, manual }), cancel);
+    benchCancel.current = null; setBench(null);
+    if (!r) return;
+    if (r.inconclusive) { toast(`Graphics check: frames sat at ${r.cap ?? 30} fps in every round, so the check couldn't tell (the display may cap them). Your settings stay`, 'info'); return; }
+    const mine = settingsRef.current.qualityChosen && !manual;
+    if (!mine) update({ quality: r.quality, qualityChosen: false });
+    const what = `${QUALITY[r.quality].label}${r.scale < 1 ? ` at ${Math.round(r.scale * 100)}% resolution` : ''}${r.target === 30 ? ', a steady 30 fps' : ''}`;
+    toast(mine ? `Graphics check: this device holds ${what}. Your own choice stays` : `Graphics check: ${what}`, 'info');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toast]);
+  const skipBench = () => {
+    if (benchCancel.current) benchCancel.current.cancelled = true;
+    if (bench && !bench.manual) game.current?.skipBenchmark();
+    setBench(null);
+  };
+  const benchAsked = useRef(false);
+  useEffect(() => {
+    if (!inMenu || benchAsked.current) return;
+    benchAsked.current = true;
+    const auto = isFirstRun() && !loadBench() && !settingsRef.current.qualityChosen && (!navigator.webdriver || BENCH_URL);
+    if (auto) void runBench(false);
+  }, [inMenu, runBench]);
   useEffect(() => { if (!inMenu) setEntering(false); }, [inMenu]);
   // a switch starts at the top of the sheet; if the control that made it went with the old content, focus moves to
   // the new content so the keyboard carries on from there
@@ -327,7 +373,7 @@ export function App() {
           </div>
           <div className="row">
             {navTarget && <button className="btn" onClick={() => navigate(null)}>Clear route</button>}
-            <button className="btn" onClick={() => setPanel(null)}>Back</button>
+            <button className="btn" onClick={() => { setPanel(navFrom); setNavFrom(null); }}>Back</button>
           </div>
         </>,
       };
@@ -388,13 +434,17 @@ export function App() {
                 <section className="sgroup" id="set-graphics">
                   <h3 className="sect">Graphics</h3>
                   <div className="field"><label>Look</label><Seg label="Look" value={settings.look} options={['ultra', 'hd'] as Look[]} labels={(l) => (l === 'ultra' ? 'Futuristic' : 'Realistic')} onChange={(l) => update({ look: l })} /></div>
-                  <div className="field"><label>Graphics</label><Seg label="Graphics" value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q })} /></div>
+                  <div className="field"><label>Graphics</label><Seg label="Graphics" value={settings.quality} options={Object.keys(QUALITY) as Quality[]} labels={(q) => QUALITY[q].label} onChange={(q) => update({ quality: q, qualityChosen: true })} /></div>
                   <p className="fine">{qualityNote(settings.quality)}</p>
+                  <GovNow game={game.current} />
                   <div className="toggles">
                     {settings.quality === 'low' && <Toggle label="Style: Retro (preview of the new Low)" value={settings.style === 'retro'} onChange={(v) => update({ style: v ? 'retro' : 'standard' })} />}
-                    <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
+                    <Toggle label="Adaptive quality (holds 60 fps)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                     <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
+                    <Toggle label="Show performance" value={settings.showPerf} onChange={(v) => update({ showPerf: v })} />
                   </div>
+                  <p className="fine">Adaptive quality turns effects down one at a time when frames run long (ambient occlusion first, then shadows, MSAA, bloom, draw distance, scenery, traffic, and resolution last, never under {settings.quality === 'high' || settings.quality === 'ultra' ? 'three quarters' : 'half'} of the preset's), and back up when there's room. Your preset stays your choice.</p>
+                  {screen === 'menu' && <div className="row"><button type="button" className="btn" disabled={!!bench} onClick={() => void runBench(true)}>Run graphics check</button></div>}
                   <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
                 </section>
                 <section className="sgroup" id="set-hud">
@@ -447,8 +497,9 @@ export function App() {
             </div>
           </div>
           {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause. OC Hypercar in Free Drive: hold Left Shift for Cold Thrust, double-tap it (or press J) for Thrust Hop; gamepad: D-pad up.</p>}
-          {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (beside your ability) for Cold Thrust, double-tap it for Thrust Hop.</p>}
-          <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
+          {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (over GAS) for Cold Thrust, double-tap it for Thrust Hop.</p>}
+          {/* the feedback report, here since it left the pause screen (owner, 2026-11-16); the phone has it too */}
+          <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
         </>,
       };
       default: return null;
@@ -577,6 +628,15 @@ export function App() {
         }} />
       )}
       {playing && radioOpen && game.current && <RadioCard game={game.current} settings={settings} update={update} onClose={() => setRadioOpen(false)} />}
+      {(settings.showPerf || PERF_URL) && screen !== 'foot' && game.current && <PerfOverlay game={game.current} />}
+      {bench && (
+        <div className="bench-card" role="status" aria-live="polite">
+          <b>Checking graphics on this device</b>
+          <span>{bench.label ? `Trying ${bench.label}` : 'Starting'} · about 5 s</span>
+          <i className="bench-bar" aria-hidden="true"><i style={{ width: `${Math.round(((bench.i + 0.5) / bench.n) * 100)}%` }} /></i>
+          <button type="button" className="btn" onClick={skipBench}>Skip</button>
+        </div>
+      )}
       <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
       {/* a venue's exit ramp: its prompt (tap to park there now); parked at the venue, Get out replaces the pedals */}
       {playing && venueUi.prompt && !venueUi.parked && (
@@ -624,33 +684,44 @@ export function App() {
         </div>
       )}
 
-      {screen === 'paused' && !panel && (
-        <div className="overlay center">
-          <div className="panel narrow paused">
-            <OcWatermark />
-            <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
-            <h2>Paused</h2>
-            {/* what left the driving HUD: the time the sky shows, the temperature and where it comes from, the handling
-                chips, the run's numbers */}
-            {lastHud.current && <p className="pause-clock">{`${lastHud.current.clock} · ${lastHud.current.tempF}° · ${lastHud.current.tempNote}`}</p>}
-            <p className="pause-chips">{chips.join(' · ')}</p>
-            {lastHud.current && <p className="pause-run">{runLine(lastHud.current)}</p>}
-            <div className="stack">
-              <button className="btn primary" onClick={resume}>Resume</button>
-              <button className="btn" onClick={() => setPanel('phone')}>Phone</button>
-              <button className="btn" onClick={() => { resume(); setRadioOpen(true); }}>Radio</button>
-              <button className="btn" onClick={() => setPanel('map')}>World map</button>
-              <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
-              <button className="btn" onClick={() => drive(mode)}>Restart</button>
-              <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
-              {mode === 'free' && <button className="btn" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>}
-              <button className="btn" onClick={openFeedback}>Feedback</button>
-              <button className="btn" onClick={() => setPanel('store')}>Store</button>
-              <button className="btn" onClick={toMenu}>Main menu</button>
+      {screen === 'paused' && !panel && (() => {
+        // the pause screen (owner, 2026-11-16: "this looks too cluttered, lets fix this and get rid of any unnecessary
+        // toggles"): Resume as the one big action; the four things done mid-drive as icon tiles (the World Map, whose
+        // own "Go to a freeway" opens the Go to card; the radio; the phone; the store); then a slim row of Settings,
+        // Restart and one way out: End drive in Free Drive (its results' Main menu goes on to the menu), Main menu in
+        // Speed Survival. Feedback moved to Settings, next to Done (and stays on the phone).
+        const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
+        return (
+          <div className="overlay center">
+            <div className="panel narrow paused" role="dialog" aria-labelledby="pause-title">
+              <OcWatermark />
+              <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
+              <h2 id="pause-title">Paused</h2>
+              {/* what left the driving HUD: the time the sky shows, the temperature and where it comes from, the handling
+                  chips, the run's numbers */}
+              <div className="pause-info">
+                {lastHud.current && <p className="pause-clock">{`${lastHud.current.clock} · ${lastHud.current.tempF}° · ${lastHud.current.tempNote}`}</p>}
+                <p className="pause-chips">{chips.join(' · ')}</p>
+                {lastHud.current && <p className="pause-run">{runLine(lastHud.current)}</p>}
+              </div>
+              <button className="btn primary pause-resume" ref={resumeRef} onClick={resume}>Resume</button>
+              <div className="pause-tiles" role="group" aria-label="While you drive">
+                <button type="button" className="btn ptile" aria-label="World map" onClick={() => setPanel('map')}><Ico name="map" /><span>Map</span></button>
+                <button type="button" className="btn ptile" onClick={() => { resume(); setRadioOpen(true); }}><Ico name="radio" /><span>Radio</span></button>
+                <button type="button" className="btn ptile" aria-label={n > 0 ? `Phone, ${n} new` : 'Phone'} onClick={() => setPanel('phone')}><Ico name="phone" /><span>Phone</span>{n > 0 && <small className="ptile-new" aria-hidden="true">{n}</small>}</button>
+                <button type="button" className="btn ptile" onClick={() => setPanel('store')}><Ico name="store" /><span>Store</span></button>
+              </div>
+              <div className="pause-more" role="group" aria-label="More">
+                <button type="button" className="btn slim" onClick={() => setPanel('settings')}>Settings</button>
+                <button type="button" className="btn slim" onClick={() => drive(mode)}>Restart</button>
+                {mode === 'free'
+                  ? <button type="button" className="btn slim" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>
+                  : <button type="button" className="btn slim" onClick={toMenu}>Main menu</button>}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {screen === 'over' && result && (
         <div className="overlay center">
@@ -708,6 +779,7 @@ export function App() {
       {panel === 'map' && game.current && (
         <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} focusHome={mapHome} onClose={() => { setMapHome(undefined); setPanel(null); }}
           onNavigate={(l) => navigate(l)}
+          onGoTo={() => { setMapHome(undefined); setNavFrom('map'); setPanel('nav'); }}
           onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
           onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }} />
       )}
@@ -860,6 +932,21 @@ function runLine(h: HudData): string {
   return `${mi(h.distance)} · Top ${h.top} mph` + (h.errand ? ` · Errand ${Math.floor(Math.ceil(h.errand.left) / 60)}:${String(Math.ceil(h.errand.left) % 60).padStart(2, '0')} left` : '');
 }
 
+// Settings' live line under the presets: the preset the player chose ("Ultra · auto" while the governor runs it) and
+// where the governor stands, read from the game twice a second while Settings is open
+function GovNow({ game }: { game: Game | null }) {
+  const [t, setT] = useState<[string, string]>(['', '']);
+  useEffect(() => {
+    if (!game) return;
+    const read = () => setT((o) => { const a = game.govLabel(), b = game.govDetail(); return o[0] === a && o[1] === b ? o : [a, b]; });
+    read();
+    const i = setInterval(read, 500);
+    return () => clearInterval(i);
+  }, [game]);
+  if (!t[0]) return null;
+  return <p className="fine gov-now">Now: <b>{t[0]}</b> · {t[1]}</p>;
+}
+
 function qualityNote(q: Quality) {
   return {
     low: 'For phones: no shadows or post-processing, 0.9 km of road.',
@@ -881,7 +968,7 @@ function Chevron({ left = false }: { left?: boolean }) {
   return <i className="chev" aria-hidden="true"><svg viewBox="0 0 8 14" width="8" height="14"><path d={left ? 'M7 1L1 7l6 6' : 'M1 1l6 6-6 6'} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg></i>;
 }
 
-function Board({ runs, mode, highlight }: { runs: { score: number; distance: number; top: number; streak: number; when: number; road: string }[]; mode: Mode; highlight: number }) {
+function Board({ runs, mode, highlight }: { runs: { score: number; distance: number; top: number; streak: number; when: number; road: string; tune?: string }[]; mode: Mode; highlight: number }) {
   return (
     <div className="board">
       <p className="eyebrow">Local leaderboard · this device only</p>
@@ -889,7 +976,7 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
         <ol>{runs.slice(0, 5).map((r, i) => (
           <li key={r.when + ':' + i} className={i + 1 === highlight ? 'me' : ''}>
             <b>{r.score.toLocaleString()}</b>
-            <span>{r.top} mph{mode === 'survival' ? ` · ${r.streak.toFixed(1)} s streak` : ''}</span>
+            <span>{r.top} mph{mode === 'survival' ? ` · ${r.streak.toFixed(1)} s streak` : ''}{r.tune === 'Unleashed' ? <em className="board-tune" data-tune="unleashed"> · OC Hypercar Unleashed</em> : ''}</span>
             <time>{new Date(r.when).toLocaleDateString()}</time>
           </li>
         ))}</ol>

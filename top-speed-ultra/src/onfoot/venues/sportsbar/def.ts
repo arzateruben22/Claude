@@ -5,6 +5,7 @@ import type { VenueDef, Budget, Room, P2, SlotDef } from '../../engine/venue-def
 import type { Schedule } from '../../engine/schedule';
 import type { Stall } from '../../engine/lot';
 import type { Tree } from '../../engine/venue-types';
+import type { Quality } from '../../engine/mats';
 import { makeFrame, frameFromRing, Frame } from '../../engine/frame';
 import { pointInPoly } from '../../engine/geom';
 import sliceJson from '../../../data/anaheim/sportsbar-slice.json';
@@ -56,7 +57,7 @@ const B = (calls: number, tris: number, frameCalls: number, frameTris: number, l
 export const BUDGETS: VenueDef['budgets'] = {
   low: B(150, 250e3, 150, 250e3, 36, 5, { inside: { lod0: 0, lod1: 7, atLod: 36 }, outside: { lod0: 0, lod1: 7, atLod: 12 }, overhead: { lod0: 0, lod1: 6, atLod: 36 } },
     { inside: { near: 0, yours: 'standin' }, outside: { near: 4, yours: 'detailed' }, overhead: { near: 0, yours: 'standin' } }, 0),
-  high: B(350, 700e3, 500, 1.1e6, 70, 10, { inside: { lod0: 0, lod1: 17, atLod: 70 }, outside: { lod0: 0, lod1: 7, atLod: 24 }, overhead: { lod0: 0, lod1: 16, atLod: 70 } },
+  hd: B(350, 700e3, 500, 1.1e6, 70, 10, { inside: { lod0: 0, lod1: 17, atLod: 70 }, outside: { lod0: 0, lod1: 7, atLod: 24 }, overhead: { lod0: 0, lod1: 16, atLod: 70 } },
     { inside: { near: 0, yours: 'standin' }, outside: { near: 12, yours: 'detailed' }, overhead: { near: 12, yours: 'detailed' } }, 6),
   ultra: B(600, 1.5e6, 1400, 3.6e6, 100, 10, { inside: { lod0: 1, lod1: 41, atLod: 100 }, outside: { lod0: 1, lod1: 19, atLod: 40 }, overhead: { lod0: 0, lod1: 40, atLod: 100 } },
     { inside: { near: 0, yours: 'detailed' }, outside: { near: 36, yours: 'detailed' }, overhead: { near: 36, yours: 'detailed' } }, 20),
@@ -64,15 +65,15 @@ export const BUDGETS: VenueDef['budgets'] = {
 /** the plan's allocations ("The allocations"), calls and triangles, which S1 measures the built rows against. Low's
  *  venue and streets were re-allocated in S1's repair (50k and 35k before; the built streets came to 38.1k at the
  *  budget poses and the venue to 16.5k); the "without people or items" sums don't move */
-export const ALLOC: Record<'low' | 'high' | 'ultra', Record<'venue' | 'streets' | 'near' | 'trees', [number, number]>> = {
+export const ALLOC: Record<Quality, Record<'venue' | 'streets' | 'near' | 'trees', [number, number]>> = {
   low: { venue: [40, 45e3], streets: [20, 40e3], near: [14, 16e3], trees: [4, 4e3] },
-  high: { venue: [50, 90e3], streets: [30, 60e3], near: [14, 16e3], trees: [4, 10e3] },
+  hd: { venue: [50, 90e3], streets: [30, 60e3], near: [14, 16e3], trees: [4, 10e3] },
   ultra: { venue: [60, 150e3], streets: [40, 120e3], near: [15, 25e3], trees: [4, 10e3] },
 };
 /** S1's check: the pass without people or items, per state (the plan's sums) */
-export const NO_PEOPLE: Record<'low' | 'high' | 'ultra', Record<'inside' | 'outside' | 'overhead', [number, number]>> = {
+export const NO_PEOPLE: Record<Quality, Record<'inside' | 'outside' | 'overhead', [number, number]>> = {
   low: { inside: [74, 101.4e3], outside: [119, 177.8e3], overhead: [74, 101.4e3] },
-  high: { inside: [94, 174.4e3], outside: [139, 328.2e3], overhead: [139, 328.2e3] },
+  hd: { inside: [94, 174.4e3], outside: [139, 328.2e3], overhead: [139, 328.2e3] },
   ultra: { inside: [139, 415.4e3], outside: [159, 611.4e3], overhead: [159, 611.4e3] },
 };
 
@@ -178,7 +179,7 @@ export async function loadSite(): Promise<BarSite> {
     ],
     screens: SCREENS,
     lights: [],
-    staff: { posts: [15.5, 18.7, 21.9, 25.1].map((u, i) => ({ id: `bartender ${i + 1}`, at: [u, 14.625] as P2 })), maxDrawn: { low: 5, high: 8, ultra: 10 } },
+    staff: { posts: [15.5, 18.7, 21.9, 25.1].map((u, i) => ({ id: `bartender ${i + 1}`, at: [u, 14.625] as P2 })), maxDrawn: { low: 5, hd: 8, ultra: 10 } },
     staffPath: LANE_PATH,
     trees,
     parking: { stalls, yours: best },

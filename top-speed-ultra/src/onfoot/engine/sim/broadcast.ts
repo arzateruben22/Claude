@@ -12,7 +12,7 @@ import type { Quality } from '../mats';
 
 const WIDE = '"Arial Black", "Helvetica Neue", Arial, sans-serif';
 const SANS = '"Avenir Next", "Segoe UI", system-ui, Arial, sans-serif';
-export const CELL: Record<Quality, { w: number; h: number; hz: number }> = { low: { w: 512, h: 288, hz: 8 }, high: { w: 1024, h: 576, hz: 15 }, ultra: { w: 1024, h: 576, hz: 30 } };
+export const CELL: Record<Quality, { w: number; h: number; hz: number }> = { low: { w: 512, h: 288, hz: 8 }, hd: { w: 1024, h: 576, hz: 15 }, ultra: { w: 1024, h: 576, hz: 30 } };
 /** where each channel sits in the atlas (cell column, row): 1, 2 and 3, and the house card */
 const CELLS: Record<1 | 2 | 3 | 4, [number, number]> = { 1: [0, 0], 2: [1, 0], 3: [0, 1], 4: [1, 1] };
 const BANNER_MIN = 10 / 60;     // a banner shows for 10 s of sim time after a score

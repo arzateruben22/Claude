@@ -420,10 +420,24 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .panel.paused .oc-watermark i { width: 112%; bottom: -3%; }
 /* what left the phone's driving HUD (HUD_POV_SPEC 1): the time the sky shows, the temperature and where it comes from,
    the handling chips, the run's numbers. --dim on the panel's glass: 9:1 and up */
-.panel.paused :is(.pause-clock, .pause-chips, .pause-run) { position: relative; margin: 0; font: 500 12.5px/1.35 var(--f-mono); letter-spacing: 0.02em; color: var(--dim); font-variant-numeric: tabular-nums; }
-.panel.paused .pause-clock { margin-top: -6px; color: var(--ink); }
-.panel.paused .pause-chips { text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px; }
-.panel.paused .pause-run { margin-bottom: 4px; }
+.panel.paused { gap: 14px; }
+.panel.paused h2 { font-size: 36px; padding-bottom: 10px; }
+.pause-info { position: relative; display: grid; gap: 2px; margin-top: -4px; }
+.panel.paused :is(.pause-clock, .pause-chips, .pause-run) { margin: 0; font: 500 12px/1.35 var(--f-mono); letter-spacing: 0.02em; color: var(--dim); font-variant-numeric: tabular-nums; }
+.panel.paused .pause-clock { color: var(--ink); }
+.panel.paused .pause-chips { text-transform: uppercase; letter-spacing: 0.12em; font-size: 10.5px; }
+/* the pause screen (owner, 2026-11-16: "too cluttered"): Resume, the big plate; four icon tiles for what is done
+   mid-drive; a slim row of plain plates for Settings, Restart and the one way out */
+.btn.pause-resume { margin-top: 2px; min-height: 56px; font-size: 16px; letter-spacing: 0.24em; }
+.pause-tiles { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding-inline: 6px; }
+.btn.ptile { display: grid; justify-items: center; align-content: center; gap: 7px; min-height: 70px; padding: 8px 2px; font: 600 11px/1 var(--f-ui); letter-spacing: 0.14em; }
+.btn.ptile .ico { width: 24px; height: 24px; color: var(--ice-text); }
+.ptile-new { position: absolute; top: 5px; right: 8px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--ice); color: var(--night); font: 700 11px/18px var(--f-mono); letter-spacing: 0; }
+.pause-more { position: relative; display: flex; gap: 8px; padding: 12px 6px 0; box-shadow: inset 0 1px 0 var(--line); }
+.btn.slim { flex: 1 1 0; min-width: 0; min-height: 40px; padding: 0 6px; font-size: 11.5px; letter-spacing: 0.12em; color: var(--dim); }
+.btn.slim::before { background: none; box-shadow: inset 0 0 0 1px var(--line); }
+@media (hover: hover) { .btn.slim:hover { color: var(--ink); } }
+@media (pointer: coarse) { .btn.slim { min-height: 44px; } }
 
 /* ------------------------------------------------------------------ the main menu */
 /* The owner's 2026-10-21 reference, in our tokens: a glass rail down the left (brand, Drive, the loadout, the rest of
@@ -676,6 +690,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .board li b { font-size: 18px; font-weight: 600; }
 .board li span { color: var(--dim); font-size: 12px; min-width: 0; }
 .board li time { color: var(--faint); font-size: 11px; }
+/* an OC Hypercar run on its Unleashed tune (Free Drive only), marked on the board (PROJECT_OC_MONETIZATION.md rule 3a) */
+.board li .board-tune { font-style: normal; color: var(--ice-text); font-weight: 600; }
 .board li.me { background: linear-gradient(90deg, var(--ice-wash), var(--clear)); box-shadow: inset 2px 0 0 var(--ice); }
 .board li.me b { color: var(--ice-text); }
 
@@ -729,7 +745,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
      margin off the visible edge as the other edges get (it sat flush on it, 2026-11-11 review) */
   --edge: 14px; --map: 150px; --bot: max(16px, var(--sa-b), calc(var(--vis-b, 0px) + 16px)); --ctl-b: max(14px, var(--sa-b), calc(var(--vis-b, 0px) + 14px));
   /* a desktop's bottom-right cluster, from one set of sizes (it was four separate pixel offsets that drifted apart):
-     the speed block's box, the bottom line, and --act, how far from the right the ability's hexagon (then THRUST's)
+     the speed block's box, the bottom line, and --act, how far from the right the ability's key (then THRUST's)
      starts, clear of the speed block */
   --spd-w: 300px; --spd-h: 132px; --spd-b: var(--bot); --act: calc(var(--sa-r) + 18px + var(--spd-w) + 12px);
   --rail-w: 156px; }
@@ -882,20 +898,33 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app[data-hud="desk"] .hud-clock { display: block; }
 .app[data-hud="desk"]:not(:has(.corner.map)) .hud-clock { bottom: var(--bot); }
 
-/* the ability button: a hexagon whose edge drains while it's on and refills while it recharges */
-.hud-ability { --p: 1; position: absolute; right: var(--act); bottom: calc(var(--spd-b) + 2px); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto;
-  display: grid; place-items: center; color: var(--ink); font: 600 10.5px/1.1 var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; text-align: center;
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--drv) calc(var(--p) * 1turn), var(--line-2) 0); }
-.hud-ability::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
-.hud-ability span { max-width: 54px; }
-.hud-ability.cool { color: var(--dim); background: conic-gradient(var(--chrome) calc(var(--p) * 1turn), var(--line) 0); }
-.hud-ability.on { color: var(--drv); }
-.hud-ability.on::before { background: radial-gradient(circle, var(--drv-wash), var(--clear) 70%), var(--glass-2); }
+/* the driver's ability and the OC Hypercar's THRUST: keys in the pedals' own language (owner, 2026-11-16: "make the
+   thrust option and display more seamlessly integrated"; they were two hexagons floating over the steering wheel): a
+   slanted dark plate with a coloured top line and a bold label, pressed it fills with its colour, and the bar along its
+   foot is the ability's charge (draining while it runs, refilling while it recharges) or THRUST's tank. --k is the
+   key's colour: the driver's own for the ability, Founder ice for THRUST. On a phone they sit over BRAKE and GAS (in
+   landscape a column beside BRAKE); on a desktop beside the speed, or in its corner in the seat view */
+.hud-ability, .hud-thrustbtn { --p: 1; --k: var(--drv); position: absolute; right: var(--act); bottom: calc(var(--spd-b) + 2px); isolation: isolate; width: 88px; height: 56px;
+  padding: 0 8px 4px; border: 0; background: none; cursor: pointer; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
+  display: grid; place-items: center; color: var(--k); font: 800 12px/1.05 var(--f-display); letter-spacing: 0.12em; text-transform: uppercase; text-align: center; }
+.hud-ability::before, .hud-thrustbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(-8deg); background: var(--hud); box-shadow: inset 0 0 0 1px var(--line-2), inset 0 3px 0 var(--k); }
+.hud-ability::after, .hud-thrustbtn::after { content: ""; position: absolute; left: 9px; right: 9px; bottom: 6px; height: 3px; transform: skewX(-8deg);
+  background: linear-gradient(90deg, var(--k) calc(var(--p) * 100%), var(--line-2) 0); }
+.hud-ability span, .hud-thrustbtn span { max-width: 100%; }
+.hud-ability.cool { --k: var(--chrome); color: var(--dim); }
+.hud-ability.on, .hud-thrustbtn.on { color: var(--night); }
+.hud-ability.on::before, .hud-thrustbtn.on::before { background: var(--k); }
+.hud-ability.on::after, .hud-thrustbtn.on::after { background: linear-gradient(90deg, var(--night) calc(var(--p) * 100%), rgba(0, 0, 0, 0.25) 0); }
 .hud-ability.ready { animation: abil-ready 0.3s var(--ease-out); }
-@keyframes abil-ready { 50% { transform: scale(1.12); } }
-/* focus: the clip-path would cut an outline, so the ring turns solid ink and the fill steps in (a 3:1 visible change) */
-.hud-ability:focus-visible { outline: none; background: var(--ink); }
-.hud-ability:focus-visible::before { inset: 5px 6px; background: var(--night-3); }
+@keyframes abil-ready { 50% { transform: scale(1.08); } }
+.hud-ability:focus-visible, .hud-thrustbtn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.hud-thrustbtn { --k: var(--founder); right: calc(var(--act) + 88px + 12px); }
+.hud-thrustbtn.low { --k: var(--ember); color: var(--dim); }
+.hud-thrustbtn:active::before { background: var(--founder-wash), var(--hud); }
+/* a desktop's seat view, where the car's own cluster shows the speed and the HUD's speed block is gone: the keys take
+   its corner, clear of the wheel */
+.app[data-hud="desk"] .hud[data-live-cluster]:is([data-view="cockpit"], [data-view="free"]) .hud-ability { right: calc(var(--sa-r) + 18px); }
+.app[data-hud="desk"] .hud[data-live-cluster]:is([data-view="cockpit"], [data-view="free"]) .hud-thrustbtn { right: calc(var(--sa-r) + 18px + 88px + 12px); }
 
 /* ------------------------------------------------------------------ the Minimal HUD, tucked away (U1; App.tsx: useIdle) */
 /* after 4 s of just driving the icons other than Pause, the map with its compass ring, the road and (in a plain Free
@@ -1125,17 +1154,21 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   opacity: 1; visibility: visible; transition: opacity 260ms var(--ease-out), visibility 0s linear 0s; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname { justify-content: center; width: 100%; height: 22px; gap: 6px; padding: 0 6px 0 3px; font-size: 11px; letter-spacing: 0.1em; border-width: 1.5px; border-radius: 5px; box-shadow: 0 4px 12px var(--shadow); }
 .app:is([data-hud="pp"], [data-hud="pl"]) .hud-roadname .shield { min-width: 20px; height: 16px; font-size: 11px; }
-/* FOCUS TIME: a 52 px hexagon in the control row, 8 px above BRAKE (left of BRAKE in landscape) */
-.app[data-hud="pp"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px); bottom: calc(var(--ctl-b) + 96px + 8px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
-.app[data-hud="pl"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px); bottom: calc(var(--ctl-b) + 22px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-ability span { max-width: 42px; }
-/* the OC Hypercar's THRUST: the same 52 px hexagon beside FOCUS TIME, its tank panel over the two of them */
-.app[data-hud="pp"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px + 60px); bottom: calc(var(--ctl-b) + 96px + 8px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
-.app[data-hud="pl"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px + 60px); bottom: calc(var(--ctl-b) + 22px); width: 52px; height: 52px; font-size: 9.5px; letter-spacing: 0.02em; }
-.app[data-hud="pp"] .hud-thrust { right: calc(var(--sa-r) + 20px + 74px + 16px + 11px); bottom: calc(var(--ctl-b) + 96px + 8px + 60px); width: 150px; padding: 6px 10px 7px; gap: 5px; }
-.app[data-hud="pl"] .hud-thrust { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 16px); bottom: calc(var(--ctl-b) + 22px + 60px); width: 150px; padding: 6px 10px 7px; gap: 5px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thrust-top em { font-size: 15px; }
-.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thrust-low { font-size: 8.5px; letter-spacing: 0.08em; }
+/* the ability (FOCUS TIME, CLEAR PATH, LOCKED IN) and THRUST on a phone: keys of the control row, in the pedals' own
+   widths. Upright, the ability over BRAKE and THRUST over GAS, 10 px above each (the right thumb's reach), stepped as the
+   pedals are; on its side, a column left of BRAKE, THRUST over the ability, as tall together as BRAKE. At 390 x 844:
+   CLEAR PATH 206..280 x 676..724, THRUST 296..370 x 640..688, under the wheel's hub and the cluster */
+.app[data-hud="pp"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px); bottom: calc(var(--ctl-b) + 96px + 10px); width: 74px; height: 48px; padding: 0 5px 4px; font-size: 11px; letter-spacing: 0.08em; }
+.app[data-hud="pp"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px); bottom: calc(var(--ctl-b) + 132px + 10px); width: 74px; height: 48px; padding: 0 5px 4px; font-size: 12px; }
+.app[data-hud="pl"] :is(.hud-ability, .hud-thrustbtn) { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 14px); width: 74px; height: 44px; padding: 0 5px 4px; font-size: 11px; letter-spacing: 0.08em; }
+.app[data-hud="pl"] .hud-ability { bottom: var(--ctl-b); }
+.app[data-hud="pl"] .hud-thrustbtn { bottom: calc(var(--ctl-b) + 52px); }
+.app:is([data-hud="pp"], [data-hud="pl"]) :is(.hud-ability, .hud-thrustbtn)::after { left: 7px; right: 7px; bottom: 5px; }
+/* manual on a narrow phone: the pedals slim to 66 px with a 10 px gap (see .touch-shift), and the keys over them too */
+@media (max-width: 419px) {
+  .app[data-hud="pp"]:has(.touch-shift) .hud-ability { right: calc(var(--sa-r) + 20px + 66px + 10px); width: 66px; }
+  .app[data-hud="pp"]:has(.touch-shift) .hud-thrustbtn { width: 66px; }
+}
 /* transient things: toasts under the cluster, the radio card docked under it */
 .app[data-hud="pp"] .toasts { top: calc(var(--sa-t) + 168px); }
 .app[data-hud="pl"] .toasts { top: 30%; }
@@ -1153,32 +1186,32 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app[data-hud="pl"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 22px); right: calc(var(--sa-r) + 200px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
 .app[data-hud="desk"] .tbar .livechip { order: -1; }
 
-/* the OC Hypercar: the tank panel (the tank bar with the hop's 40 % mark, Ground Lock's light, the hop's state) and
-   the THRUST button beside the driver's ability, its ring the tank. Free Drive only (the scored modes run the race tune
-   with no THRUST control). Its tune is one of the speed block's chips (.hud-chips: Unleashed or Race tune) */
-/* a desktop: the tank panel over the two hexagons (as on a phone), out of the right-hand column */
-.hud-thrust { position: absolute; right: var(--act); bottom: calc(var(--spd-b) + 2px + 70px + 10px); width: 190px; padding: 8px 12px 8px; display: grid; gap: 6px;
-  background: var(--hud); box-shadow: inset 0 0 0 1px var(--line), inset 0 2px 0 var(--founder-line); }
-.hud-thrust-top { display: flex; justify-content: space-between; align-items: baseline; }
-.hud-thrust-top b { font: 600 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--founder); }
-.hud-thrust-top em { font: 700 17px/1 var(--f-mono); font-style: normal; font-variant-numeric: tabular-nums; }
-.hud-thrust-bar { position: relative; height: 7px; background: var(--line-2); overflow: hidden; }
-.hud-thrust-bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--founder-line), var(--founder)); transform-origin: left; transform: scaleX(1); }
-.hud-thrust-bar s { position: absolute; top: 0; bottom: 0; left: 40%; width: 2px; background: var(--ink); opacity: 0.7; }
-.hud-thrust.low .hud-thrust-bar i { background: var(--ember); }
-.hud-thrust.on { box-shadow: inset 0 0 0 1px var(--founder-line), inset 0 2px 0 var(--founder), 0 0 18px var(--founder-glow); }
-.hud-thrust-low { display: flex; justify-content: space-between; gap: 8px; font: 600 9.5px/1.1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+/* the OC Hypercar's systems as one slim strip by the speed (Free Drive's Unleashed tune only; its tune is one of the
+   speed block's chips): THRUST, the tank's bar with the hop's 40 % mark and its figure, Ground Lock's light, the hop's
+   state. On a desktop a line over the speed block; on a phone a line of the plate, under the speed. Never in the seat
+   view of a car whose cluster shows them (the hypercar's: car-dash.ts), where the old floating panel sat on the wheel */
+.hud-thr { position: absolute; right: calc(var(--sa-r) + 18px); bottom: calc(var(--spd-b) + var(--spd-h) + 6px); width: var(--spd-w); height: 24px; padding: 0 14px;
+  display: flex; align-items: center; gap: 9px; background: var(--scan), linear-gradient(90deg, var(--scrim-0), var(--hud) 26%);
+  font: 600 9.5px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); white-space: nowrap; }
+.hud-thr b { font-weight: 700; letter-spacing: 0.18em; color: var(--founder); }
+.hud-thr-bar { position: relative; flex: 1 1 24px; min-width: 20px; height: 5px; background: var(--line-2); overflow: hidden; transform: skewX(var(--skew)); }
+.hud-thr-bar i { position: absolute; inset: 0; background: linear-gradient(90deg, var(--founder-line), var(--founder)); transform-origin: left; transform: scaleX(1); }
+.hud-thr-bar s { position: absolute; top: 0; bottom: 0; left: 40%; width: 2px; background: var(--ink); opacity: 0.7; }
+.hud-thr em { min-width: 4ch; font: 700 12px/1 var(--f-mono); font-style: normal; letter-spacing: 0; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+.hud-thr.low .hud-thr-bar i { background: var(--ember); }
+.hud-thr.on b { text-shadow: 0 0 8px var(--founder-glow); }
 .hud-lock.on { color: var(--founder); text-shadow: 0 0 8px var(--founder-glow); }
+.hud-hop { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .hud-hop.ready { color: var(--ink); }
-.hud-thrustbtn { --p: 1; position: absolute; right: calc(var(--act) + 76px + 8px); bottom: calc(var(--spd-b) + 2px); isolation: isolate; width: 76px; height: 70px; padding: 0; border: 0; cursor: pointer; pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none;
-  display: grid; place-items: center; color: var(--founder); font: 700 11px/1.1 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase;
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: conic-gradient(var(--founder) calc(var(--p) * 1turn), var(--line-2) 0); }
-.hud-thrustbtn::before { content: ""; position: absolute; inset: 3px 4px; z-index: -1; clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); background: var(--glass-2); }
-.hud-thrustbtn.on { color: var(--night); }
-.hud-thrustbtn.on::before { background: var(--founder); }
-.hud-thrustbtn.low { color: var(--dim); background: conic-gradient(var(--ember) calc(var(--p) * 1turn), var(--line) 0); }
-.hud-thrustbtn:focus-visible { outline: none; }
-.hud-thrustbtn:focus-visible::before { background: var(--night-3); }
+.hud-hop.warn { color: var(--amber); }
+/* a desktop: the rail ends over the strip */
+.app[data-hud="desk"]:has(.hud[data-thrust]:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"])) .tbar { bottom: calc(var(--spd-b) + var(--spd-h) + 12px + 30px); }
+/* a phone: a line of the plate under the speed */
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-plate > .hud-thr { display: flex; height: 13px; gap: 5px; font-size: 8.5px; letter-spacing: 0.08em; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thr em { font-size: 10.5px; min-width: 3.5ch; }
+.app:is([data-hud="pp"], [data-hud="pl"]) .hud-thr-bar { height: 4px; }
+/* the seat view of a car whose cluster shows them: none (after the phone line, which sets its display) */
+.app .hud[data-live-cluster]:is([data-view="cockpit"], [data-view="free"]) .hud-thr { display: none; }
 
 /* ------------------------------------------------------------------ touch: a steering rail and two pedals */
 
@@ -1350,6 +1383,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 @media (hover: hover) { .wm-item:not(.off):not(.on):hover { background: var(--ice-wash); } }
 .wm-act { display: grid; gap: 8px; }
 .wm-act .btn { width: 100%; }
+.wm-act .btn.wm-goto { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.wm-goto .ico { width: 18px; height: 18px; color: var(--ice-text); }
 .wm-exits summary { cursor: pointer; padding: 6px 2px; font: 500 12px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ice-text); }
 .wm-exits { max-height: 30vh; overflow-y: auto; }
 .wm-exit { display: flex; justify-content: space-between; gap: 10px; width: 100%; min-height: 36px; padding: 4px 8px; border: 0; text-align: left; cursor: pointer; color: var(--ink); background: var(--clear); box-shadow: inset 0 -1px 0 var(--line); font: 500 13px/1.25 var(--f-ui); }
@@ -1680,3 +1715,38 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .grid.places { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); margin-bottom: 6px; }
 .gcell.place b { font: 800 18px/1 var(--f-display); letter-spacing: 0.04em; text-transform: uppercase; }
 .gcell.place span { color: var(--dim); font-size: 12px; }
+
+/* ------------------------------------------------------------------ the performance overlay (SMOOTH, PerfOverlay.tsx) */
+/* measured numbers only, never in the way: no taps, under the top bar on the left, small tabular figures */
+.perf {
+  position: fixed; left: calc(8px + env(safe-area-inset-left)); top: calc(76px + env(safe-area-inset-top)); z-index: 40;
+  pointer-events: none; display: grid; gap: 2px; padding: 7px 9px 8px; min-width: 150px; max-width: 200px;
+  background: var(--hud); border: 1px solid var(--line); border-radius: 8px;
+  color: var(--dim); font: 500 10.5px/1.3 "Saira Semi Condensed", Arial, sans-serif; font-variant-numeric: tabular-nums;
+}
+.perf-top { display: flex; align-items: baseline; gap: 4px; color: var(--ink); }
+.perf-fps { font-size: 20px; font-weight: 700; line-height: 1; }
+.perf-low { margin-left: auto; color: var(--dim); }
+.perf-graph { display: block; margin: 2px 0; background: rgba(0, 0, 0, 0.25); border-radius: 3px; }
+.perf-label { color: var(--ink); font-weight: 700; margin-top: 2px; }
+.perf-detail, .perf-last { color: var(--faint); }
+.perf-last { color: var(--ice-text); }
+/* a phone upright: under the top cluster and the toasts (top 22 %), over the left of the road */
+[data-hud="pp"] .perf { top: 38%; }
+/* a desktop: the top right, over the rail (the stats plate holds the top left) */
+[data-hud="desk"] .perf { top: calc(12px + env(safe-area-inset-top)); left: auto; right: calc(12px + env(safe-area-inset-right)); }
+
+/* the first-run graphics check's card (App.tsx runBench): over the menu, at the foot, with Skip */
+.bench-card {
+  position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 60;
+  display: grid; grid-template-columns: 1fr auto; gap: 4px 14px; align-items: center; width: min(420px, calc(100vw - 32px));
+  padding: 12px 14px; background: var(--glass-2); border: 1px solid var(--line-2); border-radius: 12px; color: var(--ink);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.bench-card > b { font-size: 14px; }
+.bench-card > span { grid-column: 1; color: var(--dim); font-size: 12px; }
+.bench-card > .btn { grid-column: 2; grid-row: 1 / span 3; min-height: 44px; }
+.bench-bar { grid-column: 1; display: block; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; }
+.bench-bar > i { display: block; height: 100%; background: var(--ice); transition: width 0.3s; }
+@media (prefers-reduced-motion: reduce) { .bench-bar > i { transition: none; } }
+.gov-now b { color: var(--ink); }

@@ -11,6 +11,9 @@
 //                   knurled rotary ring (32 mm across) round a 25 mm round colour display and a toggle; the twin lower legs and the
 //                   chin at the flat bottom. The pods sit beside the hub's lower half, clear of the phone HUD's Clear
 //                   Path, Thrust buttons and Thrust panel in the seat view (the review of 2026-11-10)
+//   addSportCentre  the premium centre on that hub (2026-11-12): a pillowed cover in the car's trim, a machined bezel,
+//                   a row of stitching, a gloss-carbon chevron, the badge in a raised machined cup with a ring and a
+//                   line in the car's accent; addSimpleCentre the Brio's and the Vela E's simpler one (see below)
 //   addThumbPads    a gloss-black touch pad with bright icons and a brushed bezel on each upper spoke (every car's)
 //   paddleTip       the bright brushed-aluminium pull face at the end of each (brushed) shift paddle
 //   wheelDials      the two displays, drawn in code (canvas, as car-gauges.ts): the left one the handling profile,
@@ -199,6 +202,86 @@ export function addSportHub(wk: Kit, o: { high: boolean }) {
   const pad = extrude(roundPoly(sc(0.84), 0.012), 0.005, 0.0018, cs); pad.translate(0, 0, -0.0062); wk.add('wheelNappa', pad);
   const edge = roundPoly(sc(0.89), 0.0138); edge.holes.push(roundPoly(sc(0.85), 0.012));
   const e = new THREE.ShapeGeometry(edge, cs); e.translate(0, 0, -0.0036); wk.add('alu', e, null, 0.02);
+}
+// The premium centre (owner, 2026-10-27: "make the center part of the steering wheel more stylish"; 2026-11-11: "make
+// the center of the steering wheel more aesthetic looking"), our own design. Over the gloss surround of addSportHub:
+//   'hubBezel'   a machined bezel: a brushed-metal frame following the hub's six-sided outline, chamfered on both edges
+//   'hubCover'   the sculpted cover inside it: a pillowed pad (its edge rolls 2.4 mm down to the bezel) in the car's
+//                trim (cockpit.ts: the GT soft-touch Nappa, the Corsa and the Hypercar Alcantara)
+//   'hubStitch'  a single row of stitching round the cover, 5 mm in from its edge, in the trim's thread
+//   'hubCarbon'  a gloss-carbon chevron inlay across the cover's lower part, its V pointing at the badge
+//   'hubAccent'  a thin line along the chevron's top edges and a ring round the badge, in the car's accent (GT
+//                cognac, Corsa yellow, Hypercar ice blue)
+//   the medallion: a raised machined cup ('hubBezel') round a recessed badge disc ('badgeHub': the R, or the OC mark)
+//                with a fine chrome bead and a dark machined ring ('hubGap') between it and the accent ring
+// The Brio and the Vela E get addSimpleCentre: the medallion and the accent ring on their own Nappa hubs, the Brio a
+// brushed bar either side of it, the Vela a brushed ring round it. Phone builds: fewer curve and bevel segments.
+const ribbon = (pts: THREE.Vector2[], z: number, w: number) => {
+  // a closed strip of stitching along pts (counter-clockwise), the thread's dashes along u (32 mm a repeat, as the rim's)
+  const n = pts.length, pos: number[] = [], uv: number[] = [], idx: number[] = [];
+  let len = 0;
+  for (let i = 0; i <= n; i++) {
+    const p = pts[i % n], a = pts[(i - 1 + n) % n], b = pts[(i + 1) % n];
+    const tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1, nx = ty / tl, ny = -tx / tl;
+    if (i) len += p.distanceTo(pts[i - 1]);
+    pos.push(p.x - nx * w / 2, p.y - ny * w / 2, z, p.x + nx * w / 2, p.y + ny * w / 2, z);
+    uv.push(len / 0.032, 0, len / 0.032, 1);
+    if (i) { const k = (i - 1) * 2; idx.push(k, k + 1, k + 2, k + 1, k + 3, k + 2); }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+};
+const shell = (shape: THREE.Shape, depth: number, bt: number, bs: number, bseg: number, cs: number) =>
+  new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: bt, bevelSize: bs, bevelSegments: bseg, curveSegments: cs });
+// a thin straight bar from a to b in the wheel's plane (w wide, d deep, its face at z)
+function bar(a: [number, number], b: [number, number], w: number, d: number, z: number) {
+  const dx = b[0] - a[0], dy = b[1] - a[1], g = new THREE.BoxGeometry(Math.hypot(dx, dy), w, d);
+  g.rotateZ(Math.atan2(dy, dx)); g.translate((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, z - d / 2);
+  return g;
+}
+// the medallion at (0, y), its cup's top at z: a raised machined cup, the accent ring, a dark machined ring inside it
+// (so the accent stands apart from a bright badge), a chrome bead and the badge disc, set 0.4 mm under the cup's lip
+// (not 1.2: deeper, the lip shaded the OC mark grey)
+function medallion(wk: Kit, y: number, z: number, segs: number, r = 1) {
+  const cup = latheGeo([[0.0298 * r, z - 0.0024], [0.0296 * r, z - 0.0004], [0.0285 * r, z], [0.0268 * r, z], [0.0262 * r, z - 0.0009]], segs, 'z', { uRepeat: 1, vScale: 0.02 });
+  cup.translate(0, y, 0); wk.add('hubBezel', cup);
+  const ring = new THREE.RingGeometry(0.0245 * r, 0.0263 * r, segs, 1); ring.translate(0, y, z - 0.0008); wk.add('hubAccent', ring, null, 0.02);
+  const gap = new THREE.RingGeometry(0.0234 * r, 0.0245 * r, segs, 1); gap.translate(0, y, z - 0.0008); wk.add('hubGap', gap, null, 0.02);
+  const bead = new THREE.TorusGeometry(0.0229 * r, 0.0007, segs > 30 ? 6 : 4, segs); bead.translate(0, y, z - 0.0007); wk.add('chrome', bead, null, 0.02);
+  const badge = new THREE.CircleGeometry(0.0222 * r, segs); badge.translate(0, y, z - 0.0004); wk.add('badgeHub', badge);
+}
+export function addSportCentre(wk: Kit, o: { high: boolean }) {
+  const cs = o.high ? 8 : 4, segs = o.high ? 48 : 24, sc = (k: number) => HUB.map(([x, y]) => [x * k, y * k + 0.002 * (1 - k)] as [number, number]);
+  // the bezel: a brushed frame from 86 % to 93 % of the outline, 3.2 mm tall with chamfered edges, its face at -1.3 mm
+  const bz = roundPoly(sc(0.93), 0.0145); bz.holes.push(roundPoly(sc(0.86), 0.0125));
+  const bg = shell(bz, 0.0018, 0.0007, 0.0004, o.high ? 2 : 1, cs); bg.translate(0, 0, -0.0038); wk.add('hubBezel', bg);
+  // the cover: pillowed, its flat face at +0.6 mm, the edge rolling down under the bezel
+  const cv = shell(roundPoly(sc(0.83), 0.0115), 0.0012, 0.0028, 0.0024, o.high ? 3 : 1, cs); cv.translate(0, 0, -0.0034); wk.add('hubCover', cv);
+  // the stitching round it
+  wk.add('hubStitch', ribbon(roundPoly(sc(0.785), 0.0105).getPoints(cs), 0.00075, 0.0013));
+  // the carbon chevron and its accent line
+  const chev: [number, number][] = [[-0.033, -0.03475], [0.033, -0.03475], [0.0474, -0.016], [0, -0.0262], [-0.0474, -0.016]];
+  const ch = shell(roundPoly(chev, 0.003), 0.0004, 0.0002, 0.0002, 1, cs); ch.translate(0, 0, 0.0008); wk.add('hubCarbon', ch);
+  for (const sd of [-1, 1]) wk.add('hubAccent', bar([sd * 0.0462, -0.0153], [sd * 0.0012, -0.0252], 0.0011, 0.0005, 0.0017), null, 0.02);
+  // the medallion, at the hub's centre (y 4 mm), its cup 2.2 mm proud of the cover
+  medallion(wk, 0.004, 0.0028, segs);
+}
+export function addSimpleCentre(wk: Kit, o: { high: boolean; kind: 'brio' | 'vela' }) {
+  const segs = o.high ? 48 : 24;
+  // the hub's face is at z -2 mm and its centre 4 mm below the wheel's (cockpit.ts): the medallion there, its cup
+  // standing 1.6 mm proud
+  const y = -0.004;
+  medallion(wk, y, -0.0004, segs);
+  if (o.kind === 'brio') {
+    // a brushed bar either side of the medallion, across the airbag cover
+    for (const sd of [-1, 1]) { const b = new RoundedBoxGeometry(0.03, 0.0034, 0.0016, 1, 0.0007); b.translate(sd * 0.0495, y, -0.0016); wk.add('hubInsert', b, null, 0.02); }
+  } else {
+    // a brushed ring round it, 12 mm out
+    const r = latheGeo([[0.0415, -0.0024], [0.0415, -0.0012], [0.0405, -0.0008], [0.0385, -0.0008], [0.0378, -0.0016]], segs, 'z', { uRepeat: 1, vScale: 0.02 });
+    r.translate(0, y, 0); wk.add('hubInsert', r);
+  }
 }
 // sculpted upper spokes (52 mm tall at the hub, 34 mm at the rim) with brushed edges, a widget pod under each with
 // its rotary and toggle, the twin lower legs from the pods down into the flat bottom's corners, and the chin

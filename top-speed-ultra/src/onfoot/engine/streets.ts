@@ -493,11 +493,46 @@ export function buildStreets(S: Slice, mats: StreetMats, o: StreetOpts) {
 export type Streets = ReturnType<typeof buildStreets>;
 
 // ------------------------------------------------------------------ the I-5's light streams (ours)
+/** how the streams are drawn at a mode (S4's repair): `stretch` the length of a lamp's streak along the road (x the
+ *  1.7 m quad), `grow` the distance in metres past which a streak grows with distance, so it keeps its size on screen
+ *  far off (a long exposure's continuous stream rather than a dotted line), `lift` how far a grown streak's centre is
+ *  raised so it stays over the deck's parapet */
+export interface StreamLook { stretch: number; grow: number; lift: number; tall?: number; long?: number }
+const STREAM_PLAIN: StreamLook = { stretch: 1, grow: 1e9, lift: 0 };
+/** a car's two lamps, this far either side of its centre line (m) */
+const LAMP_HALF = 0.75;
+/** the carriageway's four lanes: their offsets from its centre line (m, 3.5 m lanes on the 14 m one-way deck) and speeds */
+const LANES = 4, LANE_OFF = [-5.25, -1.75, 1.75, 5.25], LANE_SPEED = [27, 29.5, 31.5, 33.5];
+/** a soft streak, the streams' alpha map: a bright core a third of the quad's height with a glow round it (so the
+ *  lamps glow even at Low, which has no bloom), soft ends; made once, shared */
+let streakMap: THREE.DataTexture | null = null;
+export function streakTex() {
+  if (streakMap) return streakMap;
+  const W = 64, H = 32, d = new Uint8Array(W * H * 4);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const u = (x + 0.5) / W, v = (y + 0.5) / H - 0.5;
+    const ends = Math.min(1, u / 0.3, (1 - u) / 0.3), across = Math.min(1, Math.exp(-(v * v) / 0.006) + 0.32 * Math.exp(-(v * v) / 0.05));
+    const a = Math.round(255 * Math.max(0, Math.min(1, ends * ends * (3 - 2 * ends) * across))), i = (y * W + x) * 4;
+    d[i] = d[i + 1] = d[i + 2] = a; d[i + 3] = 255;
+  }
+  streakMap = new THREE.DataTexture(d, W, H); streakMap.needsUpdate = true;
+  return streakMap;
+}
+/** S4's repair: the streak map released when the venue is left (a later streakTex() makes it again) */
+export function releaseStreakTex() { streakMap?.dispose(); streakMap = null; }
 /** head and tail lamps of cars moving along the given carriageway chains at their drawn height, 0.6 m over the
  *  ribbon: two instanced quad meshes, a quad per car's head or tail lights. `maxCars` sizes the meshes (Ultra's 400);
  *  each update takes the preset's car count and spreads it over the chains by their length, so every chain carries
  *  its share at every preset (S1 wrote all 400 and the page cut the count after, which left the first chain alone
- *  carrying lights at Low and HD) */
+ *  carrying lights at Low and HD). S4's repair: each quad lies along the road and turns about it to face the camera
+ *  (a streak, not a dot), grows with distance by the mode's `StreamLook`, and is brightest where you see that side of
+ *  the car: the head lamps of cars coming toward you, the tail lamps of cars going away (per-instance colour).
+ *  S4's second repair (the art review: at HD and Ultra the streams read as one continuous glowing band, at Low as a
+ *  white hairline): each car is a PAIR of lamps side by side on its carriageway at its drawn height, white heads if it
+ *  comes toward you and red tails if it goes away (one colour a car, so the two directions read apart), each streak
+ *  short (`stretch`) and grown with distance only up to `long` along the road and `tall` across it, so the gaps
+ *  between cars stay open far off; at Low the same, shorter, which its pass draws as dots and dashes. The meshes hold
+ *  two lamps a car (2 x maxCars), and a frame still draws two quads a car in all, as before */
 export function lightStreams(streets: Streets, chains: number[][], maxCars: number, headMat: THREE.Material, tailMat: THREE.Material) {
   const net = streets.net;
   const paths = chains.map((ids) => {
@@ -509,40 +544,72 @@ export function lightStreams(streets: Streets, chains: number[][], maxCars: numb
     const cum = [0]; for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
     return { pts, ys, cum, L: cum[cum.length - 1] };
   });
-  const quad = new THREE.PlaneGeometry(1.7, 0.32);
-  const head = new THREE.InstancedMesh(quad, headMat, maxCars), tail = new THREE.InstancedMesh(quad, tailMat, maxCars);
+  // 1.7 m long, 0.96 m tall: the lamps' core is the middle third (0.32 m, as S1 drew them), the rest their glow
+  const quad = new THREE.PlaneGeometry(1.7, 0.96);
+  const head = new THREE.InstancedMesh(quad, headMat, maxCars * 2), tail = new THREE.InstancedMesh(quad, tailMat, maxCars * 2);
   head.name = 'near-streams-head'; tail.name = 'near-streams-tail';
-  for (const m of [head, tail]) { m.frustumCulled = false; m.castShadow = false; m.receiveShadow = false; m.count = 0; }
+  for (const m of [head, tail]) {
+    m.frustumCulled = false; m.castShadow = false; m.receiveShadow = false; m.count = 0;
+    // the per-car brightness, made once so the program never changes
+    m.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(maxCars * 2 * 3).fill(1), 3);
+  }
   const total = paths.reduce((a, p) => a + p.L, 0);
   /** how many cars the last update put on each chain */
   const perPath = paths.map(() => 0);
-  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), one = new THREE.Vector3(1, 1, 1), e = new THREE.Euler();
-  const update = (time: number, camera: THREE.Camera, on: boolean, cars: number) => {
+  const m4 = new THREE.Matrix4(), X = new THREE.Vector3(), Y = new THREE.Vector3(), Z = new THREE.Vector3(), V = new THREE.Vector3(), col = new THREE.Color();
+  /** one lamp's streak: along the road (tx, tz), turned about it toward the camera, grown with distance, weighted */
+  const place = (mesh: THREE.InstancedMesh, k: number, px: number, py: number, pz: number, tx: number, tz: number, cam: THREE.Vector3, look: StreamLook, w: number) => {
+    V.set(cam.x - px, cam.y - py, cam.z - pz);
+    const d = V.length() || 1, g = Math.max(1, d / look.grow), gy = Math.min(g, look.tall ?? g), gx = Math.min(g, look.long ?? g);
+    X.set(tx, 0, tz);
+    Z.copy(V).addScaledVector(X, -V.dot(X)); if (Z.lengthSq() < 1e-8) Z.set(0, 1, 0); Z.normalize();
+    Y.crossVectors(Z, X);
+    // the streak grows along the road with distance (a continuous stream far off) but only up to `tall` across it,
+    // so a far lamp stays a thin line of light rather than a blob taller than a car (S4's repair, from the night shots)
+    m4.makeBasis(X.multiplyScalar(look.stretch * gx), Y.multiplyScalar(gy), Z);
+    m4.setPosition(px, py + look.lift * (gy - 1), pz);
+    mesh.setMatrixAt(k, m4);
+    mesh.setColorAt(k, col.setScalar(w));
+  };
+  const update = (time: number, camera: THREE.Camera, on: boolean, cars: number, look: StreamLook = STREAM_PLAIN) => {
     const count = Math.max(0, Math.min(maxCars, Math.floor(cars)));
     for (let j = 0; j < perPath.length; j++) perPath[j] = 0;
     head.count = tail.count = 0;
     if (!on || count === 0) return;
-    let k = 0;
+    const cam = camera.position;
+    let k = 0, nh = 0, nt = 0;
     for (let pi = 0; pi < paths.length; pi++) {
       const p = paths[pi];
       // this chain's share by length (the last chain takes what's left, so the shares sum to the count)
       const n = pi === paths.length - 1 ? count - k : Math.max(1, Math.round((count * p.L) / total));
       for (let c = 0; c < n && k < count; c++, k++) {
-        const speed = 27 + ((c * 7919) % 9);
-        const s = ((c * p.L) / n + time * speed) % p.L;
-        let i = 1; while (i < p.cum.length - 1 && p.cum[i] < s) i++;
+        // four lanes a carriageway, the cars spread over them in turn: a lane's cars share its speed (the inner lane
+        // fastest), so their gaps hold (S4's second repair: each car had its own speed, and over a night they bunched
+        // into the bands the art review saw; at Ultra's 400 a lane's cars are about 18 m apart)
+        const lane = c % LANES, speed = LANE_SPEED[lane];
+        const s = ((c * p.L) / n + ((c * 7919) % 7) + time * speed) % p.L;
+        // the segment holding s: a binary search on the running lengths (S4's performance pass: the linear walk was
+        // up to a chain's whole length per car, 400 cars a frame at Ultra)
+        let lo = 1, hi = p.cum.length - 1;
+        while (lo < hi) { const mid = (lo + hi) >> 1; if (p.cum[mid] < s) lo = mid + 1; else hi = mid; }
+        const i = lo;
         const f = (s - p.cum[i - 1]) / Math.max(1e-6, p.cum[i] - p.cum[i - 1]);
         const x = p.pts[i - 1][0] + (p.pts[i][0] - p.pts[i - 1][0]) * f, z = p.pts[i - 1][1] + (p.pts[i][1] - p.pts[i - 1][1]) * f, y = p.ys[i - 1] + (p.ys[i] - p.ys[i - 1]) * f;
-        const dx = p.pts[i][0] - p.pts[i - 1][0], dz = p.pts[i][1] - p.pts[i - 1][1], l = Math.hypot(dx, dz) || 1;
-        // face the camera round y (a billboard along the road's side)
-        e.set(0, Math.atan2(camera.position.x - x, camera.position.z - z), 0); q.setFromEuler(e);
-        pos.set(x + (dx / l) * 2.1, y, z + (dz / l) * 2.1); head.setMatrixAt(k, m4.compose(pos, q, one));
-        pos.set(x - (dx / l) * 2.1, y, z - (dz / l) * 2.1); tail.setMatrixAt(k, m4.compose(pos, q, one));
+        const dx = p.pts[i][0] - p.pts[i - 1][0], dz = p.pts[i][1] - p.pts[i - 1][1], l = Math.hypot(dx, dz) || 1, tx = dx / l, tz = dz / l;
+        // coming toward the camera you see its head lamps, going away its tail lamps: one colour a car, a pair of lamps
+        // side by side across its carriageway (side on, a little dimmer)
+        const dc = Math.hypot(cam.x - x, cam.z - z) || 1, toward = (tx * (cam.x - x) + tz * (cam.z - z)) / dc;
+        const w = 0.6 + 0.4 * Math.min(1, Math.abs(toward) * 1.6), fwd = toward >= 0 ? 2.1 : -2.1, mesh = toward >= 0 ? head : tail;
+        const j = toward >= 0 ? nh : nt;
+        const off = LANE_OFF[lane];
+        for (let side = -1; side <= 1; side += 2) { const a = off + LAMP_HALF * side; place(mesh, j + (side + 1) / 2, x + tx * fwd - tz * a, y, z + tz * fwd + tx * a, tx, tz, cam, look, w); }
+        if (toward >= 0) nh += 2; else nt += 2;
         perPath[pi]++;
       }
     }
-    head.count = tail.count = k;
+    head.count = nh; tail.count = nt;
     head.instanceMatrix.needsUpdate = true; tail.instanceMatrix.needsUpdate = true;
+    head.instanceColor!.needsUpdate = true; tail.instanceColor!.needsUpdate = true;
   };
   return { head, tail, update, paths, perPath, maxCars };
 }

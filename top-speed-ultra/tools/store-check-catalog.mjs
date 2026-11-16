@@ -3,7 +3,7 @@
 // What it checks (the rules in PROJECT_OC_MONETIZATION.md):
 //   - every sku has the schema's fields; kind, mode, interval and currency take the allowed values
 //   - prices are whole dollars and at least $2 (Stripe's fixed 30c makes smaller prices a bad deal), except the
-//     owner's one exception: the OC Hypercar Founder Edition at exactly $4.99 (PRICE_EXCEPTIONS below)
+//     owner's one exception: the OC Hypercar Founder Edition at exactly $9.99 (PRICE_EXCEPTIONS below; $4.99 until the owner's 2026-11-11 decision)
 //   - only the two founder offers have a sales window, and it is the one constant FOUNDER_UNTIL (src/store/founder.json),
 //     the last second of a Pacific day
 //   - the two founder offers share no grant and no name (the Founder Pack doesn't include the car)
@@ -32,7 +32,7 @@ const cosmetics = JSON.parse(read('src/store/cosmetics.json'));
 const { FOUNDER_UNTIL } = JSON.parse(read('src/store/founder.json'));
 const errs = [];
 // the owner's price exceptions to the whole-dollar rule (PROJECT_OC_MONETIZATION.md §5): this sku at this price only
-const PRICE_EXCEPTIONS = { 'hypercar-founder': 499 };
+const PRICE_EXCEPTIONS = { 'hypercar-founder': 999 };
 const FOUNDER_SKUS = new Set(['founder-pack-2026', 'hypercar-founder']);
 const until = Date.parse(FOUNDER_UNTIL);
 if (Number.isNaN(until)) errs.push(`founder.json: FOUNDER_UNTIL ${FOUNDER_UNTIL} is not a date`);
