@@ -4,6 +4,41 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: Wheel tiers: the luxury sport wheel only on the OC Hypercar; a default sport wheel on the GT and the Corsa
+
+The owner: "Also make the luxury sports wheels we've been building into available to the hypercar and the Chad car",
+then "So basically I just want the hypercar and Chad car to only have it and the other cars have default sports
+steering wheel". Branch claude/wheel-tiers from f715bf6 (live v21).
+
+- **The tier is a per-car field**, `cockpit.ts` Theme `wheelTier: 'luxury' | 'sport' | 'own'`, not a test on the
+  wheel's name: the OC Hypercar `'luxury'`, the GT and the Corsa `'sport'`, the Brio and the Vela E `'own'`. The
+  Scarlatta M1 (the Chad car, queued, not built) sets `'luxury'` with its own trim (technical notes).
+- **The OC Hypercar's luxury wheel is unchanged.** Rendered from the game's own cockpit in a fixed scene (paused, a
+  fixed readout, no world, no hands), before (f715bf6) and after: the seat view and the wheel close-up at 1280 x 720
+  and at 390 x 844 DPR 3 (a 1170 x 2532 buffer) are pixel-identical (0 differing pixels in all four).
+- **The GT and the Corsa's default sport wheel** (wheel-sport `addDefaultSpokes`): the same mildly flat-bottomed rim
+  (sportRimAt: spec rimAt wherever the hands hold it), smooth Nappa top and bottom, grips in the car's trim (GT
+  perforated Nappa, Corsa Alcantara) with double stitching in its thread, the 12 o'clock stripe (GT cognac, Corsa
+  yellow), three solid brushed-graphite spokes (the lower one slotted, with a bar in the car's accent), the thumb pads,
+  the brushed paddles without the bright pull face, a Nappa hub with the simpler centre (the R in its machined cup,
+  brushed bars). No dials, knurled rings, live displays, shift lights, premium cover, carbon chevron or rim carbon; the
+  dials and shift-light code paths are null for these cars and the revs fed to them light and throw nothing. The
+  tach's redline glow still lights at the redline.
+- **Cost (suite, phone tier):** Hypercar 23 meshes, 12,118 triangles; GT 14 and 7,908; Corsa 14 and 7,236. High tier
+  (seat-view script): Hypercar 23 and 24,002; GT 14 and 17,736; Corsa 14 and 16,504.
+- **Checked.** `npx tsc --noEmit` (tsconfig.json and tsconfig.game.json) clean; `npm run build`, one
+  `data-build="owner-test"` in dist/artifact.html. Suite (there is no `cockpit` group): boot 16/16 (16 m 40 s); the phone group
+  split into three `--check=` runs (its later checks need the earlier ones' drive), all 22 of its checks passing:
+  12/12 (menus, Founder card, Settings, HUD, seat view, the wheel checks, the centre against the arms, the cluster,
+  reach), 12/12 (HUD, seat view, wheel, centre, cluster again, Go to, route, reach, pause screen, compass) and 10/10
+  (sky camera, its fallback, Retro on a phone, the THRUST checks, with the HUD, pause and compass checks as setup). The wheel check now asserts the Hypercar's luxury parts, the GT's and the Corsa's default parts and the
+  absence of the luxury ones, no dials state, no throw on the revs, and their meshes and triangles at most the
+  Hypercar's; the dial and shift-light checks run on the Hypercar; the cluster check expects the GT's tach glow
+  without wheel shift lights (`-- -G`).
+- Frames (looked at): in-game seat views of the three cars before and after in a 1280 x 720 page and a 390 x 844
+  DPR 3 page (the game's own drawing buffer at the Low preset: 960 x 540 and 390 x 844; the world moves between runs,
+  so these are not pixel-compared), and the fixed-scene seat views and close-ups (1280 x 720 and 1170 x 2532).
+
 ## 2026-11-11: The OC Hypercar's Thrust built into the cockpit, and a hop that clears two cars at 200 mph
 
 Reviewed: it passed a play lens (keep; the hop cleared two cars in two runs with the reviewer's own placements) and a code lens.
