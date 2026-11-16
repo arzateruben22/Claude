@@ -1,13 +1,17 @@
-# One More Orbit · Season 3 · Part 4 of 8: "The Night Gets Too Bright"
+# One More Orbit · Season 3 · Part 4 of 8: "A Moon Bigger Than the Sun"
 
-Part 4 of the Moon film "How Close Can the Moon Get Before It Breaks?" (the long film is the whole story; the ending stays there). 9:16, 65 s, synthetic AI voice (stand-in until the owner's recording).
-Badge "Thought experiment" throughout. Lines come from long01/script.md; timing from long01/voice/lines.json.
+v4, in the creator's own voice (recorded 12 Nov 2026): picture-led, 61 s, 9:16. The 'Thought experiment' tag shows for the first 5 s.
+Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part4.json.
 
-## hook {pre: 0.15 · the part's own 2 s opening}
-vo: The night is getting too bright. {-}
+## opening
+vo: What happens when the Moon outgrows the Sun?
 
-## body {the chapter · distance counter synced to the voice · one like/follow line at 72% of the runtime (rotation line 4)}
-vo: One hundred fifty thousand kilometers. {c31} The Moon looks about two and a half times wider. {c32} The beach is brighter. {-} Moonlight falls off with the square of the distance. {c11} So a full Moon gives about six and a half times the light. {c33} Your shadow on the sand is sharp. {-} The wet sand shines like a mirror. {-} The Moon is crossing the sky faster too. {c13} At this distance, one lap takes about seven days, not twenty-seven. {c34} The water has a silver road across it, wider than any you have seen. {-} By now, the Moon looks far bigger than the Sun. {c15}
+## body
+vo: One hundred thousand. Nearly four times wider. Its shadow on Earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted. But often.
 
-## tease {the cliffhanger, then the closer}
-vo: Which means the next time they line up, something happens in the daytime. {-} Part four of eight. Full video on YouTube. {-}
+## like/follow (77% of the runtime)
+no spoken ask in an even part (owner, 12-16 Nov 2026): the thumbs-up + bell pop-up only, in the pause before the cliffhanger
+
+## cliffhanger and closer (even part)
+vo: Closer. Faster. And the ground feels it too.
+vo: Part four of eight. Full video on YouTube.

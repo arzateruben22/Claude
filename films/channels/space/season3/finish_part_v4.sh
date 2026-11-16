@@ -10,9 +10,12 @@ python3 - <<PY > /tmp/pl/stills$N.txt
 import json
 t=json.load(open("$O/v4-part$N.json")); b=t["beats"]; ap=[x for x in b if x["kind"]=="approach"]; rest=[x for x in b if x["kind"]!="approach"]
 ts=[]
-if ap: ts.append(ap[0]["t1"]+0.3)
-if rest: ts += [(rest[0]["t0"]+rest[0]["t1"])/2, (rest[-1]["t0"]+rest[-1]["t1"])/2]
-print(",".join(f"{x:.1f}" for x in ts[:3]))
+ts.append(f"{min(1.2, t['dur']/10):.1f}:beach")                                    # wide: the figure on the beach, the Moon small
+key=[x for x in rest if x["kind"] not in ("grow","pull")] or rest
+if key: ts.append(f"{(key[0]['t0']+key[0]['t1'])/2:.1f}:moon")                       # the part's key visual (eclipse, flex, strain, slide, tide, bright ...)
+gr=[x for x in b if x["kind"] in ("grow","pull")]
+ts.append(f"{(gr[-1]['t0']+gr[-1]['t1'])/2+1.0:.1f}:moon" if gr else (f"{ap[0]['t1']+0.5:.1f}:moon" if ap else "5.0:moon"))   # close-up: the Moon big, late in a grow beat
+print(",".join(ts[:3]))
 PY
 export PLAYWRIGHT_DIR=$(dirname $(npm root -g)) CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome
 STILLS=$(cat /tmp/pl/stills$N.txt) STILLDIR=$EP/out/cover-stills node season3/render_s3.mjs $O/v4-part$N.json /tmp/pl/dummy$N.mp4 2160 3840 30 2>&1 | tail -3

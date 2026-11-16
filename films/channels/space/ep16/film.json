@@ -1,155 +1,146 @@
 {
  "id": "one-more-orbit-s3-part4",
  "title": {
-  "title": "The Night Gets Too Bright",
+  "title": "A Moon Bigger Than the Sun",
   "series": "One More Orbit · Season 3 · Part 4 of 8"
  },
  "disclosures": {
-  "aiVoice": true,
+  "realVoice": true,
+  "aiVoice": false,
   "aiVisuals": true
  },
- "dur": 64.681,
+ "dur": 61.185,
  "fps": 30,
  "captions": [
   {
-   "t0": 0.17,
-   "t1": 2.24,
-   "text": "The night is getting too bright.",
-   "line": "ch4_hook",
-   "spoken": "The night is getting too bright."
+   "t0": 0.35,
+   "t1": 2.88,
+   "text": "What happens when the Moon outgrows the Sun?",
+   "line": "B5",
+   "spoken": "What happens when the Moon outgrows the Sun?"
   },
   {
-   "t0": 5.886,
-   "t1": 8.711,
-   "text": "150,000 km.",
-   "line": "ch4_vo",
-   "spoken": "One hundred fifty thousand kilometers."
+   "t0": 10.47,
+   "t1": 11.535,
+   "text": "100,000.",
+   "line": "L12",
+   "spoken": "One hundred thousand."
   },
   {
-   "t0": 8.731,
-   "t1": 11.916,
-   "text": "The Moon looks about 2.5 times wider.",
-   "line": "ch4_vo",
-   "spoken": "The Moon looks about two and a half times wider."
+   "t0": 11.555,
+   "t1": 13.58,
+   "text": "Nearly 4× wider.",
+   "line": "L12",
+   "spoken": "Nearly four times wider."
   },
   {
-   "t0": 11.936,
-   "t1": 13.651,
-   "text": "The beach is brighter.",
-   "line": "ch4_vo",
-   "spoken": "The beach is brighter."
+   "t0": 18.855,
+   "t1": 23.35,
+   "text": "Its shadow on Earth is wider, and eclipses come far more often.",
+   "line": "L12",
+   "spoken": "Its shadow on Earth is wider, and eclipses come far more often."
   },
   {
-   "t0": 13.671,
-   "t1": 16.976,
-   "text": "Moonlight falls off with the square of the distance.",
-   "line": "ch4_vo",
-   "spoken": "Moonlight falls off with the square of the distance."
+   "t0": 30.615,
+   "t1": 33.88,
+   "text": "Not every month, because the orbit is tilted.",
+   "line": "L12",
+   "spoken": "Not every month, because the orbit is tilted."
   },
   {
-   "t0": 16.996,
-   "t1": 20.986,
-   "text": "So a full Moon gives about 6.5 times the light.",
-   "line": "ch4_vo",
-   "spoken": "So a full Moon gives about six and a half times the light."
+   "t0": 38.99,
+   "t1": 40.07,
+   "text": "But often.",
+   "line": "L12",
+   "spoken": "But often."
   },
   {
-   "t0": 24.536,
-   "t1": 27.061,
-   "text": "Your shadow on the sand is sharp.",
-   "line": "ch4_vo",
-   "spoken": "Your shadow on the sand is sharp."
+   "t0": 47.955,
+   "t1": 49.085,
+   "text": "Closer.",
+   "line": "L13",
+   "spoken": "Closer."
   },
   {
-   "t0": 27.081,
-   "t1": 29.806,
-   "text": "The wet sand shines like a mirror.",
-   "line": "ch4_vo",
-   "spoken": "The wet sand shines like a mirror."
+   "t0": 49.105,
+   "t1": 50.17,
+   "text": "Faster.",
+   "line": "L13",
+   "spoken": "Faster."
   },
   {
-   "t0": 32.856,
-   "t1": 35.996,
-   "text": "The Moon is crossing the sky faster too.",
-   "line": "ch4_vo",
-   "spoken": "The Moon is crossing the sky faster too."
+   "t0": 54.5,
+   "t1": 56.79,
+   "text": "And the ground feels it too.",
+   "line": "L13",
+   "spoken": "And the ground feels it too."
   },
   {
-   "t0": 36.016,
-   "t1": 40.916,
-   "text": "At this distance, one lap takes about 7 days, not 27.",
-   "line": "ch4_vo",
-   "spoken": "At this distance, one lap takes about seven days, not twenty-seven."
-  },
-  {
-   "t0": 40.936,
-   "t1": 46.536,
-   "text": "The water has a silver road across it, wider than any you have seen.",
-   "line": "ch4_vo",
-   "spoken": "The water has a silver road across it, wider than any you have seen."
-  },
-  {
-   "t0": 49.718,
-   "t1": 52.833,
-   "text": "If you want one more orbit, tap like and follow.",
-   "line": "cta4_follow",
-   "spoken": "If you want one more orbit, tap like and follow."
-  },
-  {
-   "t0": 52.953,
-   "t1": 56.088,
-   "text": "By now, the Moon looks far bigger than the Sun.",
-   "line": "ch4_vo",
-   "spoken": "By now, the Moon looks far bigger than the Sun."
-  },
-  {
-   "t0": 56.229,
-   "t1": 58.63,
-   "text": "Which means the next time they line up,",
-   "line": "ch4_loop",
-   "spoken": "Which means the next time they line up, something happens in the daytime."
-  },
-  {
-   "t0": 58.65,
-   "t1": 60.699,
-   "text": "something happens in the daytime.",
-   "line": "ch4_loop",
-   "spoken": "Which means the next time they line up, something happens in the daytime."
-  },
-  {
-   "t0": 60.889,
-   "t1": 62.144,
+   "t0": 57.515,
+   "t1": 58.495,
    "text": "Part 4 of 8.",
-   "line": "closer4",
+   "line": "C4",
    "spoken": "Part four of eight."
   },
   {
-   "t0": 62.164,
-   "t1": 63.919,
+   "t0": 58.515,
+   "t1": 59.925,
    "text": "Full video on YouTube.",
-   "line": "closer4",
+   "line": "C4",
    "spoken": "Full video on YouTube."
   }
  ],
  "km": [
   [
    0.0,
-   192200
+   150000
   ],
   [
    0.0,
-   192200
+   150000
   ],
   [
-   5.836,
-   150000,
-   3.5
+   10.085,
+   100000,
+   7.0
   ]
  ],
  "tracks": {
   "eclipse": [
    [
     0,
+    0
+   ],
+   [
+    23.18,
+    0
+   ],
+   [
+    24.98,
+    1
+   ],
+   [
+    30.38,
+    1
+   ],
+   [
+    31.98,
+    0
+   ],
+   [
+    40.125,
+    0
+   ],
+   [
+    41.925,
+    1
+   ],
+   [
+    47.325,
+    1
+   ],
+   [
+    48.925,
     0
    ]
   ],
@@ -180,61 +171,66 @@
  },
  "clips": [
   {
-   "id": "ch4_hook",
-   "file": "voice/wav/11.wav",
+   "id": "B5",
+   "file": "voice5/wav/B5.wav",
    "t": 0.15,
-   "dur": 1.866,
+   "dur": 2.76,
    "from": 0.0
   },
   {
-   "id": "ch4_vo",
-   "file": "voice/wav/12.wav",
-   "t": 5.866,
-   "dur": 15.15,
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 10.26,
+   "dur": 3.35,
    "from": 0.0
   },
   {
-   "id": "ch4_vo",
-   "file": "voice/wav/12.wav",
-   "t": 24.516,
-   "dur": 5.32,
-   "from": 15.15
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 18.61,
+   "dur": 4.77,
+   "from": 3.35
   },
   {
-   "id": "ch4_vo",
-   "file": "voice/wav/12.wav",
-   "t": 32.836,
-   "dur": 13.487,
-   "from": 20.47
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 30.38,
+   "dur": 3.53,
+   "from": 8.12
   },
   {
-   "id": "cta4_follow",
-   "file": "voice/wav/39.wav",
-   "t": 46.623,
-   "dur": 2.992,
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 38.91,
+   "dur": 1.24,
+   "from": 11.65
+  },
+  {
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 47.5,
+   "dur": 2.7,
    "from": 0.0
   },
   {
-   "id": "ch4_vo",
-   "file": "voice/wav/12.wav",
-   "t": 52.915,
-   "dur": 2.944,
-   "from": 33.957
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 54.2,
+   "dur": 2.725,
+   "from": 2.7
   },
   {
-   "id": "ch4_loop",
-   "file": "voice/wav/13.wav",
-   "t": 56.209,
-   "dur": 4.31,
-   "from": 0.0
-  },
-  {
-   "id": "closer4",
-   "file": "voice/wav/31.wav",
-   "t": 60.869,
-   "dur": 2.862,
+   "id": "C4",
+   "file": "voice5/wav/C4.wav",
+   "t": 57.275,
+   "dur": 3.01,
    "from": 0.0
   }
  ],
- "source": "season3/engine.js via long01/out/part4.json"
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "chips": [],
+ "source": "season3/engine.js via long01/out/v4-part4.json"
 }

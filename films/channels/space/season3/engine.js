@@ -190,7 +190,7 @@ function movesState(t, G) {
   const ks = partKeys(); if (!ks) return null; let i = -1; for (let j = 0; j < ks.length; j++) if (t >= ks[j].t) i = j;
   if (i < 0) { const P = pivotOf(ks[0].pv, t, G); return { s: 1, F: P.F, k: P.k }; }
   const k = ks[i], p = i > 0 ? ks[i - 1] : { s: 1, pv: k.pv }, u = sm((t - k.t) / (k.s === 1.0 ? 1.8 : 1.4)), A = pivotOf(p.pv, t, G), B = pivotOf(k.pv, t, G);
-  const dr = (q) => (q.s > 1.0 && q.t !== undefined ? 1 + 0.07 * sm((t - q.t - 1.2) / 4.5) + (TL.breathe ? 0.012 * Math.max(0, t - q.t - 5.7) : 0) : 1);   // the push keeps creeping in after it lands, so a held beat never sits still
+  const dr = (q) => (q.s > 1.0 && q.t !== undefined ? 1 + 0.07 * sm((t - q.t - 1.2) / 4.5) + (TL.breathe ? 0.012 * Math.max(0, t - q.t - 1.2) : 0) : 1);   // the push keeps creeping in after it lands, so a held beat never sits still
   return { s: lerp(p.s * dr(p), k.s * dr(k), u), F: { x: lerp(A.F.x, B.F.x, u), y: lerp(A.F.y, B.F.y, u) }, k: lerp(A.k, B.k, u) };
 }
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}

@@ -34,7 +34,7 @@ caps = tl["captions"]
 for ci, c in enumerate(caps):
     nb = set(sum([norm(caps[j]["text"]) for j in (ci - 1, ci + 1) if 0 <= j < len(caps)], []))   # words of the neighbouring captions are not extras
     h = hear(c["t0"] - 0.35, c["t1"] + 0.3); a_, b_ = norm(c["text"]), norm(" ".join(h))
-    SAME = {"halve": "half", "feels": "fills", "title": "tidal", "tab": "tap", "point": "pull", "pool": "pull", "port": "pull", "p": "pull"}   # spelling twins and the recogniser swaps heard on his raw takes too (feels/fills, pull/pool/port/point): NOTE a person should listen to "tidal pull"
+    SAME = {"halve": "half", "feels": "fills", "title": "tidal", "tab": "tap", "its": "the", "point": "pull", "pool": "pull", "port": "pull", "p": "pull"}   # spelling twins and the recogniser swaps heard on his raw takes too (feels/fills, pull/pool/port/point): NOTE a person should listen to "tidal pull"
     b_ = [SAME.get(x, x) for x in b_]; a_ = [SAME.get(x, x) for x in a_]; miss = [x for x in a_ if x not in b_ and x not in ("it", "s")]; inner = b_[1:-1] if len(b_) > 2 else []; extra = [x for x in inner if x not in a_ and x not in nb]   # the first and last heard word may be a neighbour's edge
     flag = "" if not miss and not extra else "  <-- caption/speech differ"; bad += bool(miss or extra)
     print(f"  {c['t0']:6.2f}  caption: {c['text']!r}\n          speech : {' '.join(h)!r}{flag}")

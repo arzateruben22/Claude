@@ -1,0 +1,30 @@
+duration 61.20 s OK
+true peak -1.6 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part4-yt-contact.jpg
+    0.35  caption: 'What happens when the Moon outgrows the Sun?'
+          speech : 'What happens when the moon outgrows the sun?'
+   10.47  caption: '100,000.'
+          speech : '100,000.'
+   11.55  caption: 'Nearly 4× wider.'
+          speech : 'and nearly four times wider.'
+   18.86  caption: 'Its shadow on Earth is wider, and eclipses come far more often.'
+          speech : 'The shadow on Earth is wider and eclipses come far more often.'
+   30.61  caption: 'Not every month, because the orbit is tilted.'
+          speech : 'Not every month, because the orbit is tilted.'
+   38.99  caption: 'But often.'
+          speech : 'But often.'
+   47.95  caption: 'Closer.'
+          speech : 'Closer. Faster.'
+   49.10  caption: 'Faster.'
+          speech : 'Faster.'
+   54.50  caption: 'And the ground feels it too.'
+          speech : 'And the ground fills it too.'
+   57.52  caption: 'Part 4 of 8.'
+          speech : 'Part 4 of 8. Full Victoria'
+   58.52  caption: 'Full video on YouTube.'
+          speech : 'Full video on YouTube.'
+caption = speech: OK
+QA PASS

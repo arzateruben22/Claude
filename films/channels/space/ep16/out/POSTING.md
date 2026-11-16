@@ -1,31 +1,31 @@
-# Posting sheet: One More Orbit S3, Part 4 of 8, "The Night Gets Too Bright"
+# Posting sheet: One More Orbit S3, Part 4 of 8, "A Moon Bigger Than the Sun"
 
 ## YouTube Shorts
-Title: The Night Gets Too Bright
+Title: A Moon Bigger Than the Sun
 
-Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment.
+What changes when the Moon looks bigger than the Sun? Eclipses cover more of the sky, for longer. A thought experiment.
 
-Moonlight grows with the square of how close the Moon comes.
+A closer Moon makes eclipses bigger and longer.
 
 Part 4 of 8. Full video on YouTube: How Close Can the Moon Get Before It Breaks?
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 #Shorts #space #moon #astronomy
 
 ## TikTok
-Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment. Part 4 of 8. Full video on YouTube. #space #moon #learnontiktok #science
+What changes when the Moon looks bigger than the Sun? Eclipses cover more of the sky, for longer. A thought experiment. Part 4 of 8. Full video on YouTube. #space #moon #learnontiktok #science
 
 ## Instagram
-Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment.
+What changes when the Moon looks bigger than the Sun? Eclipses cover more of the sky, for longer. A thought experiment.
 
-Moonlight grows with the square of how close the Moon comes.
+A closer Moon makes eclipses bigger and longer.
 
 Part 4 of 8. Full video on YouTube (link in bio).
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 ## Pinned comment
-Part 4 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Part 4 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 Post the long film first, then one part a day.

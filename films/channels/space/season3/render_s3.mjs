@@ -27,9 +27,9 @@ const page = await browser.newPage({ viewport: { width: W, height: H }, deviceSc
 await page.goto(pathToFileURL(hp).href); await page.evaluate(([tl, a, m, w, h]) => window.setup(tl, a, m, w, h), [TL, assets, mode, W, H]);
 if (process.env.STILLS) {   // clean cover stills (no HUD), a 2160x2200 band around the Moon: STILLS="12.5,30" STILLDIR=out/dir
   await page.addStyleTag({ content: ".hud{display:none!important}" });
-  for (const ts of process.env.STILLS.split(",")) { const t = Number(ts); await page.evaluate((tt) => window.renderAt(tt), t); const ms = await page.evaluate((tt) => moonScreen(tt), t);
-    const ch = Math.min(H, Math.round(W * 2200 / 2160)), y0 = Math.max(0, Math.min(H - ch, Math.round(ms.y - 0.42 * ch)));
-    fs.mkdirSync(process.env.STILLDIR, { recursive: true }); const f = path.join(process.env.STILLDIR, `still-${ts.padStart(5, "0")}.png`); await page.screenshot({ path: f, clip: { x: 0, y: y0, width: W, height: ch } }); console.log("still", f, Math.round(ms.x), Math.round(ms.y)); }
+  for (const spec of process.env.STILLS.split(",")) { const [ts, kind = "moon"] = spec.split(":"); const t = Number(ts); await page.evaluate((tt) => window.renderAt(tt), t); const ms = await page.evaluate((tt) => moonScreen(tt), t);   // "12.5:moon" (band around the Moon) or "1.0:beach" (the bottom band: the figure and the sea)
+    const ch = Math.min(H, Math.round(W * 2200 / 2160)), y0 = kind === "beach" ? H - ch : Math.max(0, Math.min(H - ch, Math.round(ms.y - 0.42 * ch)));
+    fs.mkdirSync(process.env.STILLDIR, { recursive: true }); const f = path.join(process.env.STILLDIR, `still-${ts.padStart(5, "0")}-${kind}.png`); await page.screenshot({ path: f, clip: { x: 0, y: y0, width: W, height: ch } }); console.log("still", f, Math.round(ms.x), Math.round(ms.y)); }
   await browser.close(); process.exit(0);
 }
 const t0 = FROM ? Number(FROM) : 0, t1 = TO ? Number(TO) : TL.dur, n0 = Math.round(t0 * fps), n1 = Math.round(t1 * fps);
