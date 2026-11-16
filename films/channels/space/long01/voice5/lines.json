@@ -712,14 +712,14 @@
    "sentences": [
     {
      "text": "One hundred fifty thousand.",
-     "t0": 0.2,
-     "t1": 4.8,
+     "t0": 0.4,
+     "t1": 1.85,
      "claims": []
     },
     {
      "text": "Six and a half times the moonlight.",
-     "t0": 0.32,
-     "t1": 4.8,
+     "t0": 2.08,
+     "t1": 4.35,
      "claims": []
     },
     {

@@ -14,15 +14,15 @@
    "id": "L9",
    "file": "voice5/wav/L9.wav",
    "t": 10.42,
-   "dur": 4.635,
+   "dur": 4.62,
    "from": 0.0
   },
   {
    "id": "L9",
    "file": "voice5/wav/L9.wav",
-   "t": 22.055,
-   "dur": 3.605,
-   "from": 4.635
+   "t": 22.04,
+   "dur": 3.62,
+   "from": 4.62
   },
   {
    "id": "L10",
@@ -69,15 +69,15 @@
    "spoken": "The night is getting too bright."
   },
   {
-   "t0": 10.62,
-   "t1": 10.72,
+   "t0": 10.82,
+   "t1": 12.48,
    "text": "150,000.",
    "line": "L9",
    "spoken": "One hundred fifty thousand."
   },
   {
-   "t0": 10.74,
-   "t1": 15.025,
+   "t0": 12.5,
+   "t1": 15.02,
    "text": "6.5× the moonlight.",
    "line": "L9",
    "spoken": "Six and a half times the moonlight."
@@ -186,8 +186,8 @@
    "kind": "approach"
   },
   {
-   "t0": 15.055,
-   "t1": 22.055,
+   "t0": 15.04,
+   "t1": 22.04,
    "kind": "bright"
   },
   {
@@ -217,6 +217,7 @@
   "fade": 0.3
  },
  "units": "mi",
+ "breathe": true,
  "cta_at": 50.28,
  "cta_frac": 0.779,
  "cliff": "L11"

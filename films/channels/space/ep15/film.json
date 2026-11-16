@@ -1,149 +1,101 @@
 {
  "id": "one-more-orbit-s3-part3",
  "title": {
-  "title": "When the Ocean Starts to Climb",
+  "title": "The Night Gets Too Bright",
   "series": "One More Orbit · Season 3 · Part 3 of 8"
  },
  "disclosures": {
-  "aiVoice": true,
+  "realVoice": true,
+  "aiVoice": false,
   "aiVisuals": true
  },
- "dur": 64.336,
+ "dur": 64.57,
  "fps": 30,
  "captions": [
   {
-   "t0": 0.195,
-   "t1": 1.455,
-   "text": "Half the distance.",
-   "line": "ch3_hook",
-   "spoken": "Half the distance."
+   "t0": 0.325,
+   "t1": 2.56,
+   "text": "The night is getting too bright.",
+   "line": "B4",
+   "spoken": "The night is getting too bright."
   },
   {
-   "t0": 1.475,
-   "t1": 3.12,
-   "text": "Now the ocean moves.",
-   "line": "ch3_hook",
-   "spoken": "Now the ocean moves."
+   "t0": 10.82,
+   "t1": 12.48,
+   "text": "150,000.",
+   "line": "L9",
+   "spoken": "One hundred fifty thousand."
   },
   {
-   "t0": 6.768,
-   "t1": 12.008,
-   "text": "Half the distance: about 192,000 km.",
-   "line": "ch3_vo",
-   "spoken": "Half the distance: about one hundred ninety-two thousand kilometers."
+   "t0": 12.5,
+   "t1": 15.02,
+   "text": "6.5× the moonlight.",
+   "line": "L9",
+   "spoken": "Six and a half times the moonlight."
   },
   {
-   "t0": 12.028,
-   "t1": 15.758,
-   "text": "The Moon now looks twice as wide as it does tonight.",
-   "line": "ch3_vo",
-   "spoken": "The Moon now looks twice as wide as it does tonight."
+   "t0": 22.3,
+   "t1": 25.59,
+   "text": "Your shadow is sharp on the sand.",
+   "line": "L9",
+   "spoken": "Your shadow is sharp on the sand."
   },
   {
-   "t0": 15.778,
-   "t1": 19.963,
-   "text": "Tides come from the difference in the Moon's pull across the Earth.",
-   "line": "ch3_vo",
-   "spoken": "Tides come from the difference in the Moon's pull across the Earth."
+   "t0": 32.17,
+   "t1": 33.965,
+   "text": "And it's faster.",
+   "line": "L10",
+   "spoken": "And it's faster."
   },
   {
-   "t0": 19.983,
-   "t1": 23.383,
-   "text": "That difference falls off with the cube of the distance.",
-   "line": "ch3_vo",
-   "spoken": "That difference falls off with the cube of the distance."
+   "t0": 38.13,
+   "t1": 41.86,
+   "text": "One lap takes about 7 days, not 27.",
+   "line": "L10",
+   "spoken": "One lap takes about seven days, not twenty-seven."
   },
   {
-   "t0": 23.403,
-   "t1": 27.568,
-   "text": "So half the distance means about 8 times the tidal force.",
-   "line": "ch3_vo",
-   "spoken": "So half the distance means about eight times the tidal force."
+   "t0": 50.36,
+   "t1": 51.365,
+   "text": "Still looking up?",
+   "line": "D3",
+   "spoken": "Still looking up?"
   },
   {
-   "t0": 31.118,
-   "t1": 34.279,
-   "text": "Not a measured height, just the idea: the water",
-   "line": "ch3_vo",
-   "spoken": "Not a measured height, just the idea: the water at your feet starts to climb the beach."
+   "t0": 51.385,
+   "t1": 53.01,
+   "text": "Tap like and follow.",
+   "line": "D3",
+   "spoken": "Tap like and follow."
   },
   {
-   "t0": 34.299,
-   "t1": 36.938,
-   "text": "at your feet starts to climb the beach.",
-   "line": "ch3_vo",
-   "spoken": "Not a measured height, just the idea: the water at your feet starts to climb the beach."
+   "t0": 53.725,
+   "t1": 55.43,
+   "text": "It's bigger than the Sun now.",
+   "line": "L11",
+   "spoken": "It's bigger than the Sun now."
   },
   {
-   "t0": 36.958,
-   "t1": 40.638,
-   "text": "Slowly, in long swells, hours at a time.",
-   "line": "ch3_vo",
-   "spoken": "Slowly, in long swells, hours at a time."
-  },
-  {
-   "t0": 43.688,
-   "t1": 47.493,
-   "text": "The Moon is no longer a calm light in the sky.",
-   "line": "ch3_vo",
-   "spoken": "The Moon is no longer a calm light in the sky."
-  },
-  {
-   "t0": 47.615,
-   "t1": 49.52,
-   "text": "Real quick: like and follow,",
-   "line": "cta3_follow",
-   "spoken": "Real quick: like and follow, if space just got a little stranger for you."
-  },
-  {
-   "t0": 49.54,
-   "t1": 52.565,
-   "text": "if space just got a little stranger for you.",
-   "line": "cta3_follow",
-   "spoken": "Real quick: like and follow, if space just got a little stranger for you."
-  },
-  {
-   "t0": 52.706,
-   "t1": 54.451,
-   "text": "It is something that pulls.",
-   "line": "ch3_vo",
-   "spoken": "It is something that pulls."
-  },
-  {
-   "t0": 57.668,
-   "t1": 60.388,
-   "text": "And the night itself is about to change.",
-   "line": "ch3_loop",
-   "spoken": "And the night itself is about to change."
-  },
-  {
-   "t0": 60.517,
-   "t1": 61.797,
-   "text": "Part 3 of 8.",
-   "line": "closer3",
-   "spoken": "Part three of eight."
-  },
-  {
-   "t0": 61.817,
-   "t1": 63.627,
-   "text": "Full video on YouTube.",
-   "line": "closer3",
-   "spoken": "Full video on YouTube."
+   "t0": 61.22,
+   "t1": 63.6,
+   "text": "So what happens when they line up?",
+   "line": "L11",
+   "spoken": "So what happens when they line up?"
   }
  ],
  "km": [
   [
    0.0,
-   288300
+   192200
   ],
   [
    0.0,
-   288300
+   192200
   ],
   [
-   6.718,
-   192200,
-   3.5
+   10.245,
+   150000,
+   7.5
   ]
  ],
  "tracks": {
@@ -180,61 +132,66 @@
  },
  "clips": [
   {
-   "id": "ch3_hook",
-   "file": "voice/wav/08.wav",
+   "id": "B4",
+   "file": "voice5/wav/B4.wav",
    "t": 0.15,
-   "dur": 2.743,
+   "dur": 2.42,
    "from": 0.0
   },
   {
-   "id": "ch3_vo",
-   "file": "voice/wav/09.wav",
-   "t": 6.743,
-   "dur": 20.855,
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 10.42,
+   "dur": 4.62,
    "from": 0.0
   },
   {
-   "id": "ch3_vo",
-   "file": "voice/wav/09.wav",
-   "t": 31.098,
-   "dur": 9.57,
-   "from": 20.855
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 22.04,
+   "dur": 3.62,
+   "from": 4.62
   },
   {
-   "id": "ch3_vo",
-   "file": "voice/wav/09.wav",
-   "t": 43.668,
-   "dur": 3.627,
-   "from": 30.425
-  },
-  {
-   "id": "cta3_follow",
-   "file": "voice/wav/38.wav",
-   "t": 47.595,
-   "dur": 4.758,
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 32.01,
+   "dur": 1.985,
    "from": 0.0
   },
   {
-   "id": "ch3_vo",
-   "file": "voice/wav/09.wav",
-   "t": 52.653,
-   "dur": 1.575,
-   "from": 34.052
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 37.995,
+   "dur": 3.935,
+   "from": 1.985
   },
   {
-   "id": "ch3_loop",
-   "file": "voice/wav/10.wav",
-   "t": 57.578,
-   "dur": 2.569,
+   "id": "D3",
+   "file": "voice5/wav/D3.wav",
+   "t": 50.28,
+   "dur": 2.79,
    "from": 0.0
   },
   {
-   "id": "closer3",
-   "file": "voice/wav/30.wav",
-   "t": 60.497,
-   "dur": 2.889,
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 53.37,
+   "dur": 2.09,
    "from": 0.0
+  },
+  {
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 60.96,
+   "dur": 2.71,
+   "from": 2.09
   }
  ],
- "source": "season3/engine.js via long01/out/part3.json"
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "chips": [],
+ "source": "season3/engine.js via long01/out/v4-part3.json"
 }

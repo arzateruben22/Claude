@@ -232,7 +232,8 @@
    "start_earlier_s": 0.0,
    "end_later_s": -1.21,
    "why": "voice_edges.py: the cut waits for the voice to die away (owner, 12 Nov 2026)"
-  }
+  },
+  "sentence_times": "set from the audio (speech runs 0.43-1.79, 2.10-4.28, 4.94-6.78 s): the aligner had overlapped the first two sentences (digits in the recogniser's words)"
  },
  "L10": {
   "segments": [

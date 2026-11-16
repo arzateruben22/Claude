@@ -13,7 +13,9 @@ N = int(sys.argv[1]); YT = "--yt" in sys.argv; PRE = float(sys.argv[sys.argv.ind
 G = 0.35
 SPOKEN_CTA = N % 2 == 1      # the owner, 12 Nov 2026: a spoken like/follow ask only in every other part (1, 3, 5, 7); even parts keep only the silent pop-up, at the pause before the cliffhanger
 _dp = ((N - 1) // 2) % 2        # odd parts alternate the two lines: 1, 5 -> "If that made the sky feel bigger"; 3, 7 -> "Still looking up?"
-CTA = ((("D2" if YT else "D1") if _dp == 0 else ("D4" if YT else "D3"))) if SPOKEN_CTA else None; NAME = f"v4-part{N}" + ("-yt" if YT else "") + ("-preview" if PRE else "")
+CTA = ((("D2" if YT else "D1") if _dp == 0 else ("D4" if YT else "D3"))) if SPOKEN_CTA else None
+NAME = f"v4-part{N}" + ("-yt" if YT else "") + ("-preview" if PRE else "")
+if N == 0: SPOKEN_CTA = True; CTA = "D2"; YT = True; NAME = "v4-long"       # the long film: YouTube only, two asks (after the eclipse payoff, and at the end)
 PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1",
             "beats": [("__hook__", 3.0, "grow"), ("only goes down", 6.0, "approach"), ("A third wider", 3.0, "grow"), ("tidal pull", 3.5, "tide")],
             "chips": [], "km": [288300]},      # no chips: each one repeated the caption under it (owner, 12 Nov 2026)
@@ -30,19 +32,30 @@ PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1"
             "beats": [("__hook__", 7.0, "approach"), ("Nearly eight times wider", 4.0, "grow"), ("how fast the Earth turns", 4.0, "pull"), ("It hangs still", 5.5, "grow"), ("slides the wrong way", 9.0, "slide"), ("rises in the west", 7.0, "rise")], "chips": []},
         7: {"hook": "B8", "body": ["L19", "L20", "L21", "L22"], "closer": None, "start": 42000, "km": [30000], "keys": [("Twenty-five", 25000, 1.0), ("Twenty.", 20000, 1.0), ("Around eighteen thousand", 18000, 1.5)],
             "beats": [("__hook__", 5.5, "approach"), ("Twenty.", 5.0, "grow"), ("nine and a half thousand", 5.0, "strain"), ("straining", 7.0, "strain")], "chips": []},
+        0: {"seq": [f"L{i}" for i in range(1, 13)] + ["D2"] + [f"L{i}" for i in range(13, 27)] + ["D4"], "hook": "L1", "body": [f"L{i}" for i in range(2, 27)], "closer": None, "start": 384400, "km": [288300], "motion1": True,
+            "beats": [(("L3", "only goes down"), 6.0, "approach", 288300), (("L4", "A third wider"), 3.0, "grow"), (("L4", "tidal pull"), 3.5, "tide"),
+                      (("L5", "water starts to climb"), 6.0, "approach", 192200), (("L6", "the tidal pull"), 11.0, "climb"), (("L7", "Not a measured height"), 5.0, "tide"), (("L7", "lifted from above"), 6.0, "pull"),
+                      (("L8", "about to change"), 7.5, "approach", 150000), (("L9", "Six and a half times"), 7.0, "bright"), (("L9", "sharp on the sand"), 6.0, "bright"), (("L10", "And it's faster"), 4.0, "pull"), (("L10", "not twenty-seven"), 8.0, "slide"), (("L11", "bigger than the Sun now"), 5.5, "grow"),
+                      (("L11", "they line up"), 7.0, "approach", 100000), (("L12", "Nearly four times wider"), 5.0, "grow"), (("L12", "far more often"), 7.0, "eclipse"), (("L12", "because the orbit is tilted"), 5.0, "pull"), (("L12", "But often"), 7.0, "eclipse"), (("L13", "Faster"), 4.0, "grow"),
+                      (("L13", "ground feels it too"), 7.5, "approach", 70000), (("L14", "Seventy thousand"), 5.0, "grow"), (("L14", "today's tidal pull"), 7.0, "tide"), (("L14", "tens of centimeters"), 8.5, "flex"), (("L14", "flex far more"), 8.0, "flex"),
+                      (("L15", "wrong side of the sky"), 7.0, "approach", 50000), (("L16", "Nearly eight times wider"), 4.0, "grow"), (("L16", "how fast the Earth turns"), 4.0, "pull"), (("L17", "It hangs still"), 5.5, "grow"), (("L18", "slides the wrong way"), 9.0, "slide"), (("L18", "rises in the west"), 7.0, "rise"),
+                      (("L18", "rises in the west"), 5.5, "approach", 30000), (("L19", "Twenty."), 5.0, "grow"), (("L20", "nine and a half thousand"), 5.0, "strain"), (("L21", "straining"), 7.0, "strain"),
+                      (("L23", "A stretch"), 10.0, "stretch"), (("L24", "flatten into a ring"), 9.0, "band"), (("L25", "No Moon"), 8.0, "ring"), (("L26", "Tonight's Moon is fine"), 6.0, "pull")],
+            "keys": [("Forty-two thousand", 42000, 1.5), ("Twenty-five", 25000, 1.0), ("Twenty.", 20000, 1.0), ("Around eighteen thousand", 18000, 1.5), ("Tonight's Moon is fine", 384400, 3.0)], "chips": []},
         8: {"hook": "L23", "body": ["L24", "L25", "L26"], "closer": "C8", "start": 17000, "km": [], "keys": [("Tonight's Moon is fine", 384400, 3.0)],
             "beats": [("__hook__", 10.0, "stretch"), ("flatten into a ring", 9.0, "band"), ("No Moon", 8.0, "ring"), ("Tonight's Moon is fine", 6.0, "pull")], "chips": []}}[N]
 body = PART["body"]; cliff = body[-1]
 def build(use_closer):
     # sequence of (id, from, dur): hook, body lines (the CTA goes before the cliffhanger line), the closer
-    seq = [(PART["hook"], 0.0, lines[PART["hook"]]["dur"])] + [(i, 0.0, lines[i]["dur"]) for i in body[:-1]] + ([(CTA, 0.0, lines[CTA]["dur"])] if CTA else []) + [(cliff, 0.0, lines[cliff]["dur"])]
+    if PART.get("seq"): seq = [(i, 0.0, lines[i]["dur"]) for i in PART["seq"]]
+    else: seq = [(PART["hook"], 0.0, lines[PART["hook"]]["dur"])] + [(i, 0.0, lines[i]["dur"]) for i in body[:-1]] + ([(CTA, 0.0, lines[CTA]["dur"])] if CTA else []) + [(cliff, 0.0, lines[cliff]["dur"])]
+    if PART.get("seq"): seq = [(i, 0.0, lines[i]["dur"]) for i in PART["seq"]]
     if use_closer: seq.append((PART["closer"], 0.0, lines[PART["closer"]]["dur"]))
     clips, caps, t = [], [], 0.15
     for lid, frm, d in seq:
-        if lid == CTA: t += 0.0
         clips.append({"id": lid, "file": lines[lid]["file"], "t": round(t, 3), "dur": d, "from": frm})
         for s in lines[lid]["sentences"]: caps.append({"t0": round(t + s["t0"], 3), "t1": round(t + s["t1"] + 0.25, 3), "text": s["text"], "line": lid})
-        t += d + (0.3 if lid in (CTA,) or lid == seq[-1][0] else G)
+        t += d + (0.3 if lid in (CTA, "D4") or lid == seq[-1][0] else G)
     for a, b in zip(caps, caps[1:]): a["t1"] = round(min(a["t1"], b["t0"] - 0.02), 3) if b["t0"] > a["t0"] else a["t1"]
     if CTA: cta_t = next(c["t"] for c in clips if c["id"] == CTA)
     else:                                                       # no spoken ask: the pop-up's moment is the pause before the cliffhanger line
@@ -77,25 +90,29 @@ def build(use_closer):
         return T
     # beats
     items = []
-    for after, d, kind in PART["beats"]:
+    for bt in PART["beats"]:
+        after, d, kind = bt[:3]; arr = bt[3] if len(bt) > 3 else (PART["km"][0] if (kind == "approach" and PART["km"]) else None)
         if after == "__hook__": T = silent_after([c for c in caps if c["line"] == PART["hook"]][-1])
+        elif isinstance(after, tuple): T = silent_after(next(c for c in caps if c["line"] == after[0] and after[1] in c["text"]))
         else: T = silent_after(next(c for c in caps if after in c["text"]))
-        items.append((T, d, kind, PART["km"][0] if (kind == "approach" and PART["km"]) else None))
+        items.append((T, d, kind, arr))
     items.sort(key=lambda x: x[0])
     st0 = PART.get("start", 384400); kk = [[0.0, st0]]
     if PART["km"]:
-        T_ap = next(i[0] for i in items if i[2] == "approach"); kk += [[0.0, st0], [T_ap, PART["km"][0]]]
+        kk += [[0.0, st0]]
+        for i_ in items:
+            if i_[2] == "approach" and i_[3]: kk.append([i_[0], i_[3]])
     tracks = {"eclipse": [[0, 0]], "moon": [[0, 1]], "brk": [[0, 0]], "ring": [[0, 0]], "tonight": [[0, 0]]}
     dur0 = t + 0.6
     nclips, ncaps, nkm, ntr, beats, (dur, cta_n) = insert_beats(clips, caps, kk, tracks, items, [dur0, cta_t])
     def capt(sub):      # the final time of the caption whose sentence contains `sub` (after the beats)
         return next(c for c in ncaps if sub in c["text"])
     for sub, kmv, gl in PART.get("keys", []):                      # the counter arrives at a number as it is said: a glide of gl seconds ending just before the caption ends
-        c = capt(sub); ta = round(c["t1"] - 0.25, 3); last = nkm[-1][1]; nkm.append([round(ta - gl - 0.001, 3), last]); nkm.append([ta, kmv, gl])
+        c = capt(sub); ta = round(c["t1"] - 0.25, 3); nkm.sort(key=lambda k: k[0]); last = [k[1] for k in nkm if k[0] <= ta - gl - 0.001][-1]; nkm.append([round(ta - gl - 0.001, 3), last]); nkm.append([ta, kmv, gl])
     nkm.sort(key=lambda k: k[0])
     for b in beats:                                                 # eclipse beats: the sky dims, the stars come out, the disc slides over the Sun
         if b["kind"] == "eclipse": ntr["eclipse"] += [[round(b["t0"] - 0.2, 3), 0], [round(b["t0"] + 1.6, 3), 1], [round(b["t1"], 3), 1], [round(b["t1"] + 1.6, 3), 0]]
-    if N == 8:                                                      # the break-up: the Moon stretches, the rock spreads into a ring, then tonight's Moon is back
+    if N in (0, 8):                                                 # the break-up: the Moon stretches, the rock spreads into a ring, then tonight's Moon is back
         t_b = capt("It comes apart")["t0"]; t_r = capt("The rock spreads")["t0"]; t_n = capt("Tonight's Moon is fine")["t0"]
         ntr["moon"] += [[round(t_b - 0.1, 3), 1], [round(t_b + 1.3, 3), 0]]; ntr["brk"] += [[round(t_b - 0.1, 3), 0], [round(t_b + 1.3, 3), 1], [round(t_r - 0.1, 3), 1], [round(t_r + 2.6, 3), 0]]
         ntr["ring"] += [[round(t_r - 0.1, 3), 0], [round(t_r + 2.6, 3), 1], [round(t_n - 0.2, 3), 1], [round(t_n + 2.0, 3), 0]]; ntr["tonight"] += [[round(t_n - 0.2, 3), 0], [round(t_n + 2.0, 3), 1]]
@@ -118,9 +135,9 @@ def build(use_closer):
                     n += 1
                     if n == occ: t0 = round(c["t"] + w["start"] - c["from"], 3); chips.append({"t0": t0, "t1": round(t0 + d, 3), "text": text})
     for c in ncaps: c["spoken"] = c["text"]; c["text"] = to_display(c["text"])
-    tl = {"name": NAME, "mode": "port", "dur": round(dur, 3), "clips": nclips, "captions": split_caps(ncaps, 68), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
-          "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
-    if N == 1:   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
+    tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": split_caps(ncaps, 100 if N == 0 else 68), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
+          "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "breathe": N >= 3 or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
+    if N == 1 or PART.get("motion1"):   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
         cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]
         tl["drift"] = {"a": round(l2 - 0.2, 3), "b": round(rv, 3), "c": round(rv + 1.4, 3)}
         tl["camera"] = [{"t": round(l1 + 0.3, 3), "s": 1.18, "pv": "moon"}, {"t": round(rv, 3), "s": 1.0, "pv": "moon"}, {"t": round(rv + 2.0, 3), "s": 1.12, "pv": "moon"}]
@@ -163,6 +180,6 @@ if N == 1:
     cue(D["b"] + 0.2, "mass", dur=12.0, gain=-4, f0=38); cue(D["b"] + 1.4, "tick", gain=-4, repeat=14, every=0.7)   # the counter falling
 for c in tl["chips"]: cue(c["t0"], "tick", gain=-1); cue(c["t0"], "boom", dur=1.8, gain=-7)
 cues.append({"at": f"cap:{cliff}-1.4", "kind": "riser", "until": f"capend:{cliff}+0.1", "gain": 2, "seed": N * 100 + 90}); cues.append({"at": f"capend:{cliff}+0.1", "kind": "boom", "dur": 3.0, "gain": 0, "seed": N * 100 + 91})
-if N == 8: cues.append({"at": f"cap:L23-0.2", "kind": "debris", "dur": 3.0, "gain": -3, "seed": 899})
+if N in (0, 8): cues.append({"at": f"cap:L23-0.2", "kind": "debris", "dur": 3.0, "gain": -3, "seed": 899})
 if "--yt" not in sys.argv:
     json.dump({"palette": "space", "cues": cues}, open(f"{L1}/v4/part{N}{'-preview' if PRE else ''}.sfx.json", "w"), indent=1); print("sfx cues", len(cues))

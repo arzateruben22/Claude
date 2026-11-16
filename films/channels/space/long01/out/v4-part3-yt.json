@@ -1,0 +1,224 @@
+{
+ "name": "v4-part3-yt",
+ "mode": "port",
+ "dur": 65.35,
+ "clips": [
+  {
+   "id": "B4",
+   "file": "voice5/wav/B4.wav",
+   "t": 0.15,
+   "dur": 2.42,
+   "from": 0.0
+  },
+  {
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 10.42,
+   "dur": 4.62,
+   "from": 0.0
+  },
+  {
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 22.04,
+   "dur": 3.62,
+   "from": 4.62
+  },
+  {
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 32.01,
+   "dur": 1.985,
+   "from": 0.0
+  },
+  {
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 37.995,
+   "dur": 3.935,
+   "from": 1.985
+  },
+  {
+   "id": "D4",
+   "file": "voice5/wav/D4.wav",
+   "t": 50.28,
+   "dur": 3.57,
+   "from": 0.0
+  },
+  {
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 54.15,
+   "dur": 2.09,
+   "from": 0.0
+  },
+  {
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 61.74,
+   "dur": 2.71,
+   "from": 2.09
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.325,
+   "t1": 2.56,
+   "text": "The night is getting too bright.",
+   "line": "B4",
+   "spoken": "The night is getting too bright."
+  },
+  {
+   "t0": 10.82,
+   "t1": 12.48,
+   "text": "150,000.",
+   "line": "L9",
+   "spoken": "One hundred fifty thousand."
+  },
+  {
+   "t0": 12.5,
+   "t1": 15.02,
+   "text": "6.5× the moonlight.",
+   "line": "L9",
+   "spoken": "Six and a half times the moonlight."
+  },
+  {
+   "t0": 22.3,
+   "t1": 25.59,
+   "text": "Your shadow is sharp on the sand.",
+   "line": "L9",
+   "spoken": "Your shadow is sharp on the sand."
+  },
+  {
+   "t0": 32.17,
+   "t1": 33.965,
+   "text": "And it's faster.",
+   "line": "L10",
+   "spoken": "And it's faster."
+  },
+  {
+   "t0": 38.13,
+   "t1": 41.86,
+   "text": "One lap takes about 7 days, not 27.",
+   "line": "L10",
+   "spoken": "One lap takes about seven days, not twenty-seven."
+  },
+  {
+   "t0": 50.485,
+   "t1": 51.66,
+   "text": "Still looking up?",
+   "line": "D4",
+   "spoken": "Still looking up?"
+  },
+  {
+   "t0": 51.68,
+   "t1": 53.81,
+   "text": "Tap like and subscribe.",
+   "line": "D4",
+   "spoken": "Tap like and subscribe."
+  },
+  {
+   "t0": 54.505,
+   "t1": 56.21,
+   "text": "It's bigger than the Sun now.",
+   "line": "L11",
+   "spoken": "It's bigger than the Sun now."
+  },
+  {
+   "t0": 62.0,
+   "t1": 64.38,
+   "text": "So what happens when they line up?",
+   "line": "L11",
+   "spoken": "So what happens when they line up?"
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   192200
+  ],
+  [
+   0.0,
+   192200
+  ],
+  [
+   10.245,
+   150000,
+   7.5
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 2.745,
+   "t1": 10.245,
+   "kind": "approach"
+  },
+  {
+   "t0": 15.04,
+   "t1": 22.04,
+   "kind": "bright"
+  },
+  {
+   "t0": 25.835,
+   "t1": 31.835,
+   "kind": "bright"
+  },
+  {
+   "t0": 33.995,
+   "t1": 37.995,
+   "kind": "pull"
+  },
+  {
+   "t0": 42.105,
+   "t1": 50.105,
+   "kind": "slide"
+  },
+  {
+   "t0": 56.24,
+   "t1": 61.74,
+   "kind": "grow"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "units": "mi",
+ "breathe": true,
+ "cta_at": 50.28,
+ "cta_frac": 0.769,
+ "cliff": "L11"
+}

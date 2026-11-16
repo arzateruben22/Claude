@@ -1,31 +1,31 @@
-# Posting sheet: One More Orbit S3, Part 3 of 8, "When the Ocean Starts to Climb"
+# Posting sheet: One More Orbit S3, Part 3 of 8, "The Night Gets Too Bright"
 
 ## YouTube Shorts
-Title: When the Ocean Starts to Climb
+Title: The Night Gets Too Bright
 
-Halve the Moon's distance and its tidal pull grows about eightfold. A thought experiment about when the ocean starts to climb the beach.
+Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment.
 
-At half the distance, the tides are far larger than anything you have seen.
+Moonlight grows with the square of how close the Moon comes.
 
 Part 3 of 8. Full video on YouTube: How Close Can the Moon Get Before It Breaks?
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 #Shorts #space #moon #astronomy
 
 ## TikTok
-Halve the Moon's distance and its tidal pull grows about eightfold. A thought experiment about when the ocean starts to climb the beach. Part 3 of 8. Full video on YouTube. #space #moon #learnontiktok #science
+Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment. Part 3 of 8. Full video on YouTube. #space #moon #learnontiktok #science
 
 ## Instagram
-Halve the Moon's distance and its tidal pull grows about eightfold. A thought experiment about when the ocean starts to climb the beach.
+Bring the Moon much closer and moonlight gets far brighter, because light fades with the square of distance. A thought experiment.
 
-At half the distance, the tides are far larger than anything you have seen.
+Moonlight grows with the square of how close the Moon comes.
 
 Part 3 of 8. Full video on YouTube (link in bio).
 
-Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 ## Pinned comment
-Part 3 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is a synthetic voice (AI); the pictures are AI-assisted paintings and code-rendered.
+Part 3 of 8. The full film, "How Close Can the Moon Get Before It Breaks?", is on YouTube. Every number's source is in its description. Thought experiment: the Moon is not coming closer. Narration is the creator's own voice; the pictures are AI-assisted paintings and code-rendered.
 
 Post the long film first, then one part a day.

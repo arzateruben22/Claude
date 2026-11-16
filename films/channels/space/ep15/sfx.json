@@ -9,17 +9,17 @@
    "seed": 301
   },
   {
-   "at": 3.02,
+   "at": 2.54,
    "kind": "mass",
-   "dur": 5.3,
+   "dur": 9.3,
    "gain": -2,
    "f0": 41,
    "seed": 302
   },
   {
-   "at": 3.22,
+   "at": 2.75,
    "kind": "whoosh",
-   "dur": 3.5,
+   "dur": 7.5,
    "pan": [
     -0.4,
     0.4
@@ -28,50 +28,48 @@
    "seed": 303
   },
   {
-   "at": 6.72,
+   "at": 10.24,
    "kind": "boom",
    "dur": 2.5,
-   "gain": -5,
+   "gain": -4,
    "seed": 304
   },
   {
-   "at": 6.72,
+   "at": 10.24,
    "kind": "tick",
    "gain": -2,
    "seed": 305
   },
   {
-   "at": 27.6,
-   "kind": "surge",
-   "dur": 4.0,
-   "gain": 1,
+   "at": 15.04,
+   "kind": "shimmer",
+   "dur": 7.5,
+   "gain": -2,
    "seed": 306
   },
   {
-   "at": 29.35,
-   "kind": "wave",
-   "dur": 2.4,
-   "gain": -1,
+   "at": 15.04,
+   "kind": "tick",
+   "gain": -3,
    "seed": 307
   },
   {
-   "at": 40.67,
-   "kind": "surge",
-   "dur": 3.5,
-   "gain": 1,
+   "at": 25.84,
+   "kind": "shimmer",
+   "dur": 6.5,
+   "gain": -2,
    "seed": 308
   },
   {
-   "at": 42.17,
-   "kind": "wave",
-   "dur": 2.4,
-   "gain": -1,
+   "at": 25.84,
+   "kind": "tick",
+   "gain": -3,
    "seed": 309
   },
   {
-   "at": 54.56,
+   "at": 33.99,
    "kind": "whoosh",
-   "dur": 3.0,
+   "dur": 4.0,
    "pan": [
     0.3,
     -0.3
@@ -80,26 +78,64 @@
    "seed": 310
   },
   {
-   "at": 54.76,
+   "at": 34.2,
    "kind": "mass",
-   "dur": 3.8,
+   "dur": 4.8,
    "gain": -4,
    "f0": 44,
    "seed": 311
   },
   {
-   "at": "cap:ch3_loop-1.4",
-   "kind": "riser",
-   "until": "capend:ch3_loop+0.1",
-   "gain": 2,
+   "at": 42.1,
+   "kind": "whoosh",
+   "dur": 8.0,
+   "pan": [
+    0.5,
+    -0.5
+   ],
+   "gain": -1,
    "seed": 312
   },
   {
-   "at": "capend:ch3_loop+0.1",
+   "at": 42.4,
+   "kind": "mass",
+   "dur": 8.0,
+   "gain": -3,
+   "f0": 40,
+   "seed": 313
+  },
+  {
+   "at": "capend:L11-8.14",
+   "kind": "whoosh",
+   "dur": 5.5,
+   "pan": [
+    0.3,
+    -0.3
+   ],
+   "gain": -3,
+   "seed": 314
+  },
+  {
+   "at": "capend:L11-7.94",
+   "kind": "mass",
+   "dur": 6.3,
+   "gain": -4,
+   "f0": 44,
+   "seed": 315
+  },
+  {
+   "at": "cap:L11-1.4",
+   "kind": "riser",
+   "until": "capend:L11+0.1",
+   "gain": 2,
+   "seed": 390
+  },
+  {
+   "at": "capend:L11+0.1",
    "kind": "boom",
    "dur": 3.0,
    "gain": 0,
-   "seed": 313
+   "seed": 391
   }
  ]
 }

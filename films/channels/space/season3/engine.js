@@ -107,7 +107,8 @@ function shootingStars(t) {
 function zoomParams(t, G) {   // the camera at time t: a zoom of s about the world point F, anchored at screen point (tx, ty); null = identity
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; let z = null;
   if (inCh1) { const mo0 = moonState(384400, G), zs = zoomState(t, b, mo0); z = { s: zs.s, F: zs.F, k: zs.k }; } else { const mv = movesState(t, G); if (mv) z = mv; }
-  if (!z) return null; let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
+  if (!z) return null; if (TL.breathe) z = { ...z, s: z.s * (1 + 0.05 * Math.max(0, 1 - (z.s - 1) / 0.03) * (0.5 - 0.5 * Math.cos(0.8 * t))) };   // nothing holds still: while no beat pushes the camera, it breathes in and out (up to 5%)
+  let tx = lerp(z.F.x, W * 0.54, z.k), ty = lerp(z.F.y, H * 0.46, z.k);
   tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
   return { tx, ty, s: z.s, Fx: z.F.x, Fy: z.F.y };
 }
@@ -189,7 +190,7 @@ function movesState(t, G) {
   const ks = partKeys(); if (!ks) return null; let i = -1; for (let j = 0; j < ks.length; j++) if (t >= ks[j].t) i = j;
   if (i < 0) { const P = pivotOf(ks[0].pv, t, G); return { s: 1, F: P.F, k: P.k }; }
   const k = ks[i], p = i > 0 ? ks[i - 1] : { s: 1, pv: k.pv }, u = sm((t - k.t) / (k.s === 1.0 ? 1.8 : 1.4)), A = pivotOf(p.pv, t, G), B = pivotOf(k.pv, t, G);
-  const dr = (q) => (q.s > 1.0 && q.t !== undefined ? 1 + 0.07 * sm((t - q.t - 1.2) / 4.5) : 1);   // the push keeps creeping in after it lands, so a held beat never sits still
+  const dr = (q) => (q.s > 1.0 && q.t !== undefined ? 1 + 0.07 * sm((t - q.t - 1.2) / 4.5) + (TL.breathe ? 0.012 * Math.max(0, t - q.t - 5.7) : 0) : 1);   // the push keeps creeping in after it lands, so a held beat never sits still
   return { s: lerp(p.s * dr(p), k.s * dr(k), u), F: { x: lerp(A.F.x, B.F.x, u), y: lerp(A.F.y, B.F.y, u) }, k: lerp(A.k, B.k, u) };
 }
 function zoomState(t, b, mo) {   // {s, F (world pivot), k (0 = pivot stays put, 1 = pivot goes to the screen anchor)}

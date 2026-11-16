@@ -33,8 +33,8 @@ sp = lambda i: " ".join(x["text"] for x in lines[i]["sentences"])
 body = (f"# One More Orbit · Season 3 · Part {n} of 8: \"{title}\"\n\nv4, in the creator's own voice (recorded 12 Nov 2026): picture-led, {tl['dur']:.0f} s, 9:16. The 'Thought experiment' tag shows for the first 5 s.\n"
         f"Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part{n}.json.\n\n## opening\nvo: {sp(HOOK)}\n\n## body\n" + "\n".join(f"vo: {sp(i)}" for i in BODY[:-1]) +
         (f"\n\n## like/follow ({tl['cta_frac'] * 100:.0f}% of the runtime)\nvo: {sp(CTA)}  (YouTube file: {sp(CTA_YT)})" if CTA else
-         f"\n\n## like/follow ({tl['cta_frac'] * 100:.0f}% of the runtime)\nno spoken ask in an even part (owner, 12 Nov 2026): the silent thumbs-up + bell pop-up only, in the pause before the cliffhanger") +
-        f"\n\n## cliffhanger and closer\nvo: {sp(BODY[-1])}\nvo: {sp(CL)}\n")
+         f"\n\n## like/follow ({tl['cta_frac'] * 100:.0f}% of the runtime)\nno spoken ask in an even part (owner, 12-16 Nov 2026): the thumbs-up + bell pop-up only, in the pause before the cliffhanger") +
+        f"\n\n## cliffhanger" + (f" and closer (even part)\nvo: {sp(BODY[-1])}\nvo: {sp(CL)}\n" if n % 2 == 0 else f" (odd part: no closer)\nvo: {sp(BODY[-1])}\n"))
 open(ep + "/script.md", "w").write(body)
 allc = {c["id"]: c for c in json.load(open(L1 + "/claims.json"))}; cl = []
 for k, sent in CLAIMS.items(): c = dict(allc[k]); c["sentence"] = sent; cl.append(c)

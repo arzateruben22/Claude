@@ -1,0 +1,28 @@
+duration 65.36 s OK
+true peak -2.1 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part3-yt-contact.jpg
+    0.33  caption: 'The night is getting too bright.'
+          speech : 'The night is getting too bright.'
+   10.82  caption: '150,000.'
+          speech : '150,000.'
+   12.50  caption: '6.5× the moonlight.'
+          speech : 'six and a half times the moonlight.'
+   22.30  caption: 'Your shadow is sharp on the sand.'
+          speech : 'Your shadow is sharp on the sand.'
+   32.17  caption: "And it's faster."
+          speech : "And it's faster."
+   38.13  caption: 'One lap takes about 7 days, not 27.'
+          speech : 'One lap takes about seven days, not 27.'
+   50.48  caption: 'Still looking up?'
+          speech : 'Still looking up. Tap'
+   51.68  caption: 'Tap like and subscribe.'
+          speech : 'Tap like and subscribe.'
+   54.51  caption: "It's bigger than the Sun now."
+          speech : "It's bigger than the sun now."
+   62.00  caption: 'So what happens when they line up?'
+          speech : 'So what happens when they line up?'
+caption = speech: OK
+QA PASS
