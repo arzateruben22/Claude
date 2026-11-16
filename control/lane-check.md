@@ -276,3 +276,4 @@ STATE 14:25 UTC: weekly 0.54, 5h 0.07. CAST FX5 building (14:24, Fable). SMOOTH 
 STATE 14:52 UTC: weekly 0.55, 5h 0.11. CAST FX5 building (14:51). SMOOTH repair2 (14:50).
 STATE 15:22 UTC: weekly 0.56, 5h 0.14. CAST FX5 building (15:19). SMOOTH repair2 done, final re-judge running (15:21).
 STATE 15:50 UTC: weekly 0.57, 5h 0.20. CAST FX5 building (15:45). SMOOTH: 5 rejections so far, last re-judge running (15:44).
+STATE 16:18 UTC: weekly 0.59, 5h 0.25. CAST FX5 building (16:16). SMOOTH final re-judge (16:14).
