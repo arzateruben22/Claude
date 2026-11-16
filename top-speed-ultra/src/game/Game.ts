@@ -9,7 +9,9 @@ import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
-import { presetFor, retroOn } from './settings';
+import { presetFor, retroOn, GOV_FLOOR, loadBench, saveBench, loadDisplay, saveDisplay } from './settings';
+import type { QualityPreset, Quality, Density, BenchPick } from './settings';
+import { FrameGovernor, Rung, T60, T30, STEP as GOV_STEP, capPeriod } from './render/governor';
 import { RetroStyle } from './render/style';
 import { Input, Controls } from './input';
 import { configureTextures } from './textures';
@@ -63,6 +65,10 @@ const SHOTS: Shot[] = [
   { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
 ];
 const DT = 1 / 120;
+// the governor's traffic step (SMOOTH): `steps` density levels lighter, never under Light (no traffic at all would
+// change the drive, not just its cost)
+const DENS_ORDER: Density[] = ['none', 'light', 'moderate', 'heavy', 'expert'];
+const govDensity = (d: Density, steps: number): Density => (steps > 0 && DENS_ORDER.indexOf(d) >= 2 ? DENS_ORDER[DENS_ORDER.indexOf(d) - steps] : d);
 // Auto-drive's cruise: the attract drive's own (31 m/s, about 69 mph, a posted-limit pace), well under every car's top
 // speed in either tune; the autopilot slows from it for traffic and curves
 const AUTO_CRUISE = 31;
@@ -188,9 +194,26 @@ export class Game {
   private cineT = 0; private cineShot = 0;   // the cinematic camera's clock and its current shot
   private head = new THREE.Vector3();
   private shake = 0;
-  private renderScale = 1;
-  private frameAvg = 16;
-  private scaleT = 0;
+  private renderScale = 1;           // the preset's render scale times the governor's share of it (stats.scale)
+  // ------------------------------------------------------------------ the frame-time governor (SMOOTH)
+  // the preset in force, as a live copy the world reads (Roads, Terrain hold it): the governor's draw distance and
+  // scenery density land on it without a rebuild (scenery density on the tiles built from then on)
+  private live: QualityPreset = { ...QUALITY.low };
+  readonly gov = new FrameGovernor((level) => this.applyGov(level));
+  govFeed = true;                    // the frame loop feeds the governor (a test turns it off to feed it its own frame times)
+  private govScale = 1;              // the governor's share of the preset's resolution (GOV_FLOOR..startScale)
+  private startScale = 1;            // where it starts: 1, or the graphics check's pick for this preset
+  private govTraffic = 0;            // traffic density steps the governor took off
+  private benchPick: BenchPick | null = loadBench();
+  // what this device's display showed on earlier visits and in the graphics check's rounds (seeded into the governor in
+  // the constructor; saved again when it learns more: adapt)
+  private display = loadDisplay();
+  private benchQ: Quality | null = null;   // the graphics check's preset while it runs (its frames, not the player's)
+  private benchScale = 1;
+  private bench = { on: false, n: 0, sum: 0, slow: 0, work: 0 };
+  private workMs = 0; private lastDrawn = 0;
+  injectMs = 0;                      // test hook: artificial work added to every frame (ms), the governor sees it as load
+  private perfCalls = 0; private perfTris = 0;
   private fpsN = 0; private fpsT = 0; private fps = 60;
   private hudT = 0;
   private hudOn = true;
@@ -245,6 +268,7 @@ export class Game {
 
   constructor(private host: HTMLElement, settings: Settings, private ev: GameEvents) {
     this.settings = settings;
+    this.seedDisplay();
     const canvas = document.createElement('canvas');
     canvas.className = 'game-canvas';
     canvas.setAttribute('aria-label', 'The view from the driver\'s seat on an Orange County freeway');
@@ -306,7 +330,8 @@ export class Game {
   private buildWorld() {
     if (this.roads) { this.roads.clear(); this.scene.remove(this.roads.group); }
     if (this.terrain) { this.terrain.clear(); this.scene.remove(this.terrain.group); }
-    const q = QUALITY[this.settings.quality];
+    this.syncLive();
+    const q = this.live;                 // the live preset: the governor's draw distance and scenery reach the world
     this.roads = new Roads(this.net, q); this.scene.add(this.roads.group);
     this.terrain = new Terrain(this.net, q); this.scene.add(this.terrain.group);
     if (!this.traffic) { this.traffic = new Traffic(this.net); this.scene.add(this.traffic.group); }
@@ -315,8 +340,8 @@ export class Game {
     this.applyDensity();
   }
   private applyDensity() {
-    const d = DENSITY[this.settings.density];
-    this.traffic.level = { perKmLane: d.perKmLane, bold: d.bold };
+    const d = DENSITY[govDensity(this.settings.density, this.govTraffic)];
+    this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.settings.density].bold : d.bold };
   }
 
   // build everything in view before showing it (yielding now and then so the page stays alive)
@@ -393,6 +418,7 @@ export class Game {
 
   private startAttract() {
     this.attract = true; this.over = false; this.mode = 'free';
+    if (this.gov.rungs.length) this.govLadder(true);
     this.syncAtmosphere();
     this.setHyper(false);
     const m = this.findMain('I-405 North');
@@ -416,6 +442,7 @@ export class Game {
     this.audio.vol = { master: this.settings.master, engine: this.settings.engine, ambient: this.settings.ambient };
     this.audio.applyVolumes();
     this.mode = mode; this.attract = false; this.over = false;
+    this.govLadder(true);              // Speed Survival's ladder has no traffic step: the steps taken carry over
     this.syncAtmosphere(true);         // a run opens in the player's own time and weather, behind the loading screen
     const st = STARTS.find((x) => x.label === startLabel) ?? STARTS[0];
     // "start at your exit": on that exit's carriageway, 450 m before its sign, so the first thing you see is your exit
@@ -468,6 +495,7 @@ export class Game {
 
   updateSettings(s: Settings) {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
+    const ad = this.settings.adaptive !== s.adaptive || this.settings.qualityChosen !== s.qualityChosen;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
     const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
     const owner = s.owner !== this.settings.owner;
@@ -487,6 +515,7 @@ export class Game {
     if (d && this.traffic) this.applyDensity();
     if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
     else if (st) this.applyQuality();
+    else if (ad || d) { if (ad) this.startScale = this.pickStart(); this.govLadder(!ad); }   // Adaptive quality switched (from the top of the ladder, at its start scale), or a traffic step came or went
     this.onResize();
   }
 
@@ -903,13 +932,15 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- graphics quality
   private applyQuality(rebuild = false) {
-    const q = presetFor(this.settings);
-    this.renderScale = q.renderScale;
+    const q = this.preset();
+    this.syncLive();
+    this.startScale = this.pickStart();
+    this.govScale = this.startScale; this.renderScale = q.renderScale * this.govScale;
     this.renderer.shadowMap.enabled = q.shadows > 0;
-    const far = q.drawDistance * 1.15;
+    const far = this.live.drawDistance * 1.15;
     this.camera.far = far; this.camera.updateProjectionMatrix();
     this.env.setQuality(q.shadows, far);
-    if (this.traffic) this.traffic.viewAhead = q.drawDistance * 0.95;
+    if (this.traffic) this.traffic.viewAhead = this.live.drawDistance * 0.95;
     if (rebuild && this.net) {
       this.configureCar();                 // the car's own quality tier may have changed
       this.buildWorld();
@@ -961,8 +992,208 @@ export class Game {
       this.composer = c;
     }
     this.applyStyle();
+    this.govLadder(false);                 // the preset's ladder, from the top: the effects as the preset has them
     this.resize(true);                     // a new composer (and grade pass) takes the size even when the canvas kept it
   }
+
+  // ----------------------------------------------------------------------------------------- the frame-time governor
+  // the preset in force: the graphics check's while it runs, else the player's (Retro on Low its own)
+  private preset(): QualityPreset { return this.benchQ ? QUALITY[this.benchQ] : presetFor(this.settings); }
+  private syncLive() {
+    const p = this.preset();
+    Object.assign(this.live, p);
+    if (p.minPixelRatio === undefined) delete this.live.minPixelRatio;
+    // the graphics check measures each preset's effects and resolution, not its world: the player's draw distance and
+    // scenery stay (nothing is built or dropped for it)
+    if (this.benchQ) { const w = presetFor(this.settings); this.live.drawDistance = w.drawDistance; this.live.props = w.props; }
+  }
+  // the governor works on the standard looks with Adaptive quality on; Retro keeps its own fixed picture, the check its own
+  private govOn() { return this.settings.adaptive && !retroOn(this.settings) && !this.benchQ; }
+  // where the preset's resolution starts: the graphics check's round while it runs; else the check's saved start scale
+  // for this preset, only while Adaptive quality runs it and only when the check chose the preset (the player's own
+  // pick, or Adaptive off, renders the preset at its full resolution)
+  private pickStart(): number {
+    if (this.benchQ) return this.benchScale;
+    const b = this.benchPick;
+    return b && !b.skipped && !b.inconclusive && b.quality === this.settings.quality && this.govOn() && !this.settings.qualityChosen ? b.scale : 1;
+  }
+  // the step-down ladder for the preset in force, costliest and least visible first (governor.ts says why)
+  private govRungs(): Rung[] {
+    const q = this.preset(), r: Rung[] = [];
+    if (!this.govOn()) return r;
+    if (q.post && q.ao) r.push({ id: 'ao', text: 'AO off', up: 'AO on' });
+    if (q.shadows >= 1024) r.push({ id: 'shadow', text: `Shadows ${q.shadows / 2}`, up: `Shadows ${q.shadows}` });
+    if (q.post && q.msaa > 0) r.push({ id: 'msaa', text: 'MSAA off', up: `MSAA ${q.msaa}x` });
+    if (q.post && q.bloom) r.push({ id: 'bloom', text: 'Bloom off', up: 'Bloom on' });
+    r.push({ id: 'draw', text: `Draw distance ${Math.round(q.drawDistance * 0.8)} m`, up: `Draw distance ${q.drawDistance} m` });
+    r.push({ id: 'props', text: 'Scenery -25%', up: 'Scenery full' });
+    // one traffic step (Moderate and up; Light never goes to none). Never in Speed Survival: its scores stay comparable
+    const dn = govDensity(this.settings.density, 1);
+    if (dn !== this.settings.density && !(this.mode === 'survival' && !this.attract)) r.push({ id: 'traffic', text: `Traffic ${DENSITY[dn].label}`, up: `Traffic ${DENSITY[this.settings.density].label}` });
+    const floor = GOV_FLOOR[this.settings.quality];
+    for (let k = 1, n = Math.round((this.startScale - floor) / 0.05); k <= n; k++) r.push({ id: 'scale', text: `Resolution ${Math.round((this.startScale - 0.05 * k) * 100)}%`, up: `Resolution ${Math.round((this.startScale - 0.05 * (k - 1)) * 100)}%` });
+    return r;
+  }
+  // a new ladder: `keep` holds the steps already taken that the new ladder still has (a run's start keeps them; a new
+  // preset starts from the top)
+  private govLadder(keep: boolean) {
+    const old = this.gov.rungs, oldLevel = this.gov.level, rungs = this.govRungs();
+    let level = 0;
+    if (keep) while (level < rungs.length && old.slice(0, oldLevel).some((o) => o.text === rungs[level].text)) level++;
+    // the check's steady-30 lock, set before the reset so its target applies from the first frame
+    const b = this.benchPick;
+    this.gov.lock30 = !!b && !b.skipped && !b.inconclusive && b.target === 30;
+    this.gov.reset(rungs, level, keep);
+    this.applyGov(level);
+  }
+  // put the effects where `level` steps down the ladder has them (from the preset; idempotent: only what changed moves)
+  private applyGov(level: number) {
+    const q = this.preset(), rungs = this.gov.rungs, world = this.benchQ ? presetFor(this.settings) : q;
+    let ao = q.ao, shadows = q.shadows, msaa = q.msaa, bloom = q.bloom, draw = world.drawDistance, props = world.props, traffic = 0, scale = this.startScale;
+    for (let i = 0; i < level && i < rungs.length; i++) {
+      switch (rungs[i].id) {
+        case 'ao': ao = false; break;
+        case 'shadow': shadows = q.shadows / 2; break;
+        case 'msaa': msaa = 0; break;
+        case 'bloom': bloom = false; break;
+        case 'draw': draw = world.drawDistance * 0.8; break;
+        case 'props': props = world.props * 0.75; break;
+        case 'traffic': traffic = 1; break;
+        case 'scale': scale -= 0.05; break;
+      }
+    }
+    if (this.gtao) this.gtao.enabled = ao;
+    if (this.bloom) this.bloom.enabled = bloom;
+    const c = this.composer;
+    if (c && c.renderTarget1.samples !== msaa) for (const rt of [c.renderTarget1, c.renderTarget2]) { rt.samples = msaa; rt.dispose(); }
+    const L = this.live;
+    if (L.shadows !== shadows || L.drawDistance !== draw) {
+      L.shadows = shadows; L.drawDistance = draw;
+      const far = draw * 1.15;
+      this.camera.far = far; this.camera.updateProjectionMatrix();
+      this.env.setQuality(shadows, far);
+      if (this.traffic) this.traffic.viewAhead = draw * 0.95;
+    }
+    L.ao = ao; L.msaa = msaa; L.bloom = bloom; L.props = props;
+    if (traffic !== this.govTraffic) { this.govTraffic = traffic; if (this.traffic) this.applyDensity(); }
+    scale = Math.round(scale * 100) / 100;
+    if (scale !== this.govScale) { this.govScale = scale; this.renderScale = q.renderScale * scale; this.resize(); }
+  }
+  // what this device's display showed before (earlier visits, the graphics check's rounds: any round faster than a
+  // cap's interval rules that cap out), into the governor
+  private seedDisplay() {
+    let min = this.display.minMs;
+    for (const r of this.benchPick?.rounds ?? []) if (r.ms > 0 && (!min || r.ms < min)) min = r.ms;
+    this.gov.seedDisplay(min, this.display.capMs);
+    this.display.capMs = this.gov.capOk;                     // (the exact interval: saved rounded)
+  }
+  // once a frame, from the frame loop: this frame's interval and the last frame's own work (ms). Not while paused,
+  // hidden, parked or walking a venue, or during the graphics check
+  private adapt(intervalMs: number) {
+    const b = this.bench;
+    if (b.on) { b.n++; b.sum += intervalMs; b.work += this.workMs; if (intervalMs > T60 * 1.5) b.slow++; }
+    // the overlay's numbers come from every drawn frame, governor on or off (Adaptive off, Retro, the check)
+    if (intervalMs > 0) this.gov.record(intervalMs, this.workMs);
+    // what the display has shown, kept on this device when the governor learns more (rarely: a faster mean, a cap)
+    const d = this.display, g = this.gov;
+    if ((g.minMean < 1000 && (!d.minMs || g.minMean < d.minMs - 0.5)) || g.capOk !== d.capMs) { d.minMs = Math.min(d.minMs || 1e9, g.minMean); d.capMs = g.capOk; saveDisplay(d); }
+    if (!this.govFeed || !this.govOn() || this.paused || document.hidden || this.foot || this.venueState) { this.gov.restart(0.25); return; }
+    this.gov.tick(intervalMs, this.workMs);
+  }
+  // what the overlay and Settings show: the preset the player chose, "· auto" while the governor runs it
+  govLabel(): string {
+    const q = presetFor(this.settings);
+    return q.label + (this.govOn() ? ' · auto' : '');
+  }
+  govDetail(): string {
+    const g = this.gov;
+    if (this.benchQ) return 'graphics check running';
+    if (!this.govOn()) return retroOn(this.settings) ? 'Retro keeps its own fixed picture' : 'fixed: Adaptive quality is off';
+    const start = this.startScale < 1 ? `starts at ${Math.round(this.startScale * 100)}% resolution (graphics check)` : 'full quality';
+    const at = g.level === 0 ? start : `${g.level} of ${g.rungs.length} steps down (${g.rungs[g.level - 1].text})`;
+    // a cap only once a probe confirmed it (here or on an earlier visit); while one runs, what the frames do
+    const fr = g.probe ? `frames steady at ${Math.round(1000 / g.probe)} fps: checking for a display cap` : g.capMs > g.target ? `display capped at ${g.fps} fps` : `${g.fps} fps target`;
+    return `${at} · ${fr}`;
+  }
+  // the overlay's numbers, all measured here (one object, refilled on each read)
+  private perfOut = { fps: 0, low1: 0, frameMs: 0, workMs: 0, calls: 0, tris: 0, label: '', detail: '', last: '', lastAgo: -1, level: 0, levels: 0, target: 60, scale: 1, pixelRatio: 1, injectMs: 0 };
+  get perf() {
+    const g = this.gov, o = this.perfOut;
+    const r1 = (v: number) => (v >= 10 ? Math.round(v) : Math.round(v * 10) / 10);
+    o.fps = r1(g.fpsOver(60)); o.low1 = r1(g.low1());
+    const last = g.ring[(g.head - 1 + g.ring.length) % g.ring.length];
+    o.frameMs = Math.round(last * 10) / 10; o.workMs = Math.round(this.workMs * 10) / 10;
+    o.calls = this.perfCalls; o.tris = this.perfTris; o.label = this.govLabel(); o.detail = this.govDetail();
+    // the last action only while the governor runs (off, its clock stops and the line would go stale)
+    const on = this.govOn();
+    o.last = on ? g.last : ''; o.lastAgo = !on || g.lastAt < 0 ? -1 : Math.round(g.clock - g.lastAt);
+    o.level = g.level; o.levels = g.rungs.length; o.target = g.fps; o.scale = this.govScale;
+    o.pixelRatio = Math.round(this.renderer.getPixelRatio() * 100) / 100; o.injectMs = this.injectMs;
+    return o;
+  }
+  // the effects as they stand now (for tests and the feedback report)
+  get govState() {
+    const L = this.live;
+    return { level: this.gov.level, levels: this.gov.rungs.length, rungs: this.gov.rungs.map((r) => r.text), target: this.gov.fps, last: this.gov.last, actions: this.gov.actions,
+      ao: !!this.gtao?.enabled, bloom: !!this.bloom?.enabled, msaa: this.composer?.renderTarget1.samples ?? 0, shadows: L.shadows, drawDistance: L.drawDistance, props: L.props,
+      traffic: govDensity(this.settings.density, this.govTraffic), scale: this.govScale, floor: GOV_FLOOR[this.settings.quality], startScale: this.startScale, on: this.govOn(), label: this.govLabel() };
+  }
+
+  // The first-run graphics check (SMOOTH): about 5 s on the menu, behind its card. It draws the menu's own freeway drive
+  // with each preset's effects and resolution in turn, costliest first (Ultra, Ultra at 75 %, High, High at 75 %,
+  // Medium, Low), and stops at the first the device holds at 60 (the frames' mean within 10 % of 16.7 ms, at most a
+  // tenth of them slow); if none does, the costliest that holds a steady 30. The world itself isn't rebuilt for it (its
+  // draw distance and scenery are the menu's). It saves the pick on this device (settings.ts saveBench) and returns it;
+  // the caller applies it unless the player chose a preset themselves. null: cancelled, or the tab went to the back.
+  benchRunning() { return !!this.benchQ; }
+  async benchmark(onStep?: (i: number, n: number, label: string) => void, cancel?: { cancelled: boolean }): Promise<BenchPick | null> {
+    if (this.benchQ || !this.attract || this.ctxLost) return null;
+    const rounds: [Quality, number][] = [['ultra', 1], ['ultra', 0.75], ['high', 1], ['high', 0.75], ['medium', 1], ['low', 1]];
+    const out: BenchPick['rounds'] = [];
+    const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    let pick: [Quality, number, 60 | 30] | null = null, aborted = false;
+    try {
+      for (let i = 0; i < rounds.length; i++) {
+        const [q, sc] = rounds[i];
+        onStep?.(i, rounds.length, QUALITY[q].label + (sc < 1 ? ` at ${Math.round(sc * 100)}%` : ''));
+        this.benchQ = q; this.benchScale = sc; this.applyQuality();
+        await wait(250);                                     // its passes compile, its buffers settle
+        const b = this.bench; b.n = 0; b.sum = 0; b.slow = 0; b.work = 0; b.on = true;
+        await wait(650);
+        b.on = false;
+        if (cancel?.cancelled || document.hidden || !this.attract) { aborted = true; break; }
+        const ms = b.n ? b.sum / b.n : 999;
+        out.push({ quality: q, scale: sc, ms: Math.round(ms * 10) / 10, work: b.n ? Math.round((b.work / b.n) * 10) / 10 : 0, slow: b.n ? Math.round((b.slow / b.n) * 100) / 100 : 1 });
+        if (b.n >= 3 && ms <= T60 * GOV_STEP.over && b.slow / b.n <= 0.1) { pick = [q, sc, 60]; break; }
+      }
+    } finally {
+      this.bench.on = false; this.benchQ = null; this.benchScale = 1;
+    }
+    if (aborted) { this.applyQuality(); return null; }
+    this.seedDisplay();                                      // a round faster than a cap's interval rules that cap out
+    // every round at a display/browser cap (30, 40 or 50 fps) with light work: the cap, not the device, set the
+    // frames, so the check can't tell. Inconclusive: the player's preset stays, no start scale, never a 30 lock
+    if (!pick && out.length && out.every((r) => (r.work ?? 0) < r.ms * GOV_STEP.capLight && capPeriod(r.ms) > 0)) {
+      const res: BenchPick = { v: 1, quality: this.settings.quality, scale: 1, target: 60, inconclusive: true, cap: Math.round(1000 / capPeriod(out[0].ms)), at: new Date().toISOString(), rounds: out };
+      saveBench(res); this.benchPick = res;
+      this.applyQuality();
+      return res;
+    }
+    if (!pick) {
+      const ok = out.find((r) => r.ms <= T30 * GOV_STEP.over);
+      pick = ok ? [ok.quality, ok.scale, 30] : ['low', 1, 30];
+    }
+    const res: BenchPick = { v: 1, quality: pick[0], scale: pick[1], target: pick[2], at: new Date().toISOString(), rounds: out };
+    saveBench(res); this.benchPick = res;
+    this.applyQuality();                                     // the player's preset back, with the pick's start if it is this one
+    return res;
+  }
+  // the player skipped the check: it doesn't ask again on this device (Settings runs it)
+  skipBenchmark() {
+    const res: BenchPick = { v: 1, quality: this.settings.quality, scale: 1, target: 60, skipped: true, at: new Date().toISOString(), rounds: [] };
+    saveBench(res); this.benchPick = res;
+  }
+  get benchSaved() { return this.benchPick; }
   // RS1: the Retro style (src/game/render/style.ts) on Low while Settings.style says so: attached with the tier, its
   // materials, sky and pass all undone when it goes. The road chunks and terrain tiles are styled as they're built.
   // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw), and
@@ -982,9 +1213,12 @@ export class Game {
   private applied = { w: 0, h: 0, pr: 0 };
   private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
-    const q = presetFor(this.settings), dpr = window.devicePixelRatio || 1;
-    // the floor: 0.5 as always, or the preset's own (Retro: the screen's CSS pixels, never more than the device has)
-    const pr = clamp(dpr * this.renderScale, q.minPixelRatio !== undefined ? Math.min(q.minPixelRatio, dpr) : 0.5, q.maxPixelRatio);
+    const q = this.preset(), dpr = window.devicePixelRatio || 1;
+    // the preset's own pixel ratio on this screen (its floor: 0.5 as always, or the preset's own: Retro the screen's CSS
+    // pixels, never more than the device has), then the governor's share of it, never under 0.5
+    const lo = q.minPixelRatio !== undefined ? Math.min(q.minPixelRatio, dpr) : 0.5;
+    const base = clamp(dpr * q.renderScale, lo, q.maxPixelRatio);
+    const pr = this.govScale >= 1 ? base : Math.max(Math.min(lo, base), Math.round(base * this.govScale * 100) / 100);
     const cv = this.renderer.domElement, a = this.applied;
     if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
     a.w = w; a.h = h; a.pr = pr;
@@ -1322,6 +1556,10 @@ export class Game {
   // ----------------------------------------------------------------------------------------- the loop
   private frame = (now: number) => {
     this.raf = requestAnimationFrame(this.frame);
+    // a steady 30 where the governor aims at it: every other display frame at 60 Hz (rendering only ever on rAF)
+    if (this.gov.target === T30 && this.govOn() && now - this.lastDrawn < T30 - 4) return;
+    const t0 = performance.now();
+    const interval = this.lastDrawn > 0 ? now - this.lastDrawn : 0; this.lastDrawn = now;
     this.frames++;
     if (this.ctxLost) return;
     let dt = (now - this.last) / 1000; this.last = now;
@@ -1329,7 +1567,7 @@ export class Game {
     dt = Math.min(dt, 0.1);
     this.fpsN++; this.fpsT += dt;
     if (this.fpsT >= 0.5) { this.fps = Math.round(this.fpsN / this.fpsT); this.fpsN = 0; this.fpsT = 0; }
-    this.adapt(dt);
+    this.adapt(interval);
     this.actions();
     if (!this.paused) {
       this.input.update(dt, Math.abs(this.phys.vx));
@@ -1373,6 +1611,8 @@ export class Game {
     }
     this.hudT -= dt;
     if (this.hudT <= 0) { this.hudT = 0.1; this.sendHud(); }
+    if (this.injectMs > 0) while (performance.now() - t0 < this.injectMs) { /* the test hook's artificial frame cost */ }
+    this.workMs = performance.now() - t0;
   };
 
   // the frame's pictures, from the state the frame has set up: the loop's, and once more at once after the stage's
@@ -1385,7 +1625,12 @@ export class Game {
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     this.renderReveal(dt);                              // the garage's reveal stage, under this frame's own render
+    // the frame's draw calls and triangles for the overlay: every pass of the main view counted together
+    const info = this.renderer.info, auto = info.autoReset;
+    info.reset(); info.autoReset = false;
     if (this.composer) this.composer.render(dt); else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
+    this.perfCalls = info.render.calls; this.perfTris = info.render.triangles;
+    info.autoReset = auto;
     this.env.renderFlare();
     this.renderSkyDirect();                             // the sky camera's fallback, over the finished frame
   }
@@ -1982,20 +2227,6 @@ export class Game {
     g.fillStyle = 'rgba(0,0,0,0.6)'; g.fillRect(px - tw / 2 - dpr, py - th / 2 - dpr, tw + 2 * dpr, th + 2 * dpr);
     g.fillStyle = ac; g.fillRect(px - tw / 2, py - th / 2, tw, th);
     g.fillStyle = '#0b0b10'; g.fillText(text, px, py + 0.5 * dpr);
-  }
-
-  // ----------------------------------------------------------------------------------------- resolution that follows the frame rate
-  private adapt(dt: number) {
-    this.frameAvg = this.frameAvg * 0.95 + dt * 1000 * 0.05;
-    if (!this.settings.adaptive || this.paused) return;
-    this.scaleT += dt;
-    if (this.scaleT < 1.2) return;
-    this.scaleT = 0;
-    const q = presetFor(this.settings);
-    let next = this.renderScale;
-    if (this.frameAvg > 20) next = Math.max(0.5, this.renderScale - 0.08);
-    else if (this.frameAvg < 14.5) next = Math.min(q.renderScale, this.renderScale + 0.05);
-    if (Math.abs(next - this.renderScale) > 0.001) { this.renderScale = next; this.onResize(); }
   }
 
   // what's next on the route, how far, which way it goes, and the road it leads to: the first freeway along the route
