@@ -1,6 +1,6 @@
 {
  "file": "/home/user/claude/films/channels/skincare/ep18v2/out/skin-sense-018-9x16-1080.mp4",
- "size_mb": 154.9,
+ "size_mb": 155.8,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -11,7 +11,7 @@
   "dur": 70.666667,
   "pix_fmt": "yuv420p",
   "color": "bt709",
-  "mbps": 17.26
+  "mbps": 17.37
  },
  "film_dur": 84.8,
  "audio": {
