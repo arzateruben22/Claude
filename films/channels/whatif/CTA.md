@@ -1,12 +1,25 @@
-# The like / follow moment (owner's request, 10 Nov 2026; every other video since 12 Nov 2026)
+# The like / follow moment and the ending (owner's request, 10 Nov 2026; every other video since 12 Nov 2026; split endings since 16 Nov 2026)
 
-**Every other video** (the owner, 12 Nov 2026) gets a quick, natural "like and follow/subscribe" moment that feels
-like the narrator talking, not an ad read: the odd parts of a series (Part 1, 3, 5, 7) and the odd episodes of a
-season. The others get no spoken ask: only the silent thumbs-up and bell pop-up (`cta.py`, no voice) and, in a
-series, the closer ("Part 2 of 8"), which is the better reason to follow. Why: in a 60-75 s short, watching to the
-end and rewatching matter more than likes, and a spoken ask mid-story is a swipe-away moment; the follow button is
-on screen anyway. It applies to all four active channels. Once Prism has analytics, compare the retention dip at the
-ask in videos with and without it, and record the result in PACKAGING.md "What's working".
+## The rule (owner, 16 Nov 2026): one spoken ask per part, alternating
+
+| Part / episode | Spoken like/follow line | Spoken closer "Part X of 8. Full video on YouTube." | Thumbs-up + bell pop-up (`cta.py`) |
+|---|---|---|---|
+| **Odd** (1, 3, 5, 7) | **yes**, one sentence, right after a payoff | **no** | **yes** |
+| **Even** (2, 4, 6, 8) | no | **yes**, at the end | **yes** |
+
+- The pop-up runs on **every** part and episode, odd or even, with or without a spoken line.
+- In a season that isn't split into parts of a long video, odd episodes get the spoken line and even episodes get the
+  pop-up only (there's no closer to say).
+- It applies to **every channel**: Reality Rulebook, One More Orbit, Possibility Lab and Skin Sense.
+- Odd parts end on the story beat or the cliffhanger instead of the closer; the YouTube description and pinned
+  comment still name the part ("Part 3 of 8") and link the full video.
+- Posted videos stay as they are. Everything not yet posted follows it: new renders from 16 Nov 2026 on, and
+  finished-but-unposted parts when only the audio and the last caption change (no picture re-render).
+
+Why: in a 60-75 s short, watching to the end and rewatching matter more than likes, and a spoken ask mid-story is a
+swipe-away moment; the follow button is on screen anyway. One ask per part keeps the endings short and the asks
+varied. Once Prism has analytics, compare the retention dip at the ask in videos with and without it, and record the
+result in PACKAGING.md "What's working".
 
 ## Where it goes
 - **Shorts (60-75 s):** one moment of **one sentence, about 2-3 s, no lead-in ("Hang on", "Quick pause") and no
