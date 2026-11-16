@@ -84,8 +84,9 @@
   var VERSIONS = {
     v2: { features: [], booking: null },
     v3: { features: ["membership", "rewards", "app"], booking: "site" },
-    /* everything at once: v3 plus Skin School, the preview that connects the site and the course */
-    v4: { features: ["membership", "rewards", "app", "school"], booking: "site" }
+    /* everything at once (v3 plus the app page). Skin School came off the website on
+       Nov 16: add "school" back here, or to features above, to bring it back */
+    v4: { features: ["membership", "rewards", "app"], booking: "site" }
   };
   /* ?preview=v3 (or v2, v4): this browser only, until the tab closes */
   var preview = null;

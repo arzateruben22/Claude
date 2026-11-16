@@ -478,3 +478,14 @@ The hero's water now runs through the rest of the page, in the same cream and li
 Every product now goes straight to the bag. The seven actives that needed Evelyn's yes first were the 2.5% and 5% Acne Med, the 11% and 15% mandelic serums, Retinal B3, Retinol Peptide and Hydroxi. They lost their `consult: true` in `js/catalog.js`, so the shop, the cart, Buy again, the chat and the server's checkout (through `server/seed-products.sql`, where `consult` is now false) all sell them like everything else. The wording about unlocking actives is gone from the shop card, the FAQ and the chat. The online Skin Consult ($35, credited to the first order) stays as a service. To bring the gate back for a product, add `consult: true` to its line again and re-run `node scripts/seed-products.mjs`.
 
 Worth knowing: the gate was there because professional lines usually want their strongest actives sold on a professional's recommendation, and the brand emails (STOREFRONT.md, step 0) haven't gone out yet.
+
+## Skin School off the website (Nov 16)
+
+Skin School is off every version of the website:
+- The "Skin science" section (the three lesson clips) now shows only when Skin School is switched on.
+- `js/site-config.js` no longer switches it on in any version; v4 dropped "school".
+- So the course row in the shop, the "From Skin School" line on products and the chat's course answers are all off too. The chat says classes aren't open yet.
+- The site's share description no longer mentions it.
+- The share picture is now the koi still (`img/share.jpg`), not a lesson frame.
+
+The course itself (`school.html` and `docs/school/`) is untouched, and so is its card on Everything Lumevina. To bring Skin School back, add "school" to the features in `js/site-config.js`.
