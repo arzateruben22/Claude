@@ -20,7 +20,9 @@ export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low (tempo
 export type Look = 'ultra' | 'hd';
 export interface Settings {
   quality: Quality;
-  adaptive: boolean;        // scale resolution to hold the frame rate
+  adaptive: boolean;        // the frame-time governor (src/game/render/governor.ts): steps effects down to hold 60 (or a steady 30)
+  qualityChosen: boolean;   // the player picked the Graphics preset themselves: the graphics check never changes it
+  showPerf: boolean;        // the performance overlay (src/ui/PerfOverlay.tsx); `?perf` shows it for one visit
   density: Density;
   handling: number;         // 0 = arcade (assists on) .. 1 = simulation; the named profiles are points on it (PROFILES)
   transmission: Transmission;
@@ -120,6 +122,29 @@ export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Low · Retro', ren
 export const retroOn = (s: Pick<Settings, 'quality' | 'style'>) => s.quality === 'low' && s.style === 'retro';
 export const presetFor = (s: Pick<Settings, 'quality' | 'style'>): QualityPreset => (retroOn(s) ? RETRO : QUALITY[s.quality]);
 
+// The frame-time governor's floors (SMOOTH): the lowest render scale it may take, as a share of the preset's own
+// resolution (its pixel ratio on this screen). High and Ultra keep at least three quarters of theirs; Low and Medium
+// may go to half. The absolute floor of 0.5 device pixels per CSS pixel holds as before.
+export const GOV_FLOOR: Record<Quality, number> = { low: 0.5, medium: 0.5, high: 0.75, ultra: 0.75 };
+
+// The first-run graphics check (Game.benchmark): what it picked on this device, saved apart from the settings so a
+// new device starts fresh. `skipped`: the player skipped it (it doesn't ask again; Settings can run it).
+export interface BenchPick {
+  v: 1; quality: Quality; scale: number; target: 60 | 30; skipped?: boolean; at: string;
+  rounds: { quality: Quality; scale: number; ms: number; slow: number }[];
+}
+const BENCH_KEY = 'tsu.bench';
+export function loadBench(): BenchPick | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(BENCH_KEY) || 'null') as BenchPick | null;
+    if (!v || v.v !== 1 || !(v.quality in QUALITY)) return null;
+    return { ...v, scale: Math.min(1, Math.max(0.5, Number(v.scale) || 1)), target: v.target === 30 ? 30 : 60, rounds: Array.isArray(v.rounds) ? v.rounds : [] };
+  } catch { return null; }
+}
+export function saveBench(b: BenchPick): void {
+  try { localStorage.setItem(BENCH_KEY, JSON.stringify(b)); } catch { /* a convenience */ }
+}
+
 // cars per kilometre per lane, and the share of aggressive drivers
 export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: number }> = {
   none:     { label: 'None',     perKmLane: 0,   bold: 0 },
@@ -164,7 +189,7 @@ function guessQuality(): Quality {
 
 export function defaults(): Settings {
   return {
-    quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
+    quality: guessQuality(), adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
@@ -198,13 +223,17 @@ export function loadSettings(): Settings {
   return s;
 }
 
+// nothing was saved on this device before this load: its first run (the graphics check runs on its own only then)
+let firstRun = false;
+export const isFirstRun = () => firstRun;
+
 // the settings this device saved, checked, over the defaults; `migrated` when they were saved by an older version
 // (before SETTINGS_V) and moved to this one here, so loadSettings writes them back once
 function readSettings(): { s: Settings; migrated: boolean } {
   const d = defaults();
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return { s: d, migrated: false };
+    if (!raw) { firstRun = true; return { s: d, migrated: false }; }
     const v = JSON.parse(raw) as Partial<Settings>;
     // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
     const old = v as Record<string, unknown>; delete old.course; delete old.mode;
@@ -230,6 +259,9 @@ function readSettings(): { s: Settings; migrated: boolean } {
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
+      adaptive: v.adaptive !== false,
+      qualityChosen: v.qualityChosen === true,
+      showPerf: v.showPerf === true,
       style: v.style === 'retro' ? 'retro' : 'standard',
       look: v.look === 'hd' ? 'hd' : 'ultra',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
