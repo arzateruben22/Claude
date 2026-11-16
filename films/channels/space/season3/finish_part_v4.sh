@@ -12,7 +12,7 @@ t=json.load(open("$O/v4-part$N.json")); b=t["beats"]; ap=[x for x in b if x["kin
 ts=[]
 ts.append(f"{min(1.2, t['dur']/10):.1f}:beach")                                    # wide: the figure on the beach, the Moon small
 key=[x for x in rest if x["kind"] not in ("grow","pull")] or rest
-if key: ts.append(f"{(key[0]['t0']+key[0]['t1'])/2:.1f}:moon")                       # the part's key visual (eclipse, flex, strain, slide, tide, bright ...)
+if key: ts.append(f"{(key[0]['t0']+key[0]['t1'])/2:.1f}:" + ("beach" if key[0]["kind"] in ("flex","tide","climb") else "moon"))   # the camera is on the figure in these beats                       # the part's key visual (eclipse, flex, strain, slide, tide, bright ...)
 gr=[x for x in b if x["kind"] in ("grow","pull")]
 ts.append(f"{(gr[-1]['t0']+gr[-1]['t1'])/2+1.0:.1f}:moon" if gr else (f"{ap[0]['t1']+0.5:.1f}:moon" if ap else "5.0:moon"))   # close-up: the Moon big, late in a grow beat
 print(",".join(ts[:3]))

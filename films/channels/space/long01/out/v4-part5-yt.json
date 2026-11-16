@@ -1,0 +1,198 @@
+{
+ "name": "v4-part5-yt",
+ "mode": "port",
+ "dur": 62.205,
+ "clips": [
+  {
+   "id": "B6",
+   "file": "voice5/wav/B6.wav",
+   "t": 0.15,
+   "dur": 3.2,
+   "from": 0.0
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 11.2,
+   "dur": 1.94,
+   "from": 0.0
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 18.14,
+   "dur": 3.47,
+   "from": 1.94
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 28.61,
+   "dur": 3.635,
+   "from": 5.41
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 40.745,
+   "dur": 3.625,
+   "from": 9.045
+  },
+  {
+   "id": "D2",
+   "file": "voice5/wav/D2.wav",
+   "t": 52.72,
+   "dur": 3.42,
+   "from": 0.0
+  },
+  {
+   "id": "L15",
+   "file": "voice5/wav/L15.wav",
+   "t": 56.44,
+   "dur": 4.865,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.28,
+   "t1": 1.82,
+   "text": "It's not just the sea.",
+   "line": "B6",
+   "spoken": "It's not just the sea."
+  },
+  {
+   "t0": 1.84,
+   "t1": 3.28,
+   "text": "The ground moves too.",
+   "line": "B6",
+   "spoken": "The ground moves too."
+  },
+  {
+   "t0": 11.28,
+   "t1": 13.11,
+   "text": "70,000.",
+   "line": "L14",
+   "spoken": "Seventy thousand."
+  },
+  {
+   "t0": 18.41,
+   "t1": 21.58,
+   "text": "More than 160× today's tidal pull.",
+   "line": "L14",
+   "spoken": "More than a hundred sixty times today's tidal pull."
+  },
+  {
+   "t0": 28.795,
+   "t1": 32.215,
+   "text": "The solid ground already rises and falls tens of centimeters a day.",
+   "line": "L14",
+   "spoken": "The solid ground already rises and falls tens of centimeters a day."
+  },
+  {
+   "t0": 40.99,
+   "t1": 44.515,
+   "text": "Here, it would flex far more.",
+   "line": "L14",
+   "spoken": "Here, it would flex far more."
+  },
+  {
+   "t0": 52.92,
+   "t1": 56.09,
+   "text": "If that made the sky feel bigger, tap like and subscribe.",
+   "line": "D2",
+   "spoken": "If that made the sky feel bigger, tap like and subscribe."
+  },
+  {
+   "t0": 56.775,
+   "t1": 61.09,
+   "text": "Soon, the Moon rises on the wrong side of the sky.",
+   "line": "L15",
+   "spoken": "Soon, the Moon rises on the wrong side of the sky."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   100000
+  ],
+  [
+   0.0,
+   100000
+  ],
+  [
+   11.025,
+   70000,
+   7.5
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 3.525,
+   "t1": 11.025,
+   "kind": "approach"
+  },
+  {
+   "t0": 13.14,
+   "t1": 18.14,
+   "kind": "grow"
+  },
+  {
+   "t0": 21.61,
+   "t1": 28.61,
+   "kind": "tide"
+  },
+  {
+   "t0": 32.245,
+   "t1": 40.745,
+   "kind": "flex"
+  },
+  {
+   "t0": 44.545,
+   "t1": 52.545,
+   "kind": "flex"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "units": "mi",
+ "breathe": true,
+ "cta_at": 52.72,
+ "cta_frac": 0.848,
+ "cliff": "L15"
+}

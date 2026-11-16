@@ -24,11 +24,15 @@ if len(sys.argv) > 3:    # contact sheet
     ts = [dur * (i + 0.5) / 12 for i in range(12)]; ims = []
     for i, t_ in enumerate(ts): subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t_:.2f}", "-i", mp4, "-frames:v", "1", "-vf", "scale=270:-1", f"/tmp/qa_cs{os.getpid()}_{i}.png"], check=True); ims.append(Image.open(f"/tmp/qa_cs{os.getpid()}_{i}.png"))
     w_, h_ = ims[0].size; m = Image.new("RGB", (w_ * 6, h_ * 2)); [m.paste(im, ((i % 6) * w_, (i // 6) * h_)) for i, im in enumerate(ims)]; m.save(sys.argv[3], quality=82); print("contact sheet", sys.argv[3])
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mp4, "-vn", "-ac", "1", "-ar", "16000", f"/tmp/qa_v4_{os.getpid()}.wav"], check=True); a, sr = sf.read(f"/tmp/qa_v4_{os.getpid()}.wav", dtype="float32")
+# the speech check listens to the voice itself (the placed clips, no music or effects): the recogniser is unreliable under a mix (it heard 'go to flex bar more' for 'it would flex far more' under a swell)
+sr = 16000; a = np.zeros(int((tl["dur"] + 1) * sr), np.float32)
+for c in tl["clips"]:
+    x, sv = sf.read(f"{L1}/{c['file']}", dtype="float32"); x = x if x.ndim == 1 else x.mean(1); x = x[int(c.get("from", 0) * sv): int((c.get("from", 0) + c["dur"]) * sv)]
+    import math; g = math.gcd(sv, sr); from scipy.signal import resample_poly; y = resample_poly(x, sr // g, sv // g).astype(np.float32); i0 = int(c["t"] * sr); a[i0: i0 + len(y)] += y[: len(a) - i0]
 rec = align.recognizer(str(Path.home() / ".cache/cinema-voice/models"))
 def hear(t0, t1):   # ASR of just this caption's slice of the final mix (music and all)
     seg = a[int(max(0, t0) * sr): int(t1 * sr)]; ws = align.asr(rec, seg, sr); return [w for w, s_, e_ in ws]
-def norm(x): x = to_display(x).lower().replace("kilometers", "km").replace("centimeters", "cm"); x = re.sub(r"(?<!\d)\.|\.(?!\d)", " ", x.replace(",", "")); return re.sub(r"[^a-z0-9×.]", " ", x).split()
+def norm(x): x = to_display(x).lower().replace("kilometers", "km").replace("centimeters", "cm").replace("kilometres", "km").replace("centimetres", "cm"); x = re.sub(r"(?<!\d)\.|\.(?!\d)", " ", x.replace(",", "")); return re.sub(r"[^a-z0-9×.]", " ", x).split()
 bad = 0
 caps = tl["captions"]
 for ci, c in enumerate(caps):

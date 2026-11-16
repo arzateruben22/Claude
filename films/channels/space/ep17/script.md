@@ -1,13 +1,16 @@
-# One More Orbit · Season 3 · Part 5 of 8: "A Moon Bigger Than the Sun"
+# One More Orbit · Season 3 · Part 5 of 8: "It's Not Just the Sea"
 
-Part 5 of the Moon film "How Close Can the Moon Get Before It Breaks?" (the long film is the whole story; the ending stays there). 9:16, 61 s, synthetic AI voice (stand-in until the owner's recording).
-Badge "Thought experiment" throughout. Lines come from long01/script.md; timing from long01/voice/lines.json.
+v4, in the creator's own voice (recorded 12 Nov 2026): picture-led, 62 s, 9:16. The 'Thought experiment' tag shows for the first 5 s.
+Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part5.json.
 
-## hook {pre: 0.15 · the part's own 2 s opening}
-vo: What happens when the Moon outgrows the Sun? {-}
+## opening
+vo: It's not just the sea. The ground moves too.
 
-## body {the chapter · distance counter synced to the voice · one like/follow line at 75% of the runtime (rotation line 1)}
-vo: One hundred thousand kilometers. {c35} The Moon is nearly four times wider than tonight. {c36} Today, the Sun and the Moon look about the same size. {c4} That is why total solar eclipses are possible. {c15} Now the Moon's shadow on Earth is wider, and eclipses would be far more common. {c15} The sky goes dim, and the stars come out in the daytime. {-} A long dark noon, with a faint glow around a huge black disc. {-} And then you look at the Moon again, and it has moved. {-}
+## body
+vo: Seventy thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.
 
-## tease {the cliffhanger, then the closer}
-vo: Closer. Faster. And the ground under you is feeling it too. {-} Part five of eight. Full video on YouTube. {-}
+## like/follow (85% of the runtime)
+vo: If that made the sky feel bigger, tap like and follow.  (YouTube file: If that made the sky feel bigger, tap like and subscribe.)
+
+## cliffhanger (odd part: no closer)
+vo: Soon, the Moon rises on the wrong side of the sky.

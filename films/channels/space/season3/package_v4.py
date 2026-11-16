@@ -2,7 +2,7 @@
 sfx.json (the stem is already mixed into both finals), covers and posting pack. Reads long01/out/v4-part<n>.mp4, v4-part<n>-yt.mp4 and the timelines.
 Part 1 keeps its cover/packaging (same title); Part 2 is the old part 3 ('half the distance') so it takes that part's cover/packaging with the numbers rewritten (TODO: the owner/coordinator may want a fresh pack)."""
 import json, os, re, shutil, subprocess, sys, tempfile
-n = int(sys.argv[1]); ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
+HERE_ = os.path.dirname(os.path.abspath(__file__)); n = int(sys.argv[1]); ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", ".."))
 S = f"{ROOT}/films/channels/space"; L1 = f"{S}/long01"; O = L1 + "/out"; ep = f"{S}/ep{12 + n}"; out = ep + "/out"; os.makedirs(out, exist_ok=True)
 name = f"one-more-orbit-s3-part{n}"; T = json.load(open(L1 + "/part_titles.json")); src_n = {1: 1, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: None}[n]      # v4 part n = the old (v3) part src_n; part 8 is new (the break-up)
 title = T["parts"][str(src_n)] if src_n else "Then the Moon Comes Apart"; src_ep = f"{S}/ep{12 + src_n}" if src_n else None
@@ -64,4 +64,6 @@ else:
     json.dump(P, open(f"{out}/posting.json", "w"), indent=1, ensure_ascii=False)
     open(f"{out}/POSTING.md", "w").write(f"# Posting sheet: One More Orbit S3, Part 8 of 8, \"{title}\"\n\n## YouTube Shorts\nTitle: {title}\n\n{P['youtube']['caption']}\n\n{P['youtube']['hashtags']}\n\n## TikTok\n{P['tiktok']['caption']}\n\n## Instagram\n{P['instagram']['caption']}\n\n## Pinned comment\n{P['pinnedComment']}\n\nTODO: packaging.json (titles, thumbnails) for this part is not written; the coordinator makes the hook cover.\n")
 po = json.load(open(f"{out}/posting.json")); po["length_s"] = round(tl["dur"], 1); po["cta_at"] = tl["cta_frac"]; po["spoken_like_follow"] = bool(CTA); po["spoken_closer"] = n % 2 == 0; json.dump(po, open(f"{out}/posting.json", "w"), indent=1, ensure_ascii=False)
+for f_ in os.listdir(out):   # GitHub refuses files over 100 MB
+    if f_.endswith(".mp4"): subprocess.run([f"{HERE_}/shrink.sh", f"{out}/{f_}"], check=False)
 print("packaged", ep)
