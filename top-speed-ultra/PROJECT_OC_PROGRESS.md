@@ -4,6 +4,553 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: The cast, fourth pass repaired after the judges (Opus; uncommitted)
+
+The judges kept the fourth pass's code (code: keep) and rejected its looks (art: keep=false). This repair was told
+not to edit `src/onfoot/people/*`, `src/preview/hands*`, `src/preview/car-wheel.ts` or `Physics.ts` (another
+session's), so most of the art defects (hair edges and shapes, the shrug, the LOD 1 shells, Marcus's chest shape,
+the sandals, the fur sleeve in the seat view) are NOT fixed here: they are listed in `PROJECT_OC_CAST.md` (KNOWN GAPS,
+item 8) and queued as a Fable prompt in `PROJECT_OC_HANDOFF.md`. What was changed and how it was checked (load
+averages 8 to 20 on the 4 shared cores, one Playwright process at a time from this lane):
+- **Stoppage Time draws your own character at LOD 0 at HD** (it was Ultra only), as Lot 57 already did
+  (`venues/sportsbar/main.ts`, `wantsLod0`). Standalone page, Leila, `quality=high`, Sat 13:00, camera 2.1 m in
+  front: `cast().you` LOD 0, 163,218 triangles (LOD 1 was 14,527); the face is sharp and the blazer has no shredding
+  (`tests/out/cast/r1/avatar-sportsbar-leila-farahani-front-r1c.png`; the judges' frame at HD was LOD 1).
+- **Stoppage Time builds LOD 1 first for people within 3.2 m of the camera** (`crowd.ts` `nextJob`, `NEAR_LOD1`).
+  Probe (`scratchpad/r1/probe-crowd.mjs`: a fixed camera 2.6 m from the densest cluster at the bar): before the change,
+  all seven people within 3.6 m were LOD 2 through a 20 s window (the order put the patio's casters first). After it,
+  a 20 s window still showed LOD 2 (the page draws a frame every 2 to 3 s here, and everyone's LOD 2 is built first);
+  a longer run showed the first LOD 1 build 16 frames after the camera moved, and then the people at 0.73, 1.58, 1.6,
+  2.13 and 2.97 m reached LOD 1 one by one, nearest first, before any caster (builds of 3.0, 1.2, 1.4, 1.7 and 2.9 s)
+  (`r1/crowd-sportsbar-leila-farahani-early-r1c.png`, `-late-r1c.png`). The before case was not run as long.
+- **The catalog** (`cast.ts`): Chad's jaw, brows and stubble (`tests/out/cast/pack-chad-head-r1.png`: sheet, before,
+  after; wider squarer jaw, heavier brow, the stubble shows at LOD 0); Marcus leaner, bulk 0.45 (was 0.9), apple
+  -0.35 (`compare-marcus-bell-body-r1.png`, `r1/z-marcus-side-b.png`: the belly is flatter; the chest still projects
+  like a bust, which is body.ts's shape).
+- **The picker's turntable** (`castStage.ts`): the judges' broken-face frame was not reproduced (the moment LOD 0
+  lands, 12 held angles over a full turn, and a first frame with a clock 0.8 s and 1.5 s early, all at 390x844 DPR 3:
+  `r1/z-land-r1.png`, `r1/z-turn12-r1.png`, `r1/z-skew-before2.png`). The time step is clamped at 0 (defensive; not
+  shown to be the cause). New `hold`/`turn` on the stage; the new regression grab passes: "held at -0.5 rad: the
+  head box's skin share 0.295" (`tests/out/cast/picker-front-390x844-dpr3.png`).
+- **Daylight venue frames:** `cast-pack-venues` at Day with a fixed front camera; `node
+  tests/cast-pack-venues-shoot.mjs chad,chadaline,leila-farahani` (13:00, High): "all checks passed": the lock holds
+  in both venues without `pack=test`; each character is the avatar at LOD 0 (Stoppage Time: Chad 198,077, Chadaline
+  182,141, Leila 163,218 triangles); 49 people at Lot 57 and 60 at Stoppage Time, all from the six
+  (`tests/out/cast/r1/venue-lot57-day-r1.png`, `r1/venue-stoppage-day-close-r1.png`).
+- **Copy:** the picker's intro reads "Six drivers to choose from, plus a pack coming soon."
+- `npx tsc --noEmit` passes; `npm run build` passes (one owner-test artifact).
+- `npm test -- --only=cast`: 12/12 passed (including the new turntable grab).
+- `npm test -- --only=cast-pack`: 9/9 passed. `--only=cast-pack-venues` (now at Day): 6/6 passed, twice (the second
+  run with the close frames from both sides, `pack-venue-<venue>-<id>-near-a|b.png`; `r1/pack-venue-day-near-b-r1.png`:
+  readable daylight fronts; the suite runs at Low, so these show LOD 1, with Chad's open collar a ragged white V, a
+  known LOD 1 gap). `--only=cast-venues`: 3/3 passed (Lot 57 49 people, Stoppage Time 42, all from the six).
+- **Not re-run:** `tests/sportsbar.mjs` (its budgets group measures without the avatar; the avatar's caster stays
+  LOD 1 at HD, as at Ultra), the perf pairs, `phone`, `boot`, `venues`.
+
+## 2026-11-16: The cast graphics pass, fourth pass (Opus): verification of the third pass's final build
+
+Not committed: everything is in the working tree on `claude/cast` (HEAD `440e96e`), for the judges. This pass did no new
+look work (the brief). It re-ran, on the third pass's final build, the groups that had last run before that pass's last
+four small changes; re-checked those changes' visuals in one frame script; and recorded the open look items as KNOWN
+GAPS in `PROJECT_OC_CAST.md`.
+
+**The build.** `npx tsc --noEmit` passes. `npm run build` writes one `data-build="owner-test"` (in `dist/artifact.html`;
+none in `dist/top-speed-ultra.html`). Its two pages have the same file sizes as the third pass's final `dist` (5,539,311 and 5,539,470 bytes).
+
+**The suite** (one Playwright process at a time, each run detached and waited on; the machine's load average was 14 to
+31 on 4 shared cores, with other lanes' browsers running). Every group passes. Two runs took longer than 20 minutes
+under this load (`cast-seat` 21 min, `phone` 25 min); each still passed in one run.
+
+```
+npm test -- --only=cast-seat (04:17:00-04:38:07, load 19.33 to 23.03; final build): 3/3 passed
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 1280x720  6 frames
+  PASS  cast seat: at full lock both ways the drawn wheel stays inside the hands' range (no arm across the hub)  1.050 rad at -0.6 m/s, -1.050 rad at 0.1 m/s
+  PASS  cast-seat: no page errors
+npm test -- --only=cast-seat-phone (04:38:19-04:48:14, load 22.24 to 24.73; final build): 2/2 passed
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 390x844  6 frames
+  PASS  cast-seat-phone: no page errors
+npm test -- --only=cast-pack-seat (04:48:23-05:04:48, load 23.63 to 17.73; final build): 3/3 passed
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 1280x720  chad, chadaline
+  PASS  cast pack seat: full lock both ways with each (the drawn wheel inside the hands' range)  chad: 1.050 rad at -1.7 m/s, -1.050 rad at -1.2 m/s; chadaline: 1.050 rad at -1.0 m/s, -1.050 rad at 0.0 m/s
+  PASS  cast-pack-seat: no page errors
+npm test -- --only=cast-pack-seat-phone (05:04:56-05:08:27, load 17.75 to 20.25; final build): 2/2 passed
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 390x844 at DPR 3  chad, chadaline
+  PASS  cast-pack-seat-phone: no page errors
+npm test -- --only=cast-pack-venues --check="as chad:" (05:08:40-05:20:34, load 18.96 to 29.86; final build): 4/4 passed
+  PASS  cast pack venues: Lot 57 as chad: the avatar is the pack character; nobody in the crowd is one  avatar chad (#c79370, curlsMedium, 1.88 m); 49 people, all from the six: mateo-reyes, danny-tran, marcus-bell, kate-morgan, jas-cruz, leila-farahani
+  PASS  cast pack venues: Stoppage Time as chad: the avatar is the pack character; nobody in the crowd is one  avatar chad (#c79370, curlsMedium, 1.88 m); 42 people, all from the six: marcus-bell, leila-farahani, jas-cruz, mateo-reyes, danny-tran, kate-morgan
+  PASS  cast-pack-venues: no page errors
+  PASS  cast-pack-venues: no page errors
+npm test -- --only=cast-pack-venues --check="as chadaline:" (05:20:42-05:34:30, load 28.82 to 30.98; final build): 4/4 passed
+  PASS  cast-pack-venues: no page errors
+  PASS  cast pack venues: Lot 57 as chadaline: the avatar is the pack character; nobody in the crowd is one  avatar chadaline (#c48a63, longWaves, 1.68 m); 49 people, all from the six: mateo-reyes, danny-tran, marcus-bell, kate-morgan, jas-cruz, leila-farahani
+  PASS  cast pack venues: Stoppage Time as chadaline: the avatar is the pack character; nobody in the crowd is one  avatar chadaline (#c48a63, longWaves, 1.68 m); 42 people, all from the six: marcus-bell, leila-farahani, jas-cruz, mateo-reyes, danny-tran, kate-morgan
+  PASS  cast-pack-venues: no page errors
+npm test -- --only=boot (06:00:08-06:01:43, load 26.14 to 18.87; final build): 6/6 passed
+  PASS  loads to the main menu  menu after 29.46 s
+  PASS  network: ten freeways, both directions  20 carriageways, 10 routes
+  PASS  no barrier within 1 m of any travel lane, on all 20 carriageways  781,426 lane points clear
+  PASS  barriers come out the same on a first look as on a second  11,333,756 segments both times, 298 over 3 m both times
+  PASS  menu credits the map data and has no Controls screen
+  PASS  boot: no page errors
+npm test -- --only=venues (06:02:00-06:11:02, load 18.08 to 14.28; final build): 13/13 passed
+  PASS  venues: Lot 57 and Stoppage Time are places in the Go to sheet  Lot 57, Stoppage Time
+  PASS  venues: Lot 57: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you  89 s of Auto-drive on 1 hand-offs; parked on ramp 1142 at 276 m; "Drove Orangewood Ave to Lot 57 · street driving isn't built yet. Auto-drive off: you have control"
+  PASS  venues: Lot 57: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)  ready in 81.0 s; the game drew 0 frames on foot; low; 27 people; clock Sun 19:30; standing 0.55 m from the driver's door, Drive on offer
+  PASS  venues: Lot 57: a short walk and an Order at the bar  walked 60.7 m (straight line) to the bar; Order opened the sheet; ordered an agua fresca (making)
+  PASS  venues: Lot 57: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone  Car walked you to 0.57 m from the door, Drive (76x76) tapped: on the ramp to CA-57 North (path 233) at 4 m, 0 mph; "On the ramp to CA-57 North · street driving isn't built yet"
+  PASS  venues: Stoppage Time: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you  90 s of Auto-drive on 1 hand-offs; parked on ramp 124 at 285.7 m; "Drove Anaheim Way to Stoppage Time · street driving isn't built yet. Auto-drive off: you have control"
+  PASS  venues: Stoppage Time: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)  ready in 31.0 s; the game drew 0 frames on foot; low; 36 people; clock Sun 19:30; standing 1.94 m from the driver's door, Drive on offer
+  PASS  venues: Stoppage Time: a short walk and in through the front door  walked 34.9 m to the front door and in (indoors: true)
+  PASS  venues: Stoppage Time: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone  Car walked you to 2.05 m from the door, Drive (76x76) tapped: on the ramp to I-5 North (path 1101) at 4 m, 0 mph; "On the ramp to I-5 North · street driving isn't built ...
+  PASS  venues: no page errors
+  PASS  venues phone: on the exit ramp the venue prompt shows; a tap parks you; Get out replaces the pedals (44 px or more, labelled, focusable)  prompt 168x48 "Park at Lot 57"; Get out 168x52 at (42, 750), focused; Drive on 127x52; no pedals
+  PASS  venues phone: a tap on Drive on goes straight back to an on-ramp  on the ramp to CA-57 North
+  PASS  venues: no page errors
+npm test -- --only=phone (05:34:37-06:00:00, load 30.10 to 27.21; final build): 18/18 passed
+  PASS  menu fits a 390 × 844 phone
+  PASS  menu: one sheet; the Drive dock stays while its screens change  same sheet, dock marks Settings, one Drive button
+  PASS  profile screen renders
+  PASS  the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll  stage 306 × 172 px in a 338 px card; a stage frame 30 calls, 71,374 triangles (the phone build), 17 frames so far
+  PASS  Settings at 390 × 844: Arcade, Sport and Simulation set the handling to 0.15 / 0.5 / 0.9; off those points it reads Custom; one line each; saved  Arcade 0.15: "Strong stability and traction control, the most grip; forgiving past the limit."; Sport 0.5: "Lighter stability control, 8% less ...
+  PASS  driving HUD: condensed, inside its budget, controls reachable  390x844 10.3%, cluster to 17.5%, controls from 79.9%; 390x715 in the app 12.1%, cluster to 20.7%, controls from 73.4%; 844x390 9.2%, cluster to 25.6%, controls from 62.6%
+  PASS  seat view: horizon, cluster and windscreen clear; the duplicate speed only where the car shows none  oc-hyper: horizon 36.8%, cluster centre 59.9%, HUD speed hidden, 8.0%; rossini-gt: horizon 36.7%, cluster centre 60.8%, HUD speed shown, 10.3%
+  PASS  steering wheel: each car's parts by name; the left dial follows the profile and redraws only on a change; shift lights  rossini-gt 17 meshes, rossini-corsa 17 meshes, oc-hyper 17 meshes, rossini-brio 12 meshes, vela-e 7 meshes; left dial 0.15 ARCADE, 0.5 SPORT, 0.9 SIM, 0.35 CUSTOM; right...
+  PASS  Go to lists all twenty carriageways  20 listed
+  PASS  Go to: navigation line, destination line and road chevrons; Clear route hides them  "4.6 mi KEEP RIGHT CA-55 NORTH" / "6 minat your paceModerate trafficsimulated"; 72 chevrons; cleared
+  PASS  follow the route: route on the corner map, lane hint, an Auto-drive button that adds nothing to the HUD cover; touch steer and brake take over  map accent pixels 0 → 2360 (656 route points); lanes 2 of 5 lit, "Keep right"; AUTO on; 390x844 13.6% → 13.6%, controls from 79.9%; 390x760 15.1%...
+  PASS  reach: hold Pause for the six-wedge quick menu; Pause > Radio opens the radio card  6 wedges; radio card at y 172
+  PASS  HUD: compass ring; clock in the pause screen; Minimal tucks the icons away after 4 s, Pause stays, a tap brings them back  compass 301°, "12:30 PM · 72° · simulated"; tucked away 11.11 s after Resume; a tap brought it back; the chip paused
+  PASS  sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map  220 px for 110 CSS px at 2x, mean 132.4, sd 33.02, up while the HUD is tucked; self-check "copy ok: 49/49 opaque, 49 lit (the view: 49), 49/49 match the view"
+  PASS  sky camera fallback: drawn into the main canvas, inside its see-through frame  the screen inside the frame is 0.7 levels from the copy's picture (the road behind it: 79.53); frame rgba(0, 0, 0, 0), radius 0px
+  PASS  OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop  button 52 × 52 px left of the ability, the tank panel above; held: tank 100 → 78.36 %; double-tap: a 1.5 m hop
+  PASS  OC Hypercar HUD at 844 × 390 (a phone sideways): the ability, THRUST and the tank panel clear the corner map, the pedals, the steering rail and the road plate  844 × 390: THRUST 532-584 and the ability 592-644 px across at 302-354, the tank panel over them at 240-294, the corner map 744-8...
+  PASS  phone: no page errors
+```
+
+- **The sky camera** ("a sharp live picture inside its frame"), the third pass's one failure, passed at a load of 27
+  to 30. Since it did not fail again, the base-worktree comparison (`5cf7212`) the brief asked for on a second failure
+  was not run. The third pass's failure is recorded as not repeated; its cause was not found.
+
+**The third pass's last changed visuals, re-checked** (a scratch frame script on `src/onfoot/test-cast.html`, quality
+high, frames in `tests/out/cast/p4/`, all looked at):
+- `lod1-eight-front-p4.png` (all eight at LOD 1) and `lod2-eight-front-p4.png` (LOD 2). The eight LOD 1 fronts are
+  pixel-identical (0 pixels differ by more than 8 levels) to the third pass's `<id>-front-lod1.png` of 02:51-02:53
+  (montage `lod1-eight-front-before-0253.png`).
+- `stubble-shirt-bust-lod12-p4.png` and `stubble-game0-lod12-p4.png` (Chad, 01 and Danny at LOD 1 and 2), and
+  `bust-zoom-p4.png` (Chad at LOD 0/1/2, 01 at LOD 1/2): Chad has no painted beard at LOD 1 or 2 and no white shirt
+  patches through the jacket's sides; his open collar is a ragged white V there.
+- `leila-hairline-p4.png` (Leila at LOD 0: front, three-quarter, yaw 45 and -45, game distance): the hairline stops at
+  the brow; the parting's edge is ragged with a two-tone step. Her front and three-quarter heads and Chad's bust are
+  pixel-identical to the third pass's `-fx3` frames.
+- `danny-side-mateo-head-p4.png` (`node tests/cast-shoot.mjs danny-tran,mateo-reyes --views=headSide,head
+  --suffix=-p4`): pixel-identical to the `-fx3` frames.
+- No regression was found, so nothing was changed.
+
+**Seat frames from these runs, looked at:** `tests/out/cast/p4-seat-six-1280x720.png`, `p4-seat-six-390x844.png`,
+`p4-seat-lock-1280x720.png`, `p4-pack-seat-1280x720.png` (Chad and Chadaline, centre and full lock both ways) and
+`p4-pack-seat-390x844.png`. Each character's sleeves and tone show as in the third pass. At full lock one hand rides
+the top of the rim and the other leaves the frame (known; the hands' owner's shuffle).
+
+**Still not right** (the KNOWN GAPS list in `PROJECT_OC_CAST.md`): Marcus's tee wide at the waist and his slim legs;
+plain sneakers, deck shoes and sandals; Danny's one-mass hair; Chad's curls as a mop; Danny's faint profile cheek tone;
+01's cap brim shade; Leila's ragged parting; the far levels' ragged open layers and Chad's collar V; 01's bare
+shoulder tops and brimless cap at LOD 2; one hand out of frame at full lock.
+
+## 2026-11-16: The cast graphics pass, third pass (Fable): the pack pair's looks, the six's looks, 01's new appearance
+
+Not committed: everything is in the working tree on `claude/cast` (HEAD `440e96e`), for the judges. The cloud machine
+was reset on 2026-11-10/11 and this worktree was rebuilt from its last backup, so this pass started from the state of
+the entry below (2026-11-12) and re-shot everything it cites. `PROJECT_OC_CAST.md` has the log ("Third pass after the
+weekly reset"), what is still short of the sheets, and the list of what the builder gained.
+
+**What was asked.** Finish the looks, Chad and Chadaline first, then the six: each face's own shape with the dark
+cheek and jaw shading gone; Chadaline's long waves as real flowing hair, Chad's curls with shape and lighter tips,
+Leila's waves and Danny's side part without the helmet look; shoulders, sleeves, collars and lapels, Marcus clearly
+muscular; shoes that read from the front, Chadaline's pointed stilettos with plain black soles; Chadaline under the
+90,000-triangle budget with margin. And the owner's new reference for 01 (2026-11-15) replaces Mateo Reyes's
+appearance.
+
+**What was built** (all in `src/onfoot/people/*` behind new optional values, `src/onfoot/cast.ts`,
+`src/ui/castStage.ts`, the portrait, and the tests; `PROJECT_OC_CAST.md` lists each value):
+- **Faces:** `FaceShape.cheekFill` (two smooth masses under the features: the ledge under the cheekbone that shaded as
+  a dark band is gone), `noseProj`, `jawRise`, `round`; `Look.softShade` (less baked occlusion on the lit side and a
+  paler scatter at the light's fall-off, which was the red-brown patch on the cheek and jaw); `Look.beardShadow`.
+- **Hair:** flowing hair as a hollow horseshoe with its own rounded front ends beside the face (Chadaline's
+  `longWaves`, Leila's new `wavesFlow`); curl clumps with depth, forehead locks and tips on the clumps' outer turns
+  (Chad's `curlsMedium`); a quiff and gradually thinning sides for Danny's `sidePart`; `curlsUnderCap` for 01.
+- **Bodies and cloth:** tailored sleeves cut round a slimmer arm without the deltoid's ball (`Garment.tailored`),
+  the drape's side and overall strength (`fitK`, `drapeK`) with a faded top, notch lapels (`lapel`), a high crew neck;
+  `BodyShape.bulk` takes Marcus past the old maximum muscle.
+- **Shoes:** the foot bends at its ball for stilettos and low heels (`buildRig`'s `toeFlat`), a pointed toe box 4.5 cm
+  past the toes, a pump's vamp, a narrow plain black sole; the shoe's meshing box follows the ankles (a very heavy
+  body's shoe was cut in half).
+- **01:** the new catalog entry (heavyset, round face, no beard, curls under a black fitted cap with our own OC mark
+  and a grey under-brim, black tee, silver chain, black straight jeans, black low-top sneakers), the cap accessory
+  (`acc.ts`), the portrait re-cropped below the cap's crown (10.2 KB WebP), the arms' black `short` sleeve, the crowd.
+- **Far levels of detail:** a day's growth (`lightStubble`) was painted as a full beard at the patio distance: fixed
+  (`lod.ts`). Under a closed jacket the shirt's hanging profile showed through as white patches there: it is left out
+  (`person.ts`).
+
+**Budgets (phone build, LOD 2 / 1 / 0 triangles; the limits are 2,500 / 14,000 / 90,000):**
+
+```
+mateo-reyes 1752/9518/76034   danny-tran 1512/8013/66140   marcus-bell 1804/8801/68004
+leila-farahani 1612/9550/69408   jas-cruz 1460/7817/66217   kate-morgan 1696/8517/67484
+chad 2000/10677/83287 (was 1976/10522/87134)   chadaline 1580/8238/78780 (was 1500/8519/89325)
+```
+
+**The perf pairs, desktop, re-run in full** (3 alternating pairs, base then ours, 60 s each, 1280x720 High; the base
+is a clean build of `5cf7212` in a temporary detached worktree, removed afterwards; ours drives as Chadaline, whose
+fur sleeve was the cost found on 2026-11-12). The machine's load average was 12 to 22 on 4 shared cores (other
+lanes' renders), so each run drew only 7 to 18 frames in its 60 s; the numbers are SwiftShader under load.
+
+```
+desktop: run | char | frames | p50 | p95 | p99 | long>50 | calls (mean) | tris (mean) | heap start->end MB | load1
+pair1-base | (none) | 7 | 7616.4 | 14282.8 | 14282.8 | 4 | 849 | 3087592 | 27.9->28.1 | 11.86
+pair1-ours | chadaline | 18 | 900 | 10099.5 | 10099.5 | 8 | 846 | 3116603 | 27.8->28.2 | 16.21
+pair2-base | (none) | 14 | 6916.5 | 9766.2 | 9766.2 | 10 | 847 | 3086510 | 27.8->28 | 14.77
+pair2-ours | chadaline | 17 | 883.3 | 8833 | 8833 | 7 | 845 | 3105968 | 27.9->28.2 | 17.62
+pair3-base | (none) | 16 | 1133.3 | 17216.1 | 17216.1 | 6 | 826 | 3038178 | 27.8->28.1 | 16.84
+pair3-ours | chadaline | 17 | 333.3 | 19482.6 | 19482.6 | 8 | 847 | 3130665 | 27.8->28.1 | 17.48
+  median base: p50 6916.5, p95 14282.8, calls 847, tris 3086510; base p95 spread 9766.2..17216.1
+  median ours: p50 883.3, p95 10099.5, calls 846, tris 3116603; ours p95 spread 8833..19482.6
+```
+
+- Draw calls −0.1 %, triangles +1.0 % (inside the 2 % allowance), the heap flat.
+- The median p50 and the median p95 are both below the base's. One of our runs' p95 (19,483 ms) is above the base's
+  worst (17,216 ms). With 7 to 18 frames a run, a run's p95 is its single slowest frame, so this set cannot resolve
+  10 %; it shows no regression in the medians and no growth in calls, triangles or heap. A quieter machine is needed
+  for a tighter number. The phone pairs were not re-run in this pass (2026-11-12: passed).
+
+**The suite** (one group at a time; the machine's load average was 6 to 24). "The last four small changes" are:
+Leila's side-part hairline stopping at the brow (`hair.ts`), the far levels' light stubble (`lod.ts`), Chad's shirt
+cut inside the jacket's (`cast.ts`), and the shirt's profile left out of the far levels under a closed jacket
+(`person.ts`). `cast`, `cast-pack` and `cast-venues` were run again on the final build after them.
+
+```
+npm test -- --only=cast (03:23:27-03:36:59, load 14.32 to 24.42; final build): 10/10 passed
+  PASS  cast: the catalog has the six base characters (3 men, 3 women); the pack's two are apart from them
+  PASS  cast: the six presets build within the phone budget (LOD 2, 1 and 0)
+  PASS  cast: an old save (female, tone 1, no character) keeps its look; the picker opens on the closest character
+  PASS  cast: the picker saves the choice and a reload restores it  [saved leila-farahani; reloaded from the saved storage: leila-farahani, the menu reads "CharacterLeila FarahaniIrvine›", the arms #d3a583]
+  PASS  cast: the cockpit arms follow the character (tone through setTone, sleeves, wrist); the archetype ability stays
+  PASS  cast: 01 follows the owner's reference of 2026-11-15 (no beard, curls under a black cap with our own OC mark, black tee, chain, straight jeans, low sneakers); the crowd's 01-based looks follow it
+  PASS  cast: the two-character pack is in the catalog at 2222 cents, 18+, not for sale
+  PASS  cast: no page errors
+  PASS  cast phone: the picker at 390x844 (cards, turntable, the choice marked)
+  PASS  cast: no page errors
+npm test -- --only=cast-pack (03:09:20-03:23:18, load 18.03 to 14.81; final build): 9/9 passed
+  PASS  cast pack: the catalog has Chad and Chadaline in the pack category, not among the six
+  PASS  cast pack: both build within the phone budget (LOD 2, 1 and 0)
+  PASS  cast pack: locked without the pack: a saved pack character is not played, the picker shows the two locked with the coming-soon line
+  PASS  cast pack: the TEST switch unlocks both without a store entitlement; the choice is saved, restored on reload, and the arms follow
+  PASS  cast pack: the store's entitlement unlocks the pack (a test-mode ledger entry, as a purchase would write it)
+  PASS  cast pack: the store entry is 2222 cents, 18+, grants the two characters and the reserved car, and is not for sale
+  PASS  cast-pack: no page errors
+  PASS  cast pack phone: the picker at 390x844, locked and with the TEST unlock
+  PASS  cast-pack: no page errors
+npm test -- --only=cast-venues (03:37:14-03:47:44, load 23.22 to 23.66; final build): 3/3 passed
+  PASS  cast venues: Lot 57: the avatar is the chosen character; everyone there is one of the six base looks
+  PASS  cast venues: Stoppage Time: the avatar is the chosen character; everyone there is one of the six base looks
+  PASS  cast-venues: no page errors
+npm test -- --only=cast-seat (00:06:54-00:14:36, load 5.84 to 10.33; the build before the last four small changes): 3/3 passed
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 1280x720
+  PASS  cast seat: at full lock both ways the drawn wheel stays inside the hands' range (no arm across the hub)
+  PASS  cast-seat: no page errors
+npm test -- --only=cast-seat-phone (00:14:45-00:21:47, load 10.07 to 13.40; the build before the last four small changes): 2/2 passed
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 390x844
+  PASS  cast-seat-phone: no page errors
+npm test -- --only=cast-pack-seat (00:21:59-00:36:07, load 12.57 to 18.50; the build before the last four small changes): 3/3 passed
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 1280x720
+  PASS  cast pack seat: full lock both ways with each (the drawn wheel inside the hands' range)
+  PASS  cast-pack-seat: no page errors
+npm test -- --only=cast-pack-seat-phone (00:36:14-00:39:02, load 18.14 to 12.23; the build before the last four small changes): 2/2 passed
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 390x844 at DPR 3
+  PASS  cast-pack-seat-phone: no page errors
+npm test -- --only=cast-pack-venues --check="as chad:" (00:39:31-00:47:05, load 10.86 to 12.48; the build before the last four small changes): 4/4 passed
+  PASS  cast pack venues: Lot 57 as chad: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast pack venues: Stoppage Time as chad: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast-pack-venues: no page errors
+  PASS  cast-pack-venues: no page errors
+npm test -- --only=cast-pack-venues --check="as chadaline:" (00:47:14-00:55:43, load 11.87 to 15.91; the build before the last four small changes): 4/4 passed
+  PASS  cast-pack-venues: no page errors
+  PASS  cast pack venues: Lot 57 as chadaline: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast pack venues: Stoppage Time as chadaline: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast-pack-venues: no page errors
+npm test -- --only=boot,venues (00:55:54-01:06:50, load 15.53 to 17.08; the build before the last four small changes): 19/19 passed
+  PASS  loads to the main menu  [menu after 22.29 s]
+  PASS  network: ten freeways, both directions  [20 carriageways, 10 routes]
+  PASS  no barrier within 1 m of any travel lane, on all 20 carriageways
+  PASS  barriers come out the same on a first look as on a second  [11,333,756 segments both times, 298 over 3 m both times]
+  PASS  menu credits the map data and has no Controls screen
+  PASS  boot: no page errors
+  PASS  venues: Lot 57 and Stoppage Time are places in the Go to sheet
+  PASS  venues: Lot 57: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you
+  PASS  venues: Lot 57: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)
+  PASS  venues: Lot 57: a short walk and an Order at the bar  [walked 60.7 m (straight line) to the bar; Order opened the sheet; ordered an agua fresca (making)]
+  PASS  venues: Lot 57: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone
+  PASS  venues: Stoppage Time: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you
+  PASS  venues: Stoppage Time: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)
+  PASS  venues: Stoppage Time: a short walk and in through the front door
+  PASS  venues: Stoppage Time: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone
+  PASS  venues: no page errors
+  PASS  venues phone: on the exit ramp the venue prompt shows; a tap parks you; Get out replaces the pedals (44 px or more, labelled, focusable)
+  PASS  venues phone: a tap on Drive on goes straight back to an on-ramp
+  PASS  venues: no page errors
+npm test -- --only=phone (01:07:01-01:24:36, load 16.24 to 16.12; the build before the last four small changes): 17/18 passed; failed
+  PASS  menu fits a 390 × 844 phone
+  PASS  menu: one sheet; the Drive dock stays while its screens change
+  PASS  profile screen renders
+  PASS  the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll
+  PASS  Settings at 390 × 844: Arcade, Sport and Simulation set the handling to 0.15 / 0.5 / 0.9; off those points it reads Custom; one line each; saved
+  PASS  driving HUD: condensed, inside its budget, controls reachable
+  PASS  seat view: horizon, cluster and windscreen clear; the duplicate speed only where the car shows none
+  PASS  steering wheel: each car's parts by name; the left dial follows the profile and redraws only on a change; shift lights
+  PASS  Go to lists all twenty carriageways  [20 listed]
+  PASS  Go to: navigation line, destination line and road chevrons; Clear route hides them
+  PASS  follow the route: route on the corner map, lane hint, an Auto-drive button that adds nothing to the HUD cover; touch steer and brake take over
+  PASS  reach: hold Pause for the six-wedge quick menu; Pause > Radio opens the radio card
+  PASS  HUD: compass ring; clock in the pause screen; Minimal tucks the icons away after 4 s, Pause stays, a tap brings them back
+  FAIL  sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map  [page.waitForFunction: Timeout 60000ms exceeded.]
+  PASS  sky camera fallback: drawn into the main canvas, inside its see-through frame
+  PASS  OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop
+  PASS  OC Hypercar HUD at 844 × 390 (a phone sideways): the ability, THRUST and the tank panel clear the corner map, the pedals, the steering rail and the road plate
+  PASS  phone: no page errors
+```
+
+- **The one failure:** `phone`'s "sky camera: a sharp live picture inside its frame" timed out
+  (`page.waitForFunction: Timeout 60000ms exceeded`, waiting for the Minimal HUD to go idle with the sky camera up) at
+  a load average of 16. On 2026-11-12 the same check passed on this branch and on the base at a load of 7. This pass
+  did not touch the HUD or the sky camera. It was not re-run at a lower load in this pass (the machine never went
+  below 12 afterwards), so it stands as failed once under load, not as shown to be the load's.
+- **Two flaky checks, fixed in the test's own plumbing:** "the TEST switch unlocks both ... restored on reload"
+  (`cast-pack`) and "the picker saves the choice and a reload restores it" (`cast`) each failed once at a load of 16
+  to 19: the reload lost the `tsu.test.keep` flag in localStorage and the group's settings were written over the
+  save. The storage pause now grows with the load, and the flag is also carried in `window.name`, which a reload
+  keeps. Both pass since (the lines above are the runs after the fix).
+
+**Other proof:**
+- `npx tsc --noEmit` passes. `npm run build` writes exactly one `data-build="owner-test"` (in `dist/artifact.html`).
+- `npm run store:check`: the same two problems as on the base (the wheel styles `mesh` and `blade`); `store-sync
+  --check`: in sync, 23 SKUs.
+- **Renders beside the sheets** (`node tests/cast-shoot.mjs ... --suffix=-fx3`, then `python3 tests/cast-sheets.py
+  <sheets> -fx3` and `--pack <sheets> -fx3`), in `tests/out/cast/`: `pack-chad-body-fx3.png`, `pack-chad-head-fx3.png`,
+  `pack-chadaline-body-fx3.png`, `pack-chadaline-head-fx3.png`, and `compare-<id>-body-fx3.png` and
+  `compare-<id>-head-fx3.png` for the six. Before: the same names ending `-fx.png` (2026-11-12).
+- **The far level:** `lod1-eight-fx3.png` (all eight at LOD 1, as the venues show them across a patio).
+- **Venue frames, daytime (13:00), the avatar in view:** `venue-pack-day-fx3.png` (Lot 57 and Stoppage Time, Chad
+  and Chadaline, from the front) and `pack-page-<venue>-<id>-a|b.png` (`node tests/cast-pack-venues-shoot.mjs
+  chad,chadaline --hour=13`: all checks passed).
+- **Full lock, left and right:** `lock-pack-fx3.png` (Chad and Chadaline, left then right) and
+  `pack-seat-<id>-lock-left|right-1280x720.png`. The wheel stops at 1.05 rad each way. One hand rides the top of
+  the rim; the other leaves the bottom of the frame (the hands turn rigidly with the rim).
+- **The picker:** `picker-1450x767-cards.png`, `picker-390x844.png`, `pack-picker-locked-1450x767.png`,
+  `pack-picker-test-chadaline-1450x767.png` (locked: "Chad & Chadaline pack: coming soon, $22.22, 18+"; the TEST
+  unlock labelled "not a purchase").
+- **Seat views:** `seat-<id>-1280x720.png` and `seat-<id>-390x844.png` for all eight (01's forearms bare in his tone
+  below the black short sleeve).
+- **An existing preset, before and after:** the builder's own preset `casual` (a bearded man, none of the new values),
+  its head at yaw 0 and 45: `preset-casual-yaw0-fx3.png` and `preset-casual-yaw45-fx3.png` are pixel-identical to
+  the 2026-11-12 frames `preset-casual-yaw0|45-s2after.png` (0 of 360,000 pixels differ; side by side in
+  `preset-casual-before-after-fx3.png`). The new values change nothing where they are unset.
+- **Chad at the far level in a venue:** the Stoppage Time page shows the avatar at the coarse level. Before the far-
+  level fixes he had a painted full beard and white shirt patches through the jacket there; after them (the frames
+  above were re-shot for Chad at 03:48 to 04:10) he has neither.
+
+**What is still not right** is in `PROJECT_OC_CAST.md` ("What is still short of the sheets", "Highest-impact remaining
+visual defects"): stylised faces, Chad's curls as a mop, Marcus's tee wide at the waist, plain sneakers, deck shoes
+and sandals, one hand out of frame at full lock, and the sky-camera check above.
+
+## 2026-11-12: The cast graphics pass (Opus continuation): the Chad package, the beards, the six's sleeves, perf
+
+Not committed: everything is in the working tree on `claude/cast` (HEAD `440e96e`), for the judges. The Fable builder of
+this lane stopped at the owner's 92 % rule, and Opus 5.5 continued from what was on disk. `PROJECT_OC_CAST.md`'s
+"Graphics pass log" has each stage and what is still short.
+
+**Stage 1, the Chad package (Chad and Chadaline), repaired and proven:**
+- **The failing check.** The pack check "the TEST switch unlocks both ... restored on reload" failed: after the
+  reload the save read `chad` and `packTest` false.
+  - It was reproduced alone: the keep flag and the save were both gone after an immediate reload, and both survived a
+    3 s pause.
+  - Chromium had lost the localStorage write on a reload straight after it, under this machine's load. The game was
+    not at fault.
+  - The suite now waits 3 s (`settleStorage`) before every reload that must read back the save.
+- **The looks:**
+  - Chad: a smaller shoulder pad, a thinner jacket shell, a slightly larger head.
+  - Chadaline: the hair curtain comes forward past the ears, with wider cards.
+  - The fur shrug's rolls are blended into one sleeve.
+  - Before: `tests/out/cast/pack-*-fx.png` as found. After: `pack-*-o2.png`, and the final `pack-*-fx.png` re-shot
+    after this pass.
+- **What is still short** is written down in `PROJECT_OC_CAST.md` ("What is still short of the sheets"). They are
+  not yet the best-looking characters in the game.
+
+**Stage 2, the shared face work:**
+- The full-beard box at yaw 45 degrees and more was the six's own `fullBeard` shell. Mateo and Marcus now use the
+  face work's strand-card `beard`. The beard mask's cheek line and back edge are softened (`masks.ts`).
+- The grey speckle: the cards' per-strand grey turns into its mean where a strand is under a pixel (`cards.ts`). The
+  hair cap's grey is fine strands with a soft threshold instead of a hard step on coarse noise (`hair.ts`).
+- Frames, at yaw 0, 45 and 90 and at game distance: `stage2-before.png`, `stage2-after.png` and
+  `game45-zoom-before-after.png`. The regression head is the preset `casual`, with and without grey 0.5.
+
+**Stage 3, the six, partly:**
+- Marcus's scar on his right eyebrow (`Look.scar 'browR'`).
+- Straight and relaxed trouser legs (`Garment.leg`), with Kate's cargo pockets out on the fuller leg.
+- Before: the first pass's `compare-<id>-*.png`. After: `compare-<id>-*-fx.png`.
+- Not done: the faces' shapes, the cheek and jaw shading, the helmet hair, the shoulders and sleeves, Marcus's muscle
+  and the shoes. They need the builder's geometry and are Fable-class work.
+
+**Stage 4, the hands' options for the six** (`hands-acc.ts`, additively, as agreed):
+- The outfits `workcuff` (Mateo), `blazer` (Leila), `short` (Marcus) and `bomber` (Jas), and `look.hairTie` (Jas).
+- They are wired through the catalog.
+- The `cast` check asserts each one, and the hair tie.
+
+**Stage 5, smoothness: the perf pairs.** These are 3 alternating pairs (base, ours, base, ours, base, ours), 60 s each.
+The base is a clean build of `5cf7212` in a temporary detached worktree. Times are in milliseconds per frame. The
+machine's load average was 6 to 9 on 4 shared cores, from other lanes' renders, so the absolute times are SwiftShader
+under load (14 to 69 frames a run) and only the comparison means anything.
+
+The drive: desktop 1280x720 High with Chadaline; the phone profile (390x844, DPR 3, isMobile, CDP CPU throttle 4) with
+Chad.
+
+```
+desktop: run | char | frames | p50 | p95 | p99 | long>50 | calls | tris | heap start->end MB | load1
+pair1-base | (none) | 14 | 5033.2 | 7899.7 | 7899.7 | 4 | 846 | 3097969 | 28.4->28.1 | 9.08
+pair1-ours | chadaline | 14 | 3983.2 | 13266.1 | 13266.1 | 6 | 832 | 3064620 | 28->28.3 | 8.90
+pair2-base | (none) | 16 | 4083.2 | 9883 | 9883 | 5 | 846 | 3100853 | 27.9->28.1 | 9.10
+pair2-ours | chadaline | 15 | 4049.9 | 12299.5 | 12299.5 | 2 | 846 | 3110743 | 28.6->28.2 | 9.06
+pair3-base | (none) | 15 | 4216.5 | 6566.4 | 6566.4 | 1 | 840 | 3098490 | 28->28.2 | 7.75
+pair3-ours | chadaline | 20 | 3249.9 | 6949.7 | 6949.7 | 1 | 846 | 3128383 | 28->28.2 | 8.04
+  median base: p50 4216.5, p95 7899.7, calls 846, tris 3098490; base spread p95 6566.4..9883
+  median ours: p50 3983.2, p95 12299.5, calls 846, tris 3110743; base spread p95 6949.7..13266.1
+
+phone: run | char | frames | p50 | p95 | p99 | long>50 | calls | tris | heap start->end MB | load1
+pair1-base | (none) | 37 | 1533.3 | 4349.9 | 5183.2 | 30 | 288 | 542180 | 25.1->25.5 | 8.73
+pair1-ours | chad | 69 | 816.7 | 1916.6 | 2099.8 | 22 | 257 | 533824 | 25.2->25.6 | 9.17
+pair2-base | (none) | 37 | 1616.6 | 4249.8 | 4849.8 | 26 | 300 | 549835 | 25.2->25.5 | 6.32
+pair2-ours | chad | 41 | 1583.3 | 3183.2 | 3683.1 | 32 | 310 | 557701 | 25.1->25.5 | 8.39
+pair3-base | (none) | 36 | 1699.9 | 4433.2 | 5133.1 | 31 | 317 | 555029 | 25.1->25.5 | 8.57
+pair3-ours | chad | 44 | 1516.6 | 3299.8 | 3533.2 | 22 | 306 | 547071 | 25.1->25.5 | 8.91
+  median base: p50 1616.6, p95 4349.9, calls 300, tris 549835; base spread p95 4249.8..4433.2
+  median ours: p50 1516.6, p95 3183.2, calls 306, tris 547071; base spread p95 1916.6..3299.8
+```
+
+**The perf results:**
+- **Phone:** passes.
+  - p50 −6 % and p95 −27 % against the base.
+  - Draw calls +2.0 %. They follow the traffic, and they spread from 288 to 317 on the base itself.
+  - Triangles −0.5 %. The heap is flat.
+- **Desktop:** draw calls equal (846), triangles +0.4 %, p50 −5.5 %, heap flat. But p95 was +56 %, outside the base's
+  own spread (6,566 to 9,883 ms).
+  - Each of our runs had its slowest frame (13.3, 12.3 and 6.9 s) over the 40 s full-lock hold.
+  - A diagnostic run of our build without a character had no such frame: its slowest was 4.6 s, and p95 4,167 ms.
+  - So the cost was Chadaline's fur sleeve at full lock, a physical material with full sheen on High that fills more
+    of the screen with the arm raised.
+- **The fix, at the source:** the fur sleeve's sheen 0.4 (it was 1) and normal scale 1.2 (it was 1.6).
+  - One run after the fix (`diag-fur2`, Chadaline, desktop): p50 3,850 ms and p95 6,000 ms, inside the base's spread.
+    The 40 s frame was 5.5 s, with 844 calls and a flat heap.
+  - That is one run, not a new set of three pairs.
+
+**The base's phone group:** `npm test -- --only=phone` in the base worktree passed 18 of 18 (648 s). That includes
+"sky camera: a sharp live picture inside its frame" (220 px for 110 CSS px at 2x, mean 133.39, sd 33.16). So a
+failure of that check on our build would be ours, not pre-existing; our own phone run is below. The temporary worktree
+was removed afterwards (`git worktree remove`).
+
+**Proof:**
+- `npx tsc --noEmit` passes.
+- `npm run build` writes exactly one `data-build="owner-test"`, in `dist/artifact.html`.
+- `npm run store:check` reports two problems, the same two on the base (the wheel styles `mesh` and `blade`); this
+  pass adds none. `store-sync-catalog --check` is in sync (23 SKUs).
+- The suite:
+
+```
+npm test -- --only=cast-pack,cast-pack-seat,cast-pack-seat-phone (09:08, the build before the six's sleeves): 14/14 passed
+npm test -- --only=cast-seat,cast-seat-phone (09:34, before the hair tie moved): 5/5 passed
+npm test -- --only=phone (10:48:54-10:59:31, load 6.98): 18/18 passed
+  PASS  menu fits a 390 × 844 phone
+  PASS  menu: one sheet; the Drive dock stays while its screens change
+  PASS  profile screen renders
+  PASS  the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll
+  PASS  Settings at 390 × 844: Arcade, Sport and Simulation set the handling to 0.15 / 0.5 / 0.9; off those points it reads Custom; one line each; saved
+  PASS  driving HUD: condensed, inside its budget, controls reachable
+  PASS  seat view: horizon, cluster and windscreen clear; the duplicate speed only where the car shows none
+  PASS  steering wheel: each car's parts by name; the left dial follows the profile and redraws only on a change; shift lights
+  PASS  Go to lists all twenty carriageways
+  PASS  Go to: navigation line, destination line and road chevrons; Clear route hides them
+  PASS  follow the route: route on the corner map, lane hint, an Auto-drive button that adds nothing to the HUD cover; touch steer and brake take over
+  PASS  reach: hold Pause for the six-wedge quick menu; Pause > Radio opens the radio card
+  PASS  HUD: compass ring; clock in the pause screen; Minimal tucks the icons away after 4 s, Pause stays, a tap brings them back
+  PASS  sky camera: a sharp live picture inside its frame; it stays while Minimal tucks the map
+  PASS  sky camera fallback: drawn into the main canvas, inside its see-through frame
+  PASS  OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop
+  PASS  OC Hypercar HUD at 844 × 390 (a phone sideways): the ability, THRUST and the tank panel clear the corner map, the pedals, the steering rail and the road plate
+  PASS  phone: no page errors
+npm test -- --only=cast (10:59:31-11:04:29, load 8.30): 9/9 passed
+  PASS  cast: the catalog has the six base characters (3 men, 3 women); the pack's two are apart from them
+  PASS  cast: the six presets build within the phone budget (LOD 2, 1 and 0)
+  PASS  cast: an old save (female, tone 1, no character) keeps its look; the picker opens on the closest character
+  PASS  cast: the picker saves the choice and a reload restores it
+  PASS  cast: the cockpit arms follow the character (tone through setTone, sleeves, wrist); the archetype ability stays
+  PASS  cast: the two-character pack is in the catalog at 2222 cents, 18+, not for sale
+  PASS  cast: no page errors
+  PASS  cast phone: the picker at 390x844 (cards, turntable, the choice marked)
+  PASS  cast: no page errors
+npm test -- --only=cast-venues (11:04:29-11:08:45, load 8.33): 3/3 passed
+  PASS  cast venues: Lot 57: the avatar is the chosen character; everyone there is one of the six base looks
+  PASS  cast venues: Stoppage Time: the avatar is the chosen character; everyone there is one of the six base looks
+  PASS  cast-venues: no page errors
+npm test -- --only=cast-pack-venues (11:08:45-11:16:48, load 7.76): 6/6 passed
+  PASS  cast pack venues: Lot 57 as chad: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast pack venues: Stoppage Time as chad: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast-pack-venues: no page errors
+  PASS  cast pack venues: Lot 57 as chadaline: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast pack venues: Stoppage Time as chadaline: the avatar is the pack character; nobody in the crowd is one
+  PASS  cast-pack-venues: no page errors
+node tests/cast-pack-venues-shoot.mjs (11:16:48-11:33:28, load 8.38): all checks passed
+npm test -- --only=boot,venues (11:33:28-11:39:04, load 7.84): 19/19 passed
+  PASS  loads to the main menu
+  PASS  network: ten freeways, both directions
+  PASS  no barrier within 1 m of any travel lane, on all 20 carriageways
+  PASS  barriers come out the same on a first look as on a second
+  PASS  menu credits the map data and has no Controls screen
+  PASS  boot: no page errors
+  PASS  venues: Lot 57 and Stoppage Time are places in the Go to sheet
+  PASS  venues: Lot 57: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you
+  PASS  venues: Lot 57: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)
+  PASS  venues: Lot 57: a short walk and an Order at the bar
+  PASS  venues: Lot 57: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone
+  PASS  venues: Stoppage Time: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you
+  PASS  venues: Stoppage Time: Get out pauses the game and mounts the venue (window.__onfoot ready, your car in the stall)
+  PASS  venues: Stoppage Time: a short walk and in through the front door
+  PASS  venues: Stoppage Time: tap Car, then the venue's own Drive: back in the cockpit on an on-ramp at 0 mph, the venue gone
+  PASS  venues: no page errors
+  PASS  venues phone: on the exit ramp the venue prompt shows; a tap parks you; Get out replaces the pedals (44 px or more, labelled, focusable)
+  PASS  venues phone: a tap on Drive on goes straight back to an on-ramp
+  PASS  venues: no page errors
+npm test -- --only=cast-pack (11:39:04-11:45:41, load 8.10): 9/9 passed
+  PASS  cast pack: the catalog has Chad and Chadaline in the pack category, not among the six
+  PASS  cast pack: both build within the phone budget (LOD 2, 1 and 0)
+  PASS  cast pack: locked without the pack: a saved pack character is not played, the picker shows the two locked with the coming-soon line
+  PASS  cast pack: the TEST switch unlocks both without a store entitlement; the choice is saved, restored on reload, and the arms follow
+  PASS  cast pack: the store's entitlement unlocks the pack (a test-mode ledger entry, as a purchase would write it)
+  PASS  cast pack: the store entry is 2222 cents, 18+, grants the two characters and the reserved car, and is not for sale
+  PASS  cast-pack: no page errors
+  PASS  cast pack phone: the picker at 390x844, locked and with the TEST unlock
+  PASS  cast-pack: no page errors
+npm test -- --only=cast-seat,cast-seat-phone (11:45:41-12:00:56, load 7.05): 5/5 passed
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 1280x720
+  PASS  cast seat: at full lock both ways the drawn wheel stays inside the hands' range (no arm across the hub)
+  PASS  cast-seat: no page errors
+  PASS  cast seat: the hands of all six in the Rossini GT, Day, 390x844
+  PASS  cast-seat-phone: no page errors
+npm test -- --only=cast-pack-seat,cast-pack-seat-phone (12:00:56-12:14:28, load 11.82): 5/5 passed
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 1280x720
+  PASS  cast pack seat: full lock both ways with each (the drawn wheel inside the hands' range)
+  PASS  cast-pack-seat: no page errors
+  PASS  cast pack seat: the hands of Chad and Chadaline in the Rossini GT, Day, 390x844 at DPR 3
+  PASS  cast-pack-seat-phone: no page errors
+```
+
 ## 2026-11-12: The cast (lane cast A): six characters, the picker, the crowds, the driver; the seat view at full lock
 
 **What was asked (owner, 2026-11-11):**
