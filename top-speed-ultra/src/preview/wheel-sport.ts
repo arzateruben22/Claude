@@ -14,6 +14,7 @@
 //   addSportCentre  the premium centre on that hub (2026-11-12): a pillowed cover in the car's trim, a machined bezel,
 //                   a row of stitching, a gloss-carbon chevron, the badge in a raised machined cup with a ring and a
 //                   line in the car's accent; addSimpleCentre the Brio's and the Vela E's simpler one (see below)
+//   addDefaultSpokes the default sport wheel's three solid spokes (the GT and the Corsa, 2026-11-16): see below
 //   addThumbPads    a gloss-black touch pad with bright icons and a brushed bezel on each upper spoke (every car's)
 //   paddleTip       the bright brushed-aluminium pull face at the end of each (brushed) shift paddle
 //   wheelDials      the two displays, drawn in code (canvas, as car-gauges.ts): the left one the handling profile,
@@ -309,6 +310,26 @@ export function addSportSpokes(wk: Kit, o: { high: boolean }) {
   // the chin: where the legs meet the flat bottom, a gloss bridge with a brushed bar across its face
   const chin = new RoundedBoxGeometry(0.17, 0.016, 0.012, 2, 0.005); chin.translate(0, -0.123, -0.011); wk.add('gloss', chin, null, 0.05);
   const bar = new RoundedBoxGeometry(0.05, 0.0034, 0.005, 1, 0.0014); bar.translate(0, -0.123, -0.0045); wk.add('alu', bar, null, 0.02);
+}
+// The default sport wheel's spokes (owner, 2026-11-16: "the other cars have default sports steering wheel"; the Rossini GT
+// and the Corsa): three solid spokes in brushed graphite metal ('spokeW', cockpit.ts), no widget pods, dials, chin or legs. The two side
+// spokes run from inside the hub's flank to inside the rim (48 mm tall at the hub, 34 mm at the rim, the luxury
+// wheel's height, so the dash and the paddles behind stay hidden as before) with a brushed edge along the bottom of
+// each and a thumb pad on each (addThumbPads, cockpit.ts); the lower spoke, from the hub's foot to the rim's flat bottom,
+// is pierced by a rounded slot with a short bar in the car's accent ('hubAccent') over it
+export function addDefaultSpokes(wk: Kit, o: { high: boolean }) {
+  const cs = o.high ? 6 : 3;
+  for (const sd of [-1, 1]) {
+    const S = (pts: [number, number][]) => pts.map(([x, y]) => [sd * x, y] as [number, number]);
+    const sp = extrude(roundPoly(S([[0.06, -0.03], [0.168, -0.021], [0.168, 0.013], [0.06, 0.018]]), 0.006), 0.014, 0.003, cs);
+    sp.translate(0, 0, -0.018); wk.add('spokeW', sp);
+    wk.add('alu', leg([sd * 0.096, -0.0268], [sd * 0.156, -0.0218], 0.0024, 0.002, -0.0034), null, 0.02);
+  }
+  // the lower spoke, 52 mm wide at the hub and 76 at the rim, its slot 20 by 30 mm
+  const lo = roundPoly([[-0.026, -0.058], [0.026, -0.058], [0.038, -0.127], [-0.038, -0.127]], 0.006);
+  lo.holes.push(roundRect(0.02, 0.03, 0.0085, 0, -0.096));
+  const lg = extrude(lo, 0.012, 0.0025, cs); lg.translate(0, 0, -0.016); wk.add('spokeW', lg);
+  const bar = new RoundedBoxGeometry(0.03, 0.0032, 0.003, 1, 0.0012); bar.translate(0, -0.0745, -0.0035); wk.add('hubAccent', bar, null, 0.02);
 }
 // a thumb pad on each upper spoke: a gloss base, the pad's face (the atlas's left or right half) and a brushed bezel
 export function addThumbPads(wk: Kit, x: number, y: number, z: number) {
