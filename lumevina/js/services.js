@@ -106,10 +106,10 @@
         about: "Recommended for clients who need additional support during their acne journey, especially during the first few months or while purging. Bi-weekly treatments can help accelerate progress, minimize setbacks, and keep your skin on track. This service is by recommendation only and is not appropriate for everyone; I will determine if bi-weekly visits are beneficial based on your skin’s condition and severity. Treatments are customized at each visit and may include a peel, hydration-focused care, or other corrective treatments. First-time clients: please book Consultation + Treatment." }
     ] },
     { group: "Consultations", key: "consult", items: [
-      { id: "in-person-consultation", name: "In-Person Consultation", price: 50, min: 45, deposit: 49,
+      { id: "in-person-consultation", name: "In-Person Consultation", price: 75, min: 45, deposit: 49,
         desc: "A deep dive into your skin type, concerns and goals, with a plan and at-home product picks. Start with products, treatments later.",
         about: "Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready." },
-      { id: "virtual-consultation", name: "Virtual Consultation", price: 50, min: 45, deposit: 49, ask: true, note: "Mondays only",
+      { id: "virtual-consultation", name: "Virtual Consultation", price: 75, min: 45, deposit: 49, ask: true, note: "Mondays only",
         desc: "Your skin, concerns and long-term goals by video, with a treatment plan and at-home picks. Mondays only; message Evelyn first.",
         about: "Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking." }
     ] },

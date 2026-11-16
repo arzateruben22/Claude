@@ -1,22 +1,22 @@
 ---
 id: svc-online-consult
 kind: product
-title: Skin Consult, online
+title: Personalized Skin Consultation
 brand: Lumevina
 category: Consults
-size: 15 minutes, by video or phone
-price: 35
+size: Online or in person
+price: 75
 source: label + playbook
 answered: ""
 ---
 
-# Skin Consult, online
+# Personalized Skin Consultation
 
 **Brand:** Lumevina  
 **Type:** Consults  
-**Size:** 15 minutes, by video or phone  
-**Price:** $35  
-**On the label:** Evelyn looks at your skin and what you use, and builds your routine with you. The $35 comes back as a code on your first order.
+**Size:** Online or in person  
+**Price:** $75  
+**On the label:** Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps. Online or in person. No code or credit: $75 is the price.
 
 Label facts above come from the product's own packaging. Everything below is Evelyn's.
 

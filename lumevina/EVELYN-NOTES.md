@@ -587,3 +587,24 @@ The line under the hero's products, "As featured in CanvasRebel · Medical-grade
 - **Heading:** "Professional skincare *for your at-home routine.*" (was "The skincare Evelyn uses, for home.")
 - **Paragraph,** in Evelyn's voice: "Browse by brand or skin concern to find the products I stock and recommend for my clients. If something is out of stock, you can request it and I'll order it for you." The shop's search already understands skin concerns (acne, dark spots, sensitive, oily, wrinkles and more), and the brands sit right under it.
 - **Pickup:** "📍 Local pickup is free at the Woodland Hills studio—during your appointment or on an open day. Shipping is $8 per order." The dash stays with "studio" on a phone.
+
+## The consultation: online or in person, $75 (Nov 16)
+
+The card above the shop now reads:
+
+> NOT SURE WHAT YOUR SKIN NEEDS?
+> **Personalized Skin Consultation · Online or In Person**
+> Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps. $75
+> [Book a Consultation · $75]
+
+- **No code.** The old $35 Skin Consult gave the $35 back as a certificate code on the client's first order. That's gone: $75 is the price. When Evelyn taps Done in her dashboard (Consults), the actives unlock for that client as before, but no certificate goes out. The button reads "Done", not "Done, send the $35".
+- **Booking:** the button puts the consultation in the bag. The client pays $75, and Evelyn messages them within two business days to set the time, by video or at the studio. The emails, her dashboard and her daily priorities all say so.
+- **The menu matches:** In-Person Consultation and Virtual Consultation are now $75 (were $50), so the page never shows two prices for the same thing. Their $49 deposit is unchanged.
+- **Everywhere else:**
+  - the shipping policy line ("Not local? The Personalized Skin Consultation ($75) can be online…")
+  - the services note under the menu
+  - the share description
+  - the chat (its built-in answer and its instructions)
+  - the server's product list (`server/seed-products.sql`)
+  - the privacy page and the TikTok caption
+- **To do on GlossGenius:** her In-Person and Virtual Consultations there should be $75 too, since the simpler version of the site books on GlossGenius.

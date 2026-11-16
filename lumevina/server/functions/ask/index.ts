@@ -90,7 +90,7 @@ type Status = "new" | "existing" | "";
 const statusOf = (v: unknown): Status => v === "new" || v === "existing" ? v : "";
 // what they tapped first in the chat, so the answer sends a first visit to the right service
 const statusLine = (st: Status) => st === "new"
-  ? "The client said they're new to the studio: a first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern, never the returning-client facials; if they aren't local, the online Skin Consult. When asked, say what a first visit is like from her playbook."
+  ? "The client said they're new to the studio: a first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern, never the returning-client facials; if they aren't local, the online Skin Consultation. When asked, say what a first visit is like from her playbook."
   : st === "existing"
   ? "The client said they've been in before: they book the Lumevina Custom Facial, or the Monthly Acne Treatment if they're in the Acne Bootcamp; don't send them to the new-client services."
   : "";

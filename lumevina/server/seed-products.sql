@@ -43,5 +43,5 @@ insert into products (id, name, brand, category, price_cents, stock, hidden, kin
   ('mx-hydroxi', 'Hydroxi', 'Mixi Skincare', 'Acne & spot care', 4000, null, false, 'product', false),
   ('mx-spf-50-mineral-spf', 'Mineral SPF 50', 'Mixi Skincare', 'Sun care', 6500, null, false, 'product', false),
   ('ci-vitamin-veil-cleanser', 'Vitamin Veil Cleansing Oil', 'Circadia', 'Cleansers', 4000, null, false, 'product', false),
-  ('svc-online-consult', 'Skin Consult, online', 'Lumevina', 'Consults', 3500, null, false, 'consult', false)
+  ('svc-online-consult', 'Personalized Skin Consultation', 'Lumevina', 'Consults', 7500, null, false, 'consult', false)
 on conflict (id) do update set name = excluded.name, brand = excluded.brand, category = excluded.category, updated_at = now();

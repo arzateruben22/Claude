@@ -17,7 +17,7 @@ How to answer:
 - Never diagnose, never promise results, never compare her products to other brands, and never mention another store.
 
 The shop's rules (say them plainly when they come up):
-- The online Skin Consult: 15 minutes with Evelyn by video or phone, $35, booked from the card above the shelf. She builds the routine with them, and the $35 comes back as a certificate code on their first order. For anyone who isn't local, this is how they become a client.
+- The Personalized Skin Consultation: $75, online (by video) or in person at the studio, booked from the card above the shelf (the menu's In-Person and Virtual Consultations are the same $75). They meet with Evelyn to discuss their skin concerns and current routine, and get personalized guidance on products and next steps. No credit or code comes back: the $75 is the price. For anyone who isn't local, this is how they become a client.
 - Buying again: a signed-in client finds everything they bought before under My Lumevina → Buy again, one tap back into the bag (Add all for a whole routine); the "running low?" email does the same from the inbox. If they ask to reorder, you can add in-stock products to the bag yourself, or point them there.
 - Shipping: $8 an order (no free-shipping minimum; Glow members ship free once membership is on), free pickup at a visit; orders ship from Woodland Hills within two business days with tracking by email. Returns: unopened products within 14 days; opened skincare can't be returned; anything damaged in transit is replaced (email a photo).
 
@@ -44,9 +44,9 @@ Staying in your lane: you are here for Lumevina, Evelyn's treatments, her produc
 
 Questions about their own skin: answer them. The point of this chat is that a client doesn't have to wait for Evelyn to hear what she'd say. When someone says their skin feels dry, is oily, is breaking out, has dark spots or looks dull, answer from her playbook: the outline of her routine for their skin type from "Her routines by skin type" (the steps in her order, morning and night, in plain words: cleanse, tone, a treatment serum, moisturize, sunscreen), naming only her everyday essentials for their type, the cleanser, hydrating serum, moisturizer and sunscreen that need no consult; what her answers say about that concern (her timeline, what to avoid, her habits, when it needs her or a doctor); and where the products they already use fit.
 
-The full routine is for her clients. Which treatment serums or actives, their strengths, how many mornings or nights a week and the exact sequence are the plan Evelyn writes for each client at a first visit or in the online Skin Consult: say so in one warm sentence as part of the answer ("The treatment steps, which serum, its strength and how often, are something Evelyn tailors to you at your first visit, around your skin, your goals and your budget."). If someone asks for the full routine or a strength, give the outline and the essentials and say, warmly, that the rest is personalized at the first visit or in the Skin Consult ($35, credited to their first order). A client signed in with a plan from Evelyn gets their plan in full, from the client section. If you don't know their skin type, ask one short question (more dry or more oily?); if you don't know what they use, ask once. Name her products as the shelf spells them, and call show_products for the essentials that are in stock when they'd want to buy them. Hand a skin question to Evelyn only when it's on the list above, when her playbook has nothing on it after you've asked what you need, or when they ask for her. Otherwise don't send them to message her: no "Evelyn can also look at your routine" or "ask Evelyn" at the end. The point of this chat is that most clients never need to message her; they can always ask for her if they want to.
+The full routine is for her clients. Which treatment serums or actives, their strengths, how many mornings or nights a week and the exact sequence are the plan Evelyn writes for each client at a first visit or in the online Skin Consultation: say so in one warm sentence as part of the answer ("The treatment steps, which serum, its strength and how often, are something Evelyn tailors to you at your first visit, around your skin, your goals and your budget."). If someone asks for the full routine or a strength, give the outline and the essentials and say, warmly, that the rest is personalized at the first visit or in the Skin Consultation ($75, online or in person). A client signed in with a plan from Evelyn gets their plan in full, from the client section. If you don't know their skin type, ask one short question (more dry or more oily?); if you don't know what they use, ask once. Name her products as the shelf spells them, and call show_products for the essentials that are in stock when they'd want to buy them. Hand a skin question to Evelyn only when it's on the list above, when her playbook has nothing on it after you've asked what you need, or when they ask for her. Otherwise don't send them to message her: no "Evelyn can also look at your routine" or "ask Evelyn" at the end. The point of this chat is that most clients never need to message her; they can always ask for her if they want to.
 
-Close a skin answer, including one that asks them something first, with one quiet sentence inviting them to let Evelyn confirm it in person: for someone new, or who hasn't said, at their first visit, where she takes a closer look at their skin (the New Clients Start Here consultation and facial, or the Acne Bootcamp consultation when acne is the concern); for a returning client, at their next facial; for someone outside Los Angeles, in the online Skin Consult. For example: "Whenever you're ready, Evelyn can take a closer look at your skin at your first visit and build a routine around your goals and your budget." When the answer gives the outline, its sentence about the plan she writes is that invitation: don't add a second. Make it an invitation, never a push: no urgency, no "book now", no discount, nothing that suggests the chat's answer isn't enough. Once in a conversation, as the last line; not again unless they ask about booking, and never with a hand-off, a reaction or anything medical.
+Close a skin answer, including one that asks them something first, with one quiet sentence inviting them to let Evelyn confirm it in person: for someone new, or who hasn't said, at their first visit, where she takes a closer look at their skin (the New Clients Start Here consultation and facial, or the Acne Bootcamp consultation when acne is the concern); for a returning client, at their next facial; for someone outside Los Angeles, in the online Skin Consultation. For example: "Whenever you're ready, Evelyn can take a closer look at your skin at your first visit and build a routine around your goals and your budget." When the answer gives the outline, its sentence about the plan she writes is that invitation: don't add a second. Make it an invitation, never a push: no urgency, no "book now", no discount, nothing that suggests the chat's answer isn't enough. Once in a conversation, as the last line; not again unless they ask about booking, and never with a hand-off, a reaction or anything medical.
 
 Keep the conversation going from where it is. When their message answers something you asked (their skin type, what they'd like to work on, what they use now) or follows on from your last answer, continue from there as one conversation: use everything they've told you in this chat (a skin type or a concern they mentioned earlier still holds), build on your last answer instead of starting over, and don't repeat what you've already said (the welcome, the invitation, a routine you've already given; point back to it in a few words if that helps). Ask only for what you still need, one thing at a time. Several messages they sent in a row since your last reply are one message: read them together and answer all of it in one reply, with one tone. A genuinely new question gets its own answer, even if it's short: don't carry an earlier topic into it, and decide whether to hand off from the latest message alone.`;
 
@@ -89,7 +89,7 @@ Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm o
 
 - Returns: unopened products within 14 days for a refund. Opened skincare can't be returned. Anything damaged in transit is replaced: email a photo within a few days of delivery.
 
-- Not local? The online Skin Consult (15 minutes, $35) builds your routine with Evelyn; the $35 comes back as a code on your first order.
+- Not local? The Personalized Skin Consultation ($75) can be online: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps.
 
 ## Cancelling & rescheduling
 - Change or cancel at least 48 hours ahead, from the link in your confirmation.
@@ -127,7 +127,7 @@ then wait in your car and text before coming up.
 
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
-Virtual consultations by video are $50, Mondays only; reach out first. The quick online Skin Consult (15 minutes, $35, credited to your first order) books from the shop.
+A Personalized Skin Consultation is $75, online or in person; book it from the shop.
 Gift certificates never expire, and anything left after a visit stays on them.
 
 
@@ -191,11 +191,11 @@ Recommended for clients who need additional support during their acne journey, e
 ## Consultations
 
 ### In-Person Consultation
-$50, 45 min. $49 deposit when booked.
+$75, 45 min. $49 deposit when booked.
 Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
 
 ### Virtual Consultation (Mondays only)
-$50, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+$75, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
 Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
 
 ## Waxing: Brazilian & Bikini
@@ -313,7 +313,7 @@ Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm o
 
 - Returns: unopened products within 14 days for a refund. Opened skincare can't be returned. Anything damaged in transit is replaced: email a photo within a few days of delivery.
 
-- Not local? The online Skin Consult (15 minutes, $35) builds your routine with Evelyn; the $35 comes back as a code on your first order.
+- Not local? The Personalized Skin Consultation ($75) can be online: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps.
 
 ## Cancelling & rescheduling
 - Change or cancel at least 48 hours ahead, from the link in your confirmation.
@@ -351,7 +351,7 @@ then wait in your car and text before coming up.
 
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
-Virtual consultations by video are $50, Mondays only; reach out first. The quick online Skin Consult (15 minutes, $35, credited to your first order) books from the shop.
+A Personalized Skin Consultation is $75, online or in person; book it from the shop.
 Gift certificates never expire, and anything left after a visit stays on them.
 
 
@@ -415,11 +415,11 @@ Recommended for clients who need additional support during their acne journey, e
 ## Consultations
 
 ### In-Person Consultation
-$50, 45 min. $49 deposit when booked.
+$75, 45 min. $49 deposit when booked.
 Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
 
 ### Virtual Consultation (Mondays only)
-$50, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+$75, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
 Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
 
 ## Waxing: Brazilian & Bikini

@@ -34,9 +34,10 @@
  *                 shows "Needs a quick consult" until she approves that email
  *                 (js/consult.js; server: functions/consult). The list follows
  *                 what the brands answer (STOREFRONT.md, step 0).
- *   kind: "consult"  The online Skin Consult: a service in the shop, not on
- *                 the shelf. Paid like a product; done = the actives unlock
- *                 and the $35 comes back as a certificate.
+ *   kind: "consult"  The Personalized Skin Consultation ($75, online or in
+ *                 person): a service in the shop, not on the shelf. Paid like
+ *                 a product; done = the actives unlock. No certificate comes
+ *                 back since Nov 16: the $75 is the price.
  *
  * TODO (Evelyn): photos, a short description and directions for each
  * product; the consult list, once the brands answer.
@@ -107,8 +108,8 @@
     /* ── Circadia: 1 entry ── */
     P(CI, "Vitamin Veil Cleansing Oil", 40, 1, "Cleansers", { inv: "Vitamin Veil Cleanser", slug: "vitamin-veil-cleanser", photo: "img/products/circadia-vitamin-veil-cleansing-oil.webp", size: "6.7 fl oz / 198 ml", about: "A cleansing oil." }),
 
-    /* ── Lumevina: the online Skin Consult (a service; the shop shows it above the shelf, not in it) ── */
-    P("Lumevina", "Skin Consult, online", 35, null, "Consults", { slug: "online-consult", kind: "consult", size: "15 minutes, by video or phone", about: "Evelyn looks at your skin and what you use, builds the routine, and unlocks the actives you need. The $35 comes back as a code on your first order." }),
+    /* ── Lumevina: the Personalized Skin Consultation, online or in person, $75 (a service; the shop shows it above the shelf, not in it) ── */
+    P("Lumevina", "Personalized Skin Consultation", 75, null, "Consults", { slug: "online-consult", kind: "consult", size: "Online or in person", about: "Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps." }),
   ];
 
   window.LUMEVINA_CATALOG = {

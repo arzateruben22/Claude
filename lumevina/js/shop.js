@@ -672,7 +672,7 @@
   INV.onChange(paintAll);
   /* Evelyn approved an active for this client: its button turns into Add to cart */
   document.addEventListener("lumevina:consult-changed", function () { paintGrid(); paintRail(); });
-  /* the online consult card above the shelf: one tap puts it in the bag */
+  /* the consultation card above the shelf (online or in person, $75): one tap puts it in the bag; Evelyn sets the time after */
   document.addEventListener("click", function (e) {
     var b = e.target.closest && e.target.closest("[data-consult-add]");
     if (!b || !window.LumevinaCart) return;

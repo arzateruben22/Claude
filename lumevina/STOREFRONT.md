@@ -38,7 +38,7 @@ Ready-to-send text:
 ## Step 2 · The shop, public and compliant (built October 21; the rest as the brands answer)
 
 1. **A consult gate on the actives** (built). Benzoyl peroxide (Acne Med), the 11% and 15% mandelic serums, Retinal B3, Retinol Peptide and Hydroxi show "Needs a quick consult" instead of Add to cart. Tapping it opens the intake she already has (skin type, concerns, routine, photos in daylight). Evelyn gets a push notification, approves in the dashboard with one tap, and the product unlocks in that client's cart. Everything else (cleansers, toners, moisturizers, SPF, masks, supplements) buys straight away. This mirrors the way Face Reality itself sells: on a professional's recommendation.
-2. **The virtual consult as a product** (built). "Skin Consult, online · 15 minutes · $35, credited to your first order." Booked from the shop and the Skin School, done on a video call or through the intake plus a voice note, ends with a routine built on her shelf and the gate opened. This is how someone outside Los Angeles becomes a client; it is also the compliant way to sell them an active.
+2. **The virtual consult as a product** (built). "Skin Consult, online · 15 minutes · $35, credited to your first order." (Nov 16: now the Personalized Skin Consultation, online or in person, $75, with no credit.) Booked from the shop and the Skin School, done on a video call or through the intake plus a voice note, ends with a routine built on her shelf and the gate opened. This is how someone outside Los Angeles becomes a client; it is also the compliant way to sell them an active.
 3. **Product pages from the labels.** Every description is the label's own line, the size, the ingredient list the brand publishes, and her note where she has written one in the Skin Playbook. No claims beyond the label.
 4. **Prices at the brand's retail price.** Never under it in a listing or an ad; the welcome code applies at checkout only where the brand allows discounting.
 5. **Shipping and pickup at checkout** (exists), order emails with tracking (exists), low stock in the dashboard's Today card (exists).
@@ -64,7 +64,7 @@ Ready-to-send text:
 |---|---|
 | Her cost on pro lines | about half of retail (her exact costs are in the dashboard's Inventory) |
 | Shipping a small box in California | $5 to $9; free shipping starts at $75 so the box is covered by margin |
-| Online consult | $35, credited to the first order, so it costs the client nothing if they buy |
+| Online consult | $75, online or in person, no credit (Nov 16; was $35 credited to the first order) |
 | Ad budget to start | $10 a day, local first |
 | First-month goal | 10 online orders from people who have never visited, 5 online consults |
 | Judge it at | 90 days, like a routine |

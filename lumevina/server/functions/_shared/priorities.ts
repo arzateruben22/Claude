@@ -91,8 +91,8 @@ export async function priorities(db: any, now = Date.now()): Promise<Priority[]>
   add(2, "question_today", dueToday.length, `${plural(dueToday.length, "question")} to answer today: ${names(dueToday)}`,
     "A reply is drafted for each; check it, make it yours, send.", Q);
   const paidConsults = consults.filter((c) => c.kind === "online" && c.status === "paid");
-  add(2, "consult_paid", paidConsults.length, `${plural(paidConsults.length, "online consult")} to schedule: ${names(paidConsults)}`,
-    "Paid on the website. Message them to set the 15-minute call, then mark it done and the $35 certificate goes out by itself.", "dashboard.html#consults");
+  add(2, "consult_paid", paidConsults.length, `${plural(paidConsults.length, "skin consultation")} to set up: ${names(paidConsults)}`,
+    "Paid on the website. Message them to set the time, online or at the studio, then mark it done.", "dashboard.html#consults");
   const soldOut = products.filter((p) => Number(p.stock) === 0);
   add(2, "sold_out", soldOut.length, `Sold out: ${soldOut.map((p) => p.name).slice(0, 3).join(", ")}${soldOut.length > 3 ? ` and ${soldOut.length - 3} more` : ""}`,
     "Clients can request these from the shop. Restock, or hide them until you can.", "dashboard.html#inventory");

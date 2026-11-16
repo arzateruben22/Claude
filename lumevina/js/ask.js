@@ -160,7 +160,7 @@
       return "Acne starts with the New Client Consultation + Treatment, " + price("new-client-consultation-acne", 220) + " (80 min, $50 deposit). Then it’s the Acne Bootcamp: the Monthly Acne Treatment " +
         price("monthly-acne-treatment", 200) + ", and the Bi-Weekly Acne Treatment " + price("biweekly-acne-treatment", 115) + " when Evelyn recommends it."; } },
     { k: /consult/, a: function () {
-      return "A consultation is " + price("in-person-consultation", 50) + " in person, or " + price("virtual-consultation", 50) + " by video on Mondays (message Evelyn first). Both take a $49 deposit. " +
+      return "A Personalized Skin Consultation is " + price("in-person-consultation", 75) + ", online or in person: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps. Book it from the consultation card in the shop. " +
         "Want a facial too? New clients start with New Clients Start Here, " + price("new-client-consultation", 220) + "."; } },
     { k: /underarm|armpit/, a: function () { return "An underarm wax is " + price("underarm-wax", 20) + ", or " + price("brow-underarm-wax", 45) + " with a brow wax."; } },
     { k: /\bbrows?\b|eyebrow/, a: function () { return "Brow wax and tweeze is " + price("brow-wax-tweeze", 25) + ", or " + price("brow-underarm-wax", 45) + " with an underarm wax."; } },
@@ -1219,7 +1219,7 @@
           (p.card ? "\n" + p.card.split("\n").map(function (l) { return "  " + l; }).join("\n") : "");
       }).join("\n"),
       who ? clientBlock(who) : "",
-      status() === "new" ? "# This client is new to the studio\n\nThey said they haven't been in before. Their first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern; not the returning-client facials. If they aren't local, the online Skin Consult. Explain what a first visit is like from her playbook when asked."
+      status() === "new" ? "# This client is new to the studio\n\nThey said they haven't been in before. Their first visit books as New Clients Start Here (consultation and a custom facial), or the New Client Consultation + Treatment in the Acne Bootcamp when acne is the concern; not the returning-client facials. If they aren't local, the online Skin Consultation. Explain what a first visit is like from her playbook when asked."
         : status() === "existing" ? "# This client has been in before\n\nThey said they're a returning client: they book the Lumevina Custom Facial, or the Monthly Acne Treatment if they're in the Acne Bootcamp; don't send them to the new-client services." : "",
       [
         "# How to reply here",

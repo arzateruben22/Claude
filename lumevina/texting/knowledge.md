@@ -40,7 +40,7 @@ Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm o
 
 - Returns: unopened products within 14 days for a refund. Opened skincare can't be returned. Anything damaged in transit is replaced: email a photo within a few days of delivery.
 
-- Not local? The online Skin Consult (15 minutes, $35) builds your routine with Evelyn; the $35 comes back as a code on your first order.
+- Not local? The Personalized Skin Consultation ($75) can be online: Evelyn goes over your skin concerns and current routine with you, and guides your products and next steps.
 
 ## Cancelling & rescheduling
 - Change or cancel at least 48 hours ahead, from the link in your confirmation.
@@ -78,7 +78,7 @@ then wait in your car and text before coming up.
 
 ## Products, virtual visits & gift cards
 Order from the shelf anytime: shipping is $8 an order, or pick up at your visit.
-Virtual consultations by video are $50, Mondays only; reach out first. The quick online Skin Consult (15 minutes, $35, credited to your first order) books from the shop.
+A Personalized Skin Consultation is $75, online or in person; book it from the shop.
 Gift certificates never expire, and anything left after a visit stays on them.
 
 
@@ -142,11 +142,11 @@ Recommended for clients who need additional support during their acne journey, e
 ## Consultations
 
 ### In-Person Consultation
-$50, 45 min. $49 deposit when booked.
+$75, 45 min. $49 deposit when booked.
 Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
 
 ### Virtual Consultation (Mondays only)
-$50, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+$75, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
 Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
 
 ## Waxing: Brazilian & Bikini

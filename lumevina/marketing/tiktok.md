@@ -56,7 +56,7 @@ How to post: upload the mp4 with its own music (original, made for the clips, so
 - "Three things in every facial here" (the room, the lamp, the LED).
 - "The question I get most in the room this week", answered in one line.
 - A product from the shelf, the label's line read out loud, who she reaches for it with.
-- "Not local? The online Skin Consult is 15 minutes, $35, and the $35 comes back on your first order." (the one sales post a week)
+- "Not sure what your skin needs? Book a Personalized Skin Consultation with Evelyn, online or in person, $75." (the one sales post a week)
 
 ## Not in any post
 

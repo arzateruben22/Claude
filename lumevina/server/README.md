@@ -672,11 +672,11 @@ alter table questions add column owner_nudged_at timestamptz;
 alter table memberships add column billing_failed_at timestamptz;
 ```
 
-## The consult gate, and the online Skin Consult
+## The consult gate, and the Personalized Skin Consultation
 
 Some products need Evelyn's yes before they sell: benzoyl peroxide (Acne Med), the 11% and 15% mandelic serums, Retinal B3, Retinol Peptide, Hydroxi (`js/catalog.js` → `consult: true`; the list follows what the brands answer, STOREFRONT.md step 0). On the shelf they show **Needs a quick consult** instead of Add to cart. The client writes a few lines about their skin (`js/consult.js`); Evelyn approves or declines in the dashboard (Consults); approval is by email, so the same address checks out normally afterwards, signed in or not. `create-checkout` checks the same approval, so the gate can't be skipped by the chat or a crafted request.
 
-The **online Skin Consult** is a line in the catalog (`svc-online-consult`, `kind: "consult"`, $35): the shop shows it as a card above the shelf, it checks out like a product (no shipping, services tax code), and on payment the client gets "what happens next", Evelyn gets a notification, and a row lands in Consults. **Done** unlocks every active for that email and issues a $35 gift certificate (`gift_cards`, source `studio`), emailed with the code.
+The **Personalized Skin Consultation** (online or in person, $75; until Nov 16 the $35 online Skin Consult) is a line in the catalog (`svc-online-consult`, `kind: "consult"`, $75): the shop shows it as a card above the shelf, it checks out like a product (no shipping, services tax code), and on payment the client gets "what happens next", Evelyn gets a notification, and a row lands in Consults. **Done** unlocks every active for that email. (Until Nov 16 it also issued a $35 gift certificate; now the $75 is simply the price.)
 
 ```
 functions/consult        request (a client asks; "got it" email; her phone), status (what this email may buy)

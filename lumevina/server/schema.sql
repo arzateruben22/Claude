@@ -590,7 +590,7 @@ create policy "clients read their own orders" on orders
 --         Evelyn approves (that email may buy those products, [] = every
 --         active) or declines, with a line (functions/studio → consult_decide)
 -- online: a paid Skin Consult (the shop's svc-online-consult); done = every
---         active unlocked for that email and a $35 certificate sent
+--         active unlocked for that email (until Nov 16 a $35 certificate went back too)
 --         (functions/studio → consult_done)
 create table consults (
   id uuid primary key default gen_random_uuid(),
@@ -603,7 +603,7 @@ create table consults (
   answers jsonb,                                  -- their skin profile or intake at the time, if the website sent it
   reply text,                                     -- Evelyn's line, emailed with the decision
   order_id uuid references orders (id) on delete set null,   -- online: the order that paid for it
-  credit_code text,                               -- online, done: the $35 certificate
+  credit_code text,                               -- online, done: the $35 certificate (no longer issued since Nov 16)
   owner_nudged_at timestamptz,                    -- client-reminders told Evelyn once that it's past a day
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),

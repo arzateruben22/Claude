@@ -1,10 +1,10 @@
-/* Lumevina — Consults (dashboard): the gate on the actives, and the online Skin Consult
+/* Lumevina — Consults (dashboard): the gate on the actives, and the online Skin Consultation
  *
  * Waiting on you    a client tapped "Needs a quick consult" on an active and
  *                   wrote about their skin. Approve (that email buys it) or
  *                   decline, with a line she gets by email.
- * Online consults   paid Skin Consults ($35): set the call, then "Done" sends
- *                   the $35 back as a certificate code and unlocks every active
+ * Online consults   paid Personalized Skin Consultations ($75, online or in person): set the
+ *                   time, then "Done" unlocks every active for that email (no code: $75 is the price)
  *                   for that email.
  * Decided           the last 30 days.
  *
@@ -78,7 +78,7 @@
     var paid = list.filter(function (c) { return c.kind === "online" && c.status === "paid"; });
     var decided = list.filter(function (c) { return c.status !== "waiting" && c.status !== "paid"; }).slice(0, 12);
     var names = function (c) { return (c.product_names || (c.products || []).map(nameOf)); };
-    var h = '<h2>Consults</h2><p class="sub">The gate on the actives, and the online Skin Consult. ' + (LIVE ? "Decisions email the client." : "Demo: this browser’s requests; the website tab here sees your decision.") + '</p>';
+    var h = '<h2>Consults</h2><p class="sub">The gate on the actives, and the Personalized Skin Consultation. ' + (LIVE ? "Decisions email the client." : "Demo: this browser’s requests; the website tab here sees your decision.") + '</p>';
     h += '<h3 class="cs-h">Waiting on you' + (waiting.length ? ' <span class="cs-n">' + waiting.length + '</span>' : "") + '</h3>';
     if (!waiting.length) h += '<p class="cs-empty">Nobody waiting.</p>';
     waiting.forEach(function (c) {
@@ -94,19 +94,19 @@
         '<button type="button" class="btn btn-ghost cs-no" data-decide="declined">Decline</button></div>' +
       '</div>';
     });
-    h += '<h3 class="cs-h">Online consults' + (paid.length ? ' <span class="cs-n">' + paid.length + '</span>' : "") + '</h3>';
+    h += '<h3 class="cs-h">Consultations to set up' + (paid.length ? ' <span class="cs-n">' + paid.length + '</span>' : "") + '</h3>';
     if (!paid.length) h += '<p class="cs-empty">None booked.</p>';
     paid.forEach(function (c) {
       h += '<div class="cs-row" data-id="' + esc(c.id) + '">' +
         '<div class="cs-who"><b>' + esc(c.name || c.email) + '</b> <span class="cs-when">paid ' + esc(ago(c.created_at)) + '</span><br><span class="cs-mail">' + esc(c.email) + '</span></div>' +
-        '<p class="cs-note">Message them to set the 15-minute call (video or phone). After the call, tap Done: every active unlocks for this email and the $35 goes back as a certificate code.</p>' +
-        '<div class="cs-acts"><a class="btn btn-ghost" href="mailto:' + esc(c.email) + '?subject=' + encodeURIComponent("Your Skin Consult with Evelyn") + '">Email them</a>' +
-        '<button type="button" class="btn btn-solid" data-done="1">Done, send the $35</button></div>' +
+        '<p class="cs-note">Message them to set the time: by video, or at the studio. After it, tap Done and every active unlocks for this email.</p>' +
+        '<div class="cs-acts"><a class="btn btn-ghost" href="mailto:' + esc(c.email) + '?subject=' + encodeURIComponent("Your Skin Consultation with Evelyn") + '">Email them</a>' +
+        '<button type="button" class="btn btn-solid" data-done="1">Done</button></div>' +
       '</div>';
     });
     if (decided.length) {
       h += '<h3 class="cs-h">Decided</h3><ul class="cs-list">' + decided.map(function (c) {
-        return '<li><b>' + esc(c.name || c.email) + '</b> · ' + esc(c.kind === "online" ? "online consult" : names(c).join(", ") || "every active") + ' · <span class="cs-st is-' + esc(c.status) + '">' + esc(c.status) + '</span>' +
+        return '<li><b>' + esc(c.name || c.email) + '</b> · ' + esc(c.kind === "online" ? "skin consultation" : names(c).join(", ") || "every active") + ' · <span class="cs-st is-' + esc(c.status) + '">' + esc(c.status) + '</span>' +
           (c.credit_code ? ' · ' + esc(c.credit_code) : "") + (c.decided_at ? ' <span class="cs-when">' + esc(ago(c.decided_at)) + '</span>' : "") + '</li>';
       }).join("") + '</ul>';
     }

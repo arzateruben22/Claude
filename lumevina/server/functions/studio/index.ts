@@ -38,7 +38,7 @@
 // the consult gate and the online consult (../_shared/consults.ts):
 // POST { action: "consults" }                      → { consults }  waiting and paid first, then the last 30 days decided
 // POST { action: "consult_decide", id, status: "approved" | "declined", reply?, products? }   emailed to the client
-// POST { action: "consult_done", id }              → { code }  every active unlocked for that email; the $35 certificate sent
+// POST { action: "consult_done", id }              → { code: null }  every active unlocked for that email (no certificate since Nov 16)
 // "answer" also suggests a general answer from her reply (teach: false to skip): ../_shared/learn.ts
 //
 // Deploy:  supabase functions deploy studio --no-verify-jwt
