@@ -268,6 +268,115 @@ full lock still drops one hand out of the frame (the other session's shuffle).
 Honest scope: the six are stylised real-time 3D built by our procedural people builder, for a phone browser. They
 are matched to the sheets as closely as the builder's shapes allow. They are not photoreal and not imported models.
 
+## Chad hero test (2026-11-16, lane `claude/chad-hero`, uncommitted)
+
+The owner asked how realistic Chad can look with what we can build here, was told the honest ceiling (a polished
+stylised life-sim look, not a photo), and answered: "Yes and make sure the hairstyle is more accurate, I don't want it
+to look like strict curly hair and have more of a wavy texture". This is that test: Chad's close-up level (LOD 0) pushed
+as far as the real-time builder goes, with a **swept-back wavy side part** in place of the sheet's tight curls. The
+owner's call on the hair overrides the sheet. Additive only: every other preset renders as before (proof below).
+
+**What was built**
+
+- **The hair** (`people/hairWavy.ts`, new; `HairStyle 'sweptWavy'`): layered hair on one strand field.
+  - *The strand field.* The head as a globe whose poles are the ears: combed straight back, a strand is a circle of
+    latitude. The side part (on his left) shears the latitudes away from the parting, the long side across and back, the
+    short side down and back; S-waves about 5 cm long swing the strands sideways, their length and swing varying from
+    lock to lock. The long top lies over the shorter hair of the back of the head and ends there in uneven locks. The
+    same few lines exist in TypeScript and in GLSL.
+  - *A sculpted base volume:* 2.3 cm on top with 1.2 cm more at the front (the lift), the parting a shallow groove, wave
+    ridges across the strands, grooves between 12 mm locks; the sides 1 cm and the back 1.25 cm, tapered into the
+    hairline over 3.4 cm (short, not shaved; tidy over the ears and at the nape), over 1.3 cm at the front where the hair
+    stands up. One soft lobe of hair comes down a little onto the forehead on the long side.
+  - *A strand shader on it:* every pixel finds its own strand from the field, so the streaks, each lock's tone, the
+    lighter ends (on the waves' crests) and the anisotropic highlight all follow the same waves. The hairline is cut once
+    on those strands where the hair has already faded into the scalp's colour: no notch, no dark rim, no dither.
+  - *Feathered strand cards over it:* 230 locks over the top that follow the field and lift off the volume on the
+    crests, 120 short ones on the sides and at the nape, 90 fine wisps up from the front hairline (phone: 110 / 64 / 44).
+    Alpha-to-coverage at High and Ultra; lit with the normals of the volume they lie on; their highlight runs along the
+    strand (`cardMaterial`'s new `along`).
+  - Dark brown, near black (`#1a120d`), lighter ends `#4a3220`.
+- **Skin and eyes** (`Look.hero`, its own shader programs; unset, every program is the earlier one): a warm terminator
+  where the light falls off, pores in the colour and pore-scale gloss variation (High and Ultra only), the stubble as a
+  soft cool shade under the dots, colour zones (redder cheeks, nose and ears, a paler forehead), a soft shade in the eye
+  socket under the brow; the eye with brighter fibres round the pupil, a wider and darker limbal ring, a shaded white, a
+  wetter cornea that shows the room as a soft highlight.
+- **Face shape** (catalog values, and two new optional ones): the jaw no wider than the cheekbones (it read as a shield),
+  a square chin, defined cheekbones over a leaner cheek, a straight nose with a higher bridge, a fuller lower lip, a wider
+  mouth; `FaceShape.browLow` (deep-set eyes: the brow ridge 2 mm lower and further forward) and `Look.browFlat` (straight,
+  level, heavy brows). `BodyShape.neck` (a thicker, athlete's neck). `Accessories.studSize`: the ear studs 1.6 times the
+  size and set on the lobe's outer face (the standard stud sits inside the lobe's thickness and never showed).
+- **Proportions.** The head was already at the sheet's ratio: by the builder's own dimensions the bare skull is 25.7 cm,
+  chin to crown, on 188 cm, which is 7.3 heads (7.4 before this pass; the brief's figure is about 7.5), and the hair adds
+  about 2.5 cm. No value was changed for it. What made the head look small in the venue frame was the thin cap of curls,
+  the thin neck and the wide-angle camera looking down; the hair's volume and the neck are what changed.
+- **Clothes:** not changed in this pass. The black double-breasted jacket with peak lapels, the white open collar, the
+  pocket square and the hem's stitch line (visible on the lapels at High and Ultra, `hero/crop-collar-w5.png`) were
+  already built.
+
+**What moved toward the sheet, and what cannot**
+
+- Moved: the hair is now the owner's style and reads as that from the front, the side, the back and from above
+  (`hero/sheet-hero.png`, before: `hero/before/sheet-before.png`); the brows, the deep-set eyes, the cheekbones, the jaw's
+  taper and the stud are closer (`hero/compare-chad-hero-sheet.png`, beside the sheet).
+- Cannot, with this builder: **he is still not the sheet's person.** The face is smooth shapes blended in a distance
+  field and meshed at 2.7 mm, shaded by procedural masks. There are no scanned or painted textures, no real subsurface
+  scattering (the terminator and the wrap are approximations in the direct light only), no strand-level hair (a volume
+  with a strand shader and a few hundred ribbons), and the face's fine planes (the eyelids' folds, the nostrils' wings,
+  the lips' edges) are softer than a photo's. The result is a clean stylised life-sim head.
+- Still not right (seen in the frames):
+  - Up close from above, the top's cards show as short ribbon segments, and a row of small triangles marks where the top
+    layer ends on the back of the head (`hero/chad-above180-hero.png`).
+  - A few dark card ends stand off the outline over the ear and at the front (`hero/chad-yaw-90-hero.png`,
+    `hero/chad-yaw0-hero.png`); the nape's hairline is a V.
+  - At game distance the side's strand streaks alias into light and dark stripes (`hero/venue-stoppage-chad-ultra-b.png`).
+  - The "loose wave falling toward the forehead" is one soft lobe of the hairline, not a free lock (a free lock built
+    from cards read as a stick or a chip twice and was taken out).
+  - The stud is a small faceted steel bead, not a bright stone; it sits a little low and back on the lobe and stands a
+    little proud of it seen from behind (`hero/chad-yaw180-hero.png`, `hero/crop-ear-hero.png`).
+  - The shirt collar's points and the lapels' peaks are still sharp shards seen from eye level (`hero/sheet-hero.png`,
+    the two portraits); the jacket's flap pockets and the trousers' crease are still not built.
+  - **The picker's card for Chad still shows the sheet's portrait, with the curls** (`cast/chad.webp`). The turntable
+    beside it shows the new hair. The portrait is the owner's image; it was not replaced.
+
+**Cost**
+
+- Triangles (the suite's budget check, phone quality): LOD 2 / 1 / 0 = 2,170 / 13,070 / 82,776 (limits 2,500 / 14,000 /
+  90,000; the fifth pass's log has 2,162 / 13,599 / 84,253 for the curls, and LOD 0 built from `8a8c138` here is 84,333).
+  At High and Ultra LOD 0 is 197,547 (before 199,468). Draw calls: 21, as before.
+- Frame cost on the phone tier:
+  - *The seat view:* no people-builder mesh is drawn there. The arms are `src/preview/hands*`, which this lane did not
+    touch, and Chad's `arms` entry is unchanged. The new shading cannot cost it anything.
+  - *On foot at Low* (the phone's preset): your avatar is LOD 1, one draw call of the coarse levels' vertex-colour
+    material (`lod.ts`, unchanged); LOD 0 is never built at Low (`main.ts wantsLod0`), so none of the new programs exist
+    in that frame. Lot 57 at Low, third person, 390x844: avatar LOD 1, 13,070 triangles, 1 call; 132 calls in the frame.
+  - *Measured, and why it settles nothing:* the machine ran at a load average of 20 to 22 on 4 cores (other lanes'
+    suites), in software rendering. Lot 57 at Low took 580 to 706 ms a frame (median of 20, three runs). Chad alone at
+    LOD 0 in phone quality, 390x844 (what the picker's turntable draws): 2,456 ms before and 2,375 ms after (median of 60;
+    the fastest frames 1,510 and 1,624 ms). The run-to-run noise is hundreds of milliseconds, so a 0.5 ms limit cannot be
+    read off these numbers either way. **Not measured on a real phone.**
+  - The one place a phone runs the new shaders is the picker's turntable (LOD 0, phone quality). There the skin's pore
+    and gloss terms are compiled out (High and Ultra only) and the hair shader's finest strand noise is skipped.
+
+**What could carry over to Chadaline and the six**
+
+- `Look.hero` works on anyone (set it in the catalog): the skin's terminator, zones, pores and socket shade, and the eye.
+  It costs only at LOD 0.
+- The strand field idea: one analytic field read by the volume, the shader and the cards. Chadaline's and Leila's long
+  waves and Danny's side part would lose their streak swirls and gain highlights that follow the hair; each needs its own
+  field (hanging hair is a fall, not latitudes).
+- Cards lit with the volume's normals and the highlight along the card (`along`): any style whose cards read as chips or
+  dark strings.
+- `browLow`, `browFlat`, `neck` and the stud on the lobe's surface are plain catalog values.
+
+**Proof** (2026-11-16; the progress log's entry "Chad hero test" has the suite lines)
+
+- Every other preset renders as before: the six, Chadaline and the presets `reference`, `elder`, `muscular`, `stocky` at
+  LOD 0, High, three views each (head three-quarter, full front, head from behind), 33 frames, each **pixel-identical** to
+  the same frame built from `8a8c138`; after the last change (the stud), `tall` and `broad` (the presets that wear studs),
+  Leila and Chadaline again, 10 frames, identical.
+- Frames: `tests/out/cast/hero/` (`tests/chad-hero-shoot.mjs`, `chad-hero-venue.mjs`, `chad-hero-picker.mjs`).
+
 ## The catalog (one source of truth)
 
 `src/onfoot/cast.ts` holds everything about how a character looks, as data. Each `CastEntry` has:
@@ -402,7 +511,7 @@ renamed). They are our own fictional adults in the game's stylised 3D look, buil
 
 | Ref | Name | Age, height | Hair, defining features | Outfit (as drawn) |
 | --- | --- | --- | --- | --- |
-| P01 | Chad | 28, 188 cm, tall and athletic | Dark-brown medium curls with lighter tips, strong brows, light stubble, brown eyes, stud earrings | Black double-breasted peak-lapel jacket, white pocket square, white shirt with the collar open, black suit trousers, black lace-up shoes |
+| P01 | Chad | 28, 188 cm, tall and athletic | A swept-back wavy side part, dark brown near black with lighter ends (the owner's call of 2026-11-16; the sheet draws medium curls), strong straight brows, light stubble, brown eyes, stud earrings | Black double-breasted peak-lapel jacket, white pocket square, white shirt with the collar open, black suit trousers, black lace-up shoes |
 | P02 | Chadaline | 27, 168 cm, hourglass | Long dark hair with brown ends, full brows, brown eyes, small gold hoops, gold watch, rings | Black strap mini dress cut close, cream faux-fur shrug off the shoulders, black pointed stilettos with plain black soles |
 
 - **The lock** is one rule, `src/game/castPack.ts` `packUnlocked`:
@@ -446,7 +555,7 @@ state before that pass is in the `-fx.png` images of 2026-11-12.
 
 - **Still not the sheets' people.** They are clearly better than the six in hair and clothes, and their faces are
   smooth and proportioned, but they are the builder's stylised faces, not photoreal ones.
-- **Chad:**
+- **Chad:** (2026-11-16: his hair is now the swept-back wavy side part and his head was reworked; see "Chad hero test" above for what is still short. The lines below are the state before it.)
   - The curls read as a dark curly mop with brown tips and locks over the forehead. They are not the sheet's glossy,
     separate ringlets, and the lower edge over the forehead is two broad lobes.
   - The jacket's shoulders are square with a sharp corner at the sleeve head; the sheet's are softer. The sleeves

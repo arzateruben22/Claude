@@ -127,8 +127,12 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
     } else if (acc.studs !== null) {
       mb.setColor(acc.studs); mb.metal = 1; mb.rough = 0.15;
       const path: V3[] = [];
-      for (let i = 0; i < 6; i++) path.push([lobe[0] + sg * (0.0005 + i * 0.0003), lobe[1], lobe[2] + 0.002]);
-      mb.tube(path, (t) => 0.0024 * Math.sin(Math.PI * clamp(t * 0.95 + 0.03)), 8, false);
+      // (studSize, hero test: the stone sits on the lobe's outer face, 8.8 mm out from the lobe's middle along the ear's own normal; without it the
+      // stud is where it was, inside the lobe's thickness, and does not show)
+      const sn = Math.hypot(1, -0.45 + 0.3 * eo), so = acc.studSize !== undefined ? 0.0088 : 0;
+      const at = so ? hf.toBody([sg * (0.0745 + 0.004 * eo - 0.0015 + so / sn), -0.014 - 0.03 * esz, -0.081 + 0.004 + so * (-0.45 + 0.3 * eo) / sn]) : lobe;
+      for (let i = 0; i < 6; i++) path.push([at[0] + sg * (0.0005 + i * 0.0003), at[1], at[2] + 0.002]);
+      mb.tube(path, (t) => 0.0024 * (acc.studSize ?? 1) * Math.sin(Math.PI * clamp(t * 0.95 + 0.03)), 8, false);   // (studSize: unset, 1, as before)
     }
   }
   // ---- a fine chain round the neck, lying on the skin or the top, a little lower in front
