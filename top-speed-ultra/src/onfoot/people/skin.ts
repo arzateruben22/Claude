@@ -48,7 +48,7 @@ vec3 bumpNormal(vec3 pos, vec3 n, float H, float faceDir) {
 
 export function sssLights() {
   return THREE.ShaderChunk.lights_physical_pars_fragment
-    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.42, 0.3); float gWrap = 1.0;\nvoid RE_Direct_Physical(')
+    .replace('void RE_Direct_Physical(', 'float gThin = 0.0; float gAoD = 1.0; vec3 gSss = vec3(1.0, 0.42, 0.3); float gWrap = 1.0; float gHero = 0.0;\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor ) * gAoD;
 	#ifdef SKIN_SSS
@@ -58,6 +58,12 @@ export function sssLights() {
 	float back = pow( saturate( dot( geometryViewDir, - directLight.direction ) ), 3.0 );
 	float thru = saturate( 0.35 - nl );
 	reflectedLight.directDiffuse += directLight.color * gThin * ( back * 0.7 + 0.12 ) * thru * gSss * material.diffuseColor;
+	#ifdef SKIN_HERO
+	// (hero) a warm terminator: where the light falls off across a cheek or a jaw, the light scattered under the skin
+	// shows as a band of red-orange before the shade, and the shade itself is never grey
+	float termH = smoothstep( -0.3, 0.1, nl ) * smoothstep( 0.6, 0.1, nl );
+	reflectedLight.directDiffuse += directLight.color * BRDF_Lambert( material.diffuseColor ) * vec3( 0.95, 0.4, 0.26 ) * termH * 0.24 * gAoD * gHero;
+	#endif
 	#endif`);
 }
 
@@ -66,6 +72,8 @@ export interface SkinLook {
   hairColor: number; freckles: number; age: number; male: boolean; tattooInk?: number;
   /** (graphics pass) Look.softShade; unset: 0, as before */
   soft?: number;
+  /** (hero test) Look.hero; unset: 0, as before (the hero's own programs are compiled only for a look that asks) */
+  hero?: number;
 }
 
 export interface SkinMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: Record<string, THREE.IUniform> }
@@ -96,9 +104,11 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
     // and the upper lid's hood (person.ts sets it from the face; until it does, an eye of size 1, level and unhooded)
     uEyeP: { value: new THREE.Vector4(1, 0, 0, 0) },
     uSoft: { value: o.soft ?? 0 },
+    uHero: { value: o.hero ?? 0 },
   };
+  const hero = (o.hero ?? 0) > 0;
   m.uniformsRef = u;
-  m.customProgramCacheKey = () => `pskin-${quality}-${detail}`;
+  m.customProgramCacheKey = () => `pskin-${quality}-${detail}` + (hero ? '-hero' : '');
   // the face's expression for the per-pixel folds: smileL, smileR, squintL, squintR, read from the morph weights of a
   // mesh that carries every one of the MORPHS (morphs.ts; the head), at their indices there; every other skin mesh (the
   // coarse head, body, hands) gets zero. A face mesh that carries some but not all of them (setMorphs drops a morph
@@ -106,7 +116,7 @@ export function skinMaterial(o: SkinLook, quality: Quality, detail: 'face' | 'bo
   m.onBeforeCompile = (sh) => {
     if (detail === 'face' && sh.morphTargetsCount > 0 && sh.morphTargetsCount !== NM) console.warn(`people/skin: a face mesh with ${sh.morphTargetsCount} of the ${NM} morph targets; its smile and squint folds are off`);
     Object.assign(sh.uniforms, u);
-    sh.defines = { ...(sh.defines ?? {}), SKIN_SSS: 1, ...(high ? { SKIN_HIGH: 1 } : {}), ...(detail === 'face' ? { SKIN_FACE: 1 } : {}) };
+    sh.defines = { ...(sh.defines ?? {}), SKIN_SSS: 1, ...(high ? { SKIN_HIGH: 1 } : {}), ...(detail === 'face' ? { SKIN_FACE: 1 } : {}), ...(hero ? { SKIN_HERO: 1 } : {}) };
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', '#include <common>\nattribute vec3 aRest; attribute vec4 aSkin; attribute vec4 aFace; attribute vec4 aMisc;\nvarying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;')
       .replace('#include <begin_vertex>', `#include <begin_vertex>
@@ -124,7 +134,7 @@ vExpr = vec4(morphTargetInfluences[${MI.smileL}], morphTargetInfluences[${MI.smi
 varying vec3 vRest; varying vec4 vSkin; varying vec4 vFace; varying vec4 vMisc; varying vec4 vExpr;
 uniform vec3 uTone; uniform float uDark; uniform vec3 uLip; uniform float uLipAmt; uniform float uBlush; uniform float uBeard; uniform vec3 uBeardCol;
 uniform float uLiner; uniform vec3 uHair; uniform float uFreckles; uniform float uAge; uniform float uMale; uniform vec3 uInk;
-uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP; uniform float uSoft;
+uniform vec3 uHeadO; uniform vec3 uHeadS; uniform vec4 uLipP; uniform vec4 uFaceP; uniform vec4 uEyeP; uniform float uSoft; uniform float uHero;
 ${NOISE}`)
       .replace('#include <lights_physical_pars_fragment>', sssLights())
       .replace('#include <color_fragment>', /* glsl */ `#include <color_fragment>
@@ -356,6 +366,28 @@ if (uAge > 0.03 && mid3 > 0.001) {
 }
 c *= (1.0 - 0.22 * crease - 0.2 * foldC - 0.1 * trough - 0.05 * bag - 0.06 * crepe) * (1.0 + 0.06 * apple);
 c = mix(c, c * vec3(0.92, 0.86, 0.9), (trough + 0.4 * bag) * 0.5);   // the shadowed, bluer skin under the eye
+#ifdef SKIN_HERO
+{
+  // (Look.hero) colour zones: redder, warmer cheeks, nose and ears; a paler, yellower forehead
+  #ifdef SKIN_FACE
+  c = mix(c, c * vec3(1.08, 0.89, 0.85), 0.45 * clamp(red, 0.0, 1.0) * uHero);
+  float foreH = smoothstep(0.03, 0.055, hl.y) * smoothstep(0.0, 0.012, hl.z) * (1.0 - smoothstep(0.1, 0.5, scalp));
+  c = mix(c, c * vec3(1.02, 1.0, 0.93), 0.35 * foreH * uHero);
+  // the eye socket: a soft shade under the brow and beside the root of the nose (deep-set eyes sit in it)
+  float orbH = exp(-pow((abs(hl.x) - uFaceP.x) / 0.021, 2.0) - pow((hl.y - 0.0105) / 0.0065, 2.0)) * smoothstep(-0.004, 0.008, hl.z);
+  float innH = exp(-pow((abs(hl.x) - 0.0125) / 0.007, 2.0) - pow((hl.y - 0.004) / 0.008, 2.0)) * smoothstep(0.004, 0.012, hl.z);
+  c *= 1.0 - (0.24 * orbH + 0.13 * innH) * uHero * (1.0 - lashL);
+  // stubble as a soft shaded layer: a cool shadow under the dots, so a day's growth reads as a tone, not as speckle
+  c = mix(c, c * vec3(0.76, 0.77, 0.8), 0.5 * smoothstep(0.05, 0.7, beard * uBeard) * (1.0 - lipM) * uHero);
+  #endif
+  #ifdef SKIN_HIGH
+  // pores in the colour (larger on the nose and cheeks), and a fine unevenness
+  vec2 pcH = cells(hp * 1.9 / (1.0 + red * 0.5));
+  c *= 1.0 - 0.08 * smoothstep(0.26, 0.05, pcH.x) * fine * (1.0 - lipM) * uHero;
+  c *= 1.0 + 0.04 * (vnoise(hp * 2.3 + 31.0) - 0.5) * mid * uHero;
+  #endif
+}
+#endif
 // mouth interior
 c = mix(c, vec3(0.2, 0.045, 0.05) * (0.4 + 0.6 * ao), smoothstep(0.2, 0.8, mouth));
 diffuseColor.rgb = c;
@@ -388,6 +420,14 @@ rough += 0.12 * eyeA;   // a matte lid: no env sheen turning a closed lid into a
 rough = mix(rough, 0.24, carM);   // (the caruncle is wet)
 rough = mix(rough, 0.62, clamp(stub, 0.0, 1.0) * 0.6);
 rough = mix(rough, 0.85, smoothstep(0.1, 0.8, scalp));   // a buzz cut is matte, never a polished dome
+#ifdef SKIN_HERO
+gHero = uHero;
+#ifdef SKIN_HIGH
+// (Look.hero) the gloss is not even: pore-scale and centimetre-scale variation, a little oilier down the nose and brow
+rough += (0.1 * (vnoise(hp * 1.7 + 19.0) - 0.5) + 0.07 * (vnoise(hp * 0.4 + 5.0) - 0.5)) * mid * uHero * (1.0 - lipM);
+#endif
+rough -= 0.05 * clamp(red, 0.0, 1.0) * uHero * (1.0 - lipM);
+#endif
 gThin = thin * (1.0 - uDark * 0.5);
 gSss = mix(vec3(1.0, 0.36, 0.24), vec3(0.78, 0.34, 0.24), uDark);
 gAoD = mix(1.0, ao, 0.5);

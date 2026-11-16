@@ -128,7 +128,7 @@ export function buildAccessories(rig: Rig, acc: Accessories, look: Look, quality
       mb.setColor(acc.studs); mb.metal = 1; mb.rough = 0.15;
       const path: V3[] = [];
       for (let i = 0; i < 6; i++) path.push([lobe[0] + sg * (0.0005 + i * 0.0003), lobe[1], lobe[2] + 0.002]);
-      mb.tube(path, (t) => 0.0024 * Math.sin(Math.PI * clamp(t * 0.95 + 0.03)), 8, false);
+      mb.tube(path, (t) => 0.0024 * (acc.studSize ?? 1) * Math.sin(Math.PI * clamp(t * 0.95 + 0.03)), 8, false);   // (studSize: unset, 1, as before)
     }
   }
   // ---- a fine chain round the neck, lying on the skin or the top, a little lower in front

@@ -64,11 +64,19 @@ function shot(a: string) {
   // yaw<deg> (yaw0, yaw45, yaw90, yaw-45): the head close up from that many degrees round to the person's right;
   // game<deg>: the same angle at game distance (2.5 m, the venue camera's field of view), for what a beard or a
   // hairline does at the size it is played at; shoe<deg>: the feet close up
-  const ym = /^(yaw|game|shoe|bust|foot|collar)(-?\d+)$/.exec(a);
+  const ym = /^(yaw|game|shoe|bust|foot|collar|above|near)(-?\d+)$/.exec(a);
   const r = ym ? -Number(ym[2]) * Math.PI / 180 : ang[a] ?? 0;
   if (ym && ym[1] === 'game') {
     camera.fov = 55; camera.position.set(head.x + Math.sin(r) * 2.5, head.y + 0.1, head.z + Math.cos(r) * 2.5);
     camera.lookAt(head.x, head.y - 0.02, head.z);
+  } else if (ym && ym[1] === 'above') {
+    // (hero test, 2026-11-16) the hair from above: the camera 45 degrees up from that many degrees round (above180: from above and behind)
+    camera.fov = 22; camera.position.set(head.x + Math.sin(r) * 0.62, head.y + 0.62, head.z - 0.05 + Math.cos(r) * 0.62);
+    camera.lookAt(head.x, head.y + 0.05, head.z - 0.05);
+  } else if (ym && ym[1] === 'near') {
+    // (hero test) the head and shoulders as a portrait (the sheets' face views), from that many degrees round
+    camera.fov = 22; camera.position.set(head.x + Math.sin(r) * 1.25, head.y - 0.03, head.z + Math.cos(r) * 1.25);
+    camera.lookAt(head.x, head.y - 0.07, head.z - 0.03);
   } else if (ym && ym[1] === 'shoe') {
     camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * 1.9, 0.22, Math.cos(r) * 1.9);
     camera.lookAt(p.group.position.x, 0.1, 0.04);
