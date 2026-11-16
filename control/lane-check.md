@@ -270,3 +270,4 @@ STATE 12:38 UTC: weekly 0.52, 5h 0.32. CAST FX4 ENDED (not kept; owner asked: sh
 13:05 UTC: v20 PUBLISHED (artifact version 20, id 1794833568-627f) = 1f9dd89 (Thrust in the cluster, pedal-style keys, 3.5 m two-car hop); local/live-preview ff c7b0943 -> 1f9dd89 (other session told). boot 16/16. Owner told with 2 frames. Remaining: owner's cast choice (pending), SMOOTH (repair running). Characters' drop numbering continues from v21.
 STATE 13:02 UTC: weekly 0.52, 5h new window (resets 18:00 UTC). SMOOTH repair (13:00). Waiting for the owner's cast choice. v20 live (thrust).
 STATE 13:28 UTC: weekly 0.52. SMOOTH repair (13:17). Waiting for the owner's cast choice.
+STATE 13:55 UTC: SMOOTH repair running; waiting for the owner's cast choice.
