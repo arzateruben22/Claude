@@ -1,0 +1,47 @@
+{
+ "done": false,
+ "summary": "This repair is only partly done. Most of what the art judge rejected lives in src/onfoot/people/* or src/preview/hands*, which this task said not to edit, so those defects are still there. Nothing is committed.\n\nFixed or improved, all checked:\n- **Your own character up close in Stoppage Time.** The close-up LOD 0 is now drawn in third person at HD as well as Ultra (Lot 57 already did this). Leila at HD from 2.1 m, at 13:00, is LOD 0 (163,218 triangles; her LOD 1 is 14,527). Her face is sharp and the top no longer shows through the blazer. Low still uses LOD 1, the phone budget, as Lot 57 does.\n- **The crowd up close in Stoppage Time.** People within 3.2 m of the camera now get their LOD 1 built first, nearest first, ahead of the patio's shadow-casters. Before: all seven people within 3.6 m stayed at LOD 2 for a 20 s window. After: in a longer run, the five within 3 m reached LOD 1 in order of distance, the first one 16 frames after the camera moved. I did not run the before case that long. LOD 1 is still coarse up close (soft faces, inner tops showing through open jackets); that part needs the people builder.\n- **Catalog values in cast.ts.** Chad has a wider, squarer jaw, a heavier brow, thicker brows and the builder's `stubble`, which now shows at LOD 0 (`lightStubble` didn't). Marcus is leaner (fat 0.16, bulk 0.45 from 0.9, apple -0.35): his stomach is flatter, but his chest still sticks out like a bust in profile, because that shape is in body.ts.\n- **Picker turntable.** I could not reproduce the judge's frame (face hidden behind hair, teeth showing) at 390x844 DPR 3. I tried the moment the close-up lands, a full turn held every 30 degrees, and a first frame whose clock ran 0.8 s and then 1.5 s early. I clamped the time step at 0 as a defensive fix, but the skewed runs drew her face correctly, so this is not shown to be the cause. The stage now reports its angle and a test can hold it. A new regression check holds Leila front-on and requires her head area to be mostly skin: it passes at 0.295 (front-on is about 0.3; the judge's frame scores 0).\n- **Daylight venue frames.** `cast-pack-venues` now runs at Day instead of Sunset, which put the venue clock at 19:30. Its close frames come from a fixed camera 2.1 m away on both sides. The standalone shoot defaults to 13:00, takes any character, adds a close frame and checks the avatar is at LOD 0 at High. Chad, Chadaline and Leila are LOD 0 in both venues, and every crowd member is one of the six.\n- **Picker copy.** The intro now reads \"Six drivers to choose from, plus a pack coming soon.\"\n- **Test hooks.** `__onfoot.cast()` in both venues now reports each person's level and yours.\n\nNot fixed (ownership): Chad's hard hairline and sponge-like curls; Chadaline's jagged parting, hard strand edges and the banded shrug back; Jas's and Kate's helmet hair; Danny's two-tone hair and the ragged overshirt edge; Marcus's chest shape, sandals and the leg colour smear at LOD 2; LOD 1 open layers showing the top through; Chadaline's fur sleeve covering the phone screen at full lock; see-through holes at the side of Leila's hair. All of these are listed as KNOWN GAPS item 8 in PROJECT_OC_CAST.md. They are also queued as a Fable prompt in PROJECT_OC_HANDOFF.md (they are Fable-class under the project's triage rule).\n\nChecks: `npx tsc --noEmit` passes and `npm run build` passes. One Playwright process at a time, at load averages of 8 to 20:\n- `--only=cast`: 12/12, including the new turntable check.\n- `--only=cast-pack`: 9/9.\n- `--only=cast-pack-venues`: 6/6, run twice.\n- `--only=cast-venues`: 3/3.\n- `node tests/cast-pack-venues-shoot.mjs chad,chadaline,leila-farahani`: all checks passed.\n\nEach group ran separately; the longest took about 13 minutes. Not re-run: `tests/sportsbar.mjs`, the perf pairs, `phone`, `boot`, `venues` and `cast-seat*`. The suite runs at Low, so its venue frames show LOD 1, where Chad's open collar is still a ragged white V. The new frames are in tests/out/cast (`-r1`, the `r1/` folder, `pack-page-*-close.png`, `pack-venue-*-near-a|b.png`).",
+ "files": [
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/onfoot/venues/sportsbar/main.ts",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/onfoot/venues/sportsbar/crowd.ts",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/onfoot/main.ts",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/onfoot/cast.ts",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/ui/castStage.ts",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/src/ui/CastPicker.tsx",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/regression.mjs",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/cast-pack-venues-shoot.mjs",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/PROJECT_OC_CAST.md",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/PROJECT_OC_PROGRESS.md",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/PROJECT_OC_HANDOFF.md",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/pack-chad-head-r1.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/compare-marcus-bell-body-r1.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/picker-front-390x844-dpr3.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/avatar-sportsbar-leila-farahani-front-r1c.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/crowd-sportsbar-leila-farahani-late-r1c.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/z-turn12-r1.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/venue-lot57-day-r1.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/venue-stoppage-day-close-r1.png",
+  "/home/user/Claude/tsu-cast/top-speed-ultra/tests/out/cast/r1/pack-venue-day-near-b-r1.png",
+  "/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/r1/probe-crowd.mjs",
+  "/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/r1/picker-turn.mjs",
+  "/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpad/r1/picker-skew.mjs"
+ ],
+ "suite": "cast 12/12; cast-pack 9/9; cast-pack-venues 6/6 (twice); cast-venues 3/3; cast-pack-venues-shoot all checks passed; tsc and build pass",
+ "before": [
+  "Stoppage Time at HD drew the player's own character at LOD 1 (blurred face, inner top shredding through the blazer)",
+  "People within 3.6 m of a camera at Stoppage Time's bar stayed at LOD 2 through a 20 s window (the patio's shadow-casters were built first)",
+  "Chad: narrow jaw, light stubble not visible at LOD 0",
+  "Marcus (bulk 0.9, fat 0.28): bust-like chest and a belly in profile",
+  "cast-pack-venues frames at Sunset (venue clock 19:30, night); the front frame showed no character",
+  "The judge's picker frame: Leila's face hidden behind hair at 390x844 DPR 3 (head-box skin share 0)"
+ ],
+ "after": [
+  "Stoppage Time at HD: your character at LOD 0 in third person (Leila 163,218 tris, sharp face, clean blazer)",
+  "Within 3.2 m of the camera, LOD 1 is built first, nearest first: the five within 3 m reached LOD 1 in a longer probe (LOD 1 itself is still coarse)",
+  "Chad: wider, squarer jaw, heavier brow, stubble visible at LOD 0 (hair unchanged: the people builder's)",
+  "Marcus (bulk 0.45, fat 0.16, apple -0.35): flatter stomach; the chest still projects (body.ts's shape)",
+  "Daylight venue frames; close frames from both sides at 2.1 m; LOD 0 at High in both venues for Chad, Chadaline and Leila",
+  "Not reproduced in 3 runs; time step clamped at 0 (defensive); new regression check passes at skin share 0.295"
+ ],
+ "stats": "Load average 8-20 on 4 shared cores; one Playwright process at a time from this lane; the longest group run about 13 minutes"
+}
