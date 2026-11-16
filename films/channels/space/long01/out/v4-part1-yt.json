@@ -1,7 +1,7 @@
 {
  "name": "v4-part1-yt",
  "mode": "port",
- "dur": 63.77,
+ "dur": 60.5,
  "clips": [
   {
    "id": "B1",
@@ -57,13 +57,6 @@
    "file": "voice5/wav/L5.wav",
    "t": 54.74,
    "dur": 4.86,
-   "from": 0.0
-  },
-  {
-   "id": "C1",
-   "file": "voice5/wav/C1.wav",
-   "t": 59.95,
-   "dur": 2.92,
    "from": 0.0
   }
  ],
@@ -165,20 +158,6 @@
    "text": "Halve the distance, and the water starts to climb.",
    "line": "L5",
    "spoken": "Halve the distance, and the water starts to climb."
-  },
-  {
-   "t0": 60.15,
-   "t1": 61.045,
-   "text": "Part 1 of 8.",
-   "line": "C1",
-   "spoken": "Part one of eight."
-  },
-  {
-   "t0": 61.065,
-   "t1": 62.84,
-   "text": "Full video on YouTube.",
-   "line": "C1",
-   "spoken": "Full video on YouTube."
   }
  ],
  "km": [
@@ -255,8 +234,12 @@
   "t": 5.0,
   "fade": 0.3
  },
+ "units": "mi",
+ "shadow": true,
+ "tides": false,
+ "breathe": false,
  "cta_at": 51.02,
- "cta_frac": 0.8,
+ "cta_frac": 0.843,
  "cliff": "L5",
  "drift": {
   "a": 12.53,

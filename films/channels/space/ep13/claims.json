@@ -1,7 +1,7 @@
 [
  {
   "id": "c1",
-  "sentence": "Right now it's about three hundred eighty-four thousand kilometers away",
+  "sentence": "Right now it's about",
   "claim": "On average the Moon is about 384,400 km from Earth.",
   "source_url": "https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html",
   "source_title": "Moon Fact Sheet (NASA NSSDC)",
@@ -19,7 +19,7 @@
  },
  {
   "id": "c2",
-  "sentence": "drifting off three point eight centimeters a year",
+  "sentence": "drifting off",
   "claim": "The Moon is drifting away from Earth by about 3.8 centimeters a year.",
   "source_url": "https://www.jpl.nasa.gov/news/the-apollo-experiment-that-keeps-on-giving/",
   "source_title": "The Apollo experiment that keeps on giving (NASA JPL)",
@@ -37,7 +37,7 @@
  },
  {
   "id": "c5",
-  "sentence": "Two hundred eighty-eight thousand. A third wider.",
+  "sentence": "A third wider.",
   "claim": "A Moon at three quarters of today's distance would look about one and a third times wider.",
   "source_url": "",
   "source_title": "Our calculation (shown in the film)",

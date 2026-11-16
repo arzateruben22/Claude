@@ -193,6 +193,8 @@
   "fade": 0.3
  },
  "units": "mi",
+ "shadow": true,
+ "tides": true,
  "breathe": false,
  "cta_at": 45.065,
  "cta_frac": 0.863,

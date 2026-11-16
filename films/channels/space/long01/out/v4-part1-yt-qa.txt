@@ -1,0 +1,36 @@
+duration 60.50 s SHORT of 61 s (flagged, not padded)
+true peak -1.8 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part1-yt-contact.jpg
+    0.35  caption: 'Watch the Moon.'
+          speech : "Watch the moon. It's coming."
+    1.18  caption: "It's coming closer."
+          speech : "Moon, it's coming closer."
+    6.54  caption: 'Tonight, the Moon starts coming closer.'
+          speech : 'Tonight, the moon starts coming closer and it'
+    9.63  caption: 'And it never stops.'
+          speech : 'And it never stops.'
+   12.73  caption: "Right now it's about 384,000 km away, drifting off 3.8 cm a year."
+          speech : "Right now, it's about 384,000 kilometers away, drifting off 3.8 centimeters a year."
+   20.55  caption: 'Tonight, it reverses.'
+          speech : 'Tonight it reverses a'
+   22.57  caption: 'A thought experiment, built from real physics.'
+          speech : 'A thought experiment built from real physics.'
+   26.28  caption: 'Watch the number.'
+          speech : 'Watch the number. It only'
+   27.52  caption: 'It only goes down.'
+          speech : 'It only goes down.'
+   36.04  caption: '288,000.'
+          speech : '288,000.'
+   38.30  caption: 'A third wider.'
+          speech : 'a third wider.'
+   43.64  caption: 'And the sea already feels it: more than twice the tidal pull.'
+          speech : 'and the sea already fills it more than twice the tidal pool.'
+   51.22  caption: 'If that made the sky feel bigger, tap like and subscribe.'
+          speech : 'If that made the sky feel bigger, tap like and subscribe.'
+   54.82  caption: 'Halve the distance, and the water starts to climb.'
+          speech : 'Half the distance and the water starts to climb.'
+caption = speech: OK
+QA PASS
