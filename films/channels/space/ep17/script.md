@@ -7,7 +7,7 @@ Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.js
 vo: It's not just the sea. The ground moves too.
 
 ## body
-vo: Seventy thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls tens of centimeters a day. Here, it would flex far more.
+vo: Forty-three thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls about a foot a day. Here, it would flex far more.
 
 ## like/follow (85% of the runtime)
 vo: If that made the sky feel bigger, tap like and follow.  (YouTube file: If that made the sky feel bigger, tap like and subscribe.)
