@@ -522,6 +522,20 @@ If Fable is unavailable, run it on Opus with a design judge pair before any buil
 
 ### Fable prompt: the six characters' graphics pass (people builder), queued 2026-11-12
 
+**TAKEN (2026-11-12) by the cast lane's graphics pass** (branch `claude/cast`, uncommitted for the judges). A Fable
+builder ran it until the owner's 92 % rule, and then an Opus continuation. What is done and what is still open:
+`PROJECT_OC_CAST.md`, "Graphics pass log". Still open there: the faces' own shapes, the helmet hair (Leila, Danny),
+the sloping shoulders, the ballooning sleeves, Marcus's muscle, and the shoes. They need the builder's geometry
+(`body.ts`, `head.ts`, `hair.ts`) and are Fable-class.
+
+**Third pass (Fable, 2026-11-15/16, uncommitted for the judges):** those open items were worked: the faces' own
+shapes and the cheek and jaw shading, flowing hair for Chadaline and Leila, Chad's curls, Danny's side part, tailored
+sleeves and shoulders, lapels, Marcus's bulk, the bent foot for heels, Chadaline's budget, and 01's new appearance
+from the owner's reference of 2026-11-15. What is done, what is still short and the proof: `PROJECT_OC_CAST.md`
+("Third pass after the weekly reset") and the progress log's entry of 2026-11-16. Still open, Fable-class: faces that
+read as the sheets' people, Chad's curls as ringlets, Marcus's V shape under a tee. Opus-class: shoe detail (laces,
+tongue, straps), pockets and seams, re-running `phone` and the desktop perf pairs on a quiet machine.
+
 **The ask.** The owner (2026-11-11) wants the characters' graphics "insane". Lane cast A's renders show the people
 builder's limits on the six (`src/onfoot/cast.ts`). The comparisons are made by `node tests/cast-shoot.mjs`, then
 `python3 tests/cast-sheets.py <sheets folder>`, into `tests/out/cast/compare-<id>-body.png` and `-head.png`. The
@@ -546,6 +560,41 @@ session and branch that own them. Keep existing presets and the public API, and 
 - the frames of each venue's crowd.
 
 Log it in `PROJECT_OC_PROGRESS.md` and `PROJECT_OC_CAST.md`.
+
+### Fable prompt: the cast judges' people-builder defects (queued 2026-11-16 by the fourth pass's repair)
+
+The judges (art) rejected the cast's fourth pass on looks. The repair (Opus, 2026-11-16) did what it could outside the
+people builder: your own character at LOD 0 in Stoppage Time at HD, the crowd's LOD 1 first within 3.2 m of the camera,
+Chad's jaw, brows and stubble and Marcus's build as catalog values, daylight venue frames, and the picker's turntable
+grab. Everything below needs `src/onfoot/people/*` (hair, garments, LOD shells, body) or `src/preview/hands*`, which
+belong to another session and which the repair was told not to edit. It is Fable-class (hair, geometry, LOD).
+
+```
+Fable prompt. OC Ultra (top-speed-ultra), worktree tsu-cast, branch claude/cast (uncommitted for the judges). Read
+CLAUDE.md, PROJECT_OC_CAST.md (the KNOWN GAPS list and "Fourth pass, repair"), the newest PROJECT_OC_PROGRESS.md
+entry. Files: src/onfoot/people/{hair,cards,garments,lod,body,person}.ts and src/preview/hands-acc.ts, coordinated
+with the session that owns them; additive only (every preset and the public API build as before; new optional
+values), phone LOD budgets 2,500 / 14,000 / 90,000 tris. Fix, against the owner's sheets (owner/pack/chad,
+owner/pack/chadaline, characters/0N-name; not in the repo):
+1. Chad: a soft hairline (alpha-to-coverage or a feathered fringe of cards over the forehead; no hard notched cut-out
+   with a black rim); the curls as visible ringlet clumps, not a sponge-textured mass.
+2. Chadaline: a soft centre parting (no jagged cut or skin notch); feathered strand edges in profile (no hard black
+   alpha strands); the fur shrug's back as one continuous cream roll with no dark gaps between the bands.
+3. Jas and Kate: no helmet silhouettes: a lifted crown and loose temple strands (Jas a high, full ponytail; Kate a
+   messy low ponytail with face-framing wisps).
+4. Danny: no hard brown/black split in the hair; the open overshirt's ragged white edge at LOD 0.
+5. Marcus: pectorals in profile, not a bust (the catalog's bulk is down to 0.45; the shape is body.ts's); the tee's
+   waist; the sandals' ragged black bits; the tan-to-brown smear down the legs at LOD 2.
+6. LOD 1: an open outer layer (blazer, overshirt, bomber) shows the top under it in ragged patches; 01's cap at
+   LOD 1/2 a bowl; Chad's open collar a ragged white V.
+7. The hands (hands-acc.ts 'fur'): a shorter, slimmer 3/4 cream fur sleeve for Chadaline, which covers about a third
+   of the phone screen at full lock; the right arm crossing the hub at full lock.
+8. The hair cards' see-through holes at the side of Leila's waves on the picker's turntable (90 to 120 degrees).
+Proof: node tests/cast-shoot.mjs <ids> --suffix=-f5 and python3 tests/cast-sheets.py (--pack) <sheets> -f5, the LOD 1
+strip, npx tsc --noEmit, npm run build, npm test -- --only=cast, then cast-pack, cast-seat, cast-pack-seat,
+cast-venues, cast-pack-venues (one Playwright process at a time; each run under 20 minutes). Log in
+PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
+```
 
 ## Opus queue (routine items waiting for a daytime session)
 
