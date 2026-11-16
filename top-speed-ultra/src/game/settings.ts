@@ -27,7 +27,7 @@ export interface Settings {
   master: number;
   engine: number;
   ambient: number;
-  fov: number;              // added to the cockpit's base field of view, degrees
+  fov: number;              // added to the cockpit's base field of view, degrees (FOV_DEFAULT unless the player moved it)
   showFps: boolean;
   corner: Corner;           // the top-right window: road map, live sky camera, or nothing
   cornerSize: number;       // 0 small, 1 medium, 2 large
@@ -53,7 +53,14 @@ export interface Settings {
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
+  v: number;                // the settings' version (SETTINGS_V): which defaults a saved value was made under
 }
+
+// The field of view's default (owner, 2026-11-16: "make the standard pov set at +10"): Settings' "Field of view" slider
+// (-10..+15) starts at +10. It was 0; readSettings moves a saved 0 made under the old default to +10, once (SETTINGS_V).
+export const FOV_DEFAULT = 10;
+// 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
+export const SETTINGS_V = 2;
 
 export interface QualityPreset {
   label: string;
@@ -158,8 +165,8 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
 }
 
@@ -184,22 +191,31 @@ export function ownerTestBuild(): boolean {
 }
 
 export function loadSettings(): Settings {
-  const s = readSettings(), hash = ownerFromHash();
+  const { s, migrated } = readSettings(), hash = ownerFromHash();
+  if (migrated) saveSettings(s);                                  // the move to SETTINGS_V happens once, and is kept
   if (hash !== null && hash !== s.owner) { s.owner = hash; saveSettings(s); }
   else if (hash === null && ownerTestBuild()) s.owner = true;   // for this visit; what the device saved is left as it was
   return s;
 }
 
-function readSettings(): Settings {
+// the settings this device saved, checked, over the defaults; `migrated` when they were saved by an older version
+// (before SETTINGS_V) and moved to this one here, so loadSettings writes them back once
+function readSettings(): { s: Settings; migrated: boolean } {
   const d = defaults();
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return d;
+    if (!raw) return { s: d, migrated: false };
     const v = JSON.parse(raw) as Partial<Settings>;
     // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
     const old = v as Record<string, unknown>; delete old.course; delete old.mode;
-    return {
+    const from = typeof v.v === 'number' && Number.isFinite(v.v) ? v.v : 1;
+    let fov = typeof v.fov === 'number' && Number.isFinite(v.fov) ? Math.max(-10, Math.min(15, Math.round(v.fov))) : d.fov;
+    // the old default, never moved: saved before SETTINGS_V 2 at exactly 0, it takes the new default (+10). Once saved
+    // at v 2, a 0 is the player's own choice and stays.
+    if (from < 2 && fov === 0) fov = FOV_DEFAULT;
+    const s: Settings = {
       ...d, ...v,
+      fov, v: SETTINGS_V,
       quality: v.quality && v.quality in QUALITY ? v.quality : d.quality,
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
@@ -220,7 +236,8 @@ function readSettings(): Settings {
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
     };
-  } catch { return d; }
+    return { s, migrated: from < SETTINGS_V };
+  } catch { return { s: d, migrated: false }; }
 }
 
 export function saveSettings(s: Settings): void {

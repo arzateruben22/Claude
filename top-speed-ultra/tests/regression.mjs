@@ -863,6 +863,38 @@ await group('boot', async (use) => {
     expect(/OpenStreetMap contributors via Overture Maps \(ODbL\)/.test(text), 'no OSM/Overture credit');
     expect(!(await page.getByRole('button', { name: /^Controls$/ }).count()), 'a Controls button is back');
   });
+  // The field of view's default is +10 (owner, 2026-11-16: "make the standard pov set at +10"). A device that saved
+  // the old default (0, before settings version 2) moves to +10 once, and the move is written back; a 0 saved since
+  // (version 2: the player's own) stays 0; any other value saved before stays as it was. Each in its own page, the
+  // boot group's own game held meanwhile (two software-rendered games at once take minutes a frame here).
+  await check('field of view: +10 by default; a saved 0 from before moves to +10 once; a 0 chosen since stays', async () => {
+    const boot = async (saved) => {
+      const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
+      try {
+        // written once (a reload keeps what the game saved)
+        await ctx.addInitScript((s) => { if (!sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); if (s) localStorage.setItem('tsu.settings', JSON.stringify(s)); else localStorage.removeItem('tsu.settings'); } }, saved);
+        const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+        const read = async () => {
+          await p.waitForFunction(() => window.__game?.net, null, { timeout: BOOT_MS });
+          return p.evaluate(() => { const s = JSON.parse(localStorage.getItem('tsu.settings') || 'null'); return { fov: window.__game.settings.fov, savedFov: s?.fov ?? null, savedV: s?.v ?? null }; });
+        };
+        await p.goto(pathToFileURL(GAME).href);
+        const first = await read();
+        await p.reload();
+        return { first, again: await read() };
+      } finally { await ctx.close(); }
+    };
+    await game(page, () => window.__game.hold(true));
+    try {
+      const base = { quality: 'low', adaptive: false, density: 'none' };
+      const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
+      expect(fresh.first.fov === 10, `a new device starts at ${fresh.first.fov}`);
+      expect(old0.first.fov === 10 && old0.first.savedFov === 10 && old0.first.savedV === 2 && old0.again.fov === 10, `the old default 0 saved before: ${JSON.stringify(old0)}`);
+      expect(old5.first.fov === 5 && old5.again.fov === 5, `+5 saved before: ${JSON.stringify(old5)}`);
+      expect(mine0.first.fov === 0 && mine0.again.fov === 0 && mine0.again.savedFov === 0, `0 saved at version 2: ${JSON.stringify(mine0)}`);
+      return `new device +${fresh.first.fov}; old 0 → +${old0.first.fov} (saved ${old0.first.savedFov}, version ${old0.first.savedV}), still +${old0.again.fov} after a reload; old +5 kept; a 0 saved at version 2 kept (${mine0.again.fov})`;
+    } finally { await game(page, () => window.__game.hold(false)); }
+  });
 });
 
 await group('interchanges', async (use) => {
