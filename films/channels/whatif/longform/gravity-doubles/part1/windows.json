@@ -1,0 +1,117 @@
+{
+ "dur": 63.172,
+ "endCard": 59.572,
+ "slack_s": 0.5,
+ "lines": [
+  {
+   "id": "l01",
+   "text": "What if Earth's gravity doubled… every single hour?",
+   "t0": 0.0,
+   "t1": 3.596,
+   "speech_t0": 0.3,
+   "speech_dur": 2.796,
+   "window": 3.596,
+   "speak_window": 3.296
+  },
+  {
+   "id": "l02",
+   "text": "Here's the rule: Earth gets twice as heavy every hour. Same size, just heavier, so it pulls twice as hard.",
+   "t0": 3.596,
+   "t1": 10.469,
+   "speech_t0": 3.796,
+   "speech_dur": 5.773,
+   "window": 6.873,
+   "speak_window": 6.273
+  },
+  {
+   "id": "l03",
+   "text": "Hour zero. A normal day. Watch how high this ball bounces.",
+   "t0": 10.469,
+   "t1": 17.616,
+   "speech_t0": 10.669,
+   "speech_dur": 3.847,
+   "window": 7.147,
+   "speak_window": 4.347
+  },
+  {
+   "id": "l04",
+   "text": "Now… hour one.",
+   "t0": 17.616,
+   "t1": 21.421,
+   "speech_t0": 17.816,
+   "speech_dur": 1.505,
+   "window": 3.805,
+   "speak_window": 2.005
+  },
+  {
+   "id": "l05",
+   "text": "You weigh twice as much. Every stair you climb is like carrying a second you on your back.",
+   "t0": 21.421,
+   "t1": 28.389,
+   "speech_t0": 21.621,
+   "speech_dur": 4.768,
+   "window": 6.968,
+   "speak_window": 5.268
+  },
+  {
+   "id": "l06",
+   "text": "Same ball, same throw: half as high.",
+   "t0": 28.389,
+   "t1": 34.382,
+   "speech_t0": 28.589,
+   "speech_dur": 1.893,
+   "window": 5.993,
+   "speak_window": 2.393
+  },
+  {
+   "id": "l07",
+   "text": "Even the trees feel it. Every branch hangs a little lower.",
+   "t0": 34.382,
+   "t1": 39.929,
+   "speech_t0": 34.582,
+   "speech_dur": 3.047,
+   "window": 5.547,
+   "speak_window": 3.547
+  },
+  {
+   "id": "l08",
+   "text": "Doubling sounds gentle. It isn't.",
+   "t0": 39.929,
+   "t1": 43.304,
+   "speech_t0": 40.129,
+   "speech_dur": 2.175,
+   "window": 3.375,
+   "speak_window": 2.675
+  },
+  {
+   "id": "l09",
+   "text": "Hour ten: a thousand times. Hour twenty: a million.",
+   "t0": 43.304,
+   "t1": 50.786,
+   "speech_t0": 43.504,
+   "speech_dur": 2.882,
+   "window": 7.482,
+   "speak_window": 3.382
+  },
+  {
+   "id": "l10",
+   "text": "Doing the math with me? Tap like and follow.",
+   "t0": 50.786,
+   "t1": 53.951,
+   "speech_t0": 50.986,
+   "speech_dur": 2.465,
+   "window": 3.165,
+   "speak_window": 2.965
+  },
+  {
+   "id": "l11",
+   "text": "Hour two: four times your weight. And standing up gets dangerous.",
+   "t0": 53.951,
+   "t1": 59.572,
+   "speech_t0": 54.151,
+   "speech_dur": 3.421,
+   "window": 5.621,
+   "speak_window": 3.921
+  }
+ ]
+}

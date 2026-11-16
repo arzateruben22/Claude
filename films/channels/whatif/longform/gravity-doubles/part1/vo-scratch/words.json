@@ -1,0 +1,754 @@
+{
+ "recognizer": "parakeet-tdt-0.6b-v2-int8",
+ "lines": [
+  {
+   "id": "l01",
+   "text": "What if Earth's gravity doubled… every single hour?",
+   "heard": "What if Earth's gravity doubled every single hour?",
+   "words": [
+    {
+     "w": "What",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "if",
+     "start": 0.245,
+     "end": 0.295,
+     "heard": true
+    },
+    {
+     "w": "Earth's",
+     "start": 0.275,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "gravity",
+     "start": 0.51,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "doubled…",
+     "start": 0.925,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 1.775,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "single",
+     "start": 1.88,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "hour?",
+     "start": 2.345,
+     "end": 2.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l02",
+   "text": "Here's the rule: Earth gets twice as heavy every hour. Same size, just heavier, so it pulls twice as hard.",
+   "heard": "Here's the rule, Earth gets twice as heavy every hour. Same size, just heavier, so it pulls twice as hard.",
+   "words": [
+    {
+     "w": "Here's",
+     "start": 0.035,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.215,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "rule:",
+     "start": 0.245,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "Earth",
+     "start": 0.72,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 1.13,
+     "end": 1.28,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 1.24,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.535,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "heavy",
+     "start": 1.655,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "every",
+     "start": 1.915,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "hour.",
+     "start": 2.3,
+     "end": 2.88,
+     "heard": true
+    },
+    {
+     "w": "Same",
+     "start": 2.92,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "size,",
+     "start": 3.245,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "just",
+     "start": 3.56,
+     "end": 3.76,
+     "heard": true
+    },
+    {
+     "w": "heavier,",
+     "start": 3.735,
+     "end": 4.24,
+     "heard": true
+    },
+    {
+     "w": "so",
+     "start": 4.215,
+     "end": 4.4,
+     "heard": true
+    },
+    {
+     "w": "it",
+     "start": 4.52,
+     "end": 4.57,
+     "heard": true
+    },
+    {
+     "w": "pulls",
+     "start": 4.55,
+     "end": 4.88,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 4.79,
+     "end": 5.12,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 5.105,
+     "end": 5.28,
+     "heard": true
+    },
+    {
+     "w": "hard.",
+     "start": 5.24,
+     "end": 5.76,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l03",
+   "text": "Hour zero. A normal day. Watch how high this ball bounces.",
+   "heard": "Hour 0. A normal day. Watch how high this ball bounces.",
+   "words": [
+    {
+     "w": "Hour",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "zero.",
+     "start": 0.23,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "A",
+     "start": 1.125,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "normal",
+     "start": 1.155,
+     "end": 1.6,
+     "heard": true
+    },
+    {
+     "w": "day.",
+     "start": 1.5,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "Watch",
+     "start": 2.25,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "how",
+     "start": 2.395,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "high",
+     "start": 2.465,
+     "end": 2.8,
+     "heard": true
+    },
+    {
+     "w": "this",
+     "start": 2.895,
+     "end": 2.945,
+     "heard": true
+    },
+    {
+     "w": "ball",
+     "start": 2.945,
+     "end": 3.2,
+     "heard": true
+    },
+    {
+     "w": "bounces.",
+     "start": 3.19,
+     "end": 3.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l04",
+   "text": "Now… hour one.",
+   "heard": "Now, our one.",
+   "words": [
+    {
+     "w": "Now…",
+     "start": 0.02,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "hour",
+     "start": 0.83,
+     "end": 1.04,
+     "heard": false
+    },
+    {
+     "w": "one.",
+     "start": 1.055,
+     "end": 1.44,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l05",
+   "text": "You weigh twice as much. Every stair you climb is like carrying a second you on your back.",
+   "heard": "You weigh twice as much. Every stair you climb is like carrying a second you on your back.",
+   "words": [
+    {
+     "w": "You",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "weigh",
+     "start": 0.255,
+     "end": 0.4,
+     "heard": true
+    },
+    {
+     "w": "twice",
+     "start": 0.285,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 0.69,
+     "end": 0.88,
+     "heard": true
+    },
+    {
+     "w": "much.",
+     "start": 0.965,
+     "end": 1.36,
+     "heard": true
+    },
+    {
+     "w": "Every",
+     "start": 1.455,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "stair",
+     "start": 1.575,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 2.095,
+     "end": 2.16,
+     "heard": true
+    },
+    {
+     "w": "climb",
+     "start": 2.155,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "is",
+     "start": 2.65,
+     "end": 2.72,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 2.68,
+     "end": 2.96,
+     "heard": true
+    },
+    {
+     "w": "carrying",
+     "start": 2.96,
+     "end": 3.28,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 3.315,
+     "end": 3.365,
+     "heard": true
+    },
+    {
+     "w": "second",
+     "start": 3.405,
+     "end": 3.6,
+     "heard": true
+    },
+    {
+     "w": "you",
+     "start": 3.66,
+     "end": 3.92,
+     "heard": true
+    },
+    {
+     "w": "on",
+     "start": 4.165,
+     "end": 4.215,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 4.195,
+     "end": 4.32,
+     "heard": true
+    },
+    {
+     "w": "back.",
+     "start": 4.46,
+     "end": 4.72,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l06",
+   "text": "Same ball, same throw: half as high.",
+   "heard": "Seam ball seam throw half as high.",
+   "words": [
+    {
+     "w": "Same",
+     "start": 0.02,
+     "end": 0.32,
+     "heard": false
+    },
+    {
+     "w": "ball,",
+     "start": 0.3,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "same",
+     "start": 0.6,
+     "end": 0.88,
+     "heard": false
+    },
+    {
+     "w": "throw:",
+     "start": 0.795,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "half",
+     "start": 1.105,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "as",
+     "start": 1.355,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "high.",
+     "start": 1.505,
+     "end": 1.84,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l07",
+   "text": "Even the trees feel it. Every branch hangs a little lower.",
+   "heard": "Even the trees feel it. Every branch hangs a little lower.",
+   "words": [
+    {
+     "w": "Even",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.31,
+     "end": 0.36,
+     "heard": true
+    },
+    {
+     "w": "trees",
+     "start": 0.34,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "feel",
+     "start": 0.68,
+     "end": 0.96,
+     "heard": true
+    },
+    {
+     "w": "it.",
+     "start": 1.05,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "Every",
+     "start": 1.485,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "branch",
+     "start": 1.78,
+     "end": 2.08,
+     "heard": true
+    },
+    {
+     "w": "hangs",
+     "start": 2.005,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.35,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "little",
+     "start": 2.45,
+     "end": 2.56,
+     "heard": true
+    },
+    {
+     "w": "lower.",
+     "start": 2.555,
+     "end": 3.04,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l08",
+   "text": "Doubling sounds gentle. It isn't.",
+   "heard": "Doubling sounds gentle. It isn't.",
+   "words": [
+    {
+     "w": "Doubling",
+     "start": 0.02,
+     "end": 0.48,
+     "heard": true
+    },
+    {
+     "w": "sounds",
+     "start": 0.425,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "gentle.",
+     "start": 0.68,
+     "end": 1.44,
+     "heard": true
+    },
+    {
+     "w": "It",
+     "start": 1.54,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "isn't.",
+     "start": 1.66,
+     "end": 2.16,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l09",
+   "text": "Hour ten: a thousand times. Hour twenty: a million.",
+   "heard": "Hour 10 a thousand times. Hour 20 a million.",
+   "words": [
+    {
+     "w": "Hour",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "ten:",
+     "start": 0.23,
+     "end": 0.56,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 0.62,
+     "end": 0.72,
+     "heard": true
+    },
+    {
+     "w": "thousand",
+     "start": 0.65,
+     "end": 1.12,
+     "heard": true
+    },
+    {
+     "w": "times.",
+     "start": 1.195,
+     "end": 1.68,
+     "heard": true
+    },
+    {
+     "w": "Hour",
+     "start": 1.81,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "twenty:",
+     "start": 2.035,
+     "end": 2.32,
+     "heard": true
+    },
+    {
+     "w": "a",
+     "start": 2.355,
+     "end": 2.405,
+     "heard": true
+    },
+    {
+     "w": "million.",
+     "start": 2.385,
+     "end": 2.8,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "text": "Doing the math with me? Tap like and follow.",
+   "heard": "Doing the math with me. Tap like and follow.",
+   "words": [
+    {
+     "w": "Doing",
+     "start": 0.02,
+     "end": 0.24,
+     "heard": true
+    },
+    {
+     "w": "the",
+     "start": 0.125,
+     "end": 0.32,
+     "heard": true
+    },
+    {
+     "w": "math",
+     "start": 0.345,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "with",
+     "start": 0.625,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "me?",
+     "start": 0.87,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "Tap",
+     "start": 1.395,
+     "end": 1.52,
+     "heard": true
+    },
+    {
+     "w": "like",
+     "start": 1.58,
+     "end": 1.63,
+     "heard": true
+    },
+    {
+     "w": "and",
+     "start": 1.73,
+     "end": 2.0,
+     "heard": true
+    },
+    {
+     "w": "follow.",
+     "start": 1.915,
+     "end": 2.4,
+     "heard": true
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "text": "Hour two: four times your weight. And standing up gets dangerous.",
+   "heard": "Hour 2, 4 times your weight. And standing up gets dangerous.",
+   "words": [
+    {
+     "w": "Hour",
+     "start": 0.02,
+     "end": 0.16,
+     "heard": true
+    },
+    {
+     "w": "two:",
+     "start": 0.25,
+     "end": 0.64,
+     "heard": true
+    },
+    {
+     "w": "four",
+     "start": 0.72,
+     "end": 0.8,
+     "heard": true
+    },
+    {
+     "w": "times",
+     "start": 0.75,
+     "end": 1.04,
+     "heard": true
+    },
+    {
+     "w": "your",
+     "start": 1.13,
+     "end": 1.2,
+     "heard": true
+    },
+    {
+     "w": "weight.",
+     "start": 1.285,
+     "end": 1.76,
+     "heard": true
+    },
+    {
+     "w": "And",
+     "start": 1.82,
+     "end": 1.92,
+     "heard": true
+    },
+    {
+     "w": "standing",
+     "start": 1.965,
+     "end": 2.24,
+     "heard": true
+    },
+    {
+     "w": "up",
+     "start": 2.345,
+     "end": 2.4,
+     "heard": true
+    },
+    {
+     "w": "gets",
+     "start": 2.385,
+     "end": 2.64,
+     "heard": true
+    },
+    {
+     "w": "dangerous.",
+     "start": 2.655,
+     "end": 3.36,
+     "heard": true
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,474 @@
+{
+ "id": "possibility-lab-gravity-doubles-part1-picture",
+ "theme": "../../../theme.json",
+ "scene": "../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 63.172,
+ "v2": true,
+ "poster": 46.6,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "l01"
+  },
+  {
+   "at": 59.572,
+   "name": "end",
+   "beat": "tease"
+  }
+ ],
+ "beats": [
+  {
+   "id": "l01",
+   "t0": 0.0,
+   "t1": 3.596,
+   "line": "l01",
+   "energy": 0.6
+  },
+  {
+   "id": "l02",
+   "t0": 3.596,
+   "t1": 10.469,
+   "line": "l02",
+   "energy": 0.6
+  },
+  {
+   "id": "l03",
+   "t0": 10.469,
+   "t1": 17.616,
+   "line": "l03",
+   "energy": 0.6
+  },
+  {
+   "id": "l04",
+   "t0": 17.616,
+   "t1": 21.421,
+   "line": "l04",
+   "energy": 0.6
+  },
+  {
+   "id": "l05",
+   "t0": 21.421,
+   "t1": 28.389,
+   "line": "l05",
+   "energy": 0.6
+  },
+  {
+   "id": "l06",
+   "t0": 28.389,
+   "t1": 34.382,
+   "line": "l06",
+   "energy": 0.6
+  },
+  {
+   "id": "l07",
+   "t0": 34.382,
+   "t1": 39.929,
+   "line": "l07",
+   "energy": 0.6
+  },
+  {
+   "id": "l08",
+   "t0": 39.929,
+   "t1": 43.304,
+   "line": "l08",
+   "energy": 0.6
+  },
+  {
+   "id": "l09",
+   "t0": 43.304,
+   "t1": 50.786,
+   "line": "l09",
+   "energy": 0.6
+  },
+  {
+   "id": "l10",
+   "t0": 50.786,
+   "t1": 53.951,
+   "line": "l10",
+   "energy": 0.6
+  },
+  {
+   "id": "l11",
+   "t0": 53.951,
+   "t1": 59.572,
+   "line": "l11",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    200.0,
+    23.934
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    200.0,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1e+29,
+  "eOrb": 6.2e+29
+ },
+ "disclosures": {
+  "aiVoice": false,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 59.572,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 5.0,
+   "slot": "br"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "What If Gravity Doubled Every Hour?",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 59.572,
+ "end": {
+  "title": "Full video on YouTube: *What If Gravity Doubled Every Hour?*",
+  "follow": "Possibility Lab · Part 1 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0,
+   "mode": "grav"
+  },
+  {
+   "t0": 3.496,
+   "mode": "wide",
+   "dur": 1.0
+  },
+  {
+   "t0": 10.369,
+   "mode": "grav",
+   "dur": 1.0
+  },
+  {
+   "t0": 17.616,
+   "mode": "grav2"
+  },
+  {
+   "t0": 21.221,
+   "mode": "step"
+  },
+  {
+   "t0": 28.189,
+   "mode": "grav"
+  },
+  {
+   "t0": 34.181999999999995,
+   "mode": "tree"
+  },
+  {
+   "t0": 39.929,
+   "mode": "grav2"
+  },
+  {
+   "t0": 43.004000000000005,
+   "mode": "wide",
+   "dur": 0.8
+  },
+  {
+   "t0": 47.604,
+   "mode": "grav"
+  },
+  {
+   "t0": 53.951,
+   "mode": "hero",
+   "dur": 1.4
+  }
+ ],
+ "fx": {},
+ "robot": [
+  {
+   "t": 0,
+   "pose": "toss",
+   "expr": "happy"
+  },
+  {
+   "t": 3.596,
+   "pose": "stand",
+   "expr": "happy"
+  },
+  {
+   "t": 10.469,
+   "pose": "toss",
+   "expr": "happy"
+  },
+  {
+   "t": 18.116,
+   "pose": "stand",
+   "expr": "wide"
+  },
+  {
+   "t": 19.116,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 21.721,
+   "pose": "trudge",
+   "expr": "squint"
+  },
+  {
+   "t": 23.421,
+   "pose": "stepUp",
+   "expr": "squint"
+  },
+  {
+   "t": 24.820999999999998,
+   "pose": "trudge",
+   "expr": "squint"
+  },
+  {
+   "t": 28.589,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 34.382,
+   "pose": "crouch",
+   "expr": "neutral"
+  },
+  {
+   "t": 39.929,
+   "pose": "crouch",
+   "expr": "worried"
+  },
+  {
+   "t": 43.304,
+   "pose": "stand",
+   "expr": "wide"
+  },
+  {
+   "t": 47.604,
+   "pose": "crouch",
+   "expr": "squint"
+  },
+  {
+   "t": 50.786,
+   "pose": "crouch",
+   "expr": "happy"
+  },
+  {
+   "t": 54.951,
+   "pose": "crouch",
+   "expr": "worried"
+  },
+  {
+   "t": 56.551,
+   "pose": "buckle",
+   "expr": "wide"
+  }
+ ],
+ "hook": {
+  "text": "Gravity doubles every hour",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "chips": [],
+ "captions": [],
+ "voice": [],
+ "grav": {
+  "ball": {
+   "x": 0.36,
+   "h0": 0.5,
+   "T0": 1.5,
+   "r": 0.05,
+   "wins": [
+    [
+     0,
+     21.320999999999998
+    ],
+    [
+     28.189,
+     34.282
+    ],
+    [
+     47.704,
+     59.572
+    ]
+   ],
+   "marks": [
+    {
+     "hour": 0,
+     "t0": 12.369,
+     "t1": 34.082
+    },
+    {
+     "hour": 1,
+     "t0": 29.889,
+     "t1": 34.082
+    }
+   ]
+  },
+  "hours": [
+   [
+    0,
+    0
+   ],
+   [
+    18.166,
+    0
+   ],
+   [
+    19.066,
+    1
+   ],
+   [
+    43.554,
+    1
+   ],
+   [
+    46.354,
+    20,
+    "lin"
+   ],
+   [
+    47.544,
+    20,
+    "lin"
+   ],
+   [
+    47.604,
+    1,
+    "lin"
+   ],
+   [
+    54.201,
+    1
+   ],
+   [
+    55.101000000000006,
+    2
+   ]
+  ],
+  "race": {
+   "t0": 43.554,
+   "t1": 46.354
+  },
+  "pin": {
+   "t0": 46.354,
+   "t1": 47.604
+  },
+  "rings": [
+   5.896,
+   7.996
+  ],
+  "rpos": [
+   {
+    "t": 0,
+    "x": 0,
+    "y": 0
+   },
+   {
+    "t": 21.621,
+    "x": 0,
+    "y": 0
+   },
+   {
+    "t": 23.721,
+    "x": 0.36,
+    "y": 0.1
+   },
+   {
+    "t": 25.121,
+    "x": 0.36,
+    "y": 0.1
+   },
+   {
+    "t": 28.489,
+    "x": 0,
+    "y": 0
+   }
+  ],
+  "step": {
+   "t0": 21.221,
+   "t1": 28.288999999999998,
+   "x": 0.36
+  },
+  "ghost": {
+   "t0": 21.721,
+   "t1": 28.239
+  },
+  "tree": {
+   "t0": 34.282,
+   "t1": 40.429,
+   "x": -0.5,
+   "sag0": 35.782,
+   "sag1": 36.982,
+   "k": 0.32
+  },
+  "buckle": {
+   "t0": 56.551,
+   "t1": 59.372
+  }
+ }
+}
