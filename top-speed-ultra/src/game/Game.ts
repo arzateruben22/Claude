@@ -272,8 +272,9 @@ export class Game {
     this.offStore = onStoreChange(() => { if (syncGarage(this.profile) && this.attract) this.applyCarChoice(); else this.configureCar(); });
     this.syncAtmosphere(true);         // the menu opens in the car's atmosphere, no fade from the settings' sky
     this.input = new Input(canvas);
-    canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); this.ctxLost = true; this.setPaused(true); this.ev.context(true); });
-    canvas.addEventListener('webglcontextrestored', () => { this.ctxLost = false; this.composer = null; this.applyQuality(); this.ev.context(false); });
+    // (after three's own listeners, added in the renderer's constructor: by the time ours runs it has a new context)
+    canvas.addEventListener('webglcontextlost', this.onContextLost);
+    canvas.addEventListener('webglcontextrestored', this.onContextRestore);
     addEventListener('resize', this.onResize);
     // the stage's own size, too: iOS can lay out a turned phone or a resized viewer's iframe after its resize event has
     // fired (the handler reads the old size), which left the drawing buffer at the old shape, stretched to the new one
@@ -994,6 +995,81 @@ export class Game {
     if (this.resize() && this.raf && !this.ctxLost) this.draw(performance.now(), 0);
   };
   private onVisibility = () => { if (document.hidden && !this.attract && !this.foot) this.setPaused(true); };
+
+  // ----------------------------------------------------------------------------------------- a lost WebGL context
+  // iOS drops a page's WebGL context when the app goes to the background or memory runs short, and the browser hands
+  // back a new, empty one later; the loss can come again. three re-creates its own state on the restore (programs,
+  // buffers, and textures with a source to upload again), but whatever was only ever drawn on the GPU is gone: the
+  // environment map (PMREM) that lights and reflects every lit material, so the cabin drew pure black and stayed so.
+  // This is the one restore path: everything the game draws into a GPU-only target is rebuilt here, in order, and other
+  // parts register their own rebuilds with onContextRestored (they run last, after the scene's own).
+  private restorers = new Set<(n: number) => void>();
+  /** how many times the context has been restored this session (for tests) */
+  contextRestores = 0;
+  /**
+   * Run `fn` each time a lost WebGL context comes back, after the game has rebuilt its own GPU resources (the
+   * environment map, the composer and its targets, the shadow maps; scene.environment is already the new map). For a
+   * part that draws its own textures or targets on the GPU (a procedural texture rendered by a shader, a reflection
+   * probe): rebuild them in `fn`. Textures with a CPU source (canvas, ImageData, data arrays) come back by themselves.
+   * `fn` gets the restore's number (1 for the first). Returns a function that unregisters it; call that on dispose.
+   */
+  onContextRestored(fn: (n: number) => void): () => void {
+    this.restorers.add(fn);
+    return () => { this.restorers.delete(fn); };
+  }
+  private onContextLost = (e: Event) => {
+    e.preventDefault();                                         // or the browser never offers it back
+    if (this.ctxLost) return;
+    this.ctxLost = true;
+    this.setPaused(true);
+    this.ev.context(true);
+  };
+  private onContextRestore = () => {
+    if (!this.ctxLost) return;                                  // one restore per loss
+    this.ctxLost = false;
+    const n = ++this.contextRestores;
+    try { this.restoreGpu(); } catch (e) { console.warn('context restore', e); }
+    for (const fn of [...this.restorers]) { try { fn(n); } catch (e) { console.warn('context restore hook', e); } }
+    this.ev.context(false);
+  };
+  private restoreGpu() {
+    // the environment map, drawn again now; any material holding the old map as its own envMap takes the new one
+    const { from, to } = this.env.restore();
+    // every texture with a CPU source (canvas, ImageData, data) uploaded again: three would on first use anyway, as its
+    // record of them went with the old context; marking them keeps that true even for one three still thinks is current
+    const seen = new Set<THREE.Texture>();
+    this.scene.traverse((o) => {
+      const mats = (o as THREE.Mesh).material;
+      if (!mats) return;
+      for (const m of Array.isArray(mats) ? mats : [mats]) {
+        const mm = m as THREE.Material & { envMap?: THREE.Texture | null };
+        if (from && mm.envMap === from) { mm.envMap = to; mm.needsUpdate = true; }
+        for (const v of Object.values(m)) {
+          if (!(v instanceof THREE.Texture) || seen.has(v)) continue;
+          seen.add(v);
+          const t = v as THREE.Texture & { isRenderTargetTexture?: boolean; isDepthTexture?: boolean; isFramebufferTexture?: boolean };
+          if (t.isRenderTargetTexture || t.isDepthTexture || t.isFramebufferTexture || t === to) continue;
+          const img = t.image as { width?: number; data?: unknown } | null;
+          if (img && (img.data || (img.width ?? 0) > 0)) t.needsUpdate = true;
+        }
+        if ((m as THREE.ShaderMaterial).uniforms) {
+          for (const u of Object.values((m as THREE.ShaderMaterial).uniforms)) if (from && u && u.value === from) u.value = to;
+        }
+      }
+    });
+    // the sun's shadow map, made and drawn again on the next frame
+    this.env.restoreShadows();
+    this.renderer.shadowMap.needsUpdate = true;
+    // the composer and its targets made again at the current size, the Retro pass kept. What went with the old context
+    // is dropped, not disposed, here and below: three's dispose would send its stale handles to the new context
+    this.composer = null;
+    this.applyQuality();
+    // the garage's reveal stage, if one is open: its own environment map was GPU-only too
+    const r = this.rv;
+    if (r?.stage) { r.stage = null; r.compiled = false; this.buildRevealStage(); r.dirty = true; }
+    // the sky camera's corner: copied again on the next frame
+    this.skyAt = -1e9;
+  }
 
   // ----------------------------------------------------------------------------------------- input actions
   private actions() {
@@ -2177,6 +2253,10 @@ export class Game {
     this.resizeObs?.disconnect();
     document.removeEventListener('visibilitychange', this.onVisibility);
     this.input.detach();
+    const cv = this.renderer.domElement;
+    cv.removeEventListener('webglcontextlost', this.onContextLost);
+    cv.removeEventListener('webglcontextrestored', this.onContextRestore);
+    this.restorers.clear();
     this.style?.detach(); this.style = null;
     this.renderer.dispose();
   }

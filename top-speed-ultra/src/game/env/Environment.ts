@@ -323,11 +323,34 @@ export class Environment {
 
   private rebuildEnv() {
     const pm = new THREE.PMREMGenerator(this.renderer);
-    const tex = pm.fromScene(this.envScene, 0.02).texture;
+    const rt = pm.fromScene(this.envScene, 0.02);
     pm.dispose();
-    this.scene.environment = tex;
-    this.envTex?.dispose();
-    this.envTex = tex;
+    this.scene.environment = rt.texture;
+    this.envRT?.dispose();                 // the target with its texture (the texture alone left the framebuffer behind)
+    this.envRT = rt;
+    this.envTex = rt.texture;
+  }
+  private envRT: THREE.WebGLRenderTarget | null = null;
+  // After a lost WebGL context comes back (Game's restore path): the environment map lived only on the GPU, so it is
+  // rendered again now, at once, rather than at the next sky change (on a still day there may never be one, and every
+  // lit material sampled an empty map: the cabin drew pure black). Returns the old texture and the new one, so the
+  // caller can move any material that held the old one as its own envMap.
+  // The old target is dropped, not disposed: its GPU objects went with the old context, and three's dispose would send
+  // their stale handles to the new one ("object does not belong to this context").
+  restore(): { from: THREE.Texture | null; to: THREE.Texture } {
+    const from = this.envTex;
+    this.envDirty = false; this.envT = 4;
+    this.envRT = null; this.envTex = null;
+    this.rebuildEnv();
+    return { from, to: this.envTex! };
+  }
+
+  // the sun's shadow map after a lost context: its target is let go (dropped, as in restore) so the renderer makes and
+  // draws a new one
+  restoreShadows() {
+    const s = this.sun.shadow;
+    (s as unknown as { map: THREE.WebGLRenderTarget | null }).map = null;
+    s.needsUpdate = true;
   }
 
   // far: the camera's far plane. The background layers are sized to sit inside it.
