@@ -4,6 +4,69 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: the driver's sleeves read as cloth on the iPhone; no jagged shadows on the arms
+
+Branch fix/sleeves: 80554c76, 57df9ce0, 099ce1e6, and the repair 86155ecc. It was merged with v21 (f715bf6) as
+e5b0dfaa and published as main link v22.
+
+**The report.** Owner, v18 iPhone screenshot: "The left arm still needs to be fixed". Behind each wrist the Closer's
+white shirt sleeve ran to the screen corner as one flat, untextured white slab. On v19 the owner also wrote "the shadow
+fix on the arms still": hard, jagged shadow streaks across the sleeves.
+
+**Causes, measured on b2c4cfcc** (OC Hypercar seat view, I-405 N, 178 mph, 393x852 at 3x):
+1. Low has no shadow map, so the arms sat in full sun under the roof. On High the sun's shadow-map texels are about
+   2.7 cm, wider than a finger. That gave the blocks and streaks from the owner's Oct 27 complaint.
+2. The sleeve is drawn at about 1 px per mm on a phone. The cloth's weave (0.8 mm threads) and its geometric folds
+   (1-2 mm) were below a pixel.
+3. Nothing in the cabin occluded the arms.
+
+**Not causes:**
+- Near-plane slicing: the nearest sleeve vertex is 6.5x the near plane straight ahead, 3.5x at full lock.
+- Clipped white: 0%.
+- Missing taper.
+- The +10 field of view.
+- src/game/vehicle/Cockpit.ts: the game doesn't import it; every car uses buildDriverArms.
+
+**The fix:**
+- **hands-sun.ts.** This is the arm and hand part of the paused ui/seat-hands WIP 637aa195, reviewed and reworked.
+  - The sun's visibility at each arm's knuckles, wrist and elbow is ray-tested through the cabin glass and eased.
+  - 30% of the sun is kept as bounce.
+  - The sky's share falls off deeper in the cabin and on the sides facing the lap or the body. This is computed per
+    fragment with the creased normal.
+  - A bridge-deck term darkens the arms with the dash under overpasses on High, Medium, desktop and Retro.
+  - Near-black materials (the Ace's suit, gloves) keep their form through their own floors.
+  - The arms no longer receive the shadow map.
+- **Creases at phone scale (withCreases in hands-acc.ts).** Drape folds 20-40 mm apart, the slack gathered at the
+  crook, softened to about 3 px and faded where they come too close.
+  - A CREASES table holds rows for shirt, suit and work.
+  - An outfit with no row gets no creases. Note for claude/cast: add the new tee's row.
+- **Cost on the iPhone:** no new draw calls or triangles. Low is 241 calls and 285k triangles.
+
+**Checked:**
+- **Owner's frame, Low, straight:**
+  - right sleeve: luminance spread 24 to 56-69, detail 2.3 to 3.0-3.6;
+  - left sleeve: spread 146, detail 6.9;
+  - 0% clipped.
+- **Under the Jeffrey Road deck on High:** the cabin goes to 0.64 and the sleeves to 0.82 and 0.71. Round 1 stayed at
+  0.92 and 0.99.
+- **New phone-group checks:**
+  - "sleeves from the seat on a phone": nearest vertex, spread, detail and clipped white for the Closer, plus the Ace's
+    brightness. It fails on b2c4cfcc.
+  - "sleeves under an overpass": it fails on the round-1 fix.
+- **Judges** (Opus, independent): round 1 revise, round 2 keep. The repair fixed the overpass glow and the Ace's suit,
+  which had gone 2-2.5x too dark, and the crook banding.
+- **On the merge with v21** (e5b0dfaa): tsc clean, build OK, boot 16/16, phone 25/25, render 19/19, launch 11/11,
+  abilities 23/23, perf 22/22.
+
+**Open, moved to the seat POV stage (task 68):**
+- The near-black gate reads the per-pixel albedo. It should read the material's base colour, or charcoal and navy
+  sleeves from the cast lane will shade inside out.
+- The bridge-deck term should ease faster at speed.
+- The Ace's suite reference should be measured in the same run.
+- At full lock the crossing arm still covers the lower middle as one large pale shape.
+- Not tested on a real iPhone GPU: the skin shader gained two varyings.
+- Shots: scratchpad/sleeves/{before,after,sheets,judge1,judge2,r1,r3,r4}/.
+
 ## 2026-11-11: The OC Hypercar's Thrust built into the cockpit, and a hop that clears two cars at 200 mph
 
 Reviewed: it passed a play lens (keep; the hop cleared two cars in two runs with the reviewer's own placements) and a code lens.
