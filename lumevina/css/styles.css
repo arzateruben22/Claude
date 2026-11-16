@@ -706,6 +706,12 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .hero-title .line { display: block; overflow: hidden; }
 .hero-title .line-inner { display: inline-block; }
 .hero-title .char { display: inline-block; }
+.hero-title .word { display: inline-block; white-space: nowrap; }
+/* the Nov 16 headline is longer: its lines are balanced (no word left alone on a
+   line), a little smaller on wide screens, and the text under it a little wider */
+.hero-title .line-inner { text-wrap: balance; }
+.hero-inner .hero-sub { max-width: 36rem; }
+@media (min-width: 901px) { .hero-title { font-size: clamp(2.46rem, 5.4vw, 4.4rem); } .hero-inner .hero-sub { max-width: 42rem; } }
 
 .hero-sub {
   max-width: 33rem;

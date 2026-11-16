@@ -147,12 +147,20 @@
     var walk = function (node) {
       Array.prototype.slice.call(node.childNodes).forEach(function (child) {
         if (child.nodeType === 3) {
+          /* letters inside whole words, spaces between them: a long headline wraps between words */
           var frag = document.createDocumentFragment();
-          child.textContent.split("").forEach(function (ch) {
-            var s = document.createElement("span");
-            s.className = "char";
-            s.textContent = ch === " " ? " " : ch;
-            frag.appendChild(s);
+          child.textContent.split(/(\s+)/).forEach(function (part) {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(" ")); return; }
+            var w = document.createElement("span");
+            w.className = "word";
+            part.split("").forEach(function (ch) {
+              var c = document.createElement("span");
+              c.className = "char";
+              c.textContent = ch;
+              w.appendChild(c);
+            });
+            frag.appendChild(w);
           });
           node.replaceChild(frag, child);
         } else if (child.nodeType === 1) {
