@@ -1,5 +1,11 @@
 # Reality Rulebook Season 3, Episode 4: everything to give ChatGPT
 
+> **Credit-saving version (owner, 16 Nov): no Higgsfield clips for Episode 4.** At 1,000× and 10,000× slower the
+> kitchen is frozen, so the 4 key images (plus an optional wide kitchen) are all that's needed. Skip Prompt A and
+> Prompt B: Claude animates the stills (camera glide, the drawn sound ring, dust) and assembles the episode in
+> Episode 1's look.
+
+
 **The episode:** one clap, and we ride its sound across the kitchen, first at **1,000× slower**, then halfway at
 **10,000× slower**. Sound is invisible, so it's shown as a faint shimmering ring in the air (the card says it's drawn).
 It's made the same way as Episodes 1 and 3.

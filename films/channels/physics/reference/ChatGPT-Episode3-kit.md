@@ -1,5 +1,12 @@
 # Reality Rulebook Season 3, Episode 3: everything to give ChatGPT
 
+> **Credit-saving version (owner, 16 Nov): use as few Higgsfield image-to-video clips as possible.** For Episode 3
+> make only the key images (start: kernels + bubble; burst; popcorn touching the bubble; droplet ring; wide frozen
+> kitchen) and at most ONE clip: the kernel bursting (~5 s, from the burst image). Skip Prompt A's other clips and skip
+> Prompt B: Claude animates the stills (camera moves, the popcorn rising, the bubble's hole sweeping, droplets) and
+> assembles the episode in Episode 1's look. Deep oil is kept, so line 5 is: "And look: it launches itself into the air."
+
+
 **The episode:** popcorn at **100× slower**, then halfway the speed steps to **1,000× slower** for a soap bubble popping.
 It's made the same way as Episode 1, which you liked: your voice, ChatGPT's footage, and ChatGPT putting it together
 in Episode 1's style (the speed counter, captions, one little diagram card, the end card).
