@@ -170,7 +170,6 @@
     var intro = gsap.timeline({ defaults: { ease: "power3.out" }, paused: true });
     intro.timeScale(1.25);  /* the whole entrance plays a touch brisker */
     intro
-      .from(".hero-media", { opacity: 0, duration: 1.6, ease: "power2.out" }, 0)
       .from(".hero-title .char", { yPercent: 115, opacity: 0, duration: 0.8, stagger: 0.022 }, 0.2)
       .from(".hero-sub", { opacity: 0, y: 18, duration: 0.8 }, 0.6)
       .from(".hero-actions", { opacity: 0, y: 14, duration: 0.7 }, 0.7)

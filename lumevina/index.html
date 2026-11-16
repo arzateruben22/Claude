@@ -92,12 +92,11 @@
 
     <!-- ═══════════════ HERO ═══════════════ -->
     <section class="hero">
-      <!-- the front page: her logo carved in stone, standing in a pool; js/water.js keeps
-           the pool moving (rings from the base, drops, light on the water) -->
-      <div class="hero-media" aria-hidden="true">
-        <img class="hero-still" src="img/hero/hero-stone.webp" alt="" width="941" height="1672" fetchpriority="high" decoding="async">
+      <!-- her logo, drawn in pencil: js/sketch-logo.js draws her own lines (img/logo-full.svg) with a
+           graphite grain and sketches them in when the page opens; this image is the fallback -->
+      <div class="hero-mark hero-sketch" role="img" aria-label="Lumevina Aesthetics Spa">
+        <img class="hero-sketch-img" src="img/logo-full.svg" alt="" width="2620" height="1880" decoding="async">
       </div>
-      <div class="hero-scrim" aria-hidden="true"></div>
       <div class="hero-inner">
 
         <h1 class="hero-title" aria-label="Skincare, chosen by Evelyn.">
@@ -2045,6 +2044,7 @@
   <script src="js/consult.js"></script>
   <script src="js/shop-lessons.js"></script>
   <script src="js/water.js"></script>
+  <script src="js/sketch-logo.js"></script>
   <script src="js/morphing-light.js"></script>
   <script src="js/moving-border.js"></script>
   <script src="js/cursor-aura.js"></script>

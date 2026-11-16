@@ -607,55 +607,31 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   overflow: hidden;
 }
 
-/* ─── The moving background (Nov 14): her logo sculpted in cream, rising
-   from water, made in Higgsfield (img/hero/hero-phone.mp4, a 9 s seamless
-   loop; img/hero/hero-poster.jpg is its first frame). Phones and tablets:
-   one screen tall, the sculpture at the top and the words over the calm
-   water below it. Desktop: the same clip as a tall panel on the right,
-   feathered into its own cream, the words on the left (until a wide clip
-   exists). ─── */
-/* Nov 16: the front page is her logo carved in stone, standing in a pool
-   (img/hero/hero-stone.webp; js/water.js keeps the pool moving) */
+/* ─── The front page (Nov 16): her logo drawn in pencil on warm paper,
+   sketching itself in when the page opens (js/sketch-logo.js), in the centred
+   column above the headline, with soft light from the top left and the
+   page's water at the hero's foot (js/water.js draws its light there). The
+   cream clip (Nov 14) and the stone fountain (Nov 16) came before it; their
+   originals are in marketing/source/. ─── */
 .hero {
-  --hero-cream: #CCB397;
   background:
-    radial-gradient(60% 55% at 12% 6%, rgba(255, 244, 228, 0.5), rgba(255, 244, 228, 0) 70%),
-    linear-gradient(180deg, #D3BCA1 0%, var(--hero-cream) 100%);
+    radial-gradient(55% 42% at 10% 2%, rgba(255, 247, 235, 0.95), rgba(255, 247, 235, 0) 70%),
+    linear-gradient(180deg, var(--linen) 0%, var(--linen) 52%, #F4E2D2 80%, #F1D6C0 100%);
 }
-.hero-media {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 100vh;
-  height: 100svh;
-  overflow: hidden;
-  pointer-events: none;
-}
-.hero-video, .hero-still {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 52% 0%;
-}
-
-/* a light wash behind the words (the water below the sculpture), then the
-   hero fades into the linen ground at its base; the clip's own bottom edge
-   melts into the cream when the words run longer than one screen */
-.hero-scrim {
+/* the paper's tooth, very faint */
+.hero::before {
+  content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(180deg,
-      rgba(204, 179, 151, 0) 0%,
-      rgba(204, 179, 151, 0) calc(100svh - 9rem),
-      var(--hero-cream) 100svh,
-      var(--hero-cream) calc(100% - 8rem),
-      var(--linen) 100%),
-    linear-gradient(180deg,
-      rgba(var(--glass-rgb), 0) 44%,
-      rgba(var(--glass-rgb), 0.32) 62%,
-      rgba(var(--glass-rgb), 0.32) 100%);
+  opacity: 0.35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.32  0 0 0 0.09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)'/%3E%3C/svg%3E");
+}
+.hero-sketch { width: min(84vw, 21rem); }
+.hero-sketch img, .hero-sketch svg { display: block; width: 100%; height: 100%; }
+.hero-sketch-img { opacity: 0.8; }
+@media (min-width: 900px) {
+  .hero-sketch { width: clamp(21rem, 27vw, 27rem); }
 }
 
 /* the CSS glows are the no-WebGL fallback */
@@ -6891,54 +6867,6 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .app-copy { text-align: center; }
   .app-copy .section-sub { margin-left: auto; margin-right: auto; }
   .app-store { display: flex; width: max-content; margin-left: auto; margin-right: auto; text-align: left; }
-}
-
-/* ─── The hero's moving background: where the words sit (after every other
-   hero rule, so these win). See the clip's own rules near .hero-media. ─── */
-@media (max-width: 900px) {
-  /* the words start below the sculpture: its base sits halfway down the
-     clip, and the clip is a screen tall or, on a wide tablet, 1.78 x its width */
-  .hero {
-    justify-content: flex-start;
-    padding-top: calc(max(50svh, 88.8vw) + 0.75rem);
-  }
-}
-@media (min-width: 901px) {
-  .hero {
-    align-items: flex-start;
-    text-align: left;
-    padding-top: clamp(7rem, 17vh, 10rem);
-    padding-left: max(clamp(1.25rem, 5vw, 3rem), calc((100vw - 78rem) / 2 + 2rem));
-  }
-  /* the clip as a tall panel on the right, the full height of the hero */
-  .hero-media {
-    top: 2.75rem;
-    left: auto;
-    right: max(0px, calc((100vw - 90rem) / 2));
-    height: 100vh;
-    height: 100svh;
-    width: auto;
-    aspect-ratio: 941 / 1672;
-    /* feathered into the cream on the left and right, and at its foot */
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 95%, transparent 100%), linear-gradient(180deg, #000 80%, transparent 100%);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 26%, #000 95%, transparent 100%), linear-gradient(180deg, #000 80%, transparent 100%);
-    mask-composite: intersect;
-  }
-  .hero-scrim {
-    background: linear-gradient(180deg, rgba(204, 179, 151, 0) 0%, rgba(204, 179, 151, 0) calc(100% - 9rem), var(--linen) 100%);
-  }
-  .hero-inner {
-    max-width: min(38rem, calc(100vw - 100svh * 0.5625 - 6rem));
-    margin-right: auto;
-  }
-  /* what's on the shelf stays in the words' column, a row to scroll */
-  .hero-shelf { width: auto; margin-left: 0; }
-  .hero-shelf-k { text-align: left; }
-  .hero-shelf-list { justify-content: flex-start; }
-  .hero-title { font-size: clamp(2.46rem, 4.6vw, 4.4rem); }
-  .hero-sub { margin-left: 0; }
-  .hero-actions { justify-content: flex-start; }
 }
 
 /* ─── The water (Nov 15): the hero's light and water carried down the page.

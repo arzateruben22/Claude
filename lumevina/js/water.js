@@ -32,8 +32,7 @@
      "water": over a water picture, the light from `from` (a fraction of the height) down
      "band": a strip at the top of a plain section */
   var SPOTS = [
-    { sel: ".hero-media", tapOn: ".hero", mode: "pool", flat: 0.17,
-      fit: { w: 941, h: 1672, px: 0.52, py: 0 }, water: 0.5, source: [0.5, 0.488], strength: 0.75 },
+    { sel: ".hero", mode: "water", from: 0.66, strength: 0.7, taps: false },   /* the water at the front page's foot, under the shelf */
     { sel: "#shop", mode: "band" },
     { sel: "#book", mode: "water", from: 0, strength: 0.5 },   /* the koi pond, seen from above: water everywhere, with its own sparkle */
     { sel: "#services", mode: "band" },
@@ -105,19 +104,6 @@
     c.fillStyle = m;
     c.fillRect(0, 0, W, H);
     c.globalCompositeOperation = "source-over";
-    /* the fountain: rings from the statue's base every few seconds, and a stray drop now and then */
-    if (sp.mode === "pool" && !still.matches) {
-      if (now >= sp.nextRing) {
-        var src = sp.map(sp.source[0], sp.source[1]);
-        sp.ripples.push({ x: src[0] * r, y: src[1] * r, t0: now, big: true });
-        sp.nextRing = now + 2400;
-      }
-      if (now >= sp.nextDrop) {
-        var top = sp.map(0, sp.water + 0.06)[1], bottom = sp.map(0, 0.97)[1], left = sp.map(0.06, 0)[0], right = sp.map(0.94, 0)[0];
-        sp.ripples.push({ x: (left + Math.random() * (right - left)) * r, y: (top + Math.random() * (bottom - top)) * r, t0: now, small: true });
-        sp.nextDrop = now + 1800 + Math.random() * 2600;
-      }
-    }
     /* the rings: spreading and fading */
     var flat = sp.flat || FLAT;
     sp.ripples = sp.ripples.filter(function (rp) { return now - rp.t0 < (rp.big ? 3600 : 2000); });
@@ -226,7 +212,7 @@
     if (!sp.ctx || !sp.gctx) return;
     spots.push(sp);
     var tapHost = s.tapOn ? document.querySelector(s.tapOn) : host;
-    tapHost.addEventListener("click", function (e) {
+    if (s.taps !== false) tapHost.addEventListener("click", function (e) {
       if (still.matches || e.detail === 0) return;              /* keyboard "clicks" have no place */
       var hit = e.target.closest ? e.target.closest(SKIP) : null;
       if (hit && tapHost.contains(hit)) return;

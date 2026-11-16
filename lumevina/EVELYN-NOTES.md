@@ -458,3 +458,11 @@ The hero's water now runs through the rest of the page, in the same cream and li
 - **The front page** is now her logo carved in stone, standing in a pool (`img/hero/hero-stone.webp`, from ChatGPT; original in `marketing/source/hero-stone.png`). It replaced the cream clip, whose original stays in `marketing/source/hero-phone-higgsfield.mp4`. There's no video: `js/water.js` keeps the pool moving. Rings spread from the statue's base every few seconds, as if water were falling in. A drop lands somewhere else in the pool now and then, light plays on the water, and a tap on the water sends a ring. A Higgsfield clip of the stone fountain can replace this later.
 - **The light on the water** (front page, Book, FAQ, Contact and the bands) was redone to look like water rather than a net. A few slow waves bend the light into soft, wavy lines that thicken, thin and drift, worked out on a coarse grid and smoothed. It runs at about 25 frames a second, only while on screen.
 - **Colours:** the front page is stone beige (`#CCB397`, lit softly from the top left); the pictures further down are still the peach water.
+
+## Her logo in pencil, on the front page (Nov 16, later)
+
+- **The front page** now shows Evelyn's own logo as a pencil sketch, above the headline in the centred column, on warm paper with soft light from the top left. It replaced the stone fountain; that original is in `marketing/source/hero-stone.png`.
+  - `js/sketch-logo.js` reads her real logo (`img/logo-full.svg`: the lines traced from her drawing) and draws it in warm graphite with a paper grain, a slight hand wobble, and a second, lighter sketch line.
+  - When the page opens, the lines draw themselves in: the circle, then her profile and the roses, with the lettering shaded in last, about three seconds in all.
+  - It stays still with reduced motion. If the file can't be read, the plain logo shows.
+- **No more droplets:** the automatic rings and drops in the pool are gone. The front page has only the water's light at its foot, under the product row, and tapping there leaves no ring. Tap rings still work on the water sections further down.
