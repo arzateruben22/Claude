@@ -81,12 +81,18 @@ const LIGHTS_BEGIN = THREE.ShaderChunk.lights_fragment_begin.replace(
   'getDirectionalLightInfo( directionalLight, directLight );\n\t\tdirectLight.color *= gSunK;',
 );
 // how dark a material is, for the floors below: 1 for a pale one (the shirts, every skin tone: the deepest is 0.1
-// linear), 0 for the near-black of the Ace's suit and gloves (0.01)
-const PALE = 'smoothstep(0.025, 0.06, max(diffuseColor.r, max(diffuseColor.g, diffuseColor.b)))';
+// linear), 0 for the near-black of the Ace's suit and gloves (0.01). Read off the material's base colour when it is
+// built (its userData.albedo, linear, where the colour is in a texture, the vertex colours or a uniform: the cloth
+// and the gloves; else its color), one value per material: read per pixel off diffuseColor, a crease's darkened groove
+// on a 0.025-0.06 cloth fell under the threshold and took the dark cloth's fill, lighter than its ridges, inside out
+export const paleOf = (c: THREE.Color) => { const v = Math.max(c.r, c.g, c.b), t = Math.min(1, Math.max(0, (v - 0.025) / 0.035)); return t * t * (3 - 2 * t); };
+const PALE = 'uPale';
 
 export function withSunShade<M extends THREE.Material>(m: M, u: SunUniform, rot: RotUniform, world: WorldUniform): M {
-  patch(m, 'sunvis3', (sh) => {
-    sh.uniforms.uSunPts = u; sh.uniforms.uArmRot = rot; sh.uniforms.uSunWorld = world;
+  const base = (m.userData.albedo ?? (m as unknown as { color?: THREE.Color }).color) as THREE.Color | undefined;
+  const pale = { value: base ? paleOf(base) : 1 };
+  patch(m, 'sunvis4', (sh) => {
+    sh.uniforms.uSunPts = u; sh.uniforms.uArmRot = rot; sh.uniforms.uSunWorld = world; sh.uniforms.uPale = pale;
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>\nuniform vec4 uSunPts[${SUN_PTS}];\nvarying float vSunVis;\nvarying vec3 vGp;\n${VERT}`)
       .replace('#include <skinning_vertex>', /* glsl */ `#include <skinning_vertex>
@@ -97,7 +103,7 @@ export function withSunShade<M extends THREE.Material>(m: M, u: SunUniform, rot:
   vGp = transformed;     // the skinned position, the group's frame, for the sky term per fragment
 }`);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', `#include <common>\nvarying float vSunVis;\nvarying vec3 vGp;\nuniform mat3 uArmRot;\nuniform float uSunWorld;\n${FRAG}`)
+      .replace('#include <common>', `#include <common>\nvarying float vSunVis;\nvarying vec3 vGp;\nuniform mat3 uArmRot;\nuniform float uSunWorld;\nuniform float uPale;\n${FRAG}`)
       .replace('#include <lights_fragment_begin>', /* glsl */ `
 // in the cabin's shade the sky through the glass and the light off the dash and the lap still reach the arms: a share
 // of the sun is kept as that fill, so a shaded hand stays its own tone and keeps its modelling; a near-black cloth

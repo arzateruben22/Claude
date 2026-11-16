@@ -15,6 +15,7 @@ import type { DriverLook } from '../game/drivers';
 import { Anatomy, V3, add, cross, dot, len, madd, mul, norm, perp, sub, lerp3, G_FINGER } from './hands-sdf';
 import { BUMP_GLSL, Quality, rollAt } from './hands-skin';
 import { EYE } from './spec';
+import { paleOf } from './hands-sun';
 
 export type Outfit = 'shirt' | 'suit' | 'work';
 export function outfitOf(look: DriverLook): Outfit { return look.outfit ?? (look.sleeve === null ? 'work' : look.gloves !== null ? 'suit' : 'shirt'); }
@@ -763,6 +764,8 @@ function accMaterial() {
 // the felled seam's ridge with its two rows of stitching, the cuff's edge stitch and the cuff seam, the placket's
 // edge stitch, the knit cuff's ribs, the fire suit's ribs round the arm. Thread and stitches
 // fade out where a pixel is wider than a thread, so nothing sparkles from the seat.
+// a material whose colour is in its texture or vertex colours: its base colour for the dark-cloth floors (hands-sun.ts paleOf)
+function withAlbedo<M extends THREE.Material>(m: M, color: number) { m.userData.albedo = new THREE.Color(color); return m; }
 function clothMaterial(color: number, outfit: Outfit, q: Quality) {
   const kind = outfit === 'shirt' ? 'oxford' : outfit === 'work' ? 'twill' : 'ripstop';
   const w = weave(kind);
@@ -776,6 +779,7 @@ function clothMaterial(color: number, outfit: Outfit, q: Quality) {
     vertexColors: true, roughness: outfit === 'suit' ? 0.8 : 0.86, metalness: 0, sheen, sheenColor: sheenC, sheenRoughness: 0.55,
     map: w.map, normalMap: w.normalMap, normalScale: new THREE.Vector2(0.7, 0.7), envMapIntensity: 0.7,
   });
+  m.userData.albedo = new THREE.Color(color).multiplyScalar(0.88);   // (its colour is in the vertex colours: hands-sun.ts paleOf)
   // the thread: a tone of the cloth on the shirt, grey on the suit, a contrasting tan triple-stitch on the work shirt
   const thread = new THREE.Color(outfit === 'shirt' ? color : outfit === 'suit' ? 0x45454b : 0xc9a86a);
   if (outfit === 'shirt') thread.multiplyScalar(0.82);
@@ -863,6 +867,7 @@ function withCreases(m: THREE.MeshPhysicalMaterial, f: CreaseFrame) {
   const u = {
     uCrW: { value: f.wrist }, uCrA: { value: f.axis }, uCrU: { value: f.up },
     uCrMid: { value: f.midX }, uCrElbow: { value: f.elbow }, uCrCuff: { value: f.cuff }, uCrAmp: { value: f.amp },
+    uCrPale: { value: paleOf(m.userData.albedo ?? m.color) },
   };
   const prev = m.onBeforeCompile.bind(m), prevKey = m.customProgramCacheKey.bind(m);
   m.customProgramCacheKey = () => prevKey() + '|creases';
@@ -874,7 +879,7 @@ function withCreases(m: THREE.MeshPhysicalMaterial, f: CreaseFrame) {
       .replace('#include <begin_vertex>', '#include <begin_vertex>\nvRest = position;');
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', /* glsl */ `#include <common>
-varying vec3 vRest; uniform vec3 uCrW[2]; uniform vec3 uCrA[2]; uniform vec3 uCrU[2]; uniform float uCrMid; uniform float uCrElbow; uniform float uCrCuff; uniform float uCrAmp;
+varying vec3 vRest; uniform vec3 uCrW[2]; uniform vec3 uCrA[2]; uniform vec3 uCrU[2]; uniform float uCrMid; uniform float uCrElbow; uniform float uCrCuff; uniform float uCrAmp; uniform float uCrPale;
 // the creases' height (mm, 0 at a valley's floor, up to about 1 on a ridge) and how much of it shows here.
 // pmm: the rest-pose millimetres one pixel spans here. Each set's valley is kept at least about three pixels wide (its
 // cusp softened by its phase's change across a pixel), and a set whose creases come closer than a few pixels apart
@@ -913,9 +918,8 @@ float creaseH(vec4 cl, out float w) {
   if (cw > 0.0) {
     normal = bumpNormal(-vViewPosition, normal, ch * 3.2 * cw * 0.001, faceDirection);
     // the creases a shade darker (it shows in the shade too); not on a near-black cloth (the Ace's suit, 0.01 linear):
-    // there it took the little light there was and left a black shape (the threshold is hands-sun.ts's)
-    float pale = smoothstep(0.025, 0.06, max(diffuseColor.r, max(diffuseColor.g, diffuseColor.b)));
-    diffuseColor.rgb *= 1.0 - 0.3 * cw * pale * (1.0 - smoothstep(0.38, 0.95, ch));
+    // there it took the little light there was and left a black shape (hands-sun.ts paleOf, the cloth's base colour)
+    diffuseColor.rgb *= 1.0 - 0.3 * cw * uCrPale * (1.0 - smoothstep(0.38, 0.95, ch));
   }
 }`);
   };
@@ -1076,7 +1080,7 @@ export function buildAccessories(o: AccOptions): Accessories {
     const m = new THREE.SkinnedMesh(geo.clone(), mat); m.name = name; meshes.push(m);
   };
   mk(G.cloth, clothMaterial(G.sleeveColor, G.outfit, q), 'sleeves');
-  mk(G.patch, new THREE.MeshPhysicalMaterial({ map: patchTexture(G.sleeveColor, accent), vertexColors: true, roughness: 0.78, metalness: 0, sheen: 0.15, sheenColor: new THREE.Color(accent), sheenRoughness: 0.6, envMapIntensity: 0.6 }), 'patch');
+  mk(G.patch, withAlbedo(new THREE.MeshPhysicalMaterial({ map: patchTexture(G.sleeveColor, accent), vertexColors: true, roughness: 0.78, metalness: 0, sheen: 0.15, sheenColor: new THREE.Color(accent), sheenRoughness: 0.6, envMapIntensity: 0.6 }), G.sleeveColor), 'patch');
   mk(G.metal, accMaterial(), 'metal');
   if (look.watch) {
     const dt = dialTexture(look.watch, o.watchTime, accent);

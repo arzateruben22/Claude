@@ -100,6 +100,9 @@ export function skinMaterial(o: SkinOptions): SkinMaterial {
     envMapIntensity: 0.9,
   }) as SkinMaterial;
   const tone = new THREE.Color(o.tone);
+  // its base colour for the dark-cloth floors (hands-sun.ts paleOf): a glove's leather, not the skin under it (the Ace's
+  // near-black gloves on a pale hand); every skin tone is pale there (the deepest is 0.1 linear), so setTone leaves it
+  m.userData.albedo = gloved ? new THREE.Color(o.glove!) : tone.clone();
   const uniforms = {
     uTone: { value: tone.clone() },
     uDark: { value: darkness(o.tone) },
