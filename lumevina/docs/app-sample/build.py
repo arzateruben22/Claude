@@ -51,14 +51,14 @@ FIELDS = {
     "TYPOS_JS": open(os.path.join(SITE, "js", "ask-typos.js")).read(),   # shared with the website chat
     "ICON": raw("img/apple-touch-icon.png", "image/png"),
     "LOCK": wallpaper("img/water/koi.webp"),
-    "S_CUSTOM": img("img/services/custom.webp", 480),
-    "S_AGELESS": img("img/services/ageless.webp", 480),
-    "S_DERMA": img("img/services/dermaplane.webp", 480),
-    "S_ACNE": img("img/services/acne.webp", 480),
-    "S_CONSULT": img("img/services/consult.webp", 480),
-    "S_BRAZIL": img("img/services/brazilian.webp", 480),
-    "S_UNDERARM": img("img/services/underarm.webp", 480),
-    "P_CLEANSER": img("img/retail/glymed-cleanser.webp", 336, 208),
+    # the website's treatment photos (js/services.js PHOTOS), so the app and the site match
+    "S_CUSTOM": img("img/services/custom-facial.webp", 480),
+    "S_AGELESS": img("img/services/ageless-grace.webp", 480),
+    "S_NEWCLIENT": img("img/services/consultation.webp", 480),
+    "S_ACNE": img("img/services/acne-bootcamp.webp", 480),
+    "S_BRAZIL": img("img/services/brazilian-wax.webp", 480),
+    "S_BODY": img("img/services/body-wax.webp", 480),
+    "P_CLEANSER": img("img/products/glymed-plus-glycolic-facial-cleanser.webp", 336, 208),   # the shop's own photos (js/catalog.js)
     "P_ESSENCE": img("img/products/glymed-plus-revitalizing-essence-nad.webp", 336, 208),
     "P_SPF": img("img/retail/daily-spf-30.webp", 336, 208),
 }

@@ -554,3 +554,12 @@ The app sample on Everything Lumevina (`docs/app-sample`, the hub's app.html) no
 ## New Clients Start Here: a new photo (Nov 16)
 
 The cream swirl on linen read as pudding, so New Clients Start Here now uses the consultation photo: a small dish with three textures side by side (the same picture as the consultations). It shows in the booking picker, the treatment's pop-up and the menu cards. The swirl (`img/services/new-clients.webp`) is removed.
+
+**Later the same day:** the app's Book list now uses the website's treatment photos, the same ones as the menu and the booking picker:
+- Custom Facial and Custom + Dermaplaning share the custom facial photo.
+- The Ageless Grace has its own photo.
+- New Clients Start Here uses the consultation dish.
+- Both acne visits use the acne photo.
+- The Brazilians use the Brazilian wax photo, and the underarm uses the body wax photo.
+
+The cleanser in "Picked for your skin" uses the shop's own photo. The "Included with Ageless" tag is outlined, so it reads on the light list.
