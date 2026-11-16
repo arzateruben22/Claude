@@ -90,6 +90,8 @@ export function App() {
   // the venues (Game.arriveVenue, getOut, drive): on a venue's ramp, its name for the prompt; parked there, its name
   const [venueUi, setVenueUi] = useState({ prompt: '', parked: '', note: '' });
   const getOutRef = useRef<HTMLButtonElement>(null);
+  const resumeRef = useRef<HTMLButtonElement>(null);                   // the pause screen's Resume: the keyboard lands on it
+  const [navFrom, setNavFrom] = useState<Panel>(null);                 // the Go to card opened from the World Map goes Back to it
   const [setSec, setSetSec] = useState('graphics');                  // the Settings rail's current section
   // the radial quick menu (U3): held open from the Pause button or Tab; holdT is the 300 ms timer, held says it opened
   const [radial, setRadial] = useState<{ x: number; y: number } | null>(null);
@@ -163,6 +165,10 @@ export function App() {
   // parked at a venue: the keyboard lands on Get out
   // (and the route is done: the Go to button stops showing one)
   useEffect(() => { if (venueUi.parked) { setNavTarget(null); getOutRef.current?.focus({ preventScroll: true }); } }, [venueUi.parked]);
+  // the pause screen (and back on it from a card): the keyboard lands on Resume, so Enter carries on driving (Esc too, input.ts)
+  useEffect(() => { if (screen === 'paused' && !panel) resumeRef.current?.focus({ preventScroll: true }); }, [screen, panel]);
+  // (the Go to card remembers the World Map only while it is up: Esc, a pick or the HUD's Go to start afresh)
+  useEffect(() => { if (panel !== 'nav') setNavFrom(null); }, [panel]);
   // owner mode from an open page's address: #owner on, #owner=0 off (settings.ts reads it at load)
   useEffect(() => {
     const h = () => { const o = ownerFromHash(); if (o !== null) update({ owner: o }); };
@@ -327,7 +333,7 @@ export function App() {
           </div>
           <div className="row">
             {navTarget && <button className="btn" onClick={() => navigate(null)}>Clear route</button>}
-            <button className="btn" onClick={() => setPanel(null)}>Back</button>
+            <button className="btn" onClick={() => { setPanel(navFrom); setNavFrom(null); }}>Back</button>
           </div>
         </>,
       };
@@ -395,7 +401,7 @@ export function App() {
                     <Toggle label="Adaptive resolution (holds the frame rate)" value={settings.adaptive} onChange={(v) => update({ adaptive: v })} />
                     <Toggle label="Show frame rate" value={settings.showFps} onChange={(v) => update({ showFps: v })} />
                   </div>
-                  <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} />
+                  <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v, fovSet: true })} />
                 </section>
                 <section className="sgroup" id="set-hud">
                   <h3 className="sect">HUD and map</h3>
@@ -448,7 +454,8 @@ export function App() {
           </div>
           {!coarse && <p className="fine keys">Keyboard: W/S or arrows to drive, A/D to steer, Space handbrake, Q/E shift, C view, N map, F ability, B radio, V look back, R reset, P pause. OC Hypercar in Free Drive: hold Left Shift for Cold Thrust, double-tap it (or press J) for Thrust Hop; gamepad: D-pad up.</p>}
           {coarse && <p className="fine keys">OC Hypercar in Free Drive: hold THRUST (beside your ability) for Cold Thrust, double-tap it for Thrust Hop.</p>}
-          <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div>
+          {/* the feedback report, here since it left the pause screen (owner, 2026-11-16); the phone has it too */}
+          <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
         </>,
       };
       default: return null;
@@ -624,33 +631,44 @@ export function App() {
         </div>
       )}
 
-      {screen === 'paused' && !panel && (
-        <div className="overlay center">
-          <div className="panel narrow paused">
-            <OcWatermark />
-            <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
-            <h2>Paused</h2>
-            {/* what left the driving HUD: the time the sky shows, the temperature and where it comes from, the handling
-                chips, the run's numbers */}
-            {lastHud.current && <p className="pause-clock">{`${lastHud.current.clock} · ${lastHud.current.tempF}° · ${lastHud.current.tempNote}`}</p>}
-            <p className="pause-chips">{chips.join(' · ')}</p>
-            {lastHud.current && <p className="pause-run">{runLine(lastHud.current)}</p>}
-            <div className="stack">
-              <button className="btn primary" onClick={resume}>Resume</button>
-              <button className="btn" onClick={() => setPanel('phone')}>Phone</button>
-              <button className="btn" onClick={() => { resume(); setRadioOpen(true); }}>Radio</button>
-              <button className="btn" onClick={() => setPanel('map')}>World map</button>
-              <button className="btn" onClick={() => setPanel('nav')}>Go to a freeway</button>
-              <button className="btn" onClick={() => drive(mode)}>Restart</button>
-              <button className="btn" onClick={() => setPanel('settings')}>Settings</button>
-              {mode === 'free' && <button className="btn" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>}
-              <button className="btn" onClick={openFeedback}>Feedback</button>
-              <button className="btn" onClick={() => setPanel('store')}>Store</button>
-              <button className="btn" onClick={toMenu}>Main menu</button>
+      {screen === 'paused' && !panel && (() => {
+        // the pause screen (owner, 2026-11-16: "this looks too cluttered, lets fix this and get rid of any unnecessary
+        // toggles"): Resume as the one big action; the four things done mid-drive as icon tiles (the World Map, whose
+        // own "Go to a freeway" opens the Go to card; the radio; the phone; the store); then a slim row of Settings,
+        // Restart and one way out: End drive in Free Drive (its results' Main menu goes on to the menu), Main menu in
+        // Speed Survival. Feedback moved to Settings, next to Done (and stays on the phone).
+        const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
+        return (
+          <div className="overlay center">
+            <div className="panel narrow paused" role="dialog" aria-labelledby="pause-title">
+              <OcWatermark />
+              <div className="panel-head"><OcLockup size="md" /><p className="eyebrow">{MODES[mode].label}</p></div>
+              <h2 id="pause-title">Paused</h2>
+              {/* what left the driving HUD: the time the sky shows, the temperature and where it comes from, the handling
+                  chips, the run's numbers */}
+              <div className="pause-info">
+                {lastHud.current && <p className="pause-clock">{`${lastHud.current.clock} · ${lastHud.current.tempF}° · ${lastHud.current.tempNote}`}</p>}
+                <p className="pause-chips">{chips.join(' · ')}</p>
+                {lastHud.current && <p className="pause-run">{runLine(lastHud.current)}</p>}
+              </div>
+              <button className="btn primary pause-resume" ref={resumeRef} onClick={resume}>Resume</button>
+              <div className="pause-tiles" role="group" aria-label="While you drive">
+                <button type="button" className="btn ptile" aria-label="World map" onClick={() => setPanel('map')}><Ico name="map" /><span>Map</span></button>
+                <button type="button" className="btn ptile" onClick={() => { resume(); setRadioOpen(true); }}><Ico name="radio" /><span>Radio</span></button>
+                <button type="button" className="btn ptile" aria-label={n > 0 ? `Phone, ${n} new` : 'Phone'} onClick={() => setPanel('phone')}><Ico name="phone" /><span>Phone</span>{n > 0 && <small className="ptile-new" aria-hidden="true">{n}</small>}</button>
+                <button type="button" className="btn ptile" onClick={() => setPanel('store')}><Ico name="store" /><span>Store</span></button>
+              </div>
+              <div className="pause-more" role="group" aria-label="More">
+                <button type="button" className="btn slim" onClick={() => setPanel('settings')}>Settings</button>
+                <button type="button" className="btn slim" onClick={() => drive(mode)}>Restart</button>
+                {mode === 'free'
+                  ? <button type="button" className="btn slim" onClick={() => game.current?.endFreeDrive?.()}>End drive</button>
+                  : <button type="button" className="btn slim" onClick={toMenu}>Main menu</button>}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {screen === 'over' && result && (
         <div className="overlay center">
@@ -708,6 +726,7 @@ export function App() {
       {panel === 'map' && game.current && (
         <WorldMap game={game.current} driving={screen !== 'menu'} navTarget={navTarget} focusHome={mapHome} onClose={() => { setMapHome(undefined); setPanel(null); }}
           onNavigate={(l) => navigate(l)}
+          onGoTo={() => { setMapHome(undefined); setNavFrom('map'); setPanel('nav'); }}
           onStartFreeway={(l) => { update({ start: l, exit: '' }); setPanel(null); }}
           onStartExit={(k) => { update({ exit: k }); setMapHome(undefined); setPanel(null); }} />
       )}
