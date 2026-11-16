@@ -34,7 +34,7 @@
   var SPOTS = [
     { sel: ".hero", mode: "water", from: 0.66, strength: 0.7, taps: false },   /* the water at the front page's foot, under the shelf */
     { sel: "#shop", mode: "band" },
-    { sel: "#book", mode: "water", from: 0, strength: 0.5 },   /* the koi pond, seen from above: water everywhere, with its own sparkle */
+    { sel: "#book", mode: "water", from: 0, strength: 0.3 },   /* the koi pond, seen from above: the clip has its own sparkle, so only a little light on top */
     { sel: "#services", mode: "band" },
     { sel: "#watch", mode: "band" },
     { sel: "#policies", mode: "water", from: 0.4 },
@@ -201,7 +201,9 @@
       Array.prototype.forEach.call(host.children, function (ch) {
         if (getComputedStyle(ch).position === "static") ch.style.position = "relative";
       });
-      host.insertBefore(cv, host.firstChild);
+      /* above a background clip if the section has one, else under everything */
+      var under = host.querySelector(":scope > .bg-media");
+      if (under) host.insertBefore(cv, under.nextSibling); else host.insertBefore(cv, host.firstChild);
     } else {
       host.appendChild(cv);
     }

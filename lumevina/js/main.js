@@ -100,25 +100,25 @@
 
   /* ── The hero's moving background: still (its first frame) for reduced
      motion or data saver, and paused while it's scrolled out of view ── */
-  var heroVideo = document.querySelector(".hero-video");
-  if (heroVideo) {
-    var stillQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    var heroInView = true;
-    var heroMotion = function () {
+  /* (and the koi behind Book: every background clip loads and plays only while on screen) */
+  var stillQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  Array.prototype.forEach.call(document.querySelectorAll("video.hero-video, video.bg-video"), function (clip) {
+    var inView = !("IntersectionObserver" in window);
+    var motion = function () {
       var still = stillQuery.matches || (navigator.connection && navigator.connection.saveData);
-      if (still || !heroInView) { heroVideo.pause(); return; }
-      var p = heroVideo.play();
+      if (still || !inView) { clip.pause(); return; }
+      var p = clip.play();
       if (p && p.catch) p.catch(function () { /* autoplay refused (Low Power Mode): the poster stays */ });
     };
-    heroMotion();
-    if (stillQuery.addEventListener) stillQuery.addEventListener("change", heroMotion);
+    motion();
+    if (stillQuery.addEventListener) stillQuery.addEventListener("change", motion);
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
-        heroInView = entries[0].isIntersecting;
-        heroMotion();
-      }).observe(heroVideo);
+        inView = entries[0].isIntersecting;
+        motion();
+      }, { rootMargin: "120px 0px" }).observe(clip);
     }
-  }
+  });
 
   /* ── Motion (GSAP + ScrollTrigger) ── */
   if (typeof gsap === "undefined") return;

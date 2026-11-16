@@ -466,3 +466,9 @@ The hero's water now runs through the rest of the page, in the same cream and li
   - When the page opens, the lines draw themselves in: the circle, then her profile and the roses, with the lettering shaded in last, about three seconds in all.
   - It stays still with reduced motion. If the file can't be read, the plain logo shows.
 - **No more droplets:** the automatic rings and drops in the pool are gone. The front page has only the water's light at its foot, under the product row, and tapping there leaves no ring. Tap rings still work on the water sections further down.
+
+## The koi swim, and the pencil gets a hint of chalk (Nov 16, later)
+
+- **Book:** the koi now swim (`img/water/koi.mp4`, 10 s, 0.86 MB, from the clip "Locked overhead camera, exactly two koi"; original in `marketing/source/koi-two.mp4`). It's exactly two fish throughout. The clip doesn't end where it starts, so the loop joins with a dip: the fish fade down into the water over 0.75 s, leaving a soft swirl, and surface again where the clip begins, so there's never a third fish or a ghost. The still is the poster and the section's background. The clip loads and plays only while Book is on screen, and stays still for reduced motion or data saver. The previews play it from their asset store (`water/koi` in `scripts/preview/v2-videos.json` and `v4-videos.json`).
+  - An earlier Higgsfield clip was turned down because a third koi grew out of the cream one for about five seconds.
+- **The pencil logo:** deeper graphite, finer grain, a soft shadow under the lines, and a very slight hint of dusty-pink chalk rubbed into the roses after they're drawn.
