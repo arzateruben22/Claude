@@ -232,6 +232,19 @@ function hyperHelpers() {
     }
   };
   window.hop = () => { g.setPaused(false); const r = g.thrustHop(); g.setPaused(true); return r; };
+  // a traffic vehicle of this kind put on road m at s in this lane, driving at v m/s as its own cruising speed (0: parked,
+  // held by its own stop timer), never changing lanes; marked `placed` so removePlaced() takes it away again. (Races'
+  // Traffic.addRacer, which these checks used, went with Races on 2026-11-08; this builds the same record the traffic
+  // spawns, with a plain grey that the instanced paint reads)
+  window.placeTraffic = (m, s, lane, v, kind) => {
+    const T = g.traffic, cls = T.classes.findIndex((c) => c.id === kind), d = m.laneCenter(lane), at = m.at(s, d);
+    const color = { r: 0.47, g: 0.47, b: 0.5, toArray(a, o = 0) { a[o] = 0.47; a[o + 1] = 0.47; a[o + 2] = 0.5; return a; } };
+    const car = { cls, path: m, s, d, v, v0: v, lane, from: lane, to: lane, t: -1, sig: 0, sigT: 0, acc: 0, ps: s, pd: d, spin: 0, decide: 1e9, hitT: 0, stopT: v > 0 ? 0 : 1e9,
+      color, side: 1, touched: -99, id: 800000 + T.cars.length, bold: false, x: at.x, z: at.z, y: at.y, h: at.h, placed: true };
+    T.cars.push(car);
+    return car;
+  };
+  window.removePlaced = () => { g.traffic.cars = g.traffic.cars.filter((c) => !c.placed); };
   // a straight (as findStraight) with no other freeway on its pavement at its level: the I-405 North straight that
   // findStraight picks (34.5-37.15 km) carries CA-22 West on the same centreline, two routes' traffic half a lane apart
   window.findClean = (labels, need) => {
@@ -287,6 +300,47 @@ function readHandling() {
     saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').handling,
     sideScroll: document.documentElement.scrollWidth > innerWidth,
   };
+}
+// in the page: the OC Hypercar's THRUST in the view (owner, 2026-11-16: "make the thrust option and display more
+// seamlessly integrated"): the projected boxes of the steering wheel's hub (its wheel-hub-* parts) and of the driver's
+// display ('cluster'), the THRUST and ability keys' boxes and which of them lies on the hub or the cluster, the HUD's
+// systems strip (.hud-thr) and whether the old floating box (.hud-thrust) exists at all
+function thrustViewInPage() {
+  const g = window.__game, cam = g.camera, cv = document.querySelector('.stage canvas'), R = cv.getBoundingClientRect(), v = cam.position.clone();
+  const toScreen = (q) => { q.project(cam); return { x: R.left + ((q.x + 1) / 2) * R.width, y: R.top + ((1 - q.y) / 2) * R.height }; };
+  const box = (objs) => {
+    if (!objs.length) return null;
+    let l = 1e9, t = 1e9, r = -1e9, b = -1e9;
+    for (const obj of objs) {
+      obj.updateMatrixWorld(true);
+      obj.traverse((m) => { if (!m.isMesh || !m.visible) return; const gb = m.geometry; gb.boundingBox || gb.computeBoundingBox(); const { min, max } = gb.boundingBox;
+        for (const cx of [min.x, max.x]) for (const cy of [min.y, max.y]) for (const cz of [min.z, max.z]) { const q = toScreen(m.localToWorld(v.clone().set(cx, cy, cz))); l = Math.min(l, q.x); r = Math.max(r, q.x); t = Math.min(t, q.y); b = Math.max(b, q.y); } });
+    }
+    return { l: Math.round(l), t: Math.round(t), r: Math.round(r), b: Math.round(b) };
+  };
+  const grp = g.car.interior.group, hubs = [];
+  grp.traverse((o) => { if (/^wheel-hub/.test(o.name)) hubs.push(o); });
+  const el = (q) => {
+    const e = document.querySelector(q); if (!e) return null;
+    const r = e.getBoundingClientRect(); let shown = !e.hidden && r.width > 0 && r.height > 0;
+    for (let a = e; a && shown && a !== document.body; a = a.parentElement) { const cs = getComputedStyle(a); if (cs.display === 'none' || cs.visibility === 'hidden') shown = false; }
+    return { l: Math.round(r.left), t: Math.round(r.top), r: Math.round(r.right), b: Math.round(r.bottom), shown, text: e.textContent };
+  };
+  const view = document.querySelector('.hud').dataset.view, seat = view === 'cockpit' || view === 'free';
+  const hub = seat ? box(hubs) : null, cluster = seat ? box([grp.getObjectByName('cluster')].filter(Boolean)) : null;
+  const keys = { thrust: el('.hud-thrustbtn'), ability: el('.hud-ability') };
+  const hit = (a, b) => a && b && a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b, hits = [];
+  for (const [k, q] of Object.entries(keys)) { if (!q?.shown) continue; if (hit(q, hub)) hits.push(`${k}/hub`); if (hit(q, cluster)) hits.push(`${k}/cluster`); }
+  return { view, W: innerWidth, H: innerHeight, hub, hubParts: hubs.length, cluster, keys, hits, strip: el('.hud-thr'), oldBox: !!document.querySelector('.hud-thrust'), speed: el('.hud-speed'),
+    small: Object.entries(keys).filter(([, q]) => q?.shown && (q.r - q.l < 44 || q.b - q.t < 44)).map(([k]) => k) };
+}
+// in the page, paused: the hypercar's cluster as it shows THRUST now, after one HUD send and one look of the cockpit at
+// its displays (the frame loop does both on its own; here at once, so a reading can't fall between them)
+function clusterThrustInPage() {
+  const g = window.__game;
+  g.sendHud(); g.car.interior.update(1);
+  const sh = g.car.interior.group.userData.dash.main.shown;
+  return { thrust: sh.thrust, lock: sh.lock, hop: sh.hop, pct: Math.round(g.hyper.tank * 100), state: g.hopState() };
 }
 // start a mode in the OC Hypercar (owner mode for the test, no traffic) and pause it; the tune it latched
 const hyperIn = (page, mode) => game(page, async (mode) => {
@@ -1326,11 +1380,61 @@ await group('abilities', async (use) => {
     const before = await game(page, () => { const g = window.__game; return { car: g.driving, live: g.hyper.live, keys: g.input.thrustLive, btn: !document.querySelector('.hud-thrustbtn')?.hidden }; });
     const r = await hyperIn(page, 'free');
     await page.waitForFunction(() => { const b = document.querySelector('.hud-thrustbtn'); return b && !b.hidden && [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune'); }, null, { timeout: 900000, polling: 500 });
-    const dom = await game(page, () => ({ btn: !document.querySelector('.hud-thrustbtn').hidden, panel: !document.querySelector('.hud-thrust').hidden, chip: [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune'), aria: document.querySelector('.hud-thrustbtn').getAttribute('aria-label') }));
+    const dom = await game(page, () => ({ btn: !document.querySelector('.hud-thrustbtn').hidden, strip: !document.querySelector('.hud-thr').hidden, box: !!document.querySelector('.hud-thrust'), chip: [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune'), aria: document.querySelector('.hud-thrustbtn').getAttribute('aria-label') }));
     expect(before.car !== 'oc-hyper' && !before.live && !before.keys && !before.btn, `the ${before.car}: live ${before.live}, keys ${before.keys}, button ${before.btn}`);
     expect(r.live && r.keys && r.car === 'oc-hyper' && r.mode === 'free' && r.grip === 1.3, JSON.stringify(r));
-    expect(dom.btn && dom.panel && dom.chip === 'Unleashed', JSON.stringify(dom));
+    expect(dom.btn && dom.strip && !dom.box && dom.chip === 'Unleashed', JSON.stringify(dom));
     return `the ${before.car}: none; the OC Hypercar in Free Drive: live, grip ${r.grip}, chip "${dom.chip}", button "${dom.aria}"`;
+  });
+  // THRUST built into the car (owner, 2026-11-16: "make the thrust option and display more seamlessly integrated"; his
+  // v19 seat view had a floating THRUST box and two hexagons over the steering wheel): in the seat view the car's own
+  // cluster shows the tank, Ground Lock and the hop (car-dash.ts), and no HUD box sits over the car; the keys sit clear of
+  // the wheel's hub and the cluster; in the chase view a slim strip by the speed. A desktop at 1280 x 720 here; the phone
+  // group checks 390 x 844
+  await check('THRUST in the seat view at 1280 × 720: the cluster shows the tank %, Ground Lock and the hop (ready, charging, tank low, a refusal, in the air); no HUD box; the keys clear of the wheel hub and the cluster; a strip by the speed in the chase view', async () => {
+    await page.evaluate(`window.__clusterThrust = ${clusterThrustInPage.toString()}`);
+    await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North');
+      let s = 5200; while (s < m.len - 800 && g.structureOver(m, s, m.laneCenter(1), 400)) s += 100;
+      g.setHyper(true); g.placeCar(m, s, 1, 61); g.apLane = 1; g.traffic.clearAround(g.phys.x, g.phys.z, 600); g.hyper.tank = 0.93;
+      g.setCam('cockpit'); g.setPaused(false);
+    });
+    await page.waitForFunction(() => window.__game.camBlend >= 1 && !document.querySelector('.hud-thrustbtn').hidden, null, { timeout: 900000, polling: 250 });
+    await frames(page, 3, 900000);
+    const seat = await game(page, thrustViewInPage);
+    await page.screenshot({ path: path.join(OUT, 'thrust-seat-1280x720.png') });
+    // the cluster's words for each state, paused (so nothing moves between a change and its reading)
+    const dash = await game(page, () => {
+      const g = window.__game, h = g.hyper, p = g.phys, out = {};
+      g.setPaused(true);
+      h.tank = 0.93; h.fan = 0; h.charging = false; out.ready = window.__clusterThrust();
+      h.fan = 1; out.lock = window.__clusterThrust(); h.fan = 0;
+      h.tank = 0.3; out.low = window.__clusterThrust();
+      h.charging = true; out.charging = window.__clusterThrust(); h.charging = false;
+      // a refusal (under 5 m/s): its reason, for a moment
+      g.placeCar(g.path, p.s, 1, 3); h.tank = 1; out.refusedRes = window.hop(); out.refused = window.__clusterThrust();
+      // in the air
+      g.setHyper(true); g.placeCar(g.path, p.s, 1, 61); g.apLane = 1; out.hopRes = window.hop(); out.air = window.__clusterThrust();
+      window.run(3, { thrust: 0 }, 61, () => (p.airborne ? undefined : false));
+      g.setHyper(true);
+      return out;
+    });
+    // the chase view: the strip by the speed block
+    await game(page, () => { const g = window.__game; g.setCam('chase'); g.setPaused(false); });
+    await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: 900000, polling: 250 });
+    await frames(page, 3, 900000);
+    const chase = await game(page, thrustViewInPage);
+    await page.screenshot({ path: path.join(OUT, 'thrust-chase-1280x720.png') });
+    await game(page, () => { const g = window.__game; g.setPaused(true); g.setCam('cockpit'); });
+    expect(seat.view === 'cockpit' && seat.hub && seat.cluster && seat.hubParts > 0, `seat: ${JSON.stringify(seat)}`);
+    expect(!seat.oldBox && !seat.strip.shown, `seat view: the old box ${seat.oldBox ? 'exists' : 'gone'}, the strip ${seat.strip.shown ? 'shown' : 'hidden'}`);
+    expect(seat.keys.thrust.shown && seat.keys.ability.shown && seat.hits.length === 0 && seat.small.length === 0, `keys ${JSON.stringify(seat.keys)} on ${seat.hits.join(', ')} (hub ${JSON.stringify(seat.hub)}, cluster ${JSON.stringify(seat.cluster)}); under 44 px: ${seat.small.join(', ')}`);
+    const w = (x) => `${x.thrust}/${x.lock}/${x.hop}`;
+    expect(dash.ready.thrust === '93%' && dash.ready.lock === 'idle' && dash.ready.hop === 'HOP READY', `ready: ${JSON.stringify(dash.ready)}`);
+    expect(dash.lock.lock === 'on' && dash.low.thrust === '30%' && dash.low.hop === 'HOP: TANK LOW' && dash.charging.hop === 'HOP CHARGING', `lock ${w(dash.lock)}, low ${w(dash.low)}, charging ${w(dash.charging)}`);
+    expect(dash.refusedRes === 'Need more speed' && dash.refused.hop === 'NEED MORE SPEED' && dash.hopRes === 'ok' && dash.air.hop === 'AIRBORNE', `refused "${dash.refusedRes}" → ${dash.refused.hop}; hop ${dash.hopRes} → ${dash.air.hop}`);
+    expect(chase.view === 'chase' && chase.strip.shown && chase.speed.shown && chase.strip.b <= chase.speed.t + 0.5 && chase.speed.t - chase.strip.b <= 12 && Math.abs(chase.strip.r - chase.speed.r) <= 1, `chase: strip ${JSON.stringify(chase.strip)} by the speed ${JSON.stringify(chase.speed)}`);
+    return `seat: no HUD box; THRUST key ${seat.keys.thrust.l}-${seat.keys.thrust.r} × ${seat.keys.thrust.t}-${seat.keys.thrust.b}, the ability ${seat.keys.ability.l}-${seat.keys.ability.r}, clear of the hub ${seat.hub.l}-${seat.hub.r} × ${seat.hub.t}-${seat.hub.b} and the cluster ${seat.cluster.l}-${seat.cluster.r} × ${seat.cluster.t}-${seat.cluster.b}; the cluster reads ${w(dash.ready)}, Ground Lock ${dash.lock.lock}, ${w(dash.low)}, ${dash.charging.hop}, "${dash.refused.hop}", "${dash.air.hop}"; chase: the strip "${chase.strip.text}" ${chase.speed.t - chase.strip.b} px over the speed`;
   });
   await check('Cold Thrust: 0-60 in 0.8 s with THRUST held on the real key, at least 0.4 s quicker than on its tyres and fans', async () => {
     const r = await game(page, () => {
@@ -1436,12 +1540,16 @@ await group('abilities', async (use) => {
     expect(r.on25.tank < 0.99 && r.off25.tank === 1, `tank after 4 s cornering: ${fmt(r.on25.tank * 100)} %`);
     return `lateral g at 25 m/s ${fmt(r.off25.g)} → ${fmt(r.on25.g)}, at 40 m/s ${fmt(r.off40.g)} → ${fmt(r.on40.g)} (Arcade), ${fmt(r.simOff40.g)} → ${fmt(r.simOn40.g)} (Simulation); 4 s of it costs ${fmt((1 - r.on25.tank) * 100)} % of the tank`;
   });
-  await check('Thrust Hop at 60, 120 and 200 mph: lands on the road it left, in its lane, no spin, the springs and the camera dip', async () => {
+  // the default hop grows with the speed (owner, 2026-11-16: "make the thrust jump be higher by about the measurement of
+  // being able to hop over 2 cars at 200 mph"; HyperAbility defaultPeak): 1.5 m to 30 mph, 3.5 m from 200 mph, in its
+  // natural ballistic time
+  await check('Thrust Hop at 60, 120 and 200 mph: the default arc (1.85, 2.56, 3.5 m), lands on the road it left, in its lane, no spin, the springs and the camera dip', async () => {
     const r = await game(page, () => {
       const g = window.__game, st = window.findStraight('I-405 North', 1500), m = g.findMain(st.label), p = g.phys, out = [];
+      let s0 = st.s0 + 40; while (s0 < st.s0 + 900 && g.structureOver(m, s0, m.laneCenter(1), 260)) s0 += 20;
       for (const mph of [60, 120, 200]) {
         const v = mph / 2.236936;
-        g.setHyper(true); g.placeCar(m, st.s0 + 40, 1, v); g.apLane = 1;
+        g.setHyper(true); g.placeCar(m, s0, 1, v); g.apLane = 1; g.traffic.clearAround(p.x, p.z, 600);
         window.run(1, { thrust: 0 }, v);
         const id0 = g.path.id, d0 = p.d, before = g.hopLog.n, col0 = g.collisions;
         const res = window.hop();
@@ -1454,27 +1562,99 @@ await group('abilities', async (use) => {
           if (landed >= 0) { sus = Math.min(sus, g.car.sus.h); dip = Math.max(dip, g.dip.a); slip = Math.max(slip, Math.abs(p.drift.angle)); dMin = Math.min(dMin, p.d); dMax = Math.max(dMax, p.d); if (t - landed > 2.5) return false; }
         });
         const lane = m.laneCenter(1);
-        out.push({ mph, res, apex: +apex.toFixed(2), air: +air.toFixed(2), same: g.path.id === id0, inLane: Math.abs(dMin - lane) < 1.6 && Math.abs(dMax - lane) < 1.6, dHeld: +(dMax - d0).toFixed(2), slip: +slip.toFixed(2), sus: +(-sus).toFixed(3), dip: +dip.toFixed(3), landMph: Math.round(g.hopLog.landMph), hits: g.collisions - col0 });
+        out.push({ mph, res, want: +(1.5 + 2 * Math.min(1, Math.max(0, (v - 13.41) / 76))).toFixed(2), cost: +g.hopLog.cost.toFixed(2), apex: +apex.toFixed(2), air: +air.toFixed(2), same: g.path.id === id0, inLane: Math.abs(dMin - lane) < 1.6 && Math.abs(dMax - lane) < 1.6, dHeld: +(dMax - d0).toFixed(2), slip: +slip.toFixed(2), sus: +(-sus).toFixed(3), dip: +dip.toFixed(3), landMph: Math.round(g.hopLog.landMph), hits: g.collisions - col0 });
       }
       return out;
     });
     for (const l of r) {
-      expect(l.res === 'ok' && Math.abs(l.apex - 1.5) < 0.05 && l.air > 0.9, `${l.mph} mph: ${l.res}, apex ${l.apex} m, ${l.air} s up`);
+      expect(l.res === 'ok' && Math.abs(l.apex - l.want) < 0.05 && Math.abs(l.air - Math.sqrt((8 * l.want) / 9.81)) < 0.05, `${l.mph} mph: ${l.res}, apex ${l.apex} m (the default ${l.want} m), ${l.air} s up`);
       expect(l.same && l.inLane && l.slip < 5 && l.hits === 0, `${l.mph} mph landing: same road ${l.same}, in lane ${l.inLane}, slip ${l.slip}°, ${l.hits} hits`);
       expect(l.sus > 0.01 && l.dip > 0.02, `${l.mph} mph landing: springs ${l.sus} m, camera dip ${l.dip} m`);
     }
-    return r.map((l) => `${l.mph} mph: apex ${l.apex} m, ${l.air} s up, landed at ${l.landMph} mph, slip ${l.slip}°, springs ${l.sus} m, dip ${l.dip} m`).join('; ');
+    return r.map((l) => `${l.mph} mph: apex ${l.apex} m, ${l.air} s up, ${Math.round(l.cost * 100)} % of the tank, landed at ${l.landMph} mph, slip ${l.slip}°, springs ${l.sus} m, dip ${l.dip} m`).join('; ');
+  });
+  // the owner's measure: at 200 mph the hop clears two cars ahead in the lane. Two sedans at 30 m/s, the second at the
+  // traffic's own following distance behind the first (Traffic.ts IDM: 3 m + 1.25 s, 40.5 m bumper to bumper), the first
+  // 25 m and then 45 m ahead of the nose; every contact counted from take-off to 1.5 s after touchdown. The default hop at
+  // 200 mph with nothing ahead is 3.5 m; the camera, emulated at 60 frames a second through the game's own car and
+  // camera updates, rises and settles with no jump in the chase and the seat views. Four sedans in a row can't all be
+  // cleared and leave no room to land between: refused, no gas spent
+  await check('Thrust Hop at 200 mph: the default hop 3.5 m, 1.6-1.8 s up; over two sedans in the lane at the traffic\'s following distance, both roofs cleared by 0.3 m+, no contact, lands clean; the camera rises and settles with no jump; four in a row refused (no room to land)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, st = window.findStraight('I-405 North', 1500), m = g.findMain(st.label), p = g.phys, T = g.traffic, v = 200 / 2.236936, out = {};
+      let s0 = st.s0 + 40; while (s0 < st.s0 + 900 && g.structureOver(m, s0, m.laneCenter(1), 320)) s0 += 20;
+      const start = () => { g.setHyper(true); g.placeCar(m, s0, 1, v); g.apLane = 1; T.clearAround(p.x, p.z, 3000); window.removePlaced(); };
+      // the default hop, flown frame by frame (1/60 s: two physics steps, the car's springs, the camera) in each view
+      out.plain = {};
+      for (const view of ['chase', 'cockpit']) {
+        start(); g.setCam(view); g.camBlend = 1;
+        for (let i = 0; i < 60; i++) { window.run(1 / 60, { thrust: 0 }, v); g.car.update(1 / 60, 1, p, false, g.time, g.path); g.updateCamera(1 / 60); }
+        const res = window.hop(), cam = [];
+        let apex = 0, air = 0, f = 0, landed = -1;
+        while (f++ < 240) {
+          window.run(1 / 60, { thrust: 0 }, v); g.car.update(1 / 60, 1, p, false, g.time, g.path); g.updateCamera(1 / 60);
+          cam.push(g.camera.position.y - m.height(p.s));
+          if (p.airborne) { air += 1 / 60; apex = Math.max(apex, p.altitude); } else if (landed < 0 && f > 2) landed = f;
+          if (landed > 0 && f - landed > 60) break;
+        }
+        let step = 0, bend = 0;
+        for (let i = 1; i < cam.length; i++) { step = Math.max(step, Math.abs(cam[i] - cam[i - 1])); if (i > 1) bend = Math.max(bend, Math.abs(cam[i] - 2 * cam[i - 1] + cam[i - 2])); }
+        out.plain[view] = { res, peak: +g.hopLog.peak.toFixed(2), T: +g.hopLog.T.toFixed(2), cost: +g.hopLog.cost.toFixed(2), apex: +apex.toFixed(2), air: +air.toFixed(2), camRise: +(Math.max(...cam) - cam[0]).toFixed(2), step: +step.toFixed(3), bend: +bend.toFixed(3), settle: +(cam[cam.length - 1] - cam[0]).toFixed(3) };
+      }
+      g.setCam('cockpit');
+      out.two = [];
+      for (const gap of [25, 45]) {
+        start();
+        const sed = T.classes.find((c) => c.id === 'sedan'), s1 = s0 + 2.36 + gap + sed.len / 2, s2 = s1 + sed.len + 3 + 1.25 * 30;
+        const cars = [window.placeTraffic(m, s1, 1, 30, 'sedan'), window.placeTraffic(m, s2, 1, 30, 'sedan')];
+        const orig = T.collide.bind(T); let contacts = 0;
+        T.collide = (vw, dt, dtc) => { const n = orig(vw, dt, dtc); contacts += n; return n; };
+        const col0 = g.collisions, id0 = g.path.id, d0 = p.d, ahead = cars.map((c) => +(c.s - s0).toFixed(1)), res = window.hop(), tank = g.hyper.tank;
+        const over = [0, 0], clear = [1e9, 1e9];
+        let t = 0, landed = -1, slip = 0, dMax = 0;
+        if (res === 'ok') window.run(5, { thrust: 0 }, v, () => {
+          t += 1 / 120;
+          cars.forEach((c, i) => { if (Math.abs(c.s - p.s) < sed.len / 2 + 2.36 && Math.abs(c.d - p.d) < sed.wid / 2 + 1.02) { over[i]++; clear[i] = Math.min(clear[i], p.altitude - sed.height); } });
+          if (!p.airborne && landed < 0 && t > 0.05) landed = t;
+          if (landed >= 0) { slip = Math.max(slip, Math.abs(p.drift.angle)); dMax = Math.max(dMax, Math.abs(p.d - d0)); if (t - landed > 1.5) return false; }
+        });
+        T.collide = orig;
+        out.two.push({ gap, ahead, res, peak: +g.hopLog.peak.toFixed(2), T: +g.hopLog.T.toFixed(2), cost: +g.hopLog.cost.toFixed(2), tank: +tank.toFixed(2), over, clear: clear.map((x) => +x.toFixed(2)), roof: sed.height,
+          contacts, hits: g.collisions - col0, same: g.path.id === id0, slip: +slip.toFixed(2), drift: +dMax.toFixed(2), passed: cars.map((c) => p.s - 2.36 > c.s + sed.len / 2), landMph: Math.round(g.hopLog.landMph) });
+        window.removePlaced();
+      }
+      // four in a row at the same spacing, the first 40 m ahead
+      start();
+      { let s = s0 + 2.36 + 40 + 2.44; for (let i = 0; i < 4; i++) { window.placeTraffic(m, s, 1, 30, 'sedan'); s += 4.88 + 40.5; } }
+      const n0 = g.hopLog.n, res4 = window.hop();
+      out.four = { res: res4, hopped: g.hopLog.n > n0, air: p.airborne, tank: g.hyper.tank, toast: window.__toasts.at(-1), block: g.hopLog.block };
+      window.removePlaced(); g.setHyper(true);
+      return out;
+    });
+    for (const [view, x] of Object.entries(r.plain)) {
+      expect(x.res === 'ok' && x.peak >= 3.3 && x.apex >= 3.3 && x.air >= 1.6 && x.air <= 1.8, `the default hop at 200 mph (${view}): ${JSON.stringify(x)}`);
+      // no snap: the camera never moves more than 0.2 m in a frame (12 m/s) and its frame-to-frame step never changes by more than 0.15 m
+      expect(x.step <= 0.2 && x.bend <= 0.15 && x.camRise >= 3 && Math.abs(x.settle) < 0.05, `the camera (${view}): ${JSON.stringify(x)}`);
+    }
+    for (const x of r.two) {
+      expect(x.res === 'ok' && x.over[0] > 0 && x.over[1] > 0 && x.passed[0] && x.passed[1], `two sedans, the first ${x.gap} m ahead: ${JSON.stringify(x)}`);
+      expect(x.clear[0] >= 0.3 && x.clear[1] >= 0.3 && x.contacts === 0 && x.hits === 0 && x.same && x.slip < 5 && x.drift < 1.6, `two sedans, the first ${x.gap} m ahead: ${JSON.stringify(x)}`);
+    }
+    expect(r.four.res === 'No room to land' && !r.four.hopped && !r.four.air && r.four.tank === 1 && r.four.toast === r.four.res, `four sedans: ${JSON.stringify(r.four)}`);
+    const c = r.plain.chase, k = r.plain.cockpit;
+    return `default at 200 mph: ${k.peak} m, ${k.air} s up, ${Math.round(k.cost * 100)} % of the tank; camera: chase rises ${c.camRise} m, at most ${c.step} m a frame (change ${c.bend}); seat ${k.camRise} m, ${k.step} m a frame (change ${k.bend}); ` +
+      r.two.map((x) => `two sedans ${x.ahead.join(' and ')} m ahead: a ${x.peak} m, ${x.T} s arc, ${x.clear.join(' and ')} m over their roofs (${x.roof} m), 0 contacts, landed in lane at ${x.landMph} mph, ${Math.round(x.cost * 100)} % of the tank`).join('; ') +
+      `; four in a row: "${r.four.res}" (the ${r.four.block?.kind} ${r.four.block?.ds} m ahead), no gas spent`;
   });
   await check('Thrust Hop clears a parked sedan and a moving semi in heavy traffic: no contact, the same road', async () => {
     const parked = await game(page, () => {
       const g = window.__game, m = g.findMain('I-405 North'), p = g.phys;
       g.setHyper(true); g.placeCar(m, 3000, 1, 25); g.apLane = 1; g.traffic.clearAround(p.x, p.z, 300);
-      const car = g.traffic.addRacer(m, 3030, 1, 'Parked', 0x777777, 0, 0, 3000);
-      car.cls = g.traffic.classes.findIndex((c) => c.id === 'sedan');      // a parked sedan, held at 0 m/s
+      const car = window.placeTraffic(m, 3030, 1, 0, 'sedan');            // a parked sedan, held at 0 m/s
       const id0 = g.path.id, col0 = g.collisions, res = window.hop();
       window.run(3, { throttle: 0.3, thrust: 0 }, 0);
       const out = { res, over: g.hopLog.over, peak: +g.hopLog.peak.toFixed(2), apex: +g.hopLog.apex.toFixed(2), roof: g.traffic.classes[car.cls].height, hits: g.collisions - col0, passed: p.s > car.s + 5, same: g.path.id === id0 };
-      g.traffic.removeRacers();
+      window.removePlaced();
       return out;
     });
     const semi = await game(page, () => {
@@ -1651,8 +1831,7 @@ await group('abilities', async (use) => {
       const g = window.__game, m = g.findMain('I-405 North'), p = g.phys, T = g.traffic, out = [];
       for (const gap of [35, 20]) {
         g.setHyper(true); g.placeCar(m, 3000, 1, 10); g.apLane = 1; T.clearAround(p.x, p.z, 300);
-        const car = T.addRacer(m, 3000 + gap, 1, 'Parked', 0x777777, 0, 0, 3000);
-        car.cls = T.classes.findIndex((c) => c.id === 'sedan');
+        const car = window.placeTraffic(m, 3000 + gap, 1, 0, 'sedan');
         const col0 = g.collisions, n0 = g.hopLog.n, res = window.hop(), tank = g.hyper.tank;
         let contacts = 0, landed = null, t = 0; const orig = T.collide.bind(T);
         T.collide = (view, dt, dtc) => { const n = orig(view, dt, dtc); contacts += n; return n; };
@@ -1666,7 +1845,7 @@ await group('abilities', async (use) => {
         });
         T.collide = orig;
         out.push({ gap, res, hopped: g.hopLog.n > n0, short: g.hopLog.n > n0 ? g.hopLog.short : null, peak: +g.hopLog.peak.toFixed(2), tank: +tank.toFixed(2), landed, stopTail: +(car.s - 2.4 - 2.36 - p.s).toFixed(1), contacts, hits: g.collisions - col0, toast: window.__toasts.at(-1) });
-        T.removeRacers();
+        window.removePlaced();
       }
       g.setHyper(true);
       return out;
@@ -1687,7 +1866,7 @@ await group('abilities', async (use) => {
         const v = 20, gap = 40, t1 = (gap - cl.len / 2 - 2.36) / v, t2 = (gap + cl.len / 2 + 2.36) / v, Tair = t1 + t2, tau = t1 / Tair;
         const peak = label === 'under' ? 3.4 : (cl.height + 0.5) / (4 * tau * (1 - tau));
         g.setHyper(true); g.placeCar(m, st.s0 + 200, 1, v); g.apLane = 1; T.clearAround(p.x, p.z, 400);
-        const car = T.addRacer(m, st.s0 + 200 + gap, 1, 'Parked', 0x777777, 0, 0, st.s0 + 200); car.cls = cls;
+        const car = window.placeTraffic(m, st.s0 + 200 + gap, 1, 0, 'semi');
         let contacts = 0, first = null; const orig = T.collide.bind(T);
         T.collide = (view, dt, dtc) => { const n = orig(view, dt, dtc); if (n && view.altitude > 0) { contacts += n; if (!first) first = { alt: +view.altitude.toFixed(2), toTail: +(car.s - cl.len / 2 - p.s).toFixed(1) }; } return n; };
         const col0 = g.collisions, ok = p.hop(peak, Tair);
@@ -1695,7 +1874,7 @@ await group('abilities', async (use) => {
         window.run(Tair + 0.3, { throttle: 0.2, brake: 0, thrust: 0, steer: 0 }, 0, () => {
           if (Math.abs(car.s - p.s) < cl.len / 2 + 2.36 && Math.abs(car.d - p.d) < cl.wid / 2 + 1.02 && p.airborne) { over++; altMin = Math.min(altMin, p.altitude); altMax = Math.max(altMax, p.altitude); }
         });
-        T.collide = orig; T.removeRacers();
+        T.collide = orig; window.removePlaced();
         out.push({ label, ok, roof: cl.height, peak: +peak.toFixed(2), T: +Tair.toFixed(2), over, altMin: +altMin.toFixed(2), altMax: +altMax.toFixed(2), contacts, first, hits: g.collisions - col0, behind: p.s < car.s });
       }
       g.setHyper(true);
@@ -1712,7 +1891,7 @@ await group('abilities', async (use) => {
       for (const [kind, v, gap] of [['semi', 25, 30], ['sedan', 25, 22]]) {
         const cls = T.classes.findIndex((c) => c.id === kind), cl = T.classes[cls];
         g.setHyper(true); g.placeCar(m, st.s0 + 200, 1, v); g.apLane = 1; T.clearAround(p.x, p.z, 400);
-        const car = T.addRacer(m, st.s0 + 200 + gap, 1, 'Parked', 0x777777, 0, 0, st.s0 + 200); car.cls = cls;
+        const car = window.placeTraffic(m, st.s0 + 200 + gap, 1, 0, kind);
         let contacts = 0; const orig = T.collide.bind(T);
         T.collide = (view, dt, dtc) => { const n = orig(view, dt, dtc); contacts += n; return n; };
         const col0 = g.collisions, s0 = p.s, v0 = p.vx;
@@ -1728,7 +1907,7 @@ await group('abilities', async (use) => {
           if (landed >= 0) { groundThrust = Math.max(groundThrust, h.thrust); if (t - landed > 0.6) return false; }
         }, true);
         g.input.setThrust('key', false); g.input.update(1 / 120, 0); g.input.clear(); g.input.takeActions();
-        T.collide = orig; T.removeRacers();
+        T.collide = orig; window.removePlaced();
         const planned = v0 * g.hopLog.T;
         out.push({ kind, v, res, peak: +g.hopLog.peak.toFixed(2), T: +g.hopLog.T.toFixed(2), airThrust: +airThrust.toFixed(3), airFx: Math.round(airFx), flew: +(sLand - s0).toFixed(1), planned: +planned.toFixed(1), track: +(planned + 20).toFixed(1), clear: +clear.toFixed(2), contacts, hits: g.collisions - col0, groundThrust: +groundThrust.toFixed(2) });
       }
@@ -1873,10 +2052,10 @@ await group('abilities', async (use) => {
       await page.keyboard.down('ShiftLeft'); await frames(page, 4, 900000);
       const key = await game(page, () => { const g = window.__game; const k = { c: g.input.c.thrust, fx: g.phys.ext.fx, jets: g.jets.live }; g.setPaused(true); return k; });
       await page.keyboard.up('ShiftLeft');
-      const dom = await game(page, () => ({ btn: !document.querySelector('.hud-thrustbtn').hidden, panel: !document.querySelector('.hud-thrust').hidden, chip: [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune') }));
+      const dom = await game(page, () => ({ btn: !document.querySelector('.hud-thrustbtn').hidden, strip: !document.querySelector('.hud-thr').hidden, box: !!document.querySelector('.hud-thrust'), chip: [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent).find((t) => t === 'Unleashed' || t === 'Race tune') }));
       expect(!r.live && !r.keys && r.car === 'oc-hyper' && r.grip === 1.04, `${mode}: ${JSON.stringify(r)}`);
       expect(run.fx === 0 && run.thrust === 0 && run.tank === 1 && run.hop === 'off' && !run.air && key.c === 0 && key.fx === 0 && key.jets === 0, `${mode}: ${JSON.stringify(run)} key ${JSON.stringify(key)}`);
-      expect(!dom.btn && !dom.panel, `${mode}: THRUST on screen ${JSON.stringify(dom)}`);
+      expect(!dom.btn && !dom.strip && !dom.box, `${mode}: THRUST on screen ${JSON.stringify(dom)}`);
       out.push(`${mode}: race tune (grip ${r.grip}), chip "${dom.chip}", no button, THRUST held: 0 N, no jets`);
     }
     await hyperIn(page, 'free');
@@ -2687,9 +2866,9 @@ await group('render', async (use) => {
 // seat cluster's boxes are the projected boxes of their meshes.
 function hudLayoutInPage() {
   const g = window.__game, cam = g.camera, W = innerWidth, H = innerHeight;
-  const HUD_SEL = ['.hud-plate', '.hud-speed', '.hud-stats', '.hud-race', '.hud-road', '.hud-compass', '.hud-clock', '.corner', '.tbar .tbtn', '.livechip', '.hud-nav', '.hud-dest', '.hud-next', '.hud-fps'];
+  const HUD_SEL = ['.hud-plate', '.hud-thr', '.hud-speed', '.hud-stats', '.hud-race', '.hud-road', '.hud-compass', '.hud-clock', '.corner', '.tbar .tbtn', '.livechip', '.hud-nav', '.hud-dest', '.hud-next', '.hud-fps'];
   // Auto-drive's button sits with the driving controls on a phone (with a route in Free Drive)
-  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.tbtn.honk', '.tbtn.auto'];
+  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.hud-thrustbtn', '.tbtn.honk', '.tbtn.auto'];
   const shown = (e) => {
     const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     if (cs.display === 'none' || cs.visibility === 'hidden' || r.width <= 0 || r.height <= 0) return false;
@@ -2715,7 +2894,7 @@ function hudLayoutInPage() {
   const view = document.querySelector('.hud')?.dataset.view, seat = view === 'cockpit';
   const cluster = seat ? box(g.car.interior.group.getObjectByName('cluster')) : null, glass = seat ? box(g.car.interior.group.getObjectByName('windscreen')) : null;
   const car = seat ? null : box(g.car.exterior), band = { l: 0, r: W, t: 0.22 * H, b: 0.7 * H };
-  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .tbtn.honk, .tbtn.auto, .touch-steer, .pedal, .touch-shift .tbtn')].filter(shown)
+  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .hud-thrustbtn, .tbtn.honk, .tbtn.auto, .touch-steer, .pedal, .touch-shift .tbtn')].filter(shown)
     .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className).split(' ').slice(0, 2).join('.') }; });
   const overlaps = []; for (let i = 0; i < taps.length; i++) for (let j = i + 1; j < taps.length; j++) if (hit(taps[i], taps[j])) overlaps.push(taps[i].sel + ' / ' + taps[j].sel);
   const sp = document.querySelector('.hud-speed');
@@ -2745,7 +2924,7 @@ function hudBoxesInPage() {
   const probe = document.createElement('div');
   probe.style.cssText = 'position:fixed;left:var(--sa-l);top:var(--sa-t);right:var(--sa-r);bottom:var(--sa-b);visibility:hidden;pointer-events:none';
   app.appendChild(probe); const sa = probe.getBoundingClientRect(); probe.remove();
-  const SEL = ['.hud-plate', '.hud-navs', '.hud-nav', '.hud-dest', '.hud-next', '.hud-roadname', '.hud-stats', '.hud-speed', '.hud-thrust', '.hud-thrustbtn', '.hud-ability', '.hud-clock',
+  const SEL = ['.hud-plate', '.hud-navs', '.hud-nav', '.hud-dest', '.hud-next', '.hud-roadname', '.hud-stats', '.hud-speed', '.hud-thr', '.hud-thrustbtn', '.hud-ability', '.hud-clock',
     '.hud-fps', '.tbar .tbtn', '.corner', '.livechip', '.venue-prompt', '.touch-steer', '.pedal', '.touch-shift .tbtn', '.tbtn.honk'];
   const shown = (e) => {
     const r = e.getBoundingClientRect();
@@ -3479,7 +3658,9 @@ await group('phone', async (use) => {
     return `pixel ratio ${r.pr} on a ${r.dpr}x screen, ${r.buf}; speed "${r.mph}" over it; sky camera ${rect}, ${pct(sky.share)} on the palette (${pct(skyOff.share)} back on standard)`;
   });
   await page.keyboard.press('Escape');
-  await check('OC Hypercar THRUST button at 390 × 844: beside the ability, clear of the pedals; hold for thrust, double-tap to hop', async () => {
+  // THRUST and the ability are keys of the control row (owner, 2026-11-16: "make the thrust option and display more
+  // seamlessly integrated"): THRUST over GAS, the ability over BRAKE, each as wide as its pedal and 10 px above it
+  await check('OC Hypercar THRUST key at 390 × 844: over GAS (the ability over BRAKE), clear of the pedals; hold for thrust, double-tap to hop', async () => {
     await game(page, hyperHelpers);
     await hyperIn(page, 'free');
     // a clear straight: nothing overhead for the hop's track, no traffic, 30 m/s
@@ -3492,12 +3673,14 @@ await group('phone', async (use) => {
     await page.waitForFunction(() => { const b = document.querySelector('.hud-thrustbtn'); return b && !b.hidden; }, null, { timeout: 900000, polling: 500 });
     await frames(page, 2, 900000);
     const box = (q) => game(page, (q) => { const e = document.querySelector(q); if (!e || e.hidden) return null; const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; }, q);
-    const btn = await box('.hud-thrustbtn'), abil = await box('.hud-ability'), gas = await box('.pedal.gas'), brk = await box('.pedal.brake'), panel = await box('.hud-thrust'), speed = await box('.hud-speed');
+    const btn = await box('.hud-thrustbtn'), abil = await box('.hud-ability'), gas = await box('.pedal.gas'), brk = await box('.pedal.brake'), old = await box('.hud-thrust');
     const w = await game(page, () => innerWidth), hgt = await game(page, () => innerHeight);
     const hit = (a, b) => a && b && !(a.r <= b.l || b.r <= a.l || a.b <= b.t || b.b <= a.t);
-    expect(btn && abil && gas && brk && panel, `missing: ${JSON.stringify({ btn, abil, gas, brk, panel })}`);
-    expect(!hit(btn, abil) && !hit(btn, gas) && !hit(btn, brk) && !hit(panel, abil) && !hit(panel, btn) && !hit(panel, speed), `overlap: ${JSON.stringify({ btn, abil, gas, brk, panel, speed })}`);
-    expect(btn.l >= 0 && btn.r <= w && btn.b <= hgt && Math.abs(btn.t - abil.t) < 4 && btn.r - btn.l >= 44, `button ${JSON.stringify(btn)} vs ability ${JSON.stringify(abil)}`);
+    const over = (k, p) => k.b <= p.t + 0.5 && p.t - k.b <= 14 && Math.abs((k.l + k.r) / 2 - (p.l + p.r) / 2) < 8;
+    expect(btn && abil && gas && brk && !old, `missing: ${JSON.stringify({ btn, abil, gas, brk })}${old ? ', and the old THRUST panel is back' : ''}`);
+    expect(!hit(btn, abil) && !hit(btn, gas) && !hit(btn, brk) && !hit(abil, gas) && !hit(abil, brk), `overlap: ${JSON.stringify({ btn, abil, gas, brk })}`);
+    expect(over(btn, gas) && over(abil, brk), `THRUST ${JSON.stringify(btn)} over GAS ${JSON.stringify(gas)}, the ability ${JSON.stringify(abil)} over BRAKE ${JSON.stringify(brk)}`);
+    expect(btn.l >= 0 && btn.r <= w && btn.b <= hgt && btn.r - btn.l >= 44 && btn.b - btn.t >= 44 && abil.b - abil.t >= 44, `THRUST ${JSON.stringify(btn)}, the ability ${JSON.stringify(abil)}`);
     // hold: thrust after the 120 ms delay, off on release
     const cx = (btn.l + btn.r) / 2, cy = (btn.t + btn.b) / 2;
     const tank0 = await game(page, () => window.__game.hyper.tank);
@@ -3519,17 +3702,48 @@ await group('phone', async (use) => {
     const hop = await game(page, () => { const g = window.__game; const r = { n: g.hopLog.n, refused: g.hopLog.refused, air: g.phys.airborne, peak: g.hopLog.peak }; g.setPaused(true); return r; });
     expect(hop.n === held.hops + 1, `double-tap: ${JSON.stringify(hop)}`);
     expect(await noSideScroll(), 'the page scrolls sideways');
-    return `button ${Math.round(btn.r - btn.l)} × ${Math.round(btn.b - btn.t)} px left of the ability, the tank panel above; held: tank ${fmt(tank0 * 100)} → ${fmt(held.tank * 100)} %; double-tap: a ${fmt(hop.peak)} m hop`;
+    return `THRUST ${Math.round(btn.r - btn.l)} × ${Math.round(btn.b - btn.t)} px over GAS (${Math.round(gas.t - btn.b)} px above it), the ability over BRAKE; held: tank ${fmt(tank0 * 100)} → ${fmt(held.tank * 100)} %; double-tap: a ${fmt(hop.peak)} m hop`;
   });
-  // the same phone turned sideways: the corner map takes the right edge, so the ability, THRUST and the tank panel
-  // move low into the middle and the road plate up under the top buttons
-  await check('OC Hypercar HUD at 844 × 390 (a phone sideways): the ability, THRUST and the tank panel clear the corner map, the pedals, the steering rail and the road plate', async () => {
+  // the seat view at 390 x 844 (owner, 2026-11-16, his iPhone portrait screenshot of v19: a floating THRUST box over
+  // the wheel's centre, THRUST and CLEAR PATH hexagons over its bottom spoke): no HUD box over the car, the cluster
+  // shows the tank, Ground Lock and the hop, the keys clear of the hub and the cluster and inside the control row; in the
+  // chase view the strip is a line of the plate, the HUD still inside its 12.5 % budget
+  await check('THRUST in the seat view at 390 × 844: no HUD box over the car; the cluster shows the tank %, Ground Lock and the hop; THRUST and the ability clear of the wheel hub and the cluster; the chase view\'s strip a line of the plate', async () => {
+    await page.evaluate(`window.__clusterThrust = ${clusterThrustInPage.toString()}`);
+    await game(page, () => {
+      const g = window.__game, m = g.findMain('I-405 North');
+      let s = 5200; while (s < m.len - 800 && g.structureOver(m, s, m.laneCenter(1), 400)) s += 100;
+      g.setHyper(true); g.placeCar(m, s, 1, 61); g.apLane = 1; g.traffic.clearAround(g.phys.x, g.phys.z, 600); g.hyper.tank = 0.93;
+      g.setCam('cockpit'); g.setPaused(false);
+    });
+    await page.waitForFunction(() => window.__game.camBlend >= 1 && !document.querySelector('.hud-thrustbtn').hidden, null, { timeout: 900000, polling: 250 });
+    await frames(page, 3, 900000);
+    const seat = await game(page, thrustViewInPage), lay = await game(page, hudLayoutInPage);
+    await page.screenshot({ path: path.join(OUT, 'phone-thrust-seat.png') });
+    const dash = await game(page, () => { const g = window.__game; g.setPaused(true); g.hyper.tank = 0.93; g.hyper.fan = 1; g.hyper.charging = false; const r = window.__clusterThrust(); g.hyper.fan = 0; return r; });
+    await game(page, () => { const g = window.__game; g.setCam('chase'); g.setPaused(false); });
+    await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: 900000, polling: 250 });
+    await frames(page, 3, 900000);
+    const chase = await game(page, thrustViewInPage), clay = await game(page, hudLayoutInPage);
+    const plate = await game(page, () => { const r = document.querySelector('.hud-plate').getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom }; });
+    await page.screenshot({ path: path.join(OUT, 'phone-thrust-chase.png') });
+    await game(page, () => { const g = window.__game; g.setPaused(true); g.setCam('cockpit'); });
+    expect(seat.view === 'cockpit' && seat.hub && seat.cluster && !seat.oldBox && !seat.strip.shown, `seat: ${JSON.stringify({ view: seat.view, hub: seat.hub, cluster: seat.cluster, oldBox: seat.oldBox, strip: seat.strip })}`);
+    expect(seat.hits.length === 0 && seat.small.length === 0 && lay.cluster.hits.length === 0 && lay.overlaps.length === 0, `keys ${JSON.stringify(seat.keys)} on ${seat.hits.join(', ')}; the cluster under ${lay.cluster.hits.join(', ')}; overlapping ${lay.overlaps.join(', ')}; under 44 px ${seat.small.join(', ')}`);
+    expect(seat.keys.thrust.t >= lay.ctlTop * lay.H - 0.5 && lay.ctlTop >= 0.7, `the control row from ${pct(lay.ctlTop)}, THRUST at ${seat.keys.thrust.t} px`);
+    expect(dash.thrust === '93%' && dash.lock === 'on' && dash.hop === 'HOP READY', `the cluster: ${JSON.stringify(dash)}`);
+    expect(chase.strip.shown && chase.strip.t >= plate.t && chase.strip.b <= plate.b && clay.area <= 0.125 && clay.band.length === 0, `chase: the strip ${JSON.stringify(chase.strip)} in the plate ${JSON.stringify(plate)}; the HUD ${pct(clay.area)}, in the open view: ${clay.band.join(', ')}`);
+    return `seat: THRUST ${seat.keys.thrust.l}-${seat.keys.thrust.r} × ${seat.keys.thrust.t}-${seat.keys.thrust.b}, the ability ${seat.keys.ability.l}-${seat.keys.ability.r} × ${seat.keys.ability.t}-${seat.keys.ability.b}; the hub ${seat.hub.l}-${seat.hub.r} × ${seat.hub.t}-${seat.hub.b}, the cluster ${seat.cluster.l}-${seat.cluster.r} × ${seat.cluster.t}-${seat.cluster.b}; no HUD box; the cluster "${dash.thrust}", Ground Lock ${dash.lock}, "${dash.hop}"; chase: the strip "${chase.strip.text}" in the plate, the HUD ${pct(clay.area)}`;
+  });
+  // the same phone turned sideways: THRUST over the ability in a column left of BRAKE, as tall together as BRAKE; the
+  // systems' strip a line of the plate (chase view)
+  await check('OC Hypercar HUD at 844 × 390 (a phone sideways): THRUST over the ability beside BRAKE, the strip in the plate; clear of the corner map, the pedals, the steering rail and the road plate', async () => {
     await page.setViewportSize({ width: 844, height: 390 });
-    await game(page, () => window.__game.setPaused(false));
+    await game(page, () => { const g = window.__game; g.setCam('chase'); g.setPaused(false); });
     await frames(page, 2, 900000);
     const r = await game(page, () => {
       const box = (q) => { const e = document.querySelector(q); if (!e || e.hidden) return null; const b = e.getBoundingClientRect(); return b.width ? { l: Math.round(b.left), t: Math.round(b.top), r: Math.round(b.right), b: Math.round(b.bottom) } : null; };
-      const boxes = { corner: box('.corner'), panel: box('.hud-thrust'), btn: box('.hud-thrustbtn'), abil: box('.hud-ability'), gas: box('.pedal.gas'), brake: box('.pedal.brake'), steer: box('.touch-steer'), speed: box('.hud-speed'), stats: box('.hud-stats'), road: box('.hud-road'), tbar: box('.tbar') };
+      const boxes = { corner: box('.corner'), strip: box('.hud-thr'), btn: box('.hud-thrustbtn'), abil: box('.hud-ability'), gas: box('.pedal.gas'), brake: box('.pedal.brake'), steer: box('.touch-steer'), speed: box('.hud-speed'), stats: box('.hud-stats'), road: box('.hud-road'), tbar: box('.tbar') };
       const hit = (a, b) => !!(a && b && a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b), ks = Object.keys(boxes), overlaps = [];
       for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) if (hit(boxes[ks[i]], boxes[ks[j]])) overlaps.push(`${ks[i]}/${ks[j]}`);
       window.__game.setPaused(true);
@@ -3537,11 +3751,12 @@ await group('phone', async (use) => {
     });
     await page.setViewportSize({ width: 390, height: 844 });
     const b = r.boxes;
-    expect(b.corner && b.panel && b.btn && b.abil && b.gas && b.road, `missing: ${JSON.stringify(b)}`);
-    const mine = r.overlaps.filter((o) => /panel|btn|abil|road/.test(o));
+    expect(b.corner && b.strip && b.btn && b.abil && b.gas && b.road, `missing: ${JSON.stringify(b)}`);
+    const mine = r.overlaps.filter((o) => /strip|btn|abil|road/.test(o));
     expect(!mine.length, `overlaps: ${mine.join(', ')} ${JSON.stringify(b)}`);
-    expect([b.panel, b.btn, b.abil].every((x) => x.l >= 0 && x.r <= r.w && x.t >= 0 && x.b <= r.h), `off screen: ${JSON.stringify(b)}`);
-    return `${r.w} × ${r.h}: THRUST ${b.btn.l}-${b.btn.r} and the ability ${b.abil.l}-${b.abil.r} px across at ${b.btn.t}-${b.btn.b}, the tank panel over them at ${b.panel.t}-${b.panel.b}, the corner map ${b.corner.l}-${b.corner.r} × ${b.corner.t}-${b.corner.b}; no overlaps${r.overlaps.length ? ` (elsewhere: ${r.overlaps.join(', ')})` : ''}`;
+    expect([b.strip, b.btn, b.abil].every((x) => x.l >= 0 && x.r <= r.w && x.t >= 0 && x.b <= r.h), `off screen: ${JSON.stringify(b)}`);
+    expect(b.btn.b <= b.abil.t && b.btn.r <= b.brake.l && b.abil.b - b.btn.t <= b.brake.b - b.brake.t + 1, `the column: THRUST ${JSON.stringify(b.btn)}, the ability ${JSON.stringify(b.abil)}, BRAKE ${JSON.stringify(b.brake)}`);
+    return `${r.w} × ${r.h}: THRUST ${b.btn.l}-${b.btn.r} × ${b.btn.t}-${b.btn.b} over the ability at ${b.abil.t}-${b.abil.b}, left of BRAKE (${b.brake.l}); the strip in the plate at ${b.strip.t}-${b.strip.b}; the corner map ${b.corner.l}-${b.corner.r} × ${b.corner.t}-${b.corner.b}; no overlaps${r.overlaps.length ? ` (elsewhere: ${r.overlaps.join(', ')})` : ''}`;
   });
 });
 

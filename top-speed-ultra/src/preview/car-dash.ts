@@ -33,8 +33,10 @@ export interface DashReadout {
   profile: string; tcs: boolean; abs: boolean;
   // this run: distance (miles) and top speed (mph); the sky's clock and the simulated air temperature
   tripMi: number; topMph: number; clock: string; tempF: number;
-  // the OC Hypercar's tune ('Unleashed', 'Race tune'; '' for the others) and its Thrust tank (0..1; live or not)
-  tune: string; tank: number; thrustLive: boolean;
+  // the OC Hypercar's tune ('Unleashed', 'Race tune'; '' for the others) and its Thrust tank (0..1; live or not); with
+  // THRUST live, Ground Lock's fans running and the hop's state as the HUD words it ('Hop ready', 'Hop: charging',
+  // 'Hop: tank low', 'Airborne', or a refusal's reason for a moment)
+  tune: string; tank: number; thrustLive: boolean; lock: boolean; hop: string;
   // Go To (the HUD's own figures): the next manoeuvre's way and distance (miles), where it leads, the destination's
   // name and its distance along the route (miles); '' with no route. road: the road you're on
   turn: DashTurn; nextMi: number; navTo: string; dest: string; destMi: number; road: string;
@@ -45,7 +47,7 @@ export interface DashReadout {
 }
 export function dashReadout(): DashReadout {
   return { mph: 0, gear: 'N', rpm: 0, rpmFrac: 0, kw: 0, kwMax: 1, mode: '', profile: 'sport', tcs: true, abs: true, tripMi: 0, topMph: 0, clock: '', tempF: 0,
-    tune: '', tank: 0, thrustLive: false, turn: '', nextMi: 0, navTo: '', dest: '', destMi: 0, road: '', gx: 0, gy: 0, redline: false };
+    tune: '', tank: 0, thrustLive: false, lock: false, hop: '', turn: '', nextMi: 0, navTo: '', dest: '', destMi: 0, road: '', gx: 0, gy: 0, redline: false };
 }
 export interface DashPainter {
   tex: THREE.CanvasTexture;
@@ -170,16 +172,43 @@ function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, sh
   const mph = String(Math.round(r.mph)), gear = gearWord(r.gear);
   text(g, mph, 512, 138, 82, '#f4f8ff', 300, 'center');
   text(g, gear, 512, 216, gear.length > 1 ? 18 : 26, TXT, 700, 'center');
-  // left of the arc: the profile, TCS and ABS, the tune, the Thrust tank (right-aligned toward the speed)
+  // left of the arc (right-aligned toward the speed): with THRUST live (the Unleashed tune in Free Drive) the car's own
+  // systems, big enough to read from the seat on a phone (owner, 2026-11-16: "make the thrust option and display more
+  // seamlessly integrated"; the HUD's floating THRUST box is gone from the seat view): THRUST, the tank's percentage
+  // large, its bar with the hop's mark (the least a hop asks for), Ground Lock's chip (filled while the fans run) and the
+  // hop's state (ready, charging, in the air, or why the last request was refused). The profile, TCS and ABS move to the
+  // right block's foot. Without THRUST: the profile, TCS and ABS, the tune and THRUST OFF, as before
   const prof = profileWord(r.profile), tune = (r.tune || r.mode || '').toUpperCase();
-  text(g, prof, 404, 106, 20, ICE, 800, 'right', 92);
-  chip(g, 318, 124, 40, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 364, 124, 40, 20, 'ABS', r.abs, ICE, 12, low);
-  if (tune) text(g, tune, 404, 164, 14, HOT, 800, 'right', 92);
-  const pct = Math.round(clamp01(r.tank) * 100);
-  text(g, 'THRUST', 314, 190, 11, DIM, 600, 'left');
-  text(g, r.thrustLive ? `${pct}%` : 'OFF', 404, 190, 15, r.thrustLive ? TXT : DIM, 700, 'right');
-  g.fillStyle = HY.OFF; g.fillRect(314, 204, 90, 6);
-  if (r.thrustLive && pct > 0) { g.fillStyle = pct < 25 ? '#ffb347' : ICE; g.fillRect(314, 204, 90 * (pct / 100), 6); }
+  const pct = Math.round(clamp01(r.tank) * 100), live = r.thrustLive;
+  let hopWord = '';
+  if (live) {
+    // (what the seat shows of the display, measured on the phone frames: from x 200 left of the speed, under the rim from
+    // y 96; the rev arc's first tick reaches x 403 at y 152, so the bar and the chip stop at 396)
+    const lowTank = pct < 25, x0 = 214, x1 = 404, xb = 396;
+    text(g, 'THRUST', x0, 114, 17, ICE, 800, 'left');
+    text(g, `${pct}%`, x1, 112, 40, lowTank ? '#ffb347' : '#f4f8ff', 700, 'right', x1 - x0 - 80);
+    // the tank's bar: the fill, and the hop's mark at 40 %
+    g.fillStyle = HY.OFF; g.fillRect(x0, 136, xb - x0, 10);
+    if (pct > 0) { g.fillStyle = lowTank ? '#ffb347' : ICE; g.fillRect(x0, 136, (xb - x0) * (pct / 100), 10); }
+    g.fillStyle = '#f4f8ff'; g.fillRect(x0 + (xb - x0) * 0.4 - 1.5, 131, 3, 20);
+    // Ground Lock: lit (filled, dark letters) while the fans press the car down; an outline when idle
+    g.lineWidth = 2.5; g.beginPath(); g.roundRect(x0, 158, xb - x0, 30, 6);
+    if (r.lock) { g.fillStyle = ICE; g.fill(); } else { g.strokeStyle = ICE; g.globalAlpha = 0.55; g.stroke(); g.globalAlpha = 1; }
+    text(g, 'GROUND LOCK', (x0 + xb) / 2, 174, 18, r.lock ? '#03050a' : '#b4c8de', 800, 'center', xb - x0 - 14);
+    // the hop: ready in the hot ice, charging and tank low in amber, in the air in white, a refusal in amber
+    const hw = r.hop;
+    hopWord = hw === 'Hop ready' ? 'HOP READY' : hw === 'Airborne' ? 'AIRBORNE' : hw === 'Hop: charging' ? 'HOP CHARGING' : hw === 'Hop: tank low' ? 'HOP: TANK LOW'
+      : hw ? hw.replace(/^(Thrust Hop|No hop): /i, '').toUpperCase() : '';
+    const hc = hw === 'Hop ready' ? HOT : hw === 'Airborne' ? '#f4f8ff' : '#ffb347';
+    if (hopWord) text(g, hopWord, x1, 210, 20, hc, 800, 'right', x1 - x0, 13);
+  } else {
+    text(g, prof, 404, 106, 20, ICE, 800, 'right', 92);
+    chip(g, 318, 124, 40, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 364, 124, 40, 20, 'ABS', r.abs, ICE, 12, low);
+    if (tune) text(g, tune, 404, 164, 14, HOT, 800, 'right', 92);
+    text(g, 'THRUST', 314, 190, 11, DIM, 600, 'left');
+    text(g, 'OFF', 404, 190, 15, DIM, 700, 'right');
+    g.fillStyle = HY.OFF; g.fillRect(314, 204, 90, 6);
+  }
   // right of the arc: the next turn and its distance, the destination and its distance (or the road you're on)
   let navLine = '';
   if (r.dest) {
@@ -202,14 +231,20 @@ function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, sh
   // row went under the fingers). The trip and the top speed this run go under the destination, right of the speed
   if (r.clock) text(g, r.clock, 150, 36, 17, TXT, 600, 'left', 96);
   text(g, `${Math.round(r.tempF)}°F sim`, 900, 36, 16, TXT, 600, 'right', 120);
-  text(g, `TRIP ${r.tripMi.toFixed(1)} mi`, 620, 192, 14, DIM, 600, 'left', 96);
-  text(g, `TOP ${Math.round(r.topMph)} mph`, 620, 214, 14, DIM, 600, 'left', 96);
+  if (live) {
+    // (with THRUST live the profile and the assists take the trip and top speed's place; those two are on the HUD)
+    text(g, prof, 620, 190, 17, ICE, 800, 'left', 96);
+    chip(g, 620, 204, 42, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 668, 204, 42, 20, 'ABS', r.abs, ICE, 12, low);
+  } else {
+    text(g, `TRIP ${r.tripMi.toFixed(1)} mi`, 620, 192, 14, DIM, 600, 'left', 96);
+    text(g, `TOP ${Math.round(r.topMph)} mph`, 620, 214, 14, DIM, 600, 'left', 96);
+  }
   // the centre screen: the tune and the assists, each lit when on
   text(g, tune || 'SPORT', 716 + 154, 256 + 116, 28, ICE, 700, 'center', 240);
   text(g, 'ABS', 716 + 124, 256 + 150, 18, r.abs ? TXT : '#ff9a5c', 600, 'center');
   text(g, 'TCS', 716 + 184, 256 + 150, 18, r.tcs ? TXT : '#ff9a5c', 600, 'center');
   shown.mph = mph; shown.gear = gear; shown.profile = prof; shown.tcs = r.tcs ? 'on' : 'off'; shown.abs = r.abs ? 'on' : 'off'; shown.tune = tune;
-  shown.thrust = r.thrustLive ? `${pct}%` : 'off'; shown.turn = r.dest ? r.turn : ''; shown.next = navLine; shown.dest = r.dest; shown.redline = r.redline ? 'lit' : 'dark';
+  shown.thrust = live ? `${pct}%` : 'off'; shown.lock = live ? (r.lock ? 'on' : 'idle') : ''; shown.hop = hopWord; shown.turn = r.dest ? r.turn : ''; shown.next = navLine; shown.dest = r.dest; shown.redline = r.redline ? 'lit' : 'dark';
   shown.clock = r.clock; shown.trip = r.tripMi.toFixed(1); shown.top = String(Math.round(r.topMph));
 }
 export function hyperDash(q: 'phone' | 'high'): DashPainter {
@@ -217,21 +252,22 @@ export function hyperDash(q: 'phone' | 'high'): DashPainter {
     const low = q === 'phone';
     const [base, bg] = canvas(1024, 512), [c, g] = canvas(1024, 512);
     hyperBase(bg, low);
-    const t = tex(c), w = watch(22);
+    const t = tex(c), w = watch(24);
     const p: DashPainter = {
       tex: t, draws: 0, shown: {},
       update(r, lowNow) {
         const k = w.cur;
         k[0] = Math.round(r.mph); k[1] = r.gear; k[2] = Math.round(clamp01(r.rpmFrac) * (lowNow ? 20 : 40)); k[3] = ON(r.redline); k[4] = r.profile; k[5] = ON(r.tcs); k[6] = ON(r.abs);
-        k[7] = r.tune || r.mode; k[8] = Math.round(clamp01(r.tank) * 50); k[9] = ON(r.thrustLive); k[10] = r.dest ? r.turn : ''; k[11] = navQ(r); k[12] = r.dest; k[13] = r.dest ? qMi(r.destMi) : 0;
+        k[7] = r.tune || r.mode; k[8] = Math.round(clamp01(r.tank) * 100); k[9] = ON(r.thrustLive); k[10] = r.dest ? r.turn : ''; k[11] = navQ(r); k[12] = r.dest; k[13] = r.dest ? qMi(r.destMi) : 0;
         k[14] = r.dest ? '' : r.road; k[15] = r.clock; k[16] = Math.round(r.tempF); k[17] = Math.round(r.tripMi * 10); k[18] = Math.round(r.topMph);
         k[19] = Math.round(r.kw / 15); k[20] = lowNow ? 0 : Math.round(r.gx * 10); k[21] = lowNow ? 0 : Math.round(r.gy * 10);
+        k[22] = r.thrustLive ? ON(r.lock) : 0; k[23] = r.thrustLive ? r.hop : '';
         if (!w.changed()) return false;
         g.drawImage(base, 0, 0); hyperLive(g, r, lowNow, p.shown); t.needsUpdate = true; p.draws++;
         return true;
       },
     };
-    p.update(Object.assign(dashReadout(), { mph: 132, gear: '6', kw: 186, kwMax: 1500, rpm: 6200, rpmFrac: 0.62, mode: 'UNLEASHED', tune: 'Unleashed', tank: 1, thrustLive: true }), low);
+    p.update(Object.assign(dashReadout(), { mph: 132, gear: '6', kw: 186, kwMax: 1500, rpm: 6200, rpmFrac: 0.62, mode: 'UNLEASHED', tune: 'Unleashed', tank: 1, thrustLive: true, hop: 'Hop ready' }), low);
     return p;
   });
 }
