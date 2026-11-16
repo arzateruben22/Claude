@@ -1,0 +1,842 @@
+{
+ "id": "possibility-lab-earth-spin-part3-v3",
+ "theme": "../../../../theme.json",
+ "scene": "../../scene.mjs",
+ "fps": 30,
+ "bpm": 50,
+ "dur": 44.85,
+ "v2": true,
+ "poster": 22.2,
+ "shots": [
+  {
+   "at": 0.0,
+   "name": "eye",
+   "beat": "open"
+  },
+  {
+   "at": 41.51,
+   "name": "end",
+   "beat": "cliff"
+  }
+ ],
+ "beats": [
+  {
+   "id": "open",
+   "t0": 0.0,
+   "t1": 5.25,
+   "line": "vo01",
+   "energy": 0.6
+  },
+  {
+   "id": "s23",
+   "t0": 5.25,
+   "t1": 9.6,
+   "line": "vo02",
+   "energy": 0.6
+  },
+  {
+   "id": "u_ground",
+   "t0": 9.6,
+   "t1": 15.6,
+   "line": "vo03",
+   "energy": 0.6
+  },
+  {
+   "id": "u_gust",
+   "t0": 15.6,
+   "t1": 22.2,
+   "line": "vo04",
+   "energy": 0.6
+  },
+  {
+   "id": "s26",
+   "t0": 22.2,
+   "t1": 29.7,
+   "line": "vo05",
+   "energy": 0.6
+  },
+  {
+   "id": "s27",
+   "t0": 29.7,
+   "t1": 34.5,
+   "line": "vo06",
+   "energy": 0.6
+  },
+  {
+   "id": "cta",
+   "t0": 34.5,
+   "t1": 37.8,
+   "line": "vo07",
+   "energy": 0.6
+  },
+  {
+   "id": "cliff",
+   "t0": 37.8,
+   "t1": 44.85,
+   "line": "vo08",
+   "energy": 0.6
+  }
+ ],
+ "world": {
+  "cycleS": 16.0,
+  "keys": [
+   [
+    0.0,
+    23.934
+   ],
+   [
+    44.85,
+    23.934
+   ]
+  ],
+  "dry": [
+   [
+    0.0,
+    90.0
+   ],
+   [
+    44.85,
+    90.0
+   ]
+  ],
+  "tOrbH": 1.408151055244956,
+  "t0H": 23.934,
+  "rEq": 6378.137,
+  "gm": 398600441800000.0,
+  "eNow": 2.1361578906011758e+29,
+  "eOrb": 6.171382641999454e+31,
+  "weightWins": []
+ },
+ "disclosures": {
+  "aiVoice": true,
+  "realVoice": true,
+  "aiIllustration": true
+ },
+ "cue": {
+  "fps": 30,
+  "float": [
+   999.0,
+   1000.0
+  ],
+  "break": [
+   999.0,
+   1000.0
+  ],
+  "cost": [
+   999.0,
+   1000.0
+  ],
+  "weather": [
+   999.0,
+   1000.0
+  ],
+  "wind": [
+   999.0,
+   1000.0
+  ],
+  "oceans": [
+   999.0,
+   1000.0
+  ],
+  "poles": [
+   999.0,
+   1000.0
+  ],
+  "end": 41.51,
+  "seed": 3
+ },
+ "badges": [
+  {
+   "id": "b-thought",
+   "text": "Thought experiment",
+   "t0": 0.3,
+   "t1": 5.0,
+   "slot": "bl"
+  }
+ ],
+ "title": {
+  "series": "Possibility Lab",
+  "title": "The air can't keep up",
+  "t0": -20.0,
+  "t1": -19.0,
+  "sig": -18.0
+ },
+ "endCard": 41.51,
+ "end": {
+  "title": "Full video on YouTube: *What If Earth Spun Faster…*",
+  "follow": "Possibility Lab · Part 3 of 8",
+  "next": "Every number's source is in the description."
+ },
+ "endAnswer": "",
+ "spineHide": [],
+ "spine": [],
+ "spineOut": 0,
+ "labels": [],
+ "counters": [],
+ "work": null,
+ "cam": {},
+ "cams": [
+  {
+   "t0": 0.0,
+   "mode": "ground"
+  },
+  {
+   "t0": 34.467,
+   "mode": "wide"
+  },
+  {
+   "t0": 37.7,
+   "mode": "push"
+  }
+ ],
+ "fx": {
+  "wind": [
+   5.133,
+   33.65
+  ]
+ },
+ "robot": [
+  {
+   "t": 0.0,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 5.033,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 9.4,
+   "pose": "lean",
+   "expr": "wide"
+  },
+  {
+   "t": 15.4,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 22.0,
+   "pose": "lean",
+   "expr": "wide"
+  },
+  {
+   "t": 29.5,
+   "pose": "lean",
+   "expr": "squint"
+  },
+  {
+   "t": 34.367,
+   "pose": "armsOut",
+   "expr": "happy"
+  },
+  {
+   "t": 37.6,
+   "pose": "lookUp",
+   "expr": "awe"
+  }
+ ],
+ "hook": {
+  "text": "The air can't keep up",
+  "t0": 0.1,
+  "t1": 2.9
+ },
+ "hud3": {
+  "speed": {
+   "mph": 1040,
+   "t0": 9.6,
+   "t1": 20.333
+  }
+ },
+ "chips": [
+  {
+   "t0": 10.1,
+   "t1": 13.61,
+   "text": "Ground through the air: 1,040 mph"
+  },
+  {
+   "t0": 16.1,
+   "t1": 20.233,
+   "text": "Strongest gust ever: 250 mph"
+  },
+  {
+   "t0": 22.8,
+   "t1": 25.9,
+   "text": "4× faster"
+  }
+ ],
+ "flash": null,
+ "captions": [
+  {
+   "t0": 0.25,
+   "t1": 2.78,
+   "lines": [
+    [
+     [
+      "The",
+      0.39
+     ],
+     [
+      "air",
+      0.55
+     ],
+     [
+      "can't",
+      0.825
+     ],
+     [
+      "keep",
+      1.22
+     ]
+    ],
+    [
+     [
+      "up",
+      1.25
+     ],
+     [
+      "with",
+      1.47
+     ],
+     [
+      "the",
+      1.67
+     ],
+     [
+      "ground.",
+      2.03
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 5.258,
+   "t1": 7.023,
+   "lines": [
+    [
+     [
+      "It",
+      5.398
+     ],
+     [
+      "is",
+      5.428
+     ],
+     [
+      "pulled",
+      5.603
+     ],
+     [
+      "along",
+      5.898
+     ]
+    ],
+    [
+     [
+      "only",
+      6.163
+     ],
+     [
+      "by",
+      6.373
+     ],
+     [
+      "friction,",
+      6.533
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 7.023,
+   "t1": 9.078,
+   "lines": [
+    [
+     [
+      "so",
+      7.023
+     ],
+     [
+      "for",
+      7.288
+     ],
+     [
+      "the",
+      7.318
+     ],
+     [
+      "first",
+      7.348
+     ],
+     [
+      "hours",
+      7.548
+     ]
+    ],
+    [
+     [
+      "it",
+      7.913
+     ],
+     [
+      "is",
+      7.943
+     ],
+     [
+      "left",
+      8.223
+     ],
+     [
+      "behind.",
+      8.328
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 9.58,
+   "t1": 11.03,
+   "lines": [
+    [
+     [
+      "The",
+      9.72
+     ],
+     [
+      "ground",
+      9.815
+     ]
+    ],
+    [
+     [
+      "moves",
+      10.18
+     ],
+     [
+      "through",
+      10.515
+     ],
+     [
+      "it",
+      10.83
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 11.03,
+   "t1": 13.675,
+   "lines": [
+    [
+     [
+      "at",
+      11.03
+     ],
+     [
+      "about",
+      11.215
+     ],
+     [
+      "1,040",
+      11.475
+     ],
+     [
+      "miles",
+      12.47
+     ]
+    ],
+    [
+     [
+      "an",
+      12.895
+     ],
+     [
+      "hour.",
+      12.925
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 15.58,
+   "t1": 17.47,
+   "lines": [
+    [
+     [
+      "The",
+      15.72
+     ],
+     [
+      "strongest",
+      15.885
+     ]
+    ],
+    [
+     [
+      "gust",
+      16.385
+     ],
+     [
+      "ever",
+      16.73
+     ],
+     [
+      "measured",
+      17.0
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 17.47,
+   "t1": 20.22,
+   "lines": [
+    [
+     [
+      "was",
+      17.47
+     ],
+     [
+      "about",
+      17.71
+     ],
+     [
+      "250",
+      17.945
+     ],
+     [
+      "miles",
+      18.945
+     ]
+    ],
+    [
+     [
+      "an",
+      19.44
+     ],
+     [
+      "hour.",
+      19.47
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 22.22,
+   "t1": 24.01,
+   "lines": [
+    [
+     [
+      "This",
+      22.36
+     ],
+     [
+      "wind",
+      22.535
+     ],
+     [
+      "would",
+      22.83
+     ],
+     [
+      "be",
+      22.91
+     ],
+     [
+      "4×",
+      23.1
+     ]
+    ],
+    [
+     [
+      "faster,",
+      23.57
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 24.01,
+   "t1": 26.855,
+   "lines": [
+    [
+     [
+      "blowing",
+      24.01
+     ],
+     [
+      "from",
+      24.785
+     ],
+     [
+      "the",
+      25.04
+     ],
+     [
+      "east,",
+      25.28
+     ]
+    ],
+    [
+     [
+      "because",
+      26.775
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 26.855,
+   "t1": 29.255,
+   "lines": [
+    [
+     [
+      "the",
+      26.855
+     ],
+     [
+      "ground",
+      27.055
+     ],
+     [
+      "is",
+      27.395
+     ],
+     [
+      "running",
+      27.525
+     ]
+    ],
+    [
+     [
+      "ahead",
+      28.02
+     ],
+     [
+      "of",
+      28.295
+     ],
+     [
+      "the",
+      28.325
+     ],
+     [
+      "air.",
+      28.505
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 29.72,
+   "t1": 31.295,
+   "lines": [
+    [
+     [
+      "Winds",
+      29.86
+     ],
+     [
+      "like",
+      30.175
+     ],
+     [
+      "that",
+      30.205
+     ],
+     [
+      "would",
+      30.455
+     ]
+    ],
+    [
+     [
+      "strip",
+      30.485
+     ],
+     [
+      "the",
+      30.705
+     ],
+     [
+      "surface,",
+      31.015
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 31.295,
+   "t1": 33.055,
+   "lines": [
+    [
+     [
+      "and",
+      31.295
+     ],
+     [
+      "they'd",
+      31.385
+     ],
+     [
+      "only",
+      31.805
+     ]
+    ],
+    [
+     [
+      "be",
+      32.085
+     ],
+     [
+      "the",
+      32.24
+     ],
+     [
+      "beginning.",
+      32.305
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 34.532,
+   "t1": 36.737,
+   "lines": [
+    [
+     [
+      "If",
+      34.672
+     ],
+     [
+      "you're",
+      34.747
+     ],
+     [
+      "enjoying",
+      34.982
+     ],
+     [
+      "this,",
+      35.287
+     ]
+    ],
+    [
+     [
+      "tap",
+      35.542
+     ],
+     [
+      "like",
+      35.717
+     ],
+     [
+      "and",
+      35.867
+     ],
+     [
+      "follow.",
+      35.987
+     ]
+    ]
+   ]
+  },
+  {
+   "t0": 37.96,
+   "t1": 40.525,
+   "lines": [
+    [
+     [
+      "And",
+      38.1
+     ],
+     [
+      "then",
+      38.13
+     ],
+     [
+      "the",
+      38.36
+     ],
+     [
+      "oceans",
+      38.525
+     ]
+    ],
+    [
+     [
+      "start",
+      39.225
+     ],
+     [
+      "to",
+      39.43
+     ],
+     [
+      "move.",
+      39.775
+     ]
+    ]
+   ]
+  }
+ ],
+ "voice": [
+  {
+   "id": "vo01",
+   "t": 0.2,
+   "dur": 3.35,
+   "file": "vo/01.wav",
+   "text": "The air can't keep up with the ground."
+  },
+  {
+   "id": "vo02",
+   "t": 5.333333333333333,
+   "dur": 3.39,
+   "file": "vo/02.wav",
+   "text": "It is pulled along only by friction, so for the first hours it is left behind."
+  },
+  {
+   "id": "vo03",
+   "t": 9.7,
+   "dur": 3.61,
+   "file": "vo/03.wav",
+   "text": "The ground moves through it at about a thousand and forty miles an hour."
+  },
+  {
+   "id": "vo04",
+   "t": 15.7,
+   "dur": 4.233,
+   "file": "vo/04.wav",
+   "text": "The strongest gust ever measured was about two hundred and fifty miles an hour."
+  },
+  {
+   "id": "vo05",
+   "t": 22.3,
+   "dur": 6.54,
+   "file": "vo/05.wav",
+   "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air."
+  },
+  {
+   "id": "vo06",
+   "t": 29.8,
+   "dur": 3.05,
+   "file": "vo/06.wav",
+   "text": "Winds like that would strip the surface, and they'd only be the beginning."
+  },
+  {
+   "id": "vo07",
+   "t": 34.666666666666664,
+   "dur": 2.29,
+   "file": "vo/07.wav",
+   "text": "If you're enjoying this, tap like and follow."
+  },
+  {
+   "id": "vo08",
+   "t": 37.9,
+   "dur": 3.11,
+   "file": "vo/08.wav",
+   "text": "And then the oceans start to move."
+  }
+ ]
+}

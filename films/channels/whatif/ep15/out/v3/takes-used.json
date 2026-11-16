@@ -1,0 +1,65 @@
+{
+ "sources": {
+  "A": "voice-owner-spoken/Part A 1st half .m4a (cleaned, sentence-cut by word alignment, last take of each sentence kept)",
+  "V": "voice-owner-spoken/Valerio St 3.m4a (cleaned; first take of each phrase)"
+ },
+ "clean": "clarity.py --style normal --rumble, then debreath.py between aligned words",
+ "takes": [
+  {
+   "line": "vo01",
+   "kind": "open",
+   "take": "V.p3_open",
+   "sub_take": null,
+   "text": "The air can't keep up with the ground."
+  },
+  {
+   "line": "vo02",
+   "kind": "sent",
+   "take": "A.s023",
+   "sub_take": null,
+   "text": "It is pulled along only by friction, so for the first hours it is left behind."
+  },
+  {
+   "line": "vo03",
+   "kind": "sent",
+   "take": "standin.u_ground",
+   "sub_take": null,
+   "text": "The ground moves through it at about a thousand and forty miles an hour."
+  },
+  {
+   "line": "vo04",
+   "kind": "sent",
+   "take": "standin.u_gust",
+   "sub_take": null,
+   "text": "The strongest gust ever measured was about two hundred and fifty miles an hour."
+  },
+  {
+   "line": "vo05",
+   "kind": "sent",
+   "take": "A.s026",
+   "sub_take": null,
+   "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air."
+  },
+  {
+   "line": "vo06",
+   "kind": "sent",
+   "take": "A.s027",
+   "sub_take": null,
+   "text": "Winds like that would strip the surface, and they'd only be the beginning."
+  },
+  {
+   "line": "vo07",
+   "kind": "cta",
+   "take": "V.ask_follow",
+   "sub_take": "V.ask_sub",
+   "text": "If you're enjoying this, tap like and follow."
+  },
+  {
+   "line": "vo08",
+   "kind": "cliff",
+   "take": "V.p3_cliff",
+   "sub_take": null,
+   "text": "And then the oceans start to move."
+  }
+ ]
+}
