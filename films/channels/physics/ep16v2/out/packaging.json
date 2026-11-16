@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "format": "short",
+  "hook": "One clap crosses your kitchen in about a hundredth of a second. Slow time 1,000 times and sound creeps about a foot a second, so you can watch it reach the window.",
+  "titles": [
+    {
+      "text": "Watch a Clap Cross a Kitchen",
+      "mechanism": "visual paradox"
+    },
+    {
+      "text": "Sound Creeps a Foot a Second When You Slow Time 1,000×",
+      "mechanism": "scale shock"
+    },
+    {
+      "text": "What Is a Clap, Really?",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "The Hummingbird Frozen Mid-Wingbeat",
+      "mechanism": "curiosity"
+    },
+    {
+      "text": "How Long Does a Clap Take to Cross a Kitchen?",
+      "mechanism": "unanswered question"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "the kitchen with the drawn sound ring, and a zoom circle on the hummingbird frozen mid-wingbeat at the window",
+      "composition": "kitchen wide, the ring crossing it, a magnifier circle over the lower middle joined to the feeder",
+      "lighting": "golden daylight",
+      "trigger": "curiosity",
+      "text": "A clap still crossing / 10,000× slower",
+      "complements": "adds the frozen bird the title does not mention"
+    },
+    {
+      "id": "B",
+      "subject": "two palms meeting, the skin rippling outward",
+      "composition": "extreme close-up",
+      "lighting": "warm kitchen light",
+      "trigger": "delight",
+      "text": "",
+      "complements": "shows the clap itself"
+    },
+    {
+      "id": "C",
+      "subject": "the hummingbird frozen at the feeder, the faint ring touching the glass",
+      "composition": "bird centre",
+      "lighting": "daylight",
+      "trigger": "wonder",
+      "text": "",
+      "complements": "shows the end of the journey"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 88,
+        "curiosity": 90,
+        "clarity": 86,
+        "synergy": 88,
+        "originality": 82,
+        "accuracy": 94,
+        "mobile": 90,
+        "satisfaction": 88
+      },
+      "note": "The zoom circle gives a second mystery (why is the bird frozen?). The words do not repeat the title."
+    },
+    {
+      "title": 3,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 80,
+        "curiosity": 82,
+        "clarity": 78,
+        "synergy": 82,
+        "originality": 70,
+        "accuracy": 92,
+        "mobile": 86,
+        "satisfaction": 82
+      },
+      "note": "Clean, but the clap is missing."
+    },
+    {
+      "title": 2,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 72,
+        "curiosity": 76,
+        "clarity": 74,
+        "synergy": 72,
+        "originality": 66,
+        "accuracy": 94,
+        "mobile": 82,
+        "satisfaction": 78
+      },
+      "note": "Close-up skin is a weaker scroll-stopper."
+    }
+  ],
+  "winner": {
+    "title": "Watch a Clap Cross a Kitchen",
+    "thumbnail": "A",
+    "thumbnailText": "A clap still crossing",
+    "why": "A clap crossing a room is the hook; the circled hummingbird adds the 'how is that possible' detail. The video delivers both."
+  },
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
+  },
+  "thumbnailFile": "reality-rulebook-s3p4-cover.jpg",
+  "chatgptPrompt": "(not used: the cover is made in code from the owner's ChatGPT key images K3 and K4; see ep16v2/src/cover_p4.py)",
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "note": "Cover is the owner's AI key images (K3 wide kitchen with the drawn ring, K4 the hummingbird) with a zoom circle and words added in code, inside the centre 3:4 band; the words do not repeat the title. The sound ring is drawn, not photographed.",
+  "postingCopyLines": [
+    "Kitchen footage made with AI. The sound ring is drawn.",
+    "Cover made with AI."
+  ],
+  "shortsCover": {
+    "text": "A clap still crossing",
+    "art": "ep16v2/src/cover_p4.py (K3 + K4)"
+  }
+}
