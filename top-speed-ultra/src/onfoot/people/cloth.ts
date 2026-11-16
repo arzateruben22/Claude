@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import { Fabric, Quality } from './params';
 import { NOISE } from './skin';
 
-export const FABRIC_ID: Record<Fabric, number> = { satin: 0, cotton: 1, denim: 2, leather: 3, knit: 4, wool: 5, linen: 6 };
+export const FABRIC_ID: Record<Fabric, number> = { satin: 0, cotton: 1, denim: 2, leather: 3, knit: 4, wool: 5, linen: 6, fur: 7 };
 
 export interface ClothMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: Record<string, THREE.IUniform> }
 
@@ -23,6 +23,8 @@ export function clothMaterial(color: number, fabric: Fabric, quality: Quality, a
     knit: { roughness: 0.95, sheen: 0.8, sheenRoughness: 0.85, specularIntensity: 0.2 },
     wool: { roughness: 0.92, sheen: 0.7, sheenRoughness: 0.85, specularIntensity: 0.25 },
     linen: { roughness: 0.84, sheen: 0.4, sheenRoughness: 0.8, specularIntensity: 0.3 },
+    // (pack, 2026-11-12) faux fur: matt, a soft pale sheen at grazing angles (the pile's tips catching the light)
+    fur: { roughness: 1, sheen: 1, sheenRoughness: 0.9, specularIntensity: 0.08, envMapIntensity: 0.5 },
   };
   const base = new THREE.Color(color);
   const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, envMapIntensity: 0.7, side: THREE.DoubleSide, ...P[fabric] }) as ClothMaterial;
@@ -92,6 +94,16 @@ if (fw > 0.01) {
 #elif FABRIC == 5
   H += (vnoise(hp * 1.3) - 0.5) * 0.08 * fine;
   c *= 0.95 + 0.1 * vnoise(hp * 0.5);
+#elif FABRIC == 7
+  // (pack) faux fur: a deep pile. Tufts a few millimetres across (their tips lighter, the gaps between them dark),
+  // longer locks over them that lean down, and a strong bump so the surface never reads as a smooth shell
+  vec2 tuft = cells(hp * 0.22 + vec3(0.0, vnoise(hp * 0.05) * 2.0, 0.0));
+  float lock = vnoise(hp * vec3(0.16, 0.05, 0.16) + 7.0), fuzz = vnoise(hp * 0.9);
+  float pile = smoothstep(0.0, 0.5, tuft.y) * (0.6 + 0.4 * lock);
+  c *= 0.62 + 0.5 * pile + 0.12 * (fuzz - 0.5) * fine;
+  c = mix(c, c * vec3(0.8, 0.72, 0.62), 0.5 * (1.0 - pile));          // warmer and darker down in the pile
+  H += (pile * 1.4 + (fuzz - 0.5) * 0.5 * fine + (lock - 0.5) * 1.2) * mix(0.35, 1.0, mid);
+  rough = 1.0;
 #else
   // linen: slubs both ways, more creasing
   float sl = vnoise(hp * vec3(0.05, 1.8, 0.05)) + vnoise(hp * vec3(1.8, 0.05, 1.8));
@@ -99,7 +111,11 @@ if (fw > 0.01) {
   H -= pow(0.5 + 0.5 * sin(vnoise(hp * 0.04) * 18.0), 6.0) * 0.5 * mid;
 #endif
 // the hem band and its stitch line
+#if FABRIC == 7
+if (edge < 0.0) {
+#else
 if (edge < 10.0) {
+#endif
   float st = smoothstep(0.55, 0.0, abs(edge - 6.0)) * step(0.45, fract((hp.x + hp.y + hp.z) * 0.35));
   c = mix(c, c * 1.25 + 0.02, st * mid * 0.6);
   H += smoothstep(9.0, 2.0, edge) * 0.25 * mid;

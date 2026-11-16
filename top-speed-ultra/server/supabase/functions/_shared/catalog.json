@@ -328,13 +328,14 @@
     },
     {
       "sku": "cast-pack-duo",
-      "name": "Character Pack (two drivers)",
+      "name": "Chad & Chadaline Pack",
       "kind": "pack",
-      "price_cents": 500,
+      "price_cents": 2222,
       "currency": "usd",
       "mode": "payment",
       "grants": [
-        "cast-pack-duo-characters"
+        "cast-pack-duo-characters",
+        "cast-pack-duo-scarlatta"
       ],
       "available": false,
       "grants_ready": false,
