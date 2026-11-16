@@ -260,3 +260,4 @@ STATE 09:40 UTC: weekly 0.46 (burn slowed ~2 %/h), 5h 0.13. CAST FX4 repair1 (09
 STATE 10:01 UTC: weekly 0.47, 5h 0.15. CAST FX4 repair1 (09:58), THRUST (09:59), SMOOTH (09:59).
 STATE 10:23 UTC: weekly 0.48, 5h 0.17. CAST FX4 repair1 (10:14), THRUST (10:17), SMOOTH (10:21).
 STATE 10:45 UTC: weekly 0.48, 5h 0.20. CAST FX4 repair1 (10:35), THRUST (10:38), SMOOTH (10:40).
+STATE 11:07 UTC: weekly 0.49, 5h 0.23. CAST FX4 repair1 (11:05). THRUST builder DONE -> judges (11:01). SMOOTH (10:57).
