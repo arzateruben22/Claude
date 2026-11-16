@@ -452,3 +452,9 @@ The hero's water now runs through the rest of the page, in the same cream and li
 - **Shop, Services and Skin science:** a soft band of water and light behind each heading, fading out before the content. About keeps its own light.
 - **Moving light** (`js/water.js`): light drifts slowly across the water, drawn in code, so there's nothing to download. A ring spreads wherever someone taps open background, including on the hero, but never on a button, link, field or text. It only runs while that part of the page is on screen, and stands still with reduced motion on.
 - Both pictures were made in ChatGPT in the hero's style. The originals are in `marketing/source/water-rose.png` and `water-open.png`.
+
+## The stone fountain front page (Nov 16)
+
+- **The front page** is now her logo carved in stone, standing in a pool (`img/hero/hero-stone.webp`, from ChatGPT; original in `marketing/source/hero-stone.png`). It replaced the cream clip, whose original stays in `marketing/source/hero-phone-higgsfield.mp4`. There's no video: `js/water.js` keeps the pool moving. Rings spread from the statue's base every few seconds, as if water were falling in. A drop lands somewhere else in the pool now and then, light plays on the water, and a tap on the water sends a ring. A Higgsfield clip of the stone fountain can replace this later.
+- **The light on the water** (front page, Book, FAQ, Contact and the bands) was redone to look like water rather than a net. A few slow waves bend the light into soft, wavy lines that thicken, thin and drift, worked out on a coarse grid and smoothed. It runs at about 25 frames a second, only while on screen.
+- **Colours:** the front page is stone beige (`#CCB397`, lit softly from the top left); the pictures further down are still the peach water.
