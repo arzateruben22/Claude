@@ -3107,9 +3107,14 @@ await group('phone', async (use) => {
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     return out.join('; ');
   });
-  // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
-  // the Corsa and the OC Hypercar carry its named parts (the two dials' displays, the knurled rotary rings, the thumb
-  // pads, the 12 o'clock stripe, carbon, Alcantara, stitching, the shift lights' three banks); the Brio and the Vela E
+  // the luxury sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached";
+  // 2026-11-16: "I just want the hypercar and Chad car to only have it and the other cars have default sports steering
+  // wheel"): the OC Hypercar carries its named parts (the two dials' displays, the knurled rotary rings, the thumb pads,
+  // the 12 o'clock stripe, carbon, Alcantara, stitching, the shift lights' three banks, the premium centre); the Rossini
+  // GT and the Corsa the default sport wheel's (the thumb pads, the stripe, stitching, Nappa, the brushed graphite spokes,
+  // their grips: the GT perforated Nappa, the Corsa Alcantara, the simpler centre) and none of the dials, knurled rings,
+  // premium cover, carbon chevron, rim carbon or shift lights, no dials state, and the revs fed to them light nothing and
+  // throw nothing; their wheel no more draw calls or triangles than the Hypercar's. The Brio and the Vela E
   // keep their own wheels with the thumb pads and no dials. The left dial shows the handling profile and is drawn only
   // when its word changes: Arcade, Sport, Sim and the suite's own value in turn (at SUITE_HANDLING 0.15 the first step
   // and at 0.9 the last one ask for the word already shown, so those steps must draw nothing), then nothing new while
@@ -3124,31 +3129,47 @@ await group('phone', async (use) => {
   await check('steering wheel: each car\'s parts by name, the centre\'s included; the left dial follows the profile and redraws only on a change; shift lights', async () => {
     const HUB = ['wheel-hub-cover', 'wheel-hub-bezel', 'wheel-hub-stitch', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-gap', 'wheel-hub-badge'];
     const SIMPLE = ['wheel-hub-bezel', 'wheel-hub-insert', 'wheel-hub-accent', 'wheel-hub-gap', 'wheel-hub-badge'];
-    const SPORT = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR', ...HUB];
+    const LUX = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-thumb-pads', 'wheel-stripe', 'carbon', 'alcW', 'stitch', 'led', 'ledA', 'ledR', ...HUB];
+    const DEFAULT = { 'rossini-gt': ['nappaPerf'], 'rossini-corsa': ['alcW'] };
+    const LUX_ONLY = ['wheel-dial-left', 'wheel-dial-right', 'wheel-knurl', 'wheel-hub-cover', 'carbon', 'led', 'ledA', 'ledR'];
     const ACCENT = { 'rossini-gt': 0xc8874c, 'rossini-corsa': 0xf0c020, 'oc-hyper': 0x7cc8ff, 'rossini-brio': 0x8fb0e0, 'vela-e': 0x4fb3ff };
     // the wheel's triangle budget: at most 40 % over the wheel of c3962c5 (the live v14) at the suite's phone tier
     // (GT 13,616; Corsa and Hypercar 10,552, PROJECT_OC_PROGRESS.md 2026-11-11)
     const BUDGET = { 'rossini-gt': 13616 * 1.4, 'rossini-corsa': 10552 * 1.4, 'oc-hyper': 10552 * 1.4 };
     const out = [];
-    for (const car of ['rossini-gt', 'rossini-corsa', 'oc-hyper', 'rossini-brio', 'vela-e']) {
+    let luxCost = null;
+    for (const car of ['oc-hyper', 'rossini-gt', 'rossini-corsa', 'rossini-brio', 'vela-e']) {
       const r = await game(page, (c) => {
         const g = window.__game; g.car.configure({ ...g.car.config, car: c });
-        const n = [], w = g.car.interior.wheel; let tris = 0;
-        w.traverse((o) => { if (o.isMesh) { n.push(o.name); tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; } });
-        return { names: n, tris, accent: w.getObjectByName('wheel-hub-accent')?.material.color.getHex(), badge: !!w.getObjectByName('wheel-hub-badge')?.material.map };
+        const ck = g.car.interior, n = [], w = ck.wheel, chev = ck.group.userData.materials?.hubCarbon; let tris = 0, chevron = false;
+        w.traverse((o) => { if (o.isMesh) { n.push(o.name); tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; if (chev && o.material === chev) chevron = true; } });
+        // the revs fed to the wheel at 92 % of the redline: a wheel without shift lights lights nothing and throws nothing
+        let fed = 'ok';
+        try { ck.setInstruments({ rpmFrac: 0.92 }); ck.update(0); ck.setInstruments({ rpmFrac: 0.3 }); ck.update(0); } catch (e) { fed = String(e); }
+        return { names: n, tris, chevron, fed, dials: w.userData.dials ?? null, accent: w.getObjectByName('wheel-hub-accent')?.material.color.getHex(), badge: !!w.getObjectByName('wheel-hub-badge')?.material.map };
       }, car);
       const names = r.names;
-      const own = car === 'rossini-brio' || car === 'vela-e', want = own ? ['wheel-thumb-pads', ...SIMPLE] : SPORT;
+      const own = car === 'rossini-brio' || car === 'vela-e', lux = car === 'oc-hyper', def = !own && !lux;
+      const want = own ? ['wheel-thumb-pads', ...SIMPLE] : lux ? LUX : ['wheel-thumb-pads', 'wheel-stripe', 'stitch', 'wheelNappa', 'spokeW', ...DEFAULT[car], ...SIMPLE];
       const missing = want.filter((k) => !names.includes(k));
       expect(!missing.length, `${car}: no ${missing.join(', ')} (has ${names.join(', ')})`);
       expect(!own || !names.includes('wheel-dial-left'), `${car}: carries the sport wheel's dials`);
       expect(!own || !names.includes('wheel-hub-cover'), `${car}: carries the sport wheel's cover`);
+      expect(r.fed === 'ok', `${car}: feeding the revs threw ${r.fed}`);
+      if (lux) { expect(r.chevron && r.dials, `${car}: the luxury wheel without its carbon chevron or dials state`); luxCost = { meshes: names.length, tris: r.tris }; }
+      if (def) {
+        const extra = LUX_ONLY.filter((k) => names.includes(k));
+        expect(!extra.length && !r.chevron, `${car}: the default sport wheel carries the luxury wheel's ${[...extra, ...(r.chevron ? ['carbon chevron'] : [])].join(', ')}`);
+        expect(r.dials === null, `${car}: the default sport wheel has dials state ${JSON.stringify(r.dials)}`);
+        expect(luxCost && names.length <= luxCost.meshes && r.tris <= luxCost.tris, `${car}: the default wheel's ${names.length} meshes and ${r.tris} triangles, over the Hypercar's luxury wheel's ${JSON.stringify(luxCost)}`);
+      }
       expect(r.accent === ACCENT[car], `${car}: the centre's accent is #${(r.accent ?? 0).toString(16)}, not #${ACCENT[car].toString(16)}`);
       expect(r.badge, `${car}: the badge has no picture`);
       expect(!BUDGET[car] || r.tris <= BUDGET[car], `${car}: the wheel has ${r.tris} triangles, over its budget of ${Math.round(BUDGET[car])}`);
-      out.push(`${car} ${names.length} meshes, ${r.tris} triangles, accent #${r.accent.toString(16)}`);
+      out.push(`${car} ${lux ? 'luxury' : def ? 'default sport' : 'own'} ${names.length} meshes, ${r.tris} triangles, accent #${r.accent.toString(16)}`);
     }
-    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
+    // the dials and the shift lights: the Hypercar's (the only luxury wheel)
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'oc-hyper' }); });
     const dialState = () => game(page, () => {
       const w = window.__game.car.interior.wheel, d = w.userData.dials, m = w.getObjectByName('wheel-dial-left');
       return { left: d?.left, right: d?.right, draws: d?.draws, ver: m?.material.emissiveMap.version };
@@ -3176,6 +3197,7 @@ await group('phone', async (use) => {
       return [0.5, 0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0); return ['led', 'ledA', 'ledR'].map((n) => (mat(n).emissiveIntensity > 0 ? 1 : 0)).join(''); });
     });
     expect(lit.join(',') === '000,110,111', `shift lights at 50/80/92 % of the redline: ${lit.join(', ')} (want 000, 110, 111)`);
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });
     return `${out.join(', ')}; left dial ${seen.join(', ')}; right "${b.right}"; no redraw while unchanged; shift lights ${lit.join(' ')}`;
   });
   // the centre against the driver's arms (owner, 2026-11-11: "make sure it doesn't ... act glitchy when 1st person POV
@@ -3250,7 +3272,8 @@ await group('phone', async (use) => {
   // GT's (the tach's live window and its two side displays) and the OC Hypercar's (its wide display) show the game's
   // own state: the gear the car is in, the handling profile, TCS and ABS, and with Go To set the HUD's own next turn,
   // its distance and the destination; Clear route takes them away. With nothing changing (paused) no display redraws.
-  // The redline lights with the wheel's red shift lights: the GT's glow on the tach, the hypercar's arc.
+  // The redline lights with the wheel's red shift lights: the hypercar's arc; the GT's glow on the tach lights by the same
+  // test, though its default sport wheel has no shift lights (2026-11-16).
   await check('cluster: the shown fields follow the game state (gear, profile, TCS/ABS, Go To next turn and destination); no redraw while nothing changes; the redline lights with the shift lights', async () => {
     const out = [];
     // its own drive: the menu's demo drive behind the menu ignores setPaused, so run alone (--check=cluster) the
@@ -3294,9 +3317,10 @@ await group('phone', async (use) => {
       // the redline, read in one go (the frame loop feeds the real revs between calls)
       const red = await game(page, () => {
         const c = window.__game.car.interior, d = c.group.userData.dash, glow = c.group.getObjectByName('tach-redline');
-        return [0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0.2); return `${c.wheel.getObjectByName('ledR').material.emissiveIntensity > 0 ? 'R' : '-'}${glow ? (glow.material.opacity > 0 ? 'G' : '-') : (d.main.shown.redline === 'lit' ? 'A' : '-')}`; });
+        const ledR = c.wheel.getObjectByName('ledR');
+        return [0.8, 0.92].map((rpmFrac) => { c.setInstruments({ rpmFrac }); c.update(0.2); return `${ledR && ledR.material.emissiveIntensity > 0 ? 'R' : '-'}${glow ? (glow.material.opacity > 0 ? 'G' : '-') : (d.main.shown.redline === 'lit' ? 'A' : '-')}`; });
       });
-      expect(red.join(',') === (car === 'oc-hyper' ? '--,RA' : '--,RG'), `${car}: the red shift lights and the redline at 80 / 92 %: ${red.join(', ')}`);
+      expect(red.join(',') === (car === 'oc-hyper' ? '--,RA' : '--,-G'), `${car}: the red shift lights and the redline at 80 / 92 %: ${red.join(', ')}`);
       out.push(`${car}: gear ${gear}, profile ${prof.join(' then ')}, TCS/ABS ${assists}, Go To "${nav.dest}" ${nav.turn} ${nav.next}, no redraw paused (${d0}), redline ${red.join(' ')}`);
     }
     await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); });

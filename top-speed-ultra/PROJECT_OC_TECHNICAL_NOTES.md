@@ -260,6 +260,10 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   (`delta × steerRatio`, clamped to ±2.2 rad), the hands follow it, and the tach needle takes the rpm. Build cost in
   SwiftShader: about 0.4 s car, 0.6 s cockpit, 1 s hands (the hands' SDF is meshed at load and cached per
   presentation and quality). `Cockpit.ts` and `Instruments.ts` are the previous look and are no longer used.
+  - The steering wheel's tier is a per-car field, `cockpit.ts` Theme `wheelTier` (2026-11-16): `'luxury'` (the premium
+    sport wheel: dials, knurled rings, shift lights, the premium centre) on the OC Hypercar only, `'sport'` (the default
+    sport wheel, `wheel-sport.ts` `addDefaultSpokes` and the simpler centre) on the GT and the Corsa, `'own'` on the
+    Brio and the Vela E; the Scarlatta M1 (the Chad car) sets `'luxury'` with its own trim when it is built.
 - **Traffic bodies (`traffic/carModels.ts`).** All seven classes come from `src/preview/traffic.ts`
   `trafficParts(kind, 'phone', { wheels: false })`: `paint` (the body loft and end caps, no colour attribute so the
   instance colour paints it), `glass` (the band), `trim` (vertex-coloured, one shared material and one more
