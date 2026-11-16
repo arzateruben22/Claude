@@ -880,7 +880,7 @@ function Chevron({ left = false }: { left?: boolean }) {
   return <i className="chev" aria-hidden="true"><svg viewBox="0 0 8 14" width="8" height="14"><path d={left ? 'M7 1L1 7l6 6' : 'M1 1l6 6-6 6'} fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg></i>;
 }
 
-function Board({ runs, mode, highlight }: { runs: { score: number; distance: number; top: number; streak: number; when: number; road: string }[]; mode: Mode; highlight: number }) {
+function Board({ runs, mode, highlight }: { runs: { score: number; distance: number; top: number; streak: number; when: number; road: string; tune?: string }[]; mode: Mode; highlight: number }) {
   return (
     <div className="board">
       <p className="eyebrow">Local leaderboard · this device only</p>
@@ -888,7 +888,7 @@ function Board({ runs, mode, highlight }: { runs: { score: number; distance: num
         <ol>{runs.slice(0, 5).map((r, i) => (
           <li key={r.when + ':' + i} className={i + 1 === highlight ? 'me' : ''}>
             <b>{r.score.toLocaleString()}</b>
-            <span>{r.top} mph{mode === 'survival' ? ` · ${r.streak.toFixed(1)} s streak` : ''}</span>
+            <span>{r.top} mph{mode === 'survival' ? ` · ${r.streak.toFixed(1)} s streak` : ''}{r.tune === 'Unleashed' ? <em className="board-tune" data-tune="unleashed"> · OC Hypercar Unleashed</em> : ''}</span>
             <time>{new Date(r.when).toLocaleDateString()}</time>
           </li>
         ))}</ol>

@@ -24,8 +24,11 @@ export const FOUNDER_ICE = { id: 'founder-ice', name: 'Founder Ice', core: 0x5eb
 
 // The plaque's number. THE ONE FUNCTION THE STORE FILLS: the serial on this profile's `hypercar-founder` entitlement
 // (assigned by the store's server when the payment succeeds, 1 up, never reused; 0 is kept for owner-mode testing).
-// There is no entitlement on this branch, so there is no number.
-export function founderSerial(): number | null { return null; }
+// The game sets it from the store's entitlement rows (Game.ts, src/store/entitlements.ts serialOf) whenever they
+// change; no number is ever made up on the device, and test purchases have none.
+let storeSerial: number | null = null;
+export function setFounderSerial(n: number | null) { storeSerial = typeof n === 'number' && Number.isInteger(n) && n >= 1 ? n : null; }
+export function founderSerial(): number | null { return storeSerial; }
 
 // what the plaques, the garage card and the run card print
 export function plaqueNumber(serial = founderSerial()) {
