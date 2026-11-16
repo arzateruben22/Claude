@@ -142,7 +142,8 @@ const shelfCard = (p: typeof SHELF[number]) => shelfLine(p) + ` [id: ${p.id}]` +
 // website says which it runs (js/site-config.js, ?preview=v3 included), else
 // the SITE_VERSION secret. Each is cached on its own.
 type Site = "v2" | "v3";
-const siteOf = (v: unknown): Site => v === "v3" || v === "v2" ? v : Deno.env.get("SITE_VERSION") === "v3" ? "v3" : "v2";
+// v4 books on the website too (js/site-config.js), so it reads as v3
+const siteOf = (v: unknown): Site => v === "v3" || v === "v4" ? "v3" : v === "v2" ? "v2" : /^v[34]$/.test(Deno.env.get("SITE_VERSION") ?? "") ? "v3" : "v2";
 const factsFor = (site: Site) => site === "v3" ? FACTS_V3 : FACTS;
 const stableFor = (site: Site) => [
   PROMPT,

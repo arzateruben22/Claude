@@ -563,3 +563,13 @@ The cream swirl on linen read as pudding, so New Clients Start Here now uses the
 - The Brazilians use the Brazilian wax photo, and the underarm uses the body wax photo.
 
 The cleanser in "Picked for your skin" uses the shop's own photo. The "Included with Ageless" tag is outlined, so it reads on the light list.
+
+## The app's chat: the website's full knowledge (Nov 16)
+
+- **The topic buttons** under the app's chat were dark on a near-black bar and hard to see. The bar is now soft white, and the buttons are outlined in charcoal.
+- **The same knowledge as the website's chat.** The app now carries everything Ask Lumevina knows: her instructions, the studio's facts and policies (prices, deposits, the 48-hour rule, the $43 same-day fee, Saturdays, hours, parking, shipping), her Skin Playbook, her hard lines and the whole shelf. It's rebuilt from `knowledge/eval/bundle.json` each time the app is built.
+- **It knows Sofia:** her Glow membership, her banked facial, her next visit, her points and her welcome kit.
+- **Hand-offs:** the website's own rules decide what goes to Evelyn: reactions, pregnancy, medication, conditions, photos to read, and anyone who asks for her. Those show "Sent to Evelyn · reply within 24 hours", then a sample reply from her, sped up for the demo.
+- **When Claude answers in the preview,** answers stream in with follow-up buttons, and with "Add" buttons when it names a product.
+- **Without Claude** (where the viewer's account can't answer), the built-in answers reply instead. These were also brought up to date: hours, shipping, the change and cancel rules, running late, and Saturdays.
+- **A fix on the website too:** the full version (with booking and membership) was giving its chat the "book on GlossGenius" facts. Now it gets the "book right here" facts, on the website and on the server.

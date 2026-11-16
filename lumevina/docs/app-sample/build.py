@@ -2,7 +2,7 @@
 
 Run:  python3 build.py            (writes index.html next to this file)
 """
-import base64, io, os
+import base64, io, json, os
 from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -46,6 +46,15 @@ def raw(rel, mime):
         return uri(f.read(), mime)
 
 
+def ask_bundle():
+    """knowledge/eval/bundle.json (from knowledge/scripts/build-bundle.mjs): her instructions, the studio's facts
+    and policies, her Skin Playbook, her hard lines and the shelf, as window.LUMEVINA_ASK_BUNDLE"""
+    b = json.load(open(os.path.join(SITE, "knowledge", "eval", "bundle.json")))
+    keep = {k: b.get(k) for k in ("builtAt", "prompt", "facts", "factsV3", "knowledge", "knowledgeEmpty", "general", "hardLines", "voice")}
+    keep["shelf"] = [{k: p.get(k) for k in ("id", "name", "brand", "type", "size", "price", "about")} for p in b["shelf"]]
+    return "/* knowledge/eval/bundle.json */\nwindow.LUMEVINA_ASK_BUNDLE = " + json.dumps(keep, ensure_ascii=False).replace("<", "\\u003c") + ";"
+
+
 FIELDS = {
     "FONT": base64.b64encode(open(os.path.join(SITE, "fonts", "inter-var.woff2"), "rb").read()).decode(),
     "TYPOS_JS": open(os.path.join(SITE, "js", "ask-typos.js")).read(),   # shared with the website chat
@@ -61,6 +70,9 @@ FIELDS = {
     "P_CLEANSER": img("img/products/glymed-plus-glycolic-facial-cleanser.webp", 336, 208),   # the shop's own photos (js/catalog.js)
     "P_ESSENCE": img("img/products/glymed-plus-revitalizing-essence-nad.webp", 336, 208),
     "P_SPF": img("img/retail/daily-spf-30.webp", 336, 208),
+    # the website chat's rules, and what it knows (as scripts/build-single-file.mjs puts it in the website)
+    "RULES_JS": open(os.path.join(SITE, "js", "ask-rules.js")).read(),
+    "ASK_BUNDLE": ask_bundle(),
 }
 
 html = open(os.path.join(HERE, "app.tpl.html")).read()

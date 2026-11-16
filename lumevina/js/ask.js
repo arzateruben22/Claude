@@ -1107,7 +1107,8 @@
     var ctrl = typeof AbortController === "function" ? new AbortController() : null;
     var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, ms || 20000) : null;
     /* which version the website runs (v2: booking on GlossGenius; v3: here, with membership and points) */
-    body.site = (window.LumevinaFeatures && window.LumevinaFeatures.version) || "v2";
+    /* v3 and v4 both book on this website (js/site-config.js), so both get the booking-here facts */
+    body.site = (window.LumevinaFeatures && window.LumevinaFeatures.version) === "v2" || !window.LumevinaFeatures ? "v2" : "v3";
     return fetch(ENDPOINT, { method: "POST", headers: headers, body: JSON.stringify(body), signal: ctrl ? ctrl.signal : undefined })
       .then(function (res) { if (!res.ok) throw new Error("ask " + res.status); return res.json(); })
       .finally(function () { if (timer) clearTimeout(timer); });
@@ -1202,7 +1203,8 @@
     ].filter(Boolean).join("\n\n");
   };
   var previewRules = function () {
-    var v3 = window.LumevinaFeatures && window.LumevinaFeatures.version === "v3", who = me();
+    /* booking on this website (v3, and v4 with it): the booking-here facts */
+    var v3 = !!(window.LumevinaFeatures && window.LumevinaFeatures.version && window.LumevinaFeatures.version !== "v2"), who = me();
     return [
       BUNDLE.prompt,
       "# About the studio, FAQ and policies\n\n" + (v3 ? BUNDLE.factsV3 : BUNDLE.facts),
