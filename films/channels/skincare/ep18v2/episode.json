@@ -47,114 +47,104 @@
  },
  "caps": [
   [
-   0.435,
+   0.545,
    3.59,
    "Your skin is still healing after it looks healed."
   ],
   [
-   4.745,
-   7.87,
+   5.035,
+   8.16,
    "When a small gap in your skin closes,"
   ],
   [
-   7.84,
-   9.925,
+   8.13,
+   10.215,
    "it looks finished in a week or two,"
   ],
   [
-   9.895,
-   11.67,
+   10.185,
+   11.98,
    "but it isn't."
   ],
   [
-   13.12,
-   16.53,
+   13.82,
+   17.29,
    "Underneath, the work has already begun."
   ],
   [
-   18.035,
-   18.92,
+   19.045,
+   19.93,
    "First,"
   ],
   [
-   18.89,
-   23.55,
+   19.9,
+   24.58,
    "your body seals it and calls in its cleaning crews."
   ],
   [
-   24.975,
-   27.52,
+   26.295,
+   28.84,
    "New cells creep in from the edges,"
   ],
   [
-   27.49,
-   31.57,
+   28.81,
+   32.91,
    "and repair cells lay down fresh collagen."
   ],
   [
-   33.03,
-   38.39,
+   34.66,
+   40.2,
    "Quickly, a little messily, like scaffolding."
   ],
   [
-   40.19,
-   41.835,
+   42.015,
+   43.635,
    "But for months,"
   ],
   [
-   41.805,
-   43.655,
+   43.605,
+   45.455,
    "sometimes a year or more,"
   ],
   [
-   43.625,
-   47.61,
+   45.425,
+   49.27,
    "the skin keeps quietly rebuilding."
   ],
   [
-   49.065,
-   49.61,
+   51.045,
+   51.59,
    "Then,"
   ],
   [
-   49.58,
-   54.545,
+   51.56,
+   56.525,
    "quick collagen is traded for stronger fibers drawn slowly into line."
   ],
   [
-   54.515,
-   59.54,
+   56.495,
+   61.46,
    "The spot grows flatter and softer, paler."
   ],
   [
-   61.105,
-   61.915,
+   63.135,
+   64.16,
    "Even then,"
   ],
   [
-   61.885,
-   68.64,
+   64.13,
+   70.92,
    "rebuilt skin usually ends up at most around 80% as strong as before."
   ],
   [
-   70.08,
-   76.46,
+   72.57,
+   78.65,
    "So the skin you think of as healed is still being gently rewoven,"
   ],
   [
-   76.43,
-   78.86,
+   78.92,
+   81.45,
    "long after you've forgotten it."
-  ],
-  [
-   80.975,
-   82.965,
-   "If you're feeling a little calmer,"
-  ],
-  [
-   82.935,
-   85.98,
-   "tap like and follow."
   ]
  ],
  "hook": {

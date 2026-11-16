@@ -1,6 +1,6 @@
 # Skin Sense Season 3 · ep18: "Your Skin Is Still Healing After It Looks Healed" (draft; dermatologist sign-off before posting)
 
-About 72-75 s (v2: x1.2 pace), 9:16, ASMR, a REAL person's recorded voice (credit only after she confirms), captions on a dark plate, one continuous camera, no cuts. One skin tone. Hook text: "It's not done healing". No disease or damage words over skin art.
+About 71 s (v2: x1.2 pace), 9:16, ASMR, a REAL person's recorded voice (credit only after she confirms), captions on a dark plate, one continuous camera, no cuts. One skin tone. Hook text: "It's not done healing". No disease or damage words over skin art.
 
 ## hook
 vo: Your skin is still healing after it looks healed. {c1}
@@ -32,5 +32,4 @@ vo: Even then, rebuilt skin usually ends up at most around eighty percent as str
 ## takeaway
 vo: So the skin you think of as healed is still being gently rewoven, long after you've forgotten it. {c10}
 
-## cta
-vo: If you're feeling a little calmer, tap like and follow. (YouTube file: ...tap like and subscribe.) {-}
+(No spoken like/follow ask in this episode: CTA.md, every other episode; the silent pop-up is added by the coordinator.)

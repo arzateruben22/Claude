@@ -14,15 +14,15 @@ for part in spec.split(","):
     for k in range(a, b + 1):
         f = R / d / "build/final-plain-1440/9x16/chunks" / f"{k:03d}.mp4"; assert f.exists(), f; lst.append(f)
 (work / "list.txt").write_text("".join(f"file '{f}'\n" for f in lst))
-sh("ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", work / "list.txt", "-c", "copy", work / f"video-{mode}.mp4")
-DUR = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(work / f"video-{mode}.mp4")], capture_output=True, text=True).stdout.strip()   # the picture sets the length (no -shortest)
+VIN = ["-f", "concat", "-safe", "0", "-i", work / "list.txt"]      # encode straight from the chunk list: no joined 1440 intermediate on disk
+DUR = "%.6f" % sum(float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)], capture_output=True, text=True).stdout.strip()) for f in lst)   # the picture sets the length (sum of the chunks; no -shortest)
 mix = R / f"{ep}v2" / ("mix-yt.m4a" if mode == "youtube" else "mix.m4a")
 if mode == "youtube":
     name = out / f"skin-sense-{n}-9x16-youtube-1440.mp4"
-    sh("ffmpeg", "-y", "-loglevel", "error", "-i", work / f"video-{mode}.mp4", "-i", mix, "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-t", DUR, "-movflags", "+faststart", name)
+    sh("ffmpeg", "-y", "-loglevel", "error", *VIN, "-i", mix, "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-t", DUR, "-movflags", "+faststart", name)
 else:
     name = out / f"skin-sense-{n}-9x16-1080.mp4"
-    sh("ffmpeg", "-y", "-loglevel", "error", "-i", work / f"video-{mode}.mp4", "-i", mix, "-map", "0:v", "-map", "1:a", "-vf", "scale=1080:1920:flags=lanczos", "-c:v", "libx264", "-crf", "17", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-t", DUR, "-movflags", "+faststart", name)
+    sh("ffmpeg", "-y", "-loglevel", "error", *VIN, "-i", mix, "-map", "0:v", "-map", "1:a", "-vf", "scale=1080:1920:flags=lanczos", "-c:v", "libx264", "-crf", "17", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-t", DUR, "-movflags", "+faststart", name)
     prev = out / f"skin-sense-{n}-9x16-1080-preview.mp4"                       # what git keeps: the same picture capped at about 5 Mbps
     sh("ffmpeg", "-y", "-loglevel", "error", "-i", name, "-c:v", "libx264", "-b:v", "5M", "-maxrate", "6M", "-bufsize", "12M", "-preset", "slow", "-c:a", "copy", "-movflags", "+faststart", prev)
 size = name.stat().st_size; print(name.name, round(size / 1e6, 1), "MB")

@@ -14,8 +14,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 2.8,
-   "sha256": "ba3acf2a314e248aba6c7f9201bc50fef9d5efe8aa0d56f4842c51dae41d930d"
+   "dur": 2.81,
+   "sha256": "0eab300ef3c347ef90da2d66180b2dd0e08ba862f3c92c066a8299000377e692"
   },
   {
    "id": "vo02",
@@ -24,8 +24,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 6.88,
-   "sha256": "d8beabdf16316140bf48b26477b5a0c7e0769b5521a47ca4a5d8b7900d5cd077"
+   "dur": 6.87,
+   "sha256": "95252a7b1b40026ac6b3fbb0006e1ff3ed0ea8cf965600eed4c8e6c5820df762"
   },
   {
    "id": "vo03",
@@ -34,8 +34,8 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 3.36,
-   "sha256": "e700c33f2b2e8fa6c21fb273e91d09323b7d5faf71c0a22fef9c0ca54f3a38b9"
+   "dur": 3.49,
+   "sha256": "74a570de8dc7a0efcd27b0e21850b541e4650b949009a0d3b1e459170f265871"
   },
   {
    "id": "vo04",
@@ -44,8 +44,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 5.48,
-   "sha256": "98a05096fd6ac5c31844dbd73f35577a0b272dd48283f9e03abf2e7084b361ac"
+   "dur": 5.49,
+   "sha256": "5c92675848c0dabfe8f270df749e72c0b19c15084b4202508070779eacbcdfd1"
   },
   {
    "id": "vo05",
@@ -54,8 +54,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 6.52,
-   "sha256": "6820100be2720d943bbad5a4357607f1d1a54422965fade639d71bb5ac4be716"
+   "dur": 6.53,
+   "sha256": "a3371b06f4a72684327202dbdb5badda0c5e44e6105a32f7d8ed02433615ce5c"
   },
   {
    "id": "vo06",
@@ -64,8 +64,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 5.64,
-   "sha256": "a2183e96318434a5debfe9e9219b1bfe6b5d022c892be7e1b818e6680dc84cfe"
+   "dur": 5.51,
+   "sha256": "b21fe4e774d989a50b53acc56aa070aad14647d7cae1a2a7de08eca753cbca4e"
   },
   {
    "id": "vo07",
@@ -74,8 +74,8 @@
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 7.39,
-   "sha256": "78dc86d45d6415d92192357348f1354c2c9010dffa5e0f69fcd043775d4180db"
+   "dur": 7.27,
+   "sha256": "fe60a8f4a9cb75f0e0fe159e28a573b1a4eec69549046213662588088401bba1"
   },
   {
    "id": "vo08",
@@ -84,8 +84,8 @@
    "stars": [],
    "phonemes": null,
    "file": "08.wav",
-   "dur": 10.48,
-   "sha256": "d7fc53d48980d4c117a2602644d49af2a2ed065163a3d927d4ef7e6847a058d4"
+   "dur": 10.38,
+   "sha256": "ad33e7c6ad86de18179420e122e38633add75cadce42909330813ddb8391f24b"
   },
   {
    "id": "vo09",
@@ -94,8 +94,8 @@
    "stars": [],
    "phonemes": null,
    "file": "09.wav",
-   "dur": 7.6,
-   "sha256": "9dcb057b969befd72ccce1adaef55c16a5902411c2f01d3ef533f61ce476ebbf"
+   "dur": 7.61,
+   "sha256": "3caa8cedd3727d032fa9a4345330088ee7ab71853ce43a2a68149aedd1fcdd60"
   },
   {
    "id": "vo10",
@@ -104,18 +104,8 @@
    "stars": [],
    "phonemes": null,
    "file": "10.wav",
-   "dur": 8.48,
-   "sha256": "c9fff02ac66f57a3e578a17363ad71d03fadf1b14bfd792600f579420f6bb3c9"
-  },
-  {
-   "id": "vo11",
-   "beat": "cta",
-   "text": "If you're feeling a little calmer, tap like and follow.",
-   "stars": [],
-   "phonemes": null,
-   "file": "11.wav",
-   "dur": 4.96,
-   "sha256": "32504b87c353e46b6c8f707095462214fa6130f3029ae1234c5972f6579599cb"
+   "dur": 8.49,
+   "sha256": "5944c328b5edce5199f77e20b7e5ef8262def9e4c760d1f9e2caf20eb72e6e57"
   }
  ]
 }

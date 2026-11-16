@@ -14,8 +14,8 @@
    "stars": [],
    "phonemes": null,
    "file": "01.wav",
-   "dur": 3.68,
-   "sha256": "b945f917640ab0bf3807d1890f02858bff306e0d416f0c00179def8fff508105"
+   "dur": 3.55,
+   "sha256": "fb2aa9e3aa032cd9c8343c09a47898a073ade9364f088f3fdf461adb0293c55b"
   },
   {
    "id": "vo02",
@@ -24,8 +24,8 @@
    "stars": [],
    "phonemes": null,
    "file": "02.wav",
-   "dur": 3.84,
-   "sha256": "7eee713a29e8b337e5155bb974b121d31d8d4a0ac36f6ad9debde27c9527bbb0"
+   "dur": 3.73,
+   "sha256": "621a4ae3cf9288a3ebe0805bed8332b688a68051b8512ce1c1c64da455aa650d"
   },
   {
    "id": "vo03",
@@ -34,8 +34,8 @@
    "stars": [],
    "phonemes": null,
    "file": "03.wav",
-   "dur": 5.92,
-   "sha256": "b14a7a270f74a967db672b62975efb267a082e233879186a1e24de0bbbd0ea22"
+   "dur": 5.93,
+   "sha256": "458505355546ecfc30fab9b773bdbddf53e4a433d0f3504bc35c1f37bd3f7dd3"
   },
   {
    "id": "vo04",
@@ -44,8 +44,8 @@
    "stars": [],
    "phonemes": null,
    "file": "04.wav",
-   "dur": 7.12,
-   "sha256": "bfb1daffd1f8d1e821bd53d5c80a21e43f09857ac0d7ee8deb7e598b929077b7"
+   "dur": 7.09,
+   "sha256": "81d023b3b6debb7e30a68121ae259786f8142c88bc6dc507611dcbf1e6473972"
   },
   {
    "id": "vo05",
@@ -54,8 +54,8 @@
    "stars": [],
    "phonemes": null,
    "file": "05.wav",
-   "dur": 6.24,
-   "sha256": "0a58df0efc53e15c68f14094e916a8c6391a50e1f77ca013ae370ee7f5fa3c11"
+   "dur": 6.25,
+   "sha256": "490e8efbc2509fa8747cf0e80eeef1a5fa73707d2df0ba84b2b95880a767d9fe"
   },
   {
    "id": "vo06",
@@ -64,8 +64,8 @@
    "stars": [],
    "phonemes": null,
    "file": "06.wav",
-   "dur": 8.8,
-   "sha256": "8983acaf2517e23c3e01f3ade2cf6d7bbdf948c209cbd4cd8dc00a0c085e5de7"
+   "dur": 8.89,
+   "sha256": "c4bb9ec02bf2cdc4efe52c1302c384be9eb7126ed8d4aa0d64cc4c509714b9fb"
   },
   {
    "id": "vo07",
@@ -74,8 +74,8 @@
    "stars": [],
    "phonemes": null,
    "file": "07.wav",
-   "dur": 9.12,
-   "sha256": "978fe4d8d39448fe89b40b439de0bf3a3b3d190bec56cf0843207942499512bf"
+   "dur": 8.99,
+   "sha256": "c199c22734813662972c8ba4b575e6dfa6ad3d78c7edf645f6f9602ba244c725"
   },
   {
    "id": "vo08",
@@ -84,8 +84,8 @@
    "stars": [],
    "phonemes": null,
    "file": "08.wav",
-   "dur": 6.0,
-   "sha256": "da194298d2999dad9839d2488576ace49ae18a83c7e4cb613f3b8d23bd70cc3b"
+   "dur": 6.01,
+   "sha256": "6c20d7fc1fedaf898ffa6c94f8372f0f6989eade6589315b796c3f882e3d64dc"
   },
   {
    "id": "vo09",
@@ -94,8 +94,8 @@
    "stars": [],
    "phonemes": null,
    "file": "09.wav",
-   "dur": 5.44,
-   "sha256": "359f943b874cb13f906c8c1751ac6b3b16b7f29a4c0bcea30393b6cff357024e"
+   "dur": 5.45,
+   "sha256": "6eeb48a1f1a438d50ff2550cae7ff225df023f0c4281e7343d54bffa700cab71"
   },
   {
    "id": "vo10",
@@ -104,8 +104,8 @@
    "stars": [],
    "phonemes": null,
    "file": "10.wav",
-   "dur": 5.52,
-   "sha256": "00bbf076e130124dd413cce3973447f8bd35f2278f9c3f596b077fd1ffd08c9b"
+   "dur": 5.59,
+   "sha256": "c3eadb29659b93c1cebcd91d18857f07e5d0e392bc349c03071447526b48edbf"
   },
   {
    "id": "vo11",
@@ -114,8 +114,8 @@
    "stars": [],
    "phonemes": null,
    "file": "11.wav",
-   "dur": 4.96,
-   "sha256": "32504b87c353e46b6c8f707095462214fa6130f3029ae1234c5972f6579599cb"
+   "dur": 5.04,
+   "sha256": "a72f846dedd4bafe3353a9f760309090c5311fcd62d46ad6121fb6e2aadbaa22"
   }
  ]
 }

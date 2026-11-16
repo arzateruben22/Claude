@@ -8,56 +8,56 @@
    "words": [
     {
      "w": "Every",
-     "start": 0.055,
+     "start": 0.035,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 0.345,
+     "start": 0.325,
      "end": 0.72,
      "heard": true
     },
     {
      "w": "on",
-     "start": 0.77,
+     "start": 0.75,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "you",
-     "start": 0.8,
+     "start": 0.78,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.155,
+     "start": 1.135,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "scheduled",
-     "start": 1.44,
-     "end": 1.92,
+     "start": 1.42,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.91,
-     "end": 2.16,
+     "start": 1.89,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "fall",
-     "start": 2.045,
-     "end": 2.72,
+     "start": 2.025,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "out.",
-     "start": 2.665,
-     "end": 3.36,
+     "start": 2.645,
+     "end": 2.96,
      "heard": true
     }
    ]
@@ -69,56 +69,56 @@
    "words": [
     {
      "w": "Every",
-     "start": 0.27,
+     "start": 0.09,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 0.45,
+     "start": 0.43,
      "end": 0.8,
      "heard": true
     },
     {
      "w": "on",
-     "start": 0.825,
+     "start": 0.805,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.13,
+     "start": 1.11,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "body",
-     "start": 1.215,
-     "end": 1.68,
+     "start": 1.195,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.71,
+     "start": 1.69,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "quietly",
-     "start": 1.925,
+     "start": 1.905,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "keeping",
-     "start": 2.625,
-     "end": 3.12,
+     "start": 2.605,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 3.005,
-     "end": 3.76,
+     "start": 2.95,
+     "end": 3.68,
      "heard": true
     }
    ]
@@ -130,43 +130,43 @@
    "words": [
     {
      "w": "It",
-     "start": 0.15,
+     "start": 0.13,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "grows,",
-     "start": 0.36,
+     "start": 0.34,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "it",
-     "start": 0.985,
+     "start": 0.965,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "pauses,",
-     "start": 1.21,
+     "start": 1.19,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "it",
-     "start": 1.925,
-     "end": 2.08,
+     "start": 1.94,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "rests,",
-     "start": 1.975,
+     "start": 1.97,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.84,
+     "start": 2.82,
      "end": 3.12,
      "heard": true
     },
@@ -178,20 +178,20 @@
     },
     {
      "w": "it",
-     "start": 4.04,
+     "start": 4.02,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "lets",
-     "start": 4.215,
-     "end": 4.72,
+     "start": 4.195,
+     "end": 4.8,
      "heard": true
     },
     {
      "w": "go.",
-     "start": 4.95,
-     "end": 5.6,
+     "start": 4.795,
+     "end": 5.68,
      "heard": true
     }
    ]
@@ -203,92 +203,92 @@
    "words": [
     {
      "w": "On",
-     "start": 0.225,
+     "start": 0.205,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "your",
-     "start": 0.455,
+     "start": 0.435,
      "end": 0.64,
      "heard": true
     },
     {
      "w": "head,",
-     "start": 0.665,
+     "start": 0.645,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "growing",
-     "start": 1.31,
-     "end": 1.84,
+     "start": 1.29,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "can",
-     "start": 1.775,
-     "end": 2.08,
+     "start": 1.695,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "last",
-     "start": 1.975,
-     "end": 2.32,
+     "start": 2.205,
+     "end": 2.4,
      "heard": true
     },
     {
      "w": "for",
-     "start": 2.695,
+     "start": 2.675,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "years.",
-     "start": 2.805,
-     "end": 3.68,
+     "start": 2.785,
+     "end": 4.0,
      "heard": true
     },
     {
      "w": "That's",
-     "start": 4.05,
+     "start": 4.03,
      "end": 4.48,
      "heard": true
     },
     {
      "w": "why",
-     "start": 4.445,
+     "start": 4.425,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "it",
-     "start": 4.775,
+     "start": 4.755,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "can",
-     "start": 4.95,
+     "start": 4.93,
      "end": 5.12,
      "heard": true
     },
     {
      "w": "grow",
-     "start": 5.03,
-     "end": 5.6,
+     "start": 5.01,
+     "end": 5.52,
      "heard": true
     },
     {
      "w": "so",
-     "start": 5.565,
-     "end": 5.84,
+     "start": 5.775,
+     "end": 6.0,
      "heard": true
     },
     {
      "w": "long.",
-     "start": 6.215,
-     "end": 6.8,
+     "start": 6.075,
+     "end": 6.48,
      "heard": true
     }
    ]
@@ -300,62 +300,62 @@
    "words": [
     {
      "w": "On",
-     "start": 0.18,
+     "start": 0.16,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "your",
-     "start": 0.325,
-     "end": 0.56,
+     "start": 0.305,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "eyebrow,",
-     "start": 0.52,
+     "start": 0.5,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "it",
-     "start": 1.595,
+     "start": 1.575,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "lasts",
-     "start": 1.81,
+     "start": 1.705,
      "end": 2.24,
      "heard": true
     },
     {
      "w": "only",
-     "start": 2.465,
+     "start": 2.445,
      "end": 2.72,
      "heard": true
     },
     {
      "w": "months.",
-     "start": 2.885,
+     "start": 2.865,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "They",
-     "start": 4.26,
+     "start": 4.24,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "stay",
      "start": 4.29,
-     "end": 4.96,
+     "end": 5.04,
      "heard": true
     },
     {
      "w": "short.",
-     "start": 4.995,
-     "end": 5.92,
+     "start": 5.125,
+     "end": 6.0,
      "heard": true
     }
    ]
@@ -367,104 +367,104 @@
    "words": [
     {
      "w": "When",
-     "start": 0.26,
+     "start": 0.2,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "growing",
-     "start": 0.545,
+     "start": 0.525,
      "end": 1.12,
      "heard": true
     },
     {
      "w": "ends,",
-     "start": 1.045,
+     "start": 1.025,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "the",
-     "start": 2.035,
-     "end": 2.16,
+     "start": 2.015,
+     "end": 2.08,
      "heard": true
     },
     {
      "w": "root",
-     "start": 2.255,
-     "end": 2.56,
+     "start": 2.075,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "shrinks",
-     "start": 2.465,
-     "end": 3.28,
+     "start": 2.445,
+     "end": 3.2,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.31,
+     "start": 3.29,
      "end": 3.44,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.36,
+     "start": 3.34,
      "end": 3.6,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 3.495,
+     "start": 3.48,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "loosens.",
-     "start": 3.99,
+     "start": 3.97,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "Then",
-     "start": 5.635,
-     "end": 5.84,
+     "start": 5.615,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.95,
+     "start": 5.725,
      "end": 6.0,
      "heard": true
     },
     {
      "w": "rests",
-     "start": 5.98,
-     "end": 6.72,
+     "start": 5.93,
+     "end": 6.64,
      "heard": true
     },
     {
      "w": "for",
-     "start": 6.855,
+     "start": 6.835,
      "end": 6.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 6.885,
+     "start": 7.055,
      "end": 7.12,
      "heard": true
     },
     {
      "w": "couple",
-     "start": 7.15,
+     "start": 7.13,
      "end": 7.52,
      "heard": true
     },
     {
      "w": "months.",
-     "start": 7.46,
-     "end": 8.48,
+     "start": 7.44,
+     "end": 8.64,
      "heard": true
     }
    ]
@@ -477,103 +477,103 @@
     {
      "w": "Meanwhile,",
      "start": 0.2,
-     "end": 1.36,
+     "end": 1.28,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.45,
-     "end": 1.6,
+     "start": 1.43,
+     "end": 1.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.535,
+     "start": 1.515,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "same",
-     "start": 1.85,
-     "end": 1.92,
+     "start": 1.83,
+     "end": 2.0,
      "heard": true
     },
     {
      "w": "follicle,",
-     "start": 2.15,
-     "end": 3.12,
+     "start": 2.13,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "a",
-     "start": 3.155,
-     "end": 3.36,
+     "start": 3.135,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "brand",
-     "start": 3.415,
-     "end": 3.68,
+     "start": 3.395,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "new",
-     "start": 3.895,
+     "start": 3.875,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "hair",
-     "start": 4.17,
+     "start": 4.15,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "begins…",
-     "start": 4.685,
+     "start": 4.665,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "and",
-     "start": 5.98,
+     "start": 5.96,
      "end": 6.08,
      "heard": true
     },
     {
      "w": "gently",
-     "start": 6.155,
+     "start": 6.135,
      "end": 6.56,
      "heard": true
     },
     {
      "w": "pushes",
-     "start": 6.625,
+     "start": 6.605,
      "end": 7.04,
      "heard": true
     },
     {
      "w": "the",
-     "start": 7.075,
+     "start": 7.055,
      "end": 7.2,
      "heard": true
     },
     {
      "w": "old",
-     "start": 7.205,
+     "start": 7.185,
      "end": 7.6,
      "heard": true
     },
     {
      "w": "one",
-     "start": 7.655,
-     "end": 7.92,
+     "start": 7.635,
+     "end": 7.84,
      "heard": true
     },
     {
      "w": "out.",
-     "start": 8.12,
-     "end": 8.8,
+     "start": 8.98,
+     "end": 9.03,
      "heard": true
     }
    ]
@@ -581,96 +581,96 @@
   {
    "id": "vo08",
    "text": "So losing fifty to a hundred hairs a day from your head alone is normal.",
-   "heard": "So losing 50 to 100 hairs a day from your head alone is normal.",
+   "heard": "So losing fifty to a hundred hairs a day from your head alone is normal.",
    "words": [
     {
      "w": "So",
-     "start": 0.195,
-     "end": 0.48,
+     "start": 0.2,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "losing",
-     "start": 0.46,
+     "start": 0.485,
      "end": 1.04,
      "heard": true
     },
     {
      "w": "fifty",
-     "start": 1.155,
+     "start": 1.16,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "to",
-     "start": 1.645,
+     "start": 1.65,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.8,
-     "end": 1.85,
-     "heard": false
+     "start": 1.805,
+     "end": 1.92,
+     "heard": true
     },
     {
      "w": "hundred",
-     "start": 1.83,
-     "end": 2.32,
+     "start": 1.835,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "hairs",
-     "start": 2.3,
+     "start": 2.305,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.755,
-     "end": 3.12,
+     "start": 2.76,
+     "end": 3.04,
      "heard": true
     },
     {
      "w": "day",
-     "start": 3.28,
-     "end": 3.44,
+     "start": 3.285,
+     "end": 3.335,
      "heard": true
     },
     {
      "w": "from",
-     "start": 3.685,
+     "start": 3.69,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "your",
-     "start": 3.82,
+     "start": 3.825,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "head",
-     "start": 3.895,
-     "end": 4.32,
+     "start": 3.9,
+     "end": 4.4,
      "heard": true
     },
     {
      "w": "alone",
-     "start": 4.325,
+     "start": 4.33,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "is",
-     "start": 4.64,
+     "start": 4.645,
      "end": 4.88,
      "heard": true
     },
     {
      "w": "normal.",
-     "start": 4.855,
-     "end": 5.68,
+     "start": 4.86,
+     "end": 5.76,
      "heard": true
     }
    ]
@@ -682,86 +682,86 @@
    "words": [
     {
      "w": "Every",
-     "start": 0.165,
-     "end": 0.56,
+     "start": 0.145,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "follicle",
-     "start": 0.575,
-     "end": 1.2,
+     "start": 0.555,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "keeps",
-     "start": 1.16,
+     "start": 1.14,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "its",
-     "start": 1.605,
+     "start": 1.585,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "own",
-     "start": 1.725,
+     "start": 1.705,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "schedule,",
-     "start": 1.92,
-     "end": 2.64,
+     "start": 2.095,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "so",
-     "start": 2.68,
+     "start": 2.655,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "they",
-     "start": 2.815,
+     "start": 2.795,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "never",
-     "start": 2.96,
+     "start": 2.94,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "all",
-     "start": 3.37,
+     "start": 3.4,
      "end": 3.6,
      "heard": true
     },
     {
      "w": "let",
-     "start": 3.595,
+     "start": 3.575,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "go",
-     "start": 3.89,
-     "end": 4.16,
+     "start": 3.85,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "at",
-     "start": 4.265,
+     "start": 4.245,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "once.",
-     "start": 4.475,
-     "end": 5.12,
+     "start": 4.485,
+     "end": 5.2,
      "heard": true
     }
    ]
@@ -773,74 +773,74 @@
    "words": [
     {
      "w": "Right",
-     "start": 0.315,
+     "start": 0.295,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "now,",
-     "start": 0.365,
+     "start": 0.36,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "you're",
-     "start": 1.12,
-     "end": 1.28,
+     "start": 1.1,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "losing",
-     "start": 1.245,
-     "end": 1.76,
+     "start": 1.13,
+     "end": 1.68,
      "heard": true
     },
     {
      "w": "hair,",
-     "start": 1.665,
-     "end": 2.24,
+     "start": 1.56,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.35,
+     "start": 2.33,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "growing",
-     "start": 2.575,
+     "start": 2.56,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "it,",
-     "start": 3.4,
-     "end": 3.52,
+     "start": 3.49,
+     "end": 3.54,
      "heard": true
     },
     {
      "w": "at",
-     "start": 3.51,
+     "start": 3.615,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.685,
+     "start": 3.665,
      "end": 4.0,
      "heard": true
     },
     {
      "w": "same",
-     "start": 4.235,
+     "start": 4.215,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "time.",
-     "start": 4.725,
-     "end": 5.2,
+     "start": 4.735,
+     "end": 5.28,
      "heard": true
     }
    ]
@@ -852,62 +852,62 @@
    "words": [
     {
      "w": "If",
-     "start": 0.135,
+     "start": 0.24,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "you're",
-     "start": 0.26,
-     "end": 0.64,
+     "start": 0.275,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "feeling",
-     "start": 0.52,
-     "end": 1.04,
+     "start": 0.485,
+     "end": 0.96,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.065,
+     "start": 1.045,
      "end": 1.2,
      "heard": true
     },
     {
      "w": "little",
-     "start": 1.095,
+     "start": 1.185,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "calmer,",
-     "start": 1.545,
+     "start": 1.525,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "tap",
-     "start": 2.095,
-     "end": 2.4,
+     "start": 2.075,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "like",
-     "start": 2.44,
+     "start": 2.65,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "and",
-     "start": 3.505,
+     "start": 3.485,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "follow.",
-     "start": 3.785,
-     "end": 4.64,
+     "start": 3.765,
+     "end": 4.8,
      "heard": true
     }
    ]

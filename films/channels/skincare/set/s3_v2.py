@@ -20,7 +20,8 @@ def layout(lines, cta_dur):
 lines = json.loads((d / "vo/lines.json").read_text())["lines"]
 HOOK = cfg.get("hook")
 words = {l["id"]: l["words"] for l in json.loads((d / "vo/words.json").read_text())["lines"]}
-ytl = json.loads((d / "vo/yt/lines.json").read_text())["lines"][0]; ytw = json.loads((d / "vo/yt/words.json").read_text())["lines"][0]["words"]
+HAS_YT = (d / "vo/yt/lines.json").exists()      # no spoken like/follow ask in this episode (CTA.md): one version only
+if HAS_YT: ytl = json.loads((d / "vo/yt/lines.json").read_text())["lines"][0]; ytw = json.loads((d / "vo/yt/words.json").read_text())["lines"][0]["words"]
 def build(lines, words, suffix, cta_file):
     start, end, T = layout(lines, 0)
     dur = round(round((end[lines[-1]["id"]] + TAIL) * 15) / 15, 3)
@@ -64,6 +65,7 @@ def build(lines, words, suffix, cta_file):
     subprocess.run(["ffmpeg", "-v", "error", "-y", *ins, "-filter_complex", ";".join(fl), "-map", "[o]", "-ar", "48000", "-c:a", "aac", "-b:a", "256k", str(d / f"mix{suffix}.m4a")], check=True)
     print(sys.argv[1], suffix or "(follow)", "dur", dur, {k: v for k, v in film["lines"].items()})
 build(lines, words, "", None)
-ytlines = [dict(L) for L in lines[:-1]] + [{**lines[-1], "dur": ytl["dur"], "text": ytl["text"]}]
-ytwords = {**words, lines[-1]["id"]: ytw}
-build(ytlines, ytwords, "-yt", "yt/" + ytl["file"])
+if HAS_YT:
+    ytlines = [dict(L) for L in lines[:-1]] + [{**lines[-1], "dur": ytl["dur"], "text": ytl["text"]}]
+    ytwords = {**words, lines[-1]["id"]: ytw}
+    build(ytlines, ytwords, "-yt", "yt/" + ytl["file"])

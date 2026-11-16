@@ -8,55 +8,55 @@
    "words": [
     {
      "w": "Your",
-     "start": 0.125,
+     "start": 0.235,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 0.485,
-     "end": 0.88,
+     "start": 0.505,
+     "end": 0.8,
      "heard": true
     },
     {
      "w": "is",
-     "start": 0.905,
-     "end": 1.12,
+     "start": 0.885,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "still",
-     "start": 1.23,
-     "end": 1.36,
+     "start": 1.135,
+     "end": 1.2,
      "heard": true
     },
     {
      "w": "healing",
-     "start": 1.475,
+     "start": 1.455,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "after",
-     "start": 1.83,
+     "start": 1.81,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "it",
-     "start": 2.18,
-     "end": 2.24,
+     "start": 2.135,
+     "end": 2.32,
      "heard": true
     },
     {
      "w": "looks",
-     "start": 2.335,
+     "start": 2.4,
      "end": 2.48,
      "heard": true
     },
     {
      "w": "healed.",
-     "start": 2.48,
+     "start": 2.46,
      "end": 2.78,
      "heard": false
     }
@@ -69,115 +69,115 @@
    "words": [
     {
      "w": "When",
-     "start": 0.135,
+     "start": 0.115,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 0.295,
+     "start": 0.28,
      "end": 0.56,
      "heard": true
     },
     {
      "w": "small",
-     "start": 0.615,
+     "start": 0.595,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "gap",
-     "start": 0.96,
+     "start": 0.94,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.285,
+     "start": 1.265,
      "end": 1.44,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.365,
+     "start": 1.345,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 1.74,
+     "start": 1.72,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "closes,",
-     "start": 1.99,
+     "start": 1.97,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "it",
-     "start": 3.23,
-     "end": 3.36,
+     "start": 3.21,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "looks",
-     "start": 3.455,
+     "start": 3.295,
      "end": 3.68,
      "heard": true
     },
     {
      "w": "finished",
-     "start": 3.705,
+     "start": 3.685,
      "end": 4.16,
      "heard": true
     },
     {
      "w": "in",
-     "start": 4.13,
+     "start": 4.11,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "a",
-     "start": 4.23,
+     "start": 4.21,
      "end": 4.4,
      "heard": true
     },
     {
      "w": "week",
-     "start": 4.345,
+     "start": 4.325,
      "end": 4.72,
      "heard": true
     },
     {
      "w": "or",
-     "start": 4.86,
-     "end": 4.96,
+     "start": 4.84,
+     "end": 4.89,
      "heard": true
     },
     {
      "w": "two,",
-     "start": 4.89,
-     "end": 5.28,
+     "start": 4.87,
+     "end": 5.2,
      "heard": true
     },
     {
      "w": "but",
-     "start": 5.285,
+     "start": 5.265,
      "end": 5.44,
      "heard": true
     },
     {
      "w": "it",
-     "start": 5.53,
+     "start": 5.51,
      "end": 5.6,
      "heard": true
     },
     {
      "w": "isn't.",
-     "start": 5.56,
+     "start": 5.54,
      "end": 6.56,
      "heard": true
     }
@@ -190,38 +190,38 @@
    "words": [
     {
      "w": "Underneath,",
-     "start": 0.13,
-     "end": 0.8,
+     "start": 0.23,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.86,
-     "end": 1.04,
+     "start": 0.96,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "work",
-     "start": 0.935,
-     "end": 1.28,
+     "start": 1.035,
+     "end": 1.36,
      "heard": true
     },
     {
      "w": "has",
-     "start": 1.57,
-     "end": 1.76,
+     "start": 1.67,
+     "end": 1.84,
      "heard": true
     },
     {
      "w": "already",
-     "start": 1.765,
-     "end": 2.16,
+     "start": 1.865,
+     "end": 2.24,
      "heard": true
     },
     {
      "w": "begun.",
-     "start": 2.165,
-     "end": 3.04,
+     "start": 2.265,
+     "end": 3.2,
      "heard": true
     }
    ]
@@ -233,67 +233,67 @@
    "words": [
     {
      "w": "First,",
-     "start": 0.185,
+     "start": 0.165,
      "end": 0.88,
      "heard": true
     },
     {
      "w": "your",
-     "start": 1.04,
-     "end": 1.09,
+     "start": 1.02,
+     "end": 1.12,
      "heard": true
     },
     {
      "w": "body",
-     "start": 1.285,
+     "start": 1.265,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "seals",
-     "start": 1.575,
+     "start": 1.555,
      "end": 2.08,
      "heard": true
     },
     {
      "w": "it",
-     "start": 2.36,
+     "start": 2.34,
      "end": 2.56,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.685,
+     "start": 2.665,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "calls",
-     "start": 2.945,
-     "end": 3.36,
+     "start": 2.925,
+     "end": 3.28,
      "heard": true
     },
     {
      "w": "in",
-     "start": 3.415,
-     "end": 3.6,
+     "start": 3.395,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "its",
-     "start": 3.75,
-     "end": 3.84,
+     "start": 3.55,
+     "end": 3.76,
      "heard": true
     },
     {
      "w": "cleaning",
-     "start": 3.865,
+     "start": 3.73,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "crews.",
-     "start": 4.245,
+     "start": 4.225,
      "end": 5.2,
      "heard": true
     }
@@ -306,85 +306,85 @@
    "words": [
     {
      "w": "New",
-     "start": 0.145,
+     "start": 0.125,
      "end": 0.4,
      "heard": true
     },
     {
      "w": "cells",
      "start": 0.29,
-     "end": 0.96,
+     "end": 0.88,
      "heard": true
     },
     {
      "w": "creep",
-     "start": 0.965,
+     "start": 0.895,
      "end": 1.36,
      "heard": true
     },
     {
      "w": "in",
-     "start": 1.425,
+     "start": 1.405,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "from",
-     "start": 1.655,
+     "start": 1.635,
      "end": 1.84,
      "heard": true
     },
     {
      "w": "the",
-     "start": 1.905,
+     "start": 1.885,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "edges,",
-     "start": 2.055,
-     "end": 2.56,
+     "start": 2.035,
+     "end": 2.48,
      "heard": true
     },
     {
      "w": "and",
-     "start": 2.66,
+     "start": 2.64,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "repair",
-     "start": 2.69,
+     "start": 2.735,
      "end": 3.36,
      "heard": true
     },
     {
      "w": "cells",
-     "start": 3.445,
+     "start": 3.425,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "lay",
-     "start": 3.735,
-     "end": 4.16,
+     "start": 3.715,
+     "end": 4.08,
      "heard": true
     },
     {
      "w": "down",
-     "start": 4.055,
-     "end": 4.4,
+     "start": 4.005,
+     "end": 4.32,
      "heard": true
     },
     {
      "w": "fresh",
-     "start": 4.62,
+     "start": 4.6,
      "end": 5.04,
      "heard": true
     },
     {
      "w": "collagen.",
-     "start": 5.125,
+     "start": 5.105,
      "end": 6.24,
      "heard": true
     }
@@ -397,38 +397,38 @@
    "words": [
     {
      "w": "Quickly,",
-     "start": 0.18,
+     "start": 0.16,
      "end": 1.28,
      "heard": true
     },
     {
      "w": "a",
-     "start": 1.29,
-     "end": 1.52,
+     "start": 1.27,
+     "end": 1.44,
      "heard": true
     },
     {
      "w": "little",
-     "start": 1.59,
-     "end": 1.76,
+     "start": 1.355,
+     "end": 1.6,
      "heard": true
     },
     {
      "w": "messily,",
-     "start": 1.855,
+     "start": 1.835,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "like",
-     "start": 3.205,
+     "start": 3.185,
      "end": 3.28,
      "heard": true
     },
     {
      "w": "scaffolding.",
-     "start": 3.37,
-     "end": 5.04,
+     "start": 3.35,
+     "end": 5.2,
      "heard": true
     }
    ]
@@ -440,80 +440,80 @@
    "words": [
     {
      "w": "But",
-     "start": 0.2,
-     "end": 0.32,
+     "start": 0.205,
+     "end": 0.4,
      "heard": true
     },
     {
      "w": "for",
-     "start": 0.43,
-     "end": 0.64,
+     "start": 0.41,
+     "end": 0.56,
      "heard": true
     },
     {
      "w": "months,",
-     "start": 0.53,
-     "end": 1.52,
+     "start": 0.51,
+     "end": 1.76,
      "heard": true
     },
     {
      "w": "sometimes",
-     "start": 1.815,
+     "start": 1.795,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "a",
-     "start": 2.32,
-     "end": 2.64,
+     "start": 2.3,
+     "end": 2.56,
      "heard": true
     },
     {
      "w": "year",
-     "start": 2.545,
+     "start": 2.525,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "or",
-     "start": 2.89,
+     "start": 2.88,
      "end": 3.04,
      "heard": true
     },
     {
      "w": "more,",
-     "start": 2.92,
-     "end": 3.44,
+     "start": 2.93,
+     "end": 3.52,
      "heard": true
     },
     {
      "w": "the",
-     "start": 3.635,
+     "start": 3.615,
      "end": 3.76,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 3.685,
-     "end": 4.32,
+     "start": 3.855,
+     "end": 4.24,
      "heard": true
     },
     {
      "w": "keeps",
-     "start": 4.25,
+     "start": 4.23,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "quietly",
-     "start": 4.655,
+     "start": 4.635,
      "end": 5.52,
      "heard": true
     },
     {
      "w": "rebuilding.",
-     "start": 5.61,
-     "end": 7.12,
+     "start": 5.59,
+     "end": 6.96,
      "heard": true
     }
    ]
@@ -525,116 +525,116 @@
    "words": [
     {
      "w": "Then,",
-     "start": 0.185,
+     "start": 0.165,
      "end": 0.64,
      "heard": false
     },
     {
      "w": "quick",
-     "start": 0.7,
+     "start": 0.68,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "collagen",
-     "start": 1.045,
+     "start": 1.025,
      "end": 1.68,
      "heard": true
     },
     {
      "w": "is",
-     "start": 1.785,
-     "end": 1.84,
+     "start": 1.765,
+     "end": 1.815,
      "heard": true
     },
     {
      "w": "traded",
-     "start": 1.815,
-     "end": 2.24,
+     "start": 1.795,
+     "end": 2.16,
      "heard": true
     },
     {
      "w": "for",
-     "start": 2.13,
+     "start": 2.11,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "stronger",
-     "start": 2.45,
+     "start": 2.43,
      "end": 2.88,
      "heard": true
     },
     {
      "w": "fibers",
-     "start": 2.905,
-     "end": 3.44,
+     "start": 2.885,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "drawn",
-     "start": 3.485,
-     "end": 3.92,
+     "start": 3.465,
+     "end": 3.84,
      "heard": true
     },
     {
      "w": "slowly",
-     "start": 3.965,
+     "start": 3.72,
      "end": 4.32,
      "heard": true
     },
     {
      "w": "into",
-     "start": 4.355,
+     "start": 4.335,
      "end": 4.64,
      "heard": true
     },
     {
      "w": "line.",
-     "start": 4.585,
+     "start": 4.565,
      "end": 5.6,
      "heard": true
     },
     {
      "w": "The",
-     "start": 5.635,
-     "end": 5.84,
+     "start": 5.615,
+     "end": 5.76,
      "heard": true
     },
     {
      "w": "spot",
-     "start": 5.935,
+     "start": 5.675,
      "end": 6.32,
      "heard": true
     },
     {
      "w": "grows",
-     "start": 6.255,
+     "start": 6.235,
      "end": 6.72,
      "heard": true
     },
     {
      "w": "flatter",
-     "start": 6.745,
+     "start": 6.725,
      "end": 7.2,
      "heard": true
     },
     {
      "w": "and",
-     "start": 7.695,
-     "end": 7.745,
+     "start": 7.675,
+     "end": 7.725,
      "heard": true
     },
     {
      "w": "softer,",
-     "start": 7.92,
+     "start": 7.9,
      "end": 8.88,
      "heard": true
     },
     {
      "w": "paler.",
-     "start": 8.98,
-     "end": 10.16,
+     "start": 8.96,
+     "end": 10.08,
      "heard": true
     }
    ]
@@ -646,98 +646,98 @@
    "words": [
     {
      "w": "Even",
-     "start": 0.245,
+     "start": 0.075,
      "end": 0.48,
      "heard": true
     },
     {
      "w": "then,",
-     "start": 0.375,
+     "start": 0.37,
      "end": 0.96,
      "heard": true
     },
     {
      "w": "rebuilt",
-     "start": 1.025,
+     "start": 1.07,
      "end": 1.6,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 1.535,
+     "start": 1.515,
      "end": 2.0,
      "heard": true
     },
     {
      "w": "usually",
-     "start": 1.905,
+     "start": 1.885,
      "end": 2.4,
      "heard": true
     },
     {
      "w": "ends",
-     "start": 2.28,
-     "end": 2.8,
+     "start": 2.415,
+     "end": 2.72,
      "heard": true
     },
     {
      "w": "up",
-     "start": 2.855,
+     "start": 2.835,
      "end": 2.96,
      "heard": true
     },
     {
      "w": "at",
-     "start": 3.085,
-     "end": 3.2,
+     "start": 3.065,
+     "end": 3.12,
      "heard": true
     },
     {
      "w": "most",
-     "start": 3.115,
-     "end": 3.52,
+     "start": 3.095,
+     "end": 3.36,
      "heard": true
     },
     {
      "w": "around",
-     "start": 3.42,
+     "start": 3.445,
      "end": 3.84,
      "heard": true
     },
     {
      "w": "eighty",
-     "start": 3.965,
-     "end": 4.8,
+     "start": 3.945,
+     "end": 4.72,
      "heard": true
     },
     {
      "w": "percent",
-     "start": 4.93,
-     "end": 5.6,
+     "start": 4.83,
+     "end": 5.52,
      "heard": false
     },
     {
      "w": "as",
-     "start": 5.67,
+     "start": 5.65,
      "end": 5.84,
      "heard": true
     },
     {
      "w": "strong",
-     "start": 5.93,
-     "end": 6.32,
+     "start": 5.91,
+     "end": 6.4,
      "heard": true
     },
     {
      "w": "as",
-     "start": 6.33,
-     "end": 6.64,
+     "start": 6.31,
+     "end": 6.72,
      "heard": true
     },
     {
      "w": "before.",
-     "start": 6.63,
-     "end": 7.28,
+     "start": 6.79,
+     "end": 7.36,
      "heard": true
     }
    ]
@@ -745,181 +745,114 @@
   {
    "id": "vo10",
    "text": "So the skin you think of as healed is still being gently rewoven, long after you've forgotten it.",
-   "heard": "So the skin you think of as healed is still being gently re-wovened long after you've forgotten it.",
+   "heard": "So the skin you think of as healed is still being gently rewoven long after you've forgotten it.",
    "words": [
     {
      "w": "So",
-     "start": 0.12,
+     "start": 0.1,
      "end": 0.32,
      "heard": true
     },
     {
      "w": "the",
-     "start": 0.33,
-     "end": 0.56,
+     "start": 0.31,
+     "end": 0.48,
      "heard": true
     },
     {
      "w": "skin",
-     "start": 0.635,
-     "end": 1.2,
+     "start": 0.565,
+     "end": 1.04,
      "heard": true
     },
     {
      "w": "you",
-     "start": 1.3,
+     "start": 1.28,
      "end": 1.52,
      "heard": true
     },
     {
      "w": "think",
-     "start": 1.585,
+     "start": 1.565,
      "end": 1.76,
      "heard": true
     },
     {
      "w": "of",
-     "start": 1.76,
+     "start": 1.74,
      "end": 1.92,
      "heard": true
     },
     {
      "w": "as",
-     "start": 1.905,
+     "start": 1.885,
      "end": 2.16,
      "heard": true
     },
     {
      "w": "healed",
-     "start": 2.19,
+     "start": 2.17,
      "end": 2.8,
      "heard": true
     },
     {
      "w": "is",
-     "start": 2.775,
+     "start": 2.755,
      "end": 3.12,
      "heard": true
     },
     {
      "w": "still",
-     "start": 3.255,
-     "end": 3.305,
+     "start": 3.235,
+     "end": 3.285,
      "heard": true
     },
     {
      "w": "being",
-     "start": 3.695,
+     "start": 3.675,
      "end": 3.92,
      "heard": true
     },
     {
      "w": "gently",
-     "start": 3.915,
+     "start": 3.895,
      "end": 4.56,
      "heard": true
     },
     {
      "w": "rewoven,",
-     "start": 4.71,
-     "end": 6.4,
-     "heard": false
+     "start": 4.69,
+     "end": 5.68,
+     "heard": true
     },
     {
      "w": "long",
-     "start": 6.47,
+     "start": 6.45,
      "end": 6.64,
      "heard": true
     },
     {
      "w": "after",
-     "start": 6.7,
+     "start": 6.695,
      "end": 7.12,
      "heard": true
     },
     {
      "w": "you've",
-     "start": 7.07,
+     "start": 7.05,
      "end": 7.6,
      "heard": true
     },
     {
      "w": "forgotten",
-     "start": 7.765,
+     "start": 7.745,
      "end": 8.16,
      "heard": true
     },
     {
      "w": "it.",
-     "start": 8.25,
-     "end": 8.4,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo11",
-   "text": "If you're feeling a little calmer, tap like and follow.",
-   "heard": "If you're feeling a little calmer, tap like and follow.",
-   "words": [
-    {
-     "w": "If",
-     "start": 0.135,
-     "end": 0.32,
-     "heard": true
-    },
-    {
-     "w": "you're",
-     "start": 0.26,
-     "end": 0.56,
-     "heard": true
-    },
-    {
-     "w": "feeling",
-     "start": 0.505,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "a",
-     "start": 1.065,
-     "end": 1.2,
-     "heard": true
-    },
-    {
-     "w": "little",
-     "start": 1.095,
-     "end": 1.44,
-     "heard": true
-    },
-    {
-     "w": "calmer,",
-     "start": 1.545,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "tap",
-     "start": 2.095,
-     "end": 2.4,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 2.44,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 3.505,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "follow.",
-     "start": 3.785,
-     "end": 4.64,
+     "start": 8.23,
+     "end": 8.48,
      "heard": true
     }
    ]
