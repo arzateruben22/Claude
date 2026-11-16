@@ -647,3 +647,12 @@ The card in Services now reads:
 - the gift ad (the square and story images were redrawn without "No expiry.") and the Instagram and campaign drafts
 
 `node marketing/ads/build-ads.mjs gift` now redraws just one ad concept.
+
+## No koi anywhere (Nov 16)
+
+The koi are gone from everything:
+- **Book** sits on the same open water as FAQ and Contact (`img/water/open.webp`), with the moving water light over it and no clip. On phones the heading starts at the top again, without the band left for the fish.
+- **The app's lock screen** is the open water too.
+- **The link-preview picture** (`img/share.jpg`, what shows when the site is shared in a text or on social media) is now the open water with her logo in near-black. `node scripts/build-share-image.cjs` remakes it.
+- **The koi files** are deleted from the site and from `marketing/source/`: `img/water/koi.webp`, `koi.mp4`, `water-koi.png`, `koi-two.mp4`. They're still in the repository's history if they're ever wanted back. The previews no longer use the koi clip.
+- **Everything Lumevina's** card pictures are retaken.

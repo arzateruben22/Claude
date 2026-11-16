@@ -100,7 +100,7 @@
 
   /* ── The hero's moving background: still (its first frame) for reduced
      motion or data saver, and paused while it's scrolled out of view ── */
-  /* (and the koi behind Book: every background clip loads and plays only while on screen) */
+  /* (every background clip loads and plays only while on screen; none are on the page since Nov 16) */
   var stillQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   Array.prototype.forEach.call(document.querySelectorAll("video.hero-video, video.bg-video"), function (clip) {
     var inView = !("IntersectionObserver" in window);

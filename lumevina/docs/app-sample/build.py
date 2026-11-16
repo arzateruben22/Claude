@@ -34,7 +34,7 @@ def wallpaper(rel, width=760, aspect=390 / 844, q=72):
     """The lock screen: a top-down water still turned upright (clockwise), cut to the phone's shape."""
     im = Image.open(os.path.join(SITE, rel)).convert("RGB").transpose(Image.Transpose.ROTATE_270)
     w = round(im.height * aspect)
-    left = max(0, min(im.width - w, round(im.width * 0.55 - w / 2)))   # the koi circle sits just right of centre
+    left = max(0, min(im.width - w, round(im.width * 0.5 - w / 2)))
     im = im.crop((left, 0, left + w, im.height)).resize((width, round(width / aspect)), Image.LANCZOS)
     buf = io.BytesIO()
     im.save(buf, "WEBP", quality=q)
@@ -59,7 +59,7 @@ FIELDS = {
     "FONT": base64.b64encode(open(os.path.join(SITE, "fonts", "inter-var.woff2"), "rb").read()).decode(),
     "TYPOS_JS": open(os.path.join(SITE, "js", "ask-typos.js")).read(),   # shared with the website chat
     "ICON": raw("img/apple-touch-icon.png", "image/png"),
-    "LOCK": wallpaper("img/water/koi.webp"),
+    "LOCK": wallpaper("img/water/open.webp"),
     # the website's treatment photos (js/services.js PHOTOS), so the app and the site match
     "S_CUSTOM": img("img/services/custom-facial.webp", 480),
     "S_AGELESS": img("img/services/ageless-grace.webp", 480),

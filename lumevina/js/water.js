@@ -5,7 +5,7 @@
  *     (img/hero/hero-stone.webp). Rings keep spreading from the statue's base,
  *     as if water were falling into the pool, now and then a drop lands
  *     somewhere else, and light plays on the water below
- *   - over the water pictures behind Book (the koi), FAQ and Contact: the
+ *   - over the water pictures behind Book, FAQ and Contact: the
  *     same light on the water
  *   - at the top of the plainer sections (Shop, Services, Skin science): a
  *     soft band of water and light, fading out before the words
@@ -34,7 +34,7 @@
   var SPOTS = [
     { sel: ".hero", mode: "water", from: 0.66, strength: 0.7, taps: false },   /* the water at the front page's foot, under the shelf */
     { sel: "#shop", mode: "band" },
-    { sel: "#book", mode: "water", from: 0, strength: 0.3 },   /* the koi pond, seen from above: the clip has its own sparkle, so only a little light on top */
+    { sel: "#book", mode: "water", from: 0, strength: 0.4 },   /* the open water, as under FAQ and Contact */
     { sel: "#services", mode: "band" },
     { sel: "#watch", mode: "band" },
     { sel: "#policies", mode: "water", from: 0.4 },

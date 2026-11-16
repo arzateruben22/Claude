@@ -6881,12 +6881,12 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 }
 
 /* ─── The water (Nov 15): the hero's light and water carried down the page.
-   Book sits on two koi circling in the water (img/water/koi.webp), FAQ and
-   Contact on open water (img/water/open.webp), both made in ChatGPT in the
-   hero's style. js/water.js draws the moving light over the water, a soft
-   band of it at the top of Shop, Services and Skin science, and a ring
-   wherever open background is tapped. Each picture fades into the linen
-   above and below it, so no section ends in a hard line. ─── */
+   Book, FAQ and Contact sit on open water (img/water/open.webp, made in
+   ChatGPT in the hero's style; Nov 16: the fish are gone). js/water.js draws
+   the moving light over the water, a soft band of it at the top of Shop,
+   Services and Skin science, and a ring wherever open background is tapped.
+   Each picture fades into the linen above and below it, so no section ends
+   in a hard line. ─── */
 .water-canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; display: block; }
 .water-canvas.water-band { height: 300px; }
 
@@ -6896,53 +6896,18 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   background:
     linear-gradient(180deg, var(--linen) 0, rgba(247, 241, 236, 0) 7rem),
     linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 6rem),
-    url("../img/water/koi.webp") 100% 50% / cover no-repeat,
-    #D6CFC4;
+    url("../img/water/open.webp") 50% 50% / cover no-repeat,
+    #DED7CD;
 }
 .book-glossgenius .bkl-gg {
   background: rgba(255, 255, 255, 0.88);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
-/* desktop: the words and the card keep to the left, the koi swim just right
-   of the middle (the section stays about a screen tall, so the fish stay small) */
+/* desktop: the words and the card keep to the left over the water */
 @media (min-width: 1000px) {
   .book-glossgenius .section-book .book-head { max-width: 36rem; }
   .book-glossgenius .section-book .bkl-gg { max-width: 42rem; gap: 1.25rem 1.75rem; }
-}
-/* phones: the picture is a band across the top with the koi in it, the
-   heading starts below the fish, and the water's own colour carries on */
-@media (max-width: 760px) {
-  .section-book {
-    padding-top: max(var(--space-7), 46vw);
-    background:
-      linear-gradient(180deg, var(--linen) 0, rgba(247, 241, 236, 0) 2.5rem),
-      linear-gradient(0deg, #FFFFFF 0, rgba(255, 255, 255, 0) 5rem),
-      linear-gradient(180deg, rgba(214, 207, 196, 0) calc(56.3vw - 4rem), #D6CFC4 56.3vw),
-      url("../img/water/koi.webp") 50% 0 / 100% auto no-repeat,
-      #D6CFC4;
-  }
-}
-
-/* the koi swimming: the clip lies where the still is, fading into the linen
-   above and the white below, so the still never shows an edge around it */
-.book-media {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 7rem, #000 calc(100% - 6rem), transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0, #000 7rem, #000 calc(100% - 6rem), transparent 100%);
-}
-.book-media .bg-video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 100% 50%; }
-@media (max-width: 760px) {
-  .book-media {
-    bottom: auto;
-    height: 56.3vw;
-    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 2.5rem, #000 calc(100% - 4rem), transparent 100%);
-    mask-image: linear-gradient(180deg, transparent 0, #000 2.5rem, #000 calc(100% - 4rem), transparent 100%);
-  }
-  .book-media .bg-video { object-position: 50% 0; }
 }
 
 /* FAQ and Contact: one stretch of open water, the sunbeams over the FAQ and
