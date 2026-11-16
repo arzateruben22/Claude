@@ -168,11 +168,11 @@
     });
   });
 
-  /* each service's photo: one set of ten, in one style (img/services/), so a
+  /* each service's photo: one set, in one style (img/services/), so a
      service's pop-up, the booking picker and the featured cards agree. Close
      services share one: every peel, every acne visit, the waxes by area. */
   var PHOTOS = {
-    newClients: "img/services/new-clients.webp",
+    newClients: "img/services/consultation.webp",   /* Nov 16: the dish of three textures (the cream swirl read as pudding) */
     custom: "img/services/custom-facial.webp",
     ageless: "img/services/ageless-grace.webp",
     procell: "img/services/procell.webp",

@@ -550,3 +550,7 @@ The app sample on Everything Lumevina (`docs/app-sample`, the hub's app.html) no
 - **The app icon** (also the website's home-screen icon and favicon) had mauve line art. Its lines are now warm ivory on black.
 
 **Everything Lumevina itself** moved to the same palette. The card for the full website no longer mentions Skin School, and the card pictures were retaken from the pages as they are now.
+
+## New Clients Start Here: a new photo (Nov 16)
+
+The cream swirl on linen read as pudding, so New Clients Start Here now uses the consultation photo: a small dish with three textures side by side (the same picture as the consultations). It shows in the booking picker, the treatment's pop-up and the menu cards. The swirl (`img/services/new-clients.webp`) is removed.
