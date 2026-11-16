@@ -4,7 +4,7 @@ S=/tmp/claude-0/-home-user-Claude/104ede24-b5bc-5131-bb4c-1bc7e86a4fd2/scratchpa
 cd /home/user/Claude || exit 1
 git fetch -q origin 'refs/heads/claude/wip-*:refs/remotes/origin/claude/wip-*' 2>/dev/null
 declare -A WT=( [hyper]=tsu-hyper [fix-road]=tsu-fix-road [bar]=tsu-bar [wheel]=tsu-wheel [navhud]=tsu-navhud [final-live]=tsu-live [cast]=tsu-cast [run]=tsu-run [hgfx]=tsu-hgfx )
-for name in hyper fix-road bar wheel navhud final-live cast; do
+for name in hyper fix-road bar wheel navhud final-live cast run hgfx; do
   wt=/home/user/Claude/${WT[$name]}
   [ -d "$wt" ] || { echo "$name: no worktree"; continue; }
   prev=$(git rev-parse -q --verify origin/claude/wip-$name 2>/dev/null)
