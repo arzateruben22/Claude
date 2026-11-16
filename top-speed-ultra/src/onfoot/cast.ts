@@ -231,16 +231,21 @@ const PACK_IDENTITIES: CastEntry[] = [
   {
     id: 'chad', ref: 'P01', name: 'Chad', first: 'Chad', presentation: 'm', age: 28, heightCm: 188, build: 'tall, athletic',
     from: 'Newport Beach; pack character (working name)', unlock: 'pack', portrait: 'cast/chad.webp', sheets: PACK_SHEETS('chad', 'png'),
-    body: { ...baseBody('m'), age: 28, height: 1.88, heads: 7.5, fat: 0.2, muscle: 0.8, chestFlat: 1, apple: 0, shoulders: 1.5, hips: -0.1, waist: -0.3, legs: 0.2, soft: 0.03 },   // (repair 2026-11-16: broader shoulders, a flat chest in profile, a leaner waist: the sheet's V; he read slim and narrow with a bust under the jacket)
-    face: { ...defaultFace('m'), width: 1.04, jaw: 1.14, chin: 1.16, chinLen: 1.02, cheekbones: 1.1, cheeks: 0.92, noseLen: 1.03, noseW: 1.02, noseBridge: 1.1, lipUpper: 1.08, lipLower: 1.14, eyeSize: 1.02, eyeTilt: 0.05, hooded: 0.35, brow: 1.45, earSize: 0.92, earOut: -0.3, cheekFill: 0.7, noseProj: 0.8, jawRise: 0.45, jawSquare: 0.9 },   // (repair 2026-11-16, second: a broad square jaw, jawSquare, a wider chin, the angle lower; the outline ran in a V to a narrow chin, a shield)   // (repair 2026-11-16: a wider, squarer jaw and heavier brow, as the sheet; it read narrow and doll-like)
-    look: { ...baseLook(), softShade: 1, cleanLod: true, skin: 0xd6a886, iris: 0x4b2e17, hair: 'curlsMedium', hairColor: 0x1d130d, hairTips: 0x4e3521, facialHair: 'stubble', stubbleAmt: 0.84, browThick: 1.7 },   // (repair: the light stubble didn't show at LOD 0; the sheet's day of growth is the builder's 'stubble')
+    body: { ...baseBody('m'), age: 28, height: 1.88, heads: 7.5, fat: 0.2, muscle: 0.8, chestFlat: 1, neck: 0.8, apple: 0, shoulders: 1.5, hips: -0.1, waist: -0.3, legs: 0.2, soft: 0.03 },   // (repair 2026-11-16: broader shoulders, a flat chest in profile, a leaner waist: the sheet's V; he read slim and narrow with a bust under the jacket)
+    // (hero test, 2026-11-16: closer to the sheet's face. A long face that tapers from defined cheekbones to a strong, square jaw
+    // and chin (the jaw no wider than the cheekbones: it read as a shield), deep-set eyes under straight, heavy brows, a
+    // straight nose with a high bridge, a full lower lip)
+    face: { ...defaultFace('m'), width: 1.0, length: 1.02, jaw: 1.06, chin: 1.06, chinLen: 1.0, cheekbones: 1.14, cheeks: 0.9, noseLen: 1.05, noseW: 1.0, noseBridge: 1.15, noseTip: 0.96, lipUpper: 1.1, lipLower: 1.22, mouthW: 1.08, eyeSize: 0.97, eyeTilt: 0.05, hooded: 0.4, brow: 1.5, browLow: 1, earSize: 0.92, earOut: -0.3, cheekFill: 0.45, noseProj: 0.9, jawRise: 0.35, jawSquare: 0.6 },
+    // (hero test, 2026-11-16, the owner's call: a swept-back wavy side part, dark brown near black with lighter ends, in
+    // place of the sheet's tight curls; `hero`: the builder's best skin and eyes)
+    look: { ...baseLook(), softShade: 1, cleanLod: true, hero: 1, skin: 0xcc9c7a, iris: 0x4b2e17, hair: 'sweptWavy', hairColor: 0x1a120d, hairTips: 0x4a3220, facialHair: 'stubble', stubbleAmt: 0.84, browThick: 1.7, browFlat: 1 },
     wardrobe: {
       // (the builder's 'fitted' shell with a collar, the top buttons undone: its looser 'shirt' drape would push through the jacket)
       top: { kind: 'fitted', color: WHITE, fabric: 'cotton', sleeve: 1, neck: 'collar', unbutton: 1.15, tailored: 1, fitK: 0.3, drapeK: 0.5 },   // (cut inside the jacket's own cut, so the far levels of detail never show it through the jacket)
       outer: { kind: 'suitJacket', color: INK, fabric: 'wool', sleeve: 0.945, neck: 'v', tailored: 1, fitK: 0.3 },
       bottom: { kind: 'suitTrousers', color: INK, fabric: 'wool' },
       shoes: { kind: 'oxfords', color: 0x0c0c0d, fabric: 'leather' },
-      acc: { studs: 0xe9eef3, pocketSquare: 0xf6f6f3, buttons: 0x0b0b0c },
+      acc: { studs: 0xe9eef3, studSize: 1.6, pocketSquare: 0xf6f6f3, buttons: 0x0b0b0c },
     },
     anim: { walkSpeed: 1.42, idles: ['idle', 'talk', 'laugh'], gait: 'easy' },
     arms: { sleeve: INK, outfit: 'jacket', cuff: WHITE, watch: null, bracelet: false, ring: false, nails: null, missing: null },

@@ -12,6 +12,7 @@ import { V3, clamp, smooth, norm, cross, dot, rng, lerp } from './math';
 import { scalpCover, faceMasks, hairlineDepth } from './masks';
 import { NOISE } from './skin';
 import { hairLights } from './cards';
+import { Wavy, WAVY, wavyThick, wavyFlow, wavyLine } from './hairWavy';
 
 export interface HairSpec {
   top: number; side: number; back: number;   // shell thickness (m)
@@ -50,6 +51,8 @@ export interface HairSpec {
   wisp?: number;                              // loose strands at the temples, this wide (m): thin feathered locks falling past the cheekbones (with `framing`)
   line?: number;                              // (repair 2026-11-16) pulled-back hair: the hairline arched, this far lower at the forehead's corners (m) and a little uneven, instead of a level line across the forehead
   soft?: boolean;                             // a feathered edge: the cap's hairline and ends cut on fine strands with alpha-to-coverage, and their shaded underside lifted (no hard rim)
+  // (hero test, 2026-11-16; unset on every other style, which builds exactly as before)
+  wavy?: Wavy;                                // the swept-back wavy side part: its strand field, volume, shader and cards are hairWavy.ts'
 }
 
 /** (graphics pass) a fitted cap's band, head-local y by head-local z: low on the forehead, lower still at the back of the
@@ -81,6 +84,8 @@ export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
     // (the six, 2026-11-15) Leila's shoulder-length waves from a side parting, as flowing hair with volume at the ends
     case 'wavesFlow': return S({ top: 0.016, side: 0.018, back: 0.02, hang: -0.185, cards: 50, cardW: 0.005, meshK: 1.3, tex: 'lock', soft: true, part: 0.03, vol: 0.3, wave: 0.07, taper: 0.016, flowing: true, partV: 0.04, ends: 0.022, cardLen: 0.2, cardStep: 0.02, curl: 0.12 });
     // (01, 2026-11-15) thick curls under a cap: the curls show below the cap's band at the sides and the back
+    // (hero test, 2026-11-16) the swept-back wavy side part: layered hair on one strand field (hairWavy.ts)
+    case 'sweptWavy': return S({ top: WAVY.top, side: WAVY.side, back: WAVY.back, cards: 0, cardW: 0.012, tex: 'lock', part: 0.034, soft: true, wavy: WAVY });
     case 'curlsUnderCap': return S({ top: 0.012, side: 0.02, back: 0.024, curl: 1.2, cards: 300, cardW: 0.024, tex: 'curl', part: 0, cardLen: 0.045, taper: 0.012, fringe: 0.012, clumpF: 46, clumpA: 0.011, under: 0.05 });
   }
 }
@@ -89,6 +94,7 @@ export function hairSpec(style: HairStyle, male: boolean): HairSpec | null {
 // a loose bun high on the back of the crown: it shows over the head's outline from the front (at 0.078/-0.16 it hid)
 const BUN_C: V3 = [0, 0.094, -0.142];
 function flowAt(sp: HairSpec, l: V3): V3 {
+  if (sp.wavy) return wavyFlow(sp.wavy, l);   // (the swept-back wavy side part: along its own strand field)
   const [x, y, z] = l;
   if (sp.tie && sp.tailEnd) {
     // (cast tails) on the tail itself: down along it, from the tie to the end; elsewhere pulled back to the tie
@@ -197,6 +203,7 @@ export class HairSdf implements Sdf {
   /** (pack) the point the scalp is tested at: with a fringe, a little higher than the point itself at the front and
    *  over the ear tops, which lowers the hairline there (unevenly: locks); without one, the point */
   fr(l: V3): V3 {
+    if (this.sp.wavy) return wavyLine(l);   // (the swept-back wavy side part: a little lower at the front, slightly uneven)
     const f = this.sp.fringe;
     // (flowing) the hairline lowered away from the parting, over the forehead's corners and the temples: an inverted V
     // (the first part by the distance from the parting; the temples' extra by the distance from the head's middle, so a side
@@ -215,6 +222,7 @@ export class HairSdf implements Sdf {
   /** (repair 2026-11-16) the scalp's cover without the ears' cut-out (the same hairline) */
   coverE(lc: V3) { return smooth(-0.003, 0.004, hairlineDepth(this.style, lc, 35 + 40 * this.hf.old, this.hf.male)); }
   thick(lIn: V3) {
+    if (this.sp.wavy) return wavyThick(this, lIn);   // (the swept-back wavy side part: its own sculpted volume)
     const l = lIn, lc = this.fr(lIn);
     const sp = this.sp, top = smooth(-0.005, 0.07, l[1]), back = smooth(-0.04, -0.1, l[2]);
     let t = lerp(lerp(sp.side, sp.back, back), sp.top, top);

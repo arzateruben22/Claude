@@ -48,7 +48,8 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   // the temples: behind the orbital rim, flat to slightly hollow (the head is widest above the ears, not at the eyes)
   for (const sg of [1, -1]) E([sg * 0.046, 0.022, -0.064], 0.018, 0.034, 0.036, 0.022);
   // ---- brow ridge and orbital rims
-  const brz = 0.0185 + 0.003 * (br - 1), bry = m ? 0.0215 : 0.0245;
+  const bl = F.browLow ?? 0;   // (browLow, hero test: unset, the ridge where it was)
+  const brz = 0.0185 + 0.003 * (br - 1) + 0.0022 * bl, bry = (m ? 0.0215 : 0.0245) - 0.0018 * bl;
   for (const sg of [1, -1]) {
     // the superior orbital rim under the brow, sitting well above the lid
     K([0, bry - 0.002, brz], [sg * 0.04, bry + (m ? 0 : 0.0015), brz - 0.009], 0.0078 + 0.0015 * (br - 1), 0.0066, 0.014, [0, 1, 0], 0.7, 1);

@@ -307,7 +307,9 @@ export function buildLashes(hf: HeadFrame, quality: Quality) {
 export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Quality) {
   const m = hf.male, F = hf.face;
   // (look.browThick, pack 2026-11-12: fuller brows; unset is 1, as before)
-  const thick = (m ? 1.12 : 0.86) * (look.browThick ?? 1), arch = m ? 0.0018 : 0.0042, low = m ? -0.0015 : 0.001;
+  // (look.browFlat, hero test: straight, level brows set lower; unset is 0, as before)
+  const bf = look.browFlat ?? 0;
+  const thick = (m ? 1.12 : 0.86) * (look.browThick ?? 1), arch = (m ? 0.0018 : 0.0042) * (1 - 0.75 * bf), low = (m ? -0.0015 : 0.001) - 0.0024 * bf;
   const pos: number[] = [], uvs: number[] = [], idx: number[] = [];
   const n = 16;
   const project = (pl: V3, off: number): V3 => {
@@ -325,13 +327,13 @@ export function buildBrows(hf: HeadFrame, field: Field, look: Look, quality: Qua
     for (let i = 0; i < n; i++) {
       const u = i / (n - 1);
       const x = lerp(0.011, 0.054, u) * (0.97 + 0.03 * F.eyeSpacing);
-      const yMid = 0.0175 + low + arch * Math.sin(Math.PI * Math.min(1, u / 0.72) * 0.5) * (u < 0.72 ? 1 : 1) - (u > 0.72 ? (u - 0.72) * 0.012 : 0);
+      const yMid = 0.0175 + low + arch * Math.sin(Math.PI * Math.min(1, u / 0.72) * 0.5) * (u < 0.72 ? 1 : 1) - (u > 0.72 ? (u - 0.72) * 0.012 * (1 - 0.5 * bf) : 0);
       // (look.scar 'browR', 2026-11-12: the right brow parted where the scar crosses it, about 40 % of the way out)
       const gap = look.scar === 'browR' && side < 0 ? 1 - 0.97 * Math.exp(-(((u - 0.4) / 0.045) ** 2)) : 1;
       const hw = (u < 0.15 ? 0.0042 + 0.004 * (u / 0.15) : 0.0082 * (1 - 0.62 * (u - 0.15) / 0.85)) * thick * gap;
       for (let j = 0; j < 3; j++) {
         const y = yMid + (j - 1) * hw * 0.62;
-        rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0)));
+        rows[j].push(project([side * x, y, 0.03], 0.0005 + (j === 1 ? 0.0002 : 0) + 0.0011 * bf));   // (browFlat: a little further off a sharper ridge, which otherwise came through the strip)
       }
     }
     const s = stripGeometry(rows, (i, j) => [i / (n - 1), j / 4]);   // the atlas' brow half (v 0..0.5)
@@ -714,14 +716,15 @@ function eyeGeometry() {
 export interface EyeMaterial extends THREE.MeshPhysicalMaterial { uniformsRef: { uGaze: { value: THREE.Vector2 } } }
 
 /** one eye's material: `side` +1 the person's left eye, -1 the right; `tilt` (mm) and `hooded` shape its lid margins */
-export function eyeMaterial(iris: number, quality: Quality, o: { side?: number; tilt?: number; hooded?: number } = {}) {
+export function eyeMaterial(iris: number, quality: Quality, o: { side?: number; tilt?: number; hooded?: number; /** (hero test) Look.hero: its own program; unset, the program is exactly as before */ hero?: number } = {}) {
   const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: 0.22, clearcoat: 0, envMapIntensity: 0.5 }) as EyeMaterial;
   const u = {
     uIris: { value: new THREE.Color(iris) }, uPupil: { value: 2.3 },   // a 4.6 mm pupil: an evening patio, not daylight
     uGaze: { value: new THREE.Vector2() }, uSide: { value: o.side ?? 1 }, uLid: { value: new THREE.Vector2(o.tilt ?? 0, o.hooded ?? 0) },
   };
   m.uniformsRef = u;
-  m.customProgramCacheKey = () => 'eye2-' + quality;
+  const hero = (o.hero ?? 0) > 0;
+  m.customProgramCacheKey = () => 'eye2-' + quality + (hero ? '-hero' : '');
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vObj;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
@@ -757,7 +760,12 @@ if (o.z > 8.6 && rho < irisR + 0.25) {
   c = mix(c, c * 1.18 + 0.015, coll * 0.3);
   vec2 cr = cells(vec3(ang * 6.0, rho * 1.2, 2.0)).xy;
   c *= 1.0 - 0.35 * smoothstep(0.3, 0.1, cr.x) * smoothstep(3.2, 4.5, rho);
-  c *= mix(1.0, 0.25, smoothstep(irisR - 0.9, irisR, rho));
+  c *= mix(1.0, 0.25, smoothstep(irisR - 0.9, irisR, rho));${hero ? `
+  // (hero) a deeper iris: brighter fibres round the pupil's edge and across from the light, a wider and darker limbal
+  // ring, the pupil's edge soft
+  c *= 1.0 + 0.5 * smoothstep(1.2, 0.0, abs(rho - uPupil - 0.9)) * (0.5 + 0.5 * fib);
+  c *= 0.82 + 0.4 * smoothstep(-4.0, 5.0, -o.y - 0.4 * o.x * uSide);
+  c *= mix(1.0, 0.3, smoothstep(irisR - 1.5, irisR - 0.1, rho));` : ''}
   c = mix(c, vec3(0.012), smoothstep(uPupil + 0.12, uPupil - 0.08, rho));
   rough = 0.5;
   specK = 0.12;   // the cornea carries the eye's reflections: the iris under it is matte (its bowl otherwise caught a milky sheen)
@@ -768,7 +776,10 @@ if (o.z > 8.6 && rho < irisR + 0.25) {
   float vein = smoothstep(0.92, 1.0, 1.0 - abs(vnoise(o * vec3(0.6, 1.4, 0.6)) - 0.5) * 2.0) * side;
   c = mix(c, vec3(0.75, 0.32, 0.3), vein * 0.5 + side * 0.12);
   c *= mix(vec3(1.0), vec3(0.88, 0.92, 1.0), 0.6 * smoothstep(8.8, 6.6, rho) * smoothstep(6.0, 8.5, o.z));
-  c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));
+  c *= mix(1.0, 0.5, smoothstep(9.0, 2.0, o.z));${hero ? `
+  // (hero) the white is not paper: a soft shade toward both corners and under the upper lid, a wet gloss
+  c *= mix(1.0, 0.8, smoothstep(5.5, 11.5, abs(o.x))) * vec3(0.99, 0.985, 0.97);
+  rough = 0.14;` : ''}
   c *= mix(1.0, 0.8, smoothstep(5.0, 9.0, sk.y)) * mix(1.0, 0.85, smoothstep(-3.0, -9.0, sk.y));
   // the caruncle and the fold beside it: pink and wet in the inner corner
   // (the ball's own silhouette ends about 11 mm out: beyond it the fissure shows the socket, where skin.ts paints the
@@ -803,6 +814,8 @@ export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint
   // one material per eye (same program): each carries its own side and, set just before it draws, its ball's gaze
   const mats: THREE.Material[] = [];
   const cornea = new THREE.MeshPhysicalMaterial({ color: 0x000000, roughness: 0.03, metalness: 0, specularIntensity: 0.9, ior: 1.376, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, envMapIntensity: 0.3 });
+  // (hero) a wetter cornea: the room and the sky show in it as a soft highlight, as well as the lamps
+  if (look.hero) { cornea.envMapIntensity = 0.3 + 0.7 * look.hero; cornea.specularIntensity = 1; cornea.roughness = 0.02; }
   const sockets: THREE.Object3D[] = [], balls: THREE.Object3D[] = [], meshes: THREE.Mesh[] = [];
   const es = hf.face.eyeSize;
   for (const side of [1, -1]) {
@@ -812,7 +825,7 @@ export function buildEyes(hf: HeadFrame, look: Look, quality: Quality, headJoint
     sock.scale.set(hf.sx * es, hf.sy * es, hf.sz * es);
     const ball = new THREE.Object3D();
     sock.add(ball);
-    const mat = eyeMaterial(look.iris, quality, { side, tilt: 1.2 * hf.face.eyeTilt, hooded: hf.face.hooded });
+    const mat = eyeMaterial(look.iris, quality, { side, tilt: 1.2 * hf.face.eyeTilt, hooded: hf.face.hooded, hero: look.hero });
     mats.push(mat);
     const m1 = new THREE.Mesh(g.ball, mat), m2 = new THREE.Mesh(g.cornea, cornea);
     m1.onBeforeRender = () => mat.uniformsRef.uGaze.value.set(ball.rotation.x, ball.rotation.y);
