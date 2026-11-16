@@ -13,13 +13,13 @@ contact sheet long01/out/v4-part3-contact.jpg
    22.30  caption: 'Your shadow is sharp on the sand.'
           speech : 'Your shadow is sharp on the sand.'
    32.17  caption: "And it's faster."
-          speech : 'And faster.'
+          speech : "And it's faster."
    38.13  caption: 'One lap takes about 7 days, not 27.'
-          speech : 'One lap takes about seven days, not 27.'
+          speech : 'One lap takes about seven days, not twenty-seven.'
    50.36  caption: 'Still looking up?'
           speech : 'Still looking up'
    51.38  caption: 'Tap like and follow.'
-          speech : 'Tab like and follow.'
+          speech : 'Tap like and follow.'
    53.73  caption: "It's bigger than the Sun now."
           speech : "It's bigger than the sun now."
    61.22  caption: 'So what happens when they line up?'

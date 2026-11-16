@@ -15,9 +15,9 @@ contact sheet long01/out/v4-part3-yt-contact.jpg
    32.17  caption: "And it's faster."
           speech : "And it's faster."
    38.13  caption: 'One lap takes about 7 days, not 27.'
-          speech : 'One lap takes about seven days, not 27.'
+          speech : 'One lap takes about seven days, not twenty-seven.'
    50.48  caption: 'Still looking up?'
-          speech : 'Still looking up. Tap'
+          speech : 'Still looking up? Tap'
    51.68  caption: 'Tap like and subscribe.'
           speech : 'Tap like and subscribe.'
    54.51  caption: "It's bigger than the Sun now."
