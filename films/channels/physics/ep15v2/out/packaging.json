@@ -1,0 +1,137 @@
+{
+  "version": 1,
+  "format": "short",
+  "hook": "A popcorn kernel bursts in a hot pan, then pops a soap bubble in about a hundredth of a second. Slowed 1,000 times, you can watch the hole race around it.",
+  "titles": [
+    {
+      "text": "Popcorn vs. a Soap Bubble, in Slow Motion",
+      "mechanism": "visual paradox"
+    },
+    {
+      "text": "What Really Happens When Popcorn Pops",
+      "mechanism": "knowledge gap"
+    },
+    {
+      "text": "The Hole That Races Around a Bubble at About 16 mph",
+      "mechanism": "hidden mechanism"
+    },
+    {
+      "text": "Why Does a Bubble Pop From a Hole?",
+      "mechanism": "unanswered question"
+    },
+    {
+      "text": "A Soap Bubble's Rainbow Is 100 Times Thinner Than a Hair",
+      "mechanism": "scale shock"
+    }
+  ],
+  "thumbnails": [
+    {
+      "id": "A",
+      "subject": "popcorn bursting into a soap bubble: the bubble's rainbow rim curling back from a hole where the white popcorn touches it",
+      "composition": "bubble centre, popcorn in its lower half, dark pan below, a giant number as the star",
+      "lighting": "daylight kitchen, backlit thin-film colours",
+      "trigger": "wonder",
+      "text": "0.01 sec",
+      "complements": "adds the real duration the title does not give"
+    },
+    {
+      "id": "B",
+      "subject": "a popcorn kernel split open with white foam, steam rising, in a pan of oil",
+      "composition": "kernel centre, extreme close-up",
+      "lighting": "warm kitchen light",
+      "trigger": "delight",
+      "text": "",
+      "complements": "adds the heat and the foam the title only hints at"
+    },
+    {
+      "id": "C",
+      "subject": "the frozen ring of tiny droplets around the popcorn after the bubble is gone",
+      "composition": "popcorn centre, droplet arc to the upper right",
+      "lighting": "daylight",
+      "trigger": "curiosity",
+      "text": "",
+      "complements": "shows the aftermath"
+    }
+  ],
+  "pairings": [
+    {
+      "title": 0,
+      "thumbnail": "A",
+      "scores": {
+        "scroll": 90,
+        "curiosity": 88,
+        "clarity": 88,
+        "synergy": 90,
+        "originality": 78,
+        "accuracy": 94,
+        "mobile": 92,
+        "satisfaction": 88
+      },
+      "note": "The popcorn touching the bubble is the mystery; the number adds the time. The words do not repeat the title."
+    },
+    {
+      "title": 1,
+      "thumbnail": "B",
+      "scores": {
+        "scroll": 76,
+        "curiosity": 78,
+        "clarity": 72,
+        "synergy": 72,
+        "originality": 64,
+        "accuracy": 94,
+        "mobile": 84,
+        "satisfaction": 80
+      },
+      "note": "Popcorn draws clicks, but the part is half bubble."
+    },
+    {
+      "title": 3,
+      "thumbnail": "C",
+      "scores": {
+        "scroll": 62,
+        "curiosity": 72,
+        "clarity": 62,
+        "synergy": 66,
+        "originality": 74,
+        "accuracy": 92,
+        "mobile": 76,
+        "satisfaction": 72
+      },
+      "note": "Quieter; the droplets alone are less clear."
+    }
+  ],
+  "winner": {
+    "title": "Popcorn vs. a Soap Bubble, in Slow Motion",
+    "thumbnail": "A",
+    "thumbnailText": "0.01 sec",
+    "why": "Popcorn meeting a bubble is the hook; the giant number gives the real timing (a hundredth of a second) and the film delivers it slowed 1,000 times."
+  },
+  "testAndCompare": [
+    "A",
+    "B",
+    "C"
+  ],
+  "checks": {
+    "halfSecond": true,
+    "curiosity": true,
+    "duplication": true,
+    "competition": true,
+    "truth": true,
+    "satisfaction": true,
+    "originality": true
+  },
+  "thumbnailFile": "reality-rulebook-s3p3-cover.jpg",
+  "chatgptPrompt": "(not used: the cover is made in code from a clean frame of the delivered film, the owner's ChatGPT stills composited; see ep15v2/src/cover_p3.py)",
+  "scoresNote": "Scores are 1-100 creative judgments, not CTR predictions.",
+  "note": "Cover is a clean frame of the delivered film (the popcorn touching the bubble) with the words added in code, inside the centre 3:4 band; the words do not repeat the title.",
+  "thumbnailIllustration": "Footage and stills made with AI (the owner's ChatGPT clip and stills); the bubble pop is a composite of two stills",
+  "coverGrid": "cover-grid-3x4.jpg is the centre 1080x1440 band (TikTok / Instagram profile-grid crop); subject and text sit inside it",
+  "postingCopyLines": [
+    "Kitchen footage made with AI. The bubble pop is a composite.",
+    "Cover made with AI."
+  ],
+  "shortsCover": {
+    "text": "0.01 sec",
+    "art": "clean frame of the film at 29.7 s (ep15v2/src/render.py plain)"
+  }
+}
