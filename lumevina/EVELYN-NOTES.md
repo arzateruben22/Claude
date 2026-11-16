@@ -671,3 +671,12 @@ Typing in the shop's search on an iPhone showed the results list partly behind t
 - **The search bar moves up under the header** when the keyboard opens, so the results get the room between it and the keyboard.
 - **The list ends just above the keyboard** and scrolls inside itself, so every result can be reached.
 - **Scrolling the list never moves the page,** even past its end, so the keyboard stays up and the search keeps its text.
+
+## New treatment photos (Nov 16)
+
+Three new photos, in the same warm stone-and-linen style, each on its treatment:
+- **Lumevina Custom Facial** (and Custom Facial + Dermaplaning): serum, cream, cryo globes and a brush on a stone tray (`img/services/custom-facial.webp`)
+- **ProCell Microchanneling** (and the 4-treatment package): the microchanneling device with serum vials (`img/services/procell.webp`)
+- **Ageless Grace Facial:** a bowl of mask with a brush (`img/services/ageless-grace.webp`)
+
+They show on the featured cards in Services, in each treatment's pop-up, in the booking picker and in the app's Book list. The full-size originals are in `marketing/source/service-*.png`. New Clients Start Here keeps the consultation dish for now.
