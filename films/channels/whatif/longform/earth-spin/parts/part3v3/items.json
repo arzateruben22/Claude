@@ -1,0 +1,69 @@
+[
+ {
+  "kind": "open",
+  "text": "The air can't keep up with the ground.",
+  "take": "V.p3_open",
+  "uid": "open",
+  "vo": "vo01",
+  "dur": 3.35
+ },
+ {
+  "kind": "sent",
+  "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+  "take": "A.s023",
+  "uid": "s23",
+  "vo": "vo02",
+  "dur": 3.39
+ },
+ {
+  "kind": "sent",
+  "text": "The ground moves through it at about a thousand and forty miles an hour.",
+  "take": "standin.u_ground",
+  "uid": "u_ground",
+  "vo": "vo03",
+  "dur": 3.61
+ },
+ {
+  "kind": "sent",
+  "text": "The strongest gust ever measured was about two hundred and fifty miles an hour.",
+  "take": "standin.u_gust",
+  "uid": "u_gust",
+  "vo": "vo04",
+  "dur": 4.233
+ },
+ {
+  "kind": "sent",
+  "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air.",
+  "take": "A.s026",
+  "uid": "s26",
+  "vo": "vo05",
+  "dur": 6.54
+ },
+ {
+  "kind": "sent",
+  "text": "Winds like that would strip the surface, and they'd only be the beginning.",
+  "take": "A.s027",
+  "uid": "s27",
+  "vo": "vo06",
+  "dur": 3.05
+ },
+ {
+  "kind": "cta",
+  "text": "If you're enjoying this, tap like and follow.",
+  "take": "V.ask_follow",
+  "sub_file": "vo/07-sub.wav",
+  "sub_text": "If you're enjoying this, tap like and subscribe.",
+  "take_sub": "V.ask_sub",
+  "uid": "cta",
+  "vo": "vo07",
+  "dur": 2.29
+ },
+ {
+  "kind": "cliff",
+  "text": "And then the oceans start to move.",
+  "take": "V.p3_cliff",
+  "uid": "cliff",
+  "vo": "vo08",
+  "dur": 3.11
+ }
+]

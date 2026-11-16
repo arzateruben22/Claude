@@ -1,0 +1,12 @@
+{
+ "u_ground": {
+  "text": "The ground moves through it at about a thousand and forty miles an hour.",
+  "file": "u_ground.wav",
+  "dur": 3.61
+ },
+ "u_gust": {
+  "text": "The strongest gust ever measured was about two hundred and fifty miles an hour.",
+  "file": "u_gust.wav",
+  "dur": 4.233
+ }
+}

@@ -1,0 +1,142 @@
+{
+ "palette": "earth",
+ "cues": [
+  {
+   "at": 0.05,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 1,
+   "dur": 2.6
+  },
+  {
+   "at": 3.3499999999999996,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 2,
+   "dur": 2.0
+  },
+  {
+   "at": 5.133,
+   "kind": "wind",
+   "gain": -4,
+   "seed": 3,
+   "dur": 26.517,
+   "pan": [
+    -0.5,
+    0.5
+   ]
+  },
+  {
+   "at": 5.333,
+   "kind": "whoosh",
+   "gain": -4,
+   "seed": 4,
+   "dur": 1.8,
+   "pan": [
+    0.5,
+    -0.5
+   ]
+  },
+  {
+   "at": 10.1,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 5
+  },
+  {
+   "at": 10.1,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 6,
+   "dur": 0.9
+  },
+  {
+   "at": 16.1,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 7
+  },
+  {
+   "at": 16.1,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 8,
+   "dur": 0.9
+  },
+  {
+   "at": 22.8,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 9
+  },
+  {
+   "at": 22.8,
+   "kind": "whoosh",
+   "gain": -5,
+   "seed": 10,
+   "dur": 0.9
+  },
+  {
+   "at": 10.4,
+   "kind": "rumble",
+   "gain": -6,
+   "seed": 11,
+   "dur": 2.0
+  },
+  {
+   "at": 16.400000000000002,
+   "kind": "rumble",
+   "gain": -5,
+   "seed": 12,
+   "dur": 2.2
+  },
+  {
+   "at": 22.8,
+   "kind": "boom",
+   "gain": -5,
+   "seed": 13,
+   "dur": 1.8
+  },
+  {
+   "at": 30.0,
+   "kind": "crack",
+   "gain": -6,
+   "seed": 14,
+   "dur": 1.2
+  },
+  {
+   "at": 33.050000000000004,
+   "kind": "debris",
+   "gain": -8,
+   "seed": 15,
+   "dur": 1.4
+  },
+  {
+   "at": 34.667,
+   "kind": "whoosh",
+   "gain": -4,
+   "seed": 16,
+   "dur": 1.4
+  },
+  {
+   "at": 37.8,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 17,
+   "dur": 3.71
+  },
+  {
+   "at": 41.01,
+   "kind": "boom",
+   "gain": -4,
+   "seed": 18,
+   "dur": 2.2
+  },
+  {
+   "at": 41.51,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 19
+  }
+ ]
+}

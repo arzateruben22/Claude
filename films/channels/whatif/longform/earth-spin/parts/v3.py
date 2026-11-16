@@ -15,10 +15,13 @@ A = {s["k"]: s for s in json.loads((SP / "cutA/lines.json").read_text())["senten
 V = json.loads((SP / "cutV/phrases.json").read_text())
 CONFIG = {
  1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p1_cliff"), ("closer", "V", "c1")], hook="How fast before you float off?"),
+ 3: dict(items=[("open", "V", "p3_open"), ("sent", "A", 23), ("sent", "S", "u_ground"), ("sent", "S", "u_gust"), ("sent", "A", 26), ("sent", "A", 27), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p3_cliff")], hook="The air can't keep up"),
  2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
 }[N]
-TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast"]
+TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up"]
+SI = json.loads((HERE / "standin/lines.json").read_text())
 def src(kind, key):
+    if kind == "S": return HERE / "standin" / SI[key]["file"], SI[key]["text"], f"standin.{key}"
     if kind == "A": s = A[key]; return SP / "cutA" / s["file"], s["text"], f"A.s{key:03d}"
     p = V[key]; return SP / "cutV" / p["file"], p["text"], f"V.{key}"
 if STEP == "build":
@@ -31,7 +34,7 @@ if STEP == "build":
             wav2, text2, tag2 = src(it[1], it[3]); y2, _ = sf.read(wav2); n = max(len(x), len(y2)); pad = lambda v: np.concatenate([v, np.zeros(n - len(v))])
             sf.write(D / "vo" / f"{k:02d}-sub.wav", pad(y2), sr, subtype="PCM_24"); x = pad(x); rec.update(sub_file=f"vo/{k:02d}-sub.wav", sub_text=text2, take_sub=tag2)
         f = D / "vo" / f"{k:02d}.wav"; sf.write(f, x, sr, subtype="PCM_24")
-        uid = {"open": "open", "cta": "cta", "cliff": "cliff", "closer": "tease"}.get(kind, f"s{it[2]}")
+        uid = {"open": "open", "cta": "cta", "cliff": "cliff", "closer": "tease"}.get(kind, f"s{it[2]}" if it[1] == "A" else str(it[2]))
         lines.append({"id": f"vo{k:02d}", "beat": uid, "text": text, "stars": [], "phonemes": None, "file": f.name, "dur": round(len(x) / sr, 3), "sha256": hashlib.sha256(f.read_bytes()).hexdigest()})
         items.append(dict(rec, uid=uid, vo=f"vo{k:02d}", dur=round(len(x) / sr, 3)))
         taken.append(dict(line=f"vo{k:02d}", kind=kind, take=tag, sub_take=rec.get("take_sub"), text=text))
@@ -68,6 +71,8 @@ for it in items:
     if N == 2 and it["uid"] in ("s17", "s20"): hold = 3.2        # picture beats carried by sound effects
     if N == 2 and it["uid"] == "s18": hold = 3.6                 # the ground-speed beat (no spoken unit): the mph readout counts up, the chip pops
     if N == 2 and it["uid"] == "s21": hold = 2.4
+    if N == 3 and it["uid"] in ("u_ground", "u_gust"): hold = 2.2        # the speed count-up and the chip (carried by sound effects)
+    if N == 3 and it["uid"] in ("s27", "open"): hold = 1.6
     if N == 1 and it["uid"] == "s4": hold = 3.2                  # the ground-speed beat
     if N == 1 and it["uid"] == "s71": hold = 1.6                 # hold the liftoff
     plan[it["uid"]] = {"pre": pre, "hold": hold, "energy": 0.6}
@@ -78,8 +83,8 @@ lines_by = {l["id"]: l for l in f.lines}
 def t_of(uid, off=0.0): return lines_by[vo[uid]]["t"] + off
 def t_end_of(uid): return lines_by[vo[uid]]["t"] + lines_by[vo[uid]]["dur"]
 sent = [it for it in items if it["kind"] == "sent"]
-closer = next(l for l in f.lines if LINE[l["id"]]["kind"] == "closer"); t_end = At(f"{closer['id']}:Full", -0.2)
-WW = []; FLASH = None
+_cl = [l for l in f.lines if LINE[l["id"]]["kind"] == "closer"]; t_end = At(f"{_cl[0]['id']}:Full", -0.2) if _cl else round(f.lines[-1]["t"] + f.lines[-1]["dur"] + 0.5, 3)      # odd parts: no closer, the end card follows the cliffhanger
+WW = []; FLASH = None; FX = {}
 def U(u): return t_of(u)
 if N == 1:
     FL0 = round(At(f"{vo['s71']}:seventeen", -0.1), 3); FL1 = round(t_end_of("s71") + 1.3, 3); FLASH = {"t0": FL0, "t1": FL1}
@@ -89,6 +94,13 @@ if N == 1:
     CAMS = [{"t0": 0.0, "mode": "push"}, {"t0": round(FL0 - 0.3, 3), "mode": "lift"}, {"t0": round(FL1 + 0.1, 3), "mode": "push"}, {"t0": round(BS - 0.2, 3), "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
     CHIPS = [{"t0": round(BS + 1.5, 3), "t1": round(BS + 3.3, 3), "text": "Already faster than sound (767 mph)"}, {"t0": round(U("s12") + 1.9, 3), "t1": round(t_end_of("s12") + 0.5, 3), "text": "\u2248 a phone lighter"}]
     HUD3 = {"bar_t0": round(FL1 + 0.1, 3), "weight_t0": round(U("s12") - 0.1, 3), "speed": {"t0": BS, "t1": round(t_end_of("s12") + 0.4, 3)}}
+elif N == 3:
+    KEYS = [[0.0, 23.934], [round(f.duration, 3), 23.934]]; FX = {"wind": [round(U("s23") - 0.2, 3), round(t_end_of("s27") + 0.8, 3)]}
+    RP = {"open": ("lean", "squint"), "s23": ("lean", "squint"), "u_ground": ("lean", "wide"), "u_gust": ("lean", "squint"), "s26": ("lean", "wide"), "s27": ("lean", "squint"), "cta": ("armsOut", "happy"), "cliff": ("lookUp", "awe")}
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": round(U("u_ground") + 0.4, 3), "t1": round(t_end_of("u_ground") + 0.3, 3), "text": "Ground through the air: 1,040 mph"}, {"t0": round(U("u_gust") + 0.4, 3), "t1": round(t_end_of("u_gust") + 0.3, 3), "text": "Strongest gust ever: 250 mph"},
+             {"t0": round(U("s26") + 0.5, 3), "t1": round(U("s26") + 3.6, 3), "text": "4\u00d7 faster"}]
+    HUD3 = {"speed": {"t0": round(U("u_ground") - 0.1, 3), "t1": round(t_end_of("u_gust") + 0.4, 3)}}
 else:
     KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]
     RP = {"open": ("lookUp", "awe"), "s17": ("lookUp", "wide"), "s18": ("lookUp", "neutral"), "s20": ("float", "happy"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
@@ -121,12 +133,12 @@ BADGES = [{"id": "b-thought", "text": "Thought experiment", "t0": 0.3, "t1": 5.0
 TITLE = {"series": "Possibility Lab", "title": TITLES[N - 1], "t0": -20.0, "t1": -19.0, "sig": -18.0}
 END = {"title": "Full video on YouTube: *What If Earth Spun Faster…*", "follow": f"Possibility Lab · Part {N} of 8", "next": "Every number's source is in the description."}
 dummy = [999.0, 1000.0]; CUE = {"fps": FPS, "float": dummy, "break": dummy, "cost": dummy, "weather": dummy, "wind": dummy, "oceans": dummy, "poles": dummy, "end": t_end, "seed": 3}
-SHOTS = [{"at": 0.0, "name": "eye", "beat": "open"}, {"at": t_end, "name": "end", "beat": "tease"}]
+SHOTS = [{"at": 0.0, "name": "eye", "beat": "open"}, {"at": t_end, "name": "end", "beat": BEATS[-1]["id"]}]
 film = {"id": f"possibility-lab-earth-spin-part{N}-v3", "theme": "../../../../theme.json", "scene": "../../scene.mjs", "fps": FPS, "bpm": BPM, "dur": f.duration, "v2": True,
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4), "shots": SHOTS, "beats": BEATS,
         "world": {"cycleS": 16.0, "keys": KEYS, "dry": [[0.0, 90.0], [round(f.duration, 3), 90.0]], "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
-        "disclosures": {"aiVoice": False, "realVoice": True, "aiIllustration": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
-        "cams": CAMS, "fx": {}, "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": 2.9}, "hud3": HUD3, "chips": CHIPS, "flash": FLASH,
+        "disclosures": {"aiVoice": (N == 3), "realVoice": True, "aiIllustration": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
+        "cams": CAMS, "fx": (FX if N == 3 else {}), "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": 2.9}, "hud3": HUD3, "chips": CHIPS, "flash": FLASH,
         "captions": captions, "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]; ev.append({"t": t_end, "kind": "signature", "tag": "end"})
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05, "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],

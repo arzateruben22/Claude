@@ -12,6 +12,11 @@ if N == 1:
     cue(FL["t1"], "boom", -4, dur=1.8); cue(FL["t1"] + 0.1, "tick", -2); cue(t0("s4"), "tick", -4)
     cue(t1("s4") + 0.3, "rumble", -5, dur=3.2); cue(t1("s4") + 0.4, "tick", -3); cue(t1("s4") + 1.0, "tick", -3); cue(film["chips"][0]["t0"], "whoosh", -3, dur=1.0); cue(film["chips"][0]["t0"], "tick", -2); cue(t0("s12", 0.3), "shimmer", -6, dur=2.6); cue(film["chips"][1]["t0"], "tick", -2)
     for k in range(4): cue(t0("s13", 0.3 + 0.35 * k), "tick", -3); cue(t0("s13", 0.2 + 0.35 * k), "whoosh", -6, dur=0.7)
+elif N == 3:
+    W0, W1 = film["fx"]["wind"]; cue(W0, "wind", -4, dur=W1 - W0 - 2.0, pan=[-0.5, 0.5]); cue(t0("s23"), "whoosh", -4, dur=1.8, pan=[0.5, -0.5])
+    for c in film["chips"]: cue(c["t0"], "tick", -3); cue(c["t0"], "whoosh", -5, dur=0.9)
+    cue(film["chips"][0]["t0"] + 0.3, "rumble", -6, dur=2.0); cue(film["chips"][1]["t0"] + 0.3, "rumble", -5, dur=2.2); cue(film["chips"][2]["t0"], "boom", -5, dur=1.8)
+    cue(t0("s27", 0.2), "crack", -6, dur=1.2); cue(t1("s27") + 0.2, "debris", -8, dur=1.4)
 else:
     cue(t0("s17"), "whoosh", -2, dur=2.4, pan=[-0.5, 0.5]); cue(t0("s17", 0.4), "tick", -3); cue(t0("s18"), "whoosh", -2, dur=2.2, pan=[0.5, -0.5])
     cue(t1("s18") + 0.3, "rumble", -4, dur=3.2); cue(t1("s18") + 0.4, "tick", -3); cue(film["chips"][2]["t0"], "whoosh", -3, dur=1.0); cue(film["chips"][2]["t0"], "boom", -6, dur=2.0); cue(film["chips"][2]["t0"], "tick", -2); cue(t0("s20", 0.2), "shimmer", -6, dur=2.6); cue(t0("s21", 0.2), "tick", -3)

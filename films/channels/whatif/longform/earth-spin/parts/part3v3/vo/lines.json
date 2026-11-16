@@ -1,0 +1,88 @@
+{
+ "voice": "recorded",
+ "speaker": "owner",
+ "lang": "en-us",
+ "made_by": "parts/v2.py",
+ "lines": [
+  {
+   "id": "vo01",
+   "beat": "open",
+   "text": "The air can't keep up with the ground.",
+   "stars": [],
+   "phonemes": null,
+   "file": "01.wav",
+   "dur": 3.35,
+   "sha256": "66fbc90519a5b93317ed3f7a120af57e8e78ace30780a2aecbbdf7c08aa47c57"
+  },
+  {
+   "id": "vo02",
+   "beat": "s23",
+   "text": "It is pulled along only by friction, so for the first hours it is left behind.",
+   "stars": [],
+   "phonemes": null,
+   "file": "02.wav",
+   "dur": 3.39,
+   "sha256": "28400160ce95793d134be04b20efb05084e10cb36488145434a9bac7bd734bba"
+  },
+  {
+   "id": "vo03",
+   "beat": "u_ground",
+   "text": "The ground moves through it at about a thousand and forty miles an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "03.wav",
+   "dur": 3.61,
+   "sha256": "38b4fddef669ce1462b9367c10ce86dc14d45eec64e9991da990307ed7068364"
+  },
+  {
+   "id": "vo04",
+   "beat": "u_gust",
+   "text": "The strongest gust ever measured was about two hundred and fifty miles an hour.",
+   "stars": [],
+   "phonemes": null,
+   "file": "04.wav",
+   "dur": 4.233,
+   "sha256": "49189acc29b92ece44f04ca2d8d2c4e74810e59145a6b593673c56f57d5d2184"
+  },
+  {
+   "id": "vo05",
+   "beat": "s26",
+   "text": "This wind would be four times faster, blowing from the east, because the ground is running ahead of the air.",
+   "stars": [],
+   "phonemes": null,
+   "file": "05.wav",
+   "dur": 6.54,
+   "sha256": "6da2cf2fbf64be97819a4e31e364239feb43fdfccf2e2092940fb16dc2eceba5"
+  },
+  {
+   "id": "vo06",
+   "beat": "s27",
+   "text": "Winds like that would strip the surface, and they'd only be the beginning.",
+   "stars": [],
+   "phonemes": null,
+   "file": "06.wav",
+   "dur": 3.05,
+   "sha256": "8122ca012b9d895d25d63d2624b3e8419609537e87a08d153dfe67cdce17773a"
+  },
+  {
+   "id": "vo07",
+   "beat": "cta",
+   "text": "If you're enjoying this, tap like and follow.",
+   "stars": [],
+   "phonemes": null,
+   "file": "07.wav",
+   "dur": 2.29,
+   "sha256": "73b778bf4dd15e38a4097afd993ecce229d7152cd7301b90517dd966554b4f9c"
+  },
+  {
+   "id": "vo08",
+   "beat": "cliff",
+   "text": "And then the oceans start to move.",
+   "stars": [],
+   "phonemes": null,
+   "file": "08.wav",
+   "dur": 3.11,
+   "sha256": "318274212e6d397b48477fd3be4f58bfeb75e1339e857c2ff2180165ceac80ac"
+  }
+ ]
+}

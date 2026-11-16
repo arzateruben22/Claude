@@ -86,5 +86,225 @@
   ],
   "take": 0,
   "heard": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math."
+ },
+ "p3_open": {
+  "text": "The air can't keep up with the ground.",
+  "file": "p3_open.wav",
+  "dur": 3.35,
+  "src": [
+   17.36,
+   20.71
+  ],
+  "take": 0,
+  "heard": "The air can't keep up with the ground."
+ },
+ "p3_cliff": {
+  "text": "And then the oceans start to move.",
+  "file": "p3_cliff.wav",
+  "dur": 3.11,
+  "src": [
+   21.12,
+   24.23
+  ],
+  "take": 0,
+  "heard": "And then the oceans start to move."
+ },
+ "p4_open": {
+  "text": "The oceans are sliding toward the equator.",
+  "file": "p4_open.wav",
+  "dur": 3.51,
+  "src": [
+   24.96,
+   28.47
+  ],
+  "take": 0,
+  "heard": "The oceans are sliding toward the equator."
+ },
+ "p4_cliff": {
+  "text": "And the weather is about to change completely.",
+  "file": "p4_cliff.wav",
+  "dur": 3.34,
+  "src": [
+   28.88,
+   32.22
+  ],
+  "take": 0,
+  "heard": "And the weather is about to change completely."
+ },
+ "p5_cliff": {
+  "text": "And the calendar is about to break.",
+  "file": "p5_cliff.wav",
+  "dur": 2.95,
+  "src": [
+   36.64,
+   39.59
+  ],
+  "take": 0,
+  "heard": "And the calendar is about to break."
+ },
+ "p6_cliff": {
+  "text": "And the day keeps getting shorter.",
+  "file": "p6_cliff.wav",
+  "dur": 3.35,
+  "src": [
+   44.61,
+   47.96
+  ],
+  "take": 0,
+  "heard": "And the day keeps getting shorter."
+ },
+ "p7_open": {
+  "text": "Three hours, then two. A day is as long as a movie.",
+  "file": "p7_open.wav",
+  "dur": 3.99,
+  "src": [
+   48.05,
+   52.04
+  ],
+  "take": 0,
+  "heard": "Three hours, then two. A day is as long as a movie."
+ },
+ "p7_cliff": {
+  "text": "At an hour and a half, you're almost weightless.",
+  "file": "p7_cliff.wav",
+  "dur": 3.51,
+  "src": [
+   52.13,
+   55.64
+  ],
+  "take": 0,
+  "heard": "At an hour and a half, you're almost weightless."
+ },
+ "p8_open": {
+  "text": "A day now lasts about an hour and a half.",
+  "file": "p8_open.wav",
+  "dur": 3.11,
+  "src": [
+   55.73,
+   58.84
+  ],
+  "take": 0,
+  "heard": "A day now lasts about an hour and a half."
+ },
+ "p8_cliff": {
+  "text": "One more nudge, and something changes completely.",
+  "file": "p8_cliff.wav",
+  "dur": 3.59,
+  "src": [
+   58.93,
+   62.52
+  ],
+  "take": 0,
+  "heard": "One more nudge, and something changes completely."
+ },
+ "c3": {
+  "text": "Part three of eight. Full video on YouTube.",
+  "file": "c3.wav",
+  "dur": 3.19,
+  "src": [
+   73.09,
+   76.28
+  ],
+  "take": 0,
+  "heard": "Part 3 of 8, full video on YouTube."
+ },
+ "c4": {
+  "text": "Part four of eight. Full video on YouTube.",
+  "file": "c4.wav",
+  "dur": 3.03,
+  "src": [
+   76.69,
+   79.72
+  ],
+  "take": 0,
+  "heard": "Part 4 of 8, full video on YouTube."
+ },
+ "c5": {
+  "text": "Part five of eight. Full video on YouTube.",
+  "file": "c5.wav",
+  "dur": 3.19,
+  "src": [
+   80.45,
+   83.64
+  ],
+  "take": 0,
+  "heard": "Part 5 of 8 full video on YouTube."
+ },
+ "c6": {
+  "text": "Part six of eight. Full video on YouTube.",
+  "file": "c6.wav",
+  "dur": 2.47,
+  "src": [
+   84.05,
+   86.52
+  ],
+  "take": 0,
+  "heard": "Part 6 of 8, full video on YouTube."
+ },
+ "c7": {
+  "text": "Part seven of eight. Full video on YouTube.",
+  "file": "c7.wav",
+  "dur": 3.11,
+  "src": [
+   87.28,
+   90.39
+  ],
+  "take": 0,
+  "heard": "Part 7 of 8, full video on YouTube."
+ },
+ "c8": {
+  "text": "Part eight of eight. Full video on YouTube.",
+  "file": "c8.wav",
+  "dur": 3.03,
+  "src": [
+   90.48,
+   93.51
+  ],
+  "take": 0,
+  "heard": "Part 8 of 8, full video on YouTube."
+ },
+ "ask_follow": {
+  "text": "If you're enjoying this, tap like and follow.",
+  "file": "ask_follow.wav",
+  "dur": 2.05,
+  "src": [
+   102.01,
+   104.06
+  ],
+  "take": 0,
+  "heard": "if you're enjoying this, tap like and follow."
+ },
+ "ask_sub": {
+  "text": "If you're enjoying this, tap like and subscribe.",
+  "file": "ask_sub.wav",
+  "dur": 2.29,
+  "src": [
+   108.57,
+   110.86
+  ],
+  "take": 0,
+  "heard": "If you're enjoying this, tap like and subscribe."
+ },
+ "p5_open": {
+  "text": "Storms are turning faster, and the days are six hours long.",
+  "file": "p5_open.wav",
+  "dur": 4.3,
+  "src": [
+   32.25,
+   36.55
+  ],
+  "take": 0,
+  "heard": "Storms are turning faster and the days are six hours long."
+ },
+ "p6_open": {
+  "text": "Now a year has more than a thousand days in it.",
+  "file": "p6_open.wav",
+  "dur": 2.63,
+  "src": [
+   40.32,
+   42.95
+  ],
+  "take": 0,
+  "heard": "Now our year has more than a thousand days in it."
  }
 }
