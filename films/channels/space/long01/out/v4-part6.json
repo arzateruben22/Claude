@@ -225,6 +225,8 @@
   "t": 5.0,
   "fade": 0.3
  },
+ "units": "mi",
+ "breathe": true,
  "cta_at": 36.295,
  "cta_frac": 0.6,
  "cliff": "L18"

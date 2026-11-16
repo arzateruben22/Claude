@@ -1,0 +1,12 @@
+final: /home/user/claude/films/channels/space/long01/out/v4-part3-yt.mp4
+mixed: stem+mix at -13.8 LUFS, gain -0.2 dB ->     I:         -14.0 LUFS
+261 frames checked; edge flags: none
+duration 65.36 s OK
+true peak -2.1 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part3-yt-contact.jpg
+caption = speech: OK
+QA PASS
+MIXED 3 yt

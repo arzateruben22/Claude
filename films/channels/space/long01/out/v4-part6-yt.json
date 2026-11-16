@@ -1,0 +1,233 @@
+{
+ "name": "v4-part6-yt",
+ "mode": "port",
+ "dur": 60.51,
+ "clips": [
+  {
+   "id": "B7",
+   "file": "voice5/wav/B7.wav",
+   "t": 0.15,
+   "dur": 2.32,
+   "from": 0.0
+  },
+  {
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 9.82,
+   "dur": 3.23,
+   "from": 0.0
+  },
+  {
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 17.05,
+   "dur": 5.46,
+   "from": 3.23
+  },
+  {
+   "id": "L17",
+   "file": "voice5/wav/L17.wav",
+   "t": 26.86,
+   "dur": 3.76,
+   "from": 0.0
+  },
+  {
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 36.47,
+   "dur": 1.775,
+   "from": 0.0
+  },
+  {
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 47.245,
+   "dur": 2.495,
+   "from": 1.775
+  },
+  {
+   "id": "C6",
+   "file": "voice5/wav/C6.wav",
+   "t": 57.09,
+   "dur": 2.52,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.345,
+   "t1": 2.4,
+   "text": "Watch it rise in the wrong place.",
+   "line": "B7",
+   "spoken": "Watch it rise in the wrong place."
+  },
+  {
+   "t0": 10.02,
+   "t1": 11.29,
+   "text": "50,000.",
+   "line": "L16",
+   "spoken": "Fifty thousand."
+  },
+  {
+   "t0": 11.31,
+   "t1": 13.02,
+   "text": "Nearly 8× wider.",
+   "line": "L16",
+   "spoken": "Nearly eight times wider."
+  },
+  {
+   "t0": 17.38,
+   "t1": 20.111,
+   "text": "One lap takes about a day and a quarter,",
+   "line": "L16",
+   "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
+  },
+  {
+   "t0": 20.131,
+   "t1": 22.47,
+   "text": "close to how fast the Earth turns.",
+   "line": "L16",
+   "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
+  },
+  {
+   "t0": 27.06,
+   "t1": 28.515,
+   "text": "42,000.",
+   "line": "L17",
+   "spoken": "Forty-two thousand."
+  },
+  {
+   "t0": 28.535,
+   "t1": 30.55,
+   "text": "It hangs still.",
+   "line": "L17",
+   "spoken": "It hangs still."
+  },
+  {
+   "t0": 36.605,
+   "t1": 38.215,
+   "text": "Then it slides the wrong way.",
+   "line": "L18",
+   "spoken": "Then it slides the wrong way."
+  },
+  {
+   "t0": 47.46,
+   "t1": 49.32,
+   "text": "It rises in the west.",
+   "line": "L18",
+   "spoken": "It rises in the west."
+  },
+  {
+   "t0": 57.505,
+   "t1": 58.46,
+   "text": "Part 6 of 8.",
+   "line": "C6",
+   "spoken": "Part six of eight."
+  },
+  {
+   "t0": 58.485,
+   "t1": 59.82,
+   "text": "Full video on YouTube.",
+   "line": "C6",
+   "spoken": "Full video on YouTube."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   70000
+  ],
+  [
+   0.0,
+   70000
+  ],
+  [
+   9.645,
+   50000,
+   7.0
+  ],
+  [
+   26.764,
+   50000
+  ],
+  [
+   28.265,
+   42000,
+   1.5
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 2.645,
+   "t1": 9.645,
+   "kind": "approach"
+  },
+  {
+   "t0": 13.05,
+   "t1": 17.05,
+   "kind": "grow"
+  },
+  {
+   "t0": 22.685,
+   "t1": 26.685,
+   "kind": "pull"
+  },
+  {
+   "t0": 30.795,
+   "t1": 36.295,
+   "kind": "grow"
+  },
+  {
+   "t0": 38.245,
+   "t1": 47.245,
+   "kind": "slide"
+  },
+  {
+   "t0": 49.915,
+   "t1": 56.915,
+   "kind": "rise"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "units": "mi",
+ "breathe": true,
+ "cta_at": 36.295,
+ "cta_frac": 0.6,
+ "cliff": "L18"
+}

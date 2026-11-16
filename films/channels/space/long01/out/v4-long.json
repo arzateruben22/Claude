@@ -1,0 +1,1209 @@
+{
+ "name": "v4-long",
+ "mode": "land",
+ "dur": 433.378,
+ "clips": [
+  {
+   "id": "L1",
+   "file": "voice5/wav/L1.wav",
+   "t": 0.15,
+   "dur": 5.78,
+   "from": 0.0
+  },
+  {
+   "id": "L2",
+   "file": "voice5/wav/L2.wav",
+   "t": 6.28,
+   "dur": 13.44,
+   "from": 0.0
+  },
+  {
+   "id": "L3",
+   "file": "voice5/wav/L3.wav",
+   "t": 20.07,
+   "dur": 3.52,
+   "from": 0.0
+  },
+  {
+   "id": "L4",
+   "file": "voice5/wav/L4.wav",
+   "t": 29.94,
+   "dur": 4.67,
+   "from": 0.0
+  },
+  {
+   "id": "L4",
+   "file": "voice5/wav/L4.wav",
+   "t": 37.61,
+   "dur": 3.55,
+   "from": 4.67
+  },
+  {
+   "id": "L5",
+   "file": "voice5/wav/L5.wav",
+   "t": 45.01,
+   "dur": 4.86,
+   "from": 0.0
+  },
+  {
+   "id": "L6",
+   "file": "voice5/wav/L6.wav",
+   "t": 56.22,
+   "dur": 5.87,
+   "from": 0.0
+  },
+  {
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 73.44,
+   "dur": 1.39,
+   "from": 0.0
+  },
+  {
+   "id": "L7",
+   "file": "voice5/wav/L7.wav",
+   "t": 79.83,
+   "dur": 5.49,
+   "from": 1.39
+  },
+  {
+   "id": "L8",
+   "file": "voice5/wav/L8.wav",
+   "t": 91.67,
+   "dur": 3.33,
+   "from": 0.0
+  },
+  {
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 102.85,
+   "dur": 4.62,
+   "from": 0.0
+  },
+  {
+   "id": "L9",
+   "file": "voice5/wav/L9.wav",
+   "t": 114.47,
+   "dur": 3.62,
+   "from": 4.62
+  },
+  {
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 124.44,
+   "dur": 1.985,
+   "from": 0.0
+  },
+  {
+   "id": "L10",
+   "file": "voice5/wav/L10.wav",
+   "t": 130.425,
+   "dur": 3.935,
+   "from": 1.985
+  },
+  {
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 142.71,
+   "dur": 2.09,
+   "from": 0.0
+  },
+  {
+   "id": "L11",
+   "file": "voice5/wav/L11.wav",
+   "t": 150.3,
+   "dur": 2.71,
+   "from": 2.09
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 160.36,
+   "dur": 3.35,
+   "from": 0.0
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 168.71,
+   "dur": 4.77,
+   "from": 3.35
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 180.48,
+   "dur": 3.53,
+   "from": 8.12
+  },
+  {
+   "id": "L12",
+   "file": "voice5/wav/L12.wav",
+   "t": 189.01,
+   "dur": 1.24,
+   "from": 11.65
+  },
+  {
+   "id": "D2",
+   "file": "voice5/wav/D2.wav",
+   "t": 197.6,
+   "dur": 3.42,
+   "from": 0.0
+  },
+  {
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 201.32,
+   "dur": 2.7,
+   "from": 0.0
+  },
+  {
+   "id": "L13",
+   "file": "voice5/wav/L13.wav",
+   "t": 208.02,
+   "dur": 2.725,
+   "from": 2.7
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 218.595,
+   "dur": 1.94,
+   "from": 0.0
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 225.535,
+   "dur": 3.47,
+   "from": 1.94
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 236.005,
+   "dur": 3.635,
+   "from": 5.41
+  },
+  {
+   "id": "L14",
+   "file": "voice5/wav/L14.wav",
+   "t": 248.14,
+   "dur": 3.625,
+   "from": 9.045
+  },
+  {
+   "id": "L15",
+   "file": "voice5/wav/L15.wav",
+   "t": 260.115,
+   "dur": 4.865,
+   "from": 0.0
+  },
+  {
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 272.33,
+   "dur": 3.23,
+   "from": 0.0
+  },
+  {
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 279.56,
+   "dur": 5.46,
+   "from": 3.23
+  },
+  {
+   "id": "L17",
+   "file": "voice5/wav/L17.wav",
+   "t": 289.37,
+   "dur": 3.76,
+   "from": 0.0
+  },
+  {
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 298.98,
+   "dur": 1.775,
+   "from": 0.0
+  },
+  {
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 309.755,
+   "dur": 2.495,
+   "from": 1.775
+  },
+  {
+   "id": "L19",
+   "file": "voice5/wav/L19.wav",
+   "t": 325.1,
+   "dur": 7.42,
+   "from": 0.0
+  },
+  {
+   "id": "L20",
+   "file": "voice5/wav/L20.wav",
+   "t": 337.87,
+   "dur": 13.51,
+   "from": 0.0
+  },
+  {
+   "id": "L21",
+   "file": "voice5/wav/L21.wav",
+   "t": 356.73,
+   "dur": 6.458,
+   "from": 0.0
+  },
+  {
+   "id": "L22",
+   "file": "voice5/wav/L22.wav",
+   "t": 370.538,
+   "dur": 2.71,
+   "from": 0.0
+  },
+  {
+   "id": "L23",
+   "file": "voice5/wav/L23.wav",
+   "t": 373.598,
+   "dur": 3.83,
+   "from": 0.0
+  },
+  {
+   "id": "L24",
+   "file": "voice5/wav/L24.wav",
+   "t": 387.778,
+   "dur": 5.56,
+   "from": 0.0
+  },
+  {
+   "id": "L25",
+   "file": "voice5/wav/L25.wav",
+   "t": 402.688,
+   "dur": 1.025,
+   "from": 0.0
+  },
+  {
+   "id": "L25",
+   "file": "voice5/wav/L25.wav",
+   "t": 411.713,
+   "dur": 3.855,
+   "from": 1.025
+  },
+  {
+   "id": "L26",
+   "file": "voice5/wav/L26.wav",
+   "t": 415.918,
+   "dur": 6.64,
+   "from": 0.0
+  },
+  {
+   "id": "D4",
+   "file": "voice5/wav/D4.wav",
+   "t": 428.908,
+   "dur": 3.57,
+   "from": 0.0
+  }
+ ],
+ "captions": [
+  {
+   "t0": 0.525,
+   "t1": 3.52,
+   "text": "Tonight, the Moon starts coming closer.",
+   "line": "L1",
+   "spoken": "Tonight, the Moon starts coming closer."
+  },
+  {
+   "t0": 3.625,
+   "t1": 5.92,
+   "text": "And it never stops.",
+   "line": "L1",
+   "spoken": "And it never stops."
+  },
+  {
+   "t0": 6.72,
+   "t1": 14.525,
+   "text": "Right now it's about 384,000 km away, drifting off 3.8 cm a year.",
+   "line": "L2",
+   "spoken": "Right now it's about three hundred eighty-four thousand kilometers away, drifting off three point eight centimeters a year."
+  },
+  {
+   "t0": 14.545,
+   "t1": 16.45,
+   "text": "Tonight, it reverses.",
+   "line": "L2",
+   "spoken": "Tonight, it reverses."
+  },
+  {
+   "t0": 16.56,
+   "t1": 19.65,
+   "text": "A thought experiment, built from real physics.",
+   "line": "L2",
+   "spoken": "A thought experiment, built from real physics."
+  },
+  {
+   "t0": 20.27,
+   "t1": 21.49,
+   "text": "Watch the number.",
+   "line": "L3",
+   "spoken": "Watch the number."
+  },
+  {
+   "t0": 21.51,
+   "t1": 23.52,
+   "text": "It only goes down.",
+   "line": "L3",
+   "spoken": "It only goes down."
+  },
+  {
+   "t0": 30.03,
+   "t1": 32.265,
+   "text": "288,000.",
+   "line": "L4",
+   "spoken": "Two hundred eighty-eight thousand."
+  },
+  {
+   "t0": 32.285,
+   "t1": 34.49,
+   "text": "A third wider.",
+   "line": "L4",
+   "spoken": "A third wider."
+  },
+  {
+   "t0": 37.63,
+   "t1": 41.09,
+   "text": "And the sea already feels it: more than twice the tidal pull.",
+   "line": "L4",
+   "spoken": "And the sea already feels it: more than twice the tidal pull."
+  },
+  {
+   "t0": 45.09,
+   "t1": 49.82,
+   "text": "Halve the distance, and the water starts to climb.",
+   "line": "L5",
+   "spoken": "Halve the distance, and the water starts to climb."
+  },
+  {
+   "t0": 56.34,
+   "t1": 58.21,
+   "text": "Half the distance.",
+   "line": "L6",
+   "spoken": "Half the distance."
+  },
+  {
+   "t0": 58.23,
+   "t1": 60.15,
+   "text": "Twice as wide.",
+   "line": "L6",
+   "spoken": "Twice as wide."
+  },
+  {
+   "t0": 60.26,
+   "t1": 61.97,
+   "text": "8× the tidal pull.",
+   "line": "L6",
+   "spoken": "Eight times the tidal pull."
+  },
+  {
+   "t0": 73.785,
+   "t1": 74.8,
+   "text": "Not a measured height.",
+   "line": "L7",
+   "spoken": "Not a measured height."
+  },
+  {
+   "t0": 79.885,
+   "t1": 85.25,
+   "text": "Just the idea: the whole ocean, lifted from above.",
+   "line": "L7",
+   "spoken": "Just the idea: the whole ocean, lifted from above."
+  },
+  {
+   "t0": 91.76,
+   "t1": 94.96,
+   "text": "And the night is about to change.",
+   "line": "L8",
+   "spoken": "And the night is about to change."
+  },
+  {
+   "t0": 103.25,
+   "t1": 104.91,
+   "text": "150,000.",
+   "line": "L9",
+   "spoken": "One hundred fifty thousand."
+  },
+  {
+   "t0": 104.93,
+   "t1": 107.45,
+   "text": "6.5× the moonlight.",
+   "line": "L9",
+   "spoken": "Six and a half times the moonlight."
+  },
+  {
+   "t0": 114.73,
+   "t1": 118.02,
+   "text": "Your shadow is sharp on the sand.",
+   "line": "L9",
+   "spoken": "Your shadow is sharp on the sand."
+  },
+  {
+   "t0": 124.6,
+   "t1": 126.395,
+   "text": "And it's faster.",
+   "line": "L10",
+   "spoken": "And it's faster."
+  },
+  {
+   "t0": 130.56,
+   "t1": 134.29,
+   "text": "One lap takes about 7 days, not 27.",
+   "line": "L10",
+   "spoken": "One lap takes about seven days, not twenty-seven."
+  },
+  {
+   "t0": 143.065,
+   "t1": 144.77,
+   "text": "It's bigger than the Sun now.",
+   "line": "L11",
+   "spoken": "It's bigger than the Sun now."
+  },
+  {
+   "t0": 150.56,
+   "t1": 152.94,
+   "text": "So what happens when they line up?",
+   "line": "L11",
+   "spoken": "So what happens when they line up?"
+  },
+  {
+   "t0": 160.57,
+   "t1": 161.635,
+   "text": "100,000.",
+   "line": "L12",
+   "spoken": "One hundred thousand."
+  },
+  {
+   "t0": 161.655,
+   "t1": 163.68,
+   "text": "Nearly 4× wider.",
+   "line": "L12",
+   "spoken": "Nearly four times wider."
+  },
+  {
+   "t0": 168.955,
+   "t1": 173.45,
+   "text": "Its shadow on Earth is wider, and eclipses come far more often.",
+   "line": "L12",
+   "spoken": "Its shadow on Earth is wider, and eclipses come far more often."
+  },
+  {
+   "t0": 180.715,
+   "t1": 183.98,
+   "text": "Not every month, because the orbit is tilted.",
+   "line": "L12",
+   "spoken": "Not every month, because the orbit is tilted."
+  },
+  {
+   "t0": 189.09,
+   "t1": 190.17,
+   "text": "But often.",
+   "line": "L12",
+   "spoken": "But often."
+  },
+  {
+   "t0": 197.8,
+   "t1": 200.97,
+   "text": "If that made the sky feel bigger, tap like and subscribe.",
+   "line": "D2",
+   "spoken": "If that made the sky feel bigger, tap like and subscribe."
+  },
+  {
+   "t0": 201.775,
+   "t1": 202.905,
+   "text": "Closer.",
+   "line": "L13",
+   "spoken": "Closer."
+  },
+  {
+   "t0": 202.925,
+   "t1": 203.99,
+   "text": "Faster.",
+   "line": "L13",
+   "spoken": "Faster."
+  },
+  {
+   "t0": 208.32,
+   "t1": 210.61,
+   "text": "And the ground feels it too.",
+   "line": "L13",
+   "spoken": "And the ground feels it too."
+  },
+  {
+   "t0": 218.675,
+   "t1": 220.505,
+   "text": "70,000.",
+   "line": "L14",
+   "spoken": "Seventy thousand."
+  },
+  {
+   "t0": 225.805,
+   "t1": 228.975,
+   "text": "More than 160× today's tidal pull.",
+   "line": "L14",
+   "spoken": "More than a hundred sixty times today's tidal pull."
+  },
+  {
+   "t0": 236.19,
+   "t1": 239.61,
+   "text": "The solid ground already rises and falls tens of centimeters a day.",
+   "line": "L14",
+   "spoken": "The solid ground already rises and falls tens of centimeters a day."
+  },
+  {
+   "t0": 248.385,
+   "t1": 251.91,
+   "text": "Here, it would flex far more.",
+   "line": "L14",
+   "spoken": "Here, it would flex far more."
+  },
+  {
+   "t0": 260.45,
+   "t1": 264.765,
+   "text": "Soon, the Moon rises on the wrong side of the sky.",
+   "line": "L15",
+   "spoken": "Soon, the Moon rises on the wrong side of the sky."
+  },
+  {
+   "t0": 272.53,
+   "t1": 273.8,
+   "text": "50,000.",
+   "line": "L16",
+   "spoken": "Fifty thousand."
+  },
+  {
+   "t0": 273.82,
+   "t1": 275.53,
+   "text": "Nearly 8× wider.",
+   "line": "L16",
+   "spoken": "Nearly eight times wider."
+  },
+  {
+   "t0": 279.89,
+   "t1": 284.98,
+   "text": "One lap takes about a day and a quarter, close to how fast the Earth turns.",
+   "line": "L16",
+   "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
+  },
+  {
+   "t0": 289.57,
+   "t1": 291.025,
+   "text": "42,000.",
+   "line": "L17",
+   "spoken": "Forty-two thousand."
+  },
+  {
+   "t0": 291.045,
+   "t1": 293.06,
+   "text": "It hangs still.",
+   "line": "L17",
+   "spoken": "It hangs still."
+  },
+  {
+   "t0": 299.115,
+   "t1": 300.725,
+   "text": "Then it slides the wrong way.",
+   "line": "L18",
+   "spoken": "Then it slides the wrong way."
+  },
+  {
+   "t0": 309.97,
+   "t1": 311.83,
+   "text": "It rises in the west.",
+   "line": "L18",
+   "spoken": "It rises in the west."
+  },
+  {
+   "t0": 325.48,
+   "t1": 326.48,
+   "text": "30,000.",
+   "line": "L19",
+   "spoken": "Thirty thousand."
+  },
+  {
+   "t0": 326.5,
+   "t1": 326.9,
+   "text": "25.",
+   "line": "L19",
+   "spoken": "Twenty-five."
+  },
+  {
+   "t0": 326.92,
+   "t1": 327.43,
+   "text": "20.",
+   "line": "L19",
+   "spoken": "Twenty."
+  },
+  {
+   "t0": 338.045,
+   "t1": 342.154,
+   "text": "Around 18,000 km is the Roche limit: where Earth's tides",
+   "line": "L20",
+   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+  },
+  {
+   "t0": 342.174,
+   "t1": 346.45,
+   "text": "pull harder than the Moon's own gravity holds it together.",
+   "line": "L20",
+   "spoken": "Around eighteen thousand kilometers is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together."
+  },
+  {
+   "t0": 346.47,
+   "t1": 348.07,
+   "text": "That's if the Moon acts like a fluid.",
+   "line": "L20",
+   "spoken": "That's if the Moon acts like a fluid."
+  },
+  {
+   "t0": 348.09,
+   "t1": 351.525,
+   "text": "A perfectly rigid Moon could come to about 9,500.",
+   "line": "L20",
+   "spoken": "A perfectly rigid Moon could come to about nine and a half thousand."
+  },
+  {
+   "t0": 356.81,
+   "t1": 361.27,
+   "text": "At 18,000, it's more than 20× wider than tonight.",
+   "line": "L21",
+   "spoken": "At eighteen thousand, it's more than twenty times wider than tonight."
+  },
+  {
+   "t0": 361.29,
+   "t1": 363.333,
+   "text": "A wall of grey, straining.",
+   "line": "L21",
+   "spoken": "A wall of grey, straining."
+  },
+  {
+   "t0": 370.738,
+   "t1": 373.188,
+   "text": "And then it does something no Moon should survive.",
+   "line": "L22",
+   "spoken": "And then it does something no Moon should survive."
+  },
+  {
+   "t0": 373.713,
+   "t1": 374.858,
+   "text": "It comes apart.",
+   "line": "L23",
+   "spoken": "It comes apart."
+  },
+  {
+   "t0": 374.878,
+   "t1": 376.158,
+   "text": "Not an explosion.",
+   "line": "L23",
+   "spoken": "Not an explosion."
+  },
+  {
+   "t0": 376.178,
+   "t1": 377.368,
+   "text": "A stretch.",
+   "line": "L23",
+   "spoken": "A stretch."
+  },
+  {
+   "t0": 387.863,
+   "t1": 393.308,
+   "text": "The rock spreads along its old orbit, and over time it can flatten into a ring.",
+   "line": "L24",
+   "spoken": "The rock spreads along its old orbit, and over time it can flatten into a ring."
+  },
+  {
+   "t0": 402.878,
+   "t1": 403.683,
+   "text": "No Moon.",
+   "line": "L25",
+   "spoken": "No Moon."
+  },
+  {
+   "t0": 411.888,
+   "t1": 415.498,
+   "text": "Just a bright band, horizon to horizon.",
+   "line": "L25",
+   "spoken": "Just a bright band, horizon to horizon."
+  },
+  {
+   "t0": 416.118,
+   "t1": 420.378,
+   "text": "The real Moon is still drifting away, 3.8 cm a year.",
+   "line": "L26",
+   "spoken": "The real Moon is still drifting away, three point eight centimeters a year."
+  },
+  {
+   "t0": 420.398,
+   "t1": 422.488,
+   "text": "Tonight's Moon is fine.",
+   "line": "L26",
+   "spoken": "Tonight's Moon is fine."
+  },
+  {
+   "t0": 429.113,
+   "t1": 430.288,
+   "text": "Still looking up?",
+   "line": "D4",
+   "spoken": "Still looking up?"
+  },
+  {
+   "t0": 430.308,
+   "t1": 432.438,
+   "text": "Tap like and subscribe.",
+   "line": "D4",
+   "spoken": "Tap like and subscribe."
+  }
+ ],
+ "km": [
+  [
+   0.0,
+   384400
+  ],
+  [
+   0.0,
+   384400
+  ],
+  [
+   29.765,
+   288300,
+   15.22
+  ],
+  [
+   56.045,
+   192200,
+   6.0
+  ],
+  [
+   102.675,
+   150000,
+   7.5
+  ],
+  [
+   160.185,
+   100000,
+   7.0
+  ],
+  [
+   218.42,
+   70000,
+   7.5
+  ],
+  [
+   272.155,
+   50000,
+   7.0
+  ],
+  [
+   289.274,
+   50000
+  ],
+  [
+   290.775,
+   42000,
+   1.5
+  ],
+  [
+   324.925,
+   30000,
+   5.5
+  ],
+  [
+   325.649,
+   30000
+  ],
+  [
+   326.179,
+   30000
+  ],
+  [
+   326.65,
+   25000,
+   1.0
+  ],
+  [
+   327.18,
+   20000,
+   1.0
+  ],
+  [
+   344.699,
+   20000
+  ],
+  [
+   346.2,
+   18000,
+   1.5
+  ],
+  [
+   419.237,
+   18000
+  ],
+  [
+   422.238,
+   384400,
+   3.0
+  ]
+ ],
+ "tracks": {
+  "eclipse": [
+   [
+    0,
+    0
+   ],
+   [
+    173.28,
+    0
+   ],
+   [
+    175.08,
+    1
+   ],
+   [
+    180.48,
+    1
+   ],
+   [
+    182.08,
+    0
+   ],
+   [
+    190.225,
+    0
+   ],
+   [
+    192.025,
+    1
+   ],
+   [
+    197.425,
+    1
+   ],
+   [
+    199.025,
+    0
+   ]
+  ],
+  "moon": [
+   [
+    0,
+    1
+   ],
+   [
+    373.613,
+    1
+   ],
+   [
+    375.013,
+    0
+   ]
+  ],
+  "brk": [
+   [
+    0,
+    0
+   ],
+   [
+    373.613,
+    0
+   ],
+   [
+    375.013,
+    1
+   ],
+   [
+    387.763,
+    1
+   ],
+   [
+    390.463,
+    0
+   ]
+  ],
+  "ring": [
+   [
+    0,
+    0
+   ],
+   [
+    387.763,
+    0
+   ],
+   [
+    390.463,
+    1
+   ],
+   [
+    420.198,
+    1
+   ],
+   [
+    422.398,
+    0
+   ]
+  ],
+  "tonight": [
+   [
+    0,
+    0
+   ],
+   [
+    420.198,
+    0
+   ],
+   [
+    422.398,
+    1
+   ]
+  ]
+ },
+ "beats": [
+  {
+   "t0": 23.765,
+   "t1": 29.765,
+   "kind": "approach"
+  },
+  {
+   "t0": 34.61,
+   "t1": 37.61,
+   "kind": "grow"
+  },
+  {
+   "t0": 41.335,
+   "t1": 44.835,
+   "kind": "tide"
+  },
+  {
+   "t0": 50.045,
+   "t1": 56.045,
+   "kind": "approach"
+  },
+  {
+   "t0": 62.265,
+   "t1": 73.265,
+   "kind": "climb"
+  },
+  {
+   "t0": 74.83,
+   "t1": 79.83,
+   "kind": "tide"
+  },
+  {
+   "t0": 85.495,
+   "t1": 91.495,
+   "kind": "pull"
+  },
+  {
+   "t0": 95.175,
+   "t1": 102.675,
+   "kind": "approach"
+  },
+  {
+   "t0": 107.47,
+   "t1": 114.47,
+   "kind": "bright"
+  },
+  {
+   "t0": 118.265,
+   "t1": 124.265,
+   "kind": "bright"
+  },
+  {
+   "t0": 126.425,
+   "t1": 130.425,
+   "kind": "pull"
+  },
+  {
+   "t0": 134.535,
+   "t1": 142.535,
+   "kind": "slide"
+  },
+  {
+   "t0": 144.8,
+   "t1": 150.3,
+   "kind": "grow"
+  },
+  {
+   "t0": 153.185,
+   "t1": 160.185,
+   "kind": "approach"
+  },
+  {
+   "t0": 163.71,
+   "t1": 168.71,
+   "kind": "grow"
+  },
+  {
+   "t0": 173.48,
+   "t1": 180.48,
+   "kind": "eclipse"
+  },
+  {
+   "t0": 184.01,
+   "t1": 189.01,
+   "kind": "pull"
+  },
+  {
+   "t0": 190.425,
+   "t1": 197.425,
+   "kind": "eclipse"
+  },
+  {
+   "t0": 204.02,
+   "t1": 208.02,
+   "kind": "grow"
+  },
+  {
+   "t0": 210.92,
+   "t1": 218.42,
+   "kind": "approach"
+  },
+  {
+   "t0": 220.535,
+   "t1": 225.535,
+   "kind": "grow"
+  },
+  {
+   "t0": 229.005,
+   "t1": 236.005,
+   "kind": "tide"
+  },
+  {
+   "t0": 239.64,
+   "t1": 248.14,
+   "kind": "flex"
+  },
+  {
+   "t0": 251.94,
+   "t1": 259.94,
+   "kind": "flex"
+  },
+  {
+   "t0": 265.155,
+   "t1": 272.155,
+   "kind": "approach"
+  },
+  {
+   "t0": 275.56,
+   "t1": 279.56,
+   "kind": "grow"
+  },
+  {
+   "t0": 285.195,
+   "t1": 289.195,
+   "kind": "pull"
+  },
+  {
+   "t0": 293.305,
+   "t1": 298.805,
+   "kind": "grow"
+  },
+  {
+   "t0": 300.755,
+   "t1": 309.755,
+   "kind": "slide"
+  },
+  {
+   "t0": 312.425,
+   "t1": 319.425,
+   "kind": "rise"
+  },
+  {
+   "t0": 319.425,
+   "t1": 324.925,
+   "kind": "approach"
+  },
+  {
+   "t0": 332.695,
+   "t1": 337.695,
+   "kind": "grow"
+  },
+  {
+   "t0": 351.555,
+   "t1": 356.555,
+   "kind": "strain"
+  },
+  {
+   "t0": 363.363,
+   "t1": 370.363,
+   "kind": "strain"
+  },
+  {
+   "t0": 377.603,
+   "t1": 387.603,
+   "kind": "stretch"
+  },
+  {
+   "t0": 393.513,
+   "t1": 402.513,
+   "kind": "band"
+  },
+  {
+   "t0": 403.713,
+   "t1": 411.713,
+   "kind": "ring"
+  },
+  {
+   "t0": 422.733,
+   "t1": 428.733,
+   "kind": "pull"
+  }
+ ],
+ "chips": [],
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "units": "mi",
+ "breathe": true,
+ "cta_at": 197.6,
+ "cta_frac": 0.456,
+ "cliff": "L26",
+ "drift": {
+  "a": 6.52,
+  "b": 14.545,
+  "c": 15.945
+ },
+ "camera": [
+  {
+   "t": 0.825,
+   "s": 1.18,
+   "pv": "moon"
+  },
+  {
+   "t": 14.545,
+   "s": 1.0,
+   "pv": "moon"
+  },
+  {
+   "t": 16.545,
+   "s": 1.12,
+   "pv": "moon"
+  }
+ ],
+ "stars": [
+  {
+   "t0": 0.35,
+   "dur": 0.9,
+   "x0": 0.06,
+   "y0": 0.31,
+   "x1": 0.58,
+   "y1": 0.385
+  },
+  {
+   "t0": 11.22,
+   "dur": 0.9,
+   "x0": 0.04,
+   "y0": 0.3,
+   "x1": 0.46,
+   "y1": 0.37
+  }
+ ]
+}
