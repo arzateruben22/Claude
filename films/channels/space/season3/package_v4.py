@@ -7,6 +7,7 @@ S = f"{ROOT}/films/channels/space"; L1 = f"{S}/long01"; O = L1 + "/out"; ep = f"
 name = f"one-more-orbit-s3-part{n}"; T = json.load(open(L1 + "/part_titles.json")); src_n = {1: 1, 2: 3, 3: 4, 4: 5, 5: 6, 6: 7, 7: 8, 8: None}[n]      # v4 part n = the old (v3) part src_n; part 8 is new (the break-up)
 title = T["parts"][str(src_n)] if src_n else "Then the Moon Comes Apart"; src_ep = f"{S}/ep{12 + src_n}" if src_n else None
 tl = json.load(open(f"{O}/v4-part{n}.json")); lines = {x["id"]: x for x in json.load(open(L1 + "/voice5/lines.json"))["lines"]}
+STAND_IN = {x["id"]: x for x in json.load(open(L1 + "/voice6/lines.json"))["lines"]}; lines.update(STAND_IN)
 CLAIMS = {1: {"c1": "Right now it's about", "c2": "drifting off", "c5": "A third wider.", "c30": "more than twice the tidal pull"},
           2: {"c6": "Half the distance.", "c7": "Twice as wide.", "c10": "Eight times the tidal pull."},
           3: {"c31": "One hundred fifty thousand.", "c33": "Six and a half times the moonlight.", "c34": "One lap takes about seven days", "c15": "It's bigger than the Sun now."},
@@ -39,7 +40,8 @@ open(ep + "/script.md", "w").write(body)
 allc = {c["id"]: c for c in json.load(open(L1 + "/claims.json"))}; cl = []
 for k, sent in CLAIMS.items(): c = dict(allc[k]); c["sentence"] = sent; cl.append(c)
 json.dump(cl, open(ep + "/claims.json", "w"), indent=1, ensure_ascii=False)
-film = {"id": name, "title": {"title": title, "series": f"One More Orbit · Season 3 · Part {n} of 8"}, "disclosures": {"realVoice": True, "aiVoice": False, "aiVisuals": True}, "dur": tl["dur"], "fps": 30, "captions": tl["captions"], "km": tl["km"], "tracks": tl["tracks"], "clips": tl["clips"], "badge": tl["badge"], "chips": tl["chips"], "source": f"season3/engine.js via long01/out/v4-part{n}.json"}
+_si = sorted({c["id"] for c in tl["clips"] if c["id"] in STAND_IN})   # miles lines still in the stand-in (AI) voice until the owner records them (16 Nov 2026)
+film = {"id": name, "title": {"title": title, "series": f"One More Orbit · Season 3 · Part {n} of 8"}, "disclosures": {"realVoice": True, "aiVoice": bool(_si), "aiVisuals": True}, "standInLines": _si, "dur": tl["dur"], "fps": 30, "captions": tl["captions"], "km": tl["km"], "tracks": tl["tracks"], "clips": tl["clips"], "badge": tl["badge"], "chips": tl["chips"], "source": f"season3/engine.js via long01/out/v4-part{n}.json"}
 json.dump(film, open(ep + "/film.json", "w"), indent=1, ensure_ascii=False)
 shutil.copy(f"{L1}/v4/part{n}.sfx.json", ep + "/sfx.json")
 # packaging + posting: part n reuses the old part src_n's pack with the numbers rewritten (part 8 is new: its posting is written here); the coordinator makes the hook covers

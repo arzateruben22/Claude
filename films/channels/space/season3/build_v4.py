@@ -9,6 +9,8 @@ L1 = f"{ROOT}/films/channels/space/long01"; OUT = L1 + "/out"
 g = {"__file__": HERE + "/build_timeline.py", "__name__": "bt"}; exec(open(HERE + "/build_timeline.py").read().split("tl = {}")[0], g)   # reuse insert_beats / split_caps / to_display
 insert_beats, split_caps, to_display = g["insert_beats"], g["split_caps"], g["to_display"]
 lines = {x["id"]: x for x in json.load(open(L1 + "/voice5/lines.json"))["lines"]}
+if not os.environ.get("NOMILES"):      # the owner's sheet (16 Nov 2026): the 11 miles lines replace their kilometers lines (same ids, same windows); STAND-IN voice (AI) until he records them
+    for x in json.load(open(L1 + "/voice6/lines.json"))["lines"]: lines[x["id"]] = x
 N = int(sys.argv[1]); YT = "--yt" in sys.argv; PRE = float(sys.argv[sys.argv.index("--preview") + 1]) if "--preview" in sys.argv else None
 G = 0.35
 SPOKEN_CTA = N % 2 == 1      # the owner, 12 Nov 2026: a spoken like/follow ask only in every other part (1, 3, 5, 7); even parts keep only the silent pop-up, at the pause before the cliffhanger
@@ -27,21 +29,21 @@ PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1"
         4: {"hook": "B5", "body": ["L12", "L13"], "closer": "C4", "start": 150000, "km": [100000],
             "beats": [("__hook__", 7.0, "approach"), ("Nearly four times wider", 5.0, "grow"), ("far more often", 7.0, "eclipse"), ("because the orbit is tilted", 5.0, "pull"), ("But often", 7.0, "eclipse"), ("Faster", 4.0, "grow")], "chips": []},
         5: {"hook": "B6", "body": ["L14", "L15"], "closer": None, "start": 100000, "km": [70000],
-            "beats": [("__hook__", 7.5, "approach"), ("Seventy thousand", 5.0, "grow"), ("today's tidal pull", 7.0, "tide"), ("tens of centimeters", 8.5, "flex"), ("flex far more", 8.0, "flex")], "chips": []},
-        6: {"hook": "B7", "body": ["L16", "L17", "L18"], "closer": "C6", "start": 70000, "km": [50000], "keys": [("Forty-two thousand", 42000, 1.5)],
+            "beats": [("__hook__", 7.5, "approach"), ("Forty-three thousand", 5.0, "grow"), ("today's tidal pull", 7.0, "tide"), ("about a foot a day", 8.5, "flex"), ("flex far more", 8.0, "flex")], "chips": []},
+        6: {"hook": "B7", "body": ["L16", "L17", "L18"], "closer": "C6", "start": 70000, "km": [50000], "keys": [("Twenty-six thousand", 42000, 1.5)],
             "beats": [("__hook__", 7.0, "approach"), ("Nearly eight times wider", 4.0, "grow"), ("how fast the Earth turns", 4.0, "pull"), ("It hangs still", 5.5, "grow"), ("slides the wrong way", 9.0, "slide"), ("rises in the west", 7.0, "rise")], "chips": []},
-        7: {"hook": "B8", "body": ["L19", "L20", "L21", "L22"], "closer": None, "start": 42000, "km": [30000], "keys": [("Twenty-five", 25000, 1.0), ("Twenty.", 20000, 1.0), ("Around eighteen thousand", 18000, 1.5)],
-            "beats": [("__hook__", 5.5, "approach"), ("Twenty.", 5.0, "grow"), ("nine and a half thousand", 5.0, "strain"), ("straining", 7.0, "strain")], "chips": []},
+        7: {"hook": "B8", "body": ["L19", "L20", "L21", "L22"], "closer": None, "start": 42000, "km": [30000], "keys": [("Sixteen", 25000, 1.0), ("Twelve.", 20000, 1.0), ("Around eleven thousand", 18000, 1.5)],
+            "beats": [("__hook__", 5.5, "approach"), ("Twelve.", 5.0, "grow"), ("six thousand", 5.0, "strain"), ("straining", 7.0, "strain")], "chips": []},
         0: {"seq": [f"L{i}" for i in range(1, 13)] + ["D2"] + [f"L{i}" for i in range(13, 27)] + ["D4"], "hook": "L1", "body": [f"L{i}" for i in range(2, 27)], "closer": None, "start": 384400, "km": [288300], "motion1": True,
             "beats": [(("L3", "only goes down"), 6.0, "approach", 288300), (("L4", "A third wider"), 3.0, "grow"), (("L4", "tidal pull"), 3.5, "tide"),
                       (("L5", "water starts to climb"), 6.0, "approach", 192200), (("L6", "the tidal pull"), 11.0, "climb"), (("L7", "Not a measured height"), 5.0, "tide"), (("L7", "lifted from above"), 6.0, "pull"),
                       (("L8", "about to change"), 7.5, "approach", 150000), (("L9", "Six and a half times"), 7.0, "bright"), (("L9", "sharp on the sand"), 6.0, "bright"), (("L10", "And it's faster"), 4.0, "pull"), (("L10", "not twenty-seven"), 8.0, "slide"), (("L11", "bigger than the Sun now"), 5.5, "grow"),
                       (("L11", "they line up"), 7.0, "approach", 100000), (("L12", "Nearly four times wider"), 5.0, "grow"), (("L12", "far more often"), 7.0, "eclipse"), (("L12", "because the orbit is tilted"), 5.0, "pull"), (("L12", "But often"), 7.0, "eclipse"), (("L13", "Faster"), 4.0, "grow"),
-                      (("L13", "ground feels it too"), 7.5, "approach", 70000), (("L14", "Seventy thousand"), 5.0, "grow"), (("L14", "today's tidal pull"), 7.0, "tide"), (("L14", "tens of centimeters"), 8.5, "flex"), (("L14", "flex far more"), 8.0, "flex"),
+                      (("L13", "ground feels it too"), 7.5, "approach", 70000), (("L14", "Forty-three thousand"), 5.0, "grow"), (("L14", "today's tidal pull"), 7.0, "tide"), (("L14", "about a foot a day"), 8.5, "flex"), (("L14", "flex far more"), 8.0, "flex"),
                       (("L15", "wrong side of the sky"), 7.0, "approach", 50000), (("L16", "Nearly eight times wider"), 4.0, "grow"), (("L16", "how fast the Earth turns"), 4.0, "pull"), (("L17", "It hangs still"), 5.5, "grow"), (("L18", "slides the wrong way"), 9.0, "slide"), (("L18", "rises in the west"), 7.0, "rise"),
-                      (("L18", "rises in the west"), 5.5, "approach", 30000), (("L19", "Twenty."), 5.0, "grow"), (("L20", "nine and a half thousand"), 5.0, "strain"), (("L21", "straining"), 7.0, "strain"),
+                      (("L18", "rises in the west"), 5.5, "approach", 30000), (("L19", "Twelve."), 5.0, "grow"), (("L20", "six thousand"), 5.0, "strain"), (("L21", "straining"), 7.0, "strain"),
                       (("L23", "A stretch"), 10.0, "stretch"), (("L24", "flatten into a ring"), 9.0, "band"), (("L25", "No Moon"), 8.0, "ring"), (("L26", "Tonight's Moon is fine"), 6.0, "pull")],
-            "keys": [("Forty-two thousand", 42000, 1.5), ("Twenty-five", 25000, 1.0), ("Twenty.", 20000, 1.0), ("Around eighteen thousand", 18000, 1.5), ("Tonight's Moon is fine", 384400, 3.0)], "chips": []},
+            "keys": [("Twenty-six thousand", 42000, 1.5), ("Sixteen", 25000, 1.0), ("Twelve.", 20000, 1.0), ("Around eleven thousand", 18000, 1.5), ("Tonight's Moon is fine", 384400, 3.0)], "chips": []},
         8: {"hook": "L23", "body": ["L24", "L25", "L26"], "closer": "C8", "start": 17000, "km": [], "keys": [("Tonight's Moon is fine", 384400, 3.0)],
             "beats": [("__hook__", 10.0, "stretch"), ("flatten into a ring", 9.0, "band"), ("No Moon", 8.0, "ring"), ("Tonight's Moon is fine", 6.0, "pull")], "chips": []}}[N]
 body = PART["body"]; cliff = body[-1]
@@ -161,7 +163,7 @@ def build(use_closer):
             out += grp; i = j + 1
         return out
     tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": retime(split_caps(ncaps, 100 if N == 0 else 68)), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
-          "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 5), "breathe": N >= 3 or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
+          "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 4, 5), "breathe": N >= 3 or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
     if N == 1 or PART.get("motion1"):   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
         cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]
         tl["drift"] = {"a": round(l2 - 0.2, 3), "b": round(rv, 3), "c": round(rv + 1.4, 3)}

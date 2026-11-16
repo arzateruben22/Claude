@@ -1,0 +1,12 @@
+# the miles lines (owner's sheet: Season-3-everything-left-to-record.md, section 2, claude/physics-s2). Stand-in voice (AI, scratch TTS) until he records them; id = the km line it replaces
+L2|Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year. Tonight, it reverses. A thought experiment, built from real physics.
+L4|One hundred seventy-nine thousand. A third wider. And the sea already feels it: more than twice the tidal pull.
+L9|Ninety-three thousand. Six and a half times the moonlight. Your shadow is sharp on the sand.
+L12|Sixty-two thousand. Nearly four times wider. Its shadow on Earth is wider, and eclipses come far more often. Not every month, because the orbit is tilted. But often.
+L14|Forty-three thousand. More than a hundred sixty times today's tidal pull. The solid ground already rises and falls about a foot a day. Here, it would flex far more.
+L16|Thirty-one thousand. Nearly eight times wider. One lap takes about a day and a quarter, close to how fast the Earth turns.
+L17|Twenty-six thousand. It hangs still.
+L19|Nineteen thousand. Sixteen. Twelve.
+L20|Around eleven thousand miles is the Roche limit: where Earth's tides pull harder than the Moon's own gravity holds it together. That's if the Moon acts like a fluid. A perfectly rigid Moon could come to about six thousand.
+L21|At eleven thousand, it's more than twenty times wider than tonight. A wall of grey, straining.
+L26|The real Moon is still drifting away, an inch and a half a year. Tonight's Moon is fine.
