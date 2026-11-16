@@ -620,10 +620,12 @@ The card above the shop now reads:
 While booking runs on GlossGenius, the Book section reads:
 
 > 02 · Book a facial
-> **Book your appointment *at Lumevina Aesthetics Spa.***
-> [COMING SOON] Online booking directly through the website is coming soon. For now, book through GlossGenius using the button below.
+> **Book your *next appointment.***
+> [ONLINE BOOKING COMING SOON] For now, book through GlossGenius using the button below.
 > **New clients:** Choose "New Clients Start Here." For acne, choose "Acne Bootcamp's New Client Consultation + Treatment."
 > **Returning clients:** Choose your service and preferred time.
 > [Book through GlossGenius]
 
 The deposit wording is gone from the section: "same calendar, same deposits" and "Evelyn's calendar, deposits and reminders are on GlossGenius". In the version that books on the website, "(some treatments take a small deposit)" is gone too. Each deposit still shows beside its treatment on the menu and in the policies. "Opens lumevina.glossgenius.com" stays under the button.
+
+**Simplified the same day:** the heading is now "Book your next appointment." The tag reads "Online booking coming soon", followed by one line: "For now, book through GlossGenius using the button below." Nothing repeats where the calendar is or how deposits work, and nothing suggests booking on the website is already open.
