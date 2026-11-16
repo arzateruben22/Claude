@@ -107,6 +107,25 @@ const onPalette = (page) => game(page, () => {
   return k / Math.max(1, n);
 });
 const pc = (f) => (f * 100).toFixed(1) + '%';
+// in the page: one frame drawn and read straight from the drawing buffer (no HUD), kept as window.__ctxRef[tag]; its
+// share of pure black (0,0,0) pixels, its mean difference per channel (0..255) from the frame kept as 'pre' (diff) and
+// from the last one read (step), and whether the environment map is still due to be built (dirty)
+function ctxFrameInPage(tag) {
+  const g = window.__game, gl = g.renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, d = new Uint8Array(w * h * 4);
+  g.draw(performance.now(), 0);
+  g.renderer.setRenderTarget(null);
+  gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, d);
+  const ref = (window.__ctxRef ??= {}), pre = ref.pre, last = ref.last;
+  let black = 0, diff = 0, step = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i] + d[i + 1] + d[i + 2] === 0) black++;
+    if (pre && pre.length === d.length) diff += Math.abs(d[i] - pre[i]) + Math.abs(d[i + 1] - pre[i + 1]) + Math.abs(d[i + 2] - pre[i + 2]);
+    if (last && last.length === d.length) step += Math.abs(d[i] - last[i]) + Math.abs(d[i + 1] - last[i + 1]) + Math.abs(d[i + 2] - last[i + 2]);
+  }
+  ref[tag] = d; ref.last = d;
+  const n = w * h;
+  return { black: black / n, diff: pre && pre.length === d.length ? diff / (3 * n) : 99, step: last && last.length === d.length ? step / (3 * n) : 99, dirty: !!g.env.envDirty };
+}
 // after a page load: keep every result the game reports, so checks can read it; and the stopped-car helper below
 async function hook(page) {
   await page.evaluate(() => { const g = window.__game, o = g.ev.over; window.__results = []; g.ev.over = (r) => { window.__results.push(r); o(r); }; });
@@ -2439,6 +2458,49 @@ await group('render', async (use) => {
     await shot('after-context-loss');
     return `paused while lost, rendering again after Resume (${after.roads} road chunks)`;
   });
+  // A lost and restored context must come back looking as it did (2026-11-16: on iOS, after the app went to the
+  // background, standard Low drew the cabin pure black for good, because the environment map lived only on the GPU and
+  // nothing drew it again). Low and High, the seat view, paused: the frame is read straight from the drawing buffer
+  // once it has settled (the environment map built, the field of view eased in), then again after a loss and restore.
+  // Measured here (640x360, SwiftShader): two settled frames differ by 0.03 to 0.2 levels a channel on average; the
+  // broken restore was 28.5 at Low (34% of the frame pure black) and 0.7 even with Retro's toon materials. 2.0 sits
+  // ten times over the noise and well under the smallest real breakage. The game's onContextRestored hook (the one
+  // restore path other parts register their GPU rebuilds with) must run once per restore and not after unregistering.
+  await check('a lost context comes back as it was: Low and High, seat view, no black cabin; onContextRestored runs once a restore', async () => {
+    const read = (tag) => game(page, ctxFrameInPage, tag);
+    const loseAndRestore = async () => {
+      await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
+      await page.waitForFunction(() => window.__game.renderer.getContext().isContextLost(), null, { timeout: 30000 });
+      await page.waitForTimeout(300);
+      await game(page, () => window.__lose.restoreContext());
+      await page.waitForFunction(() => !window.__game.renderer.getContext().isContextLost() && window.__game.isPaused, null, { timeout: 60000 });
+      await frames(page, 2, 400000);
+    };
+    await game(page, () => { const g = window.__game; window.__hookRuns = []; window.__unhook = g.onContextRestored((n) => window.__hookRuns.push(n)); });
+    const out = [], restores0 = await game(page, () => window.__game.contextRestores);
+    for (const q of ['low', 'high']) {
+      await game(page, (qq) => { const g = window.__game; g.updateSettings({ ...g.settings, quality: qq, style: 'standard', corner: 'map' }); g.setPaused(true); g.setCam('cockpit'); }, q);
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: 400000 });
+      let calm = 0, s = null;
+      for (let k = 0; k < 60 && calm < 2; k++) { await frames(page, 3, 400000); s = await read('settle'); calm = !s.dirty && s.step < 0.6 ? calm + 1 : 0; }
+      expect(calm >= 2, `${q}: the frame never settled (last step ${fmt(s.step)}, environment map ${s.dirty ? 'still due' : 'built'})`);
+      await read('pre');
+      await frames(page, 2, 400000);
+      const noise = await read('noise');
+      await loseAndRestore();
+      const after = await read('after');
+      if (q === 'low') await shot('context-restored-low-seat');
+      expect(after.black <= noise.black + 0.005, `${q}: ${pc(after.black)} of the frame pure black after the restore (${pc(noise.black)} before)`);
+      expect(after.diff < 2, `${q}: the restored frame differs from the one before by ${fmt(after.diff)} levels a channel on average (two frames before it: ${fmt(noise.diff)})`);
+      out.push(`${q}: ${fmt(after.diff)} levels from the frame before (noise ${fmt(noise.diff)}), ${pc(after.black)} pure black`);
+      if (q === 'low') await game(page, () => window.__unhook());   // the hook leaves before the second restore
+    }
+    const hook = await game(page, (r0) => ({ runs: window.__hookRuns, restores: window.__game.contextRestores - r0 }), restores0);
+    expect(hook.restores === 2 && hook.runs.length === 1 && hook.runs[0] === restores0 + 1, `restores ${hook.restores}, the hook ran with ${JSON.stringify(hook.runs)} (registered for the first only)`);
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low' }); });
+    await frames(page, 2, 400000);
+    return out.join('; ') + `; the hook ran once for ${hook.restores} restores`;
+  });
   // RS1, the Retro style (src/game/render/style.ts) on Low: cel-shaded toon materials everywhere the world was lit,
   // the road chunks and tiles built while it's on styled too, hard one-step shadows, its banded sky in place of the
   // realistic one, its own pass at the screen's full resolution; switched back, every original material returns
@@ -2467,8 +2529,8 @@ await group('render', async (use) => {
     const share = await onPalette(page);
     // the context lost and restored with Retro on (Game's webglcontextrestored runs applyQuality, which keeps the
     // style): it draws through its pass again, at the canvas's size, still in the palette. (Pure black is left out of
-    // the palette share: since before the port a restored context leaves the environment map unbuilt, so the
-    // cabin draws pure black (0,0,0) in the standard style after the context check above)
+    // the palette share: until 2026-11-16 a restored context left the environment map unbuilt and the cabin drew pure
+    // black (0,0,0) in the standard style; the restore path now rebuilds it, checked just above)
     await game(page, () => { window.__lose = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lose.loseContext(); });
     await page.getByText('Graphics reset').waitFor({ timeout: 10000 });
     await game(page, () => window.__lose.restoreContext());
