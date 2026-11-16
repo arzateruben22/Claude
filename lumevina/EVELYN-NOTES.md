@@ -608,3 +608,7 @@ The card above the shop now reads:
   - the server's product list (`server/seed-products.sql`)
   - the privacy page and the TikTok caption
 - **To do on GlossGenius:** her In-Person and Virtual Consultations there should be $75 too, since the simpler version of the site books on GlossGenius.
+
+## The GlossGenius booking card: no deposit line (Nov 16)
+
+"Some treatments take a deposit ($20 to $50) when you book…" is removed from the booking card, where booking runs on GlossGenius. The card keeps "New here?" and "Been before?" and the "See openings and book" button. The deposits themselves are unchanged: GlossGenius still takes them, and each one still shows on the menu, in the policies and in the chat.
