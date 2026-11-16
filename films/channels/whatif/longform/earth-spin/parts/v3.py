@@ -14,14 +14,14 @@ FPS, BPM = 30, 50
 A = {s["k"]: s for s in json.loads((SP / "cutA/lines.json").read_text())["sentence_files"]}
 V = json.loads((SP / "cutV/phrases.json").read_text())
 CONFIG = {
- 1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p1_cliff"), ("closer", "V", "c1")], hook="How fast before you float off?"),
+ 1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p1_cliff")], hook="How fast before you float off?"),
  3: dict(items=[("open", "V", "p3_open"), ("sent", "A", 23), ("sent", "S", "u_ground"), ("sent", "S", "u_gust"), ("sent", "A", 26), ("sent", "A", 27), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p3_cliff")], hook="The air can't keep up"),
  4: dict(items=[("open", "V", "p4_open"), ("sent", "A", 29), ("sent", "S", "u_sea"), ("sent", "S", "u_depth"), ("sent", "A", 32), ("sent", "A", 33), ("cliff", "V", "p4_cliff"), ("closer", "V", "c4")], hook="Then the oceans move"),
  5: dict(items=[("open", "V", "p5_open"), ("sent", "A", 34), ("sent", "A", 35), ("sent", "A", 36), ("sent", "A", 37), ("sent", "A", 38), ("sent", "S", "u_eq6"), ("sent", "A", 40), ("sent", "A", 41), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p5_cliff")], hook="Storms are steered by the spin"),
  6: dict(items=[("open", "V", "p6_open"), ("sent", "A", 43), ("sent", "A", 44), ("sent", "A", 45), ("sent", "A", 46), ("sent", "A", 47), ("sent", "A", 48), ("cliff", "V", "p6_cliff"), ("closer", "V", "c6")], hook="The calendar breaks"),
  7: dict(items=[("open", "V", "p7_open"), ("sent", "A", 49), ("sent", "S", "u_speed3"), ("sent", "S", "u_w3"), ("sent", "A", 52), ("sent", "S", "u_jump2"), ("sent", "A", 54), ("sent", "A", 55), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p7_cliff")], hook="Three hours, then two"),
  8: dict(items=[("open", "V", "p8_open"), ("sent", "S", "u_w15"), ("sent", "S", "u_jump15"), ("sent", "A", 58), ("cliff", "V", "p8_cliff"), ("closer", "V", "c8")], hook="Almost weightless"),
- 2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cta", "V", "cta_follow", "cta_sub"), ("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
+ 2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
 }[N]
 TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up", "Then the oceans move", "Storms are steered by the spin", "The calendar breaks", "Three hours, then two", "Almost weightless"]
 SI = json.loads((HERE / "standin/lines.json").read_text())
@@ -146,7 +146,7 @@ elif N == 8:
 else:
     KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]
     RP = {"open": ("lookUp", "awe"), "s17": ("lookUp", "wide"), "s18": ("lookUp", "neutral"), "s20": ("float", "happy"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
-    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s18") - 0.2, 3), "mode": "wide"}, {"t0": round(t_end_of("s18") - 0.2, 3), "mode": "push"}, {"t0": round(U("s21") - 0.2, 3), "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "base"}]
+    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s18") - 0.2, 3), "mode": "wide"}, {"t0": round(t_end_of("s18") - 0.2, 3), "mode": "push"}, {"t0": round(U("s21") - 0.2, 3), "mode": "ground"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "base"}]
     BS = round(t_end_of("s18") + 0.3, 3)
     CHIPS = [{"t0": round(U("s17") + 0.4, 3), "t1": round(t_end_of("s17") + 0.3, 3), "text": "6 h of daylight"}, {"t0": round(U("s18") + 0.3, 3), "t1": round(t_end_of("s18") + 0.3, 3), "text": "Sun at hour-hand speed"},
              {"t0": round(BS + 1.4, 3), "t1": round(BS + 3.3, 3), "text": "\u22482,080 mph \u00b7 nearly 3\u00d7 the speed of sound"}, {"t0": round(U("s21") + 0.2, 3), "t1": round(t_end_of("s21") + 0.4, 3), "text": "8 h of sleep won't fit"}]
