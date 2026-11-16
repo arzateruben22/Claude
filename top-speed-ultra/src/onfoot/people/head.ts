@@ -75,10 +75,33 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
     // the mandible: body from the chin to the angle, then the ramus up to the ear
     // (blended fairly tight so the lower border stays an edge over the neck instead of filleting into it, but not so
     // tight that it reads as a bevelled slab; the angle is a rounded knob where the masseter inserts, not a box corner)
-    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, -0.083, -0.058], 0.0105, 0.0115 + 0.002 * (jw - 1), 0.02);
-    K([sg * 0.041 * jw, -0.083, -0.058], [sg * 0.049, -0.036, -0.072], 0.0115, 0.009, 0.019);
+    const jy = -0.083 + 0.01 * (F.jawRise ?? 0);   // (jawRise: unset, the angle where it was)
+    K([sg * 0.015 * cw, -0.1 * cl, 0.006], [sg * 0.041 * jw, jy, -0.058], 0.0105, 0.0115 + 0.002 * (jw - 1), 0.02);
+    K([sg * 0.041 * jw, jy, -0.058], [sg * 0.049, -0.036, -0.072], 0.0115, 0.009, 0.019);
     // jowls with age and weight
     if (old + fat > 0.7) E([sg * 0.032, -0.088 - 0.004 * old, 0.0], 0.016, 0.014 + 0.008 * fat, 0.016 + 0.006 * fat, 0.02);
+  }
+  // (FaceShape.jawSoft, pack 2026-11-12: unset for every other face, which builds exactly as before)
+  if (F.jawSoft) for (const sg of [1, -1]) {
+    const q = F.jawSoft;
+    E([sg * 0.0265, -0.08, 0.003], 0.0165 * q, 0.0165, 0.0165 * q, 0.02);
+    E([sg * 0.038 * Math.min(jw, 1.05), -0.066, -0.022], 0.0135 * q, 0.022, 0.026, 0.022);
+  }
+  // (FaceShape.cheekFill, graphics pass 2026-11-15: unset for every other face)
+  // the face's soft tissue as two smooth masses under the features, a wide one at the cheeks and a narrower one at the
+  // jaw: the hollows between the cheekbone, the masseter, the cheek, the mouth and the jaw fill to one surface, and
+  // the bones (the cheekbone, the jaw's edge, the chin) stand a little proud of it instead of out of a pit
+  if (F.cheekFill) {
+    const q = 0.93 + 0.07 * F.cheekFill, wj = 0.9 + 0.1 * jw;
+    E([0, -0.034, -0.03], 0.066 * q, 0.05, 0.05 * q, 0.02);
+    E([0, -0.064, -0.026], 0.054 * q * wj, 0.04, 0.045 * q, 0.02);
+  }
+  // (FaceShape.round, graphics pass 2026-11-15: a heavyset, round face; unset for every other face)
+  if (F.round) for (const sg of [1, -1]) {
+    const q = F.round;
+    E([sg * 0.041, -0.058, -0.014], 0.024 * q, 0.034, 0.03, 0.03);      // full cheeks out to the face's side
+    E([sg * 0.034, -0.086, -0.012], 0.022 * q, 0.022, 0.03, 0.03);      // the jaw line buried
+    E([sg * 0.016, -0.106, 0.0], 0.02 * q, 0.014, 0.02, 0.026);         // beside and under the chin
   }
   E([0, -0.07, -0.036], 0.032 * jw, 0.028, 0.04, 0.022);
   E([0, -0.069, 0.002], 0.029, 0.024, 0.019, 0.016);
@@ -94,16 +117,17 @@ export function buildHead(f: Field, F: FaceShape, b: BodyShape, o: { hs: number;
   const nl = F.noseLen, nw = F.noseW, nb = F.noseBridge, nt = F.noseTip;
   // the dorsum starts at the eye line about 10 mm wide and blends softly, and the sidewalls start further out, so the
   // nose slopes into the maxilla instead of standing on it as a blade with a crease; the lobule continues the dorsum
-  const tip: V3 = [0, -0.0375 * nl, 0.032 + 0.004 * (nl - 1)];
+  const tip: V3 = [0, -0.0375 * nl, 0.032 + 0.004 * (nl - 1) + 0.006 * (F.noseProj ?? 0)];   // (noseProj: unset, as before)
   K([0, 0.008, 0.0162], [0, tip[1] + 0.008, tip[2] - 0.0018], 0.0052 * (0.85 + 0.15 * nb), 0.0058 * nw, 0.012, [0, 0, 1], 1.0 + 0.1 * (nb - 1), 0.82, C, 0.95);
-  for (const sg of [1, -1]) K([sg * 0.006, -0.017, 0.0172], [sg * 0.0098 * nw, tip[1] + 0.003, 0.0205], 0.0028, 0.0056, 0.013);
+  const npj = 0.003 * (F.noseProj ?? 0);   // (the wings, sidewalls, columella and nostrils come half as far forward as the tip)
+  for (const sg of [1, -1]) K([sg * 0.006, -0.017, 0.0172], [sg * 0.0098 * nw, tip[1] + 0.003, 0.0205 + npj], 0.0028, 0.0056, 0.013);
   // the lobule (tip), the alae either side with their round wings, the columella, and nostrils that open downward
   E(tip, 0.0064 * nt * nw, 0.0068 * nt, 0.007 * nt, 0.0075);
-  for (const sg of [1, -1]) E([sg * 0.0108 * nw, tip[1] - 0.0062, 0.0212 + 0.002 * (nl - 1)], 0.0058 * nw, 0.0056, 0.0076, 0.0064);
-  K([0, tip[1] - 0.004, tip[2] - 0.004], [0, -0.049 * nl, 0.0262], 0.0036, 0.0031, 0.005);
+  for (const sg of [1, -1]) E([sg * 0.0108 * nw, tip[1] - 0.0062, 0.0212 + 0.002 * (nl - 1) + npj], 0.0058 * nw, 0.0056, 0.0076, 0.0064);
+  K([0, tip[1] - 0.004, tip[2] - 0.004], [0, -0.049 * nl, 0.0262 + npj], 0.0036, 0.0031, 0.005);
   E([0, -0.0458 * nl, 0.0192], 0.0098 * nw, 0.005, 0.0072, 0.006);
   // nostrils: shallow, tucked under the lobule behind the columella's front, opening downward
-  for (const sg of [1, -1]) XR([sg * 0.0056 * nw, tip[1] - 0.0092, 0.0215], [0, 0.18, 1], [0, 1, -0.18], 0.0040, 0.0012, 0.0023 * nw, 0.0016);
+  for (const sg of [1, -1]) XR([sg * 0.0056 * nw, tip[1] - 0.0092, 0.0215 + npj * 1.4], [0, 0.18, 1], [0, 1, -0.18], 0.0040, 0.0012, 0.0023 * nw, 0.0016);
   // ---- lips: upper (with the Cupid's bow), lower; philtral columns; the slit and the cavity behind
   const mw = F.mouthW, lu = F.lipUpper, ll = F.lipLower;
   const mY = -0.0675 - 0.002 * (nl - 1);
