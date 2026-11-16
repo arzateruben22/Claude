@@ -28,6 +28,7 @@ export interface Settings {
   engine: number;
   ambient: number;
   fov: number;              // added to the cockpit's base field of view, degrees
+  fovSet?: boolean;         // true once the player moves the Field of view slider (a saved 0 without it reads as the old default)
   showFps: boolean;
   corner: Corner;           // the top-right window: road map, live sky camera, or nothing
   cornerSize: number;       // 0 small, 1 medium, 2 large
@@ -158,7 +159,7 @@ function guessQuality(): Quality {
 export function defaults(): Settings {
   return {
     quality: guessQuality(), adaptive: true, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
-    master: 0.8, engine: 0.9, ambient: 0.7, fov: 0, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
+    master: 0.8, engine: 0.9, ambient: 0.7, fov: 10, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, style: 'standard', look: 'ultra', paints: {}, wheels: {}, radioFavs: [],
   };
 }
@@ -211,6 +212,9 @@ function readSettings(): Settings {
       presentation: v.presentation === 'f' ? 'f' : 'm',
       skin: Math.max(0, Math.min(4, Number(v.skin ?? d.skin) || 0)),
       transmission: v.transmission === 'manual' ? 'manual' : 'auto',
+      // the owner (2026-11-16): the standard Field of view is +10. A device that saved the old default (0) without ever
+      // moving the slider takes the new one; a value the player chose (fovSet, or anything but 0) is kept.
+      fov: typeof v.fov === 'number' && Number.isFinite(v.fov) && (v.fovSet === true || v.fov !== 0) ? Math.max(-10, Math.min(15, v.fov)) : d.fov,
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
