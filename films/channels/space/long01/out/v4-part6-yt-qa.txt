@@ -1,0 +1,30 @@
+duration 60.52 s SHORT of 61 s (flagged, not padded)
+true peak -1.7 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part6-yt-contact.jpg
+    0.34  caption: 'Watch it rise in the wrong place.'
+          speech : 'Watch it rise in the wrong place.'
+   10.02  caption: '50,000.'
+          speech : 'Fifty thousand nearly'
+   11.31  caption: 'Nearly 8× wider.'
+          speech : 'nearly eight times wider.'
+   17.38  caption: 'One lap takes about a day and a quarter,'
+          speech : 'One lap takes about a day and a quarter close.'
+   19.49  caption: 'close to how fast the Earth turns.'
+          speech : 'quarter close to how fast the earth turns.'
+   27.06  caption: '42,000.'
+          speech : '42,000. It hangs'
+   28.54  caption: 'It hangs still.'
+          speech : 'It hangs still.'
+   36.60  caption: 'Then it slides the wrong way.'
+          speech : 'Then it slides the wrong way.'
+   47.46  caption: 'It rises in the west.'
+          speech : 'It rises in the west.'
+   57.51  caption: 'Part 6 of 8.'
+          speech : 'Part 6 of 8. Full video.'
+   58.48  caption: 'Full video on YouTube.'
+          speech : 'Full video on YouTube.'
+caption = speech: OK
+QA PASS

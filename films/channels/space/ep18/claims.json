@@ -1,26 +1,8 @@
 [
  {
-  "id": "c18",
-  "sentence": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day.",
-  "claim": "The solid ground is lifted and lowered by the Moon's pull by tens of centimeters a day.",
-  "source_url": "https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html",
-  "source_title": "Solid Earth tides (J. T. Bullitt)",
-  "accessed": "2026-11-09",
-  "note": "Source URL found by search on 2026-11-09; the page has NOT been read by the builder. A person opens it before OK. Source not readable from the build machine; a person should open https://www.jtbullitt.com/earthsound/solid_earth_tides/index.html.",
-  "verified_via": "not read",
-  "status": "OPEN",
-  "source_read": {
-   "date": "2026-11-09",
-   "by": "builder (an AI): search excerpt only, page not opened",
-   "quote": "",
-   "qualification": "Not yet read."
-  },
-  "derivation": "Solid-Earth tides lift and lower the ground by tens of centimeters a day."
- },
- {
-  "id": "c37",
-  "sentence": "Seventy thousand kilometers.",
-  "claim": "In our thought experiment the Moon is brought to 70,000 km.",
+  "id": "c40",
+  "sentence": "Fifty thousand.",
+  "claim": "In our thought experiment the Moon is brought to 50,000 km.",
   "source_url": "",
   "source_title": "Our thought experiment (not a measurement)",
   "accessed": "2026-11-10",
@@ -33,60 +15,60 @@
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "70,000 km is a waypoint chosen for the film; no physics claim."
+  "derivation": "50,000 km is a waypoint chosen for the film; no physics claim."
  },
  {
-  "id": "c38",
-  "sentence": "The Moon is about five and a half times wider than tonight.",
-  "claim": "A Moon at 70,000 km would look about five and a half times wider.",
+  "id": "c19",
+  "sentence": "Nearly eight times wider.",
+  "claim": "A Moon at 50,000 km would look nearly eight times wider than tonight's.",
   "source_url": "",
   "source_title": "Our calculation (shown in the film)",
-  "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (arithmetic): at 50,000 km the Moon's angular width is 7.7x today's (our calculation).",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
-   "date": "2026-11-10",
+   "date": "2026-11-09",
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "At 70,000 km the Moon's angular width is 5.5x today's (calc.py)."
+  "derivation": "at 50,000 km the Moon's angular width is 7.7x today's (calc.py)."
  },
  {
-  "id": "c39",
-  "sentence": "Its tidal pull is more than a hundred sixty times today's.",
-  "claim": "At 70,000 km the Moon's tidal pull would be more than 160 times today's.",
+  "id": "c21",
+  "sentence": "One lap takes about a day and a quarter",
+  "claim": "At 50,000 km a lap around Earth would take about a day and a quarter.",
   "source_url": "",
   "source_title": "Our calculation (shown in the film)",
-  "accessed": "2026-11-10",
-  "note": "OWN INFERENCE (arithmetic/physics from our calculation and the NASA fact-sheet inputs in c1/c3).",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (Kepler's third law, our calculation): at 50,000 km the period is 30.9 h.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
-   "date": "2026-11-10",
+   "date": "2026-11-09",
    "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
    "qualification": "Own inference; see the note."
   },
-  "derivation": "With tidal force ~ 1/d^3, at 70,000 km the TIDAL pull is (384,400/70,000)^3 = 166x today's, more than a hundred sixty times (calc.py)."
+  "derivation": "at 50,000 km the period is 30.9 h."
  },
  {
-  "id": "c43",
-  "sentence": "In real life, tides are why the Moon drifts away: they steal a little of Earth's spin and hand it to the Moon's orbit.",
-  "claim": "Tides slow the Earth's spin and push the Moon's orbit outward, which is why it drifts away.",
-  "source_url": "https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035",
-  "source_title": "The Moon Is Moving Farther From Earth Each Year, and Tides Are the Reason (Discover)",
-  "accessed": "2026-11-11",
-  "note": "Secondary source; a NASA/JPL page is better. Source not readable from the build machine; a person should open https://www.discovermagazine.com/the-moon-is-moving-farther-from-earth-each-year-and-the-reason-why-comes-down-to-the-tides-48035.",
+  "id": "c22",
+  "sentence": "Forty-two thousand.",
+  "claim": "A moon closer than about 42,000 km orbits faster than the Earth turns, so it would rise in the west.",
+  "source_url": "",
+  "source_title": "Our calculation (shown in the film)",
+  "accessed": "2026-11-09",
+  "note": "OWN INFERENCE (Kepler, our calculation): a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day.",
   "verified_via": "not read",
   "status": "OPEN",
   "source_read": {
-   "date": "2026-11-11",
-   "by": "builder (an AI): source not yet read",
+   "date": "2026-11-09",
+   "by": "builder (an AI): derivation, no page read for this step",
    "quote": "",
-   "qualification": "Not yet read."
+   "qualification": "Own inference; see the note."
   },
-  "derivation": "Tidal friction transfers angular momentum from Earth's spin to the Moon's orbit, which is why the Moon recedes."
+  "derivation": "a satellite below the synchronous radius (42,164 km) orbits faster than the Earth turns, so it rises in the west. Geostationary radius from Earth's GM and the sidereal day."
  }
 ]

@@ -135,7 +135,32 @@ def build(use_closer):
                     n += 1
                     if n == occ: t0 = round(c["t"] + w["start"] - c["from"], 3); chips.append({"t0": t0, "t1": round(t0 + d, 3), "text": text})
     for c in ncaps: c["spoken"] = c["text"]; c["text"] = to_display(c["text"])
-    tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": split_caps(ncaps, 100 if N == 0 else 68), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
+    def retime(cs):
+        """a sentence shown in two pieces (split_caps divides the time by length): start each later piece on its first word, from the aligner's word times"""
+        out = []; i = 0
+        while i < len(cs):
+            j = i
+            while j + 1 < len(cs) and cs[j + 1]["spoken"] == cs[i]["spoken"] and cs[j + 1]["line"] == cs[i]["line"]: j += 1
+            grp = cs[i:j + 1]
+            if len(grp) > 1:
+                L = lines[grp[0]["line"]]; sents = L["sentences"]; k = next((q for q, sn in enumerate(sents) if sn["text"] == grp[0]["spoken"]), None)
+                if k is not None:
+                    w0 = sum(len(x["text"].split()) for x in sents[:k]); cnt = 0; t_starts = [grp[0]["t0"]]
+                    for g_ in grp[:-1]:
+                        cnt += len(g_["text"].replace("×", " times").split()) if False else 0
+                    # word counts of the pieces come from the spoken words, so split the spoken sentence in the same proportions as the displayed pieces' word counts
+                    nw = [len(g_["text"].split()) for g_ in grp]; tot = sum(nw); wsent = len(sents[k]["text"].split()); acc = 0
+                    for q in range(len(grp) - 1):
+                        acc += nw[q]; wi = w0 + min(wsent - 1, max(1, round(acc * wsent / tot)))
+                        w = L["words"][wi] if wi < len(L["words"]) else None
+                        c_ = next((c for c in nclips if c["id"] == L["id"] and c["from"] - 0.01 <= w["start"] <= c["from"] + c["dur"]), None) if w else None
+                        t_starts.append(round(c_["t"] + w["start"] - c_["from"] - 0.05, 3) if c_ else grp[q + 1]["t0"])
+                    for q, g_ in enumerate(grp):
+                        g_ = dict(g_); g_["t0"] = max(t_starts[q], grp[0]["t0"]) if q else grp[0]["t0"]; g_["t1"] = round(t_starts[q + 1] - 0.02, 3) if q + 1 < len(grp) else grp[-1]["t1"]
+                        if g_["t1"] > g_["t0"]: grp[q] = g_
+            out += grp; i = j + 1
+        return out
+    tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": retime(split_caps(ncaps, 100 if N == 0 else 68)), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
           "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "breathe": N >= 3 or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
     if N == 1 or PART.get("motion1"):   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
         cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]

@@ -1,170 +1,117 @@
 {
  "id": "one-more-orbit-s3-part6",
  "title": {
-  "title": "It's Not Just the Sea",
+  "title": "The Moon Rises in the West",
   "series": "One More Orbit · Season 3 · Part 6 of 8"
  },
  "disclosures": {
-  "aiVoice": true,
+  "realVoice": true,
+  "aiVoice": false,
   "aiVisuals": true
  },
- "dur": 64.598,
+ "dur": 60.51,
  "fps": 30,
  "captions": [
   {
-   "t0": 0.245,
-   "t1": 1.79,
-   "text": "It's not just the sea.",
-   "line": "ch6_hook",
-   "spoken": "It's not just the sea."
+   "t0": 0.345,
+   "t1": 2.4,
+   "text": "Watch it rise in the wrong place.",
+   "line": "B7",
+   "spoken": "Watch it rise in the wrong place."
   },
   {
-   "t0": 1.81,
-   "t1": 2.5,
-   "text": "The ground moves too.",
-   "line": "ch6_hook",
-   "spoken": "The ground moves too."
+   "t0": 10.02,
+   "t1": 11.29,
+   "text": "50,000.",
+   "line": "L16",
+   "spoken": "Fifty thousand."
   },
   {
-   "t0": 7.0,
-   "t1": 9.415,
-   "text": "70,000 km.",
-   "line": "ch6_vo",
-   "spoken": "Seventy thousand kilometers."
+   "t0": 11.31,
+   "t1": 13.02,
+   "text": "Nearly 8× wider.",
+   "line": "L16",
+   "spoken": "Nearly eight times wider."
   },
   {
-   "t0": 9.435,
-   "t1": 13.495,
-   "text": "The Moon is about 5.5 times wider than tonight.",
-   "line": "ch6_vo",
-   "spoken": "The Moon is about five and a half times wider than tonight."
+   "t0": 17.38,
+   "t1": 19.47,
+   "text": "One lap takes about a day and a quarter,",
+   "line": "L16",
+   "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
   },
   {
-   "t0": 13.515,
-   "t1": 18.045,
-   "text": "Its tidal pull is more than 160 times today's.",
-   "line": "ch6_vo",
-   "spoken": "Its tidal pull is more than a hundred sixty times today's."
+   "t0": 19.49,
+   "t1": 22.47,
+   "text": "close to how fast the Earth turns.",
+   "line": "L16",
+   "spoken": "One lap takes about a day and a quarter, close to how fast the Earth turns."
   },
   {
-   "t0": 21.095,
-   "t1": 24.524,
-   "text": "The solid Earth already rises and falls a little",
-   "line": "ch6_vo",
-   "spoken": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day."
+   "t0": 27.06,
+   "t1": 28.515,
+   "text": "42,000.",
+   "line": "L17",
+   "spoken": "Forty-two thousand."
   },
   {
-   "t0": 24.544,
-   "t1": 27.49,
-   "text": "with the Moon, tens of centimeters a day.",
-   "line": "ch6_vo",
-   "spoken": "The solid Earth already rises and falls a little with the Moon, tens of centimeters a day."
+   "t0": 28.535,
+   "t1": 30.55,
+   "text": "It hangs still.",
+   "line": "L17",
+   "spoken": "It hangs still."
   },
   {
-   "t0": 27.51,
-   "t1": 30.605,
-   "text": "With far more pull, it would flex far more.",
-   "line": "ch6_vo",
-   "spoken": "With far more pull, it would flex far more."
+   "t0": 36.605,
+   "t1": 38.215,
+   "text": "Then it slides the wrong way.",
+   "line": "L18",
+   "spoken": "Then it slides the wrong way."
   },
   {
-   "t0": 34.155,
-   "t1": 36.918,
-   "text": "What that would do to faults and volcanoes,",
-   "line": "ch6_vo",
-   "spoken": "What that would do to faults and volcanoes, this film cannot tell you."
+   "t0": 47.46,
+   "t1": 49.32,
+   "text": "It rises in the west.",
+   "line": "L18",
+   "spoken": "It rises in the west."
   },
   {
-   "t0": 36.938,
-   "t1": 38.62,
-   "text": "this film cannot tell you.",
-   "line": "ch6_vo",
-   "spoken": "What that would do to faults and volcanoes, this film cannot tell you."
-  },
-  {
-   "t0": 38.64,
-   "t1": 42.795,
-   "text": "In real life, tides are why the Moon drifts away.",
-   "line": "ch6_vo",
-   "spoken": "In real life, tides are why the Moon drifts away."
-  },
-  {
-   "t0": 42.815,
-   "t1": 45.161,
-   "text": "To make it come closer, our thought",
-   "line": "ch6_vo",
-   "spoken": "To make it come closer, our thought experiment has to break that rule."
-  },
-  {
-   "t0": 45.181,
-   "t1": 47.48,
-   "text": "experiment has to break that rule.",
-   "line": "ch6_vo",
-   "spoken": "To make it come closer, our thought experiment has to break that rule."
-  },
-  {
-   "t0": 50.605,
-   "t1": 51.68,
-   "text": "Still looking up?",
-   "line": "cta2_follow",
-   "spoken": "Still looking up?"
-  },
-  {
-   "t0": 51.7,
-   "t1": 52.98,
-   "text": "Tap like and follow.",
-   "line": "cta2_follow",
-   "spoken": "Tap like and follow."
-  },
-  {
-   "t0": 53.0,
-   "t1": 54.59,
-   "text": "There's plenty more sky.",
-   "line": "cta2_follow",
-   "spoken": "There's plenty more sky."
-  },
-  {
-   "t0": 54.726,
-   "t1": 56.316,
-   "text": "The number keeps falling.",
-   "line": "ch6_vo",
-   "spoken": "The number keeps falling."
-  },
-  {
-   "t0": 56.484,
-   "t1": 60.554,
-   "text": "Because soon, the Moon will rise from the wrong side of the sky.",
-   "line": "ch6_loop",
-   "spoken": "Because soon, the Moon will rise from the wrong side of the sky."
-  },
-  {
-   "t0": 60.703,
-   "t1": 62.063,
+   "t0": 57.505,
+   "t1": 58.46,
    "text": "Part 6 of 8.",
-   "line": "closer6",
+   "line": "C6",
    "spoken": "Part six of eight."
   },
   {
-   "t0": 62.083,
-   "t1": 63.893,
+   "t0": 58.485,
+   "t1": 59.82,
    "text": "Full video on YouTube.",
-   "line": "closer6",
+   "line": "C6",
    "spoken": "Full video on YouTube."
   }
  ],
  "km": [
   [
    0.0,
-   100000
+   70000
   ],
   [
    0.0,
-   100000
+   70000
   ],
   [
-   6.95,
-   70000,
-   3.5
+   9.645,
+   50000,
+   7.0
+  ],
+  [
+   26.764,
+   50000
+  ],
+  [
+   28.265,
+   42000,
+   1.5
   ]
  ],
  "tracks": {
@@ -201,61 +148,59 @@
  },
  "clips": [
   {
-   "id": "ch6_hook",
-   "file": "voice/wav/17.wav",
+   "id": "B7",
+   "file": "voice5/wav/B7.wav",
    "t": 0.15,
-   "dur": 2.97,
+   "dur": 2.32,
    "from": 0.0
   },
   {
-   "id": "ch6_vo",
-   "file": "voice/wav/18.wav",
-   "t": 6.97,
-   "dur": 11.105,
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 9.82,
+   "dur": 3.23,
    "from": 0.0
   },
   {
-   "id": "ch6_vo",
-   "file": "voice/wav/18.wav",
-   "t": 21.075,
-   "dur": 9.56,
-   "from": 11.105
+   "id": "L16",
+   "file": "voice5/wav/L16.wav",
+   "t": 17.05,
+   "dur": 5.46,
+   "from": 3.23
   },
   {
-   "id": "ch6_vo",
-   "file": "voice/wav/18.wav",
-   "t": 34.135,
-   "dur": 13.145,
-   "from": 20.665
-  },
-  {
-   "id": "cta2_follow",
-   "file": "voice/wav/37.wav",
-   "t": 50.58,
-   "dur": 3.796,
+   "id": "L17",
+   "file": "voice5/wav/L17.wav",
+   "t": 26.86,
+   "dur": 3.76,
    "from": 0.0
   },
   {
-   "id": "ch6_vo",
-   "file": "voice/wav/18.wav",
-   "t": 54.676,
-   "dur": 1.438,
-   "from": 33.81
-  },
-  {
-   "id": "ch6_loop",
-   "file": "voice/wav/19.wav",
-   "t": 56.464,
-   "dur": 3.869,
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 36.47,
+   "dur": 1.775,
    "from": 0.0
   },
   {
-   "id": "closer6",
-   "file": "voice/wav/33.wav",
-   "t": 60.683,
-   "dur": 2.965,
+   "id": "L18",
+   "file": "voice5/wav/L18.wav",
+   "t": 47.245,
+   "dur": 2.495,
+   "from": 1.775
+  },
+  {
+   "id": "C6",
+   "file": "voice5/wav/C6.wav",
+   "t": 57.09,
+   "dur": 2.52,
    "from": 0.0
   }
  ],
- "source": "season3/engine.js via long01/out/part6.json"
+ "badge": {
+  "t": 5.0,
+  "fade": 0.3
+ },
+ "chips": [],
+ "source": "season3/engine.js via long01/out/v4-part6.json"
 }
