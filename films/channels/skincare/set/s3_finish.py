@@ -16,7 +16,7 @@ for part in spec.split(","):
 (work / "list.txt").write_text("".join(f"file '{f}'\n" for f in lst))
 VIN = ["-f", "concat", "-safe", "0", "-i", work / "list.txt"]      # encode straight from the chunk list: no joined 1440 intermediate on disk
 DUR = "%.6f" % sum(float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(f)], capture_output=True, text=True).stdout.strip()) for f in lst)   # the picture sets the length (sum of the chunks; no -shortest)
-mix = R / f"{ep}v2" / ("mix-yt.m4a" if mode == "youtube" else "mix.m4a")
+mix = R / f"{ep}v2" / ("mix-yt.m4a" if mode == "youtube" and (R / f"{ep}v2/mix-yt.m4a").exists() else "mix.m4a")      # no subscribe take (no spoken ask): the same mix
 if mode == "youtube":
     name = out / f"skin-sense-{n}-9x16-youtube-1440.mp4"
     sh("ffmpeg", "-y", "-loglevel", "error", *VIN, "-i", mix, "-map", "0:v", "-map", "1:a", "-c:v", "libx264", "-crf", "16", "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "copy", "-t", DUR, "-movflags", "+faststart", name)
