@@ -26,10 +26,10 @@ refuses stripe.com), so Stripe's figures come from Stripe's own pages as indexed
   "Fuel the build" tip (from $2). That's 11 items. A livery pack ($5) is in the catalog but can't be sold until the
   livery layer exists in the game.
 - **Prices.** Whole dollars, $2 at the least, because Stripe's fixed 30¢ takes a third of a $0.99 sale. At $3 we keep
-  $2.61. At $10 we keep $9.41. **One exception, the owner's (2026-10-16):** the OC Hypercar Founder Edition is $4.99.
-  Stripe takes $0.44 and we keep $4.55 ($4.47 on an international card).
-- **The OC Hypercar Founder Edition** ($4.99, one time, sold until December 31, 2026). A numbered car, being built on
-  another branch, so it's `available: false` until it's in the game. It's the one car faster than anything you can
+  $2.61. At $10 we keep $9.41. **One exception, the owner's (2026-10-16; $9.99 since 2026-11-11):** the OC Hypercar
+  Founder Edition is $9.99. Stripe takes $0.59 and we keep $9.40 ($9.25 on an international card).
+- **The OC Hypercar Founder Edition** ($9.99, one time, sold until December 31, 2026). A numbered car, in the game
+  since v15 and on sale (`available: true`) since the owner's 2026-11-11 decision; the store is still in test mode. It's the one car faster than anything you can
   earn, and only in Free Drive, which has no clock and no rivals (rule 3a). The $10 Founder Pack doesn't include it.
 - **Where people buy.** On the web, through Stripe's hosted Checkout page. The phone apps restore your items when
   you sign in. Whether the iOS and Android apps may show a store button is a launch-time decision, because the court
@@ -148,7 +148,7 @@ Lean on purpose: 11 items you can buy, all small, all cosmetic, all built from p
 | **Canyon Run** driver style | $3 | $2.61 | Canyon suede gloves, the **Vela Pulse** smart watch (sunset face), olive field jacket cuffs, sandstone nails | Hook |
 | **Fuel the Build** (tip) | pay what you want, from $2 (suggested $5) | $1.64 at $2, $4.55 at $5 | A small "Fuelled the build" badge, the same at any amount. Unlocks nothing else | Badge: to build (small) |
 | *Stripes and Roundels Livery Pack* | $5 | $4.55 | Twin 405 Stripes, Coast Side Stripe, Two-Tone Roof, Door Roundel with your number | **Not sellable yet**: needs a livery layer in the paint (`available: false`) |
-| *OC Hypercar Founder Edition* | $4.99 | $4.55 | The OC Hypercar, numbered by the server (No. 0001 up); a **Founder Edition** plaque with the number on the sill and console; **OC Founder Silver** paint with Founder Ice lights, on this car only. Unleashed in Free Drive only (rule 3a). No garage slot; can't be sold for credits. Sold until **Dec 31, 2026** (whether it is ever sold again is the owner's open decision, §12). Not in the Founder Pack | **Not sellable yet**: the car is being built on another branch (`claude/hypercar`) and isn't in the game this store ships from (`available: false`) |
+| OC Hypercar Founder Edition | $9.99 | $9.40 | The OC Hypercar, numbered by the server (No. 0001 up); a **Founder Edition** plaque with the number on the sill and console; **Glacier Silver** paint (the plan's "OC Founder Silver", renamed at the car's M6) with Founder Ice lights, on this car only. Unleashed in Free Drive only (rule 3a). No garage slot; can't be sold for credits. Sold until **Dec 31, 2026** (whether it is ever sold again is the owner's open decision, §12). Not in the Founder Pack | **On sale** (test mode): in the game since v15; `available: true` since the owner's 2026-11-11 decision ("oc hypercar now 9.99"). Its Unleashed runs are marked on the run card and the Personal bests board |
 
 **Ready** means it works today: it needs only the entitlement check and the picker. **Hook** means the renderer
 already has the parameter but the player can't choose it yet. Examples: `buildCar` takes a caliper colour, and
@@ -189,10 +189,10 @@ and has been checked in renders (§9).
     on Day 46 (Thursday, December 3) at the earliest, so the pack sells for about four weeks, to Day 74
     (December 31). If Day 1 moves, the owner decides before sales start: keep December 31 (a shorter window, and
     the '26 on the badge stays true) or move the end with the calendar (TODO, owner).
-- **Two founder offers, kept apart.** The $10 Founder Pack and the $4.99 OC Hypercar Founder Edition sell in the same
+- **Two founder offers, kept apart.** The $10 Founder Pack and the $9.99 OC Hypercar Founder Edition sell in the same
   window (one constant, `FOUNDER_UNTIL` in `src/store/founder.json`). Neither includes the other, and the store says
   so on the car's card. Their names and looks don't overlap: the pack has the **Founder '26** badge and
-  **Founders Sunset** pearl in the sunset colours; the car has the **Founder Edition** plaque and **OC Founder Silver**
+  **Founders Sunset** pearl in the sunset colours; the car has the **Founder Edition** plaque and **Glacier Silver**
   in silver and ice. The catalog checker fails if they ever share a grant or a name.
 - **The hidden Vela E makes its wheel set unsellable to new players.** The hypercar branch hides the Vela E from
   new players (`PROJECT_OC_HYPERCAR.md` §1). After that merge, a new player can never earn the Vela E, so the store's
@@ -222,7 +222,7 @@ the catalog as `available: false`, so the paywall can be tested against them.
   rivals and marks its Unleashed runs (rule 3a). It's never earnable, takes no garage slot, and can't be sold back
   for credits (`profile.setStoreCars` and `sell` in `src/game/profile.ts`). It's restored on sign-in like every
   other item.
-- **The OC Hypercar Founder Edition** ($4.99, `hypercar-founder`). The server numbers each sale, never the device:
+- **The OC Hypercar Founder Edition** ($9.99, `hypercar-founder`). The server numbers each sale, never the device:
   - A per-sku counter in the database (`server/supabase/migrations/0002_founder_serials.sql`). The `stripe-webhook`
     function asks for the number when the payment succeeds, and it's written to the buyer's entitlement rows.
   - One number per Checkout Session: a retried webhook delivery gets the same number back.
@@ -313,8 +313,8 @@ The 30¢ is what decides our prices:
 | $0.99 | $0.33 | **$0.66** | 67 % | $0.84 |
 | $2 | $0.36 | $1.64 | 82 % | $1.70 |
 | $3 | $0.39 | **$2.61** | 87 % | $2.55 |
-| $4.99 (the hypercar; the owner's exception) | $0.44 | **$4.55** | 91 % | $4.24 |
 | $5 | $0.45 | $4.55 | 91 % | $4.25 |
+| $9.99 (the hypercar; the owner's exception) | $0.59 | **$9.40** | 94 % | $8.49 |
 | $10 | $0.59 | **$9.41** | 94 % | $8.50 |
 | $3 a month (plus Billing's 0.7 %) | $0.41 | $2.59 | 86 % | — |
 | $30 a year (plus Billing's 0.7 %) | $1.38 | $28.62 | 95 % | — |
@@ -325,9 +325,10 @@ What that means:
 - **$2 is the floor** (the tip's minimum). **$3 is the standard item.** $5 is a bigger pack. $10 is the Founder Pack.
 - **Whole dollars.** $3 reads as honest, and Apple has allowed rounded prices such as $3.00 since its 2023 pricing
   change, so the same prices would work in an app later ([Apple, Dec 2022][apple-prices]).
-- **The one exception: $4.99 for the OC Hypercar Founder Edition** (the owner's choice, 2026-10-16). Stripe's 2.9 %
-  + 30¢ takes $0.44, so we keep **$4.55**, the same as at $5. An international card costs 1.5 % more (7¢): we keep
-  $4.47. A refund loses the $0.44; a dispute costs $15 plus the sale. The catalog checker accepts this price for this
+- **The one exception: $9.99 for the OC Hypercar Founder Edition** (the owner's choice: $4.99 on 2026-10-16, then
+  "oc hypercar now 9.99" on 2026-11-11, about 6:25 PM PT). Stripe's 2.9 % + 30¢ takes $0.59 (0.29 + 0.30), so we
+  keep **$9.40**, a cent under $10's $9.41. An international card costs 1.5 % more (15¢): we keep $9.25. A refund
+  loses the $0.59; a dispute costs $15 plus the sale. The catalog checker accepts this price for this
   sku only, so any other price that isn't whole dollars still fails.
 - **Below about $2.48**, a 15 % store cut costs less than Stripe's fee. Above it, Stripe keeps less. The break-even
   is 0.30 / (0.15 − 0.029) = $2.48.
@@ -469,8 +470,8 @@ pressure, so **3 % is optimistic**.
 - 30 % of buyers come back for one more $3 item.
 - 1 player in 400 tips $5.
 - A few refunds, and one card dispute in the high case.
-- The $4.99 OC Hypercar Founder Edition isn't counted. It isn't on sale until the car is in the game, and nothing
-  is forecast for an item before then.
+- The $9.99 OC Hypercar Founder Edition isn't counted. This forecast was made before it went on sale (2026-11-11),
+  and nothing is forecast for it yet.
 
 | | Low | Middle | High |
 | --- | --- | --- | --- |
@@ -700,7 +701,7 @@ and exits 1 on any problem. It checks that:
 
 - every grant resolves, and every entitlement is granted by some sku;
 - kinds, modes and intervals fit the schema;
-- prices are whole dollars of at least $2, except the owner's $4.99 for `hypercar-founder` (that sku, that price);
+- prices are whole dollars of at least $2, except the owner's $9.99 for `hypercar-founder` (that sku, that price);
 - only the two founder offers have a window, it is `FOUNDER_UNTIL`, and that ends at 23:59:59 Pacific;
 - the two founder offers share no grant and no name;
 - a car the store grants is sold only once it's in `src/game/cars.ts`, takes no slot and is never sold back;
@@ -804,8 +805,8 @@ The build (routine, Opus-class, each checked in renders and the suite):
 - [ ] Update `PROJECT_OC_LAUNCH_KIT.md`:
   - Store copy: "Free to play. Optional cosmetics."
   - The ambassador answer to "Is it free?": "Yes. Every freeway, every mode and every car you can earn is free. There
-    are optional looks you can buy." Once the OC Hypercar Founder Edition is on sale, add: "and one founder car for
-    $4.99, faster in Free Drive only."
+    are optional looks you can buy." Now the OC Hypercar Founder Edition is on sale, add: "and one founder car for
+    $9.99, faster in Free Drive only."
   - The privacy and terms sections (§8.7).
 - [ ] Regression checks: `tools/store-check-catalog.mjs`; a test-mode purchase with 4242 granting the right items; a
   refund removing them; an under-13 answer blocking the store; nothing in the store changing a car's `SPEC` or the

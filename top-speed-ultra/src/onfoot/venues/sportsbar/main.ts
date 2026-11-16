@@ -801,7 +801,7 @@ async function main() {
   { const tv = scene.getObjectByName('bar-screens-tv') as THREE.Mesh | undefined; if (tv) barLook.bind([tv]); }
   applyQuality(quality, false);
   // S4: the sound, made in code (audio.ts); it starts on the first tap or key
-  sound.attach({ life, F, camera, quality: () => quality, indoor: indoorAt, open: () => open, night: () => night, dance: () => open && night > 0.2 && life.gameNightNow(), freeway: streams.paths });
+  track(() => sound.attach({ life, F, camera, quality: () => quality, indoor: indoorAt, open: () => open, night: () => night, dance: () => open && night > 0.2 && life.gameNightNow(), freeway: streams.paths }));
   // S4's repair: leaving the venue releases what S4's look and sound made (look.ts, audio.ts dispose()). The page today
   // is left only by closing it (pagehide, not kept in the back-forward cache); the live game's mount layer calls the
   // same release when it takes the venue down. The rest of the page's release paths are unchanged
@@ -810,7 +810,8 @@ async function main() {
     if (composer) composer.passes = composer.passes.filter((p) => p !== barLook.grade);   // the grade out of the chain first
     barLook.dispose();
   };
-  addEventListener('pagehide', (e) => { if (!(e as PageTransitionEvent).persisted) releaseS4(); });
+  // (in the game this listener is tracked, so it comes off with the venue; the mount layer's cleanup calls releaseS4)
+  track(() => addEventListener('pagehide', (e) => { if (!(e as PageTransitionEvent).persisted) releaseS4(); }));
 
   // ------------------------------------------------------------------------------------------ measuring (the budgets)
   /** the scene drawn once from the camera: one plain render between info resets, the maps not updating, no composer */
@@ -1222,7 +1223,7 @@ async function main() {
 
   // in the game: what dispose releases (embed.ts)
   const em = embed;
-  if (em) em.cleanup = () => { removeEventListener('resize', onResize); em.release(renderer, scene, [person, parked, composer], [hud, barHud, bin]); };
+  if (em) em.cleanup = () => { removeEventListener('resize', onResize); releaseS4(); s4Release = () => {}; em.release(renderer, scene, [person, parked, composer], [hud, barHud, bin]); };
   hud.show();
   loading(1, 'Ready');
   hooks.buildMs = Math.round(performance.now() - t0);

@@ -4,6 +4,86 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-11: Final live merge 5: Stoppage Time S4, the dashboard and the wheel centre
+
+What went live on claude/final-live (base d08eee0, v16): origin/claude/sports-bar cafc5a3 gives Stoppage Time its S4
+look (Low, HD, Ultra) inside the game, and leaving the venue now also releases everything S4 created (releaseS4, its
+pagehide and first-tap sound listeners). origin/claude/sport-wheel 572111a gives a richer digital dashboard and a
+premium wheel centre. Lot 57 is unchanged. The store: the OC Hypercar Founder Edition is $9.99 and on sale (test mode
+only, owner-test build); a test purchase puts the car in the garage; the Personal bests board marks Unleashed runs,
+the plaque number comes from the server's serial (test purchases read No. 0000 · TEST), the paint is Glacier Silver.
+PROJECT_OC_MONETIZATION.md says $9.99 (Stripe $0.59, we keep $9.40, $9.25 on an international card).
+
+Skipped: the "22.22" in the owner's message, because it does not say which item it is for. Known gap: a serial that
+arrives while already driving the hypercar shows on the plaque next time it is loaded.
+
+Frames (tests/out/final-live-3/): seat-oc-hyper-390x844-night-goto.png, seat-oc-hyper-1280x720-day-goto.png,
+seat-rossini-gt-390x844-night-goto.png, seat-rossini-gt-1280x720-day-goto.png, onfoot-stoppage-time-hd-1450x767.png,
+onfoot-stoppage-time-ultra-1450x767.png, wheel-*.png, goto-stoppage-*.png.
+
+Suites: boot 15/15; phone 20/20; venues 13/13; venues-trips 2/2; nav-hud 3/3; modes 10/10; store 16/17 (same single
+failure as the base d08eee0 run: the 2 known wheel-style catalog problems); render 16 passed plus "lights wake" 2/2
+alone; sportsbar.mjs data,closed,honesty 26/26; sportsbar-s4.mjs look,locked,preset 8/8. tsc clean on both configs;
+the build has exactly one data-build="owner-test".
+
+Heap: Lot 57 (Low) 90 MB at start, then 166.5, 167.2, 167.7 MB over 3 trips, game renderer 238 geometries, 81
+textures, 61 programs each time. Stoppage Time in the game (HD, S4 look) 135.4 MB at start, then 200.1, 202.2,
+202.7 MB; venue renderer 157 geometries and 91 textures each trip; nothing of the venue left in the game scene.
+
+Reviewed through 4 lenses (ours, theirs, venues, cars): keep.
+
+## 2026-11-16: Final live, drop 3: Stoppage Time S4 in the game, the new dashboard and wheel centre, the OC Hypercar on sale at $9.99
+
+Merged onto claude/final-live (base d08eee0, live v16): origin/claude/sports-bar at cafc5a3 (Stoppage Time S4, Low,
+HD and Ultra) as ae446da, and origin/claude/sport-wheel at 572111a (the richer digital dashboard and the premium wheel
+centre) as 5aead54. Both heads matched the hashes asked for. Conflicts kept both sides (the bar's main.ts keeps the
+game's mount layer and takes S4's quality ids, Ultra entitlement and look; sportsbar.html takes S4's markup, which now
+carries the ids the shared HUD binds; the logs keep both lanes' entries).
+
+Follow-up edit (uncommitted, for review):
+- **S4 in the game's mount** (`src/onfoot/venues/sportsbar/main.ts`): the mount layer's cleanup now calls `releaseS4()`
+  (S4's sound, the grade pass out of the composer, the look's targets and textures) before it releases the scene and
+  renderer, then drops the closure so the module keeps nothing of the venue; S4's `pagehide` listener and the sound's
+  first-tap listeners are tracked, so they come off with the venue; `mount()` reads S4's quality ids (the game's
+  'high' is read as HD) and re-reads the Ultra entitlement from the mount options. Lot 57 is unchanged (no file under
+  `src/onfoot/lot57/`, `main.ts` or `index.html` differs from d08eee0).
+- **The store, the owner's decision** (2026-11-11, about 6:25 PM PT: "oc hypercar now 9.99"): `hypercar-founder`
+  is 999 cents and `available: true` (its `unavailable_reason` removed). Checked first that the car is reachable: it is
+  in `cars.ts` since v15 and a (test) purchase puts it in the garage outside the slot count (the store group's grant
+  check). What its grants promised had to be true before it could be sold, so: the Personal bests board now marks
+  Unleashed Free Drive runs ("OC Hypercar Unleashed", `records.ts` Run.tune, `App.tsx` Board; rule 3a); the plaque's
+  number is the server's serial from the entitlement row (`founder.ts` setFounderSerial, set by `Game.ts` from
+  `serialOf`; test purchases have none and still read No. 0000 · TEST); the paint grant is named as built, Glacier
+  Silver #C8D3E8 (the plan's "OC Founder Silver" was renamed at the car's M6). The three grants are `ready` in
+  `cosmetics.json`. The checker's one price exception is now 999; `PROJECT_OC_MONETIZATION.md` says $9.99 everywhere
+  it named the price, with the fees recomputed (Stripe 2.9 % + 30c takes $0.59, we keep $9.40; $9.25 on an
+  international card). `npm run store:sync` rewrote the server copy; `npm run store:check` reports the same 2 problems
+  as the base (the `mesh` and `blade` wheel styles in car-wheel.ts), nothing new. The store stays in test mode.
+- **Tests**: the store group's hypercar checks now expect $9.99, on sale, a Buy button and no "Coming soon"; the
+  modes group has a new check that the board marks the Unleashed runs and no others.
+
+Verified (headless Chromium, SwiftShader; load average 8 to 19 from other sessions on the 4 cores):
+- `npx tsc --noEmit` and `-p tsconfig.game.json`: clean. `npm run build`: one `data-build="owner-test"` in
+  `dist/artifact.html`.
+- Suite groups, one run each (none over 20 minutes): boot 15/15 (4 min); phone 20/20 (15.5 min, the wheel and
+  cluster checks included); venues 13/13 (7.3 min); venues-trips 2/2 (11.5 min: Lot 57, heap 90 MB, then 166.5, 167.2,
+  167.7 MB after each trip; game geometries 238/238/238, textures 81/81/81, programs 61/61/61); nav-hud 3/3; modes 10/10
+  (with the new board check: "9,000 · OC Hypercar Unleashed; 5,000"); render 16 of 17 in a run stopped at 20 minutes, the 17th ("the Founder Edition's
+  lights wake") then 2/2 on its own; store 16/17 (the one failure is the catalog check's 2 problems, also on the
+  base: a d08eee0 build in a scratch copy gave the same 16/17). A first store run had a reload check fail and two
+  checks after it cascade at a load of 9; the rerun passed them, and the base run passed them too.
+- Stoppage Time's own quick groups on `dist/sportsbar/sportsbar.html`: tests/sportsbar.mjs data, closed, honesty
+  26/26; tests/sportsbar-s4.mjs look, locked, preset 8/8.
+- Three Go To / Get out / Drive back round trips to Stoppage Time at HD in the game (S4's look: composer Render,
+  Bloom, Output, Grade): JS heap (gc'd) 135.4 MB in the drive, then 200.1, 202.2, 202.7 MB after each trip; venue
+  renderer identical each trip (157 geometries, 91 textures); nothing of the venue left in the game's scene; no
+  page errors (`tests/out/final-live-3/venue-roundtrips-goto-StoppageTime-high.json`).
+- Frames in `tests/out/final-live-3/`, each looked at: the menu, the seat views (Rossini GT and OC Hypercar, 390x844
+  DPR 3 night and 1280x720 and 1450x767 day, Go To set to Stoppage Time), the HUD with Stoppage Time chosen (1450x767,
+  1350x750, 390x844), the I-5 North at the Disney Way / Katella Ave exit (cockpit, hood, chase), Stoppage Time on foot
+  at HD and Ultra, Lot 57 on foot at HD, the OC Hypercar in the garage; the store's card at $9.99 with "Test mode ·
+  nothing is charged" (`tests/out/store-hypercar-card-1440.png`).
+
 ## 2026-11-11: Final live merge 4: fixes
 
 Went live: origin/claude/fix-road at a662f46 (the freeway debris fix), merged as f2e8e67 on top of v15 (5cf7212). For

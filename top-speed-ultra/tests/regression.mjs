@@ -1066,7 +1066,8 @@ await group('modes', async (use) => {
     const s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); s.mode = 'time'; localStorage.setItem('tsu.settings', JSON.stringify(s));
     localStorage.setItem('tsu.profile', JSON.stringify({ v: 1, username: 'Earlier', xp: 900, credits: 4200, racesWon: 3, runs: 5, story: { done: ['mara-1'], read: ['mara-1'] } }));
     const run = (mode, score) => ({ mode, score, distance: 4000, top: 120, streak: 0, nearMisses: 0, overtakes: 0, collisions: 0, when: Date.now(), road: 'I-405 North' });
-    localStorage.setItem('tsu.runs.v1', JSON.stringify({ time: [run('time', 4000)], race: [run('race', 1500)], survival: [run('survival', 777)] }));
+    // (two Free Drive runs: one in the OC Hypercar on its Unleashed tune, which the board marks, and one in another car)
+    localStorage.setItem('tsu.runs.v1', JSON.stringify({ time: [run('time', 4000)], race: [run('race', 1500)], survival: [run('survival', 777)], free: [{ ...run('free', 9000), tune: 'Unleashed' }, run('free', 5000)] }));
     localStorage.setItem('tsu.best.time', '4000'); localStorage.setItem('tsu.race.irvine', '312.4');
   });
   await page.reload();
@@ -1099,6 +1100,20 @@ await group('modes', async (use) => {
     expect(!r.racesWon && r.credits === 4200 && r.done.includes('mara-1'), `profile: racesWon kept ${r.racesWon}, credits ${r.credits}, story ${r.done}`);
     expect(JSON.stringify(r.board) === JSON.stringify(['Speed Survival', 'Free Drive']), `bests tabs ${JSON.stringify(r.board)}`);
     return `saved "race" and "time" both open on ${r.picked}; settings drop mode and course; profile drops racesWon, keeps 4,200 credits and the story; bests tabs ${r.board.join(' / ')} (${r.boardRuns.join(', ') || 'no runs'})`;
+  });
+  await check('Personal bests: the OC Hypercar\'s Unleashed Free Drive runs are marked on the board (rule 3a), other runs are not', async () => {
+    const r = await game(page, async () => {
+      const wait = () => new Promise((res) => setTimeout(res, 500));
+      document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
+      await wait();
+      [...document.querySelectorAll('.sheet-body .panel .seg button')].find((b) => b.textContent === 'Free Drive')?.click();
+      await wait();
+      const rows = [...document.querySelectorAll('.sheet-body .board li')].map((li) => ({ score: li.querySelector('b')?.textContent, mark: li.querySelector('.board-tune')?.textContent ?? '' }));
+      document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
+      return rows;
+    });
+    expect(r.length === 2 && /OC Hypercar Unleashed/.test(r[0].mark) && r[1].mark === '', `Free Drive rows: ${JSON.stringify(r)}`);
+    return r.map((x) => `${x.score}${x.mark}`).join('; ');
   });
   await check('start("race") and start("time") from an older caller run Free Drive', async () => {
     const r = await game(page, async () => {
@@ -3540,7 +3555,7 @@ await group('launch', async (use) => {
 // The paywall in TEST MODE (the build has no VITE_ store settings): the catalog on show with its prices, a declined
 // test card, the Founder Pack bought with 4242, a reload, the paint on the car, the tip's floor, a subscription's
 // terms, the run-card badge, the phone layout, and no request to Supabase or Stripe. The OC Hypercar Founder
-// Edition's card ("Coming soon" until the car is in the game) and its garage grant (outside the slot count, never
+// Edition's card (on sale at $9.99 since the owner's 2026-11-11 decision; "Coming soon" before) and its garage grant (outside the slot count, never
 // sold for credits, out on sign-out and back on sign-in). Plus, in Node, the server's webhook signature check against
 // known vectors, its Stripe form encoding, and the Founder Edition's serial numbers through the real webhook on a
 // throwaway Postgres (server/supabase/tests/serial-webhook.mjs; reported as not run where Postgres isn't installed).
@@ -3679,7 +3694,7 @@ await group('store', async (use) => {
     return `${shown.length} items with their prices (${sale.length} on sale; ${cat.length - sale.length} not offered); "${banner}"; Brio wheels: "${brio}"`;
   });
 
-  await check('the OC Hypercar Founder Edition card: $4.99, the founder window, its plaque and paint, not in the Founder Pack, "Coming soon"', async () => {
+  await check('the OC Hypercar Founder Edition card: $9.99 and on sale (the owner, 2026-11-11), the founder window, its plaque and paint, not in the Founder Pack', async () => {
     const card = page.locator('.store-panel [data-sku="hypercar-founder"]');
     await card.waitFor();
     const r = await card.evaluate((el) => ({
@@ -3691,10 +3706,11 @@ await group('store', async (use) => {
       tracks: getComputedStyle(el).gridTemplateColumns.split(' ').length,
     }));
     expect(r.tracks === 1, `the card's grid has ${r.tracks} columns`);
-    expect(!hyper.available && r.soon === 'true' && r.buttons === 0, `available ${hyper.available}, data-soon ${r.soon}, ${r.buttons} buttons`);
-    for (const k of ['OC Hypercar Founder Edition', '$4.99', 'Founder Edition · sold until Dec 31, 2026', 'Coming soon', 'The $10 Founder Pack does not include this car', 'No pre-orders'])
+    // on sale since the owner's 2026-11-11 decision ($9.99; the car has been in the game since v15): a buy button, no "Coming soon"
+    expect(hyper.available && hyper.price_cents === 999 && r.soon === null && r.buttons >= 1 && !r.text.includes('Coming soon'), `available ${hyper.available}, ${hyper.price_cents} cents, data-soon ${r.soon}, ${r.buttons} buttons`);
+    for (const k of ['OC Hypercar Founder Edition', '$9.99', 'Founder Edition · sold until Dec 31, 2026', 'The $10 Founder Pack does not include this car'])
       expect(r.text.includes(k), `the card lacks "${k}": ${r.text.slice(0, 300)}`);
-    expect(r.grants.some((g) => /Founder Edition plaque/.test(g)) && r.grants.some((g) => /OC Founder Silver paint/.test(g) && /Founder Ice lights/.test(g)), `grants: ${r.grants.join(' | ')}`);
+    expect(r.grants.some((g) => /Founder Edition plaque/.test(g)) && r.grants.some((g) => /Glacier Silver paint/.test(g) && /Founder Ice lights/.test(g)), `grants: ${r.grants.join(' | ')}`);
     // the two founder offers keep apart: none of the pack's names on this card's grants, and no sunset look
     expect(!r.grants.some((g) => /Founders Sunset|Founder '26|run-card frame/.test(g)), `grants: ${r.grants.join(' | ')}`);
     expect(!/253, 145, 35|232, 98, 44/.test(r.frame), `the card's frame uses the Founder Pack's sunset: ${r.frame}`);
@@ -3706,7 +3722,7 @@ await group('store', async (use) => {
 
   await check('every price carries the test-mode notice right under it, at 1440 × 900 and 1280 × 720', async () => {
     const wide = await storePriceTags(page);
-    expect(wide.prices >= sale.length + 1 && !wide.bad.length, `1440: ${wide.prices} prices; ${wide.bad.join(' | ')}`);
+    expect(wide.prices >= sale.length && !wide.bad.length, `1440: ${wide.prices} prices; ${wide.bad.join(' | ')}`);
     await page.setViewportSize({ width: 1280, height: 720 });
     try {
       await page.locator('.store-panel').evaluate((el) => el.closest('.overlay')?.scrollTo(0, 0));
@@ -3932,7 +3948,7 @@ await group('store', async (use) => {
       await storeShot(p, 'store-hypercar-390x844.png');
       await storeCrop(p, hc, 'store-hypercar-card-390.png');
       const hcText = (await hc.textContent()).replace(/\s+/g, ' ');
-      expect(hcText.includes('Coming soon') && hcText.includes('$4.99') && hcText.includes('Test mode · nothing is charged'), `phone hypercar card: ${hcText.slice(0, 200)}`);
+      expect(!hcText.includes('Coming soon') && hcText.includes('$9.99') && hcText.includes('Test mode · nothing is charged'), `phone hypercar card: ${hcText.slice(0, 200)}`);
       await p.locator('.store-panel .store-group').first().evaluate((el) => el.scrollIntoView({ block: 'start' }));
       await storeShot(p, 'store-items-390x844.png');
       const itemTags = await storePriceTags(p);
