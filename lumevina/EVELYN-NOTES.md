@@ -664,3 +664,10 @@ Now: "Explore treatments and pricing below. Tap 'Book' to view availability and 
 ## Shop: no product count (Nov 16)
 
 The "43 products · 43 on the shelf now" line under the shop's search and brands is removed. A hidden copy stays for screen readers, so someone who can't see the page still hears how many products match a search. The search's own "5 products for 'spf'" in its results list is unchanged.
+
+## Shop search on a phone: the keyboard stays up (Nov 16)
+
+Typing in the shop's search on an iPhone showed the results list partly behind the keyboard. Scrolling to reach those results moved the whole page, and in the Claude app (and some others) that closes the keyboard. Now:
+- **The search bar moves up under the header** when the keyboard opens, so the results get the room between it and the keyboard.
+- **The list ends just above the keyboard** and scrolls inside itself, so every result can be reached.
+- **Scrolling the list never moves the page,** even past its end, so the keyboard stays up and the search keeps its text.

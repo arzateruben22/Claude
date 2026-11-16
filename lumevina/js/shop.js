@@ -609,13 +609,39 @@
       pop.hidden = false;
       q.setAttribute("aria-expanded", "true");
       mark(-1);
+      fitPop();
     };
+    /* phones: the list fits between the search bar and the keyboard (the visual viewport), so every
+       result is reachable by scrolling the list itself; the list never hands its scroll on to the page
+       (css: overscroll-behavior), because dragging the page closes the keyboard in some apps */
+    var vv = window.visualViewport;
+    var fitPop = function () {
+      if (pop.hidden) return;
+      if (!vv) { pop.style.maxHeight = ""; return; }
+      var room = vv.offsetTop + vv.height - box.getBoundingClientRect().bottom - 8 - 12;
+      pop.style.maxHeight = Math.round(Math.max(150, Math.min(room, 416))) + "px";
+    };
+    if (vv) { vv.addEventListener("resize", fitPop); vv.addEventListener("scroll", fitPop); }
+    window.addEventListener("scroll", function () { if (!pop.hidden) fitPop(); }, { passive: true });
+    /* and when the keyboard opens on a phone, the search bar moves up under the header, so the
+       results get the room between it and the keyboard */
+    var lifted = false;
+    var liftSearch = function () {
+      if (lifted || document.activeElement !== q || !vv || window.innerWidth > 760) return;
+      if (vv.height > window.innerHeight * 0.85) return;          /* the keyboard isn't up */
+      lifted = true;
+      var head = document.querySelector(".nav"), top = (head ? head.getBoundingClientRect().bottom : 0) + 10;
+      var dy = box.getBoundingClientRect().top - vv.offsetTop - top;
+      if (Math.abs(dy) > 24) window.scrollBy({ top: dy, behavior: calm.matches ? "auto" : "smooth" });
+      setTimeout(fitPop, 350);
+    };
+    if (vv) vv.addEventListener("resize", liftSearch);
     q.addEventListener("input", function () {
       clearTimeout(t);
       paintPop();
       t = setTimeout(function () { state.q = q.value.trim(); paintGrid(); }, 160);
     });
-    q.addEventListener("focus", function () { if (q.value.trim()) paintPop(); });
+    q.addEventListener("focus", function () { lifted = false; if (q.value.trim()) paintPop(); setTimeout(liftSearch, 400); });
     q.addEventListener("blur", function () { setTimeout(closePop, 120); });
     q.addEventListener("keydown", function (e) {
       if (pop.hidden) { if (e.key === "Enter") { e.preventDefault(); showAll(); } return; }

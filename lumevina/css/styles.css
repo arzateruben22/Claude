@@ -6695,6 +6695,8 @@ a.book-btn { text-align: center; }
 .sh-suggest {
   position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 40;
   display: flex; flex-direction: column; padding: 8px; max-height: min(26rem, 70vh); overflow-y: auto;
+  overscroll-behavior: contain;   /* scrolling the list never scrolls the page (that closes the keyboard in some apps); js/shop.js fits it above the keyboard */
+  -webkit-overflow-scrolling: touch;
   background: var(--porcelain); border: 1px solid var(--panel-edge-soft); border-radius: 16px;
   box-shadow: 0 24px 60px -28px rgba(var(--shadow-rgb), 0.55);
 }
