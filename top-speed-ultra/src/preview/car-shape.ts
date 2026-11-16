@@ -59,8 +59,8 @@ export interface ShapeParams {
   noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
   cornerIntake: [number, number][] | null; // an opening in each front corner (|x|, y): inner-bottom, outer-bottom, outer-top, inner-top
   rearMesh: { w: number; h: number; cy: number } | null;
-  exhaust: 'twin' | 'single' | 'high' | 'none';
-  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor)
+  exhaust: 'twin' | 'single' | 'high' | 'none' | 'centre';   // centre: the OC Hypercar's twin round tips side by side on the centre line (G1)
+  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number; finTail?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor); finTail: the fins stand this far out behind the tail as tall blades (the OC Hypercar, G1)
   splitter: { w: number; d: number; proud: number; canards: boolean };
   wing: { span: number; chord: number; y: number; z: number; mountX: number; plate?: [number, number] } | null;   // plate: end-plate length, height
   scoop: boolean;
@@ -314,11 +314,14 @@ const HYPER: ShapeParams = {
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
   // (M1b: inside the fang, so its LED runs down the fang's inner edge)
   cornerIntake: [[0.58, 0.1], [0.75, 0.1], [0.77, 0.33], [0.62, 0.3]],
-  rearMesh: { w: 1.3, h: 0.15, cy: 0.47 },
-  exhaust: 'none',
+  // (G1, the owner's references of 2026-11-15: a honeycomb panel filling the tail's recess, the twin round tips side
+  // by side on the centre line in it, and the plate moved up under the tail's top edge, smaller)
+  rearMesh: { w: 1.3, h: 0.2, cy: 0.49 },
+  exhaust: 'centre',
   // the diffuser's mouth: a wide trapezoid under the plate (the sheet's REAR: its LED outline runs across at about
   // half the tail's width and angles down and out to the tail's lower corners)
-  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.6, -0.43, -0.26, -0.09, 0.09, 0.26, 0.43, 0.6], top: 0.47 },
+  // (G1: the references' five tall carbon fins standing out behind the tail, in place of eight short strakes)
+  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.5, -0.25, 0, 0.25, 0.5], top: 0.47, finTail: 0.15 },
   // (M1b: proud 0.24 -> 0.12, so the blade tucks under the nose: its leading edge 3 cm ahead of the lip's point)
   splitter: { w: 1.94, d: 0.66, proud: 0.12, canards: false },
   wing: { span: 1.71, chord: 0.36, y: 0.98, z: 1.98, mountX: 0.42, plate: [0.55, 0.25] },
@@ -349,7 +352,7 @@ const HYPER: ShapeParams = {
   fins: { x: [0.8, 0.74], z: [1.0, 2.06], h: 0.06 },
   // two long vents along the front fenders' inner walls, by the cowl
   ventsQ: [[[0.37, -1.86], [0.47, -1.88], [0.6, -1.24], [0.47, -1.22]]],
-  plate: { w: 0.52, h: 0.11, y: 0.46 },
+  plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
   // (M1b: lower, so the fangs come down silver at the nose and the haunches wrap the tail down to the valance)

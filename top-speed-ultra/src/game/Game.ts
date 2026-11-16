@@ -640,8 +640,10 @@ export class Game {
     const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
+    this.car.maxAniso = this.renderer.capabilities.getMaxAnisotropy();
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      tier: s.quality === 'ultra' ? 'ultra' : 'hd',   // (G1: the OC Hypercar's 2048 px maps on Ultra, 1024 on High)
       look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
   }
@@ -951,7 +953,10 @@ export class Game {
   private resize(force = false): boolean {
     const w = this.host.clientWidth || innerWidth, h = this.host.clientHeight || innerHeight;
     const q = QUALITY[this.settings.quality];
-    const pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, q.maxPixelRatio);
+    // (Ultra, G1: native up to 4K on a desktop screen, a phone's held to its own cap; see QualityPreset)
+    const coarse = q.phonePixelRatio !== undefined && typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
+    let pr = clamp((window.devicePixelRatio || 1) * this.renderScale, 0.5, coarse ? q.phonePixelRatio! : q.maxPixelRatio);
+    if (q.maxPixels && w * h * pr * pr > q.maxPixels) pr = Math.max(0.5, Math.sqrt(q.maxPixels / Math.max(1, w * h)));
     const cv = this.renderer.domElement, a = this.applied;
     if (!force && w === a.w && h === a.h && pr === a.pr && cv.width === Math.floor(w * pr) && cv.height === Math.floor(h * pr)) return false;
     a.w = w; a.h = h; a.pr = pr;
