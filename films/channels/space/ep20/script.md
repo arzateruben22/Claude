@@ -1,13 +1,18 @@
-# One More Orbit · Season 3 · Part 8 of 8: "The Distance No Moon Survives"
+# One More Orbit · Season 3 · Part 8 of 8: "Then the Moon Comes Apart"
 
-Part 8 of the Moon film "How Close Can the Moon Get Before It Breaks?" (the long film is the whole story; the ending stays there). 9:16, 64 s, synthetic AI voice (stand-in until the owner's recording).
-Badge "Thought experiment" throughout. Lines come from long01/script.md; timing from long01/voice/lines.json.
+v4, in the creator's own voice (recorded 12 Nov 2026): picture-led, 59 s, 9:16. The 'Thought experiment' tag shows for the first 5 s.
+Voice lines: long01/voice5/lines.json (takes in voice-owner-spoken/takes-used.json); timing from long01/out/v4-part8.json.
 
-## hook {pre: 0.15 · the part's own 2 s opening}
-vo: There is a distance no moon can survive. {-}
+## opening
+vo: It comes apart. Not an explosion. A stretch.
 
-## body {the chapter · distance counter synced to the voice · one like/follow line at 73% of the runtime (rotation line 4)}
-vo: Thirty-five thousand kilometers. {-} Thirty thousand. {-} Twenty-five. {-} Twenty. {-} There is a distance where tides pull harder on a body than its own gravity holds it together. {c23} It is called the Roche limit. {c23} For a Moon like ours around Earth, it is around eighteen thousand kilometers, if the Moon behaves like a fluid. {c24} Around nine and a half thousand, if it is perfectly rigid. {c25} At eighteen thousand kilometers, it looks more than twenty times wider than tonight. {c26} It is a wall of grey, and its surface is straining. {-} Eighteen thousand. {-} Seventeen. {-} The tide is enormous. {-}
+## body
+vo: The rock spreads along its old orbit, and over time it can flatten into a ring.
+vo: No Moon. Just a bright band, horizon to horizon.
 
-## tease {the cliffhanger, then the closer}
-vo: And then the Moon does something no Moon should survive. {-} Part eight of eight. Full video on YouTube. {-}
+## like/follow (72% of the runtime)
+no spoken ask in an even part (owner, 12-16 Nov 2026): the thumbs-up + bell pop-up only, in the pause before the cliffhanger
+
+## cliffhanger and closer (even part)
+vo: The real Moon is still drifting away, three point eight centimeters a year. Tonight's Moon is fine.
+vo: Part eight of eight. Full video on YouTube.

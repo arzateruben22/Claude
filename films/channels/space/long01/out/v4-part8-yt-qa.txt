@@ -1,0 +1,30 @@
+duration 59.18 s SHORT of 61 s (flagged, not padded)
+true peak -1.8 dBTP OK
+loudness -14.0 LUFS OK
+stills over 1.4 s: none OK
+voice edges (<= 8 dB drop in 40 ms above -40 dBFS): OK
+contact sheet long01/out/v4-part8-yt-contact.jpg
+    0.27  caption: 'It comes apart.'
+          speech : 'It comes apart.'
+    1.43  caption: 'Not an explosion.'
+          speech : 'Not an explosion. A stretch.'
+    2.73  caption: 'A stretch.'
+          speech : 'A stretch.'
+   14.41  caption: 'The rock spreads along its old orbit,'
+          speech : 'The rock spreads along its old orbit and over the rock.'
+   16.57  caption: 'and over time it can flatten into a ring.'
+          speech : 'and over time it could flatten into a ring.'  <-- KNOWN recogniser ambiguity, a person should listen: recogniser hears 'could' (script: 'can'), also on his solo take: LISTEN
+   29.43  caption: 'No Moon.'
+          speech : 'No moon.'
+   38.44  caption: 'Just a bright band, horizon to horizon.'
+          speech : 'Just a bright band, horizon to horizon.'
+   42.67  caption: 'The real Moon is still drifting away, 3.8 cm a year.'
+          speech : 'The real moon is still drifting away 3.8 centimeters a year tonight.'
+   46.95  caption: "Tonight's Moon is fine."
+          speech : "Tonight's moon is fine."
+   55.74  caption: 'Part 8 of 8.'
+          speech : 'Part 8 of 8.'
+   56.94  caption: 'Full video on YouTube.'
+          speech : 'Full video on YouTube'
+caption = speech: OK
+QA PASS

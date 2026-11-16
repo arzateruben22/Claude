@@ -151,7 +151,7 @@ window.setup = async (tl, assets, mode, w, h) => {
 // extra life for the long film's still stretches (the hold in chapter 1 and everything from the break-up on): a slow camera sway, the Moon's libration, drifting dust.
 // Gated by time so the segments rendered separately join without a pop (it is 0 at 345.1 s).
 const holdAmp = (t) => { const b = beats(); return (b && t > b.calm.t1 + 1 && t < b.size.t0 - 0.2) ? sm((t - b.calm.t1 - 1) / 2) * sm((b.size.t0 - 0.2 - t) / 1) : 0; };
-const swayAmp = (t) => (MODE !== "land" || TL.dur < 300) ? (/^part[4-8]/.test(TL.name || "") ? sm((t - 0.5) / 1.5) : holdAmp(t)) : Math.max(sm((t - 346) / 4), holdAmp(t));
+const swayAmp = (t) => /^v4-(long|part8)/.test(TL.name || "") ? sm((t - 0.5) / 1.5) : (MODE !== "land" || TL.dur < 300) ? (/^part[4-8]/.test(TL.name || "") ? sm((t - 0.5) / 1.5) : holdAmp(t)) : Math.max(sm((t - 346) / 4), holdAmp(t));
 const figPos = () => (MODE === "land" ? { x: 0.342 * W, y: 0.831 * H } : { x: 0.38 * W, y: 0.81 * H });
 
 // camera beats for parts 2-8: 2-3 moves tied to the part's idea (keyed by caption text); each key eases the zoom to s about a pivot (the Moon, the figure or the sea)
@@ -228,6 +228,8 @@ function ch1Overlays(t, b, mo, G) {
     if (l2 > 0) { ctx.strokeStyle = "rgba(170,240,235,.85)"; ctx.beginPath(); ctx.moveTo(hx, hy); ctx.lineTo(lerp(hx, wx, l2), lerp(hy, wy, l2)); ctx.stroke(); } ctx.filter = "none"; }
   ctx.restore();
 }
+// the 16:9 paintings (break-up, ring, tonight) in a portrait frame: the middle of the painting at its own proportions, never squeezed
+function drawFull(img, fx = 0.5) { if (MODE === "port") { const sw = img.height * W / H, x0 = Math.max(0, Math.min(img.width - sw, fx * img.width - sw / 2)); ctx.drawImage(img, x0, 0, sw, img.height, 0, 0, W, H); } else ctx.drawImage(img, 0, 0, W, H); }
 window.renderAt = (t) => {
   TNOW = t;
   const G = geom(), ecl = track(TL.tracks.eclipse, t), moonA = track(TL.tracks.moon, t), brk = track(TL.tracks.brk, t), ring = track(TL.tracks.ring, t), tn = track(TL.tracks.tonight, t), d = dVis(t);
@@ -238,9 +240,9 @@ window.renderAt = (t) => {
   shootingStars(t); driftOverlay(t, G);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
-  if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-breakup"], 0, 0, W, H); ctx.restore(); }
-  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.translate(W / 2, H / 2); ctx.scale(1 + 0.02 * A * Math.sin(t * 0.4), 1 + 0.02 * A * Math.sin(t * 0.4)); ctx.translate(-W / 2, -H / 2); ctx.drawImage(IM["plate-ring"], 0, 0, W, H); ctx.restore(); }
-  if (tn > 0.001) { ctx.save(); ctx.globalAlpha = tn; ctx.drawImage(IM["plate-tonight"], 0, 0, W, H); ctx.restore(); }
+  if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); drawFull(IM["plate-breakup"], 0.6); ctx.restore(); }
+  if (ring > 0.001) { ctx.save(); ctx.globalAlpha = ring; ctx.translate(W / 2, H / 2); ctx.scale(1 + 0.02 * A * Math.sin(t * 0.4), 1 + 0.02 * A * Math.sin(t * 0.4)); ctx.translate(-W / 2, -H / 2); drawFull(IM["plate-ring"], 0.54); ctx.restore(); }
+  if (tn > 0.001) { ctx.save(); ctx.globalAlpha = tn; drawFull(IM["plate-tonight"], 0.68); ctx.restore(); }
   if (A > 0.01 && (brk + ring + tn > 0.01)) { const mr = rnd(77); ctx.save(); ctx.globalCompositeOperation = "screen"; for (let i = 0; i < 70; i++) { const sp = (6 + 20 * mr()) * U, x = (((mr() * W - t * sp * (mr() > 0.5 ? 1 : -1)) % W) + W) % W, y = (((mr() * H - t * sp * 0.4) % H) + H) % H, rr = (1 + 2.4 * mr()) * U; ctx.globalAlpha = A * (0.15 + 0.35 * mr()) * (0.6 + 0.4 * Math.sin(t * 1.5 + i)); ctx.fillStyle = "#cfe9ff"; ctx.beginPath(); ctx.arc(x, y, rr, 0, 6.283); ctx.fill(); } ctx.restore(); }
   ctx.restore();
   hud(t);

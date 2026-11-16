@@ -19,6 +19,6 @@ print(",".join(ts[:3]))
 PY
 export PLAYWRIGHT_DIR=$(dirname $(npm root -g)) CHROMIUM=/opt/pw-browsers/chromium-1243/chrome-linux64/chrome
 STILLS=$(cat /tmp/pl/stills$N.txt) STILLDIR=$EP/out/cover-stills node season3/render_s3.mjs $O/v4-part$N.json /tmp/pl/dummy$N.mp4 2160 3840 30 2>&1 | tail -3
-rm -f $O/v4-part$N-picture.mp4 $O/v4-part$N-yt-picture.mp4 $O/.chunk_* $O/.chunks_*
+rm -f $O/v4-part$N-picture.mp4 $O/v4-part$N-yt-picture.mp4 $O/.chunk_v4-part$N* $O/.chunks_v4-part$N*
 cd /home/user/claude && git add films/channels/space/$EP films/channels/space/long01/out/v4-part$N*.json films/channels/space/long01/out/v4-part$N*-contact.jpg films/channels/space/long01/out/v4-part$N*-qa.txt films/channels/space/long01/v4/part$N.sfx.json 2>/dev/null
 echo FINISHED $N

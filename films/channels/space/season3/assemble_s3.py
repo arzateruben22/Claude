@@ -34,6 +34,13 @@ if name == "long":
         if k.startswith("ch") or k == "close": ch.setdefault(k, [c["t"], c["t"] + c["dur"]]); ch[k][1] = c["t"] + c["dur"]
     order = sorted(ch.items(), key=lambda kv: kv[1][0]); bounds = [0.0] + [round((order[i][1][1] + order[i + 1][1][0]) / 2, 3) for i in range(len(order) - 1)] + [dur]
     for i, (k, _) in enumerate(order): secs.append({"id": k, "t0": bounds[i], "t1": bounds[i + 1], "energy": round(0.30 + 0.06 * i, 2) if k != "close" else 0.62})
+elif name == "v4-long":   # the v4 long film: one music section per part of the story (L1-5, L6-8, L9-11, L12-13, L14-15, L16-18, L19-22, L23-26), the energy rising to the break-up
+    G_ = [(1, 5), (6, 8), (9, 11), (12, 13), (14, 15), (16, 18), (19, 22), (23, 26)]; ch = {}
+    for c in tl["clips"]:
+        if c["id"][0] == "L":
+            n_ = int(c["id"][1:]); gi = next(i for i, (a_, b_) in enumerate(G_) if a_ <= n_ <= b_); ch.setdefault(gi, [c["t"], c["t"] + c["dur"]]); ch[gi][1] = c["t"] + c["dur"]
+    order = sorted(ch.items()); bounds = [0.0] + [round((order[i][1][1] + order[i + 1][1][0]) / 2, 3) for i in range(len(order) - 1)] + [dur]
+    secs = [{"id": f"part{gi + 1}", "t0": bounds[i], "t1": bounds[i + 1], "energy": round(0.30 + 0.05 * i, 2) if gi < 7 else 0.62} for i, (gi, _) in enumerate(order)]
 else:
     secs = [{"id": name, "t0": 0.0, "t1": dur, "energy": 0.42}]
 sheet = {"duration": dur, "fps": 30, "preset": sheet0["preset"], "sections": secs, "events": [{"t": s["t0"], "kind": "section", "id": s["id"], "t1": s["t1"]} for s in secs] + ([] if "--no-sfx" in sys.argv else beat_events(tl.get("beats", []))), "voice": voice}
