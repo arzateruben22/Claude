@@ -2034,6 +2034,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 .hero-cred a { color: var(--plum); font-weight: 500; text-decoration: underline;
   text-underline-offset: 2px; text-decoration-color: var(--rose); }
 .hero-cred a:hover { color: var(--mauve); }
+.hero-cred a { white-space: nowrap; }   /* "Shop medical-grade skincare" wraps as one piece, never at its hyphen */
 .hero-cred span { margin: 0 0.4rem; color: var(--mauve); opacity: 0.55; }
 
 /* labelled sub-headers inside the merged Shop section */

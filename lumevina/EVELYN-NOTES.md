@@ -577,3 +577,7 @@ The cleanser in "Picked for your skin" uses the shop's own photo. The "Included 
 ## The app: the EV surprise is off (Nov 16)
 
 The "Your EV" section on the app's Rewards tab (tap the EV for a surprise) is removed, with its "Try this" button beside the phone. The notification switch for it now reads "Glow Points and rewards". The Rewards tab goes straight from the points bar to Ways to earn. The website never had it.
+
+## The line under the products (Nov 16)
+
+The line under the hero's products, "As featured in CanvasRebel · Medical-grade skincare", now reads **"The products I use and recommend · Shop medical-grade skincare"**. "Shop medical-grade skincare" links to the shop, and on a phone it stays together on its own line. The CanvasRebel interview is still linked from her photo in Meet Evelyn ("Featured in CanvasRebel →").
