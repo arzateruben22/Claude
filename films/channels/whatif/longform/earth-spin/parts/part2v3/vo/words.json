@@ -344,103 +344,6 @@
   },
   {
    "id": "vo06",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-   "heard": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-   "words": [
-    {
-     "w": "Hang",
-     "start": 0.2,
-     "end": 0.4,
-     "heard": true
-    },
-    {
-     "w": "on.",
-     "start": 0.495,
-     "end": 0.72,
-     "heard": true
-    },
-    {
-     "w": "If",
-     "start": 0.815,
-     "end": 0.88,
-     "heard": true
-    },
-    {
-     "w": "you're",
-     "start": 0.89,
-     "end": 1.04,
-     "heard": true
-    },
-    {
-     "w": "enjoying",
-     "start": 0.92,
-     "end": 1.36,
-     "heard": true
-    },
-    {
-     "w": "this,",
-     "start": 1.43,
-     "end": 1.6,
-     "heard": true
-    },
-    {
-     "w": "tap",
-     "start": 1.685,
-     "end": 1.92,
-     "heard": true
-    },
-    {
-     "w": "like",
-     "start": 1.86,
-     "end": 2.08,
-     "heard": true
-    },
-    {
-     "w": "and",
-     "start": 2.065,
-     "end": 2.24,
-     "heard": true
-    },
-    {
-     "w": "follow.",
-     "start": 2.13,
-     "end": 2.8,
-     "heard": true
-    },
-    {
-     "w": "Okay,",
-     "start": 2.735,
-     "end": 3.28,
-     "heard": true
-    },
-    {
-     "w": "back",
-     "start": 3.405,
-     "end": 3.52,
-     "heard": true
-    },
-    {
-     "w": "to",
-     "start": 3.435,
-     "end": 3.6,
-     "heard": true
-    },
-    {
-     "w": "the",
-     "start": 3.55,
-     "end": 3.76,
-     "heard": true
-    },
-    {
-     "w": "math.",
-     "start": 3.83,
-     "end": 4.8,
-     "heard": true
-    }
-   ]
-  },
-  {
-   "id": "vo07",
    "text": "And then the wind starts to blow.",
    "heard": "And then the wind starts to blow.",
    "words": [
@@ -489,7 +392,7 @@
    ]
   },
   {
-   "id": "vo08",
+   "id": "vo07",
    "text": "Part two of eight. Full video on YouTube.",
    "heard": "Part 2 of 8. Full video on YouTube.",
    "words": [
