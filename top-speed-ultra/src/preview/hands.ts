@@ -9,6 +9,10 @@
 //     o.nails         polish colour (hex), or null for natural nails. Default: natural for 'm', a deep red for 'f'
 //     o.quality       'phone' (3 mm skin mesh, lighter shader) | 'high' (2.25 mm, full skin detail). Default 'high'
 //     o.watchTime     [h, m, s] shown on the watch (default 10:09:36)
+//     o.room          a car whose door stands close to the driver (car-shape armRoom, the OC Hypercar's narrow tub):
+//                     how far out of the driver's centreline (spec EYE.x) the door-side (left) elbow may sit, metres.
+//                     The shoulders come in to room + ROOM_SHOULDER each side and the left elbow swings in round its
+//                     shoulder-wrist line to stay inside it (see armRoom). Default: none (the shared GRIP shoulders)
 //   returns { group, setWheelAngle(rad, dt?), setPose(pose), setTone(hex), dispose(), stats, grip }
 //     group           a THREE.Group in the car's frame (x right, y up, -z forward, metres); add it to the car
 //     setWheelAngle   the wheel's rotation (the cockpit's wheelSpin.rotation.z); the hands turn with the rim and the
@@ -30,7 +34,7 @@
 // second call costs only the materials and the per-arm buffers.
 import * as THREE from 'three';
 import type { DriverLook, Presentation } from '../game/drivers';
-import { GRIP, WHEEL_AT, WHEEL_TILT } from './spec';
+import { EYE, GRIP, WHEEL_AT, WHEEL_TILT } from './spec';
 import { V3, Anatomy, POSE, gToW, dirGToW, wToCar, reach, norm, sub, dot, lerp3, madd } from './hands-sdf';
 import { buildArmGeometry, ArmGeometry } from './hands-geo';
 import { skinMaterial, nailMaterial, Quality } from './hands-skin';
@@ -44,6 +48,7 @@ export interface HandsOptions {
   nails?: number | null;
   quality?: Quality;
   watchTime?: [number, number, number];
+  room?: number;
 }
 /** off-wheel poses for the abilities: the right hand resting on the knee, the left wrist raised to check the watch,
  *  the left hand up at the window waving. 'wheel' puts both hands back. */
@@ -141,11 +146,41 @@ function both(pres: Presentation, q: Quality): Built {
 export function toCar(p: V3, side: number): V3 { const w = gToW(p); if (side) w[0] = -w[0]; return wToCar(w); }
 export function dirToCar(d: V3, side: number): V3 { const w = dirGToW(d); if (side) w[0] = -w[0]; return dirWToCar(w); }
 
+// A close door (HandsOptions.room). The elbow can sit anywhere on a circle round the shoulder-wrist line (the arm's
+// swivel); reach() puts it toward the pole (down and out). Where that is outboard of xMin (the left side: x < xMin,
+// group frame), the elbow swings in round the line, the least turn that brings it to xMin, by way of the lower of the
+// two ways (an elbow drops in under the forearm, it doesn't lift over it); when no point of the circle is that far
+// in, it takes the circle's innermost point. The wrist and the shoulder stay put. In the OC Hypercar the door is
+// 0.22 m from the driver's centreline: the shared shoulders (0.23 m out) and the pole put the left elbow 0.24 m out,
+// through the door card, and the forearm ran back to it behind the door's armrest, which drew over it whenever the
+// wheel turned left (owner, 2026-11-17, v23: "Left arm is still getting mixed in between the black shadow")
+export const ROOM_SHOULDER = 0.025;      // the shoulders' joints this far outside the elbows' room (m)
+const rC = new THREE.Vector3(), rP = new THREE.Vector3(), rQ = new THREE.Vector3(), rU = new THREE.Vector3();
+export function armRoom(S: THREE.Vector3, W: THREE.Vector3, E: THREE.Vector3, xMin: number) {
+  if (E.x >= xMin) return;
+  const u = rU.copy(W).sub(S).normalize(), C = rC.copy(u).multiplyScalar(rP.copy(E).sub(S).dot(u)).add(S);
+  const p = rP.copy(E).sub(C), hh = p.length();
+  if (hh < 1e-6) return;
+  p.divideScalar(hh);
+  const q = rQ.crossVectors(u, p);
+  // x(t) = C.x + hh (cos t p.x + sin t q.x) = C.x + R cos(t - phi); t = 0 is reach()'s elbow
+  const R = hh * Math.hypot(p.x, q.x), phi = Math.atan2(q.x, p.x);
+  let t = phi;
+  if (C.x + R > xMin) {
+    const d = Math.acos(Math.min(1, Math.max(-1, (xMin - C.x) / R)));
+    const wrap = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+    const t1 = wrap(phi - d), t2 = wrap(phi + d);
+    const y1 = Math.cos(t1) * p.y + Math.sin(t1) * q.y, y2 = Math.cos(t2) * p.y + Math.sin(t2) * q.y;
+    t = y1 <= y2 ? t1 : t2;
+  }
+  E.copy(C).addScaledVector(p, hh * Math.cos(t)).addScaledVector(q, hh * Math.sin(t));
+}
+
 export function buildDriverArms(o: HandsOptions): DriverArms {
   const t0 = performance.now();
   const look = o.look, q: Quality = o.quality ?? 'high';
   const pres: Presentation = o.presentation ?? (look.scale < 0.95 ? 'f' : 'm');
-  const female = pres === 'f';
+  const female = pres === 'f', room = o.room;
   const paint = o.nails === undefined ? (female ? 0x7c1426 : null) : o.nails;
   const B = both(pres, q), A = B.arm.anatomy, nv = B.nv;
   const tMesh = performance.now() - t0;
@@ -157,6 +192,9 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
   const sides = [0, 1].map((side) => {
     const sh = side ? GRIP.left.shoulder : GRIP.right.shoulder;
     const shoulder0: V3 = [sh.x, sh.y, sh.z];
+    // a close door (o.room): both shoulders in to room + ROOM_SHOULDER of the centreline, the body kept symmetric. The
+    // bind pose keeps the shared ones (the mesh is built round them); the pose moves from it
+    const shoulderR: V3 = [o.room === undefined ? sh.x : side ? Math.max(sh.x, EYE.x - o.room - ROOM_SHOULDER) : Math.min(sh.x, EYE.x + o.room + ROOM_SHOULDER), sh.y, sh.z];
     const pole: V3 = side ? [-0.45, -1, -0.15] : [0.45, -1, -0.15];
     const wristW = gToW(A.wrist); if (side) wristW[0] = -wristW[0];
     const wristW_m = new THREE.Vector3(wristW[0] / 1000, wristW[1] / 1000, wristW[2] / 1000);
@@ -171,7 +209,7 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
     const from = new THREE.Vector3(...dirToCar(norm(sub(tj[3], tj[1])), side)), to = new THREE.Vector3(...dirToCar(norm(sub(lerp3(ix[1], ix[2], 0.5), tj[1])), side));
     const curl = new THREE.Quaternion().slerp(new THREE.Quaternion().setFromUnitVectors(from, to), POSE.thumb.offCurl);
     const curlAt = new THREE.Vector3(...toCar(tj[1], side)).sub(WHEEL_AT);
-    return { side, shoulder0, pole, wristW_m, upper, fore, hand, thumb, curl, curlAt, foreUp, bindFore: new THREE.Quaternion(), bindForeDir: new THREE.Vector3(), bindUpper: new THREE.Quaternion(), bindUpperDir: new THREE.Vector3() };
+    return { side, shoulder0, shoulderR, pole, wristW_m, upper, fore, hand, thumb, curl, curlAt, foreUp, bindFore: new THREE.Quaternion(), bindForeDir: new THREE.Vector3(), bindUpper: new THREE.Quaternion(), bindUpperDir: new THREE.Vector3() };
   });
   const qTilt = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), WHEEL_TILT);
   const basis = (dir: THREE.Vector3, up: THREE.Vector3) => {
@@ -236,8 +274,9 @@ export function buildDriverArms(o: HandsOptions): DriverArms {
       dq.copy(s.hand.quaternion).multiply(qTiltInv);     // the hand's rotation from its bind orientation
       const wrist = wristV.copy(s.wristW_m).applyQuaternion(s.hand.quaternion).add(s.hand.position);
       wristA[0] = wrist.x; wristA[1] = wrist.y; wristA[2] = wrist.z;
-      reach(s.shoulder0, wristA, L1, L2, s.pole, 0.94, ik);
+      reach(bind ? s.shoulder0 : s.shoulderR, wristA, L1, L2, s.pole, 0.94, ik);
       const S = Sv.set(ik.shoulder[0], ik.shoulder[1], ik.shoulder[2]), E = Ev.set(ik.elbow[0], ik.elbow[1], ik.elbow[2]);
+      if (s.side === 1 && room !== undefined && !bind) armRoom(S, wrist, E, EYE.x - room);
       const fdir = vA.copy(wrist).sub(E).normalize(), udir = vB.copy(E).sub(S).normalize();
       if (bind) {
         s.bindFore.copy(basis(fdir, s.foreUp)); s.bindForeDir.copy(fdir);

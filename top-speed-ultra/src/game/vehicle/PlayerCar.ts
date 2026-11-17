@@ -312,7 +312,7 @@ export class PlayerCar {
   private buildHands(c: CarConfig) {
     if (this.arms) { this.arms.dispose(); this.arms.group.parent?.remove(this.arms.group); }
     const t = performance.now();
-    this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality });
+    this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality, room: shapeFor(c.car).armRoom });
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
     this.arms.group.position.copy(this.armsAt);

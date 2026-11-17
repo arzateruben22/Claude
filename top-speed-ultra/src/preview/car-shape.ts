@@ -97,6 +97,8 @@ export interface ShapeParams {
   eyeNudge?: [number, number, number];   // the seat camera only, off this car's eye (x, y, z m): the driver sitting up and leaning in
   seatFwd?: number;                      // how far this car's driver sits ahead of the shared frame: the eye, the wheel, the hands, the
                                          // seats and the dash move forward (-z) by it (seatOffset); the dash's front edge stays on the glass
+  armRoom?: number;                      // a door close to the driver: how far out of the driver's centreline the left elbow may sit
+                                         // (m; hands.ts HandsOptions.room). Absent: the shared shoulders and elbows
   deckRibs?: { x: [number, number]; z: number[] };   // silver ribs across the rear deck's openings (the structure seen under the wing)
   // M1b, the hypercar's face: below a lip line (|x|, y; a polyline from the centre out) the nose is set back `recess`
   // metres inside the fangs (|x| < xf), so a crisp silver lip overhangs a dark intake zone; fins: vertical carbon
@@ -339,6 +341,11 @@ const HYPER: ShapeParams = {
   // The sheet's occupants sit about 0.25 m off the centreline; M2's 0.27 m is kept (at 0.25 the narrowed buckets'
   // inner bolsters would sink another 2 cm into the console)
   sidewall: 0.75, seatDrop: 0.15, seatX: 0.27, seatFwd: 0.1,
+  // the driver's left arm in the narrow tub (owner, 2026-11-17, v23: "Left arm is still getting mixed in between the
+  // black shadow"): the door card's face is 0.22 m out of the driver's centreline (0.19 m at the slimmed armrest,
+  // cockpit.ts), and a shirt sleeve at the elbow is about 5 cm round, so the left elbow keeps 0.14 m in and the
+  // shoulders 0.165 m (both were 0.23-0.24 m: the elbow 2 cm into the door, the forearm behind its armrest)
+  armRoom: 0.14,
   // the seat camera, 1 cm higher and 12 cm further forward than that eye (the driver leaning in): the header's lip
   // (z -0.10) is then over the camera, out of frame both ways up, the left A-pillar's foot leaves the frame's top
   // left, and the bonnet's rear half and nose stand over the cowl. The hands, wheel and dash stay where they are

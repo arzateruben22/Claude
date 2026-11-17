@@ -700,7 +700,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the glass; the sill cap is built in place)
     const kw = kit.warp;
     if (hyper) kit.warp = (p) => { p.x = Math.sign(p.x) * (Math.abs(p.x) - 0.866 + wallX(p.z)); p.y = 0.2 + (p.y - 0.2) * (sill(p.z) - 0.012 - 0.2) / 0.61; return true; };
-    const arm = (z: number) => sstep(-0.62, -0.42, z) * (1 - sstep(0.22, 0.4, z));
+    // the armrest's bulge off the card along z. The hypercar's door is 0.22 m from its driver and its wheel's rim 5 cm
+    // from the door: its armrest starts behind the rim and the hands and stands a third as proud (it ran 8 cm out of
+    // the card beside them, through the rim and the left wrist, and drew over the left forearm whenever the wheel
+    // turned left; owner, 2026-11-17, v23). The left forearm runs inside it (car-shape armRoom)
+    const arm = hyper ? (z: number) => 0.35 * sstep(-0.34, -0.18, z) * (1 - sstep(0.22, 0.4, z)) : (z: number) => sstep(-0.62, -0.42, z) * (1 - sstep(0.22, 0.4, z));
     const X = (x: number) => sd * x;
     const flip = sd > 0;
     // lower panel up to the armrest, the armrest (cognac), the Alcantara insert, the sill cap to the glass
@@ -718,7 +722,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // a carbon strip under the sill, the pull strap, the release, a speaker
     if (!hyper) { const strip = new RoundedBoxGeometry(0.012, 0.022, 1.36, 2, 0.004); strip.translate(X(0.853), 0.8, -0.22); kit.add('carbon', strip); }
     // the pull strap: a loop of cognac leather, flat in section, its ends in small aluminium clamps
-    const sp = [v3(X(0.852), 0.71, -0.66), v3(X(0.83), 0.707, -0.635), v3(X(0.818), 0.703, -0.58), v3(X(0.82), 0.699, -0.5), v3(X(0.85), 0.695, -0.45)];
+    // (the hypercar's lies a third as proud: at 5 cm off its card it hung inside the rim beside the left hand)
+    const pr = (x: number) => hyper ? 0.866 - (0.866 - x) * 0.35 : x;
+    const sp = [v3(X(pr(0.852)), 0.71, -0.66), v3(X(pr(0.83)), 0.707, -0.635), v3(X(pr(0.818)), 0.703, -0.58), v3(X(pr(0.82)), 0.699, -0.5), v3(X(pr(0.85)), 0.695, -0.45)];
     kit.add('tan', tubeGeo(sp, () => 0.012, 8, { rb: () => 0.0028, up: v3(0, 1, 0) }));
     for (const e of [sp[0], sp[sp.length - 1]]) { const c = new RoundedBoxGeometry(0.014, 0.03, 0.022, 2, 0.004); c.translate(e.x - sd * 0.004, e.y, e.z); kit.add('alu', c); }
     const rel = new RoundedBoxGeometry(0.012, 0.016, 0.06, 2, 0.004); rel.translate(X(0.85), 0.77, -0.72); kit.add('alu', rel);
