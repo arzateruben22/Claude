@@ -148,6 +148,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   for (const k of SWITCHED_LAMPS) { const m = g.getObjectByName(k); if (m) m.visible = false; }
   g.userData.thrusters = B.thrusters;
+  g.userData.body = B.body;   // its section (top, canopyX): the suite checks the cabin's shapes stay under the skin
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,
     [[-A(B).trackF, B.AXLE.zF], [A(B).trackF, B.AXLE.zF], [-A(B).trackR, B.AXLE.zR], [A(B).trackR, B.AXLE.zR]], (B.ZF + B.ZR) / 2));
   g.userData.materials = mats;

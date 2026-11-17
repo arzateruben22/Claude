@@ -1433,12 +1433,20 @@ function makeBody(P: ShapeParams) {
       for (const s of [-1, 1]) put('seatSil', rb(0.08, 0.56, 0.16, 0.035), mat(sx + s * 0.2, 0.6, 0.39, tilt, 0, s * 0.08));
       put('seatSil', rb(0.27, 0.2, 0.11, 0.05), mat(sx, 1.02, 0.52, tilt));
     }
-    // the Corsa's roll hoop behind the seats
+    // the Corsa's roll hoop behind the seats: a half-circle lowered with the driver, each point kept 4.5 cm (a disc
+    // that size) inside the canopy's flank and top, like the bulkhead. The hypercar's canopy meets its deck in a notch
+    // at the hoop's shoulders, which the plain circle pierced once its driver sat 0.15 m low (a dark lozenge on the
+    // rear flank behind the side window; 0.03 m from the tube's axis to the skin now, 0.022 m tube). The Corsa's
+    // points stay where they were
     if (P.interior === 'corsa' || P.interior === 'hyper') {
-      const hoop: V3[] = [];
-      for (let k = 0; k <= 16; k++) { const t = k / 16, a = Math.PI * t; hoop.push(v3(-Math.cos(a) * 0.7, 0.3 + Math.sin(a) * 0.86, 0.5)); }
-      const hg = tubeGeo(hoop, () => 0.022, 8); if (drop) hg.translate(0, -drop, 0);
-      kit.add('interior', hg, null, 0.1);
+      const z = 0.5, M = 0.045, hoop: V3[] = [];
+      const off = (f: (d: number) => number) => { let v = 9; for (let j = -6; j <= 6; j++) { const d = M * j / 6; v = Math.min(v, f(d) - Math.sqrt(Math.max(0, M * M - d * d))); } return v; };
+      for (let k = 0; k <= 40; k++) {
+        const a = Math.PI * k / 40, s = -Math.cos(a), y0 = 0.3 + Math.sin(a) * 0.86 - drop;
+        const x = Math.min(Math.abs(s) * 0.7, off((d) => body.canopyX(z, y0 + d))), y = Math.min(y0, off((d) => body.top(z, Math.max(0, x + d))));
+        hoop.push(v3(Math.sign(s) * x, y, z));
+      }
+      kit.add('interior', tubeGeo(hoop, () => 0.022, 8), null, 0.1);
     }
   }
 

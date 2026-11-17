@@ -1862,7 +1862,8 @@ export class Game {
       // cluster was drawn small mid-screen. The cap was 84 until 2026-11-16 (owner, v19 at 207 mph on an iPhone: "the
       // hood being more presented"): with the default +10 and the speed's +4 that drew 98 degrees, a 56-degree width,
       // and the bonnet and fenders a sliver at the dash's corners; at 76 the default draws 90 (a 50-degree width) and
-      // the hood 1.1x larger. Landscape is unchanged.
+      // the hood 1.1x larger. Landscape's fov and pitch are unchanged, but the hypercar's eye moved (car-shape seatDrop,
+      // eyeNudge), so its landscape and desktop seat views also lose the A-pillar band and show the hood.
       const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, SEAT_VMAX_P) : 58;
       fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
       // the horizon sits 31% of the way down the part of the screen below the top safe area (the notch or Dynamic

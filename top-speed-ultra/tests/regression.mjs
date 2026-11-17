@@ -2609,6 +2609,19 @@ await group('render', async (use) => {
       c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
       const ext = c.exterior, lamps = ['sigL', 'sigR', 'reverse', 'brakeGlow'].map((k) => ext.getObjectByName(k));
       const out = { eye: c.eye.position.toArray(), beam: c.beams[1].position.toArray(), built: lamps.every(Boolean), hidden: lamps.every((m) => m && !m.visible) };
+      // the cabin seen through the glass stays under the skin where the roll hoop stands (z 0.5 +- 2.5 cm, above the
+      // sill): each vertex of the 'interior' meshes against the body's section there, inside the canopy's flank and
+      // under its top (seatDrop 0.15 had the hoop's shoulders through the rear flank, a dark lozenge, 2026-11-17)
+      const sec = ext.userData.body; out.skin = { n: 0, gap: Infinity, at: null }; ext.updateMatrixWorld(true);
+      ext.traverse((o) => {
+        if (o.name !== 'interior' || !o.geometry) return;
+        const p = o.geometry.attributes.position, v = new o.position.constructor(), m = ext.matrixWorld.clone().invert().multiply(o.matrixWorld);
+        for (let i = 0; i < p.count; i++) {
+          v.fromBufferAttribute(p, i).applyMatrix4(m); if (Math.abs(v.z - 0.5) > 0.025 || v.y < 0.6) continue;
+          const a = Math.abs(v.x), gap = Math.min(sec.canopyX(v.z, v.y) - a, sec.top(v.z, a) - v.y); out.skin.n++;
+          if (gap < out.skin.gap) { out.skin.gap = gap; out.skin.at = [v.x, v.y, v.z].map((q) => +q.toFixed(3)); }
+        }
+      });
       // how far the beam starts from the nearest vertex of the lit blades (the exterior's 'lamp' meshes), both in the
       // car's own frame: the beam's position on the car's root against the blades' vertices in the exterior's frame (the
       // body the exterior hangs on rides and pitches over the root, so world positions would mix in the suspension)
@@ -2661,6 +2674,9 @@ await group('render', async (use) => {
     expect(r.built && r.hidden, `switched lamps built ${r.built}, hidden until lit ${r.hidden}`);
     // (the seat camera: the driver's eye at (-0.27, 1.01, 0.0) since 2026-11-16 (0.96 m before), 1 cm up and 12 cm
     // forward of it, car-shape seatDrop and eyeNudge)
+    // (the gap is the lesser of the flank's and the top's: 0.023 m at 2026-11-17, at the hoop's shoulder; the plain
+    // circle 0.15 m low measured -0.052 m, through the skin)
+    expect(r.skin.n > 100 && r.skin.gap > 0.004, `the cabin through the skin by the roll hoop: ${r.skin.n} vertices, the closest ${r.skin.gap.toFixed(3)} m inside at ${JSON.stringify(r.skin.at)}`);
     expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 1.02) < 0.005 && Math.abs(r.eye[2] + 0.12) < 0.005, `the hypercar's seat camera at ${r.eye.map(fmt)} (want -0.27, 1.02, -0.12)`);
     // (the beam starts on the blade: within 4 cm of a vertex of its lit face, in the car's frame (0.023 m measured; 0.028
     // at b49f7f3), low and outboard, not at the shared default (0.62, 0.55, -2.2). Was z < -2.2 until M1b, whose plan V
@@ -2675,7 +2691,7 @@ await group('render', async (use) => {
     expect(r.rev.gear < 0 && r.rev.on && r.rev.signal === 0, `reversing (lamps on, no signal): ${JSON.stringify(r.rev)}`);
     expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
     expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
-    return `eye ${r.eye.map(fmt)}, beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
+    return `eye ${r.eye.map(fmt)}, cabin ${r.skin.gap.toFixed(3)} m under the skin by the hoop (${r.skin.n} vertices), beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
