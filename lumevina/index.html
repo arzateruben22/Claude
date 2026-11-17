@@ -829,11 +829,20 @@
               <svg class="policy-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </summary>
             <div class="policy-body">
-              <ul>
+              <!-- while booking runs on GlossGenius (js/site-config.js) -->
+              <ul class="only-gg">
                 <li>Change or cancel at least <strong>48 hours</strong> ahead, from the link in your confirmation.</li>
                 <li>Same-day changes: the deposit is kept, a <strong>$43 fee</strong> goes to the card on file, and rebooking takes a new deposit.</li>
                 <li>No-shows are charged <strong>50% of the service</strong> and may not be able to rebook.</li>
                 <li><strong>Saturdays can't be moved or cancelled.</strong> Moving one takes a new deposit; cancelling forfeits it and adds a fee.</li>
+              </ul>
+              <!-- booking on this website: one move, and the late fee charged by itself (functions/book) -->
+              <ul class="only-site">
+                <li><strong>Move or cancel up to 48 hours ahead</strong>, from the link in your confirmation. Your deposit moves with you to a new date in the same month.</li>
+                <li><strong>An appointment can be moved once</strong> online. To change it again, reply to your confirmation email.</li>
+                <li><strong>Cancelling within 48 hours</strong> keeps the deposit and charges a <strong>$43 late-cancellation fee</strong> to your card on file, automatically. Rebooking takes a new deposit.</li>
+                <li>No-shows are charged <strong>50% of the service</strong> and may not be able to rebook.</li>
+                <li><strong>Saturdays can't be moved.</strong> Cancelling a Saturday appointment keeps the deposit and charges the same fee.</li>
               </ul>
               <p class="policy-resched">Need to reschedule?
                 <button class="linklike policy-resched-start" type="button">Move an appointment →</button></p>
@@ -1079,12 +1088,18 @@
         <p class="booking-demo-note">Just the essentials to hold your spot — your full
         pre-visit form comes right after, before your appointment.</p>
 
+        <!-- her cancellation policy, in plain words, where they agree to it: the late fee is charged by itself -->
+        <p class="booking-policy-box"><strong>Cancellation policy.</strong> You can move an appointment once, and move or
+        cancel it up to 48 hours ahead; your deposit comes with you. Cancelling within 48 hours, or cancelling a Saturday
+        appointment, keeps the deposit and charges a $43 late-cancellation fee to your card on file. A missed appointment is
+        charged 50% of the service.</p>
+
         <label class="intake-consent">
           <input type="checkbox" class="consent-terms">
           <span>I consent to the treatment and agree to Lumevina Aesthetics Spa's
-          <a class="inline-link" href="#policies">policies</a> (deposits, cancellation,
-          aftercare), and I'll disclose any allergies, medications, or conditions on my
-          pre-visit form.</span>
+          <a class="inline-link" href="#policies">policies</a> (deposits, cancellation and the
+          $43 late-cancellation fee charged to my card on file, aftercare), and I'll disclose any allergies,
+          medications, or conditions on my pre-visit form.</span>
         </label>
         <label class="intake-consent">
           <input type="checkbox" class="consent-covid">

@@ -2589,6 +2589,18 @@ html.svc-open { overflow: hidden; }
   color: var(--ink-35);
   margin-bottom: var(--space-4);
 }
+/* her cancellation policy, where they sign (the late fee is charged automatically) */
+.booking-policy-box {
+  margin: 0 0 var(--space-4);
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--panel-edge-soft);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.booking-policy-box strong { color: var(--ink); font-weight: 600; }
 
 .field select {
   font: inherit;
@@ -6738,6 +6750,12 @@ a.book-btn { text-align: center; }
 }
 .only-gg { display: none; }
 .book-glossgenius .only-gg { display: inline; }
+/* a list or box, not a phrase. The policy list's own rule (.policy-body ul: a flex column) is more specific than .only-gg,
+   so the lists name their parent too, or both ways of booking would show at once */
+.book-glossgenius div.only-gg { display: block; }
+.policy-body ul.only-gg { display: none; }
+.book-glossgenius .policy-body ul.only-gg { display: flex; }
+.book-glossgenius .policy-body ul.only-site { display: none; }
 .book-glossgenius .only-site { display: none; }
 
 /* ─── her full logo in the hero, centred above the headline: the art traced

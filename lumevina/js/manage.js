@@ -4,11 +4,13 @@
  * it opens the site with ?manage=<token>, and this window shows that one
  * booking (functions/book → get), with what the policy allows right now:
  *
- *   48 hours or more ahead (not a Saturday): Move it (the booking calendar,
- *   js/booking.js → moveLive) or Cancel it, and the deposit carries over
- *   to a new date that month.
- *   Later than that, or a Saturday: Cancel it, keeping the deposit (a $43
- *   fee may apply). Moving is done with Evelyn.
+ *   48 hours or more ahead (not a Saturday): Move it, once (the booking
+ *   calendar, js/booking.js → moveLive), or Cancel it, and the deposit
+ *   carries over to a new date that month. After the one move, only Cancel
+ *   is offered; another change is done with Evelyn.
+ *   Later than that, or a Saturday: Cancel it, which keeps the deposit and
+ *   charges the $43 late fee to the card on file (the server does it, by
+ *   itself, when they confirm). Moving is done with Evelyn.
  *
  * My Lumevina (js/account.js) opens the same window for a signed-in
  * client's appointments: LumevinaManage.open(token).
@@ -57,9 +59,13 @@
     current = v;
     var held = v.status === "held";
     var paid = v.member ? "Your membership facial" : v.paid_cents ? "Deposit paid: " + money(v.paid_cents) + " (it goes toward your total)" : "";
-    var rule = !held ? "" : v.saturday ? "Saturday appointments can't be moved, and cancelling one keeps the deposit."
-      : v.free_change ? "You can move or cancel it up to 48 hours before, and your deposit comes with you."
-      : "It's within 48 hours now: cancelling keeps the deposit, and a $43 late fee may apply. To move it, reply to your confirmation email and Evelyn will help.";
+    var fee = money(v.late_fee_cents || 4300);
+    var left = v.moves_left == null ? 1 : v.moves_left;          /* an older server doesn't say: the move is there */
+    var canMove = held && v.free_change && !v.saturday && left > 0;
+    var rule = !held ? "" : v.saturday ? "Saturday appointments can't be moved. Cancelling one keeps the deposit and charges a " + fee + " late-cancellation fee to your card on file."
+      : v.free_change ? (left > 0 ? "You can move this appointment once, or cancel it, up to 48 hours before, and your deposit comes with you."
+        : "You've already used your one online move. You can still cancel up to 48 hours before; to change the time again, reply to your confirmation email and Evelyn will help.")
+      : "It's within 48 hours now: cancelling keeps the deposit and charges a " + fee + " late-cancellation fee to your card on file. To move it, reply to your confirmation email and Evelyn will help.";
     box.innerHTML =
       '<button class="mg-x" type="button" aria-label="Close">&times;</button>' +
       '<p class="mg-pill is-' + esc(v.status) + '">' + esc(STATUS[v.status] || v.status) + '</p>' +
@@ -70,7 +76,7 @@
       (rule ? '<p class="mg-rule">' + esc(rule) + '</p>' : "") +
       (note ? '<p class="mg-note" role="status">' + esc(note) + '</p>' : "") +
       '<div class="mg-actions">' +
-        (held && v.free_change && !v.saturday ? '<button type="button" class="btn btn-solid mg-move">Move it</button>' : "") +
+        (canMove ? '<button type="button" class="btn btn-solid mg-move">Move it</button>' : "") +
         (held ? '<button type="button" class="btn btn-ghost mg-cancel">Cancel it</button>' : "") +
         (held ? '<a class="btn btn-ghost mg-gcal" target="_blank" rel="noopener">Add to Google Calendar</a>' : "") +
         (v.status === "cancelled" ? '<a class="btn btn-solid" href="#book" data-mg-close>Book another time</a>' : "") +
@@ -94,15 +100,22 @@
     if (cx) cx.addEventListener("click", function () {
       if (cx.dataset.arm !== "1") {
         cx.dataset.arm = "1";
-        cx.textContent = v.free_change && !v.saturday ? "Tap again to cancel (deposit carries over)" : "Tap again to cancel (deposit kept)";
+        cx.textContent = v.free_change && !v.saturday ? "Tap again to cancel (deposit carries over)" : "Tap again to cancel and pay the " + fee + " fee";
         return;
       }
       cx.disabled = true;
       api({ action: "cancel", token: v.token }).then(function (r) {
-        if (!r.booking) { paint(v, "It didn't cancel. Check your connection and try again."); return; }
+        if (!r.booking) {
+          paint(v, r.reason === "past" ? "That appointment time has passed, so it can't be cancelled online. Reply to your confirmation email and Evelyn will help."
+            : "It didn't cancel. Check your connection and try again.");
+          return;
+        }
+        var kept = v.paid_cents ? "the " + money(v.paid_cents) + " deposit is kept and " : "";
         paint(r.booking, r.kind === "in_time"
           ? (v.paid_cents ? "Cancelled. Your " + money(v.paid_cents) + " deposit carries over: it comes off automatically when you book again this month with the same email." : "Cancelled. Nothing was charged.") + (v.member ? " Your membership facial is back on your account." : "")
-          : "Cancelled. As the policy says, the deposit is kept.");
+          : r.fee && r.fee.ok ? "Cancelled. As the policy says, " + kept + "a " + money(r.fee.cents) + " late-cancellation fee was charged to " + (r.fee.card || "your card on file") + "."
+          : r.fee && r.fee.reason !== "already" ? "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept. " : "") + "The " + fee + " late-cancellation fee couldn't be charged to your card, so Evelyn will be in touch."
+          : "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept." : "a late-cancellation fee applies, and Evelyn will be in touch."));
         document.dispatchEvent(new CustomEvent("lumevina:booking-changed", { detail: r.booking }));
       }, function () { paint(v, "It didn't cancel. Check your connection and try again."); });
     });

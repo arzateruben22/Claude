@@ -12,8 +12,8 @@ Everything GlossGenius does (from its own feature pages and review listings, Oct
 | Service menu with descriptions, prices, times | ✅ | Same menu as GlossGenius, with a full-description pop-up. |
 | Deposits per service | ✅ v3 | `functions/book` + Stripe Checkout. Members pay none. |
 | Card on file | ✅ v3 | Saved by Stripe when booking (or on its own when nothing is due); Evelyn can email a card link. |
-| No-show and late-cancellation fees | ✅ v3 | Dashboard → Appointments: $43 for a late cancellation, 50% of the service for a no-show (a deposit already kept counts toward it), charged to the card on file. |
-| Clients cancel or move online | ✅ v3 | The link in every email and My Lumevina, with her 48-hour and Saturday rules. |
+| No-show and late-cancellation fees | ✅ v3 | A late cancellation (inside 48 hours, or a Saturday visit) is charged $43 to the card on file **automatically** when the client cancels; Evelyn can refund it from Appointments. A no-show is 50% of the service (a deposit already kept counts toward it), charged from Appointments. GlossGenius can't charge a late-cancellation fee by itself. |
+| Clients cancel or move online | ✅ v3 | The link in every email and My Lumevina, with her 48-hour and Saturday rules, and **one move per booking** (GlossGenius has no limit on moves). |
 | Cancellation policy shown everywhere | ✅ | FAQ & Policies, booking, every confirmation. |
 | Automated waitlist for cancelled slots | ✅ v3 | A full day offers the waitlist; a cancellation emails the first person waiting. |
 | Calendar sync (Google) | ✅ | `availability` and `confirmBooking` through her Google Calendar; `calendar-feed`. |

@@ -1318,13 +1318,25 @@
   var tooCloseNotice = function () {
     showNotice("Too close to reschedule online",
       "Appointments can't be moved online within 48 hours of your visit — this is " +
-      "part of our cancellation policy, and the deposit is non-refundable inside " +
-      "this window. Please call or DM us and we'll do our best to help.");
+      "part of our cancellation policy. Cancelling inside this window keeps the deposit " +
+      "and charges a $43 late-cancellation fee to your card on file. Please call or DM " +
+      "us and we'll do our best to help.");
+  };
+
+  /* her policy: an appointment can be moved online once (the server counts it; the demo counts on the saved booking) */
+  var moveLimitNotice = function () {
+    showNotice("This appointment was already moved",
+      "An appointment can be moved online once, and this one has been. To change it " +
+      "again, reply to your confirmation email (or DM us) and Evelyn will help.");
   };
 
   var beginReschedule = function (booking, index) {
     if (bookingStartOf(booking).getTime() - Date.now() <= CANCEL_WINDOW_MS) {
       tooCloseNotice();
+      return;
+    }
+    if ((booking.moves || 0) >= 1) {
+      moveLimitNotice();
       return;
     }
     openReschedule(booking, index);
@@ -1378,15 +1390,17 @@
         "confirmation email (or DM us on Instagram) and we'll move it for you.");
       return;
     }
-    if (modal.getAttribute("aria-hidden") !== "false") {
-      lastFocus = document.activeElement;
-      modal.setAttribute("aria-hidden", "false");
-      overlay.hidden = false;
-      document.body.style.overflow = "hidden";
-    }
     if (upcoming.length === 1) {
+      /* straight into the move, or a notice (too close, or already moved once): the window opens only for the move itself,
+         so a notice doesn't leave an empty booking window open behind it */
       beginReschedule(upcoming[0].b, upcoming[0].i);
     } else {
+      if (modal.getAttribute("aria-hidden") !== "false") {
+        lastFocus = document.activeElement;
+        modal.setAttribute("aria-hidden", "false");
+        overlay.hidden = false;
+        document.body.style.overflow = "hidden";
+      }
       modal.focus();
       renderRepick(upcoming);
     }
@@ -1542,12 +1556,13 @@
           statusEl.textContent = "";
           liveMove = null;
           closeModal();
-          showNotice("Appointment moved", r.j.booking.names + " is now " + r.j.booking.when + ". Your deposit came with it; a new confirmation is on its way.");
+          showNotice("Appointment moved", r.j.booking.names + " is now " + r.j.booking.when + ". Your deposit came with it; a new confirmation is on its way. That was your one online move: to change it again, reply to your confirmation email and Evelyn will help.");
           if (mv.done) mv.done(r.j.booking);
           return;
         }
         statusEl.textContent = r.j.reason === "slot_taken" ? "That time was just taken. Pick another." :
           r.j.reason === "late" ? "It's within 48 hours now, so it can't be moved online. Reply to your confirmation email and Evelyn will help." :
+          r.j.reason === "limit" ? "This appointment was already moved once, which is the limit online. Reply to your confirmation email and Evelyn will help." :
           r.j.reason === "saturday" ? "Saturday appointments can't be moved (see policies)." :
           r.j.reason === "hours" ? "That time isn't open. Pick another." : "It didn't move. Check your connection and try again.";
         if (r.j.reason === "slot_taken") pullBusy();
@@ -1560,6 +1575,7 @@
       b.date = state.dayKey;
       b.time = state.slot;
       b.dur = totalDur();
+      b.moves = (b.moves || 0) + 1;   /* her policy: one online move */
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(all)); }
       catch (err) { /* private mode */ }
       document.dispatchEvent(new CustomEvent("lumevina:booking-changed"));
@@ -1567,7 +1583,8 @@
     closeModal();
     showNotice("Appointment moved",
       sessionName() + " is now " + whenText() + " at " + fmtTime(state.slot) +
-      ". Your deposit carried over — nothing more to pay.");
+      ". Your deposit carried over — nothing more to pay. That was your one online move: " +
+      "to change it again, reply to your confirmation email and Evelyn will help.");
   };
 
   confirmBtn.addEventListener("click", function () {
@@ -2056,7 +2073,7 @@
     } else earnedEl.hidden = true;
     refNoteEl.hidden = true;
     var sub = modal.querySelector(".booking-success-sub");
-    if (sub) sub.textContent = "A confirmation email is on its way, with a link to move or cancel up to 48 hours before. The balance is due at your visit.";
+    if (sub) sub.textContent = "A confirmation email is on its way, with a link to move it once or cancel it, up to 48 hours before. The balance is due at your visit.";
     lastBooking = { title: F_NAME + " — " + v.names, start: v.date, startMin: v.start_min, durMin: v.dur_min,
       name: v.name || nameInput.value.trim(), email: emailInput.value.trim() };
     if (gcalLink) {
@@ -2105,9 +2122,10 @@
 
   /* moving a live booking (js/manage.js): the calendar, then functions/book → reschedule */
   var openLiveMove = function (v, done) {
+    if (v.moves_left === 0) { moveLimitNotice(); return; }
     openReschedule({ services: v.services }, -1);
     liveMove = { token: v.token, done: done };
-    rescheduleNote.textContent = "Moving " + v.names + " (now " + v.when + "). Pick a new day and time: your deposit comes with it.";
+    rescheduleNote.textContent = "Moving " + v.names + " (now " + v.when + "). Pick a new day and time: your deposit comes with it. An appointment can be moved online once.";
   };
 
   /* ── a full day: the waitlist ── */

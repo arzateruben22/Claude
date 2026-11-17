@@ -736,3 +736,12 @@ alter table request_log enable row level security;
 -- treatment done on the spot ("service"), or a discount or tip ("adjust").
 alter table orders add column if not exists source text not null default 'web' check (source in ('web', 'studio'));
 create index if not exists orders_email on orders (email, paid_at desc);
+
+-- ── Nov 17: one move per booking, and the late fee charged automatically ────
+-- reschedule_count: how many times the client moved this booking online (her
+--   policy allows one; functions/book → reschedule). Evelyn moving it doesn't count.
+-- fee_charge: the Stripe payment of a fee, so Evelyn can refund it (studio-book → waive_fee).
+-- fee_waived_at: set when she refunded it; the fee is never charged again for that booking.
+alter table bookings add column if not exists reschedule_count int not null default 0;
+alter table bookings add column if not exists fee_charge text;
+alter table bookings add column if not exists fee_waived_at timestamptz;

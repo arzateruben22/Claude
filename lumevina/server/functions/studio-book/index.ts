@@ -30,9 +30,9 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { studioOk } from "../_shared/studio.ts";
 import { EMAIL, getContact, norm, upsertContact } from "../_shared/contacts.ts";
 import { chargeOnFile, customerFor, stripe } from "../_shared/stripe.ts";
-import { cancelBooking, confirmBooking, fmtWhen, LATE_FEE_CENTS, names, noShowFeeCents, priceVisit, sendBookingMessage, site } from "../_shared/bookings.ts";
+import { cancelBooking, cardFor, chargeFee, confirmBooking, fmtWhen, LATE_FEE_CENTS, names, noShowFeeCents, priceVisit, sendBookingMessage, site } from "../_shared/bookings.ts";
 import { completeVisit, quoteVisit } from "../_shared/visits.ts";
-import { memberFor, PLANS } from "../_shared/membership.ts";
+import { PLANS } from "../_shared/membership.ts";
 import { esc, money, page, sendEmail } from "../_shared/mail.ts";
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
@@ -58,14 +58,7 @@ Deno.serve(async (req) => {
     tip_cents: body.tip_cents, discount_cents: body.discount_cents, gift_code: body.gift_code, points: body.points,
   });
   /** the card that pays: the booking's, else the client's on file, else their membership's */
-  const cardOf = async (b: any) => {
-    if (b.stripe_customer && b.payment_method) return { customer: b.stripe_customer, pm: b.payment_method, label: b.card_label };
-    const c = await getContact(db, b.guest_email);
-    if (c?.stripe_customer && c.payment_method) return { customer: c.stripe_customer, pm: c.payment_method, label: c.card_label };
-    const m = await memberFor(db, b.guest_email);
-    if (m?.stripe_customer_id && m.payment_method) return { customer: m.stripe_customer_id, pm: m.payment_method, label: m.card_label };
-    return null;
-  };
+  const cardOf = (b: any) => cardFor(db, b);
 
   switch (body.action) {
     case "list": {
@@ -89,7 +82,7 @@ Deno.serve(async (req) => {
           deposit_cents: b.deposit_cents, paid_cents: b.paid_cents ?? 0, total_cents: b.total_cents,
           card: b.card_label || c?.card_label || null, member: m ? { plan: PLANS[m.plan]?.name, credits: m.credits } : null,
           membership_facial: !!b.membership_id, intake: !!by(forms, e), notes: c?.notes ?? null, visits: c?.visits ?? 0,
-          from_glossgenius: c?.source === "glossgenius", cancel_kind: b.cancel_kind, fee_cents: b.fee_cents, fee_kind: b.fee_kind,
+          from_glossgenius: c?.source === "glossgenius", cancel_kind: b.cancel_kind, fee_cents: b.fee_cents, fee_kind: b.fee_kind, fee_waived: !!b.fee_waived_at,
           balance_paid_cents: b.balance_paid_cents, tip_cents: b.tip_cents, checkout: b.checkout ? { method: b.checkout.method, charged_cents: b.checkout.charged_cents } : null,
           link_pending: !!b.checkout?.pending,
         };
@@ -145,21 +138,36 @@ Deno.serve(async (req) => {
       const b = await one();
       if (!b) return json({ reason: "not_found" }, 404);
       const kind = body.kind === "no_show" ? "no_show" : "late_cancel";
-      if (b.fee_cents) return json({ reason: "already" }, 409);
+      if (b.fee_cents || b.fee_waived_at) return json({ reason: "already" }, 409);
       const dflt = kind === "no_show" ? noShowFeeCents(b) : LATE_FEE_CENTS;
       if (!Number(body.cents) && dflt < 100) return json({ reason: "covered" }, 409);   // the deposit kept already covers it
       const cents = Math.max(100, Math.min(50000, Math.round(Number(body.cents) || dflt)));
-      const card = await cardOf(b);
-      if (!card) return json({ reason: "no_card" }, 409);
-      const r = await chargeOnFile({ customer: card.customer, paymentMethod: card.pm, cents,
-        description: kind === "no_show" ? "No-show fee" : "Late cancellation fee", metadata: { kind: "fee", booking_id: b.id }, key: `fee-${b.id}` });
-      if (!r.ok) return json({ reason: r.reason }, 402);
-      await db.from("bookings").update({ fee_cents: cents, fee_kind: kind, ...(kind === "no_show" && b.status === "held" ? { status: "no_show" } : {}) }).eq("id", b.id);
+      const r = await chargeFee(db, b, kind, cents, "manual");
+      if (!r.ok) return json({ reason: r.reason }, r.reason === "no_card" ? 409 : r.reason === "already" ? 409 : 402);
+      const card = { label: r.card };
+      if (kind === "no_show" && b.status === "held") await db.from("bookings").update({ status: "no_show" }).eq("id", b.id);
       await sendEmail(norm(b.guest_email), kind === "no_show" ? "Your missed Lumevina Aesthetics Spa appointment" : "Your late cancellation at Lumevina Aesthetics Spa",
         page(kind === "no_show" ? "We missed you." : "About your cancellation.",
           `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. As the booking policy says, a ${money(cents)} fee was charged to ${esc(card.label ?? "your card on file")}.</p>` +
           `<p style="font-size:15px;line-height:1.55">Questions? Just reply to this email.</p>`), Deno.env.get("OWNER_EMAIL") ?? undefined);
       return json({ ok: true, cents });
+    }
+
+    // Evelyn takes back a late fee (it was charged by itself when the client cancelled): the money goes back to their card
+    // and the booking is marked so the fee is never charged again.
+    case "waive_fee": {
+      const b = await one();
+      if (!b) return json({ reason: "not_found" }, 404);
+      if (!b.fee_cents || !b.fee_charge) return json({ reason: "no_fee" }, 409);
+      if (b.fee_waived_at) return json({ reason: "already" }, 409);
+      const r = await stripe("refunds", { payment_intent: b.fee_charge, metadata: { kind: "fee_refund", booking_id: b.id } }, { idempotency: `fee-refund-${b.id}` });
+      if (!r.ok) return json({ reason: String(r.data?.error?.code ?? "refund_failed") }, 402);
+      await db.from("bookings").update({ fee_waived_at: new Date().toISOString() }).eq("id", b.id);
+      await sendEmail(norm(b.guest_email), "Your late-cancellation fee is refunded",
+        page("A refund, from Evelyn.",
+          `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. Evelyn has refunded the ${money(b.fee_cents)} late-cancellation fee to your card. It shows in a few days.</p>`),
+        Deno.env.get("OWNER_EMAIL") ?? undefined);
+      return json({ ok: true, cents: b.fee_cents });
     }
 
     case "no_show": {

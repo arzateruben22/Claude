@@ -6,9 +6,11 @@
  *                  needed), products from her shelf, a discount, Glow Points,
  *                  a tip (15/20/25% or her own), then pay by the card on
  *                  file, cash, or a pay link the client opens on their phone.
- *                  A no-show or a late cancellation can be charged to the
- *                  card on file ($43). She can cancel (refunding the deposit)
- *                  or ask a client for a card.
+ *                  A no-show is charged to the card on file (50% of the
+ *                  service). A late cancellation ($43) is charged by itself
+ *                  when the client cancels (functions/book); she can refund
+ *                  it here, and charge it herself if that charge failed. She
+ *                  can cancel (refunding the deposit) or ask a client for a card.
  *   Book for a client   a phone or in-person booking, at any time (her hours
  *                  don't apply to her), with an email asking for a card.
  *   Waitlist       who's waiting for a full day.
@@ -26,9 +28,9 @@
 
   var card = document.getElementById("appointments");
   if (!card) return;
-  /* v3 only (js/site-config.js → version, or ?preview=v3): in v2 she books
-     on GlossGenius, and Settle visits does the after-visit job */
-  if (!(window.LumevinaFeatures && window.LumevinaFeatures.version === "v3")) return;
+  /* when booking is on the website (js/site-config.js → version v3, or v4 which is v3 and more; or ?preview=v3): in v2 she
+     books on GlossGenius, and Settle visits does the after-visit job */
+  if (!(window.LumevinaFeatures && /^v[34]$/.test(window.LumevinaFeatures.version))) return;
   card.hidden = false;
   var settleCard = document.getElementById("settle");
   if (settleCard) settleCard.hidden = true;
@@ -67,7 +69,7 @@
   /* ── the card's frame ── */
   card.innerHTML =
     '<div class="crm-head"><div><h2>Appointments</h2>' +
-    '<p class="sub">Today and what’s coming. Check out a visit with a tip (card on file, cash or a pay link), charge a late-cancel or no-show fee, or book for a client.</p></div>' +
+    '<p class="sub">Today and what’s coming. Check out a visit with a tip (card on file, cash or a pay link), charge a no-show fee, refund a late-cancellation fee (they are charged by themselves), or book for a client.</p></div>' +
     '<button class="bk-export" type="button" id="ap-new-open">Book for a client</button></div>' +
     '<p class="ap-msg" id="ap-msg" role="status"></p>' +
     '<form class="ap-new" id="ap-new" hidden autocomplete="off"></form>' +
@@ -98,7 +100,7 @@
         deposit_cents: Math.round((b.deposit || 0) * 100), paid_cents: Math.round((b.paid || 0) * 100), total_cents: Math.round((b.total || 0) * 100),
         card: demoCard(b.email), membership_facial: !!b.memberCredit, member: b.memberCredit ? { plan: b.memberCredit } : null,
         intake: !!(lget("lumevina_intake", {})[String(b.email || "").toLowerCase()]), cancel_kind: b.cancelKind || null,
-        fee_cents: s.fee ? Math.round(s.fee * 100) : null, balance_paid_cents: s.paid != null ? Math.round(s.paid * 100) : null, tip_cents: s.tip ? Math.round(s.tip * 100) : 0,
+        fee_cents: s.fee ? Math.round(s.fee * 100) : null, fee_waived: !!s.feeWaived, balance_paid_cents: s.paid != null ? Math.round(s.paid * 100) : null, tip_cents: s.tip ? Math.round(s.tip * 100) : 0,
         checkout: s.status === "paid" ? { method: s.method } : null
       };
     });
@@ -114,7 +116,7 @@
       { id: "s3", date: d(-1), start_min: 660, dur_min: 90, services: ["ageless-grace-facial"], names: "Ageless Grace Facial", name: "Priya Shah", email: "priya@example.com",
         status: "held", deposit_cents: 0, paid_cents: 0, card: null, intake: true, note: "" },
       { id: "s4", date: d(2), start_min: 600, dur_min: 60, services: ["brazilian-wax"], name: "Ana Ruiz", names: "Brazilian Wax", email: "ana@example.com",
-        status: "cancelled", cancel_kind: "late", deposit_cents: 3000, paid_cents: 3000, card: "Visa •••• 4242", note: "" },
+        status: "cancelled", cancel_kind: "late", fee_cents: 4300, deposit_cents: 3000, paid_cents: 3000, card: "Visa •••• 4242", note: "" },
       { id: "s5", date: d(3), start_min: 960, dur_min: 60, services: ["monthly-acne-treatment"], names: "Monthly Acne Treatment", name: "Leo Park", email: "leo@example.com",
         status: "held", deposit_cents: 3000, paid_cents: 3000, card: "Visa •••• 1881", intake: true, note: "" }
     ].map(function (r) { r.sample = true; return r; });
@@ -165,13 +167,15 @@
     if (r.phone) facts.push('<a href="tel:' + esc(String(r.phone).replace(/[^\d+]/g, "")) + '">' + esc(fmtPhone(r.phone)) + "</a>");
     var state = "", acts = [];
     if (r.status === "completed") state = "Done" + (r.balance_paid_cents != null ? " · " + money(r.balance_paid_cents) : "") + (r.tip_cents ? " + " + money(r.tip_cents) + " tip" : "") + (r.checkout && r.checkout.method ? " · " + r.checkout.method : "");
-    else if (r.status === "no_show") state = "No-show" + (r.fee_cents ? " · fee " + money(r.fee_cents) + " charged" : "");
-    else if (r.status === "cancelled") state = (r.cancel_kind === "late" ? "Late cancellation" : r.cancel_kind === "evelyn" ? "You cancelled it" : "Cancelled") + (r.fee_cents ? " · fee " + money(r.fee_cents) + " charged" : "");
+    else if (r.status === "no_show") state = "No-show" + (r.fee_cents ? " · fee " + money(r.fee_cents) + (r.fee_waived ? " refunded" : " charged") : "");
+    else if (r.status === "cancelled") state = (r.cancel_kind === "late" ? "Late cancellation" : r.cancel_kind === "evelyn" ? "You cancelled it" : "Cancelled") + (r.fee_cents ? " · fee " + money(r.fee_cents) + (r.fee_waived ? " refunded" : " charged") : "");
     if (r.status === "held" && r.date <= today) acts.push('<button type="button" class="bk-export" data-ap="checkout">Check out</button>');
     if (r.status === "held" && r.date <= today) acts.push('<button type="button" class="settle-btn settle-btn--bad" data-ap="noshow">No-show</button>');
     var feeDue = (r.status === "no_show" || (r.status === "cancelled" && r.cancel_kind === "late")) && !r.fee_cents;
     if (feeDue && feeCents(r) < 100) state += " · the deposit kept covers the fee";
-    else if (feeDue && r.card) acts.push('<button type="button" class="settle-btn" data-ap="fee">Charge the ' + money(feeCents(r)) + " fee</button>");
+    else if (feeDue && r.status === "cancelled") state += " · the late fee wasn’t charged" + (r.card ? "" : " (no card on file)");
+    if (feeDue && feeCents(r) >= 100 && r.card) acts.push('<button type="button" class="settle-btn" data-ap="fee">Charge the ' + money(feeCents(r)) + " fee</button>");
+    if (r.fee_cents && !r.fee_waived) acts.push('<button type="button" class="settle-btn" data-ap="waive">Refund the ' + money(r.fee_cents) + " fee</button>");
     if (r.status === "held" && !r.card) acts.push('<button type="button" class="settle-btn" data-ap="cardlink">Ask for a card</button>');
     if (r.status === "held") acts.push('<button type="button" class="settle-btn" data-ap="cancel">Cancel</button>');
     return '<li class="ap-row is-' + esc(r.status) + '" data-id="' + esc(r.id) + '">' +
@@ -411,6 +415,15 @@
     if (act === "fee") two("Tap again: charge " + money(fee) + " to " + r.card, function () {
       if (LIVE && !r.sample) call("studio-book", { action: "fee", id: r.id, kind: r.status === "no_show" ? "no_show" : "late_cancel" }).then(function (j) { done("Charged the " + money(j.cents || fee) + " fee to " + r.card + ". They’re emailed a receipt."); }, fail);
       else { r.fee_cents = fee; if (!r.sample) { var s2 = lget(SETTLE, {}); s2[r.id] = Object.assign(s2[r.id] || { status: "no-show" }, { fee: fee / 100 }); lset(SETTLE, s2); } paint(); say("Demo: the " + money(fee) + " fee would be charged to " + r.card + "."); }
+    });
+    if (act === "waive") two("Tap again: refund the " + money(r.fee_cents) + " fee", function () {
+      if (LIVE && !r.sample) call("studio-book", { action: "waive_fee", id: r.id }).then(function () { done("Refunded the " + money(r.fee_cents) + " fee to " + (r.card || "their card") + ". They’re emailed to say so."); },
+        function (err) { if (err && err.reason === "no_fee") { b.disabled = false; say("That fee was charged before refunds were added here. Refund it in your Stripe dashboard.", true); } else fail(err); });
+      else {
+        r.fee_waived = true;
+        if (!r.sample) { var s3 = lget(SETTLE, {}); s3[r.id] = Object.assign(s3[r.id] || {}, { feeWaived: true }); lset(SETTLE, s3); }
+        paint(); say("Demo: the " + money(r.fee_cents) + " fee would be refunded to " + (r.card || "their card") + ".");
+      }
     });
     if (act === "cancel") two(r.paid_cents ? "Tap again: cancel and refund " + money(r.paid_cents) : "Tap again: cancel it", function () {
       if (LIVE && !r.sample) call("studio-book", { action: "cancel", id: r.id }).then(function () { done("Cancelled. " + (r.name || "They") + " is emailed" + (r.paid_cents ? ", and the deposit is refunded" : "") + "."); }, fail);

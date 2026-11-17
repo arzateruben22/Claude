@@ -48,11 +48,15 @@ const text = (h) => h
   .replace(/&amp;/g, "&").replace(/&rsquo;|&#8217;/g, "’").replace(/&lsquo;/g, "‘").replace(/&rdquo;/g, "”").replace(/&ldquo;/g, "“")
   .replace(/&nbsp;/g, " ").replace(/&hellip;/g, "…").replace(/&rarr;/g, "→").replace(/&mdash;/g, "—").replace(/&ndash;/g, "–")
   .replace(/[ \t]+/g, " ").replace(/ *\n */g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+// some policy lists are for one way of booking only: <ul class="only-gg"> shows while booking runs on GlossGenius (v2),
+// <ul class="only-site"> once clients book on the website (v3), so each version's facts carry just its own
+const forSite = (block, v) => block.replace(new RegExp(`<ul class="only-${v === "v3" ? "gg" : "site"}">[\\s\\S]*?<\\/ul>`, "g"), "");
 const details = (block) => [...block.matchAll(/<details class="policy"[^>]*>\s*<summary>([\s\S]*?)<\/summary>\s*<div class="policy-body">([\s\S]*?)<\/div>\s*<\/details>/g)]
   .map((m) => ({ q: text(m[1]), a: text(m[2]) }));
 // the FAQ and the policies are one list on the page (<div class="fp-list"> … <!-- /fp-list -->)
 const fpBlock = html.slice(html.indexOf('<div class="fp-list"'), html.indexOf('<!-- /fp-list -->'));
-const policies = details(fpBlock);
+const policies = details(forSite(fpBlock, "v2"));
+const policiesV3 = details(forSite(fpBlock, "v3"));
 if (!policies.length) throw new Error("couldn't read the FAQ & Policies list from index.html");
 
 // ── her menu (js/services.js) ──
@@ -82,7 +86,7 @@ const DEPOSITS = "Some treatments take a deposit when booked, set per service: $
 const WHAT_TO_BOOK = "New clients book \"New Clients Start Here\"; for breakouts, the Acne Bootcamp's \"New Client Consultation + Treatment\". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).";
 const BOOKING = {
   v2: "Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). " + DEPOSITS + " " + WHAT_TO_BOOK,
-  v3: "Booking: right here on the website, in the Book section: pick a treatment, a day and a time. " + DEPOSITS + " The deposit is paid by card on Stripe's secure page, and the card stays on file to hold the booking; a treatment with no deposit just needs a card on file. Glow members pay no deposits. The confirmation email has a link to move or cancel the appointment (also in My Lumevina, signed in with the same email), and a reminder comes before the visit, by text too if they ask for one. A full day has a waitlist: a cancellation emails the first person waiting. Appointments already booked on GlossGenius stand as they are; new ones are booked here. " + WHAT_TO_BOOK
+  v3: "Booking: right here on the website, in the Book section: pick a treatment, a day and a time. " + DEPOSITS + " The deposit is paid by card on Stripe's secure page, and the card stays on file to hold the booking; a treatment with no deposit just needs a card on file. Glow members pay no deposits. The confirmation email has a link to move or cancel the appointment (also in My Lumevina, signed in with the same email), and a reminder comes before the visit, by text too if they ask for one. An appointment can be moved online once: to change it again, the client replies to the confirmation email and Evelyn helps. Cancelling within 48 hours, or cancelling a Saturday appointment, keeps the deposit and charges a $43 late-cancellation fee to the card on file automatically; whether to reverse a fee is Evelyn's call, so hand that to her. A full day has a waitlist: a cancellation emails the first person waiting. Appointments already booked on GlossGenius stand as they are; new ones are booked here. " + WHAT_TO_BOOK
 };
 /* membership and points, from what the website shows (js/membership.js, js/rewards.js) */
 const MEMBERSHIP_V3 = "Glow Membership (the Membership section; join online, billed monthly). Glow, $185 a month: one facial a month, the Lumevina Custom Facial or the Monthly Acne Treatment (a $200 value); 10% off skincare from her shelf and free shipping; 15% off add-ons and anything else booked the same visit; no deposits; a home routine from Evelyn each season; and Ask Evelyn any time, with her own reply within 24 hours. Ageless, $235 a month: any of the facials up to the Ageless Grace Facial (a $240 value), everything in Glow, plus dermaplaning every other visit and 15% off skincare. Founding members (the first 25) pay $175 and $225 instead, kept for as long as they stay, and the first five also get a skincare kit; the Membership section shows how many founding spots are left. Unused facials bank, up to two, and with two waiting they aren't billed until they book one. A banked facial can be sent to a friend as a gift certificate. One month a year can be skipped at no charge. Three-month minimum, then cancel online any time from My Lumevina.";
@@ -107,7 +111,7 @@ const factsFor = (v) => [
     : [...(SCHOOL_ON ? [SCHOOL] : []), "Not offered: lashes, brows, nails, memberships" + (SCHOOL_ON ? "" : ", an online course") + " or a rewards program (those are paused)."]),
   "",
   "# FAQ & Policies",
-  ...policies.map((p) => `## ${p.q}\n${p.a}`),
+  ...(v === "v3" ? policiesV3 : policies).map((p) => `## ${p.q}\n${p.a}`),
   "",
   TREATMENTS
 ].join("\n\n");

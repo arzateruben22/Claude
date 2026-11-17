@@ -15,9 +15,11 @@
 //     reasons: services, time, hours, members_first, slot_taken, email, consent, payment_unavailable
 //     (an extra Monday is for members until the Friday before: members_first)
 // POST { action: "get", token }                       → { booking }   (the link in every email)
-// POST { action: "cancel", token }                    → { kind: in_time | late, booking }
+// POST { action: "cancel", token }                    → { kind: in_time | late, booking, fee? }
+//   late (inside 48 hours, or a Saturday): the deposit is kept and the $43 fee is charged to the card on file
+//   (fee: { ok, cents, card } or { ok: false, reason }); reason "past" once the appointment time has passed
 // POST { action: "reschedule", token, date, start_min } → { booking } or { reason }
-//   (48 hours ahead or more, never a Saturday: the policy)
+//   (48 hours ahead or more, never a Saturday, and once per booking: the policy; reason "limit" after that)
 // POST { action: "release", token }   back from Stripe without finishing: frees the time
 // POST { action: "waitlist", date, services, name, email, phone?, sms_ok? }
 // POST { action: "mine" }  + the client's sign-in → { bookings } upcoming and recent
@@ -37,9 +39,12 @@ import { customerFor, stripe } from "../_shared/stripe.ts";
 import { notifyOwner } from "../_shared/notify.ts";
 import { tooMany } from "../_shared/guard.ts";
 import {
-  CANCEL_HOURS, cancelBooking, confirmBooking, fmtWhen, hoursUntil, isSaturday, names, priceVisit, sendBookingMessage, site,
+  CANCEL_HOURS, LATE_FEE_CENTS, cancelBooking, confirmBooking, fmtWhen, hoursUntil, isSaturday, moveBlock, movesLeft, names, priceVisit, sendBookingMessage, site,
 } from "../_shared/bookings.ts";
 
+/** What Stripe's page says beside the button: the policy the client agrees to (the late fee is charged automatically). */
+const POLICY_AT_PAYMENT = `Your card stays on file for this visit. Move or cancel up to 48 hours ahead and your deposit moves with you; an appointment can be moved once. Cancelling within 48 hours, or a Saturday appointment, keeps the deposit and charges a $${LATE_FEE_CENTS / 100} late-cancellation fee to this card automatically.`;
+const POLICY_AT_CARD = `Nothing is charged now. Your card holds the time. An appointment can be moved once, up to 48 hours ahead. Cancelling within 48 hours, or a Saturday appointment, charges a $${LATE_FEE_CENTS / 100} late-cancellation fee to this card automatically; a missed appointment is charged 50% of the service.`;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[0-9a-f]{32}$/;
 const AHEAD_DAYS = 62;
@@ -63,6 +68,7 @@ const view = (b: any) => ({
   cancel_kind: b.cancel_kind ?? null,
   free_change: b.status === "held" && hoursUntil(b.date, b.start_min) >= CANCEL_HOURS && !isSaturday(b.date),
   saturday: isSaturday(b.date),
+  moves_left: movesLeft(b), late_fee_cents: LATE_FEE_CENTS, fee_cents: b.fee_cents ?? null,
 });
 
 Deno.serve(async (req) => {
@@ -178,12 +184,12 @@ Deno.serve(async (req) => {
         mode: "payment",
         line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: due, product_data: { name: `Deposit · ${names(price.services)}`, description: fmtWhen(date, start) + ". It goes toward your total." } } }],
         payment_intent_data: { setup_future_usage: "off_session", description: `Deposit · ${what}`, metadata: meta },
-        custom_text: { submit: { message: "Your card stays on file for this visit. Change or cancel up to 48 hours ahead and your deposit moves with you." } },
+        custom_text: { submit: { message: POLICY_AT_PAYMENT } },
       });
       else Object.assign(params, {
         mode: "setup", currency: "usd",
         setup_intent_data: { description: `Card on file · ${what}`, metadata: meta },
-        custom_text: { submit: { message: "Nothing is charged now. Your card holds the time; a $43 fee applies only to a late cancellation or a no-show." } },
+        custom_text: { submit: { message: POLICY_AT_CARD } },
       });
       const s = await stripe("checkout/sessions", params);
       if (!s.ok || !s.data?.url) {
@@ -215,15 +221,15 @@ Deno.serve(async (req) => {
       const r = await cancelBooking(db, b, "client");
       if (!r.ok) return json({ reason: r.reason }, 409);
       const { data: after } = await db.from("bookings").select("*").eq("id", b.id).maybeSingle();
-      return json({ kind: r.kind, booking: view(after ?? b) });
+      const fee = r.fee ? (r.fee.ok ? { ok: true, cents: r.fee.cents, card: r.fee.card } : { ok: false, reason: r.fee.reason }) : null;
+      return json({ kind: r.kind, booking: view(after ?? b), fee });
     }
 
     case "reschedule": {
       const b = await byToken();
       if (!b) return json({ reason: "not_found" }, 404);
-      if (b.status !== "held") return json({ reason: "status" }, 409);
-      if (isSaturday(b.date)) return json({ reason: "saturday" }, 409);
-      if (hoursUntil(b.date, b.start_min) < CANCEL_HOURS) return json({ reason: "late" }, 409);
+      const blocked = moveBlock(b);   // status, saturday, late, or limit (moved once already)
+      if (blocked) return json({ reason: blocked }, 409);
       const date = String(body.date ?? ""), start = Math.round(Number(body.start_min));
       if (!DAY.test(date) || !(start >= 0 && start < 1440) || start % 30) return json({ reason: "time" }, 400);
       const lead = hoursUntil(date, start);
@@ -239,7 +245,14 @@ Deno.serve(async (req) => {
         }
       } catch (e) { console.error("google", String(e)); }
       const from = fmtWhen(b.date, b.start_min);
-      const { data: moved, error } = await db.from("bookings").update({ date, start_min: start, google_event_id: null }).eq("id", b.id).select("*").single();
+      // counted in the same write, and only if nobody moved it in between: two taps can't both get through
+      const { data: moved, error } = await db.from("bookings").update({ date, start_min: start, google_event_id: null, reschedule_count: (b.reschedule_count ?? 0) + 1 })
+        .eq("id", b.id).eq("reschedule_count", b.reschedule_count ?? 0).select("*").single();
+      if (error?.code === "PGRST116") {
+        // no row matched: it was moved (or cancelled) a moment ago. Put her calendar entry back and say so.
+        try { if (b.google_event_id) await addBooking({ id: b.id, date: b.date, start_min: b.start_min, dur_min: b.dur_min, title: `${names(b.services)} · ${b.guest_name}` }); } catch (e) { console.error("google", String(e)); }
+        return json({ reason: "limit" }, 409);
+      }
       if (error) {
         const taken = String(error.message ?? "").includes("no_overlap") || error.code === "23P01";
         return json({ reason: taken ? "slot_taken" : "failed" }, taken ? 409 : 500);

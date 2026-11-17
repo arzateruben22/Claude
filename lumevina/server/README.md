@@ -43,7 +43,7 @@ site's address (that browser only); the dashboard follows the same switch.
 | --- | --- | --- |
 | Books (Book section) | `book` → `create` | Checks her hours and extra Mondays (`site_settings`), her Google Calendar and the database's overlap guard; uses Glow Points (signed in, up to half the deposit), a gift certificate or a deposit carried over; saves a `pending` booking for 31 minutes and opens Stripe Checkout: the deposit with the card saved, or just the card when nothing is due. A member's facial, or a signed-in client with a card on file and nothing due, is confirmed at once. |
 | Pays | `stripe-webhook` (`checkout.session.completed`, `metadata.kind = booking`) | `confirmBooking`: held, card saved on the client, points (100 extra on a first booking here), the membership facial used, her Google Calendar, the confirmation email (and a text if they asked), her alert |
-| Moves or cancels | `book` → `get`, `reschedule`, `cancel` (the link in every email, `?manage=<token>`, and My Lumevina) | 48 hours or more ahead, not a Saturday: move it, or cancel with the deposit carried to a new date that month. Later: cancelling keeps the deposit and Evelyn decides on the fee. |
+| Moves or cancels | `book` → `get`, `reschedule`, `cancel` (the link in every email, `?manage=<token>`, and My Lumevina) | 48 hours or more ahead, not a Saturday: move it **once** (`reschedule_count`; a second try is refused with `limit`), or cancel with the deposit carried to a new date that month. Later than that, or a Saturday: cancelling keeps the deposit and the **$43 late fee is charged to the card on file by itself** (`_shared/bookings.ts → chargeFee`). A card that can't be charged doesn't undo the cancellation: Evelyn's alert says so and her button in Appointments tries again. After the appointment time has passed, a client can't cancel online (`past`): that's a no-show. |
 | Finds a day full | `book` → `waitlist` | A cancellation emails the first person waiting |
 | Joins a membership | `membership` → `join`, then `stripe-webhook` | Stripe Checkout in subscription mode at today's price (the founding rate for the first 25, kept while the subscription continues); the webhook makes the membership, and each `invoice.paid` adds that month's facial |
 | Manages it (My Lumevina) | `membership` → `status`, `pause`, `unpause`, `cancel`, `keep`, `card`, `gift` | Pause skips one billing (once a year); cancel ends after the 3-month minimum or the month paid for; billing holds at 2 banked facials and picks up when one is booked; `card` opens Stripe's billing portal |
@@ -52,7 +52,7 @@ site's address (that browser only); the dashboard follows the same switch.
 
 | Evelyn (dashboard, studio key) | Function | |
 | --- | --- | --- |
-| Appointments | `studio-book` | `list`, `quote`, `checkout` (`card` on file, `cash`, `link` for a pay link they open on their phone, `other`; tip, products, discount, points), `fee` ($43 for a late cancellation; a no-show is 50% of the service, with a deposit already kept counting toward it), `no_show`, `cancel` (refunds the deposit), `book` (for a client, any time; `request_card` emails a card link), `card_link`, `waitlist`, `waitlist_remove` |
+| Appointments | `studio-book` | `list`, `quote`, `checkout` (`card` on file, `cash`, `link` for a pay link they open on their phone, `other`; tip, products, discount, points), `fee` (a late cancellation is charged by itself when the client cancels; this charges it by hand if that failed or `AUTO_LATE_FEE=off`; a no-show is 50% of the service, with a deposit already kept counting toward it), `waive_fee` (refunds a fee to the client's card; the booking is marked so the fee can't be charged again), `no_show`, `cancel` (refunds the deposit), `book` (for a client, any time; `request_card` emails a card link), `card_link`, `waitlist`, `waitlist_remove` |
 | Clients | `studio` | `import_clients` (the GlossGenius client CSV, in chunks of 500), `invite` (one email to each imported client who hasn't booked here: 100 Glow Points on their first booking; `dry: true` counts), `contacts`, `contact_note` |
 | Hours, extra Mondays | `studio` | `hours_set`, `extra_mondays_set` (both in `site_settings`, which the website reads) |
 | Members | `studio` | `members`, `five_kit` |
@@ -76,6 +76,10 @@ site's address (that browser only); the dashboard follows the same switch.
    supabase secrets set REVIEW_URL=https://g.page/r/... STUDIO_ADDRESS="<the studio's address, for confirmations>" PREFS_SECRET=<random>
    ```
 
+   `AUTO_LATE_FEE=off` hands the late-cancellation fee back to Evelyn's button in Appointments (the default, with
+   the secret unset, is to charge it automatically when a client cancels inside 48 hours or cancels a Saturday visit).
+   Moving it onto a live database needs the three `alter table bookings add column` lines at the end of
+   `server/schema.sql` (Nov 17: `reschedule_count`, `fee_charge`, `fee_waived_at`), then redeploy `book` and `studio-book`.
    `COUNT_STOCK=off` while the shelf isn't counted yet (a product with no count reads as in stock to the assistant; see GO-LIVE.md).
    `SITE_VERSION` is the assistant's default; the website also tells it which
    version it runs, so a `?preview=v3` visitor gets v3 answers. Without

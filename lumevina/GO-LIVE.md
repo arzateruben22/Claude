@@ -88,7 +88,7 @@ How it's built, so nothing here is a surprise: **no card number ever touches the
 One switch, when Evelyn is ready: everything below is built and tested; it needs the accounts above and these steps (`server/README.md` → Turning on v3 has the commands).
 
 1. **Preview it first.** Open the site with `?preview=v3` at the end of the address (and `dashboard.html?preview=v3`). Only that browser sees it; "Previewing v3 · leave" in the corner ends it.
-2. **Server:** run the current `server/schema.sql`, add the v3 secrets (`SITE_VERSION=v3`; `REVIEW_URL` and `STUDIO_ADDRESS` from her launch questions page; Twilio later, as she chose), deploy the v3 functions, add the webhook events, turn on Stripe's customer portal, and schedule `client-reminders` hourly.
+2. **Server:** run the current `server/schema.sql` (on a database that already exists, at least the three `alter table bookings add column` lines at its end: the one-move count and the late-fee refund), add the v3 secrets (`SITE_VERSION=v3`; `REVIEW_URL` and `STUDIO_ADDRESS` from her launch questions page; Twilio later, as she chose), deploy the v3 functions, add the webhook events, turn on Stripe's customer portal, and schedule `client-reminders` hourly.
 3. **Her dashboard:** check her hours; Clients → choose the GlossGenius client export (a CSV) → Import. Nothing is sent yet.
 4. **Test mode run** (Stripe test keys, card 4242 4242 4242 4242):
    - [ ] A guest books a Brazilian: Stripe's page takes the $30 deposit; the confirmation email has "Cancel or move it"; it's in her Google Calendar and Appointments.

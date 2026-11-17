@@ -680,3 +680,29 @@ Three new photos, in the same warm stone-and-linen style, each on its treatment:
 - **Ageless Grace Facial:** a bowl of mask with a brush (`img/services/ageless-grace.webp`)
 
 They show on the featured cards in Services, in each treatment's pop-up, in the booking picker and in the app's Book list. The full-size originals are in `marketing/source/service-*.png`. New Clients Start Here keeps the consultation dish for now.
+
+## One move per booking, and the late fee charged by itself (Nov 17)
+
+You asked whether the website can limit rescheduling to once and charge a fee automatically when someone cancels late, since GlossGenius can't. It can, and it's built and tested. **It takes effect when clients book on the website**, because that's where these rules can be enforced. While booking is still on GlossGenius, the website's policy shows the GlossGenius wording and nothing changes.
+
+**The rules, on the website's own booking:**
+- **One move.** A client can move an appointment online once, up to 48 hours before (never a Saturday). After that, "Move it" is gone and the page says to reply to the confirmation email, so Evelyn decides. Moving it herself never counts against them. Two quick taps at once can't sneak a second move through.
+- **The late fee.** Cancelling inside 48 hours, or cancelling a Saturday appointment, keeps the deposit and charges the **$43 late-cancellation fee to the card on file, by itself**, the moment they confirm. It's the same $43 as before; it was a button Evelyn pressed, now it's automatic.
+- **Cancelling 48+ hours ahead** is still free, and the deposit still carries to a new date that month.
+- **Once the appointment time has passed,** a client can't cancel online: that's a no-show, which Evelyn charges herself (50% of the service).
+
+**Where clients are told:** a "Cancellation policy" box on the sign-off step (the consent checkbox now names the $43 fee), the payment page (Stripe), the FAQ's "Cancelling & rescheduling", the confirmation and reminder emails, the manage window, and the chat.
+
+**Evelyn's controls:**
+- **Refund the fee:** in Appointments, a cancelled booking with a fee has "Refund the $43 fee". It refunds the card, emails the client, and the fee can't be charged again for that booking.
+- **If the card can't be charged** (declined, or no card): the cancellation still goes through, Evelyn gets an alert saying so, the client is told she'll be in touch, and her "Charge the $43 fee" button tries again (or she can send a pay link).
+- **A switch:** the secret `AUTO_LATE_FEE=off` puts the fee back to her button, with nothing charged automatically.
+
+**To turn it on for real** (not done yet, it needs the server): run the three new lines at the end of `server/schema.sql` in Supabase, then redeploy the `book` and `studio-book` functions. `server/scripts/test-booking-policy.mjs` runs the rules against the real server code (23 checks).
+
+**Things to decide or confirm with Evelyn:**
+- A client can still cancel 48+ hours ahead for free and book again, so "one move" limits the Move button, not rebooking. Ending that would mean a fee on every cancellation.
+- Charging a card automatically needs the client to have clearly agreed. The box at sign-off, the Stripe payment page and every email now say so. Worth a quick check that a $43 late fee fits California's rules on cancellation fees (they need to be reasonable and disclosed).
+- GlossGenius's own policy still can't do either of these, so while clients book there, Evelyn enforces them by hand.
+
+**Also fixed on the way:** Evelyn's Appointments card only turned on for "v3" and skipped "v4" (the full preview); the booking window opened behind its own "too close to move" notice and stayed open after it; Everything Lumevina has a new "Appointments and late fees" link that opens the dashboard in website-booking mode.

@@ -294,39 +294,39 @@
       var cancel = document.createElement("button");
       cancel.type = "button";
       cancel.className = "acct-bk-cancel";
-      var cancellable = x.start.getTime() - now > CANCEL_WINDOW_MS;
-      if (cancellable) {
-        cancel.textContent = "Cancel";
-        cancel.addEventListener("click", function () {
-          if (cancel.dataset.arm !== "1") {
-            cancel.dataset.arm = "1";
-            cancel.textContent = "Tap again to confirm: the deposit is non-refundable" +
-              (b.points ? " and its " + b.points + " Glow Points go back" : "");
-            return;
-          }
-          var all = loadBookings();
-          var gone = all.splice(x.i, 1)[0];
-          saveBookings(all);
-          /* a membership facial comes back when its visit is cancelled in time */
-          if (gone && gone.memberCredit && window.LumevinaMembership) {
-            window.LumevinaMembership.returnCredit(gone.email || session.email);
-          }
-          /* the Glow Points this booking earned (rebooking bonus included) go back */
-          var back = gone && window.LumevinaRewards ? window.LumevinaRewards.reverse(gone) : 0;
-          renderBookings();
-          if (back) {
-            var note = document.createElement("li");
-            note.className = "acct-none";
-            note.setAttribute("role", "status");
-            note.textContent = "Cancelled. The " + back + " Glow Points from that booking were returned.";
-            listEl.insertBefore(note, listEl.firstChild);
-          }
-          renderMember();
-        });
-      } else {
-        cancel.textContent = "Within 48 hours — call or DM to cancel";
-        cancel.disabled = true;
-      }
+      /* her policy: cancelling 48+ hours ahead (not a Saturday) is free; later than that keeps the deposit and charges the $43 late fee */
+      var inTime = x.start.getTime() - now > CANCEL_WINDOW_MS && x.start.getDay() !== 6;
+      cancel.textContent = "Cancel";
+      cancel.addEventListener("click", function () {
+        if (cancel.dataset.arm !== "1") {
+          cancel.dataset.arm = "1";
+          cancel.textContent = inTime
+            ? "Tap again to confirm: the deposit is non-refundable" + (b.points ? " and its " + b.points + " Glow Points go back" : "")
+            : "Tap again to cancel: the deposit is kept and a $43 late-cancellation fee is charged to your card on file";
+          return;
+        }
+        var all = loadBookings();
+        var gone = all.splice(x.i, 1)[0];
+        saveBookings(all);
+        /* a membership facial comes back when its visit is cancelled in time (not when it's late) */
+        if (inTime && gone && gone.memberCredit && window.LumevinaMembership) {
+          window.LumevinaMembership.returnCredit(gone.email || session.email);
+        }
+        /* the Glow Points this booking earned (rebooking bonus included) go back */
+        var back = gone && window.LumevinaRewards ? window.LumevinaRewards.reverse(gone) : 0;
+        renderBookings();
+        var said = [];
+        if (!inTime) said.push("Cancelled. As the policy says, the deposit is kept and a $43 late-cancellation fee was charged to your card on file. (This is a demo: nothing real is charged.)");
+        if (back) said.push((inTime ? "Cancelled. " : "") + "The " + back + " Glow Points from that booking were returned.");
+        if (said.length) {
+          var note = document.createElement("li");
+          note.className = "acct-none";
+          note.setAttribute("role", "status");
+          note.textContent = said.join(" ");
+          listEl.insertBefore(note, listEl.firstChild);
+        }
+        renderMember();
+      });
 
       actions.appendChild(cancel);
       li.appendChild(when);
