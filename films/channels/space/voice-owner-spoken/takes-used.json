@@ -904,5 +904,36 @@
   "heard": "Part 8 of 8 Full Video on YouTube.",
   "not_heard": [],
   "breaths_lowered": []
+ },
+ "L2-miles": {
+  "segments": [
+   [
+    10.6,
+    23.295
+   ]
+  ],
+  "source": "oo-s3-miles.m4a (his miles take, 16 Nov 2026)",
+  "why": "line 1 of the miles sheet; the last take; cut with voice_edges, level matched (+3.0 dB), debreath defaults",
+  "breaths_lowered": []
+ },
+ "L4-miles": {
+  "segments": [
+   [
+    25.23,
+    32.515
+   ]
+  ],
+  "source": "oo-s3-miles.m4a (his miles take, 16 Nov 2026)",
+  "why": "line 2 of the miles sheet; the last take; cut with voice_edges, level matched (+2.2 dB), debreath defaults",
+  "breaths_lowered": [
+   [
+    3.23,
+    3.4
+   ],
+   [
+    4.91,
+    5.06
+   ]
+  ]
  }
 }

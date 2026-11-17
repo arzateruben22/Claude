@@ -5,24 +5,24 @@
    "id": "L2",
    "text": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year. Tonight, it reverses. A thought experiment, built from real physics.",
    "file": "voice6/wav/L2.wav",
-   "dur": 13.44,
+   "dur": 12.695,
    "sentences": [
     {
      "text": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year.",
-     "t0": 0.02,
-     "t1": 7.84,
+     "t0": 0.145,
+     "t1": 6.865,
      "claims": []
     },
     {
      "text": "Tonight, it reverses.",
-     "t0": 7.925,
-     "t1": 10.24,
+     "t0": 6.93,
+     "t1": 9.17,
      "claims": []
     },
     {
      "text": "A thought experiment, built from real physics.",
-     "t0": 10.375,
-     "t1": 13.44,
+     "t0": 9.56,
+     "t1": 12.395,
      "claims": []
     }
    ],
@@ -30,274 +30,276 @@
     {
      "w": "Right",
      "start": 0.02,
-     "end": 0.4
+     "end": 0.42
     },
     {
      "w": "now",
-     "start": 0.285,
-     "end": 0.56
+     "start": 0.42,
+     "end": 0.98
     },
     {
      "w": "it's",
-     "start": 0.77,
-     "end": 1.04
+     "start": 0.98,
+     "end": 1.3
     },
     {
      "w": "about",
-     "start": 0.93,
-     "end": 1.28
+     "start": 1.38,
+     "end": 1.62
     },
     {
      "w": "two",
-     "start": 1.375,
-     "end": 3.44
+     "start": 1.62,
+     "end": 1.86
     },
     {
      "w": "hundred",
-     "start": 1.405,
-     "end": 3.44
+     "start": 1.94,
+     "end": 2.26
     },
     {
      "w": "thirty-nine",
-     "start": 1.435,
-     "end": 3.44
+     "start": 2.26,
+     "end": 2.74
     },
     {
      "w": "thousand",
-     "start": 1.465,
-     "end": 3.44
+     "start": 2.74,
+     "end": 3.14
     },
     {
      "w": "miles",
-     "start": 3.525,
-     "end": 4.0
+     "start": 3.14,
+     "end": 3.54
     },
     {
      "w": "away,",
-     "start": 3.995,
-     "end": 4.72
+     "start": 3.54,
+     "end": 4.18
     },
     {
      "w": "drifting",
-     "start": 4.805,
-     "end": 5.36
+     "start": 4.18,
+     "end": 4.66
     },
     {
      "w": "off",
-     "start": 5.345,
-     "end": 5.6
+     "start": 4.66,
+     "end": 4.9
     },
     {
      "w": "an",
-     "start": 5.615,
-     "end": 5.76
+     "start": 4.9,
+     "end": 5.06
     },
     {
      "w": "inch",
-     "start": 5.83,
-     "end": 6.16
+     "start": 5.06,
+     "end": 5.3
     },
     {
      "w": "and",
-     "start": 6.145,
-     "end": 6.32
+     "start": 5.3,
+     "end": 5.46
     },
     {
      "w": "a",
-     "start": 6.385,
-     "end": 6.435
+     "start": 5.46,
+     "end": 5.54
     },
     {
      "w": "half",
-     "start": 6.415,
-     "end": 6.72
+     "start": 5.54,
+     "end": 5.86
     },
     {
      "w": "a",
-     "start": 6.685,
-     "end": 6.96
+     "start": 5.86,
+     "end": 6.02
     },
     {
      "w": "year.",
-     "start": 7.225,
-     "end": 7.84
+     "start": 6.02,
+     "end": 6.9
     },
     {
      "w": "Tonight,",
-     "start": 7.925,
-     "end": 8.64
+     "start": 6.9,
+     "end": 7.94
     },
     {
      "w": "it",
-     "start": 8.745,
-     "end": 8.88
+     "start": 7.94,
+     "end": 8.18
     },
     {
      "w": "reverses.",
-     "start": 8.845,
-     "end": 10.24
+     "start": 8.18,
+     "end": 9.54
     },
     {
      "w": "A",
-     "start": 10.375,
-     "end": 10.48
+     "start": 9.54,
+     "end": 9.7
     },
     {
      "w": "thought",
-     "start": 10.565,
-     "end": 10.72
+     "start": 9.7,
+     "end": 9.86
     },
     {
      "w": "experiment,",
-     "start": 10.985,
-     "end": 11.76
+     "start": 10.02,
+     "end": 10.58
     },
     {
      "w": "built",
-     "start": 11.8,
-     "end": 12.24
+     "start": 10.74,
+     "end": 11.06
     },
     {
      "w": "from",
-     "start": 12.21,
-     "end": 12.48
+     "start": 11.06,
+     "end": 11.3
     },
     {
      "w": "real",
-     "start": 12.48,
-     "end": 12.8
+     "start": 11.3,
+     "end": 11.46
     },
     {
      "w": "physics.",
-     "start": 12.885,
-     "end": 13.52
+     "start": 11.62,
+     "end": 12.58
     }
    ],
-   "stand_in": true
+   "stand_in": false,
+   "owner_take": "oo-s3-miles.m4a 10.6-23.0 s"
   },
   {
    "id": "L4",
    "text": "One hundred seventy-nine thousand. A third wider. And the sea already feels it: more than twice the tidal pull.",
    "file": "voice6/wav/L4.wav",
-   "dur": 8.22,
+   "dur": 7.285,
    "sentences": [
     {
      "text": "One hundred seventy-nine thousand.",
-     "t0": 0.085,
-     "t1": 2.48,
+     "t0": 0.07,
+     "t1": 1.7,
      "claims": []
     },
     {
      "text": "A third wider.",
-     "t0": 2.525,
-     "t1": 4.0,
+     "t0": 2.105,
+     "t1": 3.14,
      "claims": []
     },
     {
      "text": "And the sea already feels it: more than twice the tidal pull.",
-     "t0": 4.07,
-     "t1": 8.08,
+     "t0": 3.525,
+     "t1": 7.155,
      "claims": []
     }
    ],
    "words": [
     {
      "w": "One",
-     "start": 0.085,
-     "end": 2.48
+     "start": 0.02,
+     "end": 0.34
     },
     {
      "w": "hundred",
-     "start": 0.115,
-     "end": 2.48
+     "start": 0.34,
+     "end": 0.58
     },
     {
      "w": "seventy-nine",
-     "start": 0.145,
-     "end": 2.48
+     "start": 0.66,
+     "end": 1.3
     },
     {
      "w": "thousand.",
-     "start": 0.175,
-     "end": 2.48
+     "start": 1.3,
+     "end": 1.7
     },
     {
      "w": "A",
-     "start": 2.525,
-     "end": 2.72
+     "start": 2.1,
+     "end": 2.34
     },
     {
      "w": "third",
-     "start": 2.735,
-     "end": 3.12
+     "start": 2.34,
+     "end": 2.66
     },
     {
      "w": "wider.",
-     "start": 3.05,
-     "end": 4.0
+     "start": 2.66,
+     "end": 3.14
     },
     {
      "w": "And",
-     "start": 4.07,
-     "end": 4.16
+     "start": 3.46,
+     "end": 3.62
     },
     {
      "w": "the",
-     "start": 4.1,
-     "end": 4.32
+     "start": 3.62,
+     "end": 3.78
     },
     {
      "w": "sea",
-     "start": 4.395,
-     "end": 4.72
+     "start": 3.78,
+     "end": 4.1
     },
     {
      "w": "already",
-     "start": 4.775,
-     "end": 5.2
+     "start": 4.1,
+     "end": 4.34
     },
     {
      "w": "feels",
-     "start": 5.26,
-     "end": 5.6
+     "start": 4.34,
+     "end": 4.66
     },
     {
      "w": "it:",
-     "start": 5.685,
-     "end": 6.08
+     "start": 4.66,
+     "end": 4.82
     },
     {
      "w": "more",
-     "start": 6.11,
-     "end": 6.32
+     "start": 5.14,
+     "end": 5.3
     },
     {
      "w": "than",
-     "start": 6.375,
-     "end": 6.56
+     "start": 5.3,
+     "end": 5.54
     },
     {
      "w": "twice",
-     "start": 6.565,
-     "end": 6.96
+     "start": 5.54,
+     "end": 5.86
     },
     {
      "w": "the",
-     "start": 7.055,
-     "end": 7.2
+     "start": 5.86,
+     "end": 6.02
     },
     {
      "w": "tidal",
-     "start": 7.245,
-     "end": 7.68
+     "start": 6.02,
+     "end": 6.5
     },
     {
      "w": "pull.",
-     "start": 7.73,
-     "end": 8.08
+     "start": 6.5,
+     "end": 7.22
     }
    ],
-   "stand_in": true
+   "stand_in": false,
+   "owner_take": "oo-s3-miles.m4a 25.15-32.2 s"
   },
   {
    "id": "L9",

@@ -1,7 +1,7 @@
 {
  "name": "v4-part1",
  "mode": "port",
- "dur": 60.05,
+ "dur": 58.37,
  "clips": [
   {
    "id": "B1",
@@ -21,41 +21,41 @@
    "id": "L2",
    "file": "voice6/wav/L2.wav",
    "t": 12.29,
-   "dur": 13.44,
+   "dur": 12.695,
    "from": 0.0
   },
   {
    "id": "L3",
    "file": "voice5/wav/L3.wav",
-   "t": 26.08,
+   "t": 25.335,
    "dur": 3.52,
    "from": 0.0
   },
   {
    "id": "L4",
    "file": "voice6/wav/L4.wav",
-   "t": 35.95,
-   "dur": 3.77,
+   "t": 35.205,
+   "dur": 3.37,
    "from": 0.0
   },
   {
    "id": "L4",
    "file": "voice6/wav/L4.wav",
-   "t": 42.72,
-   "dur": 4.45,
-   "from": 3.77
+   "t": 41.575,
+   "dur": 3.915,
+   "from": 3.37
   },
   {
    "id": "D1",
    "file": "voice5/wav/D1.wav",
-   "t": 51.02,
+   "t": 49.34,
    "dur": 2.97,
    "from": 0.0
   },
   {
    "id": "L5",
    "file": "voice5/wav/L5.wav",
-   "t": 54.29,
+   "t": 52.61,
    "dur": 4.86,
    "from": 0.0
   }
@@ -90,78 +90,78 @@
    "spoken": "And it never stops."
   },
   {
-   "t0": 12.31,
-   "t1": 15.745,
+   "t0": 12.435,
+   "t1": 15.36,
    "text": "Right now it's about 239,000 miles away,",
    "line": "L2",
    "spoken": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year."
   },
   {
-   "t0": 15.765,
-   "t1": 20.195,
+   "t0": 15.38,
+   "t1": 19.2,
    "text": "drifting off an inch and a half a year.",
    "line": "L2",
    "spoken": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year."
   },
   {
-   "t0": 20.215,
-   "t1": 22.645,
+   "t0": 19.22,
+   "t1": 21.71,
    "text": "Tonight, it reverses.",
    "line": "L2",
    "spoken": "Tonight, it reverses."
   },
   {
-   "t0": 22.665,
-   "t1": 25.98,
+   "t0": 21.85,
+   "t1": 24.935,
    "text": "A thought experiment, built from real physics.",
    "line": "L2",
    "spoken": "A thought experiment, built from real physics."
   },
   {
-   "t0": 26.28,
-   "t1": 27.5,
+   "t0": 25.535,
+   "t1": 26.755,
    "text": "Watch the number.",
    "line": "L3",
    "spoken": "Watch the number."
   },
   {
-   "t0": 27.52,
-   "t1": 29.53,
+   "t0": 26.775,
+   "t1": 28.785,
    "text": "It only goes down.",
    "line": "L3",
    "spoken": "It only goes down."
   },
   {
-   "t0": 36.035,
-   "t1": 38.455,
+   "t0": 35.275,
+   "t1": 37.155,
    "text": "179,000.",
    "line": "L4",
    "spoken": "One hundred seventy-nine thousand."
   },
   {
-   "t0": 38.475,
-   "t1": 39.69,
+   "t0": 37.31,
+   "t1": 38.545,
    "text": "A third wider.",
    "line": "L4",
    "spoken": "A third wider."
   },
   {
-   "t0": 43.02,
-   "t1": 47.28,
+   "t0": 41.73,
+   "t1": 45.61,
    "text": "And the sea already feels it: more than twice the tidal pull.",
    "line": "L4",
    "spoken": "And the sea already feels it: more than twice the tidal pull."
   },
   {
-   "t0": 51.45,
-   "t1": 54.15,
+   "t0": 49.77,
+   "t1": 52.47,
    "text": "If that made the sky feel bigger, tap like and follow.",
    "line": "D1",
    "spoken": "If that made the sky feel bigger, tap like and follow."
   },
   {
-   "t0": 54.37,
-   "t1": 59.1,
+   "t0": 52.69,
+   "t1": 57.42,
    "text": "Halve the distance, and the water starts to climb.",
    "line": "L5",
    "spoken": "Halve the distance, and the water starts to climb."
@@ -177,9 +177,9 @@
    384400
   ],
   [
-   35.775,
+   35.03,
    288300,
-   15.56
+   15.81
   ]
  ],
  "tracks": {
@@ -221,18 +221,18 @@
    "kind": "grow"
   },
   {
-   "t0": 29.775,
-   "t1": 35.775,
+   "t0": 29.03,
+   "t1": 35.03,
    "kind": "approach"
   },
   {
-   "t0": 39.72,
-   "t1": 42.72,
+   "t0": 38.575,
+   "t1": 41.575,
    "kind": "grow"
   },
   {
-   "t0": 47.345,
-   "t1": 50.845,
+   "t0": 45.665,
+   "t1": 49.165,
    "kind": "tide"
   }
  ],
@@ -245,13 +245,13 @@
  "shadow": true,
  "tides": false,
  "breathe": false,
- "cta_at": 51.02,
- "cta_frac": 0.85,
+ "cta_at": 49.34,
+ "cta_frac": 0.845,
  "cliff": "L5",
  "drift": {
-  "a": 12.11,
-  "b": 20.215,
-  "c": 21.615
+  "a": 12.235,
+  "b": 19.22,
+  "c": 20.62
  },
  "camera": [
   {
@@ -260,12 +260,12 @@
    "pv": "moon"
   },
   {
-   "t": 20.215,
+   "t": 19.22,
    "s": 1.0,
    "pv": "moon"
   },
   {
-   "t": 22.215,
+   "t": 21.22,
    "s": 1.12,
    "pv": "moon"
   }
@@ -280,7 +280,7 @@
    "y1": 0.385
   },
   {
-   "t0": 16.81,
+   "t0": 16.935,
    "dur": 0.9,
    "x0": 0.04,
    "y0": 0.3,
