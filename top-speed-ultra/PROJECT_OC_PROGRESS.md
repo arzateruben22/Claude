@@ -4,6 +4,84 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
+
+Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
+- 01805092: the reframe;
+- bf4eac9e, 9b4db7f4, a8fc6c21: the sleeve follow-ups;
+- ddb41477, 74502113: round 1, then the repair;
+- 676fd87e: the look-round fix after the judges.
+
+**The report.** Owner, v19 iPhone screenshot at 207 mph: "We still need to fix this pov with the hood being more
+presented and also the shadow fix on the arms still". In portrait, the top 45% was sky, a black A-pillar band covered
+the top-left third, and only the fenders' white tips showed at the dash corners.
+
+**Cause:**
+- The portrait seat pitch was aimed with the base fov, not the fov actually drawn with the +10 setting and the speed.
+  That put the horizon at 39.6%.
+- From the hypercar's 0.96 m eye, its sunken bonnet fell away at the same angle as the line over the cowl.
+- On Low, a 50 mm frit grid cell drew the black A-pillar.
+
+**Fix:**
+- The pitch is now aimed with the fov drawn. The portrait horizon target is 31% and vBase is capped at 76, so the
+  default draws 90 degrees.
+- The hypercar's seatDrop is 0.15 (eye at 1.01 m), plus a seat-camera eyeNudge of 1 cm up and 12 cm forward. The nudge
+  eases back out when you look round with the mouse or a stick, so the view doesn't bury itself in the pillar. Touch
+  has no drag-look.
+- A 20 mm frit band. The dash top falls straight to the glass, and the display is 5 cm lower.
+- The outside-view roll hoop stays 4.5 cm inside the canopy. It had poked through the rear flank once the driver sat
+  higher; that was the round-1 regression.
+
+**Result, 393x852 at 200 mph:**
+
+| Measure | Before | After |
+| --- | --- | --- |
+| Horizon | 39.6% | 30.8% |
+| Sky | 30% | 23% |
+| A-pillar share of the upper-left third | 0.29 | 0 |
+| Bonnet share of the frame | 1.0% (52 rows) | 2.1% (85 rows) |
+
+- Retro and High are the same.
+- The hypercar's landscape and desktop seat views changed too, because its eye moved:
+  - 852x393: upper-left 0.86 to 0.09, bonnet 1.06% to 2.38%;
+  - 1280x720: upper-left 0.93 to 0.02, bonnet 1.30% to 2.92%.
+- In landscape and on desktop the wheel's hub now meets the bottom edge. The cluster stays fully legible.
+- The sleeves still read as cloth, with no jagged shadows.
+
+**Limit, for the owner to decide.** The bonnet's centre is only about 3 degrees tall from this seat. Doubling it would
+mean:
+- an eye at about 1.16 m, above the 1.10 m roof;
+- or the eye 25 cm further forward;
+- or a much narrower view, which undoes v10's roomy one.
+A bigger hood means raising the HYPER bonnet's centre heights or its nose: an exterior change.
+
+**Sleeve follow-ups** from the v22 judge:
+- The dark-cloth floors read each material's base colour, not the per-pixel albedo.
+- The bridge-deck term eases fast enough to keep up at 178 mph.
+- The Ace's suite reference is measured against the cabin in the same frame.
+
+**Suite:**
+- A new hood check: bonnet share at least 1.6% and its top above 43%. v22 fails it.
+- The phone seat-view horizon window is now 29-33% (was 35-40%).
+- The sleeve slab test applies only to sleeves covering at least 1.5% of the frame.
+- The overpass sleeves check measures at full lock when the straight wheel shows only slivers. It fails with the round-1
+  arms.
+- The render group checks the hoop stays under the skin (0.023 m).
+- Judges (Opus, independent): round 1 revise (the hoop, a misleading comment); round 2 keep, with four notes:
+  - the look-round regression: fixed in 676fd87e;
+  - the hood check's weak top limit: tightened;
+  - a pre-existing speck on the rear flank: the cockpit's tan alcantara panel shows through the paint at about z 0.4-0.5,
+    y 1.0, the same on v22. Queued, not caused here;
+  - the landscape/desktop trade-off: noted above.
+
+**Tests on 676fd87e:**
+- tsc clean, build OK.
+- boot 16/16, phone 26/26 (hood 2.1%, 84 rows from 40.0%; horizon 30.6%), launch 11/11, nav-hud 3/3, abilities 23/23.
+- render 18/19. The one failure was "the Founder Edition's lights wake", a known SwiftShader frame-timing flake; it
+  passed when re-run alone (2/2).
+
+Shots: scratchpad/seat-pov/{before,v3,after,hoop,judge1,judge2,lookfix}/ and owner-before-after.png.
+
 ## 2026-11-16: the driver's sleeves read as cloth on the iPhone; no jagged shadows on the arms
 
 Branch fix/sleeves: 80554c76, 57df9ce0, 099ce1e6, and the repair 86155ecc. It was merged with v21 (f715bf6) as
