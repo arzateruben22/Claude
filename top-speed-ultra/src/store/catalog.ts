@@ -5,6 +5,7 @@
 import catalogJson from './catalog.json';
 import cosmeticsJson from './cosmetics.json';
 import founderJson from './founder.json';
+import { storeOrder } from './store-order';
 
 // The one founder window (src/store/founder.json): the Founder Pack and the OC Hypercar Founder Edition are sold until
 // the last second of December 31, 2026, Pacific time. catalog.json's founder items name it ("FOUNDER_UNTIL"); the
@@ -29,6 +30,10 @@ export interface Sku {
   grants: string[];
   description: string;
   available: boolean;
+  // shown in the store? Absent means yes. false: kept in the catalog (what it granted still works for anyone who owns
+  // it, and the server can restore it) but not shown and not sold (the owner's trim, 2026-11-16, updated 2026-11-17:
+  // the store shows the character pack, the Founders package and the OC Hypercar Founder Edition only)
+  listed?: boolean;
   unavailable_reason?: string;     // why it can't be sold yet, in words the store shows
   caveat?: string;                 // a note for the owner (not shown in the store)
 }
@@ -78,21 +83,25 @@ export const skuById = (id: string) => SKUS.get(id) ?? null;
 export const entById = (id: string) => ENTS.get(id) ?? null;
 export const FOUNDER_SKU = 'founder-pack-2026';
 export const HYPERCAR_SKU = 'hypercar-founder';
-
-// the order and the headings the store shows
-export const KINDS: { kind: Kind; label: string; blurb: string }[] = [
-  { kind: 'pack', label: 'Packs', blurb: '' },
-  { kind: 'livery', label: 'Paints and liveries', blurb: 'For every car in your garage.' },
-  { kind: 'kit', label: 'Wheels and kits', blurb: 'Same size wheels and tyres as the factory set: looks only.' },
-  { kind: 'style', label: 'Driver styles', blurb: 'Gloves, watch, sleeves and nails: what you see on the wheel.' },
-  { kind: 'tip', label: 'Support', blurb: '' },
-  { kind: 'club', label: 'Club', blurb: '' },
-];
+// the Founder Pack's successor (the owner, 2026-11-17: the Colour Studio merged into it), coming soon
+export const FOUNDERS_SKU = 'founders-package';
 
 export const CAR_NAMES: Record<string, string> = { 'rossini-gt': 'Rossini GT', 'rossini-brio': 'Rossini Brio', 'rossini-corsa': 'Rossini Corsa', 'vela-e': 'Vela E' };
 
-// on sale right now? (available, and inside its window if it has one)
+// in the store at all (listed), whether on sale or a "coming soon" card
+export const listed = (s: Pick<Sku, 'listed'>) => s.listed !== false;
+// The store's one list, in the owner's order (2026-11-16: "remove any additional store options other than the chad
+// package, oc hypercar, and color kit"; 2026-11-17: the colour kit merged into the Founders package): every listed sku,
+// a character pack (a listed `pack` that is neither of the two founder items, like claude/cast's two-character pack
+// once that branch merges) first, then the Founders package, then the OC Hypercar Founder Edition, then the rest, each
+// group in catalog order. Nothing is added here: an item shows only by being in catalog.json and listed (store-order.ts,
+// a pure rule the suite checks on its own).
+export { storeOrder };
+export const STORE_LIST: Sku[] = storeOrder(CATALOG.filter(listed), HYPERCAR_SKU, FOUNDERS_SKU);
+
+// on sale right now? (listed, available, and inside its window if it has one)
 export function saleState(s: Sku, now = Date.now()): { ok: true } | { ok: false; why: string } {
+  if (!listed(s)) return { ok: false, why: 'Not in the store.' };
   if (!s.available) return { ok: false, why: s.unavailable_reason ?? 'Not on sale yet: it goes on sale once it is in the game.' };
   // "never sold again" is the Founder Pack's promise only: for the OC Hypercar Founder Edition, what it covers is the
   // owner's open decision (PROJECT_OC_MONETIZATION.md §12), so its copy gives the end date and no more

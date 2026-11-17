@@ -15,6 +15,38 @@ refuses stripe.com), so Stripe's figures come from Stripe's own pages as indexed
 
 ---
 
+## What the store lists now (the owner's trim, 2026-11-16, updated 2026-11-17)
+
+The owner (2026-11-16): "remove any additional store options other than the chad package, oc hypercar, and color kit"
+(the colour kit was the planned Colour Studio). On 2026-11-17 the owner merged the Colour Studio into the Founder Pack:
+the store lists exactly three items and the Colour Studio's 9 + 9 colours are dropped (it was never on sale, so no one
+owned it; its sku and grant were removed). The store shows, in this order (`catalog.ts` STORE_LIST, the rule in
+`src/store/store-order.ts`):
+
+1. **The character pack** (the "Chad & Chadaline" pack, sku `cast-pack-duo`, kind `pack`). It lives on branch
+   claude/cast and is not in this tree. Nothing was added for it here: once that branch merges, its catalog entry (no
+   `listed` field, so listed) shows first by the rule "a listed `pack` that is neither the Founders package nor the OC
+   Hypercar goes first". On that branch it is `available: false` (its characters aren't made), so it would show as a
+   coming-soon card.
+2. **The Founders package** (sku `founders-package`), coming soon: "The Founders Collection: five finishes with
+   matching brake calipers (Obsidian, Glacier, Afterglow, Evergreen, Solar Flare), the Founder '26 badge, the Founders
+   run-card frame and your name on the Founders roll." The finishes aren't built (grant `founders-collection`, status
+   build), so `available: false`: a coming-soon card with the reason and "No pre-orders.", no buy button, no test-mode
+   notice (there is nothing to pay), no pre-sale, no waitlist. **Open for the owner:** its price. The card shows $10,
+   the Founder Pack's price carried over; the owner has not set one. It carries the founder window (FOUNDER_UNTIL),
+   because the Founder Pack promised its badge, frame and roll are sold until December 31, 2026 and then never again:
+   if the finishes aren't in the game by then, it can't go on sale with them. The store check lets it grant the Founder
+   Pack's exclusives as that pack's successor (`SUCCEEDS` in `tools/store-check-catalog.mjs`), and no other sku.
+3. **The OC Hypercar Founder Edition**, $9.99, on sale in the founder window, as before.
+
+Everything else (the Founder Pack, both paint packs, the livery pack, the four wheel sets, the three driver styles, Fuel
+the Build, the aero kits, the Rossini GT Spider, the Lot 57 outfits, the OC Ultra Club) carries `"listed": false`. It
+stays in the catalog so anything already owned keeps working (test-mode purchases on the owner's devices: paints in
+Your items, the Founder '26 badge, the run-card frame) and the server can still restore, refund and renew it; it is
+not shown and not sold: `saleState` refuses it on the page ("Not in the store.") and the server's `sellable` refuses an
+unlisted sku (the server copy carries `listed`). Nothing free was removed: the garage's own paints and rims, every
+car you can earn and every mode stay free. The sections below are the full plan as written before the trim.
+
 ## The short version
 
 - **The rule.** Payments are built but in test mode. Nothing is charged until the owner connects Stripe and Supabase
@@ -847,6 +879,8 @@ findings with file and line, the fixes for severity 4–5, and the store's regre
 ## 12. Placeholders (TODO)
 
 - Every price in `catalog.json` is a proposal for the owner to approve.
+- **The Founders package's price (open, the owner's):** its coming-soon card shows $10, the Founder Pack's price
+  carried over (2026-11-17); the owner has not set one. Confirm or change it before it can ever go on sale.
 - The Founder window end, `FOUNDER_UNTIL` = `2026-12-31T23:59:59-08:00` in `src/store/founder.json`, shared by both
   founder offers (Day 74 on the 90-day calendar, about four weeks after the
   store can first open on Day 46): if Day 1 moves, decide before sales start whether the date or the window moves
