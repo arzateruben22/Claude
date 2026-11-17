@@ -1,0 +1,14 @@
+{
+  "file": "oo-s3-miles.m4a",
+  "format": "ALAC 48 kHz mono (Voice Memos), 33.7 s. The last ALAC frame is empty (decoder warning, nothing lost).",
+  "slate": [2.58, 4.72],
+  "lines": {
+    "1": {"part": 1, "start": 10.60, "end": 23.00,
+          "words": "Right now it's about two hundred thirty-nine thousand miles away, drifting off an inch and a half a year. Tonight, it reverses. A thought experiment, built from real physics.",
+          "note": "LAST TAKE. The first attempt (6.14-9.10) said 'two hundred thirty thousand' and was re-read from the top; the owner says 'Right now?' with a question lift, then pauses after 'away' (14.44-14.92), 'a year' (16.86-17.60), 'Tonight' (18.04-18.68), 'it reverses' (19.58-20.24). Ignore everything before 10.6 s."},
+    "2": {"part": 2, "start": 25.15, "end": 32.20,
+          "words": "One hundred seventy-nine thousand. A third wider. And the sea already feels it: more than twice the tidal pull.",
+          "note": "One take, no pauses to trim."}
+  },
+  "recogniser": "Parakeet TDT: 'tidal pool' = 'tidal pull', 'fills it' = 'feels it' (mishears; the owner's words are the script's)."
+}
