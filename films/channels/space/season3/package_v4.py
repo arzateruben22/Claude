@@ -40,7 +40,7 @@ open(ep + "/script.md", "w").write(body)
 allc = {c["id"]: c for c in json.load(open(L1 + "/claims.json"))}; cl = []
 for k, sent in CLAIMS.items(): c = dict(allc[k]); c["sentence"] = sent; cl.append(c)
 json.dump(cl, open(ep + "/claims.json", "w"), indent=1, ensure_ascii=False)
-_si = sorted({c["id"] for c in tl["clips"] if c["id"] in STAND_IN})   # miles lines still in the stand-in (AI) voice until the owner records them (16 Nov 2026)
+_si = sorted({c["id"] for c in tl["clips"] if STAND_IN.get(c["id"], {}).get("stand_in")})   # miles lines still in the stand-in (AI) voice until the owner records them (16 Nov 2026)
 film = {"id": name, "title": {"title": title, "series": f"One More Orbit · Season 3 · Part {n} of 8"}, "disclosures": {"realVoice": True, "aiVoice": bool(_si), "aiVisuals": True}, "standInLines": _si, "dur": tl["dur"], "fps": 30, "captions": tl["captions"], "km": tl["km"], "tracks": tl["tracks"], "clips": tl["clips"], "badge": tl["badge"], "chips": tl["chips"], "source": f"season3/engine.js via long01/out/v4-part{n}.json"}
 json.dump(film, open(ep + "/film.json", "w"), indent=1, ensure_ascii=False)
 shutil.copy(f"{L1}/v4/part{n}.sfx.json", ep + "/sfx.json")
