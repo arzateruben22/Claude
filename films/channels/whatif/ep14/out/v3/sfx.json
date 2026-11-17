@@ -90,31 +90,24 @@
    "seed": 12
   },
   {
-   "at": 29.833,
-   "kind": "whoosh",
-   "gain": -4,
-   "seed": 13,
-   "dur": 1.4
-  },
-  {
-   "at": 35.833,
+   "at": 29.7,
    "kind": "riser",
    "gain": -3,
-   "seed": 14,
+   "seed": 13,
    "dur": 3.39
   },
   {
-   "at": 38.723,
+   "at": 32.59,
    "kind": "boom",
    "gain": -4,
-   "seed": 15,
+   "seed": 14,
    "dur": 2.2
   },
   {
-   "at": 40.7,
+   "at": 34.53333333333333,
    "kind": "tick",
    "gain": -3,
-   "seed": 16
+   "seed": 15
   }
  ]
 }

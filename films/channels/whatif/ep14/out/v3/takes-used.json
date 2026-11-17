@@ -42,20 +42,13 @@
   },
   {
    "line": "vo06",
-   "kind": "cta",
-   "take": "V.cta_follow",
-   "sub_take": "V.cta_sub",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
-  },
-  {
-   "line": "vo07",
    "kind": "cliff",
    "take": "V.p2_cliff",
    "sub_take": null,
    "text": "And then the wind starts to blow."
   },
   {
-   "line": "vo08",
+   "line": "vo07",
    "kind": "closer",
    "take": "V.c2",
    "sub_take": null,
