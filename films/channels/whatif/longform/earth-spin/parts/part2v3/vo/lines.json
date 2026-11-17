@@ -56,31 +56,21 @@
   },
   {
    "id": "vo06",
-   "beat": "cta",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-   "stars": [],
-   "phonemes": null,
-   "file": "06.wav",
-   "dur": 5.11,
-   "sha256": "e4527cfda3ba53e27b28101ffb005b988c52d0b5303f8e46e603f9aa22aa6f3e"
-  },
-  {
-   "id": "vo07",
    "beat": "cliff",
    "text": "And then the wind starts to blow.",
    "stars": [],
    "phonemes": null,
-   "file": "07.wav",
+   "file": "06.wav",
    "dur": 2.79,
    "sha256": "aa0e78e3da34ec549bfc624c2c0f9ef93025ec9fc84b1f1ec211ef4008ecab80"
   },
   {
-   "id": "vo08",
+   "id": "vo07",
    "beat": "tease",
    "text": "Part two of eight. Full video on YouTube.",
    "stars": [],
    "phonemes": null,
-   "file": "08.wav",
+   "file": "07.wav",
    "dur": 3.11,
    "sha256": "ee0d9e39de8d7da5540d2f266e50849284db11bcbd50af82fa0bbf7fdb2cff27"
   }

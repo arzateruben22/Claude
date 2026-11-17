@@ -40,22 +40,11 @@
   "dur": 2.37
  },
  {
-  "kind": "cta",
-  "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math.",
-  "take": "V.cta_follow",
-  "sub_file": "vo/06-sub.wav",
-  "sub_text": "Hang on. If you're enjoying this, tap like and subscribe. Okay, back to the math.",
-  "take_sub": "V.cta_sub",
-  "uid": "cta",
-  "vo": "vo06",
-  "dur": 5.11
- },
- {
   "kind": "cliff",
   "text": "And then the wind starts to blow.",
   "take": "V.p2_cliff",
   "uid": "cliff",
-  "vo": "vo07",
+  "vo": "vo06",
   "dur": 2.79
  },
  {
@@ -63,7 +52,7 @@
   "text": "Part two of eight. Full video on YouTube.",
   "take": "V.c2",
   "uid": "tease",
-  "vo": "vo08",
+  "vo": "vo07",
   "dur": 3.11
  }
 ]

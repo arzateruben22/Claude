@@ -15,9 +15,6 @@ vo: You are one point four percent lighter, four times what you feel today. {-}
 ## s21 {shot: see v2.py · energy: 0.6} (__)
 vo: Eight hours of sleep no longer fits inside one night. {-}
 
-## cta {shot: see v2.py · energy: 0.6} (__)
-vo: Hang on. If you're enjoying this, tap like and follow. Okay, back to the math. {-}
-
 ## cliff {shot: see v2.py · energy: 0.6} (__)
 vo: And then the wind starts to blow. {-}
 
