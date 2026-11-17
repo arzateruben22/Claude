@@ -1,0 +1,384 @@
+const e=`<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stoppage Time on Foot</title>
+<meta name="description" content="Stoppage Time, our own fictional sports bar on South Claudina Way in Anaheim, to walk on foot. The crowd and the matches are simulated from the time of day and the day of the week; nothing here is live.">
+<meta name="theme-color" content="#1E1B3A">
+<style>
+  :root {
+    --violet: #1E1B3A; --violet-2: #141228; --lime: #C3F23A; --coral: #FF6B4A; --chalk: #F1EFE7; --oak: #9A6B43;
+    --panel: rgba(20, 18, 40, 0.84); --line: rgba(241, 239, 231, 0.28);
+    --sans: "Avenir Next", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --wide: "Arial Black", "Helvetica Neue", Arial, sans-serif;
+    --safe-t: env(safe-area-inset-top, 0px); --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px); --safe-r: env(safe-area-inset-right, 0px);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--violet-2); color: var(--chalk); font-family: var(--sans); overflow: hidden; }
+  body { -webkit-tap-highlight-color: transparent; touch-action: none; user-select: none; -webkit-user-select: none; }
+  #view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .pill { min-height: 44px; min-width: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid var(--line); background: var(--panel); font-weight: 700; font-size: calc(15px * var(--ts)); letter-spacing: 0.02em; display: inline-flex; align-items: center; gap: 8px; }
+  .pill:hover { background: rgba(30, 27, 58, 0.96); }
+  .pill svg { width: 20px; height: 20px; }
+  #hud { position: fixed; inset: 0; pointer-events: none; }
+  #hud > * { pointer-events: auto; }
+  #tl { position: absolute; top: calc(10px + var(--safe-t)); left: calc(10px + var(--safe-l)); display: flex; gap: 8px; }
+  #tr { position: absolute; top: calc(10px + var(--safe-t)); right: calc(10px + var(--safe-r)); display: flex; gap: 8px; }
+  #tc { position: absolute; top: calc(10px + var(--safe-t)); left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; max-width: calc(100% - 290px); }
+  #place { padding: 6px 12px; font-size: calc(13px * var(--ts)); font-weight: 600; white-space: nowrap; text-align: center; }
+  #place b { font-family: var(--wide); font-weight: 900; letter-spacing: 0.08em; font-size: calc(13px * var(--ts)); }
+  #crowd { min-height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid rgba(195, 242, 58, 0.6); background: rgba(30, 27, 58, 0.95); color: #f6f5ee; font-size: calc(13px * var(--ts)); font-weight: 700; white-space: nowrap; }
+  #crowd .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--lime); margin-right: 7px; vertical-align: 1px; }
+  #act, #act2 { position: absolute; border-radius: 50%; border: 2px solid rgba(241, 239, 231, 0.75); background: #B8402A; color: #fff8ee; font-weight: 800; letter-spacing: 0.03em; display: none; box-shadow: 0 6px 18px rgba(0,0,0,0.35); }
+  #act { width: 76px; height: 76px; font-size: calc(18px * var(--ts)); right: calc(18px + var(--safe-r)); bottom: calc(44px + var(--safe-b)); }
+  #act2 { width: 56px; height: 56px; font-size: calc(14px * var(--ts)); right: calc(104px + var(--safe-r)); bottom: calc(52px + var(--safe-b)); background: var(--violet); }
+  #act.on, #act2.on { display: block; }
+  #stick { position: absolute; left: 0; top: 0; width: 128px; height: 128px; border-radius: 50%; border: 2px solid rgba(241, 239, 231, 0.55); background: rgba(20, 18, 40, 0.28); display: none; pointer-events: none; }
+  #knob { position: absolute; left: 36px; top: 36px; width: 56px; height: 56px; border-radius: 50%; background: rgba(241, 239, 231, 0.85); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+  #hint { position: absolute; left: 50%; bottom: calc(126px + var(--safe-b)); transform: translateX(-50%); padding: 10px 16px; font-size: calc(15px * var(--ts)); font-weight: 600; text-align: center; max-width: calc(100% - 40px); transition: opacity 0.6s; pointer-events: none; }
+  /* the toasts sit under the top centre column and the screens chip (--tcb, their measured bottom: hud.ts), never over
+     the "Simulated crowd" chip; in a game they sit just above the game's bar (--gbt, measured by games.ts) */
+  #toast { position: absolute; left: 50%; top: calc(var(--tcb, 128px) + 6px); transform: translateX(-50%); padding: 10px 16px; font-size: calc(14px * var(--ts)); font-weight: 600; max-width: calc(100% - 40px); text-align: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  #toast.on { opacity: 1; }
+  #hud.gaming #toast { top: auto; bottom: var(--gbt, 120px); padding: 6px 14px; font-size: calc(13px * var(--ts)); }
+  #credit { position: absolute; left: calc(8px + var(--safe-l)); bottom: calc(6px + var(--safe-b)); max-width: min(780px, calc(100% - 120px)); padding: 4px 8px; border-radius: 8px; background: rgba(20, 18, 40, 0.84); color: #f1efe7; font-size: calc(10.5px * var(--ts)); line-height: 1.35; cursor: pointer; }
+  /* S4's second repair (the art review: on a phone the full credit covered the bottom of the frame): after the first
+     seconds the credit shrinks to one line naming the map data, the full credit one tap away (hud.ts) */
+  #creditShort { display: none; white-space: nowrap; }
+  #creditShort u { text-decoration-color: rgba(241, 239, 231, 0.6); }
+  #credit.brief { white-space: nowrap; max-width: calc(100% - 20px); overflow: hidden; text-overflow: ellipsis; }
+  #credit.brief #creditShort { display: inline; }
+  #credit.brief #creditFull { display: none; }
+  #loading { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; background: radial-gradient(ellipse at 50% 40%, #2c2858 0%, var(--violet) 45%, var(--violet-2) 100%); z-index: 6; text-align: center; padding: 24px; }
+  #loading h1 { margin: 0; font-family: var(--wide); font-weight: 900; font-size: clamp(34px, 7vw, 76px); letter-spacing: 0.06em; line-height: 0.95; transform: scaleX(1.25); text-shadow: 0 0 18px rgba(195, 242, 58, 0.45); }
+  #loading h1 small { display: block; font-family: var(--sans); font-size: 0.24em; letter-spacing: 0.32em; color: var(--lime); margin-top: 10px; text-shadow: none; transform: scaleX(0.8); }
+  #loading .board { font-family: var(--wide); color: var(--lime); border: 3px solid var(--lime); border-radius: 12px; padding: 4px 14px; font-size: calc(28px * var(--ts)); letter-spacing: 0.1em; }
+  #loading p { margin: 0; max-width: 460px; font-size: calc(14px * var(--ts)); line-height: 1.5; opacity: 0.92; }
+  #bar { width: min(320px, 70vw); height: 4px; border-radius: 2px; background: rgba(241, 239, 231, 0.2); overflow: hidden; }
+  #bar i { display: block; height: 100%; width: 0%; background: var(--lime); transition: width 0.2s; }
+  #status { font-size: calc(13px * var(--ts)); opacity: 0.85; min-height: 18px; }
+  .sheet { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(10, 9, 22, 0.58); z-index: 4; padding: 16px; }
+  .sheet.on { display: flex; }
+  .sheet .panel { width: min(470px, 100%); max-height: calc(100% - 20px); overflow: auto; padding: 18px 18px 14px; }
+  .sheet h2 { margin: 0 0 8px; font-family: var(--wide); font-weight: 900; letter-spacing: 0.05em; font-size: calc(20px * var(--ts)); }
+  .sheet p { margin: 0 0 10px; font-size: calc(15px * var(--ts)); line-height: 1.5; }
+  .sheet .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0; }
+  .sheet .row > span { min-width: 92px; font-size: calc(14px * var(--ts)); font-weight: 700; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .seg button { min-height: 40px; padding: 0 12px; border: 0; background: transparent; font-size: calc(14px * var(--ts)); font-weight: 600; }
+  .seg button[aria-pressed="true"] { background: var(--chalk); color: var(--violet); }
+  .seg button[aria-disabled="true"] { opacity: 0.7; cursor: not-allowed; }
+  .sheet select, .sheet input[type=range] { min-height: 40px; font: inherit; font-size: calc(14px * var(--ts)); color: var(--violet); background: var(--chalk); border-radius: 10px; border: 0; padding: 0 8px; }
+  .sheet input[type=range] { padding: 0; accent-color: var(--lime); background: transparent; width: 160px; }
+  .sheet .mix { display: inline-flex; align-items: center; gap: 6px; font-size: calc(13px * var(--ts)); font-weight: 600; }
+  .sheet .mix input[type=range] { width: 110px; }
+  .sheet .go { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 0; background: var(--chalk); color: var(--violet); font-weight: 800; font-size: calc(16px * var(--ts)); }
+  .small { font-size: calc(12px * var(--ts)) !important; opacity: 0.9; }
+  /* S4's repair, the transitions: the switch sheet is painted at once (it hides the switch) and fades away after; a
+     short dip to the night violet covers the cut into and out of the overhead view. Both are off under reduced motion
+     (the rules below turn every transition and animation off) */
+  #busy { position: fixed; inset: 0; display: flex; visibility: hidden; opacity: 0; align-items: center; justify-content: center; background: rgba(10, 9, 22, 0.82); z-index: 7; font-size: calc(20px * var(--ts)); font-weight: 700; transition: opacity 0.3s ease-out, visibility 0s linear 0.3s; }
+  #busy.on { visibility: visible; opacity: 1; transition: none; }
+  #fade { position: fixed; inset: 0; background: #0b0a18; opacity: 0; pointer-events: none; z-index: 6; }
+  #fade.dip { animation: dip 0.45s ease-out; }
+  @keyframes dip { 0% { opacity: 0.9; } 100% { opacity: 0; } }
+
+  /* S2a: Lot 57's P1b HUD pieces (its Hud binds them): captions, reply chips, the order and holding chip, the order sheet */
+  #caption { position: absolute; left: 50%; bottom: calc(150px + var(--safe-b)); transform: translateX(-50%); max-width: min(620px, calc(100% - 210px)); padding: 10px 16px; font-size: calc(17px * var(--ts)); line-height: 1.4; text-align: center; opacity: 0; transition: opacity 0.25s; pointer-events: none; }
+  #caption.on { opacity: 1; }
+  #caption b { display: block; font-size: calc(12px * var(--ts)); letter-spacing: 0.08em; text-transform: uppercase; color: var(--lime); margin-bottom: 2px; }
+  #chips { position: absolute; left: 50%; bottom: calc(62px + var(--safe-b)); transform: translateX(-50%); display: none; gap: 10px; }
+  #chips.on { display: flex; }
+  #chips button { min-height: 52px; min-width: 120px; padding: 8px 16px; border-radius: 16px; border: 2px solid var(--line); background: var(--panel); font-size: calc(15px * var(--ts)); font-weight: 700; }
+  #chips button small { display: block; font-size: calc(11px * var(--ts)); font-weight: 700; letter-spacing: 0.04em; opacity: 0.75; margin-bottom: 1px; }
+  #status2 { position: absolute; left: calc(10px + var(--safe-l)); top: calc(110px + var(--safe-t)); display: none; align-items: center; gap: 10px; min-height: 40px; padding: 5px 14px 5px 8px; border-radius: 20px; font-size: calc(13px * var(--ts)); font-weight: 700; max-width: min(300px, calc(100% - 140px)); }
+  #status2.on { display: flex; }
+  #status2 i { display: block; width: 24px; height: 24px; border-radius: 50%; flex: none; background: conic-gradient(var(--lime) calc(var(--p, 0) * 1turn), rgba(241, 239, 231, 0.2) 0); -webkit-mask: radial-gradient(circle, transparent 6px, #000 7px); mask: radial-gradient(circle, transparent 6px, #000 7px); }
+  #status2.ready i { background: var(--lime); -webkit-mask: none; mask: none; }
+  #status2.hold i { background: var(--coral); -webkit-mask: none; mask: none; border: 3px solid var(--chalk); }
+  #order .panel { width: min(640px, 100%); }
+  #order .who { margin: 0 0 12px; font-size: calc(16px * var(--ts)); }
+  #order .who b { color: var(--lime); }
+  #menuItems { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; }
+  #menuItems button { min-height: 58px; padding: 8px 12px; border-radius: 14px; border: 2px solid var(--line); background: rgba(241, 239, 231, 0.07); text-align: left; font-size: calc(16px * var(--ts)); font-weight: 800; line-height: 1.2; }
+  #menuItems button:hover { background: rgba(241, 239, 231, 0.16); }
+  #menuItems button small { display: block; font-size: calc(12.5px * var(--ts)); font-weight: 500; opacity: 0.9; margin-top: 3px; }
+  #menuItems button kbd { float: right; font: 700 calc(12px * var(--ts)) var(--sans); opacity: 0.7; border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; margin-left: 8px; }
+  #order .note { font-size: calc(13px * var(--ts)); margin: 12px 0 0; }
+  #order .go { background: transparent; color: var(--chalk); border: 2px solid var(--line); }
+  /* S2a: the needs strip and the mood face (top centre), the queue (under Car), the TV chip (top right), the radial
+     menu, the Cheer button; the needs panel, the TV guide card and the tired prompt */
+  #needs { display: flex; align-items: center; gap: 6px; padding: 4px 8px; min-height: 40px; border-radius: 20px; }
+  #needs .ring { position: relative; width: 28px; height: 28px; display: inline-block; }
+  #needs .ring svg { position: absolute; inset: 0; width: 28px; height: 28px; }
+  #needs .ring .ico { position: absolute; inset: 7px; width: 14px; height: 14px; color: var(--chalk); }
+  #needs .ring b { position: absolute; left: 50%; top: 29px; transform: translateX(-50%); font-size: calc(9px * var(--ts)); font-weight: 800; white-space: nowrap; color: #ffd0c4; display: none; }
+  #needs .ring.low b { display: block; }
+  #needs.lowRow { padding-bottom: 14px; }
+  #mood { display: inline-flex; align-items: center; gap: 4px; padding-left: 6px; margin-left: 2px; border-left: 1px solid var(--line); font-size: calc(12px * var(--ts)); font-weight: 800; white-space: nowrap; }
+  #mood svg { width: 24px; height: 24px; }
+  #queue { display: flex; gap: 6px; margin-top: 6px; }
+  #queue button { width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); padding: 0; display: inline-flex; align-items: center; justify-content: center; position: relative; }
+  #queue button svg { width: 22px; height: 22px; }
+  #queue button.now { border-color: var(--lime); box-shadow: 0 0 0 2px rgba(195, 242, 58, 0.35); }
+  #queue button i { position: absolute; right: -3px; top: -3px; width: 14px; height: 14px; border-radius: 50%; background: var(--violet); border: 1px solid var(--line); font: 700 calc(10px * var(--ts))/12px var(--sans); font-style: normal; }
+  #tl { flex-direction: column; align-items: flex-start; gap: 0; }
+  #tr { flex-direction: column; align-items: flex-end; }
+  #trRow { display: flex; gap: 8px; }
+  #tvchip { min-height: 34px; padding: 0 12px; border-radius: 17px; border: 1px solid var(--line); background: rgba(30, 27, 58, 0.95); color: #f6f5ee; font-size: calc(12.5px * var(--ts)); font-weight: 700; white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+  #tvchip .dot { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--coral); margin-right: 6px; vertical-align: 0; }
+  #radial { position: absolute; left: 0; top: 0; width: 0; height: 0; display: none; z-index: 3; }
+  #radial.on { display: block; }
+  #radial button { position: absolute; transform: translate(-50%, -50%); min-height: 56px; min-width: 56px; max-width: 180px; padding: 6px 14px; border-radius: 28px; border: 2px solid rgba(241, 239, 231, 0.8); background: rgba(20, 18, 40, 0.94); font-size: calc(14px * var(--ts)); font-weight: 800; line-height: 1.15; white-space: normal; text-align: center; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
+  #radial button:hover, #radial button:focus-visible { background: #2c2858; }
+  #radial button kbd { display: block; font: 700 calc(10px * var(--ts)) var(--sans); opacity: 0.7; }
+  #radial .hub { position: absolute; transform: translate(-50%, -50%); width: 12px; height: 12px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 4px rgba(195, 242, 58, 0.3); pointer-events: none; }
+  #radial .title { position: absolute; transform: translate(-50%, -50%); padding: 3px 10px; border-radius: 10px; background: rgba(10, 9, 22, 0.86); font-size: calc(12px * var(--ts)); font-weight: 700; white-space: nowrap; pointer-events: none; }
+  #cheer { position: absolute; right: calc(14px + var(--safe-r)); bottom: calc(36px + var(--safe-b)); width: 96px; height: 96px; border-radius: 50%; border: 3px solid var(--chalk); background: var(--lime); color: var(--violet); font-family: var(--wide); font-weight: 900; font-size: calc(18px * var(--ts)); letter-spacing: 0.04em; display: none; box-shadow: 0 6px 22px rgba(195, 242, 58, 0.45); }
+  #cheer.on { display: block; }
+  .needrow { display: grid; grid-template-columns: 24px 70px 1fr 110px 34px; align-items: center; gap: 8px; margin: 7px 0; font-size: calc(14px * var(--ts)); }
+  .needrow svg { width: 20px; height: 20px; }
+  .needrow .bar { height: 12px; border-radius: 6px; background: rgba(241, 239, 231, 0.18); overflow: hidden; }
+  .needrow .bar i { display: block; height: 100%; border-radius: 6px; }
+  .needrow .word { font-weight: 700; }
+  .needrow .num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .good { background: #6cc24a; } .fair { background: #e8b931; } .low { background: #ff6b4a; }
+  #moodlets { margin: 8px 0; padding: 0; list-style: none; font-size: calc(13px * var(--ts)); }
+  #moodlets li { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(241, 239, 231, 0.12); }
+  .tokens { font-size: calc(15px * var(--ts)); font-weight: 800; }
+  .three { margin: 6px 0 0; padding-left: 18px; font-size: calc(13px * var(--ts)); }
+  .three li.done { text-decoration: line-through; opacity: 0.75; }
+  #guideList .fx { display: grid; grid-template-columns: 52px 30px 1fr 30px 74px; gap: 6px; align-items: center; padding: 6px 4px; border-bottom: 1px solid rgba(241, 239, 231, 0.12); font-size: calc(13.5px * var(--ts)); }
+  #guideList .fx.feat { background: rgba(195, 242, 58, 0.1); border-radius: 8px; }
+  #guideList .fx .t { font-weight: 800; font-variant-numeric: tabular-nums; }
+  #guideList .fx .s { text-align: right; font-weight: 800; }
+  #guideList h3 { margin: 12px 0 4px; font-size: calc(13px * var(--ts)); letter-spacing: 0.06em; text-transform: uppercase; color: var(--lime); }
+  #sides { display: flex; flex-wrap: wrap; gap: 8px; }
+  #sides button { min-height: 44px; padding: 0 12px; border-radius: 12px; border: 2px solid var(--line); background: rgba(241, 239, 231, 0.06); font-weight: 700; font-size: calc(14px * var(--ts)); display: inline-flex; align-items: center; gap: 6px; }
+  #sides button[aria-pressed="true"] { border-color: var(--lime); background: rgba(195, 242, 58, 0.16); }
+  #tired .row { justify-content: center; }
+  #tired .row button { min-width: 120px; }
+  .sheet .alt { margin-top: 8px; min-height: 46px; width: 100%; border-radius: 12px; border: 2px solid var(--line); background: transparent; color: var(--chalk); font-weight: 800; font-size: calc(16px * var(--ts)); }
+  /* S4's repair, the text size: every size on the page is its px times --ts (Small 0.88, Medium 1, Large 1.18); the
+     earlier rule set em sizes on #hud, which the px sizes inside it ignored, so Small and Medium were the same */
+  :root { --ts: 1; } html.t0 { --ts: 0.88; } html.t2 { --ts: 1.18; }
+  /* S2b: the games' bar (the score, whose turn, how to play), the dart's swaying aim and the cue's power */
+  #gamebar { position: absolute; left: 50%; bottom: calc(60px + var(--safe-b)); transform: translateX(-50%); display: none; flex-direction: column; align-items: center; gap: 2px; padding: 7px 14px; max-width: min(560px, calc(100% - 360px)); text-align: center; pointer-events: none; }
+  #gamebar.on { display: flex; }
+  #gamebar b { font-family: var(--wide); font-weight: 900; font-size: calc(12px * var(--ts)); letter-spacing: 0.08em; color: var(--lime); }
+  #gameScore { font-size: calc(14px * var(--ts)); font-weight: 700; }
+  #gameHint { font-size: calc(12.5px * var(--ts)); font-weight: 600; opacity: 0.92; }
+  #gamePower { display: none; width: 180px; height: 8px; border-radius: 4px; background: rgba(241, 239, 231, 0.22); overflow: hidden; margin-top: 3px; }
+  #gamePower.on { display: block; }
+  #gamePower s { display: block; height: 100%; width: calc(var(--p, 0) * 100%); background: linear-gradient(90deg, var(--lime), var(--coral)); }
+  #reticle { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; border: 2px solid var(--lime); box-shadow: 0 0 0 1px rgba(20, 18, 40, 0.8), inset 0 0 0 1px rgba(20, 18, 40, 0.8); display: none; pointer-events: none; }
+  #reticle::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 50%; background: var(--lime); }
+  #reticle.on { display: block; }
+  @media (max-width: 520px) { #gamebar { max-width: calc(100% - 24px); bottom: calc(150px + var(--safe-b)); } }
+  /* a short landscape phone: the bar in two tight lines, low over the credit, so more of the table shows */
+  @media (max-height: 420px) { #gamebar { bottom: calc(52px + var(--safe-b)); padding: 4px 12px; gap: 0; } #gamebar b { font-size: calc(10.5px * var(--ts)); } #gameScore { font-size: calc(12.5px * var(--ts)); } #gameHint { font-size: calc(11.5px * var(--ts)); } }
+  /* S3b: a person's card, the pick list, People here, the "i" in a person's menu, the sparks and puffs over heads */
+  #radial .info { min-height: 32px; min-width: 32px; padding: 0; border-radius: 50%; font: 800 calc(15px * var(--ts)) var(--sans); font-style: italic; z-index: 1; }
+  #card .panel, #pick .panel, #peopleSheet .panel { width: min(420px, 100%); }
+  #card .cardTop { display: flex; align-items: center; gap: 12px; margin: 4px 0 10px; font-size: calc(15px * var(--ts)); }
+  #card .cardTop .face { width: 40px; height: 40px; flex: none; }
+  #card .cardTop small { font-size: calc(13px * var(--ts)); opacity: 0.9; }
+  #card .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; background: rgba(195, 242, 58, 0.2); color: var(--lime); font-size: calc(12px * var(--ts)); font-weight: 800; }
+  #card .chip.dim { background: rgba(241, 239, 231, 0.12); color: var(--chalk); }
+  #card .relbar { position: relative; height: 10px; border-radius: 5px; background: rgba(241, 239, 231, 0.16); margin: 4px 0 10px; overflow: hidden; }
+  #card .relbar i { position: absolute; top: 0; bottom: 0; }
+  #card .relbar i.pos { background: var(--lime); } #card .relbar i.neg { background: var(--coral); }
+  #card .relbar s { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: var(--chalk); }
+  #pickList, #peopleList { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+  #pickList button, #peopleList button { min-height: 48px; padding: 6px 14px; border-radius: 12px; border: 2px solid var(--line); background: rgba(241, 239, 231, 0.06); font-size: calc(15px * var(--ts)); font-weight: 700; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  #peopleList button span { font-size: calc(13px * var(--ts)); font-weight: 600; opacity: 0.92; }
+  #sparks { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  #sparks .spark { position: absolute; display: none; transform: translate(-50%, -50%); font: 900 calc(26px * var(--ts)) var(--sans); text-shadow: 0 0 6px rgba(10, 9, 22, 0.9), 0 0 2px rgba(10, 9, 22, 1); }
+  #sparks .spark.on { display: block; animation: spark 1.3s ease-out forwards; }
+  #sparks .spark.good { color: var(--lime); } #sparks .spark.bad { color: var(--coral); }
+  @keyframes spark { 0% { opacity: 0; transform: translate(-50%, -30%) scale(0.7); } 15% { opacity: 1; transform: translate(-50%, -60%) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -190%) scale(1); } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  body.rm * { transition: none !important; animation: none !important; }
+  @media (max-width: 520px) {
+    #tc { top: calc(62px + var(--safe-t)); max-width: calc(100% - 20px); }
+    #tvchip { position: fixed; left: 50%; transform: translateX(-50%); top: calc(198px + var(--safe-t)); max-width: calc(100% - 24px); }
+    /* S4's second repair (the art review: four stacked rows of pills on a phone): the crowd and the screens chips a
+       touch smaller, the screens chip without its "On now:", side by side in one row when they fit (hud.ts places
+       them; with Large text they stack) */
+    #crowd, #tvchip { font-size: calc(12px * var(--ts)); padding: 0 10px; min-height: 32px; }
+    #tvchip .pre { display: none; }
+    #hud.chipsTight #crowd, #hud.chipsTight #tvchip { font-size: calc(11px * var(--ts)); padding: 0 8px; }
+    #hud.chipsTight #crowd .dot { margin-right: 5px; }
+    #radial button { min-height: 48px; min-width: 48px; font-size: calc(13px * var(--ts)); padding: 4px 10px; }
+    #status2 { top: auto; bottom: calc(96px + var(--safe-b)); }
+    #caption { top: calc(240px + var(--safe-t)); bottom: auto; max-width: calc(100% - 24px); }
+    .needrow { grid-template-columns: 22px 62px 1fr 90px 30px; font-size: calc(13px * var(--ts)); }
+    #place { font-size: calc(12px * var(--ts)); }
+  }
+  /* a narrow landscape screen (640 to 760 wide): the pill drops the bar's name (it's on the facade and the loading
+     screen) so the clock and the hours fit between the buttons */
+  @media (min-width: 521px) and (max-width: 760px) {
+    #place b, #place .sep { display: none; }
+  }
+  @media (max-height: 420px) {
+    /* a short landscape phone: the needs panel in two columns, so the bars and the close button both fit */
+    #needsSheet .panel { width: min(780px, 100%); padding: 12px 16px 10px; }
+    #needsSheet .cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
+    #needsSheet h2 { font-size: calc(17px * var(--ts)); margin-bottom: 4px; }
+    #needsSheet .needrow { margin: 3px 0; }
+    #needsSheet p { margin-bottom: 5px; }
+    #needsSheet .go, #guide .go { margin-top: 4px; min-height: 42px; }
+    #act { bottom: calc(30px + var(--safe-b)); }
+    #act2 { bottom: calc(38px + var(--safe-b)); }
+    #hint { bottom: calc(96px + var(--safe-b)); }
+  }
+</style>
+</head>
+<body>
+<noscript><div style="padding:24px;font:16px/1.5 system-ui;color:#F1EFE7;background:#1E1B3A">Stoppage Time on foot is a 3D page: it needs JavaScript and WebGL. Stoppage Time is our own fictional sports bar on South Claudina Way in Anaheim. Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</div></noscript>
+<canvas id="view" tabindex="0" aria-label="Stoppage Time, on foot. Drag left to walk, drag right to look, tap to go. Keyboard: W A S D to walk, Shift to jog outdoors, E for the action, V for the view, O for the overhead view, C for your car, Escape to pause."></canvas>
+<div id="hud" hidden>
+  <div id="tl"><button id="car" class="pill" aria-label="Walk back to your car (long press to skip the walk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 15l2-6a2 2 0 0 1 2-1.4h10A2 2 0 0 1 19 9l2 6v3h-2.5M3 15v3h2.5M3 15h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>Car</button><div id="queue" role="group" aria-label="Your next actions (tap one to cancel it)"></div></div>
+  <div id="tc">
+    <button id="needs" class="panel" aria-haspopup="dialog" aria-label="Your needs and mood (Tab)"></button>
+    <div id="place" class="panel"><b>STOPPAGE TIME</b><span class="sep"> · </span><span id="clock">—</span> · <span id="hours">—</span></div>
+    <button id="crowd" aria-haspopup="dialog"><span class="dot" aria-hidden="true"></span><span id="crowdText">Simulated crowd</span></button>
+  </div>
+  <div id="tr"><div id="trRow">
+    <button id="viewBtn" class="pill" aria-label="Switch to third person"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="7" r="3"/><path d="M6 21v-2a6 6 0 0 1 12 0v2"/></svg><span id="viewLabel">3rd</span></button>
+    <button id="menu" class="pill" aria-label="Pause and settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button></div>
+    <button id="tvchip" aria-haspopup="dialog" aria-label="What's on the screens (G)"><span class="dot" aria-hidden="true"></span><span id="tvText">Screens · simulated</span></button>
+  </div>
+  <div id="stick" aria-hidden="true"><div id="knob"></div></div>
+  <button id="act2" aria-label="Second action"></button>
+  <button id="act" aria-label="Action"></button>
+  <div id="hint" class="panel" role="note">Drag left to walk · drag right to look · tap to go</div>
+  <div id="toast" class="panel" role="status" aria-live="polite"></div>
+  <div id="caption" class="panel" role="status" aria-live="polite"></div>
+  <div id="chips" role="group" aria-label="Your reply"><button id="reply0" data-r="0"></button><button id="reply1" data-r="1"></button></div>
+  <div id="status2" class="panel" role="status" aria-live="polite"><i aria-hidden="true"></i><span id="status2Text"></span></div>
+  <div id="gamebar" class="panel" role="status" aria-live="polite"><b id="gameTitle"></b><span id="gameScore"></span><span id="gameHint"></span><i id="gamePower" aria-hidden="true"><s></s></i></div>
+  <div id="reticle" aria-hidden="true"></div>
+  <div id="radial" role="menu" aria-label="What you can do here"></div>
+  <button id="cheer" aria-label="Cheer">CHEER</button>
+  <div id="sparks" aria-hidden="true"></div>
+  <div id="credit" role="button" tabindex="0" aria-expanded="true" aria-controls="creditFull"><span id="creditShort">Map data: OpenStreetMap, Overture (ODbL) · <u>credits</u></span><span id="creditFull">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0). Stoppage Time and everyone in it are fictional.</span></div>
+</div>
+<div id="about" class="sheet" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
+  <div class="panel">
+    <h2 id="aboutTitle">Simulated crowd</h2>
+    <p>Stoppage Time is a fictional sports bar. The crowd, the matches on the screens and the people here are simulated from the time of day and the day of the week. Nothing here is live, and nobody here is a real person or another player.</p>
+    <p class="small">The name, the hours, the menu, the screens and the sign are ours. The streets are the real ones, as OpenStreetMap maps them.</p>
+    <button class="go" data-close>Got it</button>
+  </div>
+</div>
+<div id="pause" class="sheet" role="dialog" aria-modal="true" aria-labelledby="pauseTitle">
+  <div class="panel">
+    <h2 id="pauseTitle">Paused</h2>
+    <div class="row"><span>View</span><div class="seg" id="segView"><button data-v="first">First person</button><button data-v="third">Third person</button><button data-v="overhead">Overhead</button></div></div>
+    <div class="row"><span>Graphics</span><div class="seg" id="segQ"><button data-q="low">Low</button><button data-q="hd">HD</button><button data-q="ultra">Ultra</button></div></div>
+    <div class="row"><span>Clock</span><div class="seg" id="segClock"><button data-c="live">This device</button><button data-c="set">Set</button></div></div>
+    <div class="row" id="clockSet"><span></span>
+      <select id="day" aria-label="Day"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select>
+      <input id="hour" type="range" min="0" max="23.75" step="0.25" aria-label="Hour"><output id="hourOut" for="hour"></output>
+    </div>
+    <div class="row"><span>Text</span><div class="seg" id="segText"><button data-t="0">Small</button><button data-t="1">Medium</button><button data-t="2">Large</button></div></div>
+    <div class="row" id="mixRow"><span>Sound</span>
+      <label class="mix">Room <input id="mix-room" type="range" min="0" max="100" step="5" aria-label="Room sound"></label>
+      <label class="mix">Screens <input id="mix-screens" type="range" min="0" max="100" step="5" aria-label="Screens' sound"></label>
+      <label class="mix">Music <input id="mix-music" type="range" min="0" max="100" step="5" aria-label="Music"></label>
+      <label class="mix">Effects <input id="mix-effects" type="range" min="0" max="100" step="5" aria-label="Effects"></label>
+    </div>
+    <div class="row"><span>Motion</span><div class="seg" id="segMotion"><button data-m="full">Full</button><button data-m="reduced">Reduced</button></div></div>
+    <div class="panel" id="pauseCard" style="padding:10px 12px;margin:8px 0;background:rgba(241,239,231,0.06)"><p class="tokens" id="pauseTokens"></p><p class="small" id="pauseTokenNote"></p><p class="small"><b>Tonight's three</b></p><ol class="three" id="pauseThree"></ol><p class="small" id="pauseSave"></p></div>
+    <button class="alt" id="peopleBtn">People here</button>
+    <p class="small">The clock is simulated: it sets the sun and Stoppage Time's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions. Every sound is made in code, and the commentary has no words.</p>
+    <p class="small">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</p>
+    <button class="go" data-close>Resume</button>
+  </div>
+</div>
+<div id="card" class="sheet" role="dialog" aria-modal="true" aria-labelledby="cardTitle">
+  <div class="panel">
+    <h2 id="cardTitle">Someone</h2>
+    <div id="cardBody"></div>
+    <p class="small">Everyone here is simulated: nobody is a real person or another player.</p>
+    <button class="go" data-close>Close</button>
+  </div>
+</div>
+<div id="pick" class="sheet" role="dialog" aria-modal="true" aria-labelledby="pickTitle">
+  <div class="panel">
+    <h2 id="pickTitle">Pick</h2>
+    <div id="pickList" role="menu"></div>
+    <button class="go" data-close>Not now</button>
+  </div>
+</div>
+<div id="peopleSheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="peopleTitle">
+  <div class="panel">
+    <h2 id="peopleTitle">People here</h2>
+    <p class="small">Everyone here you've met, closest friends first. Simulated people, kept on this device only.</p>
+    <div id="peopleList"></div>
+    <button class="go" data-close>Close</button>
+  </div>
+</div>
+<div id="order" class="sheet" role="dialog" aria-modal="true" aria-labelledby="orderTitle">
+  <div class="panel">
+    <h2 id="orderTitle">Order</h2>
+    <p class="who" id="orderWho"></p>
+    <div id="menuItems"></div>
+    <p class="note">You drove here, so your drinks are alcohol-free. On the house.</p>
+    <button class="go" data-close>Not now</button>
+  </div>
+</div>
+<div id="needsSheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="needsTitle">
+  <div class="panel">
+    <h2 id="needsTitle">How you're doing</h2>
+    <div class="cols"><div>
+    <div id="needRows"></div>
+    <p id="moodLine"></p>
+    <ul id="moodlets"></ul>
+    </div><div>
+    <p class="tokens" id="tokenLine"></p>
+    <p class="small" id="tokenNote"></p>
+    <p class="small" id="threeHead"><b>Tonight's three</b> (optional, no timer)</p>
+    <ol class="three" id="threeList"></ol>
+    <p class="small" id="saveNote"></p>
+    </div></div>
+    <button class="go" data-close>Close</button>
+  </div>
+</div>
+<div id="guide" class="sheet" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+  <div class="panel">
+    <h2 id="guideTitle">On the screens</h2>
+    <p id="guideNote"></p>
+    <div id="guideList"></div>
+    <h3 class="small" style="margin:12px 0 6px">Pick a side</h3>
+    <div id="sides" role="group" aria-label="Pick a side"></div>
+    <button class="go" data-close>Close</button>
+  </div>
+</div>
+<div id="tired" class="sheet" role="dialog" aria-modal="true" aria-labelledby="tiredTitle">
+  <div class="panel">
+    <h2 id="tiredTitle">Worn out. Head home?</h2>
+    <p>You're running on empty. Your car's in the lot.</p>
+    <button class="go" id="tiredLeave">Leave</button>
+    <button class="alt" id="tiredStay" data-close>Stay a while</button>
+  </div>
+</div>
+<div id="busy" role="status" aria-live="polite"></div>
+<div id="fade" aria-hidden="true"></div>
+<div id="loading" role="status" aria-live="polite">
+  <div class="board" aria-hidden="true">+3</div>
+  <h1>STOPPAGE TIME<small>SPORTS BAR · PATIO · GAMES</small></h1>
+  <p>Our own fictional sports bar on South Claudina Way, Anaheim. Built in code at load: the bar, the screens, the patio and the lot. The crowd and the matches are simulated.</p>
+  <div id="bar"><i></i></div>
+  <div id="status">Loading…</div>
+</div>
+<script type="module" src="./venues/sportsbar/main.ts"><\/script>
+</body>
+</html>
+`;export{e as default};

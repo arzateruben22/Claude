@@ -59,7 +59,7 @@
   --alarm: #c81a0a;                          /* wrong way: a deeper tail-light red, --ink on it 5.23:1 */
   --good: #6ff7de;                          /* ULTRA success */
   --bad: #ff6a4f;                            /* danger text, tail-light red: 7:1 on the base */
-  /* the OC Hypercar's own systems and Founder Edition (Cold Thrust, Ground Lock, Thrust Hop, its garage card): its LED
+  /* the OC Hypercar's own systems and Founder Edition (Ground Lock, Thrust Hop, its garage card): its LED
      ice blue, fixed whatever the atmosphere (the atmospheres below re-point --ice, never these). --founder on a HUD
      plate over a white sky is 6.2:1, on the card's dark 11:1; black on it 13:1 */
   --founder: #8fd0ff;
@@ -1199,7 +1199,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .hud-thr-bar s { position: absolute; top: 0; bottom: 0; left: 40%; width: 2px; background: var(--ink); opacity: 0.7; }
 .hud-thr em { min-width: 4ch; font: 700 12px/1 var(--f-mono); font-style: normal; letter-spacing: 0; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
 .hud-thr.low .hud-thr-bar i { background: var(--ember); }
-.hud-thr.on b { text-shadow: 0 0 8px var(--founder-glow); }
 .hud-lock.on { color: var(--founder); text-shadow: 0 0 8px var(--founder-glow); }
 .hud-hop { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .hud-hop.ready { color: var(--ink); }
@@ -1458,6 +1457,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .store .store-hyper-not { margin: 0; padding: 8px 12px; font-size: 13.5px; font-weight: 600; color: var(--ink); background: var(--night); box-shadow: inset 3px 0 0 var(--st-ice-deep); }
 .store .store-soon { font: 600 12px/1.2 var(--f-mono); font-style: normal; letter-spacing: 0.16em; text-transform: uppercase; color: var(--st-ice); }
 .store .store-soon-why { margin: -4px 0 0; padding-inline: 6px; }
+.store .store-item.is-soon { box-shadow: inset 0 0 0 1px var(--line-2), inset 3px 0 0 var(--st-ice-deep); }
 .store .store-shows { margin: 0; font-size: 12.5px; color: var(--faint); }
 .store .store-act { margin: 2px 0 0; padding-inline: 6px; }
 .store .store-owned, .store .store-locked { font: 600 12px/1.2 var(--f-mono); font-style: normal; letter-spacing: 0.12em; text-transform: uppercase; }

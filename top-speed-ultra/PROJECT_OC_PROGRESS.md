@@ -4,6 +4,134 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: Retro Low by default, a jump-only THRUST, and a store of three
+
+The owner (2026-11-16, with a Settings screenshot): "Make the style retro low as the new default, also just make the
+thrust option to only have the ability to jump over and also remove any additional store options other than the chad
+package, oc hypercar, and color kit" (the colour kit: the planned Colour Studio, $4.99). The owner's update
+(2026-11-17): the Colour Studio is merged into the Founder Pack, and the third item is the **Founders package**, coming
+soon (below). Branch claude/trim from f715bf6 (v21). Not committed.
+
+- **Retro Low is the default.** A new player (nothing saved) starts on quality Low in the Retro style on any device
+  (`settings.ts` DEFAULT_QUALITY / DEFAULT_STYLE; `guessQuality` is gone). The first-run graphics check still runs on
+  its own and saves what it measured (`tsu.bench`), but no longer changes the preset: its toast says what the device
+  holds and that Retro · Low stays, and Settings shows a hint ("The graphics check found this device holds ... Pick it
+  above if you want it") when its pick differs. Asked for from Settings ("Run graphics check") it applies its pick, as
+  before. While it runs, the Retro style is off so its rounds measure the standard presets; Retro comes back when it
+  ends. Settings version 3 (`SETTINGS_V`): settings saved before it by a player who never picked the Graphics preset
+  (`qualityChosen` false) move to Low + Retro once, written back at v3, so a change of theirs afterwards stays. **A
+  player who picked a preset themselves sees no change**: their quality and style as they were (a style never saved
+  reads as Standard, the old default). Settings reads "Now: Retro · Low · Retro keeps its own fixed picture" (the
+  preset's label is now "Retro · Low", also on the performance overlay), the toggle is "Style: Retro" (the old
+  "(preview of the new Low)" dropped), Low/Medium/High/Ultra stay, and with Adaptive quality on a line says it waits on
+  Retro (the governor never stepped Retro; that is unchanged and now said). Picking the style counts as the player's
+  own choice (`qualityChosen`).
+- **THRUST is the jump only.** A press of THRUST (the on-screen key, Left Shift, D-pad up; J as before) asks for one
+  Thrust Hop at once; holding asks for nothing more. Cold Thrust (the hold-to-boost push, its 120 ms hold delay, the
+  double-tap, its tank drain, the valve, its hiss/roar sound and its held jets) is gone: `HyperAbility.step` holds
+  `ext.fx` at 0 and never reads the control. Kept as they were: the hop's planner, cooldown/landing rules and refusals,
+  its gas and the tank (the hop's and Ground Lock's), the compressor, Ground Lock, the hop's take-off puff of the jets
+  and its whoosh. The key reads "Jump" (aria "Thrust jump: tap to hop over the traffic ahead. Tank N %"), the chase
+  view's strip "Jump", the car's cluster "JUMP" beside the tank's bar ("JUMP OFF" without it), the dash gauge has no
+  THRUST state. Physics.ts was not touched (the boost was only the caller's `ext.fx`).
+- **The store shows three things.** `listed: false` on every catalog item but the OC Hypercar Founder Edition and the
+  new **Founders package** (sku `founders-package`, kind pack, `available: false`): the owner's words, "The Founders
+  Collection: five finishes with matching brake calipers (Obsidian, Glacier, Afterglow, Evergreen, Solar Flare), the
+  Founder '26 badge, the Founders run-card frame and your name on the Founders roll." Its grants: a new
+  `founders-collection` (status build: none of the five finishes exists) and the Founder Pack's own badge, frame and
+  roll (`store:check` lets the package grant the Founder Pack's exclusives as its successor, `SUCCEEDS`, and no other
+  sku). **Open for the owner: its price.** The card shows $10, the Founder Pack's price carried over; the owner set
+  none. It carries the founder window, since the Founder Pack promised its badge, frame and roll are sold until
+  December 31, 2026 and never again. The Colour Studio (sku `colour-studio`, $4.99, never on sale, so owned by no one)
+  is removed with its grant and its $4.99 price exception. The store is one ordered list (`catalog.ts` STORE_LIST,
+  `store-order.ts`): a listed `pack` that is neither founder item first (claude/cast's character pack lands there when
+  it merges; nothing faked here), then the Founders package, then the hypercar, then the rest. The Founders package is
+  a coming-soon card: price, reason, "No pre-orders.", no button, and no "Test mode · nothing is charged" under its
+  price (nothing can be paid there). Unlisted items stay in the catalog: owned ones keep working (Your items,
+  badges, the run-card frame, the hypercar's garage grant), but `saleState` refuses them ("Not in the store.") and so
+  does the server (`_shared/store.ts` sellable; `listed` is in the server copy). The hypercar card names the Founder
+  Pack only to someone who owns it. `store:check` knows `listed` (a listed unavailable sku needs its reason; the server
+  must refuse unlisted), keeps one price exception (`PRICE_EXCEPTIONS`: the hypercar's $9.99 only; the Colour
+  Studio's $4.99 went with it), and accepts the garage's free rims
+  ('mesh', 'blade', `cars.ts` WHEELS), which failed the check at f715bf6 already. PROJECT_OC_MONETIZATION.md has the
+  trim at the top.
+- **Copy (the reviewers' repair).** Settings' keys line no longer mentions Cold Thrust or a double-tap: desktop "OC
+  Hypercar in Free Drive: tap Left Shift or J (gamepad: D-pad up) to jump over the traffic ahead (Thrust Hop).", phone
+  "OC Hypercar in Free Drive: tap JUMP (over GAS) to hop over the traffic ahead." The menu's Store tile reads "OC
+  Hypercar · Founders package soon. The OC Hypercar Founder Edition now, the Founders package once it is in the game.
+  Every freeway, every mode and every car you can earn stays free." (it said "Paints and looks for your car and
+  driver"). A suite scan (`staleThrust`: the page's text, aria-labels and titles) fails on "Cold Thrust", "double-tap"
+  or "hold THRUST / Left Shift / JUMP" on the menu and in Settings (boot at 1280, phone) and on the HUD (the phone's
+  THRUST check). The unused `KINDS` export is gone from catalog.ts; PROJECT_OC_HYPERCAR.md §6 and
+  PROJECT_OC_DYNAMICS.md say Cold Thrust was removed; Settings' graphics-check hint says, on Retro, that the check
+  measured the standard style and not Retro.
+
+**Checked**, the build as first reviewed, when the third item was still the Colour Studio (headless Chromium, SwiftShader; 4 shared cores with other lanes' browsers, load average 5 to 17):
+`npx tsc --noEmit` and `-p tsconfig.game.json` clean; `npm run build` with one `data-build="owner-test"` in
+dist/artifact.html; `npm run store:sync`, `npm run store:check` ("catalog ok: 23 skus (12 available; 2 listed in the
+store: hypercar-founder, colour-studio (coming soon)), 46 entitlements"; "server catalog in sync"). Suite groups, each
+split with `--check` into runs under 10 minutes, one Playwright at a time: boot 14/14 + 2/2 + 3/3, modes 10/10,
+abilities 9/9 + 6/6 + 11/11, store 7/7 + 12/12 (and 7/7 again), phone 8/8 + 9/9 + 10/10, perf 15/15 + 4/4 + 1/1 + 2/2,
+store-live 7/7. New or rewritten checks: a fresh device boots Retro · Low, a pre-v3 High with no pick moves to it once
+(saved at v3) and a later Standard stays over a reload, a pre-v3 pick (High; standard Low) stays (boot); the first-run
+check runs, saves a pick (Low at 30 fps here) and the preset stays Retro · Low (perf); the overlay reads "Retro · Low"
+(perf); a press asks for 1 hop, 1 s of holding 0 more, a second press 1; 0-60 1.3417 s held or not, 0 N; flat out
+336.34 mph held or not; the tank refills the same with THRUST held (abilities); the phone key: a press hops at once, held
+through the landing 0 N and no second hop (phone); the store lists exactly hypercar-founder $9.99 then colour-studio
+$4.99 (coming soon, 0 buttons), an unlisted item's checkout says "Not in the store.", the order rule puts claude/cast's
+`cast-pack-duo` first, an earlier Founder Pack still shows its 9 paints and the Founder '26 badge (store). One full
+store run before the splits failed "a Founder Pack bought before the trim still works" with the account reading "Not
+signed in" after the reload; it passed in three later runs and the cause was not found then (found since: the second repair, below).
+
+**Repair re-check (2026-11-17**, after the reviewers' copy fixes and the owner's Founders package; load average 2 to
+9): `npx tsc --noEmit` and `-p tsconfig.game.json` clean; `npm run build`, one `data-build="owner-test"`;
+`store:sync`, `store:check` ("catalog ok: 23 skus (12 available; 2 listed in the store: hypercar-founder,
+founders-package (coming soon)), 46 entitlements"; "server catalog in sync"). The store group in full in one run: 17
+of 18 in 484 s; the one failure was the phone check's own "a price in view at the top of the store" (the store now
+opens on the coming-soon card, whose price has no notice by design), so that check now looks for the hypercar's price
+once its card is scrolled up, and it passed alone (2/2). The first ten store checks also passed in a run of their own
+(10/10). "A Founder Pack bought before the trim still works" passed in both runs; the "Not signed in" failure seen
+once before did not come back, and its cause was not known yet (the second repair, below, found it). The keys and Store tile checks: boot 2/2, phone 2/2,
+twice (before and after the tile's short lead). Not re-run: modes, abilities, perf and the rest of boot and phone (the
+repair touched no code they drive).
+
+**Second repair (2026-11-17): the store group's lost sign-in, found and fixed in the suite.** The code reviewer's full
+store run (1223 s) failed "a Founder Pack bought before the trim still works": `ocu.store.session` was set just before
+`page.reload()` and gone after it, and six more checks failed after it. The cause is the test harness on this
+Chromium (153), not the game: in a new context that has an init script, every localStorage write made by the **first**
+file:// document can be gone after a reload. In the store group that first document is where the test sign-in and the
+hypercar purchase were made, and the Founder Pack check makes the group's first reload. Shown with a blank page and no
+game (scratchpad `trim-r2/storage-*.cjs`): the first document's write was lost in 7 of 30 runs opened as the suite opens
+pages (and 2 of 16, 4 of 16 in other runs), in 2 of 8 with a 3 s wait before the reload (so it is not a timing race),
+in 0 of 42 with no init script, and in 0 of 30 (and 0 of 24 with the blank page in another folder) when the page first
+loads a blank file:// page and then the test page. The game writes the session itself (`account.ts`
+setSession), and in test mode only Sign out removes it. The fix is in `tests/regression.mjs`: a new page loads
+`tests/out/warm.html` (blank) first, then the game (`firstGoto`, used by `open()` and by the boot group's fresh-device
+checks), and the init scripts that seed storage skip that blank page. No check was weakened. The Founder Pack check
+now also lists every localStorage key before and after its reload and fails naming any key that was lost.
+Re-checked (load average 4 to 8): `npx tsc --noEmit` and `-p tsconfig.game.json` clean; `npm run build`, one
+`data-build="owner-test"`; `store:check` and `store:sync --check` pass. **The full store group, twice in a row: 18/18
+in 569 s, then 18/18 in 567 s** ("6 storage keys kept over the reload" both times). The store group in two `--check`
+splits, each under 20 minutes: A (catalog, both webhook and order checks, the list, the hypercar card, the test-mode
+notices) 7/7 in 158 s; B ("lists exactly", which opens the Store, then 0002, 4242, the Founder Pack, the Sunset paint,
+the subscription, the reload, the run card, the hypercar grant, the serial webhook, the phone store, nothing sent)
+13/13 in 397 s. A first try at B left out "lists exactly". With the Store never opened, its checks failed one after
+another on 240 s waits, and the run was stopped at 1203 s. That was a wrong split, not the game. The boot checks that
+load fresh devices: field of view 1/1 and Retro Low by default 1/1 (3/3 with no page errors, 681 s). Not re-run:
+modes, abilities, perf, phone (`open()` now loads one blank page first and nothing else changed for them; the store
+group's own phone context passed). The Colour Studio's $4.99 exception is gone from this entry's text (above);
+`PRICE_EXCEPTIONS` holds only the hypercar's 999. **Still open for the owner:** the Founders package's $10, carried over
+from the Founder Pack (also in PROJECT_OC_MONETIZATION.md, the trim section and §12).
+
+Frames (looked at, at the time): a fresh profile's first drive at 390 × 844, DPR 3, in Retro Low (before: standard
+Low); Settings on a fresh profile at 390 and 1280 (before: Low · auto on the phone, Medium · auto at 1280); the
+cluster's JUMP tile and the Jump key at 390 and 1280 (before: THRUST); a hop over two sedans at 200 mph, 3.5 m apex, 0
+contacts; the store at 390 and 1280 (before: twelve items). Those one-off frames were shot to the session scratchpad
+and are **not kept**. The suite writes its own frames to tests/out on each run (not committed): phone-thrust.png (the
+Jump key mid-hop), store-1440.png and the store crops, settings-keys-1280.png and phone-settings-keys.png (the keys line,
+above); the Founders package card is in store-items-390x844.png and store-items-1280x720.png. The repair's one-off
+frames of the menu's Store tile at 390 and 1280 were shot to the session scratchpad and are not kept either.
+
 ## 2026-11-11: The OC Hypercar's Thrust built into the cockpit, and a hop that clears two cars at 200 mph
 
 Reviewed: it passed a play lens (keep; the hop cleared two cars in two runs with the reviewer's own placements) and a code lens.

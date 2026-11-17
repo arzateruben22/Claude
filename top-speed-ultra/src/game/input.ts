@@ -15,7 +15,8 @@ export interface Controls {
   lookYaw: number;    // radians, from mouse or right stick
   lookPitch: number;
   analog: boolean;    // last input came from a stick or touch (skip key smoothing)
-  thrust: number;     // 0..1: the OC Hypercar's THRUST control (Cold Thrust), after its 120 ms hold delay
+  thrust: number;     // 1 while the OC Hypercar's THRUST control is held, else 0. Nothing turns it into force: THRUST is the
+                      // jump only (owner, 2026-11-16), a press is a Thrust Hop and holding adds nothing
 }
 
 const KEYS: Record<string, string> = {
@@ -49,17 +50,12 @@ export class Input {
   steerAsked = false;
   brakeAsked = false;
   private keyBound = false;
-  // THRUST (the OC Hypercar's Cold Thrust and Thrust Hop): held by Left Shift, D-pad up or the on-screen button. Thrust
-  // starts after 120 ms of holding, so the first tap of a double-tap is not a burst; a second press within 300 ms of
-  // the first is a Thrust Hop. `thrustLive` says whether the car has it (the game sets it); off, nothing is queued.
-  // Under `thrustInstantBelow` m/s (the game sets the hop's minimum speed) there is no hop to tell a hold from, so a
-  // press opens the valve at once: a standing launch doesn't wait the 120 ms. A hold that has started stays on.
+  // THRUST, the OC Hypercar's jump (owner, 2026-11-16: "make the thrust option to only have the ability to jump over"):
+  // Left Shift, D-pad up or the on-screen key. A press queues a Thrust Hop (as J does); holding it does nothing more
+  // (the hold-to-boost Cold Thrust is gone). `thrustLive` says whether the car has it (the game sets it); off, nothing
+  // is queued. A press while another source already holds it is not a second hop.
   thrustLive = false;
-  thrustInstantBelow = 0;
   private thrustSrc = { key: false, pad: false, touch: false };
-  private thrustHeld = 0;
-  private thrustOn = false;
-  private thrustLastPress = -1e9;
 
   constructor(private el: HTMLElement) {}
 
@@ -98,16 +94,13 @@ export class Input {
   private onKeyUp = (e: KeyboardEvent) => { const k = KEYS[e.code]; if (k) this.held.delete(k); if (e.code === 'ShiftLeft') this.setThrust('key', false); };
   clear = () => {
     this.held.clear(); this.drag = null; this.touch.gas = this.touch.brake = false; this.touch.steer = 0;
-    this.thrustSrc.key = this.thrustSrc.pad = this.thrustSrc.touch = false; this.thrustHeld = 0; this.thrustOn = false; this.c.thrust = 0;
+    this.thrustSrc.key = this.thrustSrc.pad = this.thrustSrc.touch = false; this.c.thrust = 0;
   };
-  // a THRUST source pressed or let go (keyboard, gamepad, the on-screen button). A press within 300 ms of the last
-  // one queues a Thrust Hop.
-  setThrust(src: 'key' | 'pad' | 'touch', on: boolean, now = performance.now()) {
+  // a THRUST source pressed or let go (keyboard, gamepad, the on-screen button): a press queues a Thrust Hop
+  setThrust(src: 'key' | 'pad' | 'touch', on: boolean) {
     const was = this.thrustSrc.key || this.thrustSrc.pad || this.thrustSrc.touch;
     this.thrustSrc[src] = on;
-    if (!on || was || !this.thrustLive) return;
-    if (now - this.thrustLastPress < 300) { this.queue.push('hop'); this.thrustLastPress = -1e9; }
-    else this.thrustLastPress = now;
+    if (on && !was && this.thrustLive) this.queue.push('hop');
   }
 
   // mouse look: drag anywhere on the view; let go and it eases back to centre
@@ -188,11 +181,8 @@ export class Input {
     }
     c.handbrake = hb;
     c.lookBack = this.held.has('back');
-    // THRUST: on after 120 ms of holding, or at once from a standstill (only for a car that has it)
-    const th = this.thrustLive && (this.thrustSrc.key || this.thrustSrc.pad || this.thrustSrc.touch);
-    this.thrustHeld = th ? this.thrustHeld + dt : 0;
-    this.thrustOn = th && (this.thrustOn || this.thrustHeld >= 0.12 || Math.abs(speed) < this.thrustInstantBelow);
-    c.thrust = this.thrustOn ? 1 : 0;
+    // THRUST held (only for a car that has it): shown, never a force
+    c.thrust = this.thrustLive && (this.thrustSrc.key || this.thrustSrc.pad || this.thrustSrc.touch) ? 1 : 0;
 
     // look: hold drag to look around; after you let go it eases back to centre (unless free-look)
     if (!this.drag) {
