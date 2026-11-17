@@ -17,6 +17,7 @@ export interface ServerSku {
   custom_amount?: { minimum_cents: number; preset_cents: number; maximum_cents: number };
   grants: string[];
   available: boolean;
+  listed?: boolean;                 // false: not in the store (the owner's trim, 2026-11-16): never sold, still restored
   grants_ready: boolean;
   while_subscribed: string[];
 }
@@ -30,11 +31,11 @@ const stripeKey = () => env('STRIPE_SECRET_KEY');
 // a live secret (sk_live_) or restricted (rk_live_) key means real money
 export const stripeLive = () => /^(sk|rk)_live_/.test(stripeKey());
 
-// May this sku be sold now? Available, inside its window, and, with live Stripe keys, every grant built and in the
+// May this sku be sold now? Listed in the store, available, inside its window, and, with live Stripe keys, every grant built and in the
 // game ('ready' in cosmetics.json): CLAUDE.md's "nothing is sold before it exists in the game". With test keys
 // (sk_test_), every available item can be bought, so the whole flow can be tried end to end.
 export function sellable(s: ServerSku | null, now = Date.now()): { ok: true } | { ok: false; why: string } {
-  if (!s) return { ok: false, why: 'That item is not in the store.' };
+  if (!s || s.listed === false) return { ok: false, why: 'That item is not in the store.' };
   if (!s.available) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };
   if (!inWindow(s, now)) return { ok: false, why: `${s.name} is no longer sold.` };
   if (stripeLive() && !s.grants_ready) return { ok: false, why: 'Not on sale yet: it goes on sale once it is in the game.' };

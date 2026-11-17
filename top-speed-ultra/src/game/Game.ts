@@ -118,8 +118,8 @@ export interface Hud {
   // parked: what happened, plainly ("Drove Orangewood Ave to Lot 57 · street driving isn't built yet"), kept on screen
   parkedNote: string;
   // the OC Hypercar: which tune runs ('' for another car), and its own systems (live only on the Unleashed tune in
-  // Free Drive): the tank (0..1), the valve and the fans (0..1), and the hop's state in a word or two
-  tune: string; thrustLive: boolean; tank: number; thrustOn: number; groundLock: boolean; hop: string;
+  // Free Drive): the tank (0..1, the jump's gas and Ground Lock's), the fans, and the hop's state in a word or two
+  tune: string; thrustLive: boolean; tank: number; groundLock: boolean; hop: string;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -239,7 +239,7 @@ export class Game {
   private focusOnLand = false;
   private gripBoost = 1;
   private carGrip = 1;
-  // the OC Hypercar's own systems (Cold Thrust, Ground Lock, Thrust Hop) and their jets; a camera dip on a landing
+  // the OC Hypercar's own systems (Ground Lock, and THRUST's one job: the Thrust Hop) and the hop's jets; a camera dip on a landing
   readonly hyper = new HyperAbility();
   private jets!: ThrustJets;
   private dip = { a: 0, t: 1 };
@@ -675,7 +675,7 @@ export class Game {
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
     const look = lookFor(d.id, s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
-    this.jets?.setPerNozzle(high ? 24 : 12);       // Cold Thrust's jets: half the sprites on the phone build
+    this.jets?.setPerNozzle(high ? 24 : 12);       // the hop's jets: half the sprites on the phone build
     this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
@@ -727,13 +727,12 @@ export class Game {
   setHyper(live: boolean) {
     this.hyper.reset(live);
     this.input.thrustLive = live;
-    this.input.thrustInstantBelow = live ? HOP.minV : 0;          // a standing launch: no double-tap to wait for
     this.fulls = this.hyper.fulls;
     this.phys.ext.fx = 0; this.phys.ext.fz = 0;
     this.hopLog.refusedAt = -1e9;
     this.jets?.clear();
   }
-  // Thrust Hop (double-tap THRUST): plans an arc over the vehicles ahead in your lane and launches it, or says why not.
+  // Thrust Hop (a tap of THRUST, or J; THRUST is the jump only): plans an arc over the vehicles ahead in your lane and launches it, or says why not.
   // Returns 'ok' or the reason. Refused while it isn't live, in the air, with under 40 % in the tank, under 5 m/s,
   // when no arc clears the vehicle ahead, with no room to land on this road, or under a structure (an overpass, another
   // road's deck, a sign gantry) anywhere over the hop's ground track.
@@ -770,7 +769,7 @@ export class Game {
       const v0 = (t.stopT > 0 ? 0 : t.v0 * this.traffic.pace) * (t.v > 0.1 ? v / t.v : 1);
       cars.push({ ds, v: v * ws, v0: v0 * ws, bold: t.bold, acc: t.acc * ws * ws, dd, len: cl.len, wid: cl.wid, height: cl.height, kind: cl.id, other: t.path !== this.path });
     }
-    // (the car's drag slows it in the air, where the valve stays shut: the plan allows for it)
+    // (the car's drag slows it in the air, where nothing pushes it: the plan allows for it)
     const airDrag = (0.5 * 1.225 * SPEC.CdA * p.vx * p.vx) / SPEC.mass;
     const plan = planHop(p.vx, SPEC.halfL, SPEC.halfW, cars, airDrag), b = plan.block;
     this.hopLog.block = b ? { kind: b.kind, ds: +b.ds.toFixed(1), dd: +b.dd.toFixed(2), v: +b.v.toFixed(1), other: !!b.other } : null;
@@ -785,7 +784,7 @@ export class Game {
     const over = this.structureOver(this.path, p.s, p.d, track);
     if (over) return no(over === 'overpass' ? 'No hop: overpass ahead' : over === 'sign gantry' ? 'No hop: sign gantry ahead' : 'No hop: bridge overhead');
     if (!p.hop(plan.peak, plan.T)) return no('No hop');
-    h.spendHop(p, cost);                                         // and the valve shuts: the arc is planned at this speed
+    h.spendHop(p, cost);                                         // nothing pushes it along: the arc is planned at this speed
     const L = this.hopLog;
     L.n++; L.peak = plan.peak; L.T = plan.T; L.cost = cost; L.over = plan.over; L.short = plan.short ?? null; L.warn = !!plan.warn; L.apex = 0; L.air = 0; L.landV = 0; L.landMph = 0;
     this.jets.puff(0.35);
@@ -1200,8 +1199,10 @@ export class Game {
   // Low has no composer (post is off), so the frame takes the style's own pass in place of renderer.render (draw), and
   // the sky camera's corner takes its rectangle version (drawSky).
   private style: RetroStyle | null = null;
+  // (off while the graphics check runs: its rounds measure the standard presets, and a new player's Retro Low comes back
+  // when it ends)
   private applyStyle() {
-    const on = retroOn(this.settings), roots = this.roads ? [this.roads.group, this.terrain.group] : [];
+    const on = retroOn(this.settings) && !this.benchQ, roots = this.roads ? [this.roads.group, this.terrain.group] : [];
     if (!on && this.style) { this.style.detach(); this.style = null; }
     if (on && !this.style) { this.style = new RetroStyle(this.renderer); this.style.attach(this.scene, roots); }
     this.style?.watch(roots);
@@ -1591,9 +1592,9 @@ export class Game {
     });
     {
       const h = this.hyper, p = this.phys;
-      this.car.setThrustGauge(h.live, h.tank, h.thrust, h.fan > 0.3, p.airborne, this.cam === 'cockpit' || this.cam === 'free', dt, h.charging);
+      this.car.setThrustGauge(h.live, h.tank, h.fan > 0.3, p.airborne, this.cam === 'cockpit' || this.cam === 'free', dt, h.charging);
       const fx = Math.sin(p.psi), fz = Math.cos(p.psi);
-      this.jets.update(this.paused ? 0 : dt, h.thrust, h.live ? this.car.nozzleWorld() : null, fx, fz, fx * p.vx + fz * p.vy, fz * p.vx - fx * p.vy, this.env.daylight);
+      this.jets.update(this.paused ? 0 : dt, h.live ? this.car.nozzleWorld() : null, fx, fz, fx * p.vx + fz * p.vy, fz * p.vx - fx * p.vy, this.env.daylight);
     }
     this.traffic.render(alpha, this.time);
     this.updateCamera(dt);
@@ -1607,7 +1608,7 @@ export class Game {
     if (!this.attract) {
       this.audio.update(dt, { rpm: this.phys.rpm, throttle: this.phys.throttleOut, speed: Math.abs(this.phys.vx), slip: Math.max(this.phys.slipR, this.phys.slipF) + (this.input.c.handbrake ? 0.2 : 0), limiter: this.phys.limiter, scrape: this.scrape, cockpit: this.cam === 'cockpit' || this.cam === 'free' });
       const h = this.hyper;
-      this.audio.setThrust(h.thrust, h.fan, h.live && h.charging);
+      this.audio.setThrust(h.fan, h.live && h.charging);
       if (h.fulls !== this.fulls) { this.fulls = h.fulls; if (h.live) this.audio.tankFull(); }
       this.scrape = Math.max(0, this.scrape - dt * 3);
     }
@@ -2338,7 +2339,7 @@ export class Game {
       parkedNote: this.venueState?.phase === 'parked' ? `Drove ${this.venueState.vr.exit.street} to ${this.venueState.vr.venue.name} · street driving isn't built yet` : '',
       errand: this.errand && !this.errand.done ? { exit: this.errand.job.exit, left: Math.max(0, this.errand.t), dist: this.path === this.errand.sign.path ? Math.max(0, this.errand.sign.s - p.s) : -1 } : null,
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
-      thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, thrustOn: this.hyper.thrust, groundLock: this.hyper.fan > 0.3,
+      thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, groundLock: this.hyper.fan > 0.3,
       hop: this.hopState(),
     };
     this.ev.hud(h);

@@ -94,7 +94,7 @@ export class PlayerCar {
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
   private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
-  // the OC Hypercar's Cold Thrust: its two diffuser nozzles (markers on the sprung body, for the jets) and the
+  // the OC Hypercar's Thrust Hop jets: its two diffuser nozzles (markers on the sprung body, for the jets) and the
   // compressed-air pressure gauge on its dash (a small canvas display, redrawn only when what it shows changes)
   private nozzles: THREE.Object3D[] = [];
   private nozzleOut = [new THREE.Vector3(), new THREE.Vector3()];
@@ -253,11 +253,12 @@ export class PlayerCar {
     this.gauge = { mesh, canvas, tex, key: -1, wait: 0, draws: 0, step: phone ? 10 : 5, period: phone ? 0.25 : 0.1 };
   }
 
-  // what the gauge shows: the tank's pressure (0..700 bar) as a bar, and the system that's running. `seen`: the camera is
+  // what the gauge shows: the tank's pressure (0..700 bar) as a bar, and the system that's running (the hop in the air,
+  // Ground Lock, or the hop's readiness; THRUST is the jump only, so there is no thrust state). `seen`: the camera is
   // in the seat (from outside the display is a few pixels behind the glass, so it isn't redrawn); `dt` the frame time;
   // `charging`: the compressor is filling the tank. A redraw is a 256 × 160 canvas and a texture upload, so at most 10 a
   // second on High (4 on the phone build), and only when what it shows changed
-  setThrustGauge(live: boolean, tank: number, thrust: number, lock: boolean, air: boolean, seen = true, dt = 0, charging = false) {
+  setThrustGauge(live: boolean, tank: number, lock: boolean, air: boolean, seen = true, dt = 0, charging = false) {
     const gg = this.gauge; if (!gg) return;
     // the race tune has no ability, so the pod is hidden there (and on the menu's attract drive)
     gg.mesh.visible = live;
@@ -265,7 +266,7 @@ export class PlayerCar {
     if (!live || !seen) return;
     // what it shows, as one number (no string built per frame): the pressure in its steps and the four states
     const bar = Math.round((tank * 700) / gg.step) * gg.step;
-    const key = (bar / gg.step) * 16 + (thrust > 0.1 ? 8 : 0) + (lock ? 4 : 0) + (air ? 2 : 0) + (charging ? 1 : 0);
+    const key = (bar / gg.step) * 8 + (lock ? 4 : 0) + (air ? 2 : 0) + (charging ? 1 : 0);
     if (key === gg.key || gg.wait > 0) return;
     gg.key = key; gg.wait = gg.period; gg.draws++;
     const g = gg.canvas.getContext('2d'); if (!g) return;
@@ -280,16 +281,16 @@ export class PlayerCar {
     g.textAlign = 'left'; g.fillStyle = '#a6dcff'; g.font = '700 22px Arial, Helvetica, sans-serif'; g.fillText('AIR', 14, 28);
     g.textAlign = 'right'; g.fillStyle = '#ffffff'; g.font = '700 54px Arial, Helvetica, sans-serif'; g.fillText(String(bar), W - 52, 50);
     g.font = '600 20px Arial, Helvetica, sans-serif'; g.fillStyle = '#8b98a8'; g.fillText('bar', W - 52, 92);
-    // the column: 0..700 bottom to top, red under the valve's 70 bar, amber under the hop's 280, ice blue above, and
-    // the hop's mark at 280
+    // the column: 0..700 bottom to top, red under 70 bar, amber under the hop's 280, ice blue above, and the hop's mark
+    // at 280
     const cx = W - 40, cw = 26, y0 = 14, y1 = H - 14, ch = y1 - y0;
     g.fillStyle = '#1b2430'; g.fillRect(cx, y0, cw, ch);
     g.fillStyle = f >= 0.4 ? '#59b8ff' : f >= 0.1 ? '#e8a356' : '#d0141e'; g.fillRect(cx, y1 - ch * f, cw, ch * f);
     g.fillStyle = '#e8ecef'; g.fillRect(cx - 6, y1 - ch * 0.4 - 1.5, cw + 12, 3);
     // the system that's running
-    const word = air ? 'HOP' : thrust > 0.1 ? 'THRUST' : lock ? 'LOCK' : f >= 0.4 ? 'HOP READY' : charging ? 'CHARGING' : 'LOW';
+    const word = air ? 'HOP' : lock ? 'LOCK' : f >= 0.4 ? 'HOP READY' : charging ? 'CHARGING' : 'LOW';
     g.textAlign = 'right'; g.font = '700 24px Arial, Helvetica, sans-serif';
-    g.fillStyle = air || thrust > 0.1 ? '#ffffff' : lock ? '#a6dcff' : '#8b98a8'; g.fillText(word, W - 52, 132);
+    g.fillStyle = air ? '#ffffff' : lock ? '#a6dcff' : '#8b98a8'; g.fillText(word, W - 52, 132);
     gg.tex.needsUpdate = true;
   }
 

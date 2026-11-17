@@ -17,7 +17,7 @@ const cosmetics = JSON.parse(readFileSync(join(root, 'src/store/cosmetics.json')
 const { FOUNDER_UNTIL } = JSON.parse(readFileSync(join(root, 'src/store/founder.json'), 'utf8'));
 const ents = new Map(cosmetics.entitlements.map((e) => [e.id, e]));
 
-const KEEP = ['sku', 'name', 'kind', 'price_cents', 'currency', 'mode', 'interval', 'window', 'serial', 'custom_amount', 'grants', 'available'];
+const KEEP = ['sku', 'name', 'kind', 'price_cents', 'currency', 'mode', 'interval', 'window', 'serial', 'custom_amount', 'grants', 'available', 'listed'];
 const skus = catalog.map((c) => {
   const o = {};
   for (const k of KEEP) if (k in c) o[k] = c[k];

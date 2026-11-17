@@ -22,7 +22,7 @@ export interface CarDef {
   // every car is its own atmosphere (owner, 2026-10-21): the time and weather the menu's attract drive runs in while
   // this car is chosen. A run keeps the player's own time and weather settings.
   atmosphere: { time: TimeOfDay; weather: Weather };
-  // the car's own ability, part of a tune: the hypercar's Cold Thrust, Ground Lock and Thrust Hop ('hyper') come with
+  // the car's own ability, part of a tune: the hypercar's Thrust Hop and Ground Lock ('hyper') come with
   // its Unleashed tune only, so its race tune clears it and the scored modes have no THRUST control
   ability?: 'hyper';
 }
