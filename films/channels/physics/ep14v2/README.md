@@ -10,5 +10,14 @@ The owner's ChatGPT "Episode 2" (ep2.mp4, 52 s, 1080x1920 30 fps, captions baked
 - the YouTube file upscaled to 1440x2560 with "subscribe";
 - cover: an extreme close-up of the crown (cover_p2.py).
 
-To do when the owner records: the 9 caption lines as narration (owner: "I'll upload my voice later").
+
 Physics: the fly's wings measured 2.0 beats/s at 100x (correct); the mosquito 5/s at 100x (500/s real).
+
+## 17 Nov 2026: the owner's narration is in
+- The nine caption lines, read by the owner in one take each (`voice-owner-spoken/rr-s3-part2.m4a`, slate "Reality Rulebook, Part 2"), placed on
+  the baked captions (speech starts 0.12 s after each caption appears; the captions are mapped through the cuts: -0.7 s after the 12.0 s
+  cut, -1.5 s after the 20.4 s cut). De-clipped (the hard consonants touched full scale), rumble cut, -16 LUFS.
+- The bed is now +7 dB (it was +16 dB when there was no voice); the owner's closer C2 at 48.3 s is de-clipped and matched to the voice.
+- The silent like/follow pop-up moved to 35.9 s (the gap after "Tiny droplets pinch free."); even part: no spoken ask.
+- Mix -16.8 LUFS. Rebuild: `src/build.sh` (picture, bed, voice, C2), `src/voice_place.py`, `src/mix.py`, `src/post2.sh` (1440 file + pop-ups).
+- Mishears by the recogniser ("to a second", "tidal pool") are not the owner's words; the take matches the captions.
