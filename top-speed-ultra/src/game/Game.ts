@@ -1856,6 +1856,11 @@ export class Game {
       this.car.eye.getWorldPosition(this.wantP);
       this.car.body.getWorldQuaternion(this.wantQ);
       this.tmpV.set(this.head.x, 0, this.head.z).applyQuaternion(this.wantQ); this.wantP.add(this.tmpV);
+      // the hypercar's seat camera sits ahead of its eye (car-shape eyeNudge), 6 cm off the A-pillar and the canopy
+      // frame. Straight ahead that shows the hood; turned round with the mouse look or a stick (touch has none) it
+      // would bury the view in the pillar, so the nudge eases back out as the look turns or tips up
+      const back = smoothstep(0.35, 1.1, Math.max(Math.abs(c.lookYaw), Math.abs(c.lookPitch) * 2));
+      if (back > 0) { this.tmpV.copy(this.car.eyeNudge).multiplyScalar(-back).applyQuaternion(this.wantQ); this.wantP.add(this.tmpV); }
       // portrait: aim for a 50-degree horizontal view (Three's fov is vertical, so it follows the aspect, 62..76
       // degrees, clamped at 76 on tall phones) with the horizon 31% from the top. The old 96 degrees took in a 61-degree
       // width at the owner's phone aspect: the door and the flank through the side window crowded the left edge and the

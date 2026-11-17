@@ -3234,7 +3234,7 @@ await group('phone', async (use) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await frames(page, 2);
     const out = `bonnet ${pc(r.share)} of the frame, ${r.rows} rows, from ${pc(r.top ?? 1)} down (fov ${r.fov}, ${r.mph} mph)`;
-    expect(r.share >= 0.016 && r.top !== null && r.top < 0.45, out);
+    expect(r.share >= 0.016 && r.top !== null && r.top < 0.43, out);
     return out;
   });
   // the sleeves from the seat on a phone (owner, 2026-11-16, v18 on an iPhone: "The left arm still needs to be fixed",
