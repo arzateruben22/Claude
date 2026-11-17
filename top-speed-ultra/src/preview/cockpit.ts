@@ -58,7 +58,7 @@ import * as DS from './car-dash';
 import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
 import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
-import { sportRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
+import { sportRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
@@ -475,7 +475,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // double contrast stitching and a 12 o'clock Alcantara stripe in the car's trim colour (Hypercar ice blue), slim
     // gloss-black spokes with brushed edges and a thumb pad each, twin lower legs each carrying a rotary dial round a
     // live display and a toggle, shift lights across the top that light with the revs, brushed paddles, the premium
-    // centre. 'sport' (the GT and the Corsa, 2026-11-16): the default sport wheel, the same mildly flat-bottomed rim in
+    // centre. 'sport' (the GT and the Corsa, 2026-11-16): the default sport wheel, a fully round rim (wheel-sport roundRimAt) in
     // smooth Nappa top and bottom, grips in the car's trim (the GT perforated Nappa, the Corsa Alcantara) with double
     // stitching in its thread and the 12 o'clock stripe in its colour (GT cognac, Corsa yellow), three solid brushed
     // graphite spokes (wheel-sport addDefaultSpokes) with the thumb pads, brushed paddles, a Nappa hub with the simpler
@@ -483,7 +483,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // grips) with aluminium spokes, its start button and mode dial, and the thumb pads; Vela: smooth Nappa on a round
     // hub with two slim brushed spokes, the V badge and the thumb pads.
     const ws = T.wheel, lux = T.wheelTier === 'luxury', sport = T.wheelTier !== 'own';
-    const at = sport ? sportRimAt : rimAt;
+    const at = lux ? sportRimAt : sport ? roundRimAt : rimAt;   // the default sport wheel: a round rim (owner, 2026-11-16)
     // grow: how far the zone stands proud of the rim (a factor on its section), or per point along it (0..1)
     const zone = (a0: number, a1: number, key: string, n: number, grow: number | ((t: number) => number) = 1) => {
       const f = rimFrames(a0, a1, n, at), gr = typeof grow === 'number' ? () => grow : (i: number) => grow(i / (n - 1));

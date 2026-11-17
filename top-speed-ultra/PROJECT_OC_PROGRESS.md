@@ -4,6 +4,19 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-17: the default sport wheel is round
+
+The owner: "Make the default steering wheel circular as well too and not have a flat bottom", and "make sure it doesn't
+touch the left side of the car". The GT's and the Corsa's default sport wheel now follows a true circle
+(wheel-sport.ts `roundRimAt`; cockpit.ts uses it for the 'sport' tier); between -0.74 R and 0.93 R it is spec.ts rimAt's
+path exactly, so the hands do not move. Its lower spoke now reaches the round rim's bottom. The OC Hypercar's luxury wheel
+is unchanged (studio close-up and seat view pixel-identical before and after).
+
+Checks: tsc (both configs) passes; npm run build passes with one owner-test mark; phone group 23/23. Clearance from each
+wheel (all its parts) to the rest of the cabin on the driver's left, measured on the game's own geometry at centre and
+at +-1.05 rad: GT 14 / 19 / 20 mm, Corsa 14 / 19 / 21 mm (nearest the paddles and the dash Nappa), Hypercar 8 / 6 / 8 mm
+(unchanged), Brio 17 / 23 / 22 mm, Vela E 11 / 12 / 11 mm: nothing touches.
+
 ## 2026-11-11: The luxury sport steering wheel only on the OC Hypercar; a default sport wheel for the GT and the Corsa
 
 Reviewed: it passed an art lens (keep; no regression found) and a code lens (the Hypercar, Brio and Vela E geometry and materials identical before and after).

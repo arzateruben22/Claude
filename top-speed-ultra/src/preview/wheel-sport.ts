@@ -42,6 +42,12 @@ export function sportRimAt(a: number, out = new THREE.Vector3()) {
   if (y > ft) y = ft + (y - ft) * 0.45;
   return out.set(x, y, 0);
 }
+// the default sport wheel's rim (owner, 2026-11-16: "Make the default steering wheel circular as well too and not have
+// a flat bottom"): a true circle, no flat bottom and no flattened top. Between -0.74 R and 0.93 R (every degree the hands
+// hold) it is spec.ts rimAt's path exactly, so the grips and the hands do not move
+export function roundRimAt(a: number, out = new THREE.Vector3()) {
+  return out.set(Math.cos(a) * RIM_R, Math.sin(a) * RIM_R, 0);
+}
 
 // ------------------------------------------------------------------------------------------------ materials
 // the rotary rings' knurl: a fine diamond cross-hatch round the ring (u runs round it, 24 repeats)
@@ -315,7 +321,7 @@ export function addSportSpokes(wk: Kit, o: { high: boolean }) {
 // and the Corsa): three solid spokes in brushed graphite metal ('spokeW', cockpit.ts), no widget pods, dials, chin or legs. The two side
 // spokes run from inside the hub's flank to inside the rim (48 mm tall at the hub, 34 mm at the rim, the luxury
 // wheel's height, so the dash and the paddles behind stay hidden as before) with a brushed edge along the bottom of
-// each and a thumb pad on each (addThumbPads, cockpit.ts); the lower spoke, from the hub's foot to the rim's flat bottom,
+// each and a thumb pad on each (addThumbPads, cockpit.ts); the lower spoke, from the hub's foot to the round rim's bottom,
 // is pierced by a rounded slot with a short bar in the car's accent ('hubAccent') over it
 export function addDefaultSpokes(wk: Kit, o: { high: boolean }) {
   const cs = o.high ? 6 : 3;
@@ -325,8 +331,9 @@ export function addDefaultSpokes(wk: Kit, o: { high: boolean }) {
     sp.translate(0, 0, -0.018); wk.add('spokeW', sp);
     wk.add('alu', leg([sd * 0.096, -0.0268], [sd * 0.156, -0.0218], 0.0024, 0.002, -0.0034), null, 0.02);
   }
-  // the lower spoke, 52 mm wide at the hub and 76 at the rim, its slot 20 by 30 mm
-  const lo = roundPoly([[-0.026, -0.058], [0.026, -0.058], [0.038, -0.127], [-0.038, -0.127]], 0.006);
+  // the lower spoke, 52 mm wide at the hub and 80 at the rim, its slot 20 by 30 mm; it runs down into the round rim's
+  // bottom (centreline at -RIM_R, so it ends 6 mm inside the rim's 18.5 mm section)
+  const lo = roundPoly([[-0.026, -0.058], [0.026, -0.058], [0.04, -0.172], [-0.04, -0.172]], 0.006);
   lo.holes.push(roundRect(0.02, 0.03, 0.0085, 0, -0.096));
   const lg = extrude(lo, 0.012, 0.0025, cs); lg.translate(0, 0, -0.016); wk.add('spokeW', lg);
   const bar = new RoundedBoxGeometry(0.03, 0.0032, 0.003, 1, 0.0012); bar.translate(0, -0.0745, -0.0035); wk.add('hubAccent', bar, null, 0.02);
