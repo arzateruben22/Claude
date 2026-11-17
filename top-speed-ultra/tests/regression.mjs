@@ -3061,6 +3061,50 @@ function sleevesInPage() {
   return { L: side(true), R: side(false), frame: W * H, cabin: +(cs / Math.max(1, cn)).toFixed(1), minDepth: +minDepth.toFixed(3), margin: +(minDepth / cam.near).toFixed(1), nearer, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), sun: car.sunShade };
 }
 
+// in the page: how much of each of the driver's arms the seat actually sees. Two class renders at the frame's size: the
+// whole scene with each arm's pixels coloured by side and part (the hand: skinned mostly to its hand bone; the forearm
+// and sleeve: the rest) and everything else black, then the arms alone. Per class the pixels the arm would cover
+// (the arms alone) and the share of them it still covers in the whole scene (the rest are behind something)
+function armsSeenInPage() {
+  const g = window.__game, cam = g.camera, car = g.car, arms = car.arms, r = g.renderer, gl = r.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight;
+  cam.updateMatrixWorld(true); car.root.updateMatrixWorld(true);
+  // (each in the side its own material draws: the cabin's Alcantara and leather are double-sided, and the door's
+  // armrest is seen from its back)
+  const Basic = car.pool.material.constructor, blacks = [0, 1, 2].map((side) => new Basic({ color: 0x000000, fog: false, toneMapped: false, side }));
+  // (blue 128 + 64 for the left + 32 for a hand: skinIndex.x is the hand bone, 2 right and 5 left, or a sleeve's bone)
+  const cls = new Basic({ color: 0xffffff, fog: false, toneMapped: false, side: 2 });
+  cls.onBeforeCompile = (sh) => {
+    sh.vertexShader = 'varying vec2 vArm;\n' + sh.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\nvArm = vec2(skinIndex.x > 2.5 ? 1.0 : 0.0, (mod(skinIndex.x, 3.0) > 1.5 && skinWeight.x > 0.5) ? 1.0 : 0.0);');
+    sh.fragmentShader = 'varying vec2 vArm;\n' + sh.fragmentShader.replace('vec4 diffuseColor = vec4( diffuse, opacity );', 'vec4 diffuseColor = vec4(0.0, 0.0, (128.0 + vArm.x * 64.0 + vArm.y * 32.0) / 255.0, 1.0);');
+  };
+  cls.customProgramCacheKey = () => 'suite-arms-seen';
+  const inside = (o, root) => { for (let a = o; a; a = a.parent) if (a === root) return true; return false; };
+  const saved = [], hid = [], rest = [];
+  g.scene.traverse((o) => {
+    if (!o.visible) return;
+    const m = o.isMesh && (Array.isArray(o.material) ? o.material[0] : o.material);
+    if (o.isMesh && !m.isShaderMaterial && m.depthTest !== false && m.colorWrite !== false && !(m.transparent && m.opacity < 0.95) && !/glass|windscreen|dust/i.test(o.name)) {
+      const arm = inside(o, arms.group);
+      saved.push([o, o.material]); o.material = arm ? cls : blacks[m.side ?? 0]; if (!arm) rest.push(o);
+    } else if (o.isMesh || o.isPoints || o.isLine || o.isSprite) { hid.push(o); o.visible = false; }
+  });
+  const bg = g.scene.background, fog = g.scene.fog, ocs = r.outputColorSpace; g.scene.background = null; g.scene.fog = null; r.outputColorSpace = 'srgb-linear';
+  const read = () => { r.setRenderTarget(null); r.setClearColor(0x000000, 1); r.clear(); r.render(g.scene, cam); const px = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px); return px; };
+  const full = read();
+  for (const o of rest) o.visible = false;
+  const alone = read();
+  for (const o of rest) o.visible = true;
+  for (const [o, m] of saved) o.material = m; for (const o of hid) o.visible = true;
+  g.scene.background = bg; g.scene.fog = fog; r.outputColorSpace = ocs; for (const b of blacks) b.dispose(); cls.dispose();
+  g.draw(performance.now(), 0);
+  const k = (px, i) => px[i + 2] < 100 ? -1 : ((px[i + 2] - 120) >> 5) & 3, names = ['Rfore', 'Rhand', 'Lfore', 'Lhand'];
+  const want = [0, 0, 0, 0], seen = [0, 0, 0, 0];
+  for (let i = 0; i < W * H * 4; i += 4) { const c = k(alone, i); if (c < 0) continue; want[c]++; if (k(full, i) === c) seen[c]++; }
+  const out = { frame: W * H, wheel: +car.wheelAngle.toFixed(2), fov: +cam.fov.toFixed(1), look: `${g.settings.quality}/${g.settings.style}`, mph: Math.round(Math.abs(g.phys.vx) * 2.236936) };
+  names.forEach((n, i) => { out[n] = { px: want[i], seen: want[i] ? +(seen[i] / want[i]).toFixed(3) : null }; });
+  return out;
+}
+
 await group('phone', async (use) => {
   // Modern, so the controls stay put while the checks press them (a phone's first run is Minimal; the last check here
   // covers its tuck and wake)
@@ -3300,6 +3344,43 @@ await group('phone', async (use) => {
       out.push(`Ace ${name}: cabin ${r.cabin}; L mean ${r.L?.mean} (${(r.L?.mean / r.cabin).toFixed(2)} of it) spread ${r.L?.spread} detail ${r.L?.detail}; R mean ${r.R?.mean} (${(r.R?.mean / r.cabin).toFixed(2)}) spread ${r.R?.spread} detail ${r.R?.detail}`);
     }
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, driver: 'closer', presentation: 'm' }); });
+    await game(page, () => { const g = window.__game; g.phys.delta = 0; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    expect(fails.length === 0, fails.join('; ') + ' | ' + out.join(' | '));
+    return out.join(' | ');
+  });
+  // the forearms from the seat on an iPhone (owner, 2026-11-17, v23 at 101 mph in portrait, the wheel turned left: "Left
+  // arm is still getting mixed in between the black shadow"): the OC Hypercar at 393 x 852, the Closer, the wheel at
+  // 0.65 and 0.9 rad each way. Of each forearm's pixels (its sleeve, cuff and watch: armsSeenInPage) at least 90 % are
+  // seen, not behind the cabin; of each hand's at least 70 % (the rim covers the curled fingers: 80-99 %). In ca9da809
+  // (v23) the hypercar's door armrest stood 8 cm proud of its card beside the wheel, and the left arm ran out to an
+  // elbow 2 cm into the door: the left forearm 32 % seen at 0.65, 23 % at 0.9, the hand 65 % and 26 % (6196bd6e, v22:
+  // 4 % and 41 %, 15 % and 32 %); the right arm 99 %+ and its hand 83 %+ throughout. With the armrest slimmed and the
+  // elbow kept to car-shape armRoom (94384485): the forearms 99.4 %+, the hands 79 %+. (The cabin's black stand-ins take
+  // their materials' sides: drawn single-sided, the armrest seen from its back hid nothing and v23 passed at 96 %)
+  const FORE_SEEN = 0.9, HAND_SEEN = 0.7;
+  await check('the forearms from the seat on an iPhone: not behind the door or the dash when the wheel turns', async () => {
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
+    await page.setViewportSize({ width: 393, height: 852 });
+    await game(page, () => {
+      const g = window.__game;
+      g.updateSettings({ ...g.settings, driver: 'closer', presentation: 'm' });
+      g.car.configure({ ...g.car.config, car: 'oc-hyper' }); g.setCam('cockpit'); g.fastForward(6, {}, 45.15); g.setPaused(true);
+    });
+    await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+    const out = [], fails = [];
+    for (const wheel of [0.65, 0.9, -0.65, -0.9]) {
+      await game(page, (d) => { window.__game.phys.delta = d; }, wheel / 13);
+      await frames(page, 12);
+      const r = await game(page, armsSeenInPage);
+      for (const [n, floor] of [['Lfore', FORE_SEEN], ['Rfore', FORE_SEEN], ['Lhand', HAND_SEEN], ['Rhand', HAND_SEEN]]) {
+        const s = r[n];
+        // (a part out of frame, or a sliver at its edge, has nothing to hide)
+        if (s.px >= 0.002 * r.frame && s.seen < floor) fails.push(`wheel ${r.wheel}: ${n} ${pc(s.seen)} seen of ${pc(s.px / r.frame)} of the frame`);
+      }
+      out.push(`wheel ${r.wheel} rad (${r.look}, fov ${r.fov}, ${r.mph} mph): ` + ['Lfore', 'Lhand', 'Rfore', 'Rhand'].map((n) => `${n} ${r[n].seen === null ? '-' : pc(r[n].seen)} of ${pc(r[n].px / r.frame)}`).join(', '));
+    }
     await game(page, () => { const g = window.__game; g.phys.delta = 0; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     await page.setViewportSize({ width: 390, height: 844 });
     await frames(page, 2);
