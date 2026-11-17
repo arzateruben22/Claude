@@ -154,6 +154,9 @@ def build(use_closer):
                     nw = [len(g_["text"].split()) for g_ in grp]; tot = sum(nw); wsent = len(sents[k]["text"].split()); acc = 0
                     for q in range(len(grp) - 1):
                         acc += nw[q]; wi = w0 + min(wsent - 1, max(1, round(acc * wsent / tot)))
+                        fw = re.sub(r"[^a-z]", "", grp[q + 1]["text"].split()[0].lower())        # the next piece's first word, found among the sentence's own words (numbers shrink when shown: '239,000' for four words)
+                        hit = next((j for j in range(w0 + 1, w0 + wsent) if j < len(L["words"]) and re.sub(r"[^a-z]", "", L["words"][j]["w"].lower()) == fw and j > w0 + q), None)
+                        if hit is not None: wi = hit
                         w = L["words"][wi] if wi < len(L["words"]) else None
                         c_ = next((c for c in nclips if c["id"] == L["id"] and c["from"] - 0.01 <= w["start"] <= c["from"] + c["dur"]), None) if w else None
                         t_starts.append(round(c_["t"] + w["start"] - c_["from"] - 0.05, 3) if c_ else grp[q + 1]["t0"])
