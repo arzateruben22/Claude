@@ -11,11 +11,12 @@
 //       and a gauge pod kept for the Cold Thrust tank (gaugeAt). Its
 //       driver sits lower, further in and further forward (car-shape seatOffset): the eye, wheel, binnacle, dash, console and seats
 //       move with the seat; it has no rear-view mirror (its low header), only the door mirrors.
-//       The steering wheels (2026-11-09): the GT, the Corsa and the OC Hypercar the premium sport wheel of
-//       wheel-sport.ts in their own trims, with live dials (setInstruments profile, tank, tcs); the Brio and the Vela E
-//       their own wheels with its thumb pads; see 'the steering wheel' below. Every wheel's centre (2026-11-12,
+//       The steering wheels, by tier (Theme wheelTier, 2026-11-16): the OC Hypercar the luxury wheel, the premium sport
+//       wheel of wheel-sport.ts with live dials (setInstruments profile, tank, tcs) and shift lights; the GT and the Corsa
+//       the default sport wheel in their own trims (three solid spokes, no dials or shift lights); the Brio and the
+//       Vela E their own wheels with its thumb pads; see 'the steering wheel' below. Every wheel's centre (2026-11-12,
 //       wheel-sport addSportCentre / addSimpleCentre) carries the car's badge in a machined cup with a ring in the
-//       car's accent; the sport wheels' a pillowed cover in the trim with stitching and a carbon chevron.
+//       car's accent; the luxury wheel's a pillowed cover in the trim with stitching and a carbon chevron.
 //       The clusters (2026-11-12, car-dash.ts) are live: speed, gear, a rev arc whose redline lights with the red
 //       shift lights, the profile, TCS and ABS, trip and top speed, the clock and temperature (sim), Go To's next turn
 //       and destination, the hypercar's tune and Thrust tank, the power in use; nothing the game doesn't simulate.
@@ -57,23 +58,27 @@ import * as DS from './car-dash';
 import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
 import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
-import { sportRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
+import { sportRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
-interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number; stripe?: number; belt?: number; disp: string; accent: number }
+// wheelTier (owner, 2026-11-16: "I just want the hypercar and Chad car to only have it and the other cars have default
+// sports steering wheel"): 'luxury' the premium sport wheel of wheel-sport.ts (dials, knurled rings, shift lights, the
+// premium centre), only the OC Hypercar today and the Scarlatta M1 (the Chad car) when it is built; 'sport' the default
+// sport wheel (the GT and the Corsa); 'own' the car's own wheel (the Brio, the Vela E). wheel picks the trim within it.
+interface Theme { seat: number; seatKind: 'leather' | 'buckets'; stitch: number; dash: 'alc' | 'nappa'; band: 'carbon' | 'alu'; wheel: 'gt' | 'brio' | 'corsa' | 'vela'; wheelTier: 'luxury' | 'sport' | 'own'; binnacle: 'tach' | 'screen'; door: 'nappa' | 'carbon'; head: number; stripe?: number; belt?: number; disp: string; accent: number }
 const THEMES: Record<string, Theme> = {
-  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', binnacle: 'tach', door: 'nappa', head: 0x3a3a3e, stripe: 0xb8773f, disp: '#e89a3c', accent: 0xc8874c },
-  brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', binnacle: 'tach', door: 'nappa', head: 0x55565b, disp: '#8fb0e0', accent: 0x8fb0e0 },
-  corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'tach', door: 'carbon', head: 0x29292b, disp: '#f2c230', accent: 0xf0c020 },
-  vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', binnacle: 'screen', door: 'nappa', head: 0xa39e93, disp: '#4fb3ff', accent: 0x4fb3ff },
+  gt: { seat: 0x7a3f1c, seatKind: 'leather', stitch: 0xc58a52, dash: 'alc', band: 'carbon', wheel: 'gt', wheelTier: 'sport', binnacle: 'tach', door: 'nappa', head: 0x3a3a3e, stripe: 0xb8773f, disp: '#e89a3c', accent: 0xc8874c },
+  brio: { seat: 0x1c2740, seatKind: 'leather', stitch: 0x8fb0e0, dash: 'nappa', band: 'alu', wheel: 'brio', wheelTier: 'own', binnacle: 'tach', door: 'nappa', head: 0x55565b, disp: '#8fb0e0', accent: 0x8fb0e0 },
+  corsa: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0xe8b81c, dash: 'alc', band: 'carbon', wheel: 'corsa', wheelTier: 'sport', binnacle: 'tach', door: 'carbon', head: 0x29292b, disp: '#f2c230', accent: 0xf0c020 },
+  vela: { seat: 0xbdb5a5, seatKind: 'leather', stitch: 0x7d7870, dash: 'nappa', band: 'alu', wheel: 'vela', wheelTier: 'own', binnacle: 'screen', door: 'nappa', head: 0xa39e93, disp: '#4fb3ff', accent: 0x4fb3ff },
   // the OC Hypercar: the Corsa's carbon buckets, roll hoop and Alcantara wheel, with ice-blue stitching, an ice-blue
   // centre stripe on the rim, deep blue harnesses, an ice-blue ambient line along the dash and the door cards, the OC
   // badge on the wheel's boss (the car's brand), a gauge pod on the dash kept for M5's Cold Thrust tank gauge, and
   // its own driver display (the Vela's display geometry, centred on its driver, with car-dash hyperDash)
   // Its door card is black Nappa, not carbon: in the narrow canopy the card sits a hand's width from the eye, where
   // a clear coat at that grazing angle mirrored the bright sky as a grey slab across the left of the seat view.
-  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', binnacle: 'screen', door: 'nappa', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66, disp: '#5eb8ff', accent: 0x7cc8ff },
+  hyper: { seat: 0x2b2b2e, seatKind: 'buckets', stitch: 0x8fd0ff, dash: 'alc', band: 'carbon', wheel: 'corsa', wheelTier: 'luxury', binnacle: 'screen', door: 'nappa', head: 0x29292b, stripe: 0x7cc8ff, belt: 0x1f3f66, disp: '#5eb8ff', accent: 0x7cc8ff },
 };
 export interface Cockpit {
   group: THREE.Group;
@@ -264,6 +269,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     color: 0x0b0c0d, roughness: 0.15, clearcoat: 1, emissive: [0x2bff6a, 0xffb21e, 0xff2a24][i], emissiveIntensity: 0 })));
   [mats.led, mats.ledA, mats.ledR] = shiftLeds;
   mats.paddleW = M.brushed(q, 0x80858c, { key: 'paddle', env: 0.4 });
+  // the default sport wheel's spokes (wheel-sport addDefaultSpokes): brushed graphite (metal: its colour is what it
+  // reflects, so a mid tone reads as satin metal against the dark dash without outshining the badge)
+  mats.spokeW = M.brushed(q, 0x9097a0, { key: 'spokeW', env: 0.9 });
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
@@ -480,23 +488,28 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   let dials: WheelDials | null = null;
   {
     const segs = high ? 22 : 12;
-    // each car's wheel. GT, Corsa and the OC Hypercar: the premium sport wheel (wheel-sport.ts), a flat bottom, 2x2
-    // twill carbon top and bottom, black Alcantara grips with double contrast stitching and a 12 o'clock Alcantara
-    // stripe in the car's trim colour (GT cognac, Corsa yellow, Hypercar ice blue), slim gloss-black spokes with
-    // brushed edges and a thumb pad each, twin lower legs each carrying a rotary dial round a live display and a
-    // toggle, shift lights across the top that light with the revs, brushed paddles. Brio: all Nappa (perforated grips) with aluminium
-    // spokes, its start button and mode dial, and the thumb pads; Vela: smooth Nappa on a round hub with two slim
-    // brushed spokes, the V badge and the thumb pads.
-    const ws = T.wheel, sport = ws === 'gt' || ws === 'corsa';
-    const at = sport ? sportRimAt : rimAt;
+    // each car's wheel, by its tier (Theme wheelTier). 'luxury' (the OC Hypercar; the Scarlatta M1 when built): the
+    // premium sport wheel (wheel-sport.ts), a flat bottom, 2x2 twill carbon top and bottom, black Alcantara grips with
+    // double contrast stitching and a 12 o'clock Alcantara stripe in the car's trim colour (Hypercar ice blue), slim
+    // gloss-black spokes with brushed edges and a thumb pad each, twin lower legs each carrying a rotary dial round a
+    // live display and a toggle, shift lights across the top that light with the revs, brushed paddles, the premium
+    // centre. 'sport' (the GT and the Corsa, 2026-11-16): the default sport wheel, a fully round rim (wheel-sport roundRimAt) in
+    // smooth Nappa top and bottom, grips in the car's trim (the GT perforated Nappa, the Corsa Alcantara) with double
+    // stitching in its thread and the 12 o'clock stripe in its colour (GT cognac, Corsa yellow), three solid brushed
+    // graphite spokes (wheel-sport addDefaultSpokes) with the thumb pads, brushed paddles, a Nappa hub with the simpler
+    // centre; no dials, knurled rings, shift lights, premium cover or carbon. 'own': Brio: all Nappa (perforated
+    // grips) with aluminium spokes, its start button and mode dial, and the thumb pads; Vela: smooth Nappa on a round
+    // hub with two slim brushed spokes, the V badge and the thumb pads.
+    const ws = T.wheel, lux = T.wheelTier === 'luxury', sport = T.wheelTier !== 'own';
+    const at = lux ? sportRimAt : sport ? roundRimAt : rimAt;   // the default sport wheel: a round rim (owner, 2026-11-16)
     // grow: how far the zone stands proud of the rim (a factor on its section), or per point along it (0..1)
     const zone = (a0: number, a1: number, key: string, n: number, grow: number | ((t: number) => number) = 1) => {
       const f = rimFrames(a0, a1, n, at), gr = typeof grow === 'number' ? () => grow : (i: number) => grow(i / (n - 1));
       wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]) * gr(i), (i) => rimB(f.as[i]) * gr(i), segs, { around: 0.13, flip: true }));
       return f;
     };
-    const rimTop = sport ? 'carbon' : 'wheelNappa';
-    const gripK = sport ? 'alcW' : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
+    const rimTop = lux ? 'carbon' : 'wheelNappa';
+    const gripK = lux ? 'alcW' : sport ? (ws === 'gt' ? 'nappaPerf' : 'alcW') : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
     const spokeK = 'alu';
     // The grips run from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and 148 degrees, about
     // +-16 degrees of rim under the palm and fingers) sits wholly on leather or Alcantara: no seam, ring or step
@@ -525,18 +538,24 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // (no brushed rings at the joins: the hands cover the upper ones in the seat view and the lower ones never read;
     // the material change is the join)
     // shift lights across the top, on the driver's face of the rim: four green, three amber, three red, left to right
-    if (sport) for (let i = 0; i < 10; i++) {
+    if (lux) for (let i = 0; i < 10; i++) {
       const a = 2.0 - (i / 9) * 0.88, p = rimAt(a);
       const led = new RoundedBoxGeometry(0.0085, 0.0042, 0.003, 1, 0.001);
       led.rotateZ(a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add(i < 4 ? 'led' : i < 7 ? 'ledA' : 'ledR', led, null, 0.02);
     }
-    // hub: the sport wheel's slim sculpted hub (wheel-sport addSportHub) with its premium centre (addSportCentre: a
+    // hub: the luxury wheel's slim sculpted hub (wheel-sport addSportHub) with its premium centre (addSportCentre: a
     // pillowed cover in the trim, a machined bezel, stitching, a carbon chevron, the badge in a raised machined cup with
-    // a ring in the car's accent), the others' Nappa airbag cover with a simpler centre (addSimpleCentre). The badge:
-    // R, V or the OC mark
-    if (sport) { addSportHub(wk, { high }); addSportCentre(wk, { high }); }
-    else {
+    // a ring in the car's accent), the others' Nappa airbag cover with a simpler centre (addSimpleCentre; the default
+    // sport wheel's a slimmer cover than the Brio's, with its brushed bars). The badge: R, V or the OC mark
+    if (lux) { addSportHub(wk, { high }); addSportCentre(wk, { high }); }
+    else if (sport) {
+      const hub = extrude(roundRect(0.154, 0.104, 0.034, 0, -0.004), 0.034, 0.012); hub.translate(0, 0, -0.036);
+      wk.add('wheelNappa', hub);
+      const seam = new THREE.TorusGeometry(1, 0.012, 4, high ? 64 : 32); seam.scale(0.058, 0.039, 1); seam.translate(0, -0.004, -0.001);
+      wk.add('gloss', seam, null, 0.05);
+      addSimpleCentre(wk, { high, kind: 'brio' });
+    } else {
       const hub = ws === 'vela' ? extrude(roundRect(0.13, 0.13, 0.065, 0, -0.004), 0.034, 0.012) : extrude(roundRect(0.19, 0.122, 0.04, 0, -0.004), 0.034, 0.012);
       hub.translate(0, 0, -0.036);
       wk.add('wheelNappa', hub);
@@ -544,12 +563,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       wk.add('gloss', seam, null, 0.05);
       addSimpleCentre(wk, { high, kind: ws === 'vela' ? 'vela' : 'brio' });
     }
-    if (sport) {
-      // the sport wheel's spokes, legs, widget sets and chin, its thumb pads, and its two live displays
+    if (lux) {
+      // the luxury wheel's spokes, legs, widget sets and chin, its thumb pads, and its two live displays
       addSportSpokes(wk, { high });
       addThumbPads(wk, 0.113, -0.006, -0.0012);
-      dials = wheelDials(hyper ? 'hyper' : 'std', hyper ? 0x5eb8ff : ws === 'corsa' ? 0xf0c020 : 0xe0a060, q);
+      dials = wheelDials(hyper ? 'hyper' : 'std', hyper ? 0x5eb8ff : T.accent, q);
       mats.swDialL = dials.left; mats.swDialR = dials.right;
+    } else if (sport) {
+      // the default sport wheel's three solid spokes and the thumb pads on the side ones (no dials: setInstruments and
+      // update leave the wheel alone, dials and leds stay null)
+      addDefaultSpokes(wk, { high });
+      addThumbPads(wk, 0.113, -0.006, -0.0012);
     } else {
       // the Brio's three and the Vela's two: the car's own spokes, each with a thumb pad
       for (const sd of [-1, 1]) {
@@ -592,9 +616,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // the sport wheel's: the whole blade brushed metal in a mid tone with a calm reflection (a bright, fully
       // reflective blade was the brightest thing inside the rim, seen through the wheel), and a brighter brushed pull
       // face at its outer end, toward the driver; the others' stay dark anodised
-      const sportP = T.wheel === 'gt' || T.wheel === 'corsa';
+      // (the default sport wheel's: the same brushed blade, without the bright pull face)
+      const sportP = T.wheelTier !== 'own';
       kit.add(sportP ? 'paddleW' : 'anod', p, pm);
-      if (sportP) { const tip = paddleTip(sd); tip.translate(sd * 0.045, 0.028, -0.052); kit.add('alu', tip, pm, 0.02); }
+      if (T.wheelTier === 'luxury') { const tip = paddleTip(sd); tip.translate(sd * 0.045, 0.028, -0.052); kit.add('alu', tip, pm, 0.02); }
     }
   }
 
@@ -887,12 +912,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
 
   // ---------------------------------------------------------------- build
   kit.build(mats, group, { shadow: (k) => ['alc', 'nappa', 'tan', 'paint', 'carbon', 'plastic'].includes(k) });
-  // (the sport wheel's rim carbon: the same weave with a calmer reflection, so its top and bottom stay dark at night)
-  const sportW = T.wheel === 'gt' || T.wheel === 'corsa';
+  // (the luxury wheel's rim carbon: the same weave with a calmer reflection, so its top and bottom stay dark at night)
   // (and a finer weave than the dash's, 4 cm a repeat, so the rim reads as twill at phone size; the thread glows a
-  // little so the double stitching reads at night)
+  // little so the double stitching reads at night: the default sport wheel's too)
   const wStitch = M.stitch(stitchC, 0.25);
-  wk.build(sportW ? { ...mats, carbon: M.carbon(q, 0.04, { env: 0.55, cc: 0.09 }), stitch: wStitch, hubStitch: wStitch } : mats, wheelMount, { shadow: (k) => ['nappaPerf', 'wheelNappa', 'carbon'].includes(k) });
+  const wMats = T.wheelTier === 'luxury' ? { ...mats, carbon: M.carbon(q, 0.04, { env: 0.55, cc: 0.09 }), stitch: wStitch, hubStitch: wStitch } : T.wheelTier === 'sport' ? { ...mats, stitch: wStitch } : mats;
+  wk.build(wMats, wheelMount, { shadow: (k) => ['nappaPerf', 'wheelNappa', 'carbon'].includes(k) });
   // the sport wheel's parts by name (the suite looks for them): the dials' displays, the knurled rings, the thumb pads,
   // the 12 o'clock stripe
   // and the centre's parts
