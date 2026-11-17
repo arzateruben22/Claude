@@ -3433,8 +3433,15 @@ await group('phone', async (use) => {
     // at the frame's edges, about 0.6 % of it each, the left in the cabin's shade by the door in the open and under the
     // deck alike (0.92); then both places are measured again at full lock, where they cover 10 % and 5.6 %: 0.73 and
     // 0.70 there, and 1.0 and 1.0 with the deck test taken out of PlayerCar.updateSunShade, round 1's behaviour)
+    // (a sleeve the sun reaches in the open: its wrist's or elbow's visibility at least a half (sunShade: R knuckles,
+    // wrist, elbow, then the left's). One in the cabin's shade by the door in the open has only its fill share of the
+    // sun to lose under the deck, the sky's share staying: it is held to SHADED. Since the left elbow keeps inside the
+    // hypercar's door (car-shape armRoom, 2026-11-17) its sleeve shows 4.8 % of the frame held straight, in that shade
+    // (the sun 0 at its wrist and elbow): 0.90 under the deck after the phone group's earlier checks, 0.75 alone)
+    const lit = (o, side) => !!o.sun && Math.max(o.sun[side === 'L' ? 4 : 1], o.sun[side === 'L' ? 5 : 2]) >= 0.5;
+    const SHADED = 0.95;
     let open = await at(spot.s - 150), under = await at(spot.s), lock = '';
-    if (!(open.L && open.L.px / open.frame >= SLAB) && !(open.R && open.R.px / open.frame >= SLAB)) {
+    if (!['L', 'R'].some((sd) => open[sd] && open[sd].px / open.frame >= SLAB && lit(open, sd))) {
       lock = ` (straight: L ${pc((open.L?.px ?? 0) / open.frame)}, R ${pc((open.R?.px ?? 0) / open.frame)} of the frame, L ${open.L?.mean} to ${under.L?.mean}, R ${open.R?.mean} to ${under.R?.mean}; at full lock)`;
       open = await at(spot.s - 150, 0.6); under = await at(spot.s, 0.6);
       await game(page, () => { window.__game.phys.delta = 0; });
@@ -3448,7 +3455,8 @@ await group('phone', async (use) => {
     expect(cab < 0.85, `the cabin didn't go dark under the deck: ${msg}`);
     // (a sleeve under SLAB of the frame in the open is reported, not held to it)
     const big = (o) => o && o.px / open.frame >= SLAB, msg2 = `${msg}; in the open L ${pc((open.L?.px ?? 0) / open.frame)} of the frame, R ${pc((open.R?.px ?? 0) / open.frame)}`;
-    expect(L !== null && R !== null && (L < 0.88 || !big(open.L)) && (R < 0.88 || !big(open.R)) && (big(open.L) || big(open.R)), `the sleeves stayed lit under the deck: ${msg2}`);
+    const held = (r, sd) => !big(open[sd]) || r < (lit(open, sd) ? 0.88 : SHADED);
+    expect(L !== null && R !== null && held(L, 'L') && held(R, 'R') && ((big(open.L) && lit(open, 'L')) || (big(open.R) && lit(open, 'R'))), `the sleeves stayed lit under the deck: ${msg2}`);
     return msg2;
   });
   // the sport steering wheel (owner, 2026-11-09: "looks all fresh ... with the button widgets attached"): the Rossini GT,
