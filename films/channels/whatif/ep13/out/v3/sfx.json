@@ -175,21 +175,21 @@
    "dur": 1.4
   },
   {
-   "at": 34.633,
+   "at": 31.8,
    "kind": "riser",
    "gain": -3,
    "seed": 26,
    "dur": 4.03
   },
   {
-   "at": 38.163,
+   "at": 35.33,
    "kind": "boom",
    "gain": -4,
    "seed": 27,
    "dur": 2.2
   },
   {
-   "at": 40.0,
+   "at": 35.83,
    "kind": "tick",
    "gain": -3,
    "seed": 28

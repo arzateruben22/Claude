@@ -50,9 +50,9 @@
   {
    "line": "vo07",
    "kind": "cta",
-   "take": "V.cta_follow",
-   "sub_take": "V.cta_sub",
-   "text": "Hang on. If you're enjoying this, tap like and follow. Okay, back to the math."
+   "take": "V.ask_follow",
+   "sub_take": "V.ask_sub",
+   "text": "If you're enjoying this, tap like and follow."
   },
   {
    "line": "vo08",
@@ -60,13 +60,6 @@
    "take": "V.p1_cliff",
    "sub_take": null,
    "text": "And then the spin has only just begun to speed up."
-  },
-  {
-   "line": "vo09",
-   "kind": "closer",
-   "take": "V.c1",
-   "sub_take": null,
-   "text": "Part one of eight. Full video on YouTube."
   }
  ]
 }
