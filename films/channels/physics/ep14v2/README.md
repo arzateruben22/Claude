@@ -21,3 +21,13 @@ Physics: the fly's wings measured 2.0 beats/s at 100x (correct); the mosquito 5/
 - The silent like/follow pop-up moved to 35.9 s (the gap after "Tiny droplets pinch free."); even part: no spoken ask.
 - Mix -16.8 LUFS. Rebuild: `src/build.sh` (picture, bed, voice, C2), `src/voice_place.py`, `src/mix.py`, `src/post2.sh` (1440 file + pop-ups).
 - Mishears by the recogniser ("to a second", "tidal pool") are not the owner's words; the take matches the captions.
+
+## 17 Nov 2026 (later): smoother joins (owner: "a smoother transition from fly to mosquito and then to the water faucet")
+- fly -> mosquito: a 1.2 s smoothstep dissolve (it was a 0.7 s left wipe). Both shots share the counter and the kitchen, only the creature
+  changes, so a soft dissolve reads as one scene.
+- mosquito -> faucet: a 0.9 s camera pan to the right with motion blur (`src/whip.py`: the two shots slid along one strip on a smootherstep
+  ease, 8 sub-frames of blur), toward the mug on the right edge of the mosquito shot (it was a 0.8 s down-wipe).
+- The overlaps are longer (1.2 s + 0.9 s), so everything after the cuts is 0.6 s earlier than the first narration build: the film is
+  51.5 s, the captions/voice lines are re-placed (`src/voice_place2.py`), the closer C2 is at 47.7 s, the silent pop-up at 35.4 s.
+  `src/build2.sh` rebuilds everything (picture, pan, bed, voice, mix, 1440 file, pop-ups). Mix -16.8 LUFS.
+
