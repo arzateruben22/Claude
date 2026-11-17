@@ -343,7 +343,7 @@ const HYPER: ShapeParams = {
   sidewall: 0.75, seatDrop: 0.15, seatX: 0.27, seatFwd: 0.1,
   // the driver's left arm in the narrow tub (owner, 2026-11-17, v23: "Left arm is still getting mixed in between the
   // black shadow"): the door card's face is 0.22 m out of the driver's centreline (0.19 m at the slimmed armrest,
-  // cockpit.ts), and a shirt sleeve at the elbow is about 5 cm round, so the left elbow keeps 0.14 m in and the
+  // cockpit.ts), and a shirt sleeve at the elbow is about 5 cm in radius, so the left elbow keeps 0.14 m in and the
   // shoulders 0.165 m (both were 0.23-0.24 m: the elbow 2 cm into the door, the forearm behind its armrest)
   armRoom: 0.14,
   // the seat camera, 1 cm higher and 12 cm further forward than that eye (the driver leaning in): the header's lip
