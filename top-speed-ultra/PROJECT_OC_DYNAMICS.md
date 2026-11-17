@@ -7,7 +7,8 @@ states and slip-ratio controllers for ABS and traction control, builds the hyper
 `claude/hypercar` only set values, designs the swept traffic contact, and sets the invariants and the test plan.
 
 Rules carried from the owner: semi-real drifting; the OC Hypercar Founder Edition is the fastest car with the best
-handling and traction, with its own ability (Cold Thrust, Ground Lock, Thrust Hop); the two-tune rule (Unleashed only in
+handling and traction, with its own ability (Cold Thrust, Ground Lock, Thrust Hop; Cold Thrust was removed on 2026-11-16, THRUST is now the
+jump only); the two-tune rule (Unleashed only in
 Free Drive, the race tune at or under the Rossini Corsa on every measured number in every scored mode, ability off); the
 profiles Arcade 0.15, Sport 0.5, Simulation 0.9 on the handling slider, which stays the source of truth; our own names
 only; every number here was measured, and the method is stated with it.
@@ -451,7 +452,8 @@ export interface CarDef {
 `ext = { fx: 0, fz: 0 }` on the instance, both in newtons. The physics **never writes** them; the caller owns them
 and writes them every step (`Game.simulate` sets `p.ext.fx = thrust`, `p.ext.fz = fan`, or 0, from the ability
 state before `p.step`). `ext.fx` is a body force along x added to `Fx` on the ground and in the air (Cold Thrust:
-`m·(2.0 g·(1 − smoothstep(0, 80, v)) + 0.05 g)` as the plan has it). `ext.fz` is added to the axle loads 45/55
+`m·(2.0 g·(1 − smoothstep(0, 80, v)) + 0.05 g)` as the plan has it). Since 2026-11-16 Cold Thrust is gone and the caller holds
+`ext.fx` at 0; the term stays in the physics, unused. `ext.fz` is added to the axle loads 45/55
 before load sensitivity (§2.2), so it feeds the traction limit, the lateral capacity and the ABS/TC through `Fz`.
 
 ### 4.4 All-wheel drive: `driveFront`

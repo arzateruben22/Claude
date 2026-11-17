@@ -1,4 +1,4 @@
-// Cold Thrust's jets: white condensation with an ice-blue tint, streaming back from the two nozzles in the hypercar's
+// The Thrust Hop's jets (the gas puffed at take-off; THRUST is the jump only since 2026-11-16, so no held jet): white condensation with an ice-blue tint, streaming back from the two nozzles in the hypercar's
 // diffuser. A fixed pool of camera-facing sprites (about 24 a nozzle on the desktop build, 12 on the phone build), all
 // in one instanced draw call, each stretched along the jet and fading over 0.4 s. Positions are kept in world
 // coordinates (so the plume stays where the gas went as the car drives on, and survives the origin's rebase) and
@@ -173,13 +173,14 @@ export class ThrustJets {
   // a short burst from both nozzles, angled down (the hop's take-off)
   puff(seconds = 0.35) { this.puffT = seconds; }
 
-  // dt: frame time; thrust 0..1; nozzles: the two nozzle positions in render coordinates (null when the car has none);
-  // fx, fz: the car's forward direction; cvx, cvz: its world velocity (m/s); daylight 0..1
-  update(dt: number, thrust: number, nozzles: THREE.Vector3[] | null, fx: number, fz: number, cvx: number, cvz: number, daylight: number) {
+  // dt: frame time; nozzles: the two nozzle positions in render coordinates (null when the car has none); fx, fz: the
+  // car's forward direction; cvx, cvz: its world velocity (m/s); daylight 0..1. Gas flows only in the hop's puff (THRUST
+  // is the jump only since 2026-11-16: no held thrust)
+  update(dt: number, nozzles: THREE.Vector3[] | null, fx: number, fz: number, cvx: number, cvz: number, daylight: number) {
     const n = this.n, half = n / 2;
     if (this.puffT > 0) this.puffT = Math.max(0, this.puffT - dt);
-    const emit = nozzles && nozzles.length === 2 ? Math.max(thrust, this.puffT > 0 ? 1 : 0) : 0;
-    // emission: enough to keep each nozzle's pool full at full thrust (pool / life per second, per nozzle)
+    const emit = nozzles && nozzles.length === 2 && this.puffT > 0 ? 1 : 0;
+    // emission: enough to keep each nozzle's pool full while it flows (pool / life per second, per nozzle)
     if (emit > 0.02 && dt > 0) {
       this.acc += dt * (half / LIFE) * 2 * emit;
       const down = this.puffT > 0 ? 0.45 : 0.04;
@@ -218,7 +219,7 @@ export class ThrustJets {
     else this.aPar.needsUpdate = true;
     this.mat.uniforms.uLight.value = 0.12 + 0.88 * daylight;
     this.mat.uniforms.uGlow.value = 0.12 + 0.5 * (1 - daylight);
-    // the cones: the flow follows the valve (and the hop's puff), and they draw only while gas flows
+    // the cones: the flow follows the hop's puff, and they draw only while gas flows
     const cm = coneMaterial(), flow = nozzles ? emit : 0;
     this.time += dt;
     cm.uniforms.uFlow.value = flow; cm.uniforms.uTime.value = this.time % 1000;

@@ -1,5 +1,7 @@
-// The store: optional looks, sold honestly. The catalog (src/store/catalog.json) grouped by kind, each item's price
-// and what it unlocks, what you own, Restore purchases, and a checkout sheet. In TEST MODE the sheet takes Stripe's
+// The store: optional extras, sold honestly. The catalog's listed items (src/store/catalog.json; catalog.ts STORE_LIST,
+// the owner's trim of 2026-11-16 and its update of 2026-11-17: a character pack when there is one, the Founders package
+// as a "coming soon" card with no way to pay, and the OC Hypercar Founder Edition), each with its price and what it unlocks; what you own (including
+// unlisted items bought before the trim), Restore purchases, and a checkout sheet. In TEST MODE the sheet takes Stripe's
 // test cards and nothing is charged; live, it hands you to Stripe's own checkout page (src/store/payments.ts).
 // The rules it shows, from PROJECT_OC_MONETIZATION.md: looks only; a licence, not ownership (California AB 2426);
 // 13+ with a neutral age question, and a parent's or guardian's OK under 18; a subscription's terms before its
@@ -11,7 +13,7 @@ import { cloneElement, useEffect, useId, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 import type { Game } from '../game/Game';
 import { CONFIG } from '../store/config';
-import { CATALOG, KINDS, FOUNDER_SKU, HYPERCAR_SKU, Sku, Entitlement, saleState, priceLine, money, carFor, CAR_NAMES, entById, skuById, grantLine, windowDate } from '../store/catalog';
+import { STORE_LIST, FOUNDER_SKU, HYPERCAR_SKU, Sku, Entitlement, saleState, priceLine, money, carFor, CAR_NAMES, entById, skuById, grantLine, windowDate } from '../store/catalog';
 import * as account from '../store/account';
 import { has, ownsSku, receipts, restore, list, serialOf, serialLabel, Receipt } from '../store/entitlements';
 import { checkout, formatCard, formatExpiry, confirmReturn, onSaleFromServer, cleanRollName, ReturnState } from '../store/payments';
@@ -60,9 +62,6 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
   }, []);
 
   const s = account.current(), age = account.ageState(), garage = game.profile.p.vehicles;
-  const founder = skuById(FOUNDER_SKU);
-  const founderOn = !!founder && saleState(founder).ok;
-  // the hypercar's card: on sale, "Coming soon" until it is, and after the window only for the people who own it
   const hyper = skuById(HYPERCAR_SKU);
   const hyperOn = !!hyper && saleState(hyper).ok;
   const hyperSale = hyper ? saleState(hyper) : null;
@@ -75,6 +74,24 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
     if (serverSale && !serverSale.has(it.sku)) return 'On sale once it is in the game';
     return null;
   };
+  // the hypercar's own card: on sale, "Coming soon" until it is, and after the window only for the people who own it
+  const hyperCard = () => (!hyper || !hyperShown ? null : (
+    // not the class 'soon': that is the main menu's coming-soon tile (styles.css), a two-column grid
+    <section key={hyper.sku} className={'store-founder store-hyper' + (hyperSoon ? ' is-soon' : '')} data-sku={hyper.sku} data-soon={hyperSoon ? 'true' : undefined} aria-labelledby="store-hyper-h">
+      <p className="store-founder-when">Founder Edition · sold until {windowDate(hyper, 'short')}</p>
+      <div className="store-founder-head">
+        <h3 id="store-hyper-h">{hyper.name}</h3>
+        <Price item={hyper} soon={hyperSoon} />
+      </div>
+      <p className="store-desc">{hyper.description}</p>
+      <p className="store-q small">Comes with</p>
+      <Grants item={hyper} shows={false} />
+      {/* (the Founder Pack isn't in the store any more: the line keeps the two apart for the people who have it) */}
+      {ownsSku(FOUNDER_SKU) && <p className="store-hyper-not">Your Founder Pack does not include this car, and this car does not include the pack's Founder '26 badge or Founders Sunset paint.</p>}
+      {!hyperSoon ? <Action item={hyper} locked={lockedWhy(hyper)} onBuy={buy} />
+        : <><p className="store-act"><em className="store-soon">Coming soon</em></p><p className="fine store-soon-why">{hyperSale && !hyperSale.ok ? hyperSale.why + ' ' : ''}No pre-orders.</p></>}
+    </section>
+  ));
   const buy = (sku: string) => { setNote(null); setSheet({ sku, preview: false }); };
   const doRestore = async () => {
     setBusy(true);
@@ -94,8 +111,8 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
             ? <div className="store-mode live" role="note"><b>Secure checkout</b><span>Stripe's own page takes your card, Apple Pay or Google Pay. We never see your card.</span></div>
             : <div className="store-mode" role="note"><b>Test mode</b><span>Nothing is charged. Use 4242 4242 4242 4242.</span></div>}
           {hyperShown
-            ? <p className="store-lede">Optional looks for your car and your driver, and one founder car. The looks change nothing about how any car drives or scores. The OC Hypercar Founder Edition is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}); everywhere else it runs at or under the Rossini Corsa. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>
-            : <p className="store-lede">Optional looks for your car and your driver. Nothing here changes how any car drives or scores. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>}
+            ? <p className="store-lede">One founder car, and looks for every car once they're in the game. The looks change nothing about how any car drives or scores. The OC Hypercar Founder Edition is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}); everywhere else it runs at or under the Rossini Corsa. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>
+            : <p className="store-lede">Optional looks for every car. Nothing here changes how any car drives or scores. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>}
 
           <Account signin={signin} setSignin={setSignin} busy={busy} onRestore={() => void doRestore()} />
           {note && <p className={'store-note ' + note.kind} role="status">{note.text}</p>}
@@ -104,56 +121,10 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
 
           {owned.length > 0 && <Locker game={game} />}
 
-          {founder && founderOn && (
-            <section className="store-founder" data-sku={founder.sku} aria-labelledby="store-founder-h">
-              <p className="store-founder-when">For launch players · sold until {windowDate(founder)}, then never again</p>
-              <div className="store-founder-head">
-                <h3 id="store-founder-h">{founder.name}</h3>
-                <Price item={founder} />
-              </div>
-              <p className="store-desc">{founder.description}</p>
-              <Grants item={founder} />
-              <Action item={founder} locked={lockedWhy(founder)} onBuy={buy} />
-            </section>
-          )}
-
-          {hyper && hyperShown && (
-            // not the class 'soon': that is the main menu's coming-soon tile (styles.css), a two-column grid
-            <section className={'store-founder store-hyper' + (hyperSoon ? ' is-soon' : '')} data-sku={hyper.sku} data-soon={hyperSoon ? 'true' : undefined} aria-labelledby="store-hyper-h">
-              <p className="store-founder-when">Founder Edition · sold until {windowDate(hyper, 'short')}</p>
-              <div className="store-founder-head">
-                <h3 id="store-hyper-h">{hyper.name}</h3>
-                <Price item={hyper} />
-              </div>
-              <p className="store-desc">{hyper.description}</p>
-              <p className="store-q small">Comes with</p>
-              <Grants item={hyper} shows={false} />
-              <p className="store-hyper-not">The $10 Founder Pack does not include this car, and this car does not include the pack's Founder '26 badge or Founders Sunset paint.</p>
-              {!hyperSoon ? <Action item={hyper} locked={lockedWhy(hyper)} onBuy={buy} />
-                : <><p className="store-act"><em className="store-soon">Coming soon</em></p><p className="fine store-soon-why">{hyperSale && !hyperSale.ok ? hyperSale.why + ' ' : ''}No pre-orders.</p></>}
-            </section>
-          )}
-
-          {KINDS.map(({ kind, label, blurb }) => {
-            const items = CATALOG.filter((it) => it.kind === kind && it.sku !== FOUNDER_SKU && it.sku !== HYPERCAR_SKU && saleState(it).ok);
-            if (!items.length) return null;
-            return (
-              <section key={kind} className="store-group" aria-labelledby={'store-g-' + kind}>
-                <h3 className="sect" id={'store-g-' + kind}>{label}</h3>
-                {blurb && <p className="fine">{blurb}</p>}
-                <div className="store-items">
-                  {items.map((it) => (
-                    <article key={it.sku} className={'store-item' + (ownsSku(it.sku) ? ' owned' : '')} data-sku={it.sku}>
-                      <div className="store-item-head"><h4>{it.name}</h4><Price item={it} small={it.kind === 'tip'} /></div>
-                      <p className="store-desc">{it.description}</p>
-                      <Grants item={it} />
-                      <Action item={it} locked={lockedWhy(it)} onBuy={buy} />
-                    </article>
-                  ))}
-                </div>
-              </section>
-            );
-          })}
+          {/* the store's one list, in the owner's order (catalog.ts STORE_LIST): a character pack when there is one, the
+              Founders package, the OC Hypercar Founder Edition. Everything else in the catalog is unlisted: not shown, not
+              sold, and still yours (Your items above) if you have it */}
+          {STORE_LIST.map((it) => (it.sku === HYPERCAR_SKU ? hyperCard() : <Item key={it.sku} it={it} locked={lockedWhy(it)} onBuy={buy} />))}
 
           <Terms />
           <p className="fine">{CONFIG.live ? 'Payments by Stripe. Receipts come from Stripe by email.' : 'This store build is in test mode: live payments need the owner\'s Stripe and Supabase accounts.'} {s ? '' : CONFIG.live ? 'Signing in sends your email to our database host (Supabase); playing never needs it.' : 'In test mode your email stays on this device.'}</p>
@@ -175,11 +146,12 @@ function Field({ label, children }: { label: string; children: ReactElement }) {
 // Every price carries the test-mode notice right under it, not only the banner at the top of the store, so a price is
 // never on screen without it (CLAUDE.md: test mode until the owner connects Stripe and says live; nothing is charged).
 const TEST_TAG = 'Test mode · nothing is charged';
-function Price({ item, small = false }: { item: Sku; small?: boolean }) {
+// a coming-soon card (`soon`) shows its planned price without the test-mode notice: there is nothing to pay for yet
+function Price({ item, small = false, soon = false }: { item: Sku; small?: boolean; soon?: boolean }) {
   return (
     <div className="store-pricebox">
       <p className={'store-price' + (small ? ' small' : '')}>{priceLine(item)}</p>
-      {!CONFIG.live && <p className="store-test-tag">{TEST_TAG}</p>}
+      {!CONFIG.live && !soon && <p className="store-test-tag">{TEST_TAG}</p>}
     </div>
   );
 }
@@ -205,6 +177,24 @@ function Grants({ item, shows = true }: { item: Sku; shows?: boolean }) {
     </>
   );
 }
+// a listed item's card: on sale, its price, what it unlocks and Buy; listed but not built yet, a "coming soon" card with
+// its planned price and no way to pay (nothing is sold, or pre-sold, before it exists in the game); a sale window that
+// has closed shows it only to the people who own it
+function Item({ it, locked, onBuy }: { it: Sku; locked: string | null; onBuy: (sku: string) => void }) {
+  const sale = saleState(it), owned = ownsSku(it.sku);
+  if (it.window && Date.now() > Date.parse(it.window.until) && !owned) return null;
+  const soon = !sale.ok && !owned;
+  return (
+    <article className={'store-item' + (owned ? ' owned' : '') + (soon ? ' is-soon' : '')} data-sku={it.sku} data-soon={soon ? 'true' : undefined}>
+      <div className="store-item-head"><h4>{it.name}</h4><Price item={it} small={it.kind === 'tip'} soon={soon} /></div>
+      <p className="store-desc">{it.description}</p>
+      {soon
+        ? <><p className="store-act"><em className="store-soon">Coming soon</em></p><p className="fine store-soon-why">{!sale.ok ? sale.why + ' ' : ''}No pre-orders.</p></>
+        : <><Grants item={it} /><Action item={it} locked={locked} onBuy={onBuy} /></>}
+    </article>
+  );
+}
+
 function Action({ item, locked, onBuy }: { item: Sku; locked: string | null; onBuy: (sku: string) => void }) {
   if (item.kind !== 'tip' && ownsSku(item.sku)) return <p className="store-act"><em className="store-owned">Owned</em></p>;
   if (locked) return <p className="store-act"><em className="store-locked">{locked}</em></p>;
