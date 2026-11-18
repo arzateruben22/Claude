@@ -15,13 +15,13 @@ A = {s["k"]: s for s in json.loads((SP / "cutA/lines.json").read_text())["senten
 V = json.loads((SP / "cutV/phrases.json").read_text())
 CONFIG = {
  1: dict(items=[("open", "V", "p1_open"), ("sent", "A", 71), ("sent", "A", 72), ("sent", "A", 4), ("sent", "A", 12), ("sent", "A", 13), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p1_cliff")], hook="How fast before you float off?"),
- 3: dict(items=[("open", "V", "p3_open"), ("sent", "A", 23), ("sent", "S", "u_ground"), ("sent", "S", "u_gust"), ("sent", "A", 26), ("sent", "A", 27), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p3_cliff")], hook="The air can't keep up"),
+ 3: dict(items=[("open", "V", "p3_open"), ("sent", "A", 23), ("sent", "S", "u_ground"), ("sent", "S", "u_gust"), ("sent", "A", 26), ("sent", "A", 27), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p3_cliff")], hook=" "),
  4: dict(items=[("open", "V", "p4_open"), ("sent", "A", 29), ("sent", "S", "u_sea"), ("sent", "S", "u_depth"), ("sent", "A", 32), ("sent", "A", 33), ("cliff", "V", "p4_cliff"), ("closer", "V", "c4")], hook="Then the oceans move"),
  5: dict(items=[("open", "V", "p5_open"), ("sent", "A", 34), ("sent", "A", 35), ("sent", "A", 36), ("sent", "A", 37), ("sent", "A", 38), ("sent", "S", "u_eq6"), ("sent", "A", 40), ("sent", "A", 41), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p5_cliff")], hook="Storms are steered by the spin"),
  6: dict(items=[("open", "V", "p6_open"), ("sent", "A", 43), ("sent", "A", 44), ("sent", "A", 45), ("sent", "A", 46), ("sent", "A", 47), ("sent", "A", 48), ("cliff", "V", "p6_cliff"), ("closer", "V", "c6")], hook="The calendar breaks"),
  7: dict(items=[("open", "V", "p7_open"), ("sent", "A", 49), ("sent", "S", "u_speed3"), ("sent", "S", "u_w3"), ("sent", "A", 52), ("sent", "S", "u_jump2"), ("sent", "A", 54), ("sent", "A", 55), ("cta", "V", "ask_follow", "ask_sub"), ("cliff", "V", "p7_cliff")], hook="Three hours, then two"),
  8: dict(items=[("open", "V", "p8_open"), ("sent", "S", "u_w15"), ("sent", "S", "u_jump15"), ("sent", "A", 58), ("cliff", "V", "p8_cliff"), ("closer", "V", "c8")], hook="Almost weightless"),
- 2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook="A 12-hour day"),
+ 2: dict(items=[("open", "V", "p2_open")] + [("sent", "A", k) for k in (17, 18, 20, 21)] + [("cliff", "V", "p2_cliff"), ("closer", "V", "c2")], hook=" "),
 }[N]
 TITLES = ["What If Earth Spun Faster?", "The day is shrinking fast", "The air can't keep up", "Then the oceans move", "Storms are steered by the spin", "The calendar breaks", "Three hours, then two", "Almost weightless"]
 SI = json.loads((HERE / "standin/lines.json").read_text())
@@ -71,7 +71,7 @@ GAP = 0.9                                                  # a pause between lin
 plan = {}
 for it in items:
     pre, hold = 0.1, GAP - 0.1
-    if it["kind"] == "open": pre, hold = 0.2, (2.0 if N == 2 else GAP)
+    if it["kind"] == "open": pre, hold = (2.6 if N in (2, 3) else 0.2), (2.0 if N == 2 else GAP)      # P2/P3: a cold open of picture first (18 Nov formula)
     if it["kind"] == "closer": pre, hold = 0.0, 0.0
     if it["kind"] == "cta": pre, hold = 0.15, GAP - 0.1
     if N == 2 and it["uid"] in ("s17", "s20"): hold = 3.2        # picture beats carried by sound effects
@@ -92,7 +92,7 @@ def t_of(uid, off=0.0): return lines_by[vo[uid]]["t"] + off
 def t_end_of(uid): return lines_by[vo[uid]]["t"] + lines_by[vo[uid]]["dur"]
 sent = [it for it in items if it["kind"] == "sent"]
 _cl = [l for l in f.lines if LINE[l["id"]]["kind"] == "closer"]; t_end = At(f"{_cl[0]['id']}:Full", -0.2) if _cl else round(f.lines[-1]["t"] + f.lines[-1]["dur"] + 0.5, 3)      # odd parts: no closer, the end card follows the cliffhanger
-WW = []; FLASH = None; FX = {}
+WW = []; FLASH = None; FX = {}; MONO = None
 def U(u): return t_of(u)
 if N == 1:
     FL0 = round(At(f"{vo['s71']}:seventeen", -0.1), 3); FL1 = round(t_end_of("s71") + 1.3, 3); FLASH = {"t0": FL0, "t1": FL1}
@@ -103,11 +103,12 @@ if N == 1:
     CHIPS = [{"t0": round(BS + 1.5, 3), "t1": round(BS + 3.3, 3), "text": "Already faster than sound (767 mph)"}, {"t0": round(U("s12") + 1.9, 3), "t1": round(t_end_of("s12") + 0.5, 3), "text": "\u2248 a phone lighter"}]
     HUD3 = {"bar_t0": round(FL1 + 0.1, 3), "weight_t0": round(U("s12") - 0.1, 3), "speed": {"t0": BS, "t1": round(t_end_of("s12") + 0.4, 3)}}
 elif N == 3:
-    KEYS = [[0.0, 23.934], [round(f.duration, 3), 23.934]]; FX = {"wind": [round(U("s23") - 0.2, 3), round(t_end_of("s27") + 0.8, 3)]}
-    RP = {"open": ("lean", "squint"), "s23": ("lean", "squint"), "u_ground": ("lean", "wide"), "u_gust": ("lean", "squint"), "s26": ("lean", "wide"), "s27": ("lean", "squint"), "cta": ("armsOut", "happy"), "cliff": ("lookUp", "awe")}
-    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
-    CHIPS = [{"t0": round(U("u_ground") + 0.4, 3), "t1": round(t_end_of("u_ground") + 0.3, 3), "text": "Ground through the air: 1,040 mph"}, {"t0": round(U("u_gust") + 0.4, 3), "t1": round(t_end_of("u_gust") + 0.3, 3), "text": "Strongest gust ever: 250 mph"},
-             {"t0": round(U("s26") + 0.5, 3), "t1": round(U("s26") + 3.6, 3), "text": "4\u00d7 faster"}]
+    KEYS = [[0.0, 23.934], [round(f.duration, 3), 23.934]]; FX = {"wind": [0.2, round(t_end_of("s27") + 0.8, 3)]}
+    MONO = {"x": 0.36, "cup": {"t1": 3.4}, "slosh": [[0.0, 0.5], [0.6, 1.0]], "spill": [[0.0, 0.0], [0.6, 1.0]], "wind": [[0.0, 1.0], [round(f.duration, 3), 1.0]], "rip": {"t0": 0.75, "t1": 2.05}, "hat": {"t0": 1.5, "t1": 3.3}}
+    RP = {"open": ("lean", "wide"), "s23": ("lean", "squint"), "u_ground": ("lean", "wide"), "u_gust": ("lean", "squint"), "s26": ("lean", "wide"), "s27": ("lean", "squint"), "cta": ("armsOut", "happy"), "cliff": ("lookUp", "awe")}
+    CAMS = [{"t0": 0.0, "mode": "prop"}, {"t0": round(U("cta") - 0.2, 3), "mode": "wide"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
+    CHIPS = [{"t0": 0.55, "t1": 2.45, "text": "1,040 mph"}, {"t0": round(U("u_ground") + 0.4, 3), "t1": round(t_end_of("u_ground") + 0.3, 3), "text": "Ground through the air: 1,040 mph"}, {"t0": round(U("u_gust") + 0.4, 3), "t1": round(t_end_of("u_gust") + 0.3, 3), "text": "Strongest gust ever: 250 mph"},
+             {"t0": round(U("s26") + 0.5, 3), "t1": round(U("s26") + 3.6, 3), "text": "4\u00d7 faster"}, {"t0": round(U("s27") + 0.3, 3), "t1": round(t_end_of("s27") + 0.4, 3), "text": "Mono's cap: gone"}]
     HUD3 = {"speed": {"mph": 1040, "t0": round(U("u_ground") - 0.1, 3), "t1": round(t_end_of("u_gust") + 0.4, 3)}}
 elif N == 4:
     KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]; FX = {"ocean": [round(U("s29") + 2.0, 3), round(t_end_of("s33") + 0.5, 3)]}
@@ -144,13 +145,16 @@ elif N == 8:
     CHIPS = [{"t0": round(U("u_w15") + 1.6, 3), "t1": round(t_end_of("u_w15") + 0.4, 3), "text": "150 lb feels like 18 lb"}, {"t0": round(U("u_jump15") + 0.5, 3), "t1": round(t_end_of("u_jump15") + 0.3, 3), "text": "1.5 ft jump \u2192 13 ft"}]
     HUD3 = {"weight_t0": round(U("u_w15") - 0.3, 3)}
 else:
-    KEYS = [[0.0, 12.0], [round(f.duration, 3), 12.0]]
-    RP = {"open": ("lookUp", "awe"), "s17": ("lookUp", "wide"), "s18": ("lookUp", "neutral"), "s20": ("float", "happy"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
-    CAMS = [{"t0": 0.0, "mode": "ground"}, {"t0": round(U("s18") - 0.2, 3), "mode": "wide"}, {"t0": round(t_end_of("s18") - 0.2, 3), "mode": "push"}, {"t0": round(U("s21") - 0.2, 3), "mode": "ground"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "base"}]
+    KEYS = [[0.0, 1.4], [1.9, 1.4], [2.7, 12.0], [round(f.duration, 3), 12.0]]
+    MONO = {"x": 0.36, "cup": {"t1": 1e9}, "slosh": [[0.0, 0.0], [round(U("s20") - 0.2, 3), 0.1], [round(U("s20") + 1.2, 3), 1.0], [round(t_end_of("s21") + 0.5, 3), 0.7], [round(U("cliff"), 3), 0.2]], "spill": [[0.0, 0.0], [round(U("s20") + 0.6, 3), 0.0], [round(U("s20") + 1.8, 3), 1.0], [round(t_end_of("s21"), 3), 0.0]],
+            "wind": [[0.0, 0.0], [round(U("cliff") - 0.2, 3), 0.0], [round(U("cliff") + 1.0, 3), 1.0]], "hat": {"t0": 1e9, "t1": 1e9 + 1}}
+    RP = {"open": ("hips", "blink"), "s17": ("hips", "blink"), "s18": ("stand", "blink"), "s20": ("stand", "wide"), "s21": ("hips", "blink"), "cta": ("armsOut", "happy"), "cliff": ("lean", "squint"), "tease": ("stand", "happy")}
+    CAMS = [{"t0": 0.0, "mode": "prop"}, {"t0": round(U("s18") - 0.2, 3), "mode": "push"}, {"t0": round(U("s21") - 0.2, 3), "mode": "prop"}, {"t0": round(U("cliff") - 0.2, 3), "mode": "push"}]
     BS = round(t_end_of("s18") + 0.3, 3)
-    CHIPS = [{"t0": round(U("s17") + 0.4, 3), "t1": round(t_end_of("s17") + 0.3, 3), "text": "6 h of daylight"}, {"t0": round(U("s18") + 0.3, 3), "t1": round(t_end_of("s18") + 0.3, 3), "text": "Sun at hour-hand speed"},
-             {"t0": round(BS + 1.4, 3), "t1": round(BS + 3.3, 3), "text": "\u22482,080 mph \u00b7 nearly 3\u00d7 the speed of sound"}, {"t0": round(U("s21") + 0.2, 3), "t1": round(t_end_of("s21") + 0.4, 3), "text": "8 h of sleep won't fit"}]
-    HUD3 = {"bar_t0": round(U("s17"), 3), "weight_t0": round(U("s20") - 0.2, 3), "speed": {"t0": BS, "t1": round(t_end_of("s20") + 0.2, 3)}}
+    CHIPS = [{"t0": 0.5, "t1": 2.45, "text": "Mono is asleep"}, {"t0": round(U("s17") + 0.4, 3), "t1": round(t_end_of("s17") + 0.3, 3), "text": "Day 6 h \u00b7 Night 6 h"},
+             {"t0": round(BS + 1.4, 3), "t1": round(BS + 3.3, 3), "text": "\u22482,080 mph \u00b7 nearly 3\u00d7 the speed of sound"}, {"t0": round(U("s20") + 1.0, 3), "t1": round(t_end_of("s20") + 1.4, 3), "text": "Even the coffee leans"},
+             {"t0": round(U("s21") + 0.2, 3), "t1": round(t_end_of("s21") + 0.5, 3), "text": "Mono: five more minutes"}]
+    HUD3 = {"bar_t0": round(U("s17"), 3), "weight_t0": round(U("s20") - 0.2, 3), "speed": {"mph": 2080, "t0": BS, "t1": round(t_end_of("s20") + 0.2, 3)}}
 ROBOT = []
 for it in items:
     p, e = RP.get(it["uid"], ("stand", "neutral")); ROBOT.append({"t": round(max(0.0, t_of(it["uid"]) - 0.3), 3), "pose": p, "expr": e})
@@ -180,7 +184,7 @@ film = {"id": f"possibility-lab-earth-spin-part{N}-v3", "theme": "../../../../th
         "poster": round(min(f.duration - 6, BEATS[len(BEATS) // 2]["t0"]), 4), "shots": SHOTS, "beats": BEATS,
         "world": {"cycleS": 16.0, "keys": KEYS, "dry": [[0.0, 90.0], [round(f.duration, 3), 90.0]], "tOrbH": T_ORB / 3600, "t0H": 23.934, "rEq": R_EQ / 1000, "gm": 3.986004418e14, "eNow": E_NOW, "eOrb": E_ORB, "weightWins": WW},
         "disclosures": {"aiVoice": (N == 3), "realVoice": True, "aiIllustration": True}, "cue": CUE, "badges": BADGES, "title": TITLE, "endCard": t_end, "end": END, "endAnswer": "", "spineHide": [], "spine": [], "spineOut": 0, "labels": [], "counters": [], "work": None, "cam": {},
-        "cams": CAMS, "fx": (FX if N == 3 else {}), "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": 2.9}, "hud3": HUD3, "chips": CHIPS, "flash": FLASH,
+        "cams": CAMS, "fx": (FX if N == 3 else {}), "mono": MONO, "robot": ROBOT, "hook": {"text": CONFIG["hook"], "t0": 0.1, "t1": (2.5 if N in (2, 3) else 2.9)}, "hud3": HUD3, "chips": CHIPS, "flash": FLASH,
         "captions": captions, "voice": [{"id": ln["id"], "t": ln["t"], "dur": ln["dur"], "file": ln["file"], "text": ln["text"]} for ln in f.lines]}
 ev = [{"t": b["t0"], "kind": "section", "id": b["id"], "t1": b["t1"]} for b in BEATS if b["id"] != "tease"]; ev.append({"t": t_end, "kind": "signature", "tag": "end"})
 sheet = {"duration": f.duration, "fps": FPS, "preset": "envelope-working", "tail_s": 0.05, "sections": [{"id": b["id"], "t0": b["t0"], "t1": b["t1"], "energy": b["energy"]} for b in BEATS],

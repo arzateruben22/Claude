@@ -224,6 +224,48 @@ const fmtT = (T) => T >= 10 ? Math.round(T) + " h" : T >= 1.995 ? T.toFixed(1) +
 
 // ── staging ─────────────────────────────────────────────────────────────────
 const UPV = new THREE.Vector3(0, 1, 0);
+
+// ── Mono's props (P2/P3, 18 Nov): a coffee mug on a small table that sloshes and, in Part 3, is ripped away by the wind; Mono's magenta cap goes with it (film.json "mono") ──
+const MONO = FILM.mono || null;
+let monoObjs = null;
+if (MONO && bot) {
+  const g = new THREE.Group(), mugM = new THREE.MeshPhysicalMaterial({ color: "#f4f5f7", roughness: 0.25, clearcoat: 0.9, clearcoatRoughness: 0.12, envMapIntensity: 1.0, side: THREE.DoubleSide });
+  const prof = [[0, 0], [0.05, 0], [0.056, 0.01], [0.062, 0.09], [0.066, 0.096], [0.058, 0.096], [0.052, 0.088], [0.046, 0.012], [0, 0.01]].map(([r, y]) => new THREE.Vector2(r, y));
+  const body = new THREE.Mesh(new THREE.LatheGeometry(prof, 36), mugM); g.add(body);
+  const handle = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.008, 10, 24, Math.PI * 1.25), mugM); handle.position.set(0.066, 0.055, 0); handle.rotation.z = -Math.PI * 0.62; g.add(handle);
+  const coffee = new THREE.Mesh(new THREE.CircleGeometry(0.049, 28), new THREE.MeshPhysicalMaterial({ color: "#2b160b", roughness: 0.12, clearcoat: 1, envMapIntensity: 1.2 })); coffee.rotation.x = -Math.PI / 2; coffee.position.y = 0.078; g.add(coffee);
+  const steam = Array.from({ length: 4 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.012, 10, 8), new THREE.MeshBasicMaterial({ color: new THREE.Color(unlit("#dfe9ff")), transparent: true, opacity: 0.4, depthWrite: false })); g.add(m); return m; });
+  const drops = Array.from({ length: 7 }, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.009, 8, 6), new THREE.MeshPhysicalMaterial({ color: "#2b160b", roughness: 0.1, clearcoat: 1 })); scene.add(m); m.visible = false; return m; });
+  const table = new THREE.Group(), tM = new THREE.MeshPhysicalMaterial({ color: "#26407a", roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 0.9 });
+  const top = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.012, 32), tM); top.position.y = 0.118; const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.115, 12), tM); leg.position.y = 0.058; const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.05, 0.01, 24), tM); foot.position.y = 0.005;
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.004, 8, 40), new THREE.MeshBasicMaterial({ color: new THREE.Color(unlit("#6fe0ff")) })); rim.rotation.x = Math.PI / 2; rim.position.y = 0.124; table.add(top, leg, foot, rim);
+  const capMat = new THREE.MeshPhysicalMaterial({ color: "#EB63FF", roughness: 0.3, clearcoat: 0.8, envMapIntensity: 0.9 }), capGeo = new THREE.SphereGeometry(0.33, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2);
+  const capHead = new THREE.Mesh(capGeo, capMat); capHead.scale.set(1, 0.62, 1); capHead.position.set(0, 0.17, -0.02); capHead.rotation.x = -0.12; bot.head.add(capHead);
+  const capFly = new THREE.Mesh(capGeo, capMat); capFly.scale.set(1, 0.62, 1); capFly.visible = false; scene.add(capFly);
+  scene.add(g, table); g.visible = table.visible = false;
+  monoObjs = { g, coffee, steam, drops, table, capHead, capFly, mugM };
+}
+const klerp = (K, t) => { if (t <= K[0][0]) return K[0][1]; for (let i = 0; i < K.length - 1; i++) if (t <= K[i + 1][0]) return K[i][1] + (K[i + 1][1] - K[i][1]) * clamp01((t - K[i][0]) / Math.max(1e-6, K[i + 1][0] - K[i][0])); return K[K.length - 1][1]; };
+const monoUpdate = (t, pcx, pcy, ysc, cam) => {
+  if (!monoObjs) return;
+  const { g, coffee, steam, drops, table, capHead, capFly } = monoObjs, k = ysc / 0.26, tx = pcx + MONO.x, gy = pcy + Math.sqrt(Math.max(0, 1 - MONO.x * MONO.x)), vis = t < MONO.cup.t1;
+  g.visible = vis; table.visible = true; table.position.set(tx, gy, 0); table.scale.setScalar(k);
+  const sl = klerp(MONO.slosh, t), wind = klerp(MONO.wind || [[0, 0]], t), rip = clamp01((t - (MONO.rip ? MONO.rip.t0 : 1e9)) / (MONO.rip ? MONO.rip.t1 - MONO.rip.t0 : 1));
+  // the mug: on the table; the coffee leans toward the rim as the spin rises; in P3 the wind rips it off
+  const baseY = gy + 0.124 * k;
+  let px = tx + 0.0, py = baseY, rz = 0, rx = 0;
+  if (rip > 0) { px += 1.9 * rip * rip * k; py += (0.42 * rip - 0.1 * rip * rip) * k; rz = -7.5 * rip; rx = 4 * rip; }
+  g.position.set(px, py, 0.01); g.scale.setScalar(k); g.rotation.set(rx, 0, rz);
+  coffee.position.x = 0.015 * sl + 0.01 * Math.sin(t * 6) * sl; coffee.rotation.z = 0.5 * sl * Math.sin(t * 5 + 1); coffee.rotation.x = -Math.PI / 2 + 0.25 * sl * Math.sin(t * 4.3);
+  steam.forEach((m, i) => { const u = ((t * 0.5 + i / 4) % 1); m.position.set(0.012 * Math.sin(u * 6 + i) + wind * 0.16 * u, 0.1 + 0.13 * u, 0); m.material.opacity = 0.42 * Math.sin(Math.PI * u); });
+  const spill = klerp(MONO.spill || [[0, 0]], t);
+  drops.forEach((m, i) => { const u = ((t * 0.9 + i / 7) % 1) * spill; m.visible = vis && spill > 0.02 && rip === 0; if (m.visible) m.position.set(px + (0.05 + 0.1 * u) * k, baseY + (0.095 + 0.1 * u - 0.5 * u * u) * k, 0.01); });
+  // the cap: on Mono's head, then blown off (relative to the head, so it stays a pure function of t)
+  const hu = MONO.hat ? clamp01((t - MONO.hat.t0) / (MONO.hat.t1 - MONO.hat.t0)) : 0;
+  capHead.visible = hu <= 0; capFly.visible = hu > 0 && hu < 1;
+  if (capFly.visible) { bot.group.updateMatrixWorld(true); capHead.visible = true; capHead.updateWorldMatrix(true, false); const p = new THREE.Vector3(), q = new THREE.Quaternion(), sc = new THREE.Vector3(); capHead.matrixWorld.decompose(p, q, sc); capHead.visible = false;
+    capFly.position.set(p.x + (1.6 * hu * hu + 0.1 * hu) * k, p.y + (0.5 * hu - 0.25 * hu * hu) * k, p.z); capFly.quaternion.copy(q); capFly.rotation.z -= 6.0 * hu; capFly.rotation.x += 3 * hu; capFly.scale.copy(sc); }
+};
 window.seek = function (t) {
   window.__t = t;
   const fxw0 = (k) => { const w = (FILM.fx || {})[k]; return w ? E.inout2(seg(t, w[0], w[0] + 1.5)) * (1 - E.inout2(seg(t, w[1] - 1.5, w[1]))) : 0; };
@@ -258,6 +300,7 @@ window.seek = function (t) {
       wide: { pcy: -0.35, c: [1.5 + 3 * sw, 0.9 + sh, 8.2], l: [0, -0.1, 0], fov: 34, fs: 0.8 },          // the whole planet with the light line
       hero: { pcy: -0.62, c: [0.0 + sw, 0.7 + sh, 2.8], l: [0, 0.8, 0], fov: 30, fs: 1.15 },          // the cover: the figure big in the foreground
       lift: { pcy: -0.75, c: [0.15 + sw, 0.8 + sh, 2.35], l: [0, 0.72, 0], fov: 36, fs: 1.2 },          // the liftoff close-up: the robot big, the globe curving away below
+      prop: { pcy: -0.62, c: [0.17 + sw, 0.6 + sh, 3.0], l: [0.12, 0.6, 0], fov: 32, fs: 1.0 },                 // Mono and his coffee table (P2/P3, 18 Nov)
       push: { pcy: -0.6, c: [0.25 + sw, 0.62 + sh, 2.9], l: [0, 0.62, 0], fov: 30, fs: 1 },             // in close on the figure
     };
     const lm = (a, b, u) => a + (b - a) * u, base0 = cur;
@@ -362,5 +405,6 @@ window.seek = function (t) {
   if (tail > 0) { endEl.style.opacity = String(Number(endEl.style.opacity || 1) * (1 - tail)); const sc = document.querySelector(".hud-scrim"); if (sc) sc.style.opacity = String(Number(sc.style.opacity || 0) * (1 - tail)); }
   tFlap.update(t);
   void gate; void UPV; void MARK; void S3;
+  monoUpdate(t, pcx, pcy, ysc, camera);
   renderer.render(scene, camera);
 };

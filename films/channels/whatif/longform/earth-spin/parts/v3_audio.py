@@ -7,6 +7,8 @@ T = {it["uid"]: next(v for v in film["voice"] if v["id"] == it["vo"]) for it in 
 FL = film.get("flash"); cues, seed = [], [0]
 def cue(at, kind, gain=0, **kw): seed[0] += 1; cues.append(dict(at=at, kind=kind, gain=gain, seed=seed[0], **kw))
 cue(0.05, "riser", -3, dur=2.6); cue(t1("open") - 0.2, "boom", -6, dur=2.0)
+if N == 3: cue(0.7, "crack", -3, dur=0.9); cue(0.8, "whoosh", -3, dur=1.6, pan=[-0.3, 0.6]); cue(1.55, "whoosh", -5, dur=1.3, pan=[-0.2, 0.7]); cue(2.0, "debris", -6, dur=1.0)
+if N == 2: cue(0.2, "whoosh", -3, dur=2.2, pan=[-0.6, 0.6]); cue(1.9, "boom", -6, dur=1.4); cue(t0("s20", 1.0), "rumble", -8, dur=1.4)
 if N == 1:
     cue(t0("s71"), "whoosh", -3, dur=2.4, pan=[-0.4, 0.4]); cue(FL["t0"] + 0.2, "riser", -3, dur=2.2); cue(FL["t0"] + 0.5, "shimmer", -5, dur=2.4); cue(FL["t0"] + 1.1, "whoosh", -3, dur=1.8, pan=[0.5, -0.5])
     cue(FL["t1"], "boom", -4, dur=1.8); cue(FL["t1"] + 0.1, "tick", -2); cue(t0("s4"), "tick", -4)

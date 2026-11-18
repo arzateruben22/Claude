@@ -9,17 +9,42 @@
    "dur": 2.6
   },
   {
-   "at": 3.03,
+   "at": 5.43,
    "kind": "boom",
    "gain": -6,
    "seed": 2,
    "dur": 2.0
   },
   {
-   "at": 5.333,
+   "at": 0.2,
+   "kind": "whoosh",
+   "gain": -3,
+   "seed": 3,
+   "dur": 2.2,
+   "pan": [
+    -0.6,
+    0.6
+   ]
+  },
+  {
+   "at": 1.9,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 4,
+   "dur": 1.4
+  },
+  {
+   "at": 21.5,
+   "kind": "rumble",
+   "gain": -8,
+   "seed": 5,
+   "dur": 1.4
+  },
+  {
+   "at": 7.733,
    "kind": "whoosh",
    "gain": -2,
-   "seed": 3,
+   "seed": 6,
    "dur": 2.4,
    "pan": [
     -0.5,
@@ -27,16 +52,16 @@
    ]
   },
   {
-   "at": 5.733,
+   "at": 8.133,
    "kind": "tick",
    "gain": -3,
-   "seed": 4
+   "seed": 7
   },
   {
-   "at": 11.933,
+   "at": 14.333,
    "kind": "whoosh",
    "gain": -2,
-   "seed": 5,
+   "seed": 8,
    "dur": 2.2,
    "pan": [
     0.5,
@@ -44,70 +69,70 @@
    ]
   },
   {
-   "at": 14.613000000000001,
+   "at": 17.013,
    "kind": "rumble",
    "gain": -4,
-   "seed": 6,
+   "seed": 9,
    "dur": 3.2
   },
   {
-   "at": 14.713000000000001,
+   "at": 17.113,
    "kind": "tick",
    "gain": -3,
-   "seed": 7
-  },
-  {
-   "at": 16.013,
-   "kind": "whoosh",
-   "gain": -3,
-   "seed": 8,
-   "dur": 1.0
-  },
-  {
-   "at": 16.013,
-   "kind": "boom",
-   "gain": -6,
-   "seed": 9,
-   "dur": 2.0
-  },
-  {
-   "at": 16.013,
-   "kind": "tick",
-   "gain": -2,
    "seed": 10
   },
   {
-   "at": 18.3,
+   "at": 18.413,
+   "kind": "whoosh",
+   "gain": -3,
+   "seed": 11,
+   "dur": 1.0
+  },
+  {
+   "at": 18.413,
+   "kind": "boom",
+   "gain": -6,
+   "seed": 12,
+   "dur": 2.0
+  },
+  {
+   "at": 18.413,
+   "kind": "tick",
+   "gain": -2,
+   "seed": 13
+  },
+  {
+   "at": 20.7,
    "kind": "shimmer",
    "gain": -6,
-   "seed": 11,
+   "seed": 14,
    "dur": 2.6
   },
   {
-   "at": 25.067,
-   "kind": "tick",
-   "gain": -3,
-   "seed": 12
-  },
-  {
-   "at": 29.7,
-   "kind": "riser",
-   "gain": -3,
-   "seed": 13,
-   "dur": 3.39
-  },
-  {
-   "at": 32.59,
-   "kind": "boom",
-   "gain": -4,
-   "seed": 14,
-   "dur": 2.2
-  },
-  {
-   "at": 34.53333333333333,
+   "at": 27.467,
    "kind": "tick",
    "gain": -3,
    "seed": 15
+  },
+  {
+   "at": 32.1,
+   "kind": "riser",
+   "gain": -3,
+   "seed": 16,
+   "dur": 3.39
+  },
+  {
+   "at": 34.99,
+   "kind": "boom",
+   "gain": -4,
+   "seed": 17,
+   "dur": 2.2
+  },
+  {
+   "at": 36.96666666666667,
+   "kind": "tick",
+   "gain": -3,
+   "seed": 18
   }
  ]
 }
