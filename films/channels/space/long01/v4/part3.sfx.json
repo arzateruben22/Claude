@@ -9,119 +9,46 @@
    "seed": 301
   },
   {
-   "at": 2.54,
+   "at": 0.3,
    "kind": "mass",
-   "dur": 9.3,
-   "gain": -2,
+   "dur": 20.971,
+   "gain": -4,
    "f0": 41,
    "seed": 302
   },
   {
-   "at": 2.75,
-   "kind": "whoosh",
-   "dur": 7.5,
-   "pan": [
-    -0.4,
-    0.4
-   ],
-   "gain": -2,
+   "at": 0.6,
+   "kind": "tick",
+   "gain": -5,
+   "repeat": 34,
+   "every": 0.6,
    "seed": 303
   },
   {
-   "at": 10.24,
-   "kind": "boom",
-   "dur": 2.5,
-   "gain": -4,
+   "at": 7.54,
+   "kind": "shimmer",
+   "dur": 6.5,
+   "gain": -2,
    "seed": 304
   },
   {
-   "at": 10.24,
+   "at": 7.54,
    "kind": "tick",
-   "gain": -2,
+   "gain": -3,
    "seed": 305
   },
   {
-   "at": 14.85,
+   "at": 17.34,
    "kind": "shimmer",
-   "dur": 7.5,
+   "dur": 5.5,
    "gain": -2,
    "seed": 306
   },
   {
-   "at": 14.85,
+   "at": 17.34,
    "kind": "tick",
    "gain": -3,
    "seed": 307
-  },
-  {
-   "at": 25.84,
-   "kind": "shimmer",
-   "dur": 6.5,
-   "gain": -2,
-   "seed": 308
-  },
-  {
-   "at": 25.84,
-   "kind": "tick",
-   "gain": -3,
-   "seed": 309
-  },
-  {
-   "at": 33.99,
-   "kind": "whoosh",
-   "dur": 4.0,
-   "pan": [
-    0.3,
-    -0.3
-   ],
-   "gain": -3,
-   "seed": 310
-  },
-  {
-   "at": 34.2,
-   "kind": "mass",
-   "dur": 4.8,
-   "gain": -4,
-   "f0": 44,
-   "seed": 311
-  },
-  {
-   "at": 42.1,
-   "kind": "whoosh",
-   "dur": 8.0,
-   "pan": [
-    0.5,
-    -0.5
-   ],
-   "gain": -1,
-   "seed": 312
-  },
-  {
-   "at": 42.4,
-   "kind": "mass",
-   "dur": 8.0,
-   "gain": -3,
-   "f0": 40,
-   "seed": 313
-  },
-  {
-   "at": "capend:L11-8.14",
-   "kind": "whoosh",
-   "dur": 5.5,
-   "pan": [
-    0.3,
-    -0.3
-   ],
-   "gain": -3,
-   "seed": 314
-  },
-  {
-   "at": "capend:L11-7.94",
-   "kind": "mass",
-   "dur": 6.3,
-   "gain": -4,
-   "f0": 44,
-   "seed": 315
   },
   {
    "at": "cap:L11-1.4",

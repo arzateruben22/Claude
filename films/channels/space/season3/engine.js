@@ -119,6 +119,11 @@ function zoomParams(t, G) {   // the camera at time t: a zoom of s about the wor
   tx = Math.max(W - (W - z.F.x) * z.s, Math.min(z.F.x * z.s, tx)); ty = Math.max(H - (H - z.F.y) * z.s, Math.min(z.F.y * z.s, ty));   // never show past the painting
   return { tx, ty, s: z.s, Fx: z.F.x, Fy: z.F.y };
 }
+// the Moon's size today (timeline.sizeChip): a dotted ring stays in the sky around the Moon while it outgrows it
+function todayOutline(t, G) {
+  if (!TL.sizeChip) return; const mo = moonState(Math.max(dVis(t), 17000), G); ctx.save(); ctx.globalAlpha = 0.85 * sm((t - 1.0) / 0.8); ctx.strokeStyle = "rgba(238,240,255,.92)"; ctx.lineWidth = 2.6 * U; ctx.setLineDash([9 * U, 9 * U]);
+  ctx.beginPath(); ctx.arc(mo.cx, mo.cy, G.r0, 0, 6.283); ctx.stroke(); ctx.restore();
+}
 function moonScreen(t) {   // where the Moon is on the screen at time t (centre and radius in canvas px), through the shake, the sway and the camera
   TNOW = t; const G = geom(), mo = moonState(Math.max(dVis(t), 17000), G); mo.cx += slideOff(t); let x = mo.cx, y = mo.cy, r = mo.r; const zp = zoomParams(t, G);
   if (zp) { x = zp.tx + (x - zp.Fx) * zp.s; y = zp.ty + (y - zp.Fy) * zp.s; r *= zp.s; }
@@ -141,12 +146,14 @@ function placeCaption(cap, el, t) {
 // small comparison chips at each stop ("2x wider", "8x pull"): timeline.chips [{t0, t1, text}]
 function chips(t) {
   const c = (TL.chips || []).find((q) => t >= q.t0 && t < q.t1), el = document.getElementById("chip"); if (!el) return;
+  if (TL.sizeChip) { const s = sizeX(dVis(t)); el.textContent = (s < 9.95 ? s.toFixed(1) : Math.round(s)) + "× wider than today"; el.style.opacity = sm((t - 1.2) / 0.5); el.style.transform = (MODE === "land" ? "" : "translateX(-50%) "); return; }   // a live chip: the Moon's width against today's (384,400 / the distance)
   if (c) { const u = t - c.t0, sc = u < 0.16 ? lerp(0.6, 1.1, sm(u / 0.16)) : u < 0.3 ? lerp(1.1, 1, sm((u - 0.16) / 0.14)) : 1;   // a small pop as the voice says it
     el.textContent = c.text; el.style.opacity = Math.min(1, u / 0.1, (c.t1 - t) / 0.25); el.style.transform = (MODE === "land" ? "" : "translateX(-50%) ") + `scale(${sc.toFixed(3)})`; } else el.style.opacity = 0;
 }
 function hud(t) {
   const d = dCount(t), s = sizeX(dVis(t)), fmt = (n) => Math.round(n).toLocaleString("en-US");
-  document.getElementById("num").textContent = TL.units === "mi" ? fmt(d * 0.621371) + " mi" : fmt(d) + " km";   // the owner, 16 Nov 2026: US units on the counter (the voice and captions keep saying kilometers) document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
+  document.getElementById("num").textContent = TL.units === "mi" ? fmt(d * 0.621371) + " mi" : fmt(d) + " km";   // the owner, 16 Nov 2026: US units on the counter (the voice and captions keep saying kilometers)
+  document.getElementById("size").textContent = "size in the sky ×" + (s < 9.95 ? s.toFixed(1) : Math.round(s));
   chips(t); const cap = TL.captions.find((c) => t >= c.t0 && t < c.t1), el = document.getElementById("cap");
   if (cap) { el.textContent = cap.text; el.style.opacity = 1; placeCaption(cap, el, t); } else el.style.opacity = 0;
 }
@@ -180,6 +187,7 @@ const flareBoost = (t) => beatPhase(t, "bright", 2.0);
 const slideOff = (t) => -0.30 * W * beatPhase(t, "slide", 3.0);
 const shakeAmp = (t) => Math.max(beatPhase(t, "flex", 0.8), 0.45 * beatPhase(t, "strain", 0.8));
 function beatKeys() {
+  if (TL.nozoom) return (TL._bk = null);      // the camera stays put: the Moon grows only because it is nearer
   if (TL._bk !== undefined) return TL._bk; const bs = TL.beats || []; if (!bs.length) return (TL._bk = null); const keys = [];
   for (const k of (TL.camera || [])) keys.push({ t: k.t, s: k.s, pv: k.pv || "moon" });   // timeline.camera: [{t, s, pv}] extra camera keys (a push while the voice talks, a pull-back on a reversal)
   for (const b of bs) { const [pv, sc] = BK[b.kind] || ["moon", 1.0]; if (sc <= 1.0) continue; keys.push({ t: b.t0 - 0.1, s: sc, pv });
@@ -244,7 +252,7 @@ window.renderAt = (t) => {
   const b = beats(), inCh1 = b && t >= b.start - 0.01 && t <= b.end + 2.5; ctx.save();
   const zp = zoomParams(t, G); if (zp) { ctx.translate(zp.tx, zp.ty); ctx.scale(zp.s, zp.s); ctx.translate(-zp.Fx, -zp.Fy); }
   sceneComposite(t, Math.max(d, 17000), ecl, moonA, G);
-  shootingStars(t); driftOverlay(t, G);
+  shootingStars(t); driftOverlay(t, G); todayOutline(t, G);
   if (inCh1) ch1Overlays(t, b, moonState(384400, G), G);
   ctx.restore();
   if (brk > 0.001) { ctx.save(); ctx.globalAlpha = brk; const sc = 1.02 + 0.03 * (t / TL.dur) + 0.01 * Math.sin(t * 0.3) + 0.018 * A * Math.sin(t * 0.45); ctx.translate(W / 2, H / 2); ctx.scale(sc, sc); ctx.translate(-W / 2, -H / 2); drawFull(IM["plate-breakup"], 0.6); ctx.restore(); }

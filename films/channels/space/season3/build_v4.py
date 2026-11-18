@@ -24,8 +24,8 @@ PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1"
         2: {"hook": "B3", "body": ["L6", "L7", "L8"], "closer": "C2",
             "beats": [("__hook__", 6.0, "approach"), ("the tidal pull", 11.0, "climb"), ("Not a measured height", 5.0, "tide"), ("lifted from above", 6.0, "pull")],
             "chips": [], "km": [192200], "start": 288300},
-        3: {"hook": "B4", "body": ["L9", "L10", "L11"], "closer": None, "start": 192200, "km": [150000],
-            "beats": [("__hook__", 7.5, "approach"), ("Six and a half times", 7.0, "bright"), ("sharp on the sand", 6.0, "bright"), ("And it's faster", 4.0, "pull"), ("not twenty-seven", 8.0, "slide"), ("bigger than the Sun now", 5.5, "grow")], "chips": []},
+        3: {"hook": "B4", "body": ["L9", "L11"], "closer": None, "start": 192200, "km": [], "glide": 150000, "glide_frac": 0.67,      # owner, 17 Nov 2026: the Moon visibly nearer all the way (the counter falls through two thirds of the part, camera locked), less talking (L10 cut)
+            "beats": [("Six and a half times", 6.0, "bright"), ("sharp on the sand", 5.0, "bright")], "chips": []},
         4: {"hook": "B5", "body": ["L12", "L13"], "closer": "C4", "start": 150000, "km": [100000],
             "beats": [("__hook__", 7.0, "approach"), ("Nearly four times wider", 5.0, "grow"), ("far more often", 7.0, "eclipse"), ("because the orbit is tilted", 5.0, "pull"), ("But often", 7.0, "eclipse"), ("Faster", 4.0, "grow")], "chips": []},
         5: {"hook": "B6", "body": ["L14", "L15"], "closer": None, "start": 100000, "km": [70000],
@@ -118,6 +118,8 @@ def build(use_closer):
         t_b = capt("It comes apart")["t0"]; t_r = capt("The rock spreads")["t0"]; t_n = capt("Tonight's Moon is fine")["t0"]
         ntr["moon"] += [[round(t_b - 0.1, 3), 1], [round(t_b + 1.3, 3), 0]]; ntr["brk"] += [[round(t_b - 0.1, 3), 0], [round(t_b + 1.3, 3), 1], [round(t_r - 0.1, 3), 1], [round(t_r + 2.6, 3), 0]]
         ntr["ring"] += [[round(t_r - 0.1, 3), 0], [round(t_r + 2.6, 3), 1], [round(t_n - 0.2, 3), 1], [round(t_n + 2.0, 3), 0]]; ntr["tonight"] += [[round(t_n - 0.2, 3), 0], [round(t_n + 2.0, 3), 1]]
+    if PART.get("glide"):                                           # the counter falls continuously from where the last part ended to the part's distance, arriving at glide_frac of the runtime, then holds
+        Tg = round(PART["glide_frac"] * dur, 3); nkm[:] = [[0.0, PART["start"]], [Tg, PART["glide"], Tg]]
     short = [(c["id"], c["dur"]) for c in nclips if c["dur"] < 0.4]
     if short: raise SystemExit(f"a beat split a voice clip into a piece shorter than 0.4 s: {short} (owner, 12 Nov 2026: no cut-off fragments)")
     # the voice goes where its captions are: a clip that starts just before a beat boundary must move with its first sentence (a clip whose t falls a hair before T is not shifted by the warp)
@@ -166,7 +168,7 @@ def build(use_closer):
             out += grp; i = j + 1
         return out
     tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": retime(split_caps(ncaps, 100 if N == 0 else 68)), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
-          "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 4, 5), "breathe": N >= 3 or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
+          "nozoom": N == 3, "sizeChip": N == 3, "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 4, 5), "breathe": (N >= 3 and N != 3) or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
     if N == 1 or PART.get("motion1"):   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
         cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]
         tl["drift"] = {"a": round(l2 - 0.2, 3), "b": round(rv, 3), "c": round(rv + 1.4, 3)}
@@ -187,6 +189,7 @@ cap_end = max(c["t1"] for c in tl["captions"] if c["line"] == cliff); cta = tl["
 def at(t): return r(t) if t < cta else f"capend:{cliff}{t - cap_end:+.2f}"
 def cue(t, kind, **kw): cues.append({"at": at(t), "kind": kind, **kw, "seed": N * 100 + len(cues) + 1})
 cue(0.1, "mass", dur=6.0, gain=-3)
+if N == 3: Tg_ = tl["km"][-1][0]; cue(0.3, "mass", dur=Tg_, gain=-4, f0=41); cue(0.6, "tick", gain=-5, repeat=int(Tg_ / 0.6), every=0.6)      # the counter ticking down as the Moon nears
 if N == 1: cue(0.35, "shooting_star", dur=1.2, pan=[0.0, 0.8], gain=-2)
 for b in tl["beats"]:
     t0, t1, k = b["t0"], b["t1"], b["kind"]; d = r(t1 - t0)
