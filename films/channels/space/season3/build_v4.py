@@ -24,7 +24,7 @@ PART = {1: {"hook": "B1", "body": ["L1", "L2", "L3", "L4", "L5"], "closer": "C1"
         2: {"hook": "B3", "body": ["L6", "L7", "L8"], "closer": "C2",
             "beats": [("__hook__", 6.0, "approach"), ("the tidal pull", 11.0, "climb"), ("Not a measured height", 5.0, "tide"), ("lifted from above", 6.0, "pull")],
             "chips": [], "km": [192200], "start": 288300},
-        3: {"hook": "B4", "body": ["L9", "L11"], "closer": None, "start": 192200, "km": [], "glide": 150000, "glide_frac": 0.67,      # owner, 17 Nov 2026: the Moon visibly nearer all the way (the counter falls through two thirds of the part, camera locked), less talking (L10 cut)
+        3: {"hook": "B4", "body": ["L9", "L11"], "closer": None, "start": 192200, "km": [], "glide": 150000, "glide_frac": 0.67, "lead": 2.3,      # owner, 17 Nov 2026: the Moon visibly nearer all the way (the counter falls through two thirds of the part, camera locked), less talking (L10 cut)
             "beats": [("Six and a half times", 6.0, "bright"), ("sharp on the sand", 5.0, "bright")], "chips": []},
         4: {"hook": "B5", "body": ["L12", "L13"], "closer": "C4", "start": 150000, "km": [100000],
             "beats": [("__hook__", 7.0, "approach"), ("Nearly four times wider", 5.0, "grow"), ("far more often", 7.0, "eclipse"), ("because the orbit is tilted", 5.0, "pull"), ("But often", 7.0, "eclipse"), ("Faster", 4.0, "grow")], "chips": []},
@@ -53,7 +53,7 @@ def build(use_closer):
     else: seq = [(PART["hook"], 0.0, lines[PART["hook"]]["dur"])] + [(i, 0.0, lines[i]["dur"]) for i in body[:-1]] + ([(CTA, 0.0, lines[CTA]["dur"])] if CTA else []) + [(cliff, 0.0, lines[cliff]["dur"])]
     if PART.get("seq"): seq = [(i, 0.0, lines[i]["dur"]) for i in PART["seq"]]
     if use_closer: seq.append((PART["closer"], 0.0, lines[PART["closer"]]["dur"]))
-    clips, caps, t = [], [], 0.15
+    clips, caps, t = [], [], PART.get("lead", 0.15)
     for lid, frm, d in seq:
         clips.append({"id": lid, "file": lines[lid]["file"], "t": round(t, 3), "dur": d, "from": frm})
         for s in lines[lid]["sentences"]: caps.append({"t0": round(t + s["t0"], 3), "t1": round(t + s["t1"] + 0.25, 3), "text": s["text"], "line": lid})
@@ -168,7 +168,7 @@ def build(use_closer):
             out += grp; i = j + 1
         return out
     tl = {"name": NAME, "mode": "land" if N == 0 else "port", "dur": round(dur, 3), "clips": nclips, "captions": retime(split_caps(ncaps, 100 if N == 0 else 68)), "km": nkm, "tracks": ntr, "beats": beats, "chips": chips,
-          "nozoom": N == 3, "sizeChip": N == 3, "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 4, 5), "breathe": (N >= 3 and N != 3) or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
+          "nozoom": N == 3, "sizeChip": N == 3, "todayLine": N in (2, 3), **({"punch": {"t0": 0.0, "t1": 2.2}} if N == 3 else {}), "badge": {"t": 5.0, "fade": 0.3}, "units": "mi", "shadow": N in (0, 1, 2, 3, 6), "tides": N in (0, 2, 3, 4, 5), "breathe": (N >= 3 and N != 3) or N == 0, "cta_at": cta_n, "cta_frac": round(cta_n / dur, 3), "cliff": cliff}
     if N == 1 or PART.get("motion1"):   # the owner's motion note (12 Nov): nothing holds still. L1: a slow push toward the Moon; L2: an orbit arc widens and the Moon eases smaller along it (drifting off); 'Tonight, it reverses': the arc snaps back, the camera pulls back and the counter starts to fall, all the way to 288,300
         cp = {c["text"]: c for c in tl["captions"]}; l1 = cp["Tonight, the Moon starts coming closer."]["t0"]; l2 = next(c for c in tl["captions"] if c["text"].startswith("Right now"))["t0"]; rv = cp["Tonight, it reverses."]["t0"]
         tl["drift"] = {"a": round(l2 - 0.2, 3), "b": round(rv, 3), "c": round(rv + 1.4, 3)}

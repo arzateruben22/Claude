@@ -11,7 +11,7 @@
   {
    "at": 0.3,
    "kind": "mass",
-   "dur": 20.971,
+   "dur": 22.412,
    "gain": -4,
    "f0": 41,
    "seed": 302
@@ -20,32 +20,32 @@
    "at": 0.6,
    "kind": "tick",
    "gain": -5,
-   "repeat": 34,
+   "repeat": 37,
    "every": 0.6,
    "seed": 303
   },
   {
-   "at": 7.54,
+   "at": 9.69,
    "kind": "shimmer",
    "dur": 6.5,
    "gain": -2,
    "seed": 304
   },
   {
-   "at": 7.54,
+   "at": 9.69,
    "kind": "tick",
    "gain": -3,
    "seed": 305
   },
   {
-   "at": 17.34,
+   "at": 19.48,
    "kind": "shimmer",
    "dur": 5.5,
    "gain": -2,
    "seed": 306
   },
   {
-   "at": 17.34,
+   "at": 19.48,
    "kind": "tick",
    "gain": -3,
    "seed": 307

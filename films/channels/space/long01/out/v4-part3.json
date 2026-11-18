@@ -1,97 +1,97 @@
 {
  "name": "v4-part3",
  "mode": "port",
- "dur": 31.3,
+ "dur": 33.45,
  "clips": [
   {
    "id": "B4",
    "file": "voice5/wav/B4.wav",
-   "t": 0.15,
+   "t": 2.3,
    "dur": 2.42,
    "from": 0.0
   },
   {
    "id": "L9",
    "file": "voice5/wav/L9.wav",
-   "t": 2.92,
+   "t": 5.07,
    "dur": 4.62,
    "from": 0.0
   },
   {
    "id": "L9",
    "file": "voice5/wav/L9.wav",
-   "t": 13.54,
+   "t": 15.69,
    "dur": 3.62,
    "from": 4.62
   },
   {
    "id": "D3",
    "file": "voice5/wav/D3.wav",
-   "t": 22.51,
+   "t": 24.66,
    "dur": 2.79,
    "from": 0.0
   },
   {
    "id": "L11",
    "file": "voice5/wav/L11.wav",
-   "t": 25.6,
+   "t": 27.75,
    "dur": 4.8,
    "from": 0.0
   }
  ],
  "captions": [
   {
-   "t0": 0.325,
-   "t1": 2.56,
+   "t0": 2.475,
+   "t1": 4.71,
    "text": "The night is getting too bright.",
    "line": "B4",
    "spoken": "The night is getting too bright."
   },
   {
-   "t0": 3.32,
-   "t1": 4.98,
+   "t0": 5.47,
+   "t1": 7.13,
    "text": "150,000.",
    "line": "L9",
    "spoken": "One hundred fifty thousand."
   },
   {
-   "t0": 5.0,
-   "t1": 7.52,
+   "t0": 7.15,
+   "t1": 9.67,
    "text": "6.5× the moonlight.",
    "line": "L9",
    "spoken": "Six and a half times the moonlight."
   },
   {
-   "t0": 13.8,
-   "t1": 17.09,
+   "t0": 15.95,
+   "t1": 19.24,
    "text": "Your shadow is sharp on the sand.",
    "line": "L9",
    "spoken": "Your shadow is sharp on the sand."
   },
   {
-   "t0": 22.59,
-   "t1": 23.595,
+   "t0": 24.74,
+   "t1": 25.745,
    "text": "Still looking up?",
    "line": "D3",
    "spoken": "Still looking up?"
   },
   {
-   "t0": 23.615,
-   "t1": 25.24,
+   "t0": 25.765,
+   "t1": 27.39,
    "text": "Tap like and follow.",
    "line": "D3",
    "spoken": "Tap like and follow."
   },
   {
-   "t0": 25.955,
-   "t1": 27.93,
+   "t0": 28.105,
+   "t1": 30.08,
    "text": "It's bigger than the Sun now.",
    "line": "L11",
    "spoken": "It's bigger than the Sun now."
   },
   {
-   "t0": 27.95,
-   "t1": 30.33,
+   "t0": 30.1,
+   "t1": 32.48,
    "text": "So what happens when they line up?",
    "line": "L11",
    "spoken": "So what happens when they line up?"
@@ -103,9 +103,9 @@
    192200
   ],
   [
-   20.971,
+   22.412,
    150000,
-   20.971
+   22.412
   ]
  ],
  "tracks": {
@@ -142,19 +142,24 @@
  },
  "beats": [
   {
-   "t0": 7.54,
-   "t1": 13.54,
+   "t0": 9.69,
+   "t1": 15.69,
    "kind": "bright"
   },
   {
-   "t0": 17.335,
-   "t1": 22.335,
+   "t0": 19.485,
+   "t1": 24.485,
    "kind": "bright"
   }
  ],
  "chips": [],
  "nozoom": true,
  "sizeChip": true,
+ "todayLine": true,
+ "punch": {
+  "t0": 0.0,
+  "t1": 2.2
+ },
  "badge": {
   "t": 5.0,
   "fade": 0.3
@@ -163,7 +168,7 @@
  "shadow": true,
  "tides": true,
  "breathe": false,
- "cta_at": 22.51,
- "cta_frac": 0.719,
+ "cta_at": 24.66,
+ "cta_frac": 0.737,
  "cliff": "L11"
 }
