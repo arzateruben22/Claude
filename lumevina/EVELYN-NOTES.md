@@ -819,3 +819,16 @@ A **Book** button on the menu skips to the day with that service chosen; picking
 **What I did not copy:** GlossGenius's dark photo background and rose-gold buttons (the site keeps its own look), and the shopping-bag icon (the "Details" list does that job). **Still to do, if she wants it:** her own screen for editing services (names, options, prices, deposits, hiding one) like GlossGenius's setup, and a client page for managing their booking in the same style. Today the menu lives in `js/services.js` and changes go through the build (`node scripts/build-services.mjs`).
 
 Nothing here has launched: booking on the website is still in the preview, with demo payments.
+
+## Her GlossGenius changes, matched on the menu (Nov 20, 1 pm)
+
+From her screens of the booking page (Ageless Grace Facial, Refresh Peel, Corrective Peel, In-Person and Virtual Consultations), compared line by line with the menu:
+
+- **Corrective Peel is $240 now** (was $230). Its options are named as she has them: Medium Chemical Peel $240 · 60 min, and Medium Chemical Peel + Dermaplaning $270 · 60 min (unchanged).
+- **Ageless Grace Facial has a third option:** Ageless Grace Facial + Dermaplaning + Custom Chemical Peel, $310 · 95 min. The other two are as before ($240 · 75 min and $280 · 85 min).
+- **Refresh Peel's options use her names:** No Downtime Peel $230 · 10 min, and No Downtime Peel + Dermaplaning $270 · 15 min. Same prices.
+- **Both consultations now take a $30 deposit** (was $49): In-Person Consultation, and "Virtual Consultations" (her name). The price is $75 and 45 min, as the site already had. Her description for the virtual one says Mondays only and to reach out first, so it stays "message Evelyn first" on the website.
+- **Not changed:** the New Clients Start Here and Custom Facial prices and options (already the same), and the Glow Membership: it covers the Custom Facial ($200) and the Ageless Grace Facial ($240), whose prices did not move. The new Ageless option with a peel is not covered by a membership facial (like the dermaplaning option, it is paid at full price).
+- **The chat** follows: the deposit answer says $30 for a consultation, and the peel answers use the live prices ($230 and $240).
+
+If she changed anything else on her page, send its screen and I'll match it.

@@ -149,9 +149,9 @@
         "Custom ProCell for Acne Scars adds a booster peel and an exosome mask: " + price("procell-acne-scars-1", 450) + " for one treatment, or " + price("procell-acne-scars-2", 550) + " with take-home masks and a recovery kit. " +
         "Packages of 4 save $300: Signature + Aftercare " + price("procell-package-signature", 1300) + ", or Deluxe " + price("procell-package-deluxe", 1700) + ". Ask Evelyn about payment plans."; } },
     { k: /biorepeel|bio repeel|bio-repeel/, a: function () {
-      return "BioRePeel isn’t on Evelyn’s menu right now. Her peels are the Refresh Peel (" + price("refresh-peel", 230) + ", no downtime) and the Corrective Peel (" + price("corrective-peel", 230) + ", existing clients)."; } },
+      return "BioRePeel isn’t on Evelyn’s menu right now. Her peels are the Refresh Peel (" + price("refresh-peel", 230) + ", no downtime) and the Corrective Peel (" + price("corrective-peel", 240) + ", existing clients)."; } },
     { k: /\bpeels?\b|chemical/, a: function () {
-      return "Two peels: the Refresh Peel, " + price("refresh-peel", 230) + ", gentle with little or no flaking and a great first peel; and the Corrective Peel, " + price("corrective-peel", 230) +
+      return "Two peels: the Refresh Peel, " + price("refresh-peel", 230) + ", gentle with little or no flaking and a great first peel; and the Corrective Peel, " + price("corrective-peel", 240) +
         ", a medium-depth peel for existing clients (peeling up to a week, prep first). Either one with dermaplaning is " + price("refresh-peel-dermaplaning", 270) + ". A series works best."; } },
     { k: /back facial|backne|facial for (my )?back/, a: function () {
       return "Back facials aren’t on Evelyn’s menu right now. If breakouts on your back are the worry, ask her and she’ll tell you what she’d do."; } },
@@ -274,12 +274,12 @@
       return "Gift certificates come in $50, $100, $200, $400 or any amount you choose, and go toward any treatment. Use the balance toward your treatment: any remaining amount stays on the gift certificate, and you can pay the difference if your treatment costs more."; },
       acts: [["Send a gift", "#gift"]] },
     { id: "deposit", node: "cancel", k: /deposit|refund/, a: function () {
-      return "Some treatments take a non-refundable deposit when you book: $50 for the acne consultation, $49 for a consultation, $20 or $30 for waxing and acne treatments; facials and peels have none. It goes toward your total, and with 48 hours’ notice it moves to a new date in the same month. If anything comes up after your visit, reach out within 24 hours."; } },
+      return "Some treatments take a non-refundable deposit when you book: $50 for the acne consultation, $30 for a consultation, $20 or $30 for waxing and acne treatments; facials and peels have none. It goes toward your total, and with 48 hours’ notice it moves to a new date in the same month. If anything comes up after your visit, reach out within 24 hours."; } },
     { id: "pay", k: /\bpay\b|payment|cash|credit card|\bcard\b|venmo|zelle|apple pay/, a: function () {
       return "Cash is preferred at your visit; cards are accepted with a small fee. The deposit is paid online when you book."; } },
     { id: "prices", node: "prices", k: /price|cost|how much|menu|rates?\b|\$/, a: function () {
       return "New clients start with New Clients Start Here, " + price("new-client-consultation", 220) + ". The Lumevina Custom Facial is " + price("lumevina-custom-facial", 200) +
-        ", the Ageless Grace " + price("ageless-grace-facial", 240) + ", ProCell Microchanneling " + price("procell-microchanneling", 350) + ", and either peel " + price("refresh-peel", 230) +
+        ", the Ageless Grace " + price("ageless-grace-facial", 240) + ", ProCell Microchanneling " + price("procell-microchanneling", 350) + ", and the peels " + price("refresh-peel", 230) + " and " + price("corrective-peel", 240) +
         ". Acne starts at " + price("new-client-consultation-acne", 220) + ". Waxing starts at " + price("upper-lip-wax", 10) + "; a Brazilian is " + price("brazilian-wax", 75) + "."; },
       acts: [["See the menu", "#services"], ["Book", "book"]] },
     { id: "before", node: "before", k: /before (my|the|a) (facial|appointment|visit|treatment)|prep|prepare|stop (using|taking)|botox|filler|shave|shaving|makeup (to|before)/, a: function () {

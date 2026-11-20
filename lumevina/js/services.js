@@ -60,7 +60,8 @@
       { id: "ageless-grace-menu", name: "Ageless Grace Facial", price: 240, from: true, min: 75, deposit: 0, note: "Signature",
         options: [
           { id: "ageless-grace-facial", name: "Ageless Grace Facial", short: "Ageless Grace", price: 240, min: 75 },
-          { id: "ageless-grace-dermaplaning", name: "Ageless Grace Facial + Dermaplaning", short: "With dermaplaning", price: 280, min: 85, extra: DERMAPLANING }
+          { id: "ageless-grace-dermaplaning", name: "Ageless Grace Facial + Dermaplaning", short: "With dermaplaning", price: 280, min: 85, extra: DERMAPLANING },
+          { id: "ageless-grace-peel", name: "Ageless Grace Facial + Dermaplaning + Custom Chemical Peel", short: "With dermaplaning and a peel", price: 310, min: 95, extra: DERMAPLANING }
         ],
         desc: "Lift, firm and brighten: oxygen therapy and a professional Tightening Protein Booster. Add dermaplaning or a peel for more glow.",
         about: "Lift, firm, and brighten your skin with this advanced age-supporting facial. Featuring oxygen therapy and a professional Tightening Protein Booster, this treatment helps improve circulation, boost hydration, and leave your skin firmer, smoother, and more radiant. Suitable for all skin types. For enhanced results, add dermaplaning and/or a chemical peel to maximize exfoliation, hydration, and glow. I’ll help determine whether one or both add-ons are the best fit for your skin and goals." },
@@ -100,15 +101,15 @@
     { group: "Peels", key: "peels", items: [
       { id: "refresh-peel-menu", name: "Refresh Peel", price: 230, from: true, min: 10, deposit: 0,
         options: [
-          { id: "refresh-peel", name: "Refresh Peel", short: "No-downtime peel", price: 230, min: 10 },
-          { id: "refresh-peel-dermaplaning", name: "Refresh Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 15, extra: DERMAPLANING }
+          { id: "refresh-peel", name: "No Downtime Peel", short: "No-downtime peel", price: 230, min: 10 },
+          { id: "refresh-peel-dermaplaning", name: "No Downtime Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 15, extra: DERMAPLANING }
         ],
         desc: "Gentle renewal with minimal downtime; maybe 2–3 days of light flaking. A great first peel. Aftercare products required for a series.",
         about: "Perfect for new and existing clients, this peel gently exfoliates to renew and brighten the skin with minimal downtime. Some clients may experience 2–3 days of light flaking, while others may not visibly peel, and both are completely normal. Ideal as your first peel or for deeper exfoliation during the summer months. A series is recommended for optimal results. Required aftercare products must be purchased before beginning a peel series." },
-      { id: "corrective-peel-menu", name: "Corrective Peel", price: 230, from: true, min: 60, deposit: 0, note: "Existing clients",
+      { id: "corrective-peel-menu", name: "Corrective Peel", price: 240, from: true, min: 60, deposit: 0, note: "Existing clients",
         options: [
-          { id: "corrective-peel", name: "Corrective Peel", short: "Medium chemical peel", price: 230, min: 60 },
-          { id: "corrective-peel-dermaplaning", name: "Corrective Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 60, extra: DERMAPLANING }
+          { id: "corrective-peel", name: "Medium Chemical Peel", short: "Medium chemical peel", price: 240, min: 60 },
+          { id: "corrective-peel-dermaplaning", name: "Medium Chemical Peel + Dermaplaning", short: "With dermaplaning", price: 270, min: 60, extra: DERMAPLANING }
         ],
         desc: "Medium depth, for sun damage, fine lines, wrinkles and acne scars. Peeling up to a week. Prep and a homecare routine come first.",
         about: "This is a medium-depth peel for existing clients only. Peeling may last up to one week; results and visible peeling may vary. This treatment helps improve sun damage, fine lines, wrinkles, and acne scars by deeply exfoliating and renewing the skin. A series is recommended for best results. Prep and a specific homecare routine are required before booking this service." }
@@ -125,10 +126,10 @@
         about: "Recommended for clients who need additional support during their acne journey, especially during the first few months or while purging. Bi-weekly treatments can help accelerate progress, minimize setbacks, and keep your skin on track. This service is by recommendation only and is not appropriate for everyone; I will determine if bi-weekly visits are beneficial based on your skin’s condition and severity. Treatments are customized at each visit and may include a peel, hydration-focused care, or other corrective treatments. First-time clients: please book Consultation + Treatment." }
     ] },
     { group: "Consultations", key: "consult", items: [
-      { id: "in-person-consultation", name: "In-Person Consultation", price: 75, min: 45, deposit: 49,
+      { id: "in-person-consultation", name: "In-Person Consultation", price: 75, min: 45, deposit: 30,
         desc: "A deep dive into your skin type, concerns and goals, with a plan and at-home product picks. Start with products, treatments later.",
         about: "Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready." },
-      { id: "virtual-consultation", name: "Virtual Consultation", price: 75, min: 45, deposit: 49, ask: true, note: "Mondays only",
+      { id: "virtual-consultation", name: "Virtual Consultations", price: 75, min: 45, deposit: 30, ask: true, note: "Mondays only",
         desc: "Your skin, concerns and long-term goals by video, with a treatment plan and at-home picks. Mondays only; message Evelyn first.",
         about: "Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking." }
     ] },

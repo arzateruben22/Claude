@@ -6,7 +6,7 @@
 
 Lumevina Aesthetics Spa, Woodland Hills, CA. Owner and esthetician: Evelyn Romero. Every treatment is with her.
 
-Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book "New Clients Start Here"; for breakouts, the Acne Bootcamp's "New Client Consultation + Treatment". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).
+Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $30 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none. New clients book "New Clients Start Here"; for breakouts, the Acne Bootcamp's "New Client Consultation + Treatment". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).
 
 Her menu: every treatment, with prices, times and her own descriptions, is under "Her treatments, in her words" below. Not offered right now: couples facials, back facials, BioRePeel, leg waxing, full-face, nose, sideburn and hairline waxing.
 
@@ -106,7 +106,7 @@ Custom facial: $200, 60 min · With dermaplaning: from $230, 60 min. No deposit.
 A customized facial for returning clients that includes a double cleanse, enzyme or gentle acid exfoliation, extractions (as needed), targeted mask, facial massage, LED therapy, and cryo globes. Best for clients following a customized skincare routine for continued skin progress. New clients: please book New Clients Start Here. Acne concerns: please book the Acne Program. If you’re unsure what to book, feel free to reach out.
 
 ### Ageless Grace Facial (Signature)
-Ageless Grace: $240, 75 min · With dermaplaning: $280, 85 min. No deposit.
+Ageless Grace: $240, 75 min · With dermaplaning: $280, 85 min · With dermaplaning and a peel: $310, 95 min. No deposit.
 Lift, firm, and brighten your skin with this advanced age-supporting facial. Featuring oxygen therapy and a professional Tightening Protein Booster, this treatment helps improve circulation, boost hydration, and leave your skin firmer, smoother, and more radiant. Suitable for all skin types. For enhanced results, add dermaplaning and/or a chemical peel to maximize exfoliation, hydration, and glow. I’ll help determine whether one or both add-ons are the best fit for your skin and goals.
 
 ### After-Hours Add-On
@@ -140,7 +140,7 @@ No-downtime peel: $230, 10 min · With dermaplaning: $270, 15 min. No deposit.
 Perfect for new and existing clients, this peel gently exfoliates to renew and brighten the skin with minimal downtime. Some clients may experience 2–3 days of light flaking, while others may not visibly peel, and both are completely normal. Ideal as your first peel or for deeper exfoliation during the summer months. A series is recommended for optimal results. Required aftercare products must be purchased before beginning a peel series.
 
 ### Corrective Peel (Existing clients)
-Medium chemical peel: $230, 60 min · With dermaplaning: $270, 60 min. No deposit.
+Medium chemical peel: $240, 60 min · With dermaplaning: $270, 60 min. No deposit.
 This is a medium-depth peel for existing clients only. Peeling may last up to one week; results and visible peeling may vary. This treatment helps improve sun damage, fine lines, wrinkles, and acne scars by deeply exfoliating and renewing the skin. A series is recommended for best results. Prep and a specific homecare routine are required before booking this service.
 
 ## Acne Bootcamp
@@ -160,11 +160,11 @@ Recommended for clients who need additional support during their acne journey, e
 ## Consultations
 
 ### In-Person Consultation
-$75, 45 min. $49 deposit when booked.
+$75, 45 min. $30 deposit when booked.
 Have questions about your skin or not sure where to start? We’ll take a deep dive into your skin type, concerns, and goals. I’ll assess your skin in person and create a customized plan with at-home product recommendations. While starting with the New Client Consultation + Treatment is ideal, this option is great if you’d like to begin with products first and start treatments later when you’re ready.
 
-### Virtual Consultation (Mondays only)
-$75, 45 min. $49 deposit when booked. Message Evelyn first; she confirms the time.
+### Virtual Consultations (Mondays only)
+$75, 45 min. $30 deposit when booked. Message Evelyn first; she confirms the time.
 Have more questions about your skin or not sure where to start? During this consultation, we’ll take a deep dive into your skin type, concerns, and long-term goals. I’ll assess your skin and create a customized treatment plan, including at-home product recommendations to support real, lasting results. Please note: this service is available on Mondays only. Be sure to reach out beforehand before booking.
 
 ## Waxing: Brazilian & Bikini

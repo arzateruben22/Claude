@@ -82,7 +82,7 @@ const TREATMENTS = "# Her treatments, in her words\n\nFrom her GlossGenius page:
 // membership and points held back; v3 books here, with both. The ask
 // function picks one by what the website says it runs.
 globalThis.window.LumevinaHours = undefined;
-const DEPOSITS = "Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $49 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none.";
+const DEPOSITS = "Some treatments take a deposit when booked, set per service: $50 for the New Client Consultation + Treatment (acne), $30 for the In-Person or Virtual Consultation, $30 for the Monthly and Bi-Weekly Acne Treatments, the Brazilian, Wax Wednesday, Bikini Line, Brazilian + Mini Vajacial, Full Arm and Full Back, and $20 for Half Arm, Half Back and Full Butt; facials, peels and ProCell have none.";
 const WHAT_TO_BOOK = "New clients book \"New Clients Start Here\"; for breakouts, the Acne Bootcamp's \"New Client Consultation + Treatment\". The Virtual Consultation is Mondays only, by message first. After-hours visits, outside her hours or on a closed day, are an extra $50 that she confirms first (the client asks through the Contact form).";
 const BOOKING = {
   v2: "Booking: for now, every booking goes through Evelyn's GlossGenius page (https://lumevina.glossgenius.com/); the Book buttons on this website open it. Booking directly on this website is coming soon (Evelyn is getting used to the site first). " + DEPOSITS + " " + WHAT_TO_BOOK,

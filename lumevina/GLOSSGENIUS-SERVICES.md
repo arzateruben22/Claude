@@ -63,7 +63,7 @@ NOTE: price column appears at right of the service row; earlier screenshots were
 ## The "2 options" services
 
 - Brow Wax + Tweeze: **Brow Wax + Tweeze** $25 · 30 min, or **Brow Wax + Underarm Wax** $45 · 30 min
-- Corrective Peel: **Medium Chemical Peel** $230 · 60 min, or **Medium Chemical Peel + Dermaplaning** $270 · 60 min
+- Corrective Peel: **Medium Chemical Peel** $240 · 60 min (was $230 until Nov 20), or **Medium Chemical Peel + Dermaplaning** $270 · 60 min
 - Refresh Peel: **No Downtime Peel** $230 · 10 min, or **No Downtime Peel + Dermaplaning** $270 · 15 min
 - ProCell Microchanneling Package: **ProCell Microchanneling Package** $1,100 · 60 min, or **Rebook (4 clients who paid in full)** $0 · 60 min
 - Ageless Grace Facial: **Ageless Grace Facial** $240 · 75 min, or **Ageless Grace Facial + Dermaplaning** $280 · 85 min
