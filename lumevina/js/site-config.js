@@ -27,7 +27,8 @@
  * 3. Where clients book, in v2 (v3 always books here).
  *      "glossgenius"  every Book button opens her GlossGenius page (now:
  *                     she keeps her calendar, deposits and checkout there;
- *                     soon: true adds "booking right here is coming soon")
+ *                     the page shows no "coming soon" badge any more: clients
+                     can already book online through GlossGenius)
  *      "both"         this website's calendar, plus a "Book there instead"
  *                     link to her GlossGenius page
  *      "site"         this website's calendar only
@@ -67,9 +68,8 @@
          GlossGenius can still use it for now, with a note that everything
          is moving here */
       /* Evelyn, Oct 19: hold off on booking through the website while she
-         gets used to it. Every Book button opens her GlossGenius page, and
-         the Book section says booking right here is coming soon. When she's
-         ready: mode "both" (both places), later "site" (website only). */
+         gets used to it. Every Book button opens her GlossGenius page. When
+         she's ready: mode "both" (both places), later "site" (website only). */
       mode: "glossgenius",
       soon: true,
       glossgenius: "https://lumevina.glossgenius.com/",

@@ -741,3 +741,12 @@ The rule reads the same way too: **cancelling or rescheduling within 48 hours** 
 **How it works today:** inside 48 hours a client can't move an appointment online, so on the website a late change is a cancellation, which charges the fee by itself, and then a new booking with a new deposit. If a client emails Evelyn to move one instead, she handles it by hand: the "Charge the $43 fee" button in Appointments only shows on bookings the client cancelled late, so for a late reschedule she'd charge it from Stripe, or tell me and I'll add a button for it.
 
 The fee's internal names (`late_cancel`, `AUTO_LATE_FEE`) are unchanged so nothing already saved or set up breaks; clients and Evelyn never see them.
+
+## "Ask Evelyn" closes the shop, and Book becomes "Book a facial" (Nov 20)
+
+- **End of the shop:** the two lines under the product grid (shipping and pickup, which already sit at the top of the shop, plus "Not sure what's right for your skin?") are one line: **Need help choosing products? Ask Evelyn →**. It goes to the Contact form.
+- **Less air before booking:** the gap between that line and the booking heading is about half what it was (96px instead of 192px on a phone, 132px instead of 240px on a desktop).
+- **One heading for booking:** "01 Book a facial" and "Book your next appointment." are replaced by **Book a facial**, with **Appointments at Lumevina in Woodland Hills.** under it.
+- **The button comes first** (**View availability & book →**, with "Booking through GlossGenius" under it), then the two instructions: **First visit?** Select "New Clients Start Here." If you're coming in for acne, select "Acne Bootcamp's New Client Consultation + Treatment." **Returning client?** Choose your service and preferred time.
+- **"Online booking coming soon" is gone** from the page, since clients can already book online through GlossGenius. When booking moves onto the website, that version keeps a plain "Book a facial" label above "Every opening, at a glance."
+- **Section numbers:** Book no longer carries one, so the numbered labels now run **01 Services & Gift Cards, 02 About Evelyn, 03 FAQ & Policies, 04 Contact**.

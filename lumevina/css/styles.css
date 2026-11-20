@@ -6284,6 +6284,9 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 @media (max-width: 600px) {
   .section-store { padding-top: 1.75rem; }
 }
+/* the shop hands over to booking without a long pause */
+.section-store { padding-bottom: 2.25rem; }
+@media (max-width: 600px) { .section-store { padding-bottom: 1.5rem; } }
 .sh-tools { display: grid; gap: 0.7rem; margin-bottom: 0.9rem; }
 .sh-search-k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .sh-search input {
@@ -6314,7 +6317,7 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 .sh-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(13.25rem, 1fr)); gap: 1rem; }
 .sh-none { grid-column: 1 / -1; padding: 1rem 0; color: var(--ink-60); }
 .sh-more { display: block; margin: 1.4rem auto 0; }
-.sh-fine { margin: 1.4rem auto 0; max-width: 40rem; font-size: 0.86rem; color: var(--ink-60); text-align: center; }
+.sh-fine { margin: 1.75rem auto 0; max-width: 40rem; font-size: 0.98rem; color: var(--ink-60); text-align: center; }
 .section-store.is-live .sh-fallback { display: none; }
 .section-store:not(.is-live) .sh-tools, .section-store:not(.is-live) .sh-count { display: none; }
 @media (max-width: 520px) {
@@ -6398,14 +6401,14 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 .bkl-gg { display: none; }
 .book-glossgenius .bkl { display: none; }
 .book-glossgenius .bkl-gg {
-  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem 2.75rem; align-items: center;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; align-items: start;
   padding: clamp(1.4rem, 3vw, 2.4rem); background: var(--field); border: 1px solid var(--panel-edge); border-radius: 22px;
 }
 .bkl-gg-lead { margin: 0 0 1rem; max-width: 36rem; font-size: 1.06rem; color: var(--ink); }
 .bkl-gg-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 40rem; font-size: 0.93rem; color: var(--ink-60); }
 .bkl-gg-steps strong { font-weight: 600; color: var(--ink); }
 .bkl-gg-steps em { font-style: normal; color: var(--ink); }
-.bkl-gg-cta { display: grid; justify-items: center; gap: 0.55rem; }
+.bkl-gg-cta { display: grid; justify-items: start; gap: 0.55rem; }
 .bkl-gg-fine { margin: 0; font-size: 0.78rem; color: var(--ink-60); }
 @media (max-width: 760px) {
   .book-glossgenius .bkl-gg { grid-template-columns: 1fr; }
@@ -6740,18 +6743,6 @@ a.book-btn { text-align: center; }
 .sh-console { position: relative; z-index: 25; }   /* its suggestions sit over the sticky type bar */
 .sh-search input::-webkit-search-cancel-button { filter: grayscale(1) brightness(0.35); cursor: pointer; }
 
-/* booking on the website: coming soon (js/site-config.js → booking.soon) */
-.bk-soon { display: none; }
-.book-soon .bk-soon {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; margin: 1rem 0 0; max-width: 44rem;
-  font-size: 1rem; line-height: 1.5; color: var(--ink-60);
-}
-.bk-soon-text { flex-basis: 100%; }   /* the words on their own line, under the tag */
-.bk-soon-tag {
-  display: inline-flex; align-items: center; padding: 0.25rem 0.7rem; border-radius: 999px;
-  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--porcelain); background: var(--plum);
-}
 .only-gg { display: none; }
 .book-glossgenius .only-gg { display: inline; }
 /* a list or box, not a phrase. The policy list's own rule (.policy-body ul: a flex column) is more specific than .only-gg,
@@ -6925,6 +6916,9 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
+/* the shop above it ends close, so the booking section doesn't open with a wide empty band */
+.section-book { padding-top: 4.25rem; }
+@media (max-width: 600px) { .section-book { padding-top: 2.75rem; } }
 /* desktop: the words and the card keep to the left over the water */
 @media (min-width: 1000px) {
   .book-glossgenius .section-book .book-head { max-width: 36rem; }
