@@ -623,6 +623,7 @@
 
 
 
+
         <p class="shop-note" data-reveal>Certificates can be applied to any
         treatment. Prefer a date on the books right away?
         <a class="inline-link" data-open-booking href="#services">Book with Evelyn</a>.</p>
@@ -1056,30 +1057,74 @@
         checkout. Demo mode — no card is charged until payments go live.</p>
         <p class="booking-reschedule-note" hidden>Moving your appointment — pick a new day
         and time below. Your deposit carries over; there's nothing more to pay.</p>
-        <p class="booking-resched-link">Already have an appointment?
-          <button type="button" class="linklike booking-resched-start">Reschedule it instead →</button></p>
 
-        <div class="field">
-          <span class="booking-label" id="bk-services-label">Services</span>
-          <!-- floating action picker: sectors → subsectors → treatment -->
-          <div class="fam" aria-labelledby="bk-services-label">
-            <button class="fam-trigger" type="button" aria-expanded="false" aria-haspopup="true">
-              <span class="fam-plus" aria-hidden="true">+</span> Add a service
-            </button>
-            <div class="fam-menu" hidden></div>
+        <!-- the three steps, in GlossGenius's order: services, a day, your details (js/booking.js → "The steps") -->
+        <ol class="bk-steps" aria-label="Booking steps">
+          <li><button type="button" class="bk-step is-on" data-step="services" aria-label="Services"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.2"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.2"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.2"/></svg></button></li>
+          <li><button type="button" class="bk-step" data-step="day" aria-label="Day and time"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke-linecap="round"/></svg></button></li>
+          <li><button type="button" class="bk-step" data-step="details" aria-label="Your details"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20c.8-3.7 3.6-5.6 7.2-5.6s6.4 1.9 7.2 5.6" stroke-linecap="round"/></svg></button></li>
+        </ol>
+        <p class="bk-caption" aria-live="polite">Select a service</p>
+
+        <!-- 1 · services: a category menu, then a card for each -->
+        <section class="bk-panel" data-panel="services">
+          <label class="bk-cat">
+            <span class="sr-only">Category</span>
+            <select class="bk-cat-select"></select>
+            <svg class="bk-cat-chev" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 5l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <div class="bk-cards"></div>
+          <p class="booking-resched-link">Already have an appointment?
+            <button type="button" class="linklike booking-resched-start">Reschedule it instead →</button></p>
+        </section>
+
+        <!-- 1b · one service: its options, and the running total -->
+        <section class="bk-panel" data-panel="your" hidden>
+          <button type="button" class="bk-back bk-your-back">← Back</button>
+          <h3 class="bk-h">Your service</h3>
+          <div class="bk-your">
+            <p class="bk-your-name"></p>
+            <p class="bk-your-from"></p>
+            <button type="button" class="linklike bk-your-remove" hidden>Remove</button>
           </div>
-          <p class="field-help">Choose a sector, then your treatment — add as many as
-          you like and they'll schedule back to back.</p>
-        </div>
-        <div class="booking-chips" aria-label="Services in this session"></div>
-        <p class="booking-meta"></p>
+          <div class="bk-opts" hidden>
+            <p class="bk-opts-h"><span>Select service option</span><span class="bk-req">Required</span></p>
+            <p class="bk-opts-sub">Select one option</p>
+            <div class="bk-opts-list" role="radiogroup" aria-label="Service option"></div>
+          </div>
+          <p class="bk-your-about"></p>
+          <ul class="bk-bar-list" role="list" hidden></ul>
+          <div class="bk-bar">
+            <button type="button" class="bk-bar-more" aria-expanded="false" aria-label="Show what's in your session"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 9l5-5 5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <p class="bk-bar-total"><span>Total</span><strong class="bk-bar-price"></strong></p>
+            <button type="button" class="btn btn-solid bk-select">Select</button>
+          </div>
+        </section>
 
-        <p class="booking-label">Pick a day</p>
-        <div class="booking-days"></div>
+        <!-- 2 · a day and a time -->
+        <section class="bk-panel" data-panel="day" hidden>
+          <button type="button" class="bk-back bk-day-back">← Back</button>
+          <p class="booking-label">Select a day</p>
+          <div class="booking-days"></div>
 
-        <p class="booking-label">Pick a time</p>
-        <div class="booking-slots"></div>
+          <p class="booking-label">Pick a time</p>
+          <div class="booking-slots"></div>
 
+          <button type="button" class="btn btn-solid bk-next" disabled>Next</button>
+          <p class="bk-or" aria-hidden="true">or</p>
+          <button type="button" class="btn btn-ghost bk-wait">Join waitlist</button>
+          <div class="bk-wait-box" hidden></div>
+          <p class="form-status bk-day-status" role="alert"></p>
+
+          <p class="booking-label bk-details-label">Details</p>
+          <div class="booking-chips" aria-label="Services in this session"></div>
+          <p class="booking-meta"></p>
+          <button type="button" class="linklike bk-more">+ Add another service</button>
+        </section>
+
+        <!-- 3 · who you are -->
+        <section class="bk-panel" data-panel="details" hidden>
+          <button type="button" class="bk-back bk-details-back">← Back</button>
         <!-- money summary once a time is chosen (the mini calendar
              above carries the timeline) -->
         <div class="session-preview" hidden>
@@ -1114,17 +1159,18 @@
             placeholder="GLOW-XXXX" maxlength="12" aria-describedby="bk-ref-hint">
           <p class="rw-ref-hint" id="bk-ref-hint" aria-live="polite">A friend’s code takes $15 off your first visit.</p>
         </div>
-        <button class="btn-mb booking-confirm" type="button">
+                <button class="btn-mb booking-confirm" type="button">
           <span class="btn-mb-border" aria-hidden="true"><svg preserveAspectRatio="none" width="100%" height="100%"><rect width="100%" height="100%" rx="30%" ry="30%" fill="none"/></svg><span class="btn-mb-glow"></span></span>
           <span class="btn btn-solid btn-mb-inner">Continue to deposit</span>
         </button>
         <p class="form-status booking-status" role="alert"></p>
+        </section>
       </div>
 
       <!-- step 2: a quick consent + sign (the full clinical intake comes
            after booking so it never blocks checkout) -->
       <div class="booking-consent-view" hidden>
-        <button class="consent-back" type="button">← Back to time selection</button>
+        <button class="consent-back" type="button">← Back</button>
         <h2 class="booking-title">One quick sign-off</h2>
         <p class="booking-demo-note">Just the essentials to hold your spot — your full
         pre-visit form comes right after, before your appointment.</p>
@@ -1161,7 +1207,7 @@
 
       <!-- step 3: the deposit (her amount for each service; some have none) -->
       <div class="booking-pay-view" hidden>
-        <button class="booking-back" type="button">← Back to time selection</button>
+        <button class="booking-back" type="button">← Back</button>
         <h2 class="booking-title">Secure your time</h2>
         <p class="booking-demo-note">Some treatments take a non-refundable deposit to hold the
         time (see policies); it goes toward your total. The balance is due at your visit — cash

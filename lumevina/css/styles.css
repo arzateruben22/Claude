@@ -7024,3 +7024,92 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .cart-later { font-size: 0.8125rem; line-height: 1.45; color: var(--ink-60); margin: 0 0 var(--space-2); }
 .svc-later { margin: -0.45rem 0 1rem; font-size: 0.875rem; color: var(--ink-60); }
 .svc-later[hidden] { display: none; }
+
+/* ─── Booking, in GlossGenius's order (js/booking.js → "The steps") ───
+   Services (a category menu and a card for each) → Your service (its options, a running total)
+   → a day and a time → your details. Moving a booking uses the day and time alone ("classic"). */
+.booking-modal { --bk-pad: clamp(1.5rem, 4vw, 2.5rem); }
+.bk-panel[hidden], .bk-steps[hidden], .bk-caption[hidden], .bk-wait-box[hidden], .bk-bar-list[hidden], .bk-opts[hidden] { display: none; }
+.bk-steps { list-style: none; display: flex; justify-content: center; align-items: center; margin: 0.4rem 0 0.9rem; padding: 0; }
+.bk-steps li { display: flex; align-items: center; }
+.bk-steps li + li::before { content: ""; width: clamp(2.2rem, 12vw, 4rem); height: 1px; background: var(--ink-15); }
+.bk-step {
+  width: 3.1rem; height: 3.1rem; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  background: transparent; color: var(--ink-35); border: 1.5px solid var(--ink-15);
+  transition: background 200ms ease, color 200ms ease, border-color 200ms ease;
+}
+.bk-step.is-done { color: var(--ink); border-color: var(--ink-35); }
+.bk-step.is-on { background: var(--ink); color: var(--on-accent); border-color: var(--ink); }
+.bk-step:disabled { opacity: 0.4; cursor: not-allowed; }
+.bk-step:focus-visible, .bk-opt:focus-visible, .bk-cat-select:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.bk-caption { text-align: center; margin: 0 0 1.2rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-60); }
+
+.bk-cat { position: relative; display: block; margin-bottom: 1.1rem; }
+.bk-cat-select {
+  appearance: none; -webkit-appearance: none; width: 100%; min-height: 3.2rem; padding: 0 2.6rem 0 1.1rem;
+  font: inherit; font-size: 1rem; color: var(--ink); background: var(--field); border: 1px solid var(--panel-edge); border-radius: 14px; cursor: pointer;
+}
+.bk-cat-chev { position: absolute; right: 1.1rem; top: 50%; translate: 0 -50%; pointer-events: none; color: var(--ink-60); }
+.bk-cards { display: grid; gap: 0.9rem; }
+.bk-group { margin: 0.8rem 0 0; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-35); }
+.bk-card { padding: 1.25rem 1.25rem 1.1rem; background: var(--field); border: 1px solid var(--panel-edge); border-radius: 16px; display: flex; flex-direction: column; gap: 0.55rem; }
+.bk-card.is-added { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.bk-card-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.8rem; }
+.bk-card-title { margin: 0; font-family: var(--font-body); font-size: 0.86rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; line-height: 1.5; color: var(--ink); }
+.bk-card-note { flex: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; color: var(--ink-60); padding: 0.15rem 0.6rem; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--panel-edge); }
+.bk-card-dep { margin: 0; font-size: 0.9rem; color: var(--ink); }
+.bk-card-desc { margin: 0; font-size: 0.95rem; line-height: 1.55; color: var(--ink-60); }
+.bk-card-foot { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; margin-top: 0.5rem; text-align: right; }
+.bk-card-opts, .bk-card-pt { margin: 0; font-size: 1rem; font-variant-numeric: tabular-nums; color: var(--ink); }
+.bk-card-pt i { font-style: normal; margin: 0 0.6rem; color: var(--ink-15); }
+.bk-card-later { margin: 0.2rem 0 0.35rem; font-size: 0.82rem; line-height: 1.5; color: var(--ink-60); max-width: 18rem; }
+.bk-card-later b { display: inline-block; margin: 0 0.3rem 0.3rem 0; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; color: var(--ink); box-shadow: inset 0 0 0 1px var(--panel-edge); }
+.bk-card-later span { display: block; }
+.bk-card-select { margin-top: 0.4rem; min-width: 9rem; }
+.bk-empty { margin: 0; color: var(--ink-60); }
+.booking-resched-link { margin: 1.4rem 0 0; font-size: 0.9rem; color: var(--ink-60); }
+
+.bk-back { background: none; border: 0; padding: 0.3rem 0; margin: 0 0 0.9rem; font: inherit; font-size: 0.9rem; color: var(--ink-60); cursor: pointer; }
+.bk-back:hover { color: var(--ink); }
+.bk-h { margin: 0 0 1rem; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; letter-spacing: -0.022em; color: var(--plum); }
+.bk-your { display: grid; gap: 0.2rem; padding: 0 0 1.1rem; border-bottom: 1px solid var(--ink-15); margin-bottom: 1.1rem; }
+.bk-your-name { margin: 0; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.45; color: var(--ink); }
+.bk-your-from { margin: 0; font-size: 0.95rem; color: var(--ink-60); }
+.bk-your-remove { justify-self: start; margin-top: 0.4rem; }
+.bk-opts-h { display: flex; justify-content: space-between; align-items: center; margin: 0 0 0.15rem; font-size: 1.05rem; color: var(--ink); }
+.bk-req { font-size: 0.78rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: var(--blush); color: var(--ink-60); }
+.bk-opts-sub { margin: 0 0 0.8rem; font-size: 0.9rem; color: var(--ink-60); }
+.bk-opts-list { display: grid; gap: 0.7rem; }
+.bk-opt { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; text-align: left; padding: 1rem 1.1rem; font: inherit; color: var(--ink); background: var(--field); border: 1px solid var(--panel-edge); border-radius: 14px; cursor: pointer; }
+.bk-opt-txt { display: grid; gap: 0.2rem; min-width: 0; }
+.bk-opt-txt strong { font-size: 0.86rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.4; }
+.bk-opt-txt span { font-size: 0.9rem; color: var(--ink-60); font-variant-numeric: tabular-nums; }
+.bk-opt-dot { flex: none; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1.5px solid var(--ink-35); display: grid; place-items: center; }
+.bk-opt.is-on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.bk-opt.is-on .bk-opt-dot { border-color: var(--ink); }
+.bk-opt.is-on .bk-opt-dot::after { content: ""; width: 0.8rem; height: 0.8rem; border-radius: 50%; background: var(--ink); }
+.bk-your-about { display: grid; gap: 0.7rem; margin: 1.3rem 0 1.5rem; font-size: 0.95rem; line-height: 1.6; color: var(--ink-60); }
+.bk-your-extra { padding-left: 0.85rem; border-left: 2px solid var(--khaki); }
+.bk-bar-list { list-style: none; margin: 0; padding: 0.9rem 0 0; display: grid; gap: 0.45rem; font-size: 0.92rem; color: var(--ink-60); }
+.bk-bar-list li { display: flex; justify-content: space-between; gap: 1rem; }
+.bk-bar-list .bk-bar-sum { color: var(--ink); font-weight: 600; padding-top: 0.5rem; border-top: 1px solid var(--ink-15); }
+.bk-bar { position: sticky; bottom: calc(-1 * var(--bk-pad)); margin: 0 calc(-1 * var(--bk-pad)) calc(-1 * var(--bk-pad)); padding: 0.9rem var(--bk-pad) 1rem; display: flex; align-items: center; gap: 0.9rem; background: var(--porcelain); border-top: 1px solid var(--ink-15); }
+.bk-bar-more { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--on-accent); border: 0; cursor: pointer; }
+.bk-bar-more[aria-expanded="true"] svg { transform: rotate(180deg); }
+.bk-bar-more[hidden] { display: none; }
+.bk-bar-total { margin: 0; display: grid; gap: 0.05rem; min-width: 0; flex: 1; }
+.bk-bar-total span { font-size: 0.85rem; color: var(--ink-60); }
+.bk-bar-total strong { font-size: 1.1rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.bk-select { flex: none; min-width: 8rem; }
+
+.bk-next { width: 100%; margin-top: 1.1rem; }
+.bk-or { margin: 0.7rem 0; text-align: center; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-35); }
+.bk-wait { width: 100%; }
+.bk-wait-box { margin-top: 0.9rem; }
+.bk-day-status { margin: 0.6rem 0 0; }
+.bk-details-label { margin-top: 1.8rem; }
+.bk-more { margin-top: 0.4rem; }
+/* moving a booking: the day and time and the confirm button, with no steps */
+.booking-modal.is-classic .bk-back, .booking-modal.is-classic .bk-next, .booking-modal.is-classic .bk-or,
+.booking-modal.is-classic .bk-wait, .booking-modal.is-classic .bk-more, .booking-modal.is-classic .bk-wait-box { display: none; }
+.bk-cat .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

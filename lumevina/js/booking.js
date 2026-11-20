@@ -502,7 +502,7 @@
     if (!state.services.length) {
       var none = document.createElement("p");
       none.className = "mini-empty";
-      none.textContent = "No services yet — pick one above and tap + Add.";
+      none.textContent = "No services yet. Go back to Services to pick one.";
       chipsEl.appendChild(none);
       return;
     }
@@ -809,7 +809,7 @@
     if (!state.services.length) {
       var empty = document.createElement("p");
       empty.className = "booking-open-note";
-      empty.textContent = "Pick a service above to see available times.";
+      empty.textContent = "Pick a service first to see available times.";
       slotsEl.appendChild(empty);
       return;
     }
@@ -841,12 +841,8 @@
     }
     /* a full day: the waitlist */
     if (dayInfo(dayD).state === "full") {
-      var wl = document.createElement("div");
-      wl.className = "booking-waitlist";
-      wl.innerHTML = '<p><strong>' + dayD.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) +
-        ' is full.</strong> Join the waitlist: if a time opens that day, you hear first, and the first to book it gets it.</p>' +
-        '<button type="button" class="btn btn-ghost wl-join">Join the waitlist</button><p class="wl-status" role="status" aria-live="polite"></p>';
-      wl.querySelector(".wl-join").addEventListener("click", function () { joinWaitlist(state.dayKey, wl); });
+      var wl = waitBox(state.dayKey, "<strong>" + dayD.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) +
+        " is full.</strong> Join the waitlist: if a time opens that day, you hear first, and the first to book it gets it.");
       slotsEl.appendChild(wl);
       return;
     }
@@ -907,6 +903,7 @@
   /* money summary once a time is chosen — the mini calendar above
      carries the timeline */
   var renderPreview = function () {
+    if (typeof paintNext === "function") paintNext();
     if (state.slot === null || !state.services.length) {
       previewEl.hidden = true;
       return;
@@ -1049,121 +1046,315 @@
   /* live: her extra-Mondays choice arrives from the server */
   document.addEventListener("lumevina:extra-days", function () { if (XD) { renderDays(); renderSlots(); } });
 
-  /* ── Session building ── */
-  var addService = function (id) {
-    var s = byId[id];
-    if (!s) return;
-    var already = state.services.some(function (x) { return x.id === s.id; });
-    if (already) {
-      statusEl.textContent = s.name + " is already in this session.";
-      return;
-    }
-    state.services.push(s);
-    state.slot = null;
-    statusEl.textContent = "";
-    renderAll();
-  };
+  /* ── The steps, in GlossGenius's order ──
+     1 Services: a category menu and a card for each service → "Your service":
+       its options and a running total → 2 A day and a time → 3 Your details →
+       the sign-off and the deposit (below). Everything that picks, prices,
+       holds and charges is the code around this; this is how it is laid out.
+       Moving a booking skips to the day and time (the "classic" layout). */
+  var MENU = window.LUMEVINA_SERVICES;
+  var panels = {};
+  [].forEach.call(modal.querySelectorAll(".bk-panel"), function (p) { panels[p.getAttribute("data-panel")] = p; });
+  var stepsEl = modal.querySelector(".bk-steps");
+  var stepBtns = [].slice.call(modal.querySelectorAll(".bk-step"));
+  var captionEl = modal.querySelector(".bk-caption");
+  var catSel = modal.querySelector(".bk-cat-select");
+  var cardsEl = modal.querySelector(".bk-cards");
+  var yourName = modal.querySelector(".bk-your-name");
+  var yourFrom = modal.querySelector(".bk-your-from");
+  var yourRemove = modal.querySelector(".bk-your-remove");
+  var optsWrap = modal.querySelector(".bk-opts");
+  var optsList = modal.querySelector(".bk-opts-list");
+  var yourAbout = modal.querySelector(".bk-your-about");
+  var barPrice = modal.querySelector(".bk-bar-price");
+  var barMore = modal.querySelector(".bk-bar-more");
+  var barList = modal.querySelector(".bk-bar-list");
+  var selectBtn = modal.querySelector(".bk-select");
+  var nextBtn = modal.querySelector(".bk-next");
+  var waitBtn = modal.querySelector(".bk-wait");
+  var waitHost = modal.querySelector(".bk-wait-box");
+  var dayStatus = modal.querySelector(".bk-day-status");
+  var STEPS = ["services", "day", "details"];
+  var CAPTION = { services: "Select a service", your: "Your service", day: "Select a day", details: "Your details" };
+  var step = "services";
 
-  /* ── Floating action service picker (sectors → subsectors) ── */
-  var SECTORS = (function () {
-    var M = window.LUMEVINA_SERVICES;
-    if (!M) return [];
-    var ids = function (items) {
-      var out = [];
-      items.forEach(function (it) { (it.options || [it]).forEach(function (o) { if (byId[o.id]) out.push(o.id); }); });
-      return out;
-    };
-    return M.menu.map(function (g) {
-      return g.subs ? { name: g.group, subs: g.subs.map(function (sg) { return { name: sg.group, ids: ids(sg.items) }; }) }
-        : { name: g.group, ids: ids(g.items) };
+  var paintSteps = function () {
+    var at = step === "your" ? "services" : step;
+    stepBtns.forEach(function (b) {
+      var k = b.getAttribute("data-step");
+      b.classList.toggle("is-on", k === at);
+      b.classList.toggle("is-done", STEPS.indexOf(k) < STEPS.indexOf(at));
+      b.disabled = (k === "day" && !state.services.length) || (k === "details" && state.slot === null);
     });
-  })();
+  };
+  var showStep = function (name) {
+    step = name;
+    var classic = name === "classic";
+    modal.classList.toggle("is-classic", classic);
+    Object.keys(panels).forEach(function (k) {
+      panels[k].hidden = classic ? !(k === "day" || k === "details") : k !== name;
+    });
+    stepsEl.hidden = captionEl.hidden = classic;
+    captionEl.textContent = CAPTION[name] || "";
+    waitHost.hidden = true; waitHost.textContent = "";
+    dayStatus.textContent = ""; statusEl.textContent = "";
+    if (name === "services") paintCards();
+    paintSteps(); paintNext();
+    toTop();
+  };
+  var toTop = function () {
+    var inner = modal.querySelector(".booking-inner");
+    if (inner) inner.scrollTop = 0;
+  };
+  var paintNext = function () {
+    nextBtn.disabled = state.slot === null || !state.services.length;
+    paintSteps();
+  };
 
-  var famEl = modal.querySelector(".fam");
-  var famTrigger = modal.querySelector(".fam-trigger");
-  var famMenu = modal.querySelector(".fam-menu");
-  var famPath = [];
+  /* what each card on the menu books: the cards are the page's own services (js/services.js), in her order */
+  var ENTRIES = [];
+  var buildEntries = function () {
+    ENTRIES = [];
+    if (!MENU) return;
+    MENU.menu.forEach(function (g) {
+      var add = function (items, sub) {
+        items.forEach(function (it) {
+          if (it.ask) return;
+          var opts = (it.options || []).map(function (o) { return byId[o.id] ? { o: o, svc: byId[o.id] } : null; }).filter(Boolean);
+          var single = it.options ? null : byId[it.id];
+          if (it.options ? !opts.length : !single) return;
+          ENTRIES.push({ group: g.group, sub: sub || "", it: it, opts: opts, single: single });
+        });
+      };
+      if (g.subs) g.subs.forEach(function (sg) { add(sg.items, sg.group); }); else add(g.items, "");
+    });
+  };
+  var listOf = function (e) { return e.opts.length ? e.opts.map(function (x) { return x.o; }) : [e.it]; };
+  var svcOf = function (x) { return byId[x.id]; };
+  /* "$220+" and "60+ min": the lowest, and a + when the options differ */
+  var spanOf = function (e) {
+    var list = listOf(e);
+    var prices = list.map(function (x) { return x.price; });
+    var paid = prices.filter(function (p) { return p > 0; });
+    var lo = paid.length ? Math.min.apply(null, paid) : 0, hi = Math.max.apply(null, prices);
+    var mins = list.map(function (x) { return x.min || (svcOf(x) ? svcOf(x).dur : 0); }).filter(Boolean);
+    var m0 = mins.length ? Math.min.apply(null, mins) : 0, m1 = mins.length ? Math.max.apply(null, mins) : 0;
+    return {
+      lo: lo, plus: hi > lo || list.some(function (x) { return x.from; }),
+      price: usd(lo) + (hi > lo || list.some(function (x) { return x.from; }) ? "+" : ""),
+      time: m0 ? m0 + (m1 > m0 ? "+" : "") + " min" : "",
+      mins: m0
+    };
+  };
+  var depositOf = function (e) {
+    var ds = (e.opts.length ? e.opts.map(function (x) { return x.svc.deposit; }) : [e.single.deposit]).filter(function (d) { return d > 0; });
+    return ds.length && ds.every(function (d) { return d === ds[0]; }) ? ds[0] : 0;
+  };
+  var idsOf = function (e) { return e.opts.length ? e.opts.map(function (x) { return x.svc.id; }) : [e.single.id]; };
+  var inSession = function (e) {
+    var ids = idsOf(e);
+    return state.services.filter(function (s) { return ids.indexOf(s.id) !== -1; })[0] || null;
+  };
+  var payLaterOn = function () { return !(window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.payLater === false); };
+  var usd = function (n) { return "$" + (Math.round(n) === n ? n.toLocaleString("en-US") : n.toFixed(2)); };   /* $220, $83.20 */
+  var el = function (tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  };
 
-  var famItem = function (i, label, sub, onClick, extraClass) {
-    var b = document.createElement("button");
-    b.type = "button";
-    b.className = "fam-item" + (extraClass ? " " + extraClass : "");
-    b.style.setProperty("--i", i);
-    var l = document.createElement("span");
-    l.className = "fam-item-label";
-    l.textContent = label;
-    b.appendChild(l);
-    if (sub) {
-      var s = document.createElement("span");
-      s.className = "fam-item-sub";
-      s.textContent = sub;
-      b.appendChild(s);
+  var buildCats = function () {
+    catSel.textContent = "";
+    var all = el("option", "", "View All"); all.value = "";
+    catSel.appendChild(all);
+    var seen = {};
+    ENTRIES.forEach(function (e) {
+      if (seen[e.group]) return;
+      seen[e.group] = 1;
+      var o = el("option", "", e.group); o.value = e.group;
+      catSel.appendChild(o);
+    });
+  };
+  var paintCards = function () {
+    cardsEl.textContent = "";
+    var only = catSel.value;
+    var haveService = state.services.some(function (s) {
+      return !ENTRIES.some(function (e) { return e.it.addon && idsOf(e).indexOf(s.id) !== -1; });
+    });
+    var lastHead = null;
+    ENTRIES.forEach(function (e) {
+      if (only && e.group !== only) return;
+      if (e.it.addon && !haveService && !inSession(e)) return;   /* add-ons come alongside another service */
+      var head = e.sub || (only ? "" : e.group);
+      if (head && head !== lastHead) cardsEl.appendChild(el("p", "bk-group", head));
+      lastHead = head;
+      var span = spanOf(e), dep = depositOf(e), mine = inSession(e);
+      var card = el("article", "bk-card" + (mine ? " is-added" : ""));
+      var top = el("div", "bk-card-top");
+      top.appendChild(el("h3", "bk-card-title", e.it.name));
+      if (e.it.note) top.appendChild(el("span", "bk-card-note", e.it.note));
+      card.appendChild(top);
+      if (dep) card.appendChild(el("p", "bk-card-dep", "$" + dep.toFixed(2) + " deposit required"));
+      card.appendChild(el("p", "bk-card-desc", e.it.desc || ""));
+      var foot = el("div", "bk-card-foot");
+      if (e.opts.length > 1) foot.appendChild(el("p", "bk-card-opts", e.opts.length + " options"));
+      var pt = el("p", "bk-card-pt");
+      pt.appendChild(el("span", "", span.price));
+      if (span.time) { pt.appendChild(el("i", "", "|")); pt.appendChild(el("span", "", span.time)); }
+      foot.appendChild(pt);
+      if (payLaterOn() && span.lo > 0) {
+        var pl = el("p", "bk-card-later");
+        ["Affirm", "Klarna", "Afterpay"].forEach(function (n) { pl.appendChild(el("b", "", n)); });
+        pl.appendChild(el("span", "", "Pay over time where your total qualifies."));
+        foot.appendChild(pl);
+      }
+      var go = el("button", "btn btn-solid bk-card-select", mine ? "Change" : "Select");
+      go.type = "button";
+      go.setAttribute("aria-label", (mine ? "Change " : "Select ") + e.it.name);
+      go.addEventListener("click", function () { openYour(e); });
+      foot.appendChild(go);
+      card.appendChild(foot);
+      cardsEl.appendChild(card);
+    });
+    if (!cardsEl.firstChild) cardsEl.appendChild(el("p", "bk-empty", "Nothing here yet."));
+  };
+  catSel.addEventListener("change", paintCards);
+
+  /* "Your service": pick an option, see the total, then Select */
+  var cur = null;   /* { e, pick } */
+  var openYour = function (e) {
+    var had = inSession(e);
+    cur = { e: e, pick: null };
+    if (e.opts.length === 1) cur.pick = e.opts[0].svc;
+    else if (!e.opts.length) cur.pick = e.single;
+    else if (had) cur.pick = had;
+    paintYour();
+    showStep("your");
+  };
+  var optLine = function (svc, o) {
+    return usd(svc.price) + (o && o.from ? "+" : "") + " · " + (o && o.min ? o.min : svc.dur) + " mins";
+  };
+  var paintYour = function () {
+    var e = cur.e, span = spanOf(e), had = inSession(e);
+    yourName.textContent = e.it.name;
+    yourFrom.textContent = (e.opts.length > 1 || e.it.from ? "Starts from " : "") + span.price + (span.time ? " · " + span.time : "");
+    yourRemove.hidden = !had;
+    optsWrap.hidden = e.opts.length < 2;
+    optsList.textContent = "";
+    e.opts.forEach(function (x) {
+      var on = cur.pick && cur.pick.id === x.svc.id;
+      var b = el("button", "bk-opt" + (on ? " is-on" : ""));
+      b.type = "button";
+      b.setAttribute("role", "radio");
+      b.setAttribute("aria-checked", on ? "true" : "false");
+      var txt = el("span", "bk-opt-txt");
+      txt.appendChild(el("strong", "", x.o.name));
+      txt.appendChild(el("span", "", x.svc.price > 0 ? optLine(x.svc, x.o) : "Already paid · " + (x.o.min || x.svc.dur) + " mins"));
+      b.appendChild(txt);
+      b.appendChild(el("span", "bk-opt-dot"));
+      b.addEventListener("click", function () { cur.pick = x.svc; paintYour(); });
+      optsList.appendChild(b);
+    });
+    yourAbout.textContent = "";
+    var picked = cur.pick && e.opts.filter(function (x) { return x.svc.id === cur.pick.id; })[0];
+    String(e.it.about || e.it.desc || "").split(/\n+/).filter(Boolean).forEach(function (t) { yourAbout.appendChild(el("span", "", t)); });
+    if (picked && picked.o.extra) yourAbout.appendChild(el("span", "bk-your-extra", picked.o.extra));
+    var price = cur.pick ? cur.pick.price : span.lo;
+    barPrice.textContent = usd(price) + (!cur.pick && span.plus ? "+" : "") + " · " + (cur.pick ? (picked && picked.o.min ? picked.o.min : cur.pick.dur) : span.mins) + " mins";
+    selectBtn.disabled = !cur.pick;
+    /* the running list under the bar: what's already in the session, and this one */
+    barList.textContent = "";
+    var ids = idsOf(e);
+    var lines = state.services.filter(function (s) { return ids.indexOf(s.id) === -1; }).concat(cur.pick ? [cur.pick] : []);
+    var sum = 0, dep = 0;
+    lines.forEach(function (s) {
+      var li = el("li");
+      li.appendChild(el("span", "", s.name));
+      li.appendChild(el("span", "", usd(s.price)));
+      barList.appendChild(li);
+      sum += s.price; dep += s.deposit || 0;
+    });
+    if (lines.length) {
+      var t = el("li", "bk-bar-sum");
+      t.appendChild(el("span", "", dep ? "Total · " + usd(dep) + " deposit due when you book" : "Total · nothing due until your visit"));
+      t.appendChild(el("span", "", usd(sum)));
+      barList.appendChild(t);
     }
-    b.addEventListener("click", onClick);
-    return b;
+    barMore.hidden = !lines.length;
+    if (!lines.length) { barList.hidden = true; barMore.setAttribute("aria-expanded", "false"); }
   };
-
-  var famLevel = function () {
-    if (!famPath.length) return { nodes: SECTORS, services: null };
-    var sector = SECTORS[famPath[0]];
-    if (sector.subs) {
-      if (famPath.length === 1) return { nodes: sector.subs, services: null };
-      return { nodes: null, services: sector.subs[famPath[1]].ids };
-    }
-    return { nodes: null, services: sector.ids };
-  };
-
-  var renderFam = function () {
-    famMenu.textContent = "";
-    var level = famLevel();
-    var i = 0;
-    if (famPath.length) {
-      famMenu.appendChild(famItem(i++, "← Back", null, function () {
-        famPath.pop();
-        renderFam();
-      }, "fam-back"));
-    }
-    if (level.nodes) {
-      level.nodes.forEach(function (node, idx) {
-        var count = node.subs
-          ? node.subs.reduce(function (a, s) { return a + s.ids.length; }, 0)
-          : node.ids.length;
-        famMenu.appendChild(famItem(i++, node.name,
-          count + (count === 1 ? " option" : " options"), function () {
-            famPath.push(idx);
-            renderFam();
-          }));
-      });
-    } else {
-      level.services.forEach(function (id) {
-        var s = byId[id];
-        if (!s) return;
-        famMenu.appendChild(famItem(i++, s.name,
-          s.dur + " min · $" + s.price, function () {
-            addService(id);
-            closeFam();
-          }, "fam-service"));
-      });
-    }
-  };
-
-  var openFam = function () {
-    famPath = [];
-    renderFam();
-    famMenu.hidden = false;
-    famEl.classList.add("open");
-    famTrigger.setAttribute("aria-expanded", "true");
-  };
-
-  var closeFam = function () {
-    famMenu.hidden = true;
-    famEl.classList.remove("open");
-    famTrigger.setAttribute("aria-expanded", "false");
-  };
-
-  famTrigger.addEventListener("click", function () {
-    if (famEl.classList.contains("open")) closeFam(); else openFam();
+  barMore.addEventListener("click", function () {
+    var open = barList.hidden;
+    barList.hidden = !open;
+    barMore.setAttribute("aria-expanded", open ? "true" : "false");
   });
+  selectBtn.addEventListener("click", function () {
+    if (!cur || !cur.pick) return;
+    var e = cur.e, ids = idsOf(e);
+    state.services = state.services.filter(function (s) { return ids.indexOf(s.id) === -1; });
+    state.services.push(cur.pick);
+    state.slot = null;
+    renderAll();
+    showStep("day");
+  });
+  yourRemove.addEventListener("click", function () {
+    var ids = idsOf(cur.e);
+    state.services = state.services.filter(function (s) { return ids.indexOf(s.id) === -1; });
+    state.slot = null;
+    renderAll();
+    showStep("services");
+  });
+  modal.querySelector(".bk-your-back").addEventListener("click", function () { showStep("services"); });
+  modal.querySelector(".bk-day-back").addEventListener("click", function () { showStep("services"); });
+  modal.querySelector(".bk-details-back").addEventListener("click", function () { showStep("day"); });
+  modal.querySelector(".bk-more").addEventListener("click", function () { showStep("services"); });
+  stepBtns.forEach(function (b) {
+    b.addEventListener("click", function () { if (!b.disabled) showStep(b.getAttribute("data-step")); });
+  });
+  nextBtn.addEventListener("click", function () {
+    if (state.slot === null) { dayStatus.textContent = "Pick a time first."; return; }
+    showStep("details");
+  });
+
+  /* the waitlist, for a full day or any day: it needs a name and an email, so it asks for them right here */
+  var waitBox = function (key, intro) {
+    var wl = el("div", "booking-waitlist");
+    var p = el("p"); p.innerHTML = intro;
+    wl.appendChild(p);
+    var row = el("div", "field-row");
+    [["Name", "bk-wl-name", "text", "name", nameInput.value], ["Email", "bk-wl-email", "email", "email", emailInput.value]].forEach(function (f) {
+      var fl = el("label", "field");
+      fl.appendChild(el("span", "", f[0]));
+      var inp = el("input", f[1]); inp.type = f[2]; inp.autocomplete = f[3]; inp.value = f[4];
+      fl.appendChild(inp);
+      row.appendChild(fl);
+    });
+    wl.appendChild(row);
+    var join = el("button", "btn btn-ghost wl-join", "Join the waitlist");
+    join.type = "button";
+    join.addEventListener("click", function () {
+      nameInput.value = wl.querySelector(".bk-wl-name").value.trim();
+      emailInput.value = wl.querySelector(".bk-wl-email").value.trim();
+      joinWaitlist(key, wl);
+    });
+    wl.appendChild(join);
+    var say = el("p", "wl-status"); say.setAttribute("role", "status"); say.setAttribute("aria-live", "polite");
+    wl.appendChild(say);
+    return wl;
+  };
+  waitBtn.addEventListener("click", function () {
+    if (!state.dayKey || !state.services.length) { dayStatus.textContent = "Pick a service and a day first, then join that day's waitlist."; return; }
+    if (!waitHost.hidden) { waitHost.hidden = true; waitHost.textContent = ""; return; }
+    waitHost.textContent = "";
+    waitHost.appendChild(waitBox(state.dayKey, "Join the waitlist for <strong>" +
+      keyDate(state.dayKey).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) +
+      "</strong>: if a time opens that day, you hear first, and the first to book it gets it."));
+    waitHost.hidden = false;
+  });
+
+  buildEntries();
+  buildCats();
 
   /* ── The next few openings for one service ── the homepage's "Start
      here" card shows these so a new client can tap a real time. One per
@@ -1223,7 +1414,6 @@
          instead of defaulting to the New Client Consultation */
       state.services = [];
     }
-    closeFam();
     state.slot = null;
     if (pick && pick.dayKey && state.services.length) {
       state.dayKey = pick.dayKey;
@@ -1249,10 +1439,13 @@
     repickView.hidden = true;
     calMonth = null;
     renderAll();
+    catSel.value = "";
+    showStep(state.services.length && state.slot !== null ? "details" : state.services.length ? "day" : "services");
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     modal.focus();
+    toTop();
     /* opened on a chosen time: skip past the picker to the total and the name field */
     if (pick && state.slot !== null) {
       setTimeout(function () {
@@ -1277,7 +1470,6 @@
       : [byId["new-client-consultation"] || services[0]];
     state.dayKey = null;
     state.slot = null;
-    closeFam();
     statusEl.textContent = "";
     modal.classList.add("rescheduling");
     rescheduleNote.hidden = false;
@@ -1288,10 +1480,12 @@
     repickView.hidden = true;
     calMonth = null;
     renderAll();
+    showStep("classic");
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
     modal.focus();
+    toTop();
   };
 
   /* ── Reschedule entry point (from the "Reschedule it instead" link) ──
@@ -1434,7 +1628,6 @@
   });
   document.addEventListener("keydown", function (e) {
     if (e.key === "Escape" && modal.getAttribute("aria-hidden") === "false") {
-      if (famEl.classList.contains("open")) { closeFam(); return; }
       closeModal();
     }
   });
@@ -2133,7 +2326,7 @@
     var name = nameInput.value.trim(), email = emailInput.value.trim();
     var say = box.querySelector(".wl-status");
     if (!name || !email || !emailInput.checkValidity()) {
-      say.textContent = "Add your name and email below first, then tap Join the waitlist.";
+      say.textContent = "Add your name and email first, then tap Join the waitlist.";
       nameInput.focus();
       return;
     }

@@ -805,3 +805,17 @@ The old first-10-clients package ($1,100, regularly $1,400) is retired: its id s
 **Still to confirm with her:** the times. She gave none, so the new acne-scars treatment is 70 minutes (the same as the single session) and the two packages keep the 60 minutes the old package had. The times only show on the menu and in the calendar once booking runs on the website. Also, her text had a card emoji before "Book your full series"; the site leaves it out.
 
 The menu, the server's price list, the chat's knowledge and the iPhone app sample were regenerated from it (`node scripts/build-services.mjs`).
+
+## Booking on the website now goes in GlossGenius's order (Nov 20)
+
+Evelyn wants clients to move through our booking the way they do on her GlossGenius page. She sent screenshots of it (the service list, "Your service", the day calendar). The on-site booking (the version where booking is here, not on GlossGenius) is now three steps, with the same stepper (services, a day, your details) and the same captions:
+
+1. **Select a service.** A "View All" category menu (Facials, ProCell Microchanneling, Peels, Acne Bootcamp, Consultations, Waxing) and a card for each service: the name in small spaced capitals, "$50.00 deposit required" where there is one, her description, "2 options", "$220+ | 60+ min", the Affirm / Klarna / Afterpay line, and **Select**. (The pay-over-time line follows the `payLater` switch; it gives no "as low as $20 a month" figure, because that number comes from the lenders.)
+2. **Your service.** Pick one option ("Select service option · Required"), with the price and time on each, a running **Total** bar at the bottom (the arrow shows what is in the session), and **Select**. Remove is there for a service already chosen.
+3. **Select a day.** The calendar, then the times, then **Next**, then "or **Join waitlist**" (it asks for a name and an email right there; a full day shows the same form), then **Details**: the services in the session, with "+ Add another service" (several still book back to back). **Your details** is next: name, email, mobile, then the same sign-off and deposit as before.
+
+A **Book** button on the menu skips to the day with that service chosen; picking a time on the homepage calendar opens at your details with the time held. Moving a booking (the "Reschedule it instead" link, or the link in a client's email) shows just the day and time with no steps, as before. Memberships, flash openings, Glow Points, gift certificates, deposits and the card on file work exactly as they did: only the layout changed.
+
+**What I did not copy:** GlossGenius's dark photo background and rose-gold buttons (the site keeps its own look), and the shopping-bag icon (the "Details" list does that job). **Still to do, if she wants it:** her own screen for editing services (names, options, prices, deposits, hiding one) like GlossGenius's setup, and a client page for managing their booking in the same style. Today the menu lives in `js/services.js` and changes go through the build (`node scripts/build-services.mjs`).
+
+Nothing here has launched: booking on the website is still in the preview, with demo payments.
