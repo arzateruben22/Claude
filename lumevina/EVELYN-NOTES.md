@@ -750,3 +750,14 @@ The fee's internal names (`late_cancel`, `AUTO_LATE_FEE`) are unchanged so nothi
 - **The button comes first** (**View availability & book →**, with "Booking through GlossGenius" under it), then the two instructions: **First visit?** Select "New Clients Start Here." If you're coming in for acne, select "Acne Bootcamp's New Client Consultation + Treatment." **Returning client?** Choose your service and preferred time.
 - **"Online booking coming soon" is gone** from the page, since clients can already book online through GlossGenius. When booking moves onto the website, that version keeps a plain "Book a facial" label above "Every opening, at a glance."
 - **Section numbers:** Book no longer carries one, so the numbered labels now run **01 Services & Gift Cards, 02 About Evelyn, 03 FAQ & Policies, 04 Contact**.
+
+## Booking is one button on the water, no box (Nov 20)
+
+The big white box is gone. The Book section (while booking runs on GlossGenius) is now just:
+
+> Lumevina Aesthetics Spa
+> **Book a facial**
+> **[ View services & book → ]**
+> First visit? Look for 'New Clients Start Here' or 'Acne Bootcamp' when booking.
+
+"Appointments at Lumevina in Woodland Hills" is replaced by the full name above the heading, and "Booking through GlossGenius" and the returning-client line are dropped. The small first-visit line is there in case new clients pick the wrong service; it's one line to delete if they don't. The section is also a little shorter underneath, since there's less in it. The button still opens her GlossGenius page.

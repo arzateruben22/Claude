@@ -6400,19 +6400,11 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 .bkl:not(.is-live) .bkl-side, .bkl:not(.is-live) .bkl-cal { display: none; }
 .bkl-gg { display: none; }
 .book-glossgenius .bkl { display: none; }
-.book-glossgenius .bkl-gg {
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; align-items: start;
-  padding: clamp(1.4rem, 3vw, 2.4rem); background: var(--field); border: 1px solid var(--panel-edge); border-radius: 22px;
-}
-.bkl-gg-lead { margin: 0 0 1rem; max-width: 36rem; font-size: 1.06rem; color: var(--ink); }
-.bkl-gg-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; max-width: 40rem; font-size: 0.93rem; color: var(--ink-60); }
-.bkl-gg-steps strong { font-weight: 600; color: var(--ink); }
-.bkl-gg-steps em { font-style: normal; color: var(--ink); }
-.bkl-gg-cta { display: grid; justify-items: start; gap: 0.55rem; }
-.bkl-gg-fine { margin: 0; font-size: 0.78rem; color: var(--ink-60); }
+/* booking on GlossGenius: one button straight on the water, with one small line under it (no box) */
+.book-glossgenius .bkl-gg { display: grid; justify-items: start; gap: 0.8rem; max-width: 30rem; }
+.bkl-gg-fine { margin: 0; font-size: 0.88rem; line-height: 1.45; color: var(--ink-60); }
 @media (max-width: 760px) {
-  .book-glossgenius .bkl-gg { grid-template-columns: 1fr; }
-  .bkl-gg-cta { justify-items: stretch; text-align: center; }
+  .book-glossgenius .bkl-gg { justify-items: stretch; max-width: none; }
   .bkl-gg-go { text-align: center; }
 }
 /* one heading per way of booking */
@@ -6911,18 +6903,15 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
     url("../img/water/open.webp") 50% 50% / cover no-repeat,
     #DED7CD;
 }
-.book-glossgenius .bkl-gg {
-  background: rgba(255, 255, 255, 0.88);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
 /* the shop above it ends close, so the booking section doesn't open with a wide empty band */
 .section-book { padding-top: 4.25rem; }
 @media (max-width: 600px) { .section-book { padding-top: 2.75rem; } }
-/* desktop: the words and the card keep to the left over the water */
+/* with just a button under the heading, the section doesn't need a deep floor (the calendar's version keeps it) */
+.book-glossgenius .section-book { padding-bottom: 4.5rem; }
+@media (max-width: 600px) { .book-glossgenius .section-book { padding-bottom: 3rem; } }
+/* desktop: the words and the button keep to the left over the water */
 @media (min-width: 1000px) {
   .book-glossgenius .section-book .book-head { max-width: 36rem; }
-  .book-glossgenius .section-book .bkl-gg { max-width: 42rem; gap: 1.25rem 1.75rem; }
 }
 
 /* FAQ and Contact: one stretch of open water, the sunbeams over the FAQ and
