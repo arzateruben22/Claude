@@ -706,3 +706,7 @@ You asked whether the website can limit rescheduling to once and charge a fee au
 - GlossGenius's own policy still can't do either of these, so while clients book there, Evelyn enforces them by hand.
 
 **Also fixed on the way:** Evelyn's Appointments card only turned on for "v3" and skipped "v4" (the full preview); the booking window opened behind its own "too close to move" notice and stayed open after it; Everything Lumevina has a new "Appointments and late fees" link that opens the dashboard in website-booking mode.
+
+## "View all products →" under the shelf (Nov 20)
+
+"On the shelf now" stays. The two lines under its carousel ("The products I use and recommend · Shop medical-grade skincare") are replaced by one link, **View all products →**, which goes down to the shop.
