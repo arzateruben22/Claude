@@ -718,4 +718,4 @@ The shop now opens with just **Shop all products** and one line, **Free pickup i
 - **Dropped:** the "01 Shop" label, the intro paragraph, and the 📍 pin.
 - **Sold-out items** now say **Request this product** (it still fills in the Contact form with that product, so Evelyn can order it in). The note a client sees when something sells out of their cart uses the same words.
 - **On a phone,** the space around the divider between the carousel and the shop is trimmed, so "View all products →" flows straight into the shop. The pickup line is sized to stay on one line on a phone.
-- **Heads-up:** the other labels still read 02 to 06 (Book a facial is "02"). I left them as you worded them; say the word and I'll renumber them 01 to 05.
+- **Section numbers:** with Shop unnumbered, the labels now run **01 to 05** (Book a facial 01, Services & Gift Cards 02, About Evelyn 03, FAQ & Policies 04, Contact 05).
