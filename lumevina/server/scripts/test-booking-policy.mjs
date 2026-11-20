@@ -1,6 +1,6 @@
 // Tests for the booking policy on the website's own booking (Nov 17):
 //   - a booking can be moved online once
-//   - cancelling inside 48 hours (or a Saturday visit) charges the $43 late fee to the card on file, by itself
+//   - cancelling inside 48 hours (or a Saturday visit) charges the $43 cancellation / rescheduling fee to the card on file, by itself
 //   - a card that can't be charged never undoes the cancellation; Evelyn can refund a fee; AUTO_LATE_FEE=off hands it back
 //
 // It runs the real server code (functions/_shared/bookings.ts and the book and studio-book handlers) under
@@ -105,13 +105,13 @@ await test("a Saturday booking and a booking inside 48 hours are refused with th
   const l = booking(slots.late()); fresh(l);
   assert.equal((await call(bookHandler, { action: "reschedule", token: l.manage_token, ...slots.moveTo() })).j.reason, "late");
 });
-await test("what the booking page is told: moves left, the late fee", async () => {
+await test("what the booking page is told: moves left, the cancellation / rescheduling fee", async () => {
   const b = booking(slots.inTime()); fresh(b);
   const v = (await call(bookHandler, { action: "get", token: b.manage_token })).j.booking;
   assert.equal(v.moves_left, 1); assert.equal(v.late_fee_cents, 4300); assert.equal(v.free_change, true);
 });
 
-console.log("\nThe late fee");
+console.log("\nThe cancellation / rescheduling fee");
 await test("cancelling inside 48 hours charges $43 to the card on file, by itself", async () => {
   const b = booking(slots.late(), { paid_cents: 5000 }); const db = fresh(b);
   const r = await call(bookHandler, { action: "cancel", token: b.manage_token });
@@ -129,9 +129,9 @@ await test("the client's email says the fee was charged; Evelyn's alert says it 
   const b = booking(slots.late(), { paid_cents: 5000 }); const db = fresh(b);
   await call(bookHandler, { action: "cancel", token: b.manage_token });
   const mail = net.emails.find((e) => e.subject.includes("is cancelled"));
-  assert.match(mail.text, /\$43 late-cancellation fee was charged to Visa •••• 4242/);
+  assert.match(mail.text, /\$43 cancellation \/ rescheduling fee was charged to Visa •••• 4242/);
   assert.match(mail.text, /\$50 deposit is kept/);
-  assert.match(alerts(db).join("\n"), /Late cancellation: Sofia Ramirez \|.*\$43 late fee was charged to Visa •••• 4242 automatically/);
+  assert.match(alerts(db).join("\n"), /Late cancellation: Sofia Ramirez \|.*\$43 cancellation \/ rescheduling fee was charged to Visa •••• 4242 automatically/);
 });
 await test("a Saturday visit cancelled days ahead is charged too", async () => {
   const b = booking(slots.saturday()); const db = fresh(b);
@@ -168,7 +168,7 @@ await test("AUTO_LATE_FEE=off hands the fee back to Evelyn's button", async () =
   const r = await call(bookHandler, { action: "cancel", token: b.manage_token });
   assert.equal(r.j.kind, "late"); assert.equal(r.j.fee, null);
   assert.equal(net.stripe.length, 0);
-  assert.match(alerts(db).join("\n"), /You can charge the \$43 late fee from Appointments/);
+  assert.match(alerts(db).join("\n"), /You can charge the \$43 cancellation \/ rescheduling fee from Appointments/);
   delete env.AUTO_LATE_FEE;
 });
 await test("Evelyn cancelling inside 48 hours never charges a fee", async () => {
@@ -218,7 +218,7 @@ await test("a member's cancellation 48+ hours ahead hands the facial back and ch
 });
 
 console.log("\nEvelyn's side");
-await test("she can still charge a no-show fee, and a late fee when automatic charging is off", async () => {
+await test("she can still charge a no-show fee, and the cancellation / rescheduling fee when automatic charging is off", async () => {
   const b = booking(slots.late(), { status: "cancelled", cancel_kind: "late" }); const db = fresh(b); env.AUTO_LATE_FEE = "off";
   const r = await call(studioHandler, { action: "fee", id: b.id, kind: "late_cancel" });
   assert.equal(r.status, 200, JSON.stringify(r.j)); assert.equal(r.j.cents, 4300);
@@ -236,7 +236,7 @@ await test("she can refund an automatic fee: the money goes back, the booking is
   assert.equal(w.status, 200, JSON.stringify(w.j));
   assert.deepEqual(net.stripe.filter((s) => s.kind === "refund").map((s) => s.payment_intent), [row(db, b.id).fee_charge], "the refund is for the payment that was charged");
   assert.ok(row(db, b.id).fee_waived_at);
-  assert.match(net.emails[0].text, /refunded the \$43 late-cancellation fee/);
+  assert.match(net.emails[0].text, /refunded the \$43 cancellation \/ rescheduling fee/);
   assert.equal((await call(studioHandler, { action: "waive_fee", id: b.id })).j.reason, "already", "no second refund");
   const again = await call(studioHandler, { action: "fee", id: b.id, kind: "late_cancel" });
   assert.equal(again.j.reason, "already", "a refunded fee is never charged again");

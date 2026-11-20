@@ -1318,8 +1318,8 @@
   var tooCloseNotice = function () {
     showNotice("Too close to reschedule online",
       "Appointments can't be moved online within 48 hours of your visit — this is " +
-      "part of our cancellation policy. Cancelling inside this window keeps the deposit " +
-      "and charges a $43 late-cancellation fee to your card on file. Please call or DM " +
+      "part of our cancellation policy. Cancelling or rescheduling inside this window keeps the deposit " +
+      "and charges a $43 cancellation / rescheduling fee to your card on file. Please call or DM " +
       "us and we'll do our best to help.");
   };
 

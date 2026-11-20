@@ -70,7 +70,7 @@ create table bookings (
   balance_paid_cents int,          -- paid at the visit, tip not included
   tip_cents int not null default 0,
   completed_at timestamptz,
-  fee_cents int,                   -- a late-cancel or no-show fee Evelyn charged
+  fee_cents int,                   -- a cancellation / rescheduling or no-show fee Evelyn charged
   fee_kind text check (fee_kind in ('late_cancel', 'no_show')),
   created_at timestamptz not null default now()
 );
@@ -737,7 +737,7 @@ alter table request_log enable row level security;
 alter table orders add column if not exists source text not null default 'web' check (source in ('web', 'studio'));
 create index if not exists orders_email on orders (email, paid_at desc);
 
--- ── Nov 17: one move per booking, and the late fee charged automatically ────
+-- ── Nov 17: one move per booking, and the cancellation / rescheduling fee charged automatically ────
 -- reschedule_count: how many times the client moved this booking online (her
 --   policy allows one; functions/book → reschedule). Evelyn moving it doesn't count.
 -- fee_charge: the Stripe payment of a fee, so Evelyn can refund it (studio-book → waive_fee).

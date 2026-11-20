@@ -874,7 +874,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
                   <div class="grow total"><span class="l" id="c-due-l">Due today · no deposit for members</span><span class="r" id="c-due"></span></div>
                   <div class="grow"><span class="l">Balance at your visit</span><span class="r" id="c-bal"></span></div>
                 </div>
-                <p class="policy">You can move it once, or cancel, up to 48 hours before. As a member you book with no deposit: your card on file holds the time. Cancelling within 48 hours, or a Saturday visit, charges a $43 late-cancellation fee to it. Saturdays can&rsquo;t be moved.</p>
+                <p class="policy">You can move it once, or cancel, up to 48 hours before. As a member you book with no deposit: your card on file holds the time. Cancelling or rescheduling within 48 hours, or cancelling a Saturday visit, charges a $43 cancellation / rescheduling fee to it. Saturdays can&rsquo;t be moved.</p>
                 <button class="pay" type="button" id="pay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 16c1.5 1 3.5 1 5 0"/></svg><span id="pay-l">Pay with Face ID</span></button>
                 <div class="faceid" id="faceid" hidden><div class="box" id="faceid-box"></div></div>
               </div>
@@ -1551,9 +1551,9 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     "a-makeup": ["Skip makeup for the rest of the day so your skin takes in the treatment.", [["Something else", "n:after"]]],
     "a-work": ["Give it 24 hours: no workouts or heavy sweating.", [["Something else", "n:after"]]],
     cancel: ["What do you need?", [["Move my visit", "n:c-move"], ["Running late", "n:c-late"], ["A Saturday visit", "n:c-sat"]]],
-    "c-move": ["Move it once, or cancel, at least 48 hours ahead, right from your next visit on Home. Cancelling within 48 hours charges a $43 late-cancellation fee to your card on file.", [["Something else", "n:cancel"]]],
+    "c-move": ["Move it once, or cancel, at least 48 hours ahead, right from your next visit on Home. Cancelling or rescheduling within 48 hours charges a $43 cancellation / rescheduling fee to your card on file.", [["Something else", "n:cancel"]]],
     "c-late": ["There’s a 10-minute grace period; after that the visit may be cancelled. Send a text as soon as you know.", [["Something else", "n:cancel"]]],
-    "c-sat": ["Saturdays can’t be moved. Cancelling a Saturday visit charges the $43 late-cancellation fee to your card on file.", [["Something else", "n:cancel"]]],
+    "c-sat": ["Saturdays can’t be moved. Cancelling a Saturday visit charges the $43 cancellation / rescheduling fee to your card on file.", [["Something else", "n:cancel"]]],
     member: ["Your Glow membership. What would you like to know?", [["What it covers", "n:m-covers"], ["Banked facials", "n:m-bank"], ["Pausing", "n:m-pause"]]],
     "m-covers": ["Glow covers one facial a month: the Custom Facial or the Monthly Acne Treatment, plus 15% off add-ons, 10% off the shelf with free shipping, and no deposits. Ageless ($225 a month) covers any of the facials, up to the Ageless Grace, with dermaplaning every other visit.", [["Something else", "n:member"]]],
     "m-bank": ["You have 1 facial banked. Up to two can bank, and with two waiting we don’t bill you until you book one. You can gift one to a friend from Me.", [["Something else", "n:member"]]],
@@ -1594,7 +1594,7 @@ html.app-mode .app-bar { display: flex; align-items: center; justify-content: sp
     [/^(ok|okay|k|cool|great|got it|sounds good|perfect|nice|alright|yes|yeah|yep|thanks|thank you|ty)[\s!.]*$/i, "Anything else I can help with?"],
     [/before|prep|retinol|botox|filler/i, "Stop retinol 5 to 7 days before, pause exfoliating acids 2 to 3 days before, and don’t wax or shave your face for 2 days."],
     [/after|work ?out|exercise|makeup/i, "Give it 24 hours: skip workouts and heavy sweating, and makeup for the rest of the day."],
-    [/cancel|move|reschedul/i, "Move it once, or cancel, at least 48 hours ahead, right from your next visit on Home. Cancelling within 48 hours charges a $43 late-cancellation fee to your card on file, and Saturdays can’t be moved."],
+    [/cancel|move|reschedul/i, "Move it once, or cancel, at least 48 hours ahead, right from your next visit on Home. Cancelling or rescheduling within 48 hours charges a $43 cancellation / rescheduling fee to your card on file, and Saturdays can’t be moved."],
     [/\bhours?\b|what time|when are you open|open (on|today|tomorrow|saturday|sunday|monday)/i, "Tuesday 12 to 7, Wednesday and Thursday 11 to 7, Friday 10 to 5, Saturday 9:30 to 6. Closed Sundays and Mondays."],
     [/ship|deliver/i, "Shipping is free for you as a Glow member (it’s $8 an order otherwise), or pick it up at your visit. Orders ship from Woodland Hills within two business days."],
     [/park|where|address/i, "Free parking lot. Wait in your car and text when you arrive; the address is in your confirmation."],

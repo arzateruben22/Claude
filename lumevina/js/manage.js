@@ -9,7 +9,7 @@
  *   carries over to a new date that month. After the one move, only Cancel
  *   is offered; another change is done with Evelyn.
  *   Later than that, or a Saturday: Cancel it, which keeps the deposit and
- *   charges the $43 late fee to the card on file (the server does it, by
+ *   charges the $43 cancellation / rescheduling fee to the card on file (the server does it, by
  *   itself, when they confirm). Moving is done with Evelyn.
  *
  * My Lumevina (js/account.js) opens the same window for a signed-in
@@ -62,10 +62,10 @@
     var fee = money(v.late_fee_cents || 4300);
     var left = v.moves_left == null ? 1 : v.moves_left;          /* an older server doesn't say: the move is there */
     var canMove = held && v.free_change && !v.saturday && left > 0;
-    var rule = !held ? "" : v.saturday ? "Saturday appointments can't be moved. Cancelling one keeps the deposit and charges a " + fee + " late-cancellation fee to your card on file."
+    var rule = !held ? "" : v.saturday ? "Saturday appointments can't be moved. Cancelling one keeps the deposit and charges a " + fee + " cancellation / rescheduling fee to your card on file."
       : v.free_change ? (left > 0 ? "You can move this appointment once, or cancel it, up to 48 hours before, and your deposit comes with you."
         : "You've already used your one online move. You can still cancel up to 48 hours before; to change the time again, reply to your confirmation email and Evelyn will help.")
-      : "It's within 48 hours now: cancelling keeps the deposit and charges a " + fee + " late-cancellation fee to your card on file. To move it, reply to your confirmation email and Evelyn will help.";
+      : "It's within 48 hours now, so it can't be moved online. Cancelling or rescheduling keeps the deposit and charges a " + fee + " cancellation / rescheduling fee to your card on file. To change it, reply to your confirmation email and Evelyn will help.";
     box.innerHTML =
       '<button class="mg-x" type="button" aria-label="Close">&times;</button>' +
       '<p class="mg-pill is-' + esc(v.status) + '">' + esc(STATUS[v.status] || v.status) + '</p>' +
@@ -113,9 +113,9 @@
         var kept = v.paid_cents ? "the " + money(v.paid_cents) + " deposit is kept and " : "";
         paint(r.booking, r.kind === "in_time"
           ? (v.paid_cents ? "Cancelled. Your " + money(v.paid_cents) + " deposit carries over: it comes off automatically when you book again this month with the same email." : "Cancelled. Nothing was charged.") + (v.member ? " Your membership facial is back on your account." : "")
-          : r.fee && r.fee.ok ? "Cancelled. As the policy says, " + kept + "a " + money(r.fee.cents) + " late-cancellation fee was charged to " + (r.fee.card || "your card on file") + "."
-          : r.fee && r.fee.reason !== "already" ? "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept. " : "") + "The " + fee + " late-cancellation fee couldn't be charged to your card, so Evelyn will be in touch."
-          : "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept." : "a late-cancellation fee applies, and Evelyn will be in touch."));
+          : r.fee && r.fee.ok ? "Cancelled. As the policy says, " + kept + "a " + money(r.fee.cents) + " cancellation / rescheduling fee was charged to " + (r.fee.card || "your card on file") + "."
+          : r.fee && r.fee.reason !== "already" ? "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept. " : "") + "The " + fee + " cancellation / rescheduling fee couldn't be charged to your card, so Evelyn will be in touch."
+          : "Cancelled. As the policy says, " + (v.paid_cents ? "the deposit is kept." : "a cancellation / rescheduling fee applies, and Evelyn will be in touch."));
         document.dispatchEvent(new CustomEvent("lumevina:booking-changed", { detail: r.booking }));
       }, function () { paint(v, "It didn't cancel. Check your connection and try again."); });
     });

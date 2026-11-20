@@ -294,7 +294,7 @@
       var cancel = document.createElement("button");
       cancel.type = "button";
       cancel.className = "acct-bk-cancel";
-      /* her policy: cancelling 48+ hours ahead (not a Saturday) is free; later than that keeps the deposit and charges the $43 late fee */
+      /* her policy: cancelling 48+ hours ahead (not a Saturday) is free; later than that keeps the deposit and charges the $43 cancellation / rescheduling fee */
       var inTime = x.start.getTime() - now > CANCEL_WINDOW_MS && x.start.getDay() !== 6;
       cancel.textContent = "Cancel";
       cancel.addEventListener("click", function () {
@@ -302,7 +302,7 @@
           cancel.dataset.arm = "1";
           cancel.textContent = inTime
             ? "Tap again to confirm: the deposit is non-refundable" + (b.points ? " and its " + b.points + " Glow Points go back" : "")
-            : "Tap again to cancel: the deposit is kept and a $43 late-cancellation fee is charged to your card on file";
+            : "Tap again to cancel: the deposit is kept and a $43 cancellation / rescheduling fee is charged to your card on file";
           return;
         }
         var all = loadBookings();
@@ -316,7 +316,7 @@
         var back = gone && window.LumevinaRewards ? window.LumevinaRewards.reverse(gone) : 0;
         renderBookings();
         var said = [];
-        if (!inTime) said.push("Cancelled. As the policy says, the deposit is kept and a $43 late-cancellation fee was charged to your card on file. (This is a demo: nothing real is charged.)");
+        if (!inTime) said.push("Cancelled. As the policy says, the deposit is kept and a $43 cancellation / rescheduling fee was charged to your card on file. (This is a demo: nothing real is charged.)");
         if (back) said.push((inTime ? "Cancelled. " : "") + "The " + back + " Glow Points from that booking were returned.");
         if (said.length) {
           var note = document.createElement("li");

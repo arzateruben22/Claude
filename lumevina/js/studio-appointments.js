@@ -7,7 +7,7 @@
  *                  a tip (15/20/25% or her own), then pay by the card on
  *                  file, cash, or a pay link the client opens on their phone.
  *                  A no-show is charged to the card on file (50% of the
- *                  service). A late cancellation ($43) is charged by itself
+ *                  service). A late cancellation ($43 cancellation / rescheduling fee) is charged by itself
  *                  when the client cancels (functions/book); she can refund
  *                  it here, and charge it herself if that charge failed. She
  *                  can cancel (refunding the deposit) or ask a client for a card.
@@ -59,7 +59,7 @@
   var svcName = function (id) { var s = SV.get(id); return s ? s.name : id; };
   var svcCents = function (id) { var s = SV.get(id); return s ? Math.round(s.price * 100) : 0; };
   var svcMin = function (id) { var s = SV.get(id); return s ? (s.block || 60) : 60; };
-  /* her policy: a late cancellation is $43; a no-show is 50% of the service,
+  /* her policy: the cancellation / rescheduling fee is $43; a no-show is 50% of the service,
      with a deposit already kept counting toward it (functions/studio-book → fee) */
   var feeCents = function (r) {
     if (r.status !== "no_show") return 4300;
@@ -69,7 +69,7 @@
   /* ── the card's frame ── */
   card.innerHTML =
     '<div class="crm-head"><div><h2>Appointments</h2>' +
-    '<p class="sub">Today and what’s coming. Check out a visit with a tip (card on file, cash or a pay link), charge a no-show fee, refund a late-cancellation fee (they are charged by themselves), or book for a client.</p></div>' +
+    '<p class="sub">Today and what’s coming. Check out a visit with a tip (card on file, cash or a pay link), charge a no-show fee, refund a cancellation / rescheduling fee (it is charged by itself when a client cancels), or book for a client.</p></div>' +
     '<button class="bk-export" type="button" id="ap-new-open">Book for a client</button></div>' +
     '<p class="ap-msg" id="ap-msg" role="status"></p>' +
     '<form class="ap-new" id="ap-new" hidden autocomplete="off"></form>' +
@@ -173,7 +173,7 @@
     if (r.status === "held" && r.date <= today) acts.push('<button type="button" class="settle-btn settle-btn--bad" data-ap="noshow">No-show</button>');
     var feeDue = (r.status === "no_show" || (r.status === "cancelled" && r.cancel_kind === "late")) && !r.fee_cents;
     if (feeDue && feeCents(r) < 100) state += " · the deposit kept covers the fee";
-    else if (feeDue && r.status === "cancelled") state += " · the late fee wasn’t charged" + (r.card ? "" : " (no card on file)");
+    else if (feeDue && r.status === "cancelled") state += " · the cancellation / rescheduling fee wasn’t charged" + (r.card ? "" : " (no card on file)");
     if (feeDue && feeCents(r) >= 100 && r.card) acts.push('<button type="button" class="settle-btn" data-ap="fee">Charge the ' + money(feeCents(r)) + " fee</button>");
     if (r.fee_cents && !r.fee_waived) acts.push('<button type="button" class="settle-btn" data-ap="waive">Refund the ' + money(r.fee_cents) + " fee</button>");
     if (r.status === "held" && !r.card) acts.push('<button type="button" class="settle-btn" data-ap="cardlink">Ask for a card</button>');

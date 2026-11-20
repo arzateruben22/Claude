@@ -10,14 +10,14 @@
 //   - A booking can be moved online once (MAX_MOVES). Another change is done
 //     with Evelyn.
 //   - Cancelling later than 48 hours ahead keeps the deposit and charges the
-//     $43 late-cancellation fee to the card on file, automatically
+//     $43 cancellation / rescheduling fee to the card on file, automatically
 //     (chargeFee; AUTO_LATE_FEE=off hands it back to her button in
 //     Appointments, and she can refund one there: studio-book → waive_fee).
 //   - Saturdays can't be moved, and cancelling one keeps the deposit and
 //     charges the same fee.
 //   - Every booking holds a card on file (members: the one their
 //     membership bills); nothing is charged to it unless she checks out the
-//     visit with it, or a late-cancel or no-show fee applies.
+//     visit with it, or a cancellation / rescheduling or no-show fee applies.
 
 // deno-lint-ignore-file no-explicit-any
 import { CATALOG } from "./catalog.ts";
@@ -219,11 +219,11 @@ export async function cardFor(db: any, b: any) {
   return null;
 }
 
-/** The late fee is charged by itself when a client cancels late; AUTO_LATE_FEE=off hands it back to Evelyn's button. */
+/** The cancellation / rescheduling fee is charged by itself when a client cancels late; AUTO_LATE_FEE=off hands it back to Evelyn's button. */
 export const autoLateFee = () => (Deno.env.get("AUTO_LATE_FEE") ?? "on").trim().toLowerCase() !== "off";
 
 /**
- * Charges a late-cancellation or no-show fee to the card on file, once per booking (the row says so, and
+ * Charges a cancellation / rescheduling or no-show fee to the card on file, once per booking (the row says so, and
  * never again after Evelyn refunded it). `how` "auto" is the charge made when a client cancels late (its key
  * makes a repeat harmless); "manual" is her button, whose key changes each minute so she can try again after a decline.
  * Resolves { ok, cents, card } or { ok: false, reason }: already, no_card, or Stripe's decline code.
@@ -234,7 +234,7 @@ export async function chargeFee(db: any, b: any, kind: "late_cancel" | "no_show"
   if (!card) return { ok: false as const, reason: "no_card" };
   const r = await chargeOnFile({
     customer: card.customer, paymentMethod: card.pm, cents,
-    description: kind === "no_show" ? "No-show fee" : "Late cancellation fee", metadata: { kind: "fee", booking_id: b.id },
+    description: kind === "no_show" ? "No-show fee" : "Cancellation / rescheduling fee", metadata: { kind: "fee", booking_id: b.id },
     key: how === "auto" ? `fee-${b.id}-auto` : `fee-${b.id}-m${Math.floor(Date.now() / 6e4)}`,
   });
   if (!r.ok) return { ok: false as const, reason: r.reason };
@@ -247,7 +247,7 @@ export async function chargeFee(db: any, b: any, kind: "late_cancel" | "no_show"
 /**
  * Cancels a booking. In time (48 hours or more, not a Saturday): the deposit
  * carries to a new date that month, a membership facial comes back. Late:
- * the deposit is kept and the $43 late fee is charged to the card on file
+ * the deposit is kept and the $43 cancellation / rescheduling fee is charged to the card on file
  * straight away (see autoLateFee); a card that can't be charged doesn't undo
  * the cancellation, it tells Evelyn. Evelyn cancelling refunds the deposit and
  * never charges a fee. Frees the time, hands back the points it earned (the
@@ -286,16 +286,16 @@ export async function cancelBooking(db: any, b: any, by: "client" | "evelyn", o:
     refunded = (await stripe("refunds", { payment_intent: b.stripe_payment_intent, metadata: { booking_id: b.id } }, { idempotency: `refund-${b.id}` })).ok;
   }
   if (b.google_event_id) await removeBooking(b.google_event_id).catch((e) => console.error("google", String(e)));
-  // the late fee, to the card on file, now (her policy)
+  // the cancellation / rescheduling fee, to the card on file, now (her policy)
   let fee: Awaited<ReturnType<typeof chargeFee>> | null = null;
   if (kind === "late" && autoLateFee()) {
-    fee = await chargeFee(db, b, "late_cancel", LATE_FEE_CENTS, "auto").catch((e) => { console.error("late fee", String(e)); return { ok: false as const, reason: "failed" }; });
+    fee = await chargeFee(db, b, "late_cancel", LATE_FEE_CENTS, "auto").catch((e) => { console.error("cancellation / rescheduling fee", String(e)); return { ok: false as const, reason: "failed" }; });
   }
   await sendBookingMessage(db, b, "cancelled", { kind, refunded, fee });
   if (by === "client") {
-    const feeNote = !late ? "" : fee?.ok ? ` The ${money(fee.cents)} late fee was charged to ${fee.card || "their card on file"} automatically.`
-      : fee ? ` The ${money(LATE_FEE_CENTS)} late fee couldn't be charged (${fee.reason === "no_card" ? "no card on file" : fee.reason === "already" ? "already charged" : fee.reason}): send a pay link from Appointments.`
-      : (b.payment_method ? ` You can charge the ${money(LATE_FEE_CENTS)} late fee from Appointments.` : " No card on file for a fee.");
+    const feeNote = !late ? "" : fee?.ok ? ` The ${money(fee.cents)} cancellation / rescheduling fee was charged to ${fee.card || "their card on file"} automatically.`
+      : fee ? ` The ${money(LATE_FEE_CENTS)} cancellation / rescheduling fee couldn't be charged (${fee.reason === "no_card" ? "no card on file" : fee.reason === "already" ? "already charged" : fee.reason}): send a pay link from Appointments.`
+      : (b.payment_method ? ` You can charge the ${money(LATE_FEE_CENTS)} cancellation / rescheduling fee from Appointments.` : " No card on file for a fee.");
     await notifyOwner(db, { kind: "cancel", url: "dashboard.html#appointments",
       title: `${late ? "Late cancellation" : "Cancelled"}: ${b.guest_name || email}`,
       body: `${names(b.services)}, ${fmtWhen(b.date, b.start_min)}.` + feeNote }).catch(() => {});
@@ -339,10 +339,10 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     row("When", esc(when)) + row("Treatment", esc(svc)) +
     row("Where", esc(address || "Lumevina Aesthetics Spa, Woodland Hills") + (address ? "" : "<br><span style=\"font-size:13px;color:#7D5A44\">The address is in your booking text from Evelyn.</span>")) +
     (b.membership_id ? row("Paid", "Your membership facial") : b.paid_cents ? row("Deposit paid", esc(money(b.paid_cents)) + " (it goes toward your total)") : "") +
-    (b.card_label ? row("Card on file", esc(b.card_label) + "<br><span style=\"font-size:13px;color:#7D5A44\">Nothing is charged to it unless you choose to pay with it, or for a late cancellation (" + money(LATE_FEE_CENTS) + ", charged automatically) or a no-show.</span>") : "") +
+    (b.card_label ? row("Card on file", esc(b.card_label) + "<br><span style=\"font-size:13px;color:#7D5A44\">Nothing is charged to it unless you choose to pay with it, or for a late cancellation or reschedule (the " + money(LATE_FEE_CENTS) + " cancellation / rescheduling fee, charged automatically) or a no-show.</span>") : "") +
     `</table>`;
   const manage = button(manageUrl(b), "Cancel or move it");
-  const policy = `<p style="font-size:13px;line-height:1.5;color:#7D5A44">You can move an appointment once, and move or cancel it up to 48 hours ahead: your deposit moves with you to a new date that month. Cancelling within 48 hours, or cancelling a Saturday appointment, keeps the deposit and charges a ${money(LATE_FEE_CENTS)} late-cancellation fee to your card on file. A missed appointment is charged 50% of the service. Saturday appointments can't be moved. There's a 10-minute grace period if you're running late.</p>`;
+  const policy = `<p style="font-size:13px;line-height:1.5;color:#7D5A44">You can move an appointment once, and move or cancel it up to 48 hours ahead: your deposit moves with you to a new date that month. Cancelling or rescheduling within 48 hours, or cancelling a Saturday appointment, keeps the deposit and charges a ${money(LATE_FEE_CENTS)} cancellation / rescheduling fee to your card on file. A missed appointment is charged 50% of the service. Saturday appointments can't be moved. There's a 10-minute grace period if you're running late.</p>`;
   const arrive = `<p style="font-size:14px;line-height:1.5">Free parking in the lot. When you arrive, wait in your car and text Evelyn before coming up.</p>`;
   const formLine = form ? "" : `<p style="font-size:14px;line-height:1.5">Please fill in your pre-visit form before you come: <a href="${esc(site())}/?intake=1" style="color:#161412">open it here</a> (two minutes).</p>`;
   let subject = "", title = "", body = "", sms = "";
@@ -363,8 +363,8 @@ export async function sendBookingMessage(db: any, b: any, kind: "confirmed" | "r
     const deposit = !b.paid_cents ? "" : extra.kind === "in_time" ? `Your ${money(b.paid_cents)} deposit carries over to a new date this month: it comes off automatically when you book with this email.`
       : extra.kind === "late" ? `It was within 48 hours (or a Saturday), so the ${money(b.paid_cents)} deposit is kept, as the policy says.`
       : extra.refunded ? `Evelyn cancelled this one, so your ${money(b.paid_cents)} deposit is refunded to your card (it shows in a few days).` : "";
-    const feeLine = extra.fee?.ok ? `A ${money(extra.fee.cents)} late-cancellation fee was charged to ${esc(extra.fee.card || "your card on file")}, as the booking policy says.`
-      : extra.fee && extra.fee.reason !== "already" ? `The booking policy has a ${money(LATE_FEE_CENTS)} late-cancellation fee. We couldn't charge it to your card on file, so Evelyn will be in touch.` : "";
+    const feeLine = extra.fee?.ok ? `A ${money(extra.fee.cents)} cancellation / rescheduling fee was charged to ${esc(extra.fee.card || "your card on file")}, as the booking policy says.`
+      : extra.fee && extra.fee.reason !== "already" ? `The booking policy has a ${money(LATE_FEE_CENTS)} cancellation / rescheduling fee. We couldn't charge it to your card on file, so Evelyn will be in touch.` : "";
     body = `<p style="font-size:15px;line-height:1.55">${esc(svc)}, ${esc(when)}.</p>` + (deposit ? `<p style="font-size:15px;line-height:1.55">${deposit}</p>` : "") +
       (feeLine ? `<p style="font-size:15px;line-height:1.55">${feeLine}</p>` : "") +
       (b.membership_id && extra.kind !== "late" ? `<p style="font-size:15px;line-height:1.55">Your membership facial is back on your account.</p>` : "") +

@@ -76,7 +76,7 @@ site's address (that browser only); the dashboard follows the same switch.
    supabase secrets set REVIEW_URL=https://g.page/r/... STUDIO_ADDRESS="<the studio's address, for confirmations>" PREFS_SECRET=<random>
    ```
 
-   `AUTO_LATE_FEE=off` hands the late-cancellation fee back to Evelyn's button in Appointments (the default, with
+   `AUTO_LATE_FEE=off` hands the cancellation / rescheduling fee back to Evelyn's button in Appointments (the default, with
    the secret unset, is to charge it automatically when a client cancels inside 48 hours or cancels a Saturday visit).
    Moving it onto a live database needs the three `alter table bookings add column` lines at the end of
    `server/schema.sql` (Nov 17: `reschedule_count`, `fee_charge`, `fee_waived_at`), then redeploy `book` and `studio-book`.
@@ -121,7 +121,7 @@ site's address (that browser only); the dashboard follows the same switch.
 8. **Test in Stripe's test mode first** (card 4242 4242 4242 4242): a guest
    booking with a deposit, one with no deposit, moving and cancelling from
    the email link, a membership join and its first facial, a checkout with a
-   tip, a pay link, a late-cancel fee. GO-LIVE.md has the full list.
+   tip, a pay link, a cancellation / rescheduling fee. GO-LIVE.md has the full list.
 
 ## Gift certificates
 

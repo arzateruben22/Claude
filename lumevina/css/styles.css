@@ -2588,7 +2588,7 @@ html.svc-open { overflow: hidden; }
   color: var(--ink-35);
   margin-bottom: var(--space-4);
 }
-/* her cancellation policy, where they sign (the late fee is charged automatically) */
+/* her cancellation policy, where they sign (the cancellation / rescheduling fee is charged automatically) */
 .booking-policy-box {
   margin: 0 0 var(--space-4);
   padding: 0.85rem 1rem;

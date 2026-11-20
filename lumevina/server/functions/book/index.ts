@@ -42,9 +42,9 @@ import {
   CANCEL_HOURS, LATE_FEE_CENTS, cancelBooking, confirmBooking, fmtWhen, hoursUntil, isSaturday, moveBlock, movesLeft, names, priceVisit, sendBookingMessage, site,
 } from "../_shared/bookings.ts";
 
-/** What Stripe's page says beside the button: the policy the client agrees to (the late fee is charged automatically). */
-const POLICY_AT_PAYMENT = `Your card stays on file for this visit. Move or cancel up to 48 hours ahead and your deposit moves with you; an appointment can be moved once. Cancelling within 48 hours, or a Saturday appointment, keeps the deposit and charges a $${LATE_FEE_CENTS / 100} late-cancellation fee to this card automatically.`;
-const POLICY_AT_CARD = `Nothing is charged now. Your card holds the time. An appointment can be moved once, up to 48 hours ahead. Cancelling within 48 hours, or a Saturday appointment, charges a $${LATE_FEE_CENTS / 100} late-cancellation fee to this card automatically; a missed appointment is charged 50% of the service.`;
+/** What Stripe's page says beside the button: the policy the client agrees to (the cancellation / rescheduling fee is charged automatically). */
+const POLICY_AT_PAYMENT = `Your card stays on file for this visit. Move or cancel up to 48 hours ahead and your deposit moves with you; an appointment can be moved once. Cancelling or rescheduling within 48 hours, or cancelling a Saturday appointment, keeps the deposit and charges a $${LATE_FEE_CENTS / 100} cancellation / rescheduling fee to this card automatically.`;
+const POLICY_AT_CARD = `Nothing is charged now. Your card holds the time. An appointment can be moved once, up to 48 hours ahead. Cancelling or rescheduling within 48 hours, or cancelling a Saturday appointment, charges a $${LATE_FEE_CENTS / 100} cancellation / rescheduling fee to this card automatically; a missed appointment is charged 50% of the service.`;
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[0-9a-f]{32}$/;
 const AHEAD_DAYS = 62;

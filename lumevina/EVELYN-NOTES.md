@@ -731,3 +731,13 @@ The card is shorter too:
 > **Book a consultation · $75**
 
 The "Not sure what your skin needs?" label and the "Personalized Skin Consultation" title are gone from the card (the service itself is still called that on GlossGenius, the menu and the FAQ). The button still opens her GlossGenius page. The chat now says "the consultation card in the shop" rather than "above the shelf".
+
+## It's the cancellation / rescheduling fee, not a "late fee" (Nov 20)
+
+The $43 is now called the **cancellation / rescheduling fee** everywhere it's shown: the website's "Cancelling & rescheduling" policy, the box clients sign at booking, the manage window, My Lumevina, the Stripe payment page, the confirmation and refund emails, the Stripe line on the card statement, the chat and the app sample, and Evelyn's Appointments card and the hub.
+
+The rule reads the same way too: **cancelling or rescheduling within 48 hours** keeps the deposit and charges the $43 (a Saturday appointment can't be moved, so cancelling one is what charges it). Rebooking takes a new deposit.
+
+**How it works today:** inside 48 hours a client can't move an appointment online, so on the website a late change is a cancellation, which charges the fee by itself, and then a new booking with a new deposit. If a client emails Evelyn to move one instead, she handles it by hand: the "Charge the $43 fee" button in Appointments only shows on bookings the client cancelled late, so for a late reschedule she'd charge it from Stripe, or tell me and I'll add a button for it.
+
+The fee's internal names (`late_cancel`, `AUTO_LATE_FEE`) are unchanged so nothing already saved or set up breaks; clients and Evelyn never see them.

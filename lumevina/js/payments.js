@@ -82,7 +82,7 @@
      never a full card number. LIVE (Stripe): at deposit time confirm a
      SetupIntent to vault the card off-session, then store the returned
      payment_method id + last4 on the Stripe customer. Future deposits and
-     no-show / late-cancel fees charge that saved method (with the client's
+     no-show and cancellation / rescheduling fees charge that saved method (with the client's
      up-front consent) — no re-entry. */
   var CARDS_KEY = "lumevina_cards";
   var loadCards = function () {

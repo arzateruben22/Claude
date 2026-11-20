@@ -43,7 +43,7 @@ Legend: ✅ done · 🟡 scaffolded (flips on with Supabase/Stripe/Resend) · �
 | New-member retention cohort | ✅ | partial | Returned vs first-time |
 | Checkout at the visit, with tips | ✅ v3 | ✅ | Appointments: card on file, cash or a pay link; products, discount, points (v2: "Settle visits") |
 | No-show tracking (deposit kept) | ✅ | ✅ | Deposit kept, balance written off |
-| Charge a no-show/late-cancel fee | ✅ v3 | ✅ | One tap, to the card on file |
+| Charge a no-show or cancellation / rescheduling fee | ✅ v3 | ✅ | One tap, to the card on file |
 | Gift-certificate liability tracking | ✅ | partial | Outstanding balance tile + per-cert table |
 | Bookkeeping / tax (income, costs, profit) | ✅ | partial | Services, dues, retail, gifts in; card fees, product cost, Founding Five kits, expenses out; monthly profit; CSV |
 | Calendar sync (Google/Apple) | ✅ | ✅ | Owner .ics feed |

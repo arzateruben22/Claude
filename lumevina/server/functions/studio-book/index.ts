@@ -12,7 +12,7 @@
 //   their phone (→ { url }); the webhook finishes it. cash / other: recorded.
 //   → { ok, quote, points } or { reason } (a declined card: try the link instead)
 // POST { action: "fee", id, kind: "late_cancel" | "no_show", cents? }  charges the card on file:
-//   $43 for a late cancellation, 50% of the service for a no-show (less a deposit
+//   $43 cancellation / rescheduling fee, 50% of the service for a no-show (less a deposit
 //   already kept), unless she says otherwise; a no-show is marked no-show either way
 // POST { action: "no_show", id }        marks it, without a fee
 // POST { action: "cancel", id, refund? }  Evelyn cancels: the deposit is refunded (unless refund: false),
@@ -146,14 +146,14 @@ Deno.serve(async (req) => {
       if (!r.ok) return json({ reason: r.reason }, r.reason === "no_card" ? 409 : r.reason === "already" ? 409 : 402);
       const card = { label: r.card };
       if (kind === "no_show" && b.status === "held") await db.from("bookings").update({ status: "no_show" }).eq("id", b.id);
-      await sendEmail(norm(b.guest_email), kind === "no_show" ? "Your missed Lumevina Aesthetics Spa appointment" : "Your late cancellation at Lumevina Aesthetics Spa",
+      await sendEmail(norm(b.guest_email), kind === "no_show" ? "Your missed Lumevina Aesthetics Spa appointment" : "Your cancellation / rescheduling fee at Lumevina Aesthetics Spa",
         page(kind === "no_show" ? "We missed you." : "About your cancellation.",
           `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. As the booking policy says, a ${money(cents)} fee was charged to ${esc(card.label ?? "your card on file")}.</p>` +
           `<p style="font-size:15px;line-height:1.55">Questions? Just reply to this email.</p>`), Deno.env.get("OWNER_EMAIL") ?? undefined);
       return json({ ok: true, cents });
     }
 
-    // Evelyn takes back a late fee (it was charged by itself when the client cancelled): the money goes back to their card
+    // Evelyn takes back a cancellation / rescheduling fee (it was charged by itself when the client cancelled): the money goes back to their card
     // and the booking is marked so the fee is never charged again.
     case "waive_fee": {
       const b = await one();
@@ -163,9 +163,9 @@ Deno.serve(async (req) => {
       const r = await stripe("refunds", { payment_intent: b.fee_charge, metadata: { kind: "fee_refund", booking_id: b.id } }, { idempotency: `fee-refund-${b.id}` });
       if (!r.ok) return json({ reason: String(r.data?.error?.code ?? "refund_failed") }, 402);
       await db.from("bookings").update({ fee_waived_at: new Date().toISOString() }).eq("id", b.id);
-      await sendEmail(norm(b.guest_email), "Your late-cancellation fee is refunded",
+      await sendEmail(norm(b.guest_email), "Your cancellation / rescheduling fee is refunded",
         page("A refund, from Evelyn.",
-          `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. Evelyn has refunded the ${money(b.fee_cents)} late-cancellation fee to your card. It shows in a few days.</p>`),
+          `<p style="font-size:15px;line-height:1.55">${esc(names(b.services))}, ${esc(fmtWhen(b.date, b.start_min))}. Evelyn has refunded the ${money(b.fee_cents)} cancellation / rescheduling fee to your card. It shows in a few days.</p>`),
         Deno.env.get("OWNER_EMAIL") ?? undefined);
       return json({ ok: true, cents: b.fee_cents });
     }
@@ -241,7 +241,7 @@ async function cardLink(db: any, b: any) {
     mode: "setup", currency: "usd", customer: customer ?? undefined,
     success_url: `${site()}/?card=saved`, cancel_url: `${site()}/`,
     metadata: { kind: "card", booking_id: b.id }, setup_intent_data: { metadata: { kind: "card", booking_id: b.id } },
-    custom_text: { submit: { message: "Nothing is charged now. Your card holds the time; a $43 fee applies only to a late cancellation or a no-show." } },
+    custom_text: { submit: { message: "Nothing is charged now. Your card holds the time; a $43 cancellation / rescheduling fee applies only inside 48 hours, and a no-show is charged separately." } },
   });
   if (!s.ok || !s.data?.url) return null;
   await sendBookingMessage(db, b, "card", { url: s.data.url });
