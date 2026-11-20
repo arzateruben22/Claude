@@ -173,7 +173,7 @@
     });
     if (gone.length) {
       noticeEl.textContent = gone.join(" and ") + (gone.length === 1 ? " just sold out and was" : " just sold out and were") +
-        " taken out of your cart. Request it from the shop and Evelyn will order it in.";
+        " taken out of your cart. Use \"Request this product\" in the shop and Evelyn will order it in.";
       noticeEl.hidden = false;
     }
     if (changed) save();

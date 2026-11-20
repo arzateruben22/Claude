@@ -8,7 +8,7 @@
  *   The shop     search, brand and category, "in stock now", and every
  *                product's price and availability at a glance
  *
- * Out of stock is never a dead end: "Request it" fills in the Contact
+ * Out of stock is never a dead end: "Request this product" fills in the Contact
  * form with that product, so Evelyn can order it in.
  *
  * Product cards are labels, not photos, until Evelyn's photos arrive:
@@ -82,7 +82,7 @@
       b.dataset.price = String(p.price);
       b.setAttribute("aria-label", "Add " + p.name + " to cart, " + money(p.price));
     } else {
-      b.textContent = "Request it";
+      b.textContent = "Request this product";
       b.setAttribute("aria-label", "Request " + p.name);
       b.addEventListener("click", function () { request(p); });
     }

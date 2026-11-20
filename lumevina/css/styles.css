@@ -891,8 +891,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
   border-bottom: 1px solid var(--ink-15);
 }
 
-.shop-local { margin: 0.6rem 0 0; font-size: 0.9rem; color: var(--ink-60); max-width: 44rem; }
-.shop-local::before { content: "📍 "; }
+.shop-local { margin: 0; font-size: clamp(0.8rem, 3.45vw, 0.9rem); color: var(--ink-60); max-width: 44rem; }   /* the one line fits a phone */
 .shop-head { text-align: center; }
 .shop-head .section-sub { margin-left: auto; margin-right: auto; }
 
@@ -4585,7 +4584,7 @@ a.appstore-badge:hover { transform: translateY(-2px); }
 }
 
 @media (max-width: 600px) {
-  .hero { min-height: 0; padding-top: 5.5rem; padding-bottom: 2.6rem; }
+  .hero { min-height: 0; padding-top: 5.5rem; padding-bottom: 1.4rem; }
   .hero-title { margin-bottom: 0.7rem; }
   .hero-sub { margin-bottom: 0; font-size: 0.98rem; }
   .hero-wordmark { display: none; }
@@ -6279,8 +6278,12 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 
 /* ─── The shop ─── */
 .section-store { border-top: 1px solid var(--ink-15); }
-.section-store .shop-head { text-align: left; margin-bottom: var(--space-4); }
-.section-store .shop-head .section-sub { margin-left: 0; }
+.section-store .shop-head { text-align: left; margin-bottom: 1.1rem; }
+.section-store .shop-head .display { margin-bottom: 0.4rem; }
+/* on a phone the carousel flows straight into the shop: the divider stays, the air around it goes */
+@media (max-width: 600px) {
+  .section-store { padding-top: 1.75rem; }
+}
 .sh-tools { display: grid; gap: 0.7rem; margin-bottom: 0.9rem; }
 .sh-search-k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .sh-search input {
