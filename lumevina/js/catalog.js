@@ -108,7 +108,7 @@
     /* ── Circadia: 1 entry ── */
     P(CI, "Vitamin Veil Cleansing Oil", 40, 1, "Cleansers", { inv: "Vitamin Veil Cleanser", slug: "vitamin-veil-cleanser", photo: "img/products/circadia-vitamin-veil-cleansing-oil.webp", size: "6.7 fl oz / 198 ml", about: "A cleansing oil." }),
 
-    /* ── Lumevina: the Personalized Skin Consultation, online or in person, $75 (a service; the shop shows it above the shelf, not in it) ── */
+    /* ── Lumevina: the Personalized Skin Consultation, online or in person, $75 (a service; the shop shows it as a card after the first group of products, not as a product) ── */
     P("Lumevina", "Personalized Skin Consultation", 75, null, "Consults", { slug: "online-consult", kind: "consult", size: "Online or in person", about: "Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps." }),
   ];
 

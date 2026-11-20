@@ -719,3 +719,15 @@ The shop now opens with just **Shop all products** and one line, **Free pickup i
 - **Sold-out items** now say **Request this product** (it still fills in the Contact form with that product, so Evelyn can order it in). The note a client sees when something sells out of their cart uses the same words.
 - **On a phone,** the space around the divider between the carousel and the shop is trimmed, so "View all products →" flows straight into the shop. The pickup line is sized to stay on one line on a phone.
 - **Section numbers:** with Shop unnumbered, the labels now run **01 to 05** (Book a facial 01, Services & Gift Cards 02, About Evelyn 03, FAQ & Policies 04, Contact 05).
+
+## The consultation card moves down the shop (Nov 20)
+
+The consultation card used to sit between the shop's category tabs and the first product, so the first thing after the search was a booking card. It now sits **below the first group of products** (right after Cleansers), so people meet the products first. It stays in place while someone searches or filters, and the "consultation" link in the top section still jumps to it.
+
+The card is shorter too:
+
+> **Skin consultation**
+> Meet with Evelyn online or in person for help building a routine around your skin concerns.
+> **Book a consultation · $75**
+
+The "Not sure what your skin needs?" label and the "Personalized Skin Consultation" title are gone from the card (the service itself is still called that on GlossGenius, the menu and the FAQ). The button still opens her GlossGenius page. The chat now says "the consultation card in the shop" rather than "above the shelf".

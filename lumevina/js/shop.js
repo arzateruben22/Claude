@@ -222,7 +222,7 @@
     show: function (id) { var p = INV.get(id); if (p) showDetail(p); }
   };
 
-  /* the shelf: every live product that is a product (the online consult is a service, shown above the shelf) */
+  /* the shelf: every live product that is a product (the online consult is a service: its card sits in the shelf, after the first group) */
   var shelf = function () { return INV.live().filter(function (p) { return p.kind !== "consult"; }); };
 
   var sorted = function (list) {
@@ -474,6 +474,7 @@
     return true;
   };
 
+  var consult = document.getElementById("sh-consult");   /* the skin consultation card: paintGrid moves it into the shelf */
   var paintGrid = function () {
     if (!grid) return;
     var list = sorted(shelf().filter(matches));
@@ -481,7 +482,7 @@
       return { cat: c, items: list.filter(function (p) { return p.cat === c; }) };
     }).filter(function (g) { return g.items.length; });
     grid.textContent = "";
-    groups.forEach(function (g) {
+    groups.forEach(function (g, gi) {
       var sec = el("section", "sh-sec");
       sec.id = secId(g.cat);
       sec.setAttribute("data-cat", g.cat);
@@ -499,6 +500,8 @@
       g.items.forEach(function (p) { var li = el("li"); li.appendChild(card(p)); row.appendChild(li); });
       sec.appendChild(row);
       grid.appendChild(sec);
+      /* the skin consultation card comes after the first group, so the products are what you meet first */
+      if (gi === 0 && consult) grid.appendChild(consult);
     });
     if (!list.length) {
       var none = el("p", "sh-none");
@@ -511,6 +514,7 @@
       none.appendChild(ask);
       grid.appendChild(none);
     }
+    if (consult && consult.parentNode !== grid) grid.appendChild(consult);   /* nothing matched: it still has a home */
     paintCats(groups);
     var inNow = list.filter(function (p) { var s = INV.status(p); return s === "in" || s === "low"; }).length;
     var line = list.length + (list.length === 1 ? " product" : " products") + " · " + inNow + " on the shelf now";
@@ -698,7 +702,7 @@
   INV.onChange(paintAll);
   /* Evelyn approved an active for this client: its button turns into Add to cart */
   document.addEventListener("lumevina:consult-changed", function () { paintGrid(); paintRail(); });
-  /* the consultation card above the shelf (online or in person, $75): its button opens her GlossGenius page,
+  /* the consultation card in the shelf (online or in person, $75): its button opens her GlossGenius page,
      where it's booked; the link follows js/site-config.js (booking.glossgenius) if that ever changes */
   (function () {
     var cfg = (window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.booking) || {};
