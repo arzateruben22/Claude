@@ -53,7 +53,7 @@ Everything GlossGenius does (from its own feature pages and review listings, Oct
 | Checkout at the visit | ✅ v3 | Appointments → Check out: services, products from her shelf, discount, Glow Points; pay by the card on file, cash, or a pay link on the client's phone (Apple Pay, Google Pay, pay over time). No card reader. |
 | Tips | ✅ v3 | 15 / 20 / 25% or her own amount, at checkout. |
 | Same-day / instant payouts | 🟡 | Stripe pays out on its schedule; instant payouts are a Stripe setting. |
-| Buy now, pay later (Affirm, Afterpay, Klarna) | ✅ | Stripe Checkout, for the shop and pay links (switched on in Stripe). |
+| Buy now, pay later (Affirm, Afterpay, Klarna) | ✅ | Stripe Checkout, for the shop, gift certificates, her pay link for a sale and the visit link (switched on in Stripe; `PAY_LATER=off` hides it). The booking deposit and memberships stay card-only: these methods can't keep a card for the cancellation / rescheduling fee. |
 | Gift cards | ✅ more on the website | Any amount, balances that carry over, used at checkout. |
 | Memberships | ✅ v3 | Glow $185, Ageless $235 a month (founding $175 / $225 for the first 25) on Stripe Billing: bank, gift, pause, cancel online. |
 | Loyalty points | ✅ v3 (GlossGenius has none built in) | Glow Points: 1 per $1, 100 on the first booking here, referrals, birthdays. |

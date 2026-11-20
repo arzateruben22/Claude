@@ -4,7 +4,7 @@
 // checks every price and count against the products table (never trusting
 // the browser), saves a pending order, and opens a Stripe Checkout page:
 // card, Apple Pay and Google Pay, and pay-over-time (Klarna, Afterpay,
-// Affirm) when they're switched on in Stripe. Sales tax is added by Stripe
+// Affirm) when they're switched on in Stripe (PAY_LATER=off hides them). Sales tax is added by Stripe
 // Tax when STRIPE_TAX=on. The Stripe webhook finishes the order (stock,
 // gift codes, emails, Evelyn's alert).
 //
@@ -26,6 +26,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { isLive, memberFor, PLANS } from "../_shared/membership.ts";
 import { approvedFor, mayBuy } from "../_shared/consults.ts";
 import { tooMany } from "../_shared/guard.ts";
+import { payLaterOn } from "../_shared/paylater.ts";
 
 // $8 an order; members ship free. FREE_OVER_CENTS = 0: no free-shipping line
 // (Evelyn, Nov 11). Same rule as js/cart.js.
@@ -158,6 +159,7 @@ Deno.serve(async (req) => {
   }
   if (delivery === "pickup") f.set("custom_text[submit][message]", "Pick up at your next visit to the studio in Woodland Hills.");
 
+  if (!payLaterOn()) f.set("payment_method_types[0]", "card");   // PAY_LATER=off: no Klarna / Afterpay / Affirm (_shared/paylater.ts)
   f.set("allow_promotion_codes", "true");       // WELCOME10 and the like, set up in Stripe (marketing/welcome-offer.md); never in an ad
   const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",

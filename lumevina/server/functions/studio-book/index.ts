@@ -30,6 +30,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { studioOk } from "../_shared/studio.ts";
 import { EMAIL, getContact, norm, upsertContact } from "../_shared/contacts.ts";
 import { chargeOnFile, customerFor, stripe } from "../_shared/stripe.ts";
+import { cardOnly, payLaterOn } from "../_shared/paylater.ts";
 import { cancelBooking, cardFor, chargeFee, confirmBooking, fmtWhen, LATE_FEE_CENTS, names, noShowFeeCents, priceVisit, sendBookingMessage, site } from "../_shared/bookings.ts";
 import { completeVisit, quoteVisit } from "../_shared/visits.ts";
 import { PLANS } from "../_shared/membership.ts";
@@ -120,12 +121,15 @@ Deno.serve(async (req) => {
         if (q.charge_cents <= 0) return json(await completeVisit(db, b, input(), { method: "other", charged_cents: 0 }));
         const c = await getContact(db, b.guest_email);
         const customer = await customerFor(norm(b.guest_email), b.guest_name ?? "", c?.stripe_customer);
+        // Klarna / Afterpay / Affirm can't save a card, so the visit is offered pay-over-time only when a card is already on file for the fee
+        const saveCard = !(payLaterOn() && await cardOf(b));
         const items: any[] = [{ quantity: 1, price_data: { currency: "usd", unit_amount: q.due_cents, product_data: { name: `Your visit · ${names(q.services)}` } } }];
         if (q.tip_cents) items.push({ quantity: 1, price_data: { currency: "usd", unit_amount: q.tip_cents, product_data: { name: "Tip for Evelyn" } } });
         const s = await stripe("checkout/sessions", {
           mode: "payment", customer: customer ?? undefined, line_items: q.due_cents ? items : items.slice(1),
           success_url: `${site()}/?paid=1`, cancel_url: `${site()}/`, metadata: { kind: "visit", booking_id: b.id },
-          payment_intent_data: { setup_future_usage: "off_session", metadata: { kind: "visit", booking_id: b.id } },
+          payment_intent_data: { ...(saveCard ? { setup_future_usage: "off_session" } : {}), metadata: { kind: "visit", booking_id: b.id } },
+          ...cardOnly(),
         });
         if (!s.ok || !s.data?.url) return json({ reason: "payment_unavailable" }, 502);
         await db.from("bookings").update({ checkout: { pending: input(), session: s.data.id } }).eq("id", b.id);

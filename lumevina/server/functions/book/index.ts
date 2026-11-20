@@ -183,6 +183,7 @@ Deno.serve(async (req) => {
       if (due > 0) Object.assign(params, {
         mode: "payment",
         line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: due, product_data: { name: `Deposit · ${names(price.services)}`, description: fmtWhen(date, start) + ". It goes toward your total." } } }],
+        // card-only by design: the card is kept for the cancellation / rescheduling fee, and Klarna / Afterpay / Affirm can't save one (_shared/paylater.ts)
         payment_intent_data: { setup_future_usage: "off_session", description: `Deposit · ${what}`, metadata: meta },
         custom_text: { submit: { message: POLICY_AT_PAYMENT } },
       });

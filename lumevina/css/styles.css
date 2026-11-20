@@ -6966,11 +6966,11 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   padding: 0.38rem 0.8rem; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--tone-line);
 }
 .svc-name { margin: clamp(1.4rem, 5vw, 2.4rem) 0 0.9rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 4.4vw, 3.3rem); line-height: 1.02; letter-spacing: -0.038em; text-wrap: balance; }
-.svc-open { all: unset; cursor: pointer; border-radius: 6px; }
-.svc-open:hover { text-decoration: underline; text-underline-offset: 0.14em; text-decoration-thickness: 1px; }
-.svc-open:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.svc-card .svc-open { border-radius: 6px; }                 /* (the base .svc-open, for the service sheet, resets the button) */
+.svc-card .svc-open:hover { text-decoration: underline; text-underline-offset: 0.14em; text-decoration-thickness: 1px; }
+.svc-card .svc-open:focus-visible { outline-offset: 4px; }
 .svc-desc { margin: 0; max-width: 32rem; font-size: 1.02rem; line-height: 1.55; color: var(--tone-soft); }
-.svc-meta { margin: auto 0 0; padding-top: 1.4rem; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.02em; color: var(--tone-soft); }
+.svc-card .svc-meta { margin: auto 0 0; padding-top: 1.4rem; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.02em; color: var(--tone-soft); }
 .svc-dim { position: absolute; inset: 0; background: #0A0A0A; opacity: 0; pointer-events: none; }
 
 /* the cut-away corner: a piece of the section's own ground, with its top-left corner
@@ -7018,3 +7018,9 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .is-deck .svc-face { min-height: min(24rem, calc(var(--stage-h) - 12svh)); }
 }
 @media (prefers-reduced-motion: reduce) { .svc-lift { filter: none; } }
+
+/* ─── Pay over time (Klarna, Afterpay, Affirm): js/site-config.js → payLater ─── */
+.no-pay-later [data-pay-later] { display: none !important; }
+.cart-later { font-size: 0.8125rem; line-height: 1.45; color: var(--ink-60); margin: 0 0 var(--space-2); }
+.svc-later { margin: -0.45rem 0 1rem; font-size: 0.875rem; color: var(--ink-60); }
+.svc-later[hidden] { display: none; }

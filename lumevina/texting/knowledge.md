@@ -35,6 +35,14 @@ Some treatments take a non-refundable deposit when you book (the menu shows each
 It holds your spot, goes toward your total, and with 48 hours' notice moves to a new date in the same month.
 Pay the rest at your visit: cash preferred, card with a fee, or Klarna, Affirm or Afterpay.
 
+## Can I pay over time?
+Yes, on purchases that qualify. Klarna, Afterpay and Affirm split a purchase into smaller payments.
+They decide who qualifies, and each has its own smallest and largest amount, so you'll see only the ones that fit your total.
+
+- Shop products and gift certificates: choose one on the payment page, next to card, Apple Pay and Google Pay.
+
+- Treatments: GlossGenius shows the option on the services it's available for when you book.
+
 ## Shipping, returns & the actives
 - Shipping is $8 an order, or pick up free at your visit. Orders ship from Woodland Hills within two business days by USPS Ground Advantage, with tracking by email.
 

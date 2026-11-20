@@ -2,6 +2,7 @@
 //   - a booking can be moved online once
 //   - cancelling inside 48 hours (or a Saturday visit) charges the $43 cancellation / rescheduling fee to the card on file, by itself
 //   - a card that can't be charged never undoes the cancellation; Evelyn can refund a fee; AUTO_LATE_FEE=off hands it back
+//   - the visit pay link offers pay-over-time (Klarna / Afterpay / Affirm) only when a card is already on file; PAY_LATER=off hides it
 //
 // It runs the real server code (functions/_shared/bookings.ts and the book and studio-book handlers) under
 // Node, with a fake database, a fake Stripe and a fake email service. Nothing real is touched.
@@ -247,6 +248,44 @@ await test("refunding a booking that has no fee does nothing", async () => {
   const w = await call(studioHandler, { action: "waive_fee", id: b.id });
   assert.equal(w.status, 409); assert.equal(w.j.reason, "no_fee");
   assert.equal(net.stripe.length, 0);
+});
+
+console.log("\nPay over time");
+const visitLink = async (b) => { const r = await call(studioHandler, { action: "checkout", id: b.id, method: "link" }); const sent = net.stripe.find((x) => x.kind === "session"); return { r, sent: sent?.body ?? null }; };
+await test("a client whose card is on file can pay the visit over time: the link no longer insists on saving a card", async () => {
+  const b = booking(slots.inTime()); fresh(b);
+  const { r, sent } = await visitLink(b);
+  assert.equal(r.status, 200); assert.ok(r.j.url, "a link comes back");
+  assert.equal(sent["payment_intent_data[setup_future_usage]"], undefined, "nothing asks to save a card, so Stripe can show Klarna, Afterpay and Affirm");
+  assert.equal(sent["payment_method_types[0]"], undefined, "no method is excluded");
+  assert.equal(sent["payment_intent_data[metadata][booking_id]"], b.id);
+});
+await test("a client with no card on file still has one saved by the visit link (the fee rule needs it)", async () => {
+  const b = booking(slots.inTime(), { stripe_customer: null, payment_method: null, card_label: null }); fresh(b);
+  const { r, sent } = await visitLink(b);
+  assert.equal(r.status, 200);
+  assert.equal(sent["payment_intent_data[setup_future_usage]"], "off_session");
+});
+await test("PAY_LATER=off: the visit link is cards only and saves the card, as before", async () => {
+  const b = booking(slots.inTime()); fresh(b); env.PAY_LATER = "off";
+  try {
+    const { r, sent } = await visitLink(b);
+    assert.equal(r.status, 200);
+    assert.equal(sent["payment_intent_data[setup_future_usage]"], "off_session");
+    assert.equal(sent["payment_method_types[0]"], "card");
+  } finally { delete env.PAY_LATER; }
+});
+await test("the on/off switch: on unless it says off, in any case", async () => {
+  const P = await import("../functions/_shared/paylater.ts");
+  assert.equal(P.payLaterOn(), true); assert.deepEqual(P.cardOnly(), {});
+  for (const v of ["off", "OFF", " Off "]) { env.PAY_LATER = v; assert.equal(P.payLaterOn(), false, v); assert.deepEqual(P.cardOnly(), { payment_method_types: ["card"] }); }
+  for (const v of ["on", "", "yes"]) { env.PAY_LATER = v; assert.equal(P.payLaterOn(), true, v); }
+  delete env.PAY_LATER;
+});
+await test("the website's booking deposit stays card-only: it always saves the card for the fee", async () => {
+  const src = (await import("node:fs")).readFileSync(new URL("../functions/book/index.ts", import.meta.url), "utf8");
+  assert.match(src, /mode: "payment"[\s\S]*?setup_future_usage: "off_session"/, "the deposit still saves the card");
+  assert.doesNotMatch(src, /import[^\n]*paylater/, "and does not offer pay-over-time");
 });
 
 console.error = quiet;

@@ -42,6 +42,10 @@
   var CONFIG = window.LUMEVINA_CONFIG = {
     version: "v2",
     features: [],
+    /* pay over time (Klarna, Afterpay, Affirm): true = the site says so (cart, each service, the FAQ).
+       The methods themselves are switched on in Evelyn's Stripe Dashboard (GO-LIVE.md); set false here
+       if she doesn't switch them on. PAY_LATER=off on the server hides them on Stripe's page too. */
+    payLater: true,
     /* the assistant: Claude answers from Evelyn's playbook through the server
        (server/functions/ask). Empty = the keyword answers in js/ask.js. */
     ask: {
@@ -107,6 +111,7 @@
   var root = document.documentElement;
   root.classList.add("is-" + CONFIG.running);
   CONFIG.features.forEach(function (f) { root.classList.add("has-" + f); });
+  if (CONFIG.payLater === false) root.classList.add("no-pay-later");
   /* opened inside an app's viewer on a phone (the Claude app shows the site in
      a frame, with its own × and ⋯ floating over the top strip, and taps there
      never reach the page): the header moves down, clear of them (css: html.in-app) */

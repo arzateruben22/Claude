@@ -12,6 +12,7 @@ import { CATALOG } from "./catalog.ts";
 import { EMAIL, getContact, norm, upsertContact } from "./contacts.ts";
 import { fulfillOrder } from "./orders.ts";
 import { chargeOnFile, stripe } from "./stripe.ts";
+import { cardOnly } from "./paylater.ts";
 
 export type SaleInput = {
   email?: string; name?: string; phone?: string;
@@ -78,6 +79,7 @@ export async function recordSale(db: any, input: SaleInput) {
       metadata: { order_id: order.id }, payment_intent_data: { metadata: { order_id: order.id }, description: "Lumevina Aesthetics Spa, at the studio" },
       line_items: items.filter((i) => i.price_cents > 0).map((i) => ({ quantity: i.qty, price_data: { currency: "usd", unit_amount: i.price_cents, product_data: { name: i.name } } })),
       ...(discount ? { discounts: [] } : {}),
+      ...cardOnly(),
     });
     if (!s.ok || !s.data?.url) {
       await db.from("orders").update({ status: "cancelled" }).eq("id", order.id);

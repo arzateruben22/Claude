@@ -769,3 +769,14 @@ The four cards at the top of Services (Ageless Grace Facial, ProCell Microchanne
 It follows a design from 21st.dev (the "Project Deck" component by Aakash Mehra), redone in plain code because the site doesn't use React; the credit is in the code comments. With "reduce motion" switched on in a phone's settings, or if scripts don't load, the cards simply appear as a plain list, two across on a computer and one on a phone. To change a card's words, price or order, edit `js/services.js` and `scripts/build-services.mjs`, then run `node scripts/build-services.mjs`.
 
 The section's soft background tint now stays behind the heading only (the deck's cut-away corners are the page colour, so the page colour below the heading is flat).
+
+## Pay over time for products and treatments (Nov 20)
+
+She asked for buy now, pay later on products and services. Where it stands:
+
+- **Products and gift certificates:** Stripe's payment page already offers Klarna, Afterpay and Affirm next to card, Apple Pay and Google Pay, once Evelyn switches them on in her Stripe Dashboard (GO-LIVE.md has the step). The cart now says so in one line.
+- **Treatments:** in the version where booking stays on GlossGenius, GlossGenius already shows pay-over-time on the services it applies to. In the version where booking is on the website, the visit's pay link (the one Evelyn sends to the client's phone at the end of a visit) now offers it, when the client's card is already on file. Each treatment's details also say "Pay over time with Klarna, Afterpay or Affirm, where your total qualifies."
+- **A new FAQ question, "Can I pay over time?"** answers for both versions (and so does the chat, since it reads the FAQ).
+- **Where it can't apply, on purpose:** the booking deposit (the website keeps that card on file for the cancellation / rescheduling fee, and these methods can't keep a card) and Glow Membership (a monthly subscription).
+- **What to know:** Klarna, Afterpay and Affirm approve the buyer, not us; each has its own smallest and largest order, so small orders may only show card; they typically cost her more per sale than a card does (check Stripe's current pricing). Nothing is live yet: Stripe is in test mode and the server isn't deployed.
+- **Switches:** `payLater` in `js/site-config.js` turns the site's lines off; `PAY_LATER=off` on the server hides the methods on Stripe's page. Tests: `scripts/test-booking-policy.mjs` ("Pay over time").

@@ -73,6 +73,10 @@ export function makeNet() {
       net.emails.push({ to: body.to, subject: body.subject, text: String(body.html).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() });
       return json(200, { id: "em_1" });
     }
+    if (u.includes("api.stripe.com/v1/checkout/sessions") && init.method === "POST") {
+      net.stripe.push({ kind: "session", body });
+      return json(200, { id: "cs_test_1", url: "https://checkout.stripe.test/cs_test_1" });
+    }
     if (u.includes("api.stripe.com")) return json(200, {});
     throw new Error("unexpected network call in test: " + u);
   };

@@ -24,7 +24,7 @@ below is the checklist.
 | `functions/ask/` | Ask Lumevina: answers everyday questions with Claude from the spa's own facts and the answers Evelyn approved, specific to a signed-in client's profile; remembers what they tell it; hands personal ones to Evelyn with a drafted reply |
 | `functions/gift-cards/` | Gift certificates: check a balance, use one at the visit (studio key), list them, sell one in person |
 | `functions/client-plans/` | Skin plans: Evelyn writes each client's routine (studio key); the signed-in client reads theirs |
-| `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time, Stripe Tax, shipping or pickup, gift certificates) |
+| `functions/create-checkout/` | The shop's real checkout: prices the cart from the products table and opens Stripe Checkout (cards, Apple/Google Pay, pay-over-time when switched on in Stripe, Stripe Tax, shipping or pickup, gift certificates) |
 | `functions/studio/` | Lumevina Studio (her dashboard): notifications on, the alerts feed, orders, stock and prices, client questions; in v3 also her hours and extra Mondays, the GlossGenius client import and invitation, the members list, each client's skin profile, and Teach the chat (studio key) |
 | `functions/studio-digest/` | Her morning email and notification, led by her priorities for the day (`_shared/priorities.ts`, PRIORITIES.md); sends gift certificates dated for today (run daily by cron) |
 | `functions/_shared/orders.ts`, `notify.ts`, `mail.ts`, `sms.ts` | Finishing a paid order; alerting Evelyn (feed, push, email); sending email and texts |
@@ -75,6 +75,14 @@ site's address (that browser only); the dashboard follows the same switch.
    # optional:
    supabase secrets set REVIEW_URL=https://g.page/r/... STUDIO_ADDRESS="<the studio's address, for confirmations>" PREFS_SECRET=<random>
    ```
+
+   **Pay over time (Klarna, Afterpay, Affirm)** is Stripe's, not ours: Evelyn switches each on in her Stripe Dashboard (Settings →
+   Payment methods) and Stripe's page shows the ones that fit the amount (each has its own smallest and largest order). It appears on
+   the shop checkout (products and gift certificates), on her pay link for a sale, and on the visit link (`studio-book` `checkout`
+   `link`) when the client's card is already on file. It is card-only, on purpose, where the card must be kept: the website's
+   booking deposit (the card is held for the cancellation / rescheduling fee) and memberships (subscriptions). `PAY_LATER=off`
+   hides them everywhere (`_shared/paylater.ts`); the site's own lines about it are the `payLater` switch in `js/site-config.js`.
+   The visit-link rule is tested in `scripts/test-booking-policy.mjs` ("Pay over time").
 
    `AUTO_LATE_FEE=off` hands the cancellation / rescheduling fee back to Evelyn's button in Appointments (the default, with
    the secret unset, is to charge it automatically when a client cancels inside 48 hours or cancels a Saturday visit).
@@ -289,7 +297,7 @@ again updates names but keeps her stock, prices and hidden flags).
 
 ```sh
 supabase functions deploy create-checkout
-supabase secrets set SITE_URL=https://her-domain STRIPE_TAX=on   # STRIPE_TAX once Stripe Tax is set up
+supabase secrets set SITE_URL=https://her-domain STRIPE_TAX=on   # STRIPE_TAX once Stripe Tax is set up (PAY_LATER=off hides Klarna / Afterpay / Affirm)
 ```
 
 ## A sale at the studio

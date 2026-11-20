@@ -72,6 +72,7 @@
       '<p class="svc-k"></p>' +
       '<h3 class="svc-title" id="svc-title"></h3>' +
       '<p class="svc-meta"></p>' +
+      '<p class="svc-later" data-pay-later hidden>Pay over time with Klarna, Afterpay or Affirm, where your total qualifies.</p>' +
       '<div class="svc-about"></div>' +
       '<ul class="svc-options" role="list" hidden></ul>' +
     "</div>" +
@@ -96,6 +97,7 @@
     if (s.ask) meta.push("Message Evelyn first");
     if (s.addon) meta.push("Added to another service");
     $(".svc-meta").textContent = meta.filter(Boolean).join(" · ");
+    $(".svc-later").hidden = !(it.price > 0) || !!s.ask || !!s.addon;
     var about = $(".svc-about");
     about.textContent = "";
     String(s.about || s.desc || "").split(/\n+/).concat(o && o.extra ? [o.extra] : []).filter(Boolean).forEach(function (para, i, all) {
