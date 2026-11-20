@@ -145,8 +145,9 @@
       return "Dermaplaning comes as an option with New Clients Start Here (" + price("new-client-dermaplaning", 260) + "), the Custom Facial (" + price("custom-facial-dermaplaning", 230) +
         "), the Ageless Grace Facial (" + price("ageless-grace-dermaplaning", 280) + ") and both peels (" + price("refresh-peel-dermaplaning", 270) + ")."; } },
     { k: /procell|pro cell|micro.?channel|microneedl|micro needl|collagen induction/, a: function () {
-      return "ProCell Microchanneling is " + price("procell-microchanneling", 350) + " a session: collagen induction with growth factors for acne scars, fine lines, pores and texture, with LED, post-care guidance and a recovery set. Four sessions are the minimum she recommends. " +
-        "Right now the first 10 clients can get four for " + price("procell-package", 1100) + " (regularly $1,400), with payment plans; just ask."; } },
+      return "Custom ProCell Microchanneling is " + price("procell-microchanneling", 350) + " a session: collagen stimulation with a growth factor serum, for acne scars, fine lines, enlarged pores and uneven texture, with numbing, LED and aftercare. She recommends starting with 4 sessions, and may plan up to 7 depending on your skin and goals. " +
+        "Custom ProCell for Acne Scars adds a booster peel and an exosome mask: " + price("procell-acne-scars-1", 450) + " for one treatment, or " + price("procell-acne-scars-2", 550) + " with take-home masks and a recovery kit. " +
+        "Packages of 4 save $300: Signature + Aftercare " + price("procell-package-signature", 1300) + ", or Deluxe " + price("procell-package-deluxe", 1700) + ". Ask Evelyn about payment plans."; } },
     { k: /biorepeel|bio repeel|bio-repeel/, a: function () {
       return "BioRePeel isn’t on Evelyn’s menu right now. Her peels are the Refresh Peel (" + price("refresh-peel", 230) + ", no downtime) and the Corrective Peel (" + price("corrective-peel", 230) + ", existing clients)."; } },
     { k: /\bpeels?\b|chemical/, a: function () {

@@ -791,3 +791,17 @@ She sent nine screenshots of her GlossGenius inventory. What changed:
 - **New, held back until she confirms the names (the screenshots cut them off):** KRX All Day Glow Vitamin Ser… $41 (0) and CICA Home Care Sheet Ma… $60 (4); Dermathod Med Shield E… $64 (5) and Priming Peel… $50 (4); SIV Biome Balancing Ser… $79 (3); and two Circadia "Lip Renewing Hydrator -…" at $16 (4 and 3: two lines with the same cut-off name). Clients don't see these.
 - **To check with her:** one count was half-hidden behind the + button (Retinol Peptide Serum, read as 4); and the screens may skip a row or two between scrolls (every product already on the site was seen, so nothing from the site is missing).
 - **Stock is not shared with GlossGenius.** The site's count and GlossGenius's are separate: if she also sells from GlossGenius, or in person, the site's number has to be corrected in the dashboard (Inventory), or a client can buy something that has just sold. Online orders take stock off the site's count by themselves.
+
+## ProCell: her new menu wording, three treatments (Nov 20)
+
+Evelyn sent new wording and prices for ProCell. In her words, the menu now has:
+
+- **Custom ProCell Microchanneling, $350 per session.** The single session (same id as before), with her new description. She recommends starting with 4 sessions and may plan up to 7.
+- **Custom ProCell for Acne Scars (new).** Option 1, $450: one treatment with a customized booster peel and exosome mask. Option 2, $550: the same, plus take-home exosome sheet masks and a recovery kit for all 4 sessions. She recommends starting with 4 and may plan up to 6.
+- **ProCell Microchanneling Packages (4 treatments each, both save $300).** Signature + Aftercare, $1,300 (take-home exosome sheet masks and a recovery kit for all 4 sessions) and Deluxe, $1,700 (everything in Signature, plus a customized booster peel and an in-studio recovery treatment at every visit). "Book your full series to save. Ask me about payment plans!" The "next session (package already paid)" option stays for people who have paid.
+
+The old first-10-clients package ($1,100, regularly $1,400) is retired: its id stays in the server's price list so old bookings still read. "Promo pricing is available for a limited time" is gone from the single session, and the first-10-clients line from the chat's ProCell answer and the Instagram post.
+
+**Still to confirm with her:** the times. She gave none, so the new acne-scars treatment is 70 minutes (the same as the single session) and the two packages keep the 60 minutes the old package had. The times only show on the menu and in the calendar once booking runs on the website. Also, her text had a card emoji before "Book your full series"; the site leaves it out.
+
+The menu, the server's price list, the chat's knowledge and the iPhone app sample were regenerated from it (`node scripts/build-services.mjs`).

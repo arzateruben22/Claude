@@ -165,13 +165,23 @@ A visit outside her hours, or on a closed day. Message Evelyn first and she’ll
 
 ## ProCell Microchanneling
 
-### ProCell Microchanneling (New)
-from $350, 70 min. No deposit.
-*Promo pricing is available for a limited time.* Advanced Collagen Induction Therapy: a powerful skin-renewing treatment designed to improve the appearance of acne scars, fine lines, enlarged pores, uneven texture, and overall skin quality. It works with your skin’s natural healing process to stimulate collagen production while infusing growth factors to support smoother, healthier-looking skin. Each treatment includes LED light therapy, personalized post-care guidance, and a recovery skincare set to help support your results. For best results, a minimum of 4 treatments is recommended; depending on your skin concerns and goals, a series of up to 8 sessions may be recommended. Package options are available and will be discussed during your consultation.
+### Custom ProCell Microchanneling ($350 per session)
+$350, 70 min. No deposit.
+A customized treatment that pairs collagen stimulation with a growth factor serum to soften the look of acne scars, fine lines, and enlarged pores and improve uneven texture.
+Your session includes numbing, extractions as needed, a deeply hydrating mask, LED light therapy, and personalized aftercare instructions.
+I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 7. We’ll talk through your treatment plan and package options at your consultation.
 
-### ProCell Microchanneling Package · 4 treatments (First 10 clients)
-Four sessions, paid in full: $1100, 60 min · Next session (package already paid): $0, 60 min. No deposit.
-Invest in your skin and save with this limited-time introductory package: 4 ProCell Microchanneling treatments (a $1,400 value) for $1,100, saving $300. Payment plans are available, just ask for details. This exclusive client offer is limited to the first 10 clients only. Once all spots have been claimed, this package will no longer be available and standard pricing will apply. ProCell Microchanneling is ideal for improving acne scars, uneven texture, fine lines, pigmentation, and overall skin rejuvenation by stimulating your skin’s natural collagen production.
+### Custom ProCell for Acne Scars (New)
+One treatment with a booster peel and exosome mask: $450, 70 min · Option 1, plus take-home exosome masks and a recovery kit: $550, 70 min. No deposit.
+A targeted treatment for the appearance of acne scars, dark spots, uneven texture, and fine lines. After microchanneling, I apply a customized booster peel and finish with an in-studio exosome mask.
+Both options include numbing, extractions as needed, a deeply hydrating mask, and LED light therapy.
+I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 6. We’ll go over your treatment plan and package options at your first appointment.
+
+### ProCell Microchanneling Packages (Save $300)
+4 treatments, take-home masks and a recovery kit · save $300: $1300, 60 min · Everything in Signature, plus a booster peel and a recovery treatment · save $300: $1700, 60 min · Next session (package already paid): $0, 60 min. No deposit.
+Each package includes 4 collagen-stimulating ProCell treatments designed to soften the look of acne scars and fine lines and improve uneven texture and tone.
+Both packages include numbing, extractions as needed, a hydrating sheet mask, and LED light therapy at each visit.
+Book your full series to save. Ask me about payment plans!
 
 ## Peels
 
@@ -401,13 +411,23 @@ A visit outside her hours, or on a closed day. Message Evelyn first and she’ll
 
 ## ProCell Microchanneling
 
-### ProCell Microchanneling (New)
-from $350, 70 min. No deposit.
-*Promo pricing is available for a limited time.* Advanced Collagen Induction Therapy: a powerful skin-renewing treatment designed to improve the appearance of acne scars, fine lines, enlarged pores, uneven texture, and overall skin quality. It works with your skin’s natural healing process to stimulate collagen production while infusing growth factors to support smoother, healthier-looking skin. Each treatment includes LED light therapy, personalized post-care guidance, and a recovery skincare set to help support your results. For best results, a minimum of 4 treatments is recommended; depending on your skin concerns and goals, a series of up to 8 sessions may be recommended. Package options are available and will be discussed during your consultation.
+### Custom ProCell Microchanneling ($350 per session)
+$350, 70 min. No deposit.
+A customized treatment that pairs collagen stimulation with a growth factor serum to soften the look of acne scars, fine lines, and enlarged pores and improve uneven texture.
+Your session includes numbing, extractions as needed, a deeply hydrating mask, LED light therapy, and personalized aftercare instructions.
+I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 7. We’ll talk through your treatment plan and package options at your consultation.
 
-### ProCell Microchanneling Package · 4 treatments (First 10 clients)
-Four sessions, paid in full: $1100, 60 min · Next session (package already paid): $0, 60 min. No deposit.
-Invest in your skin and save with this limited-time introductory package: 4 ProCell Microchanneling treatments (a $1,400 value) for $1,100, saving $300. Payment plans are available, just ask for details. This exclusive client offer is limited to the first 10 clients only. Once all spots have been claimed, this package will no longer be available and standard pricing will apply. ProCell Microchanneling is ideal for improving acne scars, uneven texture, fine lines, pigmentation, and overall skin rejuvenation by stimulating your skin’s natural collagen production.
+### Custom ProCell for Acne Scars (New)
+One treatment with a booster peel and exosome mask: $450, 70 min · Option 1, plus take-home exosome masks and a recovery kit: $550, 70 min. No deposit.
+A targeted treatment for the appearance of acne scars, dark spots, uneven texture, and fine lines. After microchanneling, I apply a customized booster peel and finish with an in-studio exosome mask.
+Both options include numbing, extractions as needed, a deeply hydrating mask, and LED light therapy.
+I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 6. We’ll go over your treatment plan and package options at your first appointment.
+
+### ProCell Microchanneling Packages (Save $300)
+4 treatments, take-home masks and a recovery kit · save $300: $1300, 60 min · Everything in Signature, plus a booster peel and a recovery treatment · save $300: $1700, 60 min · Next session (package already paid): $0, 60 min. No deposit.
+Each package includes 4 collagen-stimulating ProCell treatments designed to soften the look of acne scars and fine lines and improve uneven texture and tone.
+Both packages include numbing, extractions as needed, a hydrating sheet mask, and LED light therapy at each visit.
+Book your full series to save. Ask me about payment plans!
 
 ## Peels
 

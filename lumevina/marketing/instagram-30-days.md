@@ -24,7 +24,7 @@ Format: **Day · type · caption** (story = a 15-second story or Reel cover; pos
 18. **Story.** Q&A box: "Ask me anything about skincare (not your own diagnosis, that's a visit)."
 19. **Post.** Answers from the Q&A box, three of them, in her words.
 20. **Story.** The chat on my website answers the everyday questions (prices, prep, aftercare, products) any time; anything about your own skin comes to me.
-21. **Post.** ProCell Microchanneling: collagen induction with growth factors, for acne scars, texture, pores and fine lines. A series of 4 is where it shows; the first 10 clients get the package at $1,100.
+21. **Post.** Custom ProCell Microchanneling: collagen stimulation with a growth factor serum, for acne scars, texture, pores and fine lines. Evelyn recommends starting with 4 sessions; the Signature + Aftercare ($1,300) and Deluxe ($1,700) packages each save $300.
 22. **Story.** Pickup today: three orders waiting at the front with names on them. (Photo of the bags.)
 23. **Post.** Glow Membership: a facial every month, 10% off the shelf, no deposits, and a routine from me each season. $185 a month; the first 25 members keep $175 for good. (v3 only; skip while v2 runs.)
 24. **Story.** Sunday is closed. Monday is closed. Book Tuesday through Saturday from the bio, any hour.

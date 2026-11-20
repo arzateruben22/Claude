@@ -197,6 +197,7 @@ const RETIRED = {
   "half-leg-wax": ["Half Leg Wax", 5500, 30], "full-leg-wax": ["Full Leg Wax", 11000, 60], "nose-wax": ["Nose Wax", 900, 30],
   "sideburn-wax": ["Sideburn Wax", 2200, 30], "hairline-wax": ["Hairline Wax", 4300, 30], "full-face-wax": ["Full Face Wax", 3800, 30],
   "full-face-wax-cooling-mask": ["Full Face Wax + Cooling Mask", 5500, 60],
+  "procell-package": ["ProCell Package · 4 treatments (first 10 clients, $1,100)", 110000, 60],
 };
 const lines = S.all.map((s) => `  "${s.id}": { name: ${JSON.stringify(s.name)}, price_cents: ${s.price * 100}, dur_min: ${s.block}, deposit_cents: ${s.deposit * 100}, offered: ${!s.ask} },`)
   .concat(Object.entries(RETIRED).map(([id, [name, c, d]]) => `  "${id}": { name: ${JSON.stringify(name)}, price_cents: ${c}, dur_min: ${d}, deposit_cents: 0, offered: false },`));

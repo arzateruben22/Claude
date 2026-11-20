@@ -28,7 +28,8 @@
  *   couples-facial, back-facial-half/full,
  *   light/medium-chemical-peel, biorepeel-1/3, first-time-brazilian,
  *   extended-bikini-line, half/full-leg-wax, nose-wax, sideburn-wax,
- *   hairline-wax, full-face-wax, full-face-wax-cooling-mask.
+ *   hairline-wax, full-face-wax, full-face-wax-cooling-mask,
+ *   procell-package (the $1,100 first-10 offer; replaced Nov 20 by the Signature and Deluxe packages).
  */
 (function (root) {
   "use strict";
@@ -67,16 +68,34 @@
         desc: "A visit outside her hours, or on a closed day. Message Evelyn first and she’ll confirm the time." }
     ] },
     { group: "ProCell Microchanneling", key: "procell", items: [
-      { id: "procell-microchanneling", name: "ProCell Microchanneling", price: 350, from: true, min: 70, deposit: 0, note: "New",
-        desc: "Collagen induction with growth factors for acne scars, fine lines, pores and texture. Includes LED, post-care guidance and a recovery set.",
-        about: "*Promo pricing is available for a limited time.* Advanced Collagen Induction Therapy: a powerful skin-renewing treatment designed to improve the appearance of acne scars, fine lines, enlarged pores, uneven texture, and overall skin quality. It works with your skin’s natural healing process to stimulate collagen production while infusing growth factors to support smoother, healthier-looking skin. Each treatment includes LED light therapy, personalized post-care guidance, and a recovery skincare set to help support your results. For best results, a minimum of 4 treatments is recommended; depending on your skin concerns and goals, a series of up to 8 sessions may be recommended. Package options are available and will be discussed during your consultation." },
-      { id: "procell-package-menu", name: "ProCell Microchanneling Package · 4 treatments", price: 1100, min: 60, deposit: 0, note: "First 10 clients",
+      { id: "procell-microchanneling", name: "Custom ProCell Microchanneling", price: 350, min: 70, deposit: 0, note: "$350 per session",
+        desc: "Collagen stimulation paired with a growth factor serum, for acne scars, fine lines, enlarged pores and uneven texture. Includes numbing, LED and aftercare.",
+        about: "A customized treatment that pairs collagen stimulation with a growth factor serum to soften the look of acne scars, fine lines, and enlarged pores and improve uneven texture.\n" +
+          "Your session includes numbing, extractions as needed, a deeply hydrating mask, LED light therapy, and personalized aftercare instructions.\n" +
+          "I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 7. We’ll talk through your treatment plan and package options at your consultation." },
+      { id: "procell-acne-scars-menu", name: "Custom ProCell for Acne Scars", price: 450, from: true, min: 70, deposit: 0, note: "New",
         options: [
-          { id: "procell-package", name: "ProCell Package · 4 treatments", short: "Four sessions, paid in full", price: 1100, min: 60 },
+          { id: "procell-acne-scars-1", name: "Custom ProCell for Acne Scars · Option 1", short: "One treatment with a booster peel and exosome mask", price: 450, min: 70,
+            extra: "One ProCell treatment with a customized booster peel and exosome mask." },
+          { id: "procell-acne-scars-2", name: "Custom ProCell for Acne Scars · Option 2", short: "Option 1, plus take-home exosome masks and a recovery kit", price: 550, min: 70,
+            extra: "One ProCell treatment with the same in-studio care, plus take-home exosome sheet masks and a recovery kit for all 4 sessions." }
+        ],
+        desc: "Microchanneling, then a customized booster peel and an in-studio exosome mask, for acne scars, dark spots, uneven texture and fine lines.",
+        about: "A targeted treatment for the appearance of acne scars, dark spots, uneven texture, and fine lines. After microchanneling, I apply a customized booster peel and finish with an in-studio exosome mask.\n" +
+          "Both options include numbing, extractions as needed, a deeply hydrating mask, and LED light therapy.\n" +
+          "I recommend starting with 4 sessions. Depending on your skin and goals, we may plan up to 6. We’ll go over your treatment plan and package options at your first appointment." },
+      { id: "procell-package-menu", name: "ProCell Microchanneling Packages", price: 1300, from: true, min: 60, deposit: 0, note: "Save $300",
+        options: [
+          { id: "procell-package-signature", name: "ProCell Package · Signature + Aftercare", short: "4 treatments, take-home masks and a recovery kit · save $300", price: 1300, min: 60,
+            extra: "4 ProCell treatments, plus take-home exosome sheet masks and a recovery kit for all 4 sessions. $1,300, a $300 saving." },
+          { id: "procell-package-deluxe", name: "ProCell Package · Deluxe", short: "Everything in Signature, plus a booster peel and a recovery treatment · save $300", price: 1700, min: 60,
+            extra: "Everything in Signature, plus a customized booster peel and an in-studio recovery treatment at every visit. $1,700, a $300 saving." },
           { id: "procell-package-rebook", name: "ProCell Package · next session", short: "Next session (package already paid)", price: 0, min: 60 }
         ],
-        desc: "Four treatments for $1,100 (regularly $1,400), for the first 10 clients only. Payment plans available; just ask.",
-        about: "Invest in your skin and save with this limited-time introductory package: 4 ProCell Microchanneling treatments (a $1,400 value) for $1,100, saving $300. Payment plans are available, just ask for details. This exclusive client offer is limited to the first 10 clients only. Once all spots have been claimed, this package will no longer be available and standard pricing will apply. ProCell Microchanneling is ideal for improving acne scars, uneven texture, fine lines, pigmentation, and overall skin rejuvenation by stimulating your skin’s natural collagen production." }
+        desc: "Four collagen-stimulating treatments, saving $300: Signature + Aftercare at $1,300 or Deluxe at $1,700. Ask about payment plans.",
+        about: "Each package includes 4 collagen-stimulating ProCell treatments designed to soften the look of acne scars and fine lines and improve uneven texture and tone.\n" +
+          "Both packages include numbing, extractions as needed, a hydrating sheet mask, and LED light therapy at each visit.\n" +
+          "Book your full series to save. Ask me about payment plans!" }
     ] },
     { group: "Peels", key: "peels", items: [
       { id: "refresh-peel-menu", name: "Refresh Peel", price: 230, from: true, min: 10, deposit: 0,
