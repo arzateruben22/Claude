@@ -60,12 +60,15 @@
     shop: {
       supabase: "",   /* e.g. https://<project>.supabase.co */
       key: "",        /* the Supabase anon key (public) */
-      /* false = the shelf isn't counted yet (launch): every product without a
-         count reads "In stock" and sells without limit, online and in the
-         dashboard. As Evelyn types a count for a product (Inventory), that
-         product is counted and can sell out. Remove the line, or set true,
-         to go back to "Ask about stock" for products with no count. */
-      countStock: false
+      /* true = the shelf is counted: Evelyn's Nov 20 inventory (js/catalog.js) is
+         the count, so a product at 0 reads "Out of stock" ("Request this product")
+         and one that runs low reads "Only N left". Keep the counts right in the
+         dashboard's Inventory as stock arrives and sells.
+         false = the shelf isn't counted yet: every product without a count of
+         hers reads "In stock" and sells without limit, online and in the
+         dashboard. Remove the line to go back to "Ask about stock" for
+         products with no count. */
+      countStock: true
     },
     booking: {
       /* new clients book here; clients who already book with Evelyn on

@@ -88,7 +88,7 @@ site's address (that browser only); the dashboard follows the same switch.
    the secret unset, is to charge it automatically when a client cancels inside 48 hours or cancels a Saturday visit).
    Moving it onto a live database needs the three `alter table bookings add column` lines at the end of
    `server/schema.sql` (Nov 17: `reschedule_count`, `fee_charge`, `fee_waived_at`), then redeploy `book` and `studio-book`.
-   `COUNT_STOCK=off` while the shelf isn't counted yet (a product with no count reads as in stock to the assistant; see GO-LIVE.md).
+   `COUNT_STOCK=off` only if the shelf stops being counted (a product with no count would then read as in stock to the assistant; the shelf has been counted since Nov 20, so leave it unset; see GO-LIVE.md).
    `SITE_VERSION` is the assistant's default; the website also tells it which
    version it runs, so a `?preview=v3` visitor gets v3 answers. Without
    `PREFS_SECRET`, unsubscribe links are signed with the studio key.

@@ -1718,6 +1718,9 @@ Never promise results or say something is "guaranteed" or "cures" anything. Neve
 - Revitalizing Essence with NAD+ (GlyMed Plus, Serums, 1.35 oz / 40 ml): $50. Part of the GlyMed Plus Elite line; step 2 of its routine: treat.
 - Skin Recovery Mist (GlyMed Plus, Toners & mists, 4 fl oz / 118 ml): $46. Step 2 of the GlyMed Plus routine: treat.
 - Vitamin C Cleanser (GlyMed Plus, Cleansers, 6.75 fl oz / 200 ml): $47. Step 1 of the GlyMed Plus routine: cleanse.
+- Fulvic Elixir (GlyMed Plus, More): $69
+- Hydrating Lip Balm (GlyMed Plus, More): $17
+- Mega Cream Cleanser (GlyMed Plus, Cleansers): $43
 - Dew Drop (Mixi Skincare, Serums, 1 fl oz): $56. Silky smooth hydration with beta-glucan. Non-pore-clogging.
   Lasts about: 2 to 3 months: Evelyn's rule of thumb for a 1 oz serum.
 - Hydroxi (Mixi Skincare, Acne & spot care, 1.7 fl oz): $40. Hydrogen peroxide acne cream.
@@ -1725,3 +1728,5 @@ Never promise results or say something is "guaranteed" or "cures" anything. Neve
   In Evelyn's routines: Morning, dry or normal skin; Morning, oily or combination skin
   Lasts about: About a month: Evelyn's rule of thumb for a 2 oz sunscreen used properly on the face.
 - Vitamin Veil Cleansing Oil (Circadia, Cleansers, 6.7 fl oz / 198 ml): $40. A cleansing oil.
+- Eye/Lash Cream (Factor Five, Eye care): $120
+- Lash/Brow Growth Serum (Factor Five, Serums): $79

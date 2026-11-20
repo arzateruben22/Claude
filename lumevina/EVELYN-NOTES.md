@@ -780,3 +780,14 @@ She asked for buy now, pay later on products and services. Where it stands:
 - **Where it can't apply, on purpose:** the booking deposit (the website keeps that card on file for the cancellation / rescheduling fee, and these methods can't keep a card) and Glow Membership (a monthly subscription).
 - **What to know:** Klarna, Afterpay and Affirm approve the buyer, not us; each has its own smallest and largest order, so small orders may only show card; they typically cost her more per sale than a card does (check Stripe's current pricing). Nothing is live yet: Stripe is in test mode and the server isn't deployed.
 - **Switches:** `payLater` in `js/site-config.js` turns the site's lines off; `PAY_LATER=off` on the server hides the methods on Stripe's page. Tests: `scripts/test-booking-policy.mjs` ("Pay over time").
+
+## The shop counts her real inventory (Nov 20)
+
+She sent nine screenshots of her GlossGenius inventory. What changed:
+
+- **Counts:** every quantity on the 42 products already on the site now matches her inventory (25 of them changed). The shop is counting for real (`countStock: true` in `js/site-config.js`): a product at 0 reads "Out of stock" with "Request this product", and one down to a few reads "Only N left". Right now 19 of the 48 shown are at 0, 10 are "Only N left", the rest "In stock". Before launch, keep the dashboard's Inventory in step with GlossGenius (see below).
+- **Prices:** every price on her screens already matched the site, except the Barrier Repair Cream: her screen still says $83.20 and the site says $104, the price she set on Nov 11 (kept). The Retinol Peptide Serum's price wasn't visible; the site keeps $60.
+- **New on the shop (name, brand, price and count only: no photo, size or label facts yet, so they show as label cards):** Factor Five Eye/Lash Cream $120 (6) and Lash/Brow Growth Serum $79 (3); GlyMed Plus Fulvic Elixir $69 (0), Hydrating Lip Balm $17 (0) and Mega Cream Cleanser $43 (0). Factor Five is a new brand chip.
+- **New, held back until she confirms the names (the screenshots cut them off):** KRX All Day Glow Vitamin Ser… $41 (0) and CICA Home Care Sheet Ma… $60 (4); Dermathod Med Shield E… $64 (5) and Priming Peel… $50 (4); SIV Biome Balancing Ser… $79 (3); and two Circadia "Lip Renewing Hydrator -…" at $16 (4 and 3: two lines with the same cut-off name). Clients don't see these.
+- **To check with her:** one count was half-hidden behind the + button (Retinol Peptide Serum, read as 4); and the screens may skip a row or two between scrolls (every product already on the site was seen, so nothing from the site is missing).
+- **Stock is not shared with GlossGenius.** The site's count and GlossGenius's are separate: if she also sells from GlossGenius, or in person, the site's number has to be corrected in the dashboard (Inventory), or a client can buy something that has just sold. Online orders take stock off the site's count by themselves.
