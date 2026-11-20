@@ -35,7 +35,8 @@
      GlossGenius page, or a button that opens the calendar (js/booking.js) */
   var pageControl = function (id) {
     return document.querySelector('.wax-row[data-service="' + id + '"] .wax-book, .wax-row[data-service="' + id + '"] .wax-ask, ' +
-      '.wax-row[data-service="' + id + '"] .add-to-cart, .product-card[data-service="' + id + '"] .book-btn, .product-card[data-service="' + id + '"] .add-to-cart');
+      '.wax-row[data-service="' + id + '"] .add-to-cart, .product-card[data-service="' + id + '"] .book-btn, .product-card[data-service="' + id + '"] .add-to-cart, ' +
+      '.svc-card[data-service="' + id + '"] .book-btn, .svc-card[data-service="' + id + '"] .add-to-cart');
   };
   var bookFor = function (id, label, solid) {
     var orig = pageControl(id), el;
@@ -189,7 +190,7 @@
     var opener = t.closest(".svc-open");
     if (!opener) {
       if (t.closest("a, button, input, select, textarea")) return;
-      opener = t.closest(".product-card[data-service], .wax-row[data-service] .wax-item");
+      opener = t.closest(".product-card[data-service], .svc-card[data-service], .wax-row[data-service] .wax-item");
     }
     var row = opener && opener.closest("[data-service]");
     if (!row) return;

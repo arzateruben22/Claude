@@ -761,3 +761,11 @@ The big white box is gone. The Book section (while booking runs on GlossGenius) 
 > First visit? Look for 'New Clients Start Here' or 'Acne Bootcamp' when booking.
 
 "Appointments at Lumevina in Woodland Hills" is replaced by the full name above the heading, and "Booking through GlossGenius" and the returning-client line are dropped. The small first-visit line is there in case new clients pick the wrong service; it's one line to delete if they don't. The section is also a little shorter underneath, since there's less in it. The button still opens her GlossGenius page.
+
+## The four featured treatments are now a scrolling deck, no photos (Nov 20)
+
+The four cards at the top of Services (Ageless Grace Facial, ProCell Microchanneling, Lumevina Custom Facial, Brazilian Wax + Mini Vajacial) no longer have pictures. Each is a text card in its own colour (black, taupe, ivory, stone) showing the name, one line about it, the length and, in a cut-away corner, the price and the **Book** button. As you scroll, the cards are dealt one on top of the next: each rises from below, then settles flat, and the ones underneath lean back and dim. Tapping a card (or its name) still opens the full details with the photo; the photos live there now.
+
+It follows a design from 21st.dev (the "Project Deck" component by Aakash Mehra), redone in plain code because the site doesn't use React; the credit is in the code comments. With "reduce motion" switched on in a phone's settings, or if scripts don't load, the cards simply appear as a plain list, two across on a computer and one on a phone. To change a card's words, price or order, edit `js/services.js` and `scripts/build-services.mjs`, then run `node scripts/build-services.mjs`.
+
+The section's soft background tint now stays behind the heading only (the deck's cut-away corners are the page colour, so the page colour below the heading is flat).

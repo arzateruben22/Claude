@@ -885,7 +885,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 
 .section-shop {
   background:
-    radial-gradient(90% 60% at 50% 0%, rgba(var(--accent-rgb), 0.076), transparent 60%),
+    radial-gradient(90% 600px at 50% 0%, rgba(var(--accent-rgb), 0.076), transparent 60%) no-repeat,   /* the tint stays behind the heading; below it the ground is flat porcelain, which the deck's notches match */
     var(--porcelain);
   border-top: 1px solid var(--ink-15);
   border-bottom: 1px solid var(--ink-15);
@@ -6932,3 +6932,89 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
     url("../img/water/open.webp") 50% 100% / cover no-repeat,
     #DED7CD;
 }
+
+
+/* ─── The featured treatments (js/service-deck.js) ───
+   Four cards dealt one after another as you scroll: the next rises from below,
+   leaning toward you and out of focus, and flattens and sharpens as it lands;
+   the cards beneath lean back, sink and dim. The bottom-right corner of each
+   card is cut away to hold the price and the Book button. Text only: the photos
+   live in the service sheet. The deal and its spring are after the "Project
+   Deck" component by Aakash Mehra (21st.dev), redone here in plain CSS and JS.
+   Without JS, or with reduced motion, it is a plain list of the same cards. */
+.svc-deck { --R: 18px; --r: 20px; margin: var(--space-5) 0 var(--space-6); }
+.svc-stage { display: grid; gap: var(--space-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.svc-card {
+  position: relative;
+  min-width: 0;
+  cursor: pointer;
+  --tone-bg: var(--linen); --tone-fg: var(--ink); --tone-soft: var(--ink-60); --tone-line: var(--ink-15);
+}
+.svc-card[data-tone="ink"]   { --tone-bg: #171717; --tone-fg: #FBFAF7; --tone-soft: rgba(251, 250, 247, 0.74); --tone-line: rgba(251, 250, 247, 0.26); }
+.svc-card[data-tone="sand"]  { --tone-bg: #9A8E82; --tone-fg: #171717; --tone-soft: #25221F; --tone-line: rgba(23, 23, 23, 0.3); }
+.svc-card[data-tone="linen"] { --tone-bg: #F1EEE8; --tone-fg: #171717; --tone-soft: #403D39; --tone-line: rgba(64, 61, 57, 0.28); }
+.svc-card[data-tone="stone"] { --tone-bg: #D8D4CD; --tone-fg: #171717; --tone-soft: #2E2B28; --tone-line: rgba(23, 23, 23, 0.3); }
+
+.svc-lift { filter: drop-shadow(0 36px 40px rgba(var(--shadow-rgb), 0.2)); }
+.svc-shape { position: relative; overflow: hidden; border-radius: 24px; background: var(--tone-bg); color: var(--tone-fg); box-shadow: inset 0 0 0 1px var(--tone-line); }
+.svc-face {
+  display: flex; flex-direction: column; align-items: flex-start;
+  min-height: 24rem; padding: clamp(1.3rem, 3vw, 2.3rem);
+}
+.svc-badge {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.38rem 0.8rem; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--tone-line);
+}
+.svc-name { margin: clamp(1.4rem, 5vw, 2.4rem) 0 0.9rem; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 4.4vw, 3.3rem); line-height: 1.02; letter-spacing: -0.038em; text-wrap: balance; }
+.svc-open { all: unset; cursor: pointer; border-radius: 6px; }
+.svc-open:hover { text-decoration: underline; text-underline-offset: 0.14em; text-decoration-thickness: 1px; }
+.svc-open:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.svc-desc { margin: 0; max-width: 32rem; font-size: 1.02rem; line-height: 1.55; color: var(--tone-soft); }
+.svc-meta { margin: auto 0 0; padding-top: 1.4rem; font-size: 0.92rem; font-weight: 600; letter-spacing: 0.02em; color: var(--tone-soft); }
+.svc-dim { position: absolute; inset: 0; background: #0A0A0A; opacity: 0; pointer-events: none; }
+
+/* the cut-away corner: a piece of the section's own ground, with its top-left corner
+   rounded and a quarter-round ear where it meets the card's edges */
+.svc-notch {
+  position: absolute; right: 0; bottom: 0; z-index: 2;
+  background: var(--porcelain); border-top-left-radius: var(--r);
+  padding: 0.85rem 0 0 1.4rem; cursor: default;
+}
+.svc-notch::before, .svc-notch::after {
+  content: ""; position: absolute; width: var(--R); height: var(--R); pointer-events: none;
+  background: radial-gradient(circle at 0 0, transparent calc(var(--R) - 0.5px), var(--porcelain) var(--R));
+}
+.svc-notch::before { right: 0; bottom: 100%; }
+.svc-notch::after { right: 100%; bottom: 0; }
+.svc-notch .product-foot { margin: 0; flex-wrap: nowrap; flex-direction: row; align-items: center; justify-content: flex-start; text-align: left; gap: 1.1rem; }
+.svc-notch .product-price { font-size: 1.3rem; font-weight: 600; color: var(--ink); }
+.svc-notch .btn { padding: 0.7rem 1.3rem; white-space: nowrap; }
+.svc-notch .book-btn::after { content: "\2192"; margin-left: 0.5em; display: inline-block; transition: transform 200ms ease; }
+.svc-notch .book-btn:hover::after { transform: translateX(3px); }
+
+/* the dealt deck: JS adds .is-deck, then sets each card's transform as you scroll */
+.svc-deck.is-deck {
+  --stage-h: calc(100svh - var(--nav-bottom, 4.6rem));
+  height: calc(var(--n) * var(--stage-h)); margin-bottom: var(--space-5);
+}
+.is-deck .svc-stage {
+  position: sticky; top: var(--nav-bottom, 4.6rem); height: var(--stage-h);
+  display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; gap: 0;
+  overflow: hidden; overflow: clip; perspective: 1800px;
+}
+.is-deck .svc-card {
+  grid-area: 1 / 1; width: min(100%, 60rem); margin-top: 3svh;
+  transform-origin: 50% 25%; will-change: transform, filter;
+}
+.is-deck .svc-face { min-height: min(27rem, calc(var(--stage-h) - 14svh)); }
+
+@media (max-width: 760px) {
+  .svc-stage { grid-template-columns: minmax(0, 1fr); }
+  .svc-face { min-height: 22rem; }
+  .svc-notch { padding: 0.7rem 0 0 1rem; }
+  .svc-notch .product-foot { gap: 0.8rem; }
+  .svc-notch .product-price { font-size: 1.15rem; }
+  .svc-notch .btn { padding: 0.62rem 1.05rem; font-size: 0.9rem; }
+  .is-deck .svc-face { min-height: min(24rem, calc(var(--stage-h) - 12svh)); }
+}
+@media (prefers-reduced-motion: reduce) { .svc-lift { filter: none; } }
