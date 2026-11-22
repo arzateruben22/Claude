@@ -4,6 +4,66 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: the left forearm no longer disappears into the hypercar's door when the wheel turns
+
+Branch fix/left-arm (94384485, 1f926f60, 25767012, 4bd14a03) on v23 (ca9da809). Merged with v24 (5e16ab4) as
+932bb64b and published as main link v25.
+- Built and judged 2026-11-17.
+- Paused by the owner before publishing; resumed 2026-11-22.
+
+**The report.** Owner, v23 iPhone screenshot at 101 mph, 2026-11-16 10:36 PM PT: "Left arm is still getting mixed in
+between the black shadow or whatever it is". With the wheel turned left, the left hand sat low at about 8 o'clock, and
+the forearm behind it vanished into a black shape. A dark band crossed the wrist by the watch.
+
+**Cause.** Measured with a per-mesh ID render on the iPhone portrait seat view at 101 mph:
+- **The armrest.** The OC Hypercar's door-card armrest (the 'tan' loft plus the pull strap) kept the Rossini's 8.4 cm
+  bulge. In the hypercar's narrow tub, with the door 0.22 m from the driver's centreline, its face reached |x| 0.406,
+  through the wheel's rim and the left wrist.
+- **The shoulders.** The arms used the shared shoulders, 0.23 m out, which put the left elbow 2 cm into the door card.
+  The forearm ran behind the armrest.
+- **How much showed:**
+
+  | Build | Left forearm at 0.65 / 0.9 rad | Left hand at 0.65 / 0.9 rad |
+  | --- | --- | --- |
+  | v23 | 33% / 24% | 65% / 26% |
+  | v22 (6196bd6e) | 4% / 41% | 15% / 32% |
+
+- **The dark band** at the wrist and the watch was that armrest's edge, not shading. The arm's sun term is 0 at the left
+  wrist and elbow throughout, in both builds.
+
+**Fix** (OC Hypercar only; other cars build as before; no depth tricks):
+- **cockpit.ts door block.** The armrest starts behind the hands (z -0.34 to -0.18) at 0.35 of its bulge. The pull
+  strap stands 0.35 as proud.
+- **car-shape armRoom** (hypercar 0.14), with hands.ts HandsOptions.room and armRoom(). The shoulders come in to 0.165 m
+  from the centreline. The left elbow swings in around the shoulder-wrist line, the lower way, to stay 0.14 m in.
+- **Results:**
+  - At 0.65 to 1.2 rad left, the left forearm is 99-100% in view and the left hand 72-81%; the rest of the hand is behind
+    the rim. This holds for the Closer male and female, the Ace and the Wrench, on Low, Retro and High, at 393x852,
+    390x844 and 393x760.
+  - Right turns, straight ahead, landscape, desktop, the Rossini GT and Corsa, and the poses match v23 to within a point.
+    The exception is the crossed-hands frames: at -1.95 the right hand is now 98-100% in view (was 59-78%).
+
+**Checked:**
+- **New phone-group check:** "the forearms from the seat on an iPhone", at the wheel ±0.65 and ±0.9. The floors are 90%
+  for the forearm and 70% for the hand. v23 and v22 fail it; the fix passes.
+- **Changed check:** "sleeves under an overpass (High)" now holds a sunlit sleeve to 0.88 and a shaded one to 0.95.
+  The left sleeve now shows straight ahead, in the door's shade.
+- **On the branch:** tsc clean, build OK, boot 16/16, phone 27/27, render 19/19, launch 11/11, abilities 23/23.
+- **The judge** (Opus, independent) said keep after one round. It shot its own matrix and free-camera views of the door
+  and arm.
+- **Judge's notes:**
+  - The dev page test-car.ts (&hands=1) still builds the arms without `room`.
+  - The hypercar's shoulders are now 0.33 m apart, and the elbows are asymmetric when not visible. A future hypercar
+    torso should be built at ±0.165 m.
+- **On the merge with v24** (932bb64b), re-run 2026-11-22 in a rebuilt container: tsc clean, build OK, store:check OK.
+  - boot 18/18, phone 28/28 (forearms 99.7-99.8% at 0.65 and 0.9 rad; hood 2.2%), render 19/19, abilities 22/22.
+  - launch 10/11. "The run card downloads as a 1080 x 1350 PNG" timed out waiting for the results screen. It fails the
+    same way, alone, on the v24 (5e16ab4) and v23 (ca9da809) builds in this container, and v23 passed it in the old
+    container. So it comes from the rebuilt container's browser (Chromium 157 with Playwright 1.63), not this branch.
+    It is left for the suite's owner. The project pins Playwright
+  1.56, whose browser wasn't installed, so the run used the container's Playwright 1.63 through node_modules symlinks.
+  The repo is unchanged.
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
