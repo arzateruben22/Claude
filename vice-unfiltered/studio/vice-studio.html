@@ -1,0 +1,360 @@
+<title>Vice Unfiltered Studio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a newsroom pasteboard. Home = one torn-paper poster per streamer; each streamer has a room; thin nav (rail on desktop, tab bar at the thumb on phones). Single committed look: the Vice Unfiltered comic-pop paper. */
+:root{
+  --paper:#F1E9D8; --paper-2:#E7DCC4; --card:#FBF7EE; --ink:#151413; --ink-2:#4A453D; --ink-3:#6E675B;
+  --magenta:#D9136F; --yellow:#FFD21A; --line:rgba(21,20,19,.16); --line-2:rgba(21,20,19,.32);
+  --good:#17703F; --warn:#9A5B00; --bad:#B3122B; --focus:#151413;
+  --display:"Anton","Impact","Arial Narrow Bold",sans-serif; --body:"Archivo","Helvetica Neue",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;--s7:48px; --r:3px; --rail:88px; --nav-h:64px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 var(--body);
+  background-image:radial-gradient(rgba(21,20,19,.07) 1px,transparent 1.2px);background-size:7px 7px}
+a{color:inherit}
+button,select,textarea,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.skip{position:absolute;left:-999px}.skip:focus{left:16px;top:16px;z-index:50;background:var(--yellow);padding:8px 12px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* shell */
+.shell{min-height:100%;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:var(--s5) calc(var(--nav-h) + var(--s6) + env(safe-area-inset-bottom,0px))}
+main{max-width:1180px;margin:0 auto;display:grid;gap:var(--s6)}
+@media (min-width:900px){.shell{padding-left:calc(var(--rail) + max(24px,env(safe-area-inset-left,0px)));padding-bottom:var(--s7)}}
+
+nav.nav{position:fixed;z-index:20;background:var(--ink);color:var(--paper)}
+nav.nav ul{list-style:none;margin:0;padding:0;display:flex}
+nav.nav a,nav.nav summary{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:48px;min-width:56px;padding:6px 8px;text-decoration:none;font:600 11px/1.1 var(--body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;list-style:none;position:relative;border-radius:var(--r)}
+nav.nav summary::-webkit-details-marker{display:none}
+nav.nav a[aria-current="page"]{background:var(--yellow);color:var(--ink)}
+nav.nav svg{width:22px;height:22px}
+.badge{position:absolute;top:2px;right:6px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--magenta);color:#fff;font:600 11px/18px var(--mono);text-align:center}
+.brandmark{font:400 22px/1 var(--display);letter-spacing:.02em;text-align:center;padding:14px 0 18px;color:var(--yellow)}
+.brandmark span{display:block;font:600 9px/1.2 var(--body);letter-spacing:.18em;color:var(--paper)}
+details.more{position:relative}
+details.more .menu{position:absolute;background:var(--card);color:var(--ink);border:2px solid var(--ink);min-width:200px;padding:6px;display:grid;gap:2px;box-shadow:6px 6px 0 var(--ink)}
+details.more .menu a{flex-direction:row;justify-content:flex-start;color:var(--ink);font-size:13px;letter-spacing:.04em}
+details.more .menu a:hover{background:var(--paper-2)}
+@media (max-width:899.98px){
+  nav.nav{left:0;right:0;bottom:0;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+  nav.nav ul{justify-content:space-around}.brandmark{display:none}
+  details.more .menu{bottom:calc(100% + 10px);right:0}
+}
+@media (min-width:900px){
+  nav.nav{top:0;bottom:0;left:0;width:var(--rail);padding:0 10px max(16px,env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+  nav.nav ul{flex-direction:column;gap:6px;height:calc(100% - 70px)}
+  nav.nav li.push{margin-top:auto}
+  details.more .menu{left:calc(100% + 12px);bottom:0}
+}
+
+/* type */
+.eyebrow{font:500 12px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.01em;line-height:.95;margin:0;text-wrap:balance;text-transform:uppercase}
+h1{font-size:clamp(44px,8vw,84px)} h2{font-size:clamp(28px,4.4vw,40px)} h3{font-size:24px}
+.lede{color:var(--ink-2);max-width:62ch;margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.row{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center}
+.sec{display:grid;gap:var(--s4)} .sec-head{display:flex;justify-content:space-between;align-items:end;gap:var(--s3);flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:var(--s2)}
+
+/* masthead */
+.mast{display:grid;gap:var(--s3)}
+.mast .title{display:inline-block;background:var(--ink);color:var(--paper);padding:10px 16px 6px;transform:rotate(-1.2deg);box-shadow:6px 6px 0 var(--magenta)}
+.mast .title em{font-style:normal;color:var(--yellow)}
+.ticker{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4)}
+.ticker a{font:500 13px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.08em}
+
+/* chips & buttons */
+.chip,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 14px;border:2px solid var(--ink);border-radius:var(--r);background:var(--card);text-decoration:none;font-weight:600;font-size:14px;cursor:pointer}
+.chip:hover,.btn:hover{background:var(--yellow)}
+.btn.primary{background:var(--ink);color:var(--paper)} .btn.primary:hover{background:var(--magenta);color:#fff}
+.btn.done{background:var(--good);border-color:var(--good);color:#fff}
+.btn.small{min-height:36px;padding:4px 10px;font-size:13px}
+.linkbtn{background:none;border:0;padding:4px 2px;text-decoration:underline;cursor:pointer;font-size:13px;color:var(--ink-2);min-height:36px}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--body);text-transform:uppercase;letter-spacing:.06em;padding:5px 8px;border:1.5px solid currentColor;border-radius:999px}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.good{color:var(--good)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)} .pill.muted{color:var(--ink-3)} .pill.hot{color:var(--magenta)}
+
+/* wall: one poster per streamer */
+.wall{display:grid;gap:var(--s5);grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));align-items:start}
+.poster{--acc:var(--magenta);--acc-ink:#fff;position:relative;display:grid;background:var(--card);border:2px solid var(--ink);text-decoration:none;box-shadow:8px 8px 0 var(--ink);transition:transform .15s}
+.poster:nth-child(3n+1){transform:rotate(-.8deg)} .poster:nth-child(3n+2){transform:rotate(.6deg)} .poster:nth-child(3n){transform:rotate(-.3deg)}
+.poster:hover{transform:rotate(0) translateY(-3px)}
+.poster .art{aspect-ratio:9/12;max-width:100%;overflow:hidden;position:relative;background:var(--paper-2);
+  background-image:radial-gradient(color-mix(in srgb,var(--acc) 55%,transparent) 1.4px,transparent 1.6px);background-size:9px 9px}
+.poster .art img{width:100%;height:100%;object-fit:cover;display:block}
+.poster .art .empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:var(--s5);font:600 13px/1.4 var(--body);color:var(--ink-2)}
+.poster .tag{position:absolute;top:12px;left:-6px;background:var(--acc);color:var(--acc-ink);font:400 30px/1 var(--display);padding:8px 12px 4px;text-transform:uppercase;box-shadow:3px 3px 0 var(--ink)}
+.poster .foot{display:grid;gap:6px;padding:var(--s3) var(--s4) var(--s4);border-top:2px solid var(--ink)}
+.poster .foot .mono{font-size:12px;color:var(--ink-2)}
+.drop{border:2px dashed var(--ink);background:repeating-linear-gradient(-45deg,transparent 0 12px,rgba(255,210,26,.35) 12px 24px);padding:var(--s5);display:grid;gap:var(--s3);align-content:start;min-height:100%}
+.drop ol{margin:0;padding-left:20px;display:grid;gap:6px}
+
+/* batch bar */
+.batch{display:grid;gap:6px}
+.segs{display:flex;gap:4px}
+.segs i{flex:1;height:10px;border:1.5px solid var(--ink);background:transparent}
+.segs i.ready{background:var(--ink)} .segs i.posted{background:var(--magenta);border-color:var(--magenta)}
+
+/* streamer room */
+.strip{display:flex;gap:var(--s2);overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.strip a{flex:none;min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:2px solid var(--ink);border-radius:var(--r);text-decoration:none;font:400 18px/1 var(--display);text-transform:uppercase;background:var(--card)}
+.strip a .dot{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--ink)}
+.strip a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.roomhead{--acc:var(--magenta);--acc-ink:#fff;display:grid;gap:var(--s3);padding:var(--s5);background:var(--acc);color:var(--acc-ink);border:2px solid var(--ink);box-shadow:8px 8px 0 var(--ink);position:relative;overflow:hidden}
+.roomhead .eyebrow{color:inherit;opacity:.85}
+.roomhead h1{color:inherit}
+.roomhead .chip{background:var(--card);color:var(--ink)}
+
+/* post cards: one per account */
+.cards{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));align-items:start}
+.card{background:var(--card);border:2px solid var(--ink);display:grid;gap:var(--s3);padding:var(--s4);min-width:0}
+.card .top{display:grid;grid-template-columns:92px 1fr;gap:var(--s3);align-items:start}
+.card .thumb{width:92px;aspect-ratio:9/16;max-width:100%;background:var(--paper-2);border:1.5px solid var(--ink);overflow:hidden}
+.card .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.card .plat{font:600 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--magenta)}
+.card h3{font-size:22px;margin-top:4px}
+.field{display:grid;gap:4px;min-width:0}
+.field .lbl{display:flex;justify-content:space-between;align-items:center;gap:8px;font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.field .val{background:var(--paper);border:1.5px solid var(--line-2);padding:8px 10px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;min-width:0}
+.actions{display:flex;flex-wrap:wrap;gap:var(--s2);align-items:center;padding-top:var(--s2);border-top:1.5px dashed var(--line-2)}
+.state{font-size:13px;color:var(--ink-2)}
+
+/* lists */
+.list{display:grid;gap:var(--s3)}
+.item{display:grid;grid-template-columns:64px 1fr auto;gap:var(--s3);align-items:center;background:var(--card);border:2px solid var(--ink);padding:var(--s3)}
+.item .thumb{width:64px;aspect-ratio:9/16;max-width:100%;background:var(--paper-2);border:1.5px solid var(--ink);overflow:hidden}
+.item .thumb img{width:100%;height:100%;object-fit:cover}
+.item .meta{min-width:0;display:grid;gap:4px}
+.item .meta b{font:400 20px/1 var(--display);text-transform:uppercase}
+@media (max-width:520px){.item{grid-template-columns:56px 1fr}.item>.end{grid-column:1/-1}}
+.emptybox{border:2px dashed var(--line-2);padding:var(--s5);color:var(--ink-2);background:rgba(251,247,238,.6)}
+
+/* review reel */
+.reel{display:grid;gap:var(--s6)}
+.slide{display:grid;gap:var(--s4);grid-template-columns:minmax(0,360px) minmax(0,1fr);align-items:start;background:var(--card);border:2px solid var(--ink);padding:var(--s4);box-shadow:8px 8px 0 var(--ink)}
+.slide video{width:100%;aspect-ratio:9/16;background:var(--ink);display:block;border:2px solid var(--ink)}
+.slide .side{display:grid;gap:var(--s3);min-width:0}
+.slide textarea{width:100%;min-height:90px;border:2px solid var(--ink);background:var(--paper);padding:8px;border-radius:var(--r)}
+@media (max-width:760px){.slide{grid-template-columns:1fr}.slide .actions{position:sticky;bottom:calc(var(--nav-h) + 8px + env(safe-area-inset-bottom,0px));background:var(--card);padding:var(--s2);border:2px solid var(--ink)}}
+ol.titles{margin:0;padding-left:22px;display:grid;gap:4px}
+
+/* rules */
+.rules{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.rule{background:var(--card);border:2px solid var(--ink);padding:var(--s4);display:grid;gap:var(--s2);border-top:10px solid var(--acc,var(--ink))}
+.rule dl{margin:0;display:grid;gap:6px} .rule dt{font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)} .rule dd{margin:0}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:var(--r);font-weight:600;z-index:40;box-shadow:4px 4px 0 var(--magenta)}
+.notice{border:2px solid var(--ink);background:var(--yellow);padding:var(--s3) var(--s4);font-weight:600}
+</style>
+
+<a class="skip" href="#content">Skip to content</a>
+<nav class="nav" aria-label="Studio">
+  <div class="brandmark">VU<span>STUDIO</span></div>
+  <ul>
+    <li><a href="#home" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="9"/><rect x="14" y="4" width="7" height="6"/><rect x="14" y="13" width="7" height="7"/><rect x="3" y="16" width="7" height="4"/></svg>Home</a></li>
+    <li><a href="#upload" data-nav="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>Upload<span class="badge" id="b-upload" hidden></span></a></li>
+    <li><a href="#review" data-nav="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>Review<span class="badge" id="b-review" hidden></span></a></li>
+    <li class="push"><details class="more"><summary><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>More</summary>
+      <div class="menu"><a href="#library" data-nav="library">Library</a><a href="#rules" data-nav="rules">Campaign rules</a><a href="#accounts" data-nav="accounts">Accounts</a></div></details></li>
+  </ul>
+</nav>
+
+<div class="shell"><main id="content" tabindex="-1"><div class="emptybox">Opening the studio…</div></main></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(() => {
+const PLATFORMS = [
+  {id:"youtube", label:"YouTube Shorts", upload:"https://studio.youtube.com/"},
+  {id:"tiktok", label:"TikTok", upload:"https://www.tiktok.com/upload"},
+  {id:"instagram", label:"Instagram Reels", upload:"https://www.instagram.com/"}
+];
+const S = {streamers:[], accounts:[], clips:[], pubs:[], batches:[], ready:false, err:null};
+const $main = document.getElementById("content");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDate = t => t ? new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "";
+let db = null;
+
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
+function activeAccounts(){const off=new Set(S.accounts.filter(a=>a.active===false).map(a=>a.id));return PLATFORMS.filter(p=>!off.has(p.id)).map(p=>({...p,...(S.accounts.find(a=>a.id===p.id)||{})}))}
+function streamers(){return S.streamers.filter(s=>!s.archived).sort((a,b)=>(a.order??9)-(b.order??9))}
+function streamerOf(slug){return S.streamers.find(s=>s.id===slug)}
+function clipsOf(slug){return S.clips.filter(c=>c.streamer===slug).sort((a,b)=>(b.created_at||"").localeCompare(a.created_at||""))}
+function pub(clipId,plat){return S.pubs.find(p=>p.id===clipId+"__"+plat)}
+function isApproved(c){return c.status==="approved"}
+function pendingPubs(){const out=[];for(const c of S.clips.filter(isApproved)){for(const a of activeAccounts()){const p=pub(c.id,a.id);if(!p||p.status==="ready")out.push({c,a})}}return out}
+function needsSubmit(){const out=[];for(const c of S.clips){const st=streamerOf(c.streamer);if(!st?.campaign?.name)continue;for(const a of activeAccounts()){const p=pub(c.id,a.id);if(p&&p.status==="uploaded")out.push({c,a,p})}}return out}
+function accVars(st){return st?`--acc:${esc(st.accent||"#D9136F")};--acc-ink:${esc(st.accent_ink||"#fff")}`:""}
+const STATUS = {
+  waiting_source:["Waiting for source","muted"], editing:["In the edit","warn"], qc:["In QC","warn"],
+  ready_for_review:["Ready for review","hot"], revision:["Changes requested","bad"], approved:["Approved · ready to post","good"], archived:["Archived","muted"]
+};
+const pill = s => {const [t,k]=STATUS[s]||[s||"Unknown","muted"];return `<span class="pill ${k}">${esc(t)}</span>`};
+function thumb(c){return c?.thumb_url?`<img src="${esc(c.thumb_url)}" alt="">`:""}
+function batchOf(){return S.batches.filter(b=>b.active!==false).sort((a,b)=>(b.created_at||"").localeCompare(a.created_at||""))[0]}
+function batchBar(slugs){
+  const b=batchOf(); if(!b) return "";
+  const list=(slugs||b.streamers||[]);
+  const segs=list.map(sl=>{const c=clipsOf(sl).find(x=>x.batch===b.id);let k="";if(c&&["ready_for_review","approved"].includes(c.status))k="ready";if(c&&activeAccounts().length&&activeAccounts().every(a=>pub(c.id,a.id)&&pub(c.id,a.id).status!=="ready"))k="posted";return `<i class="${k}" title="${esc(streamerOf(sl)?.name||sl)}"></i>`}).join("");
+  const ready=list.filter(sl=>{const c=clipsOf(sl).find(x=>x.batch===b.id);return c&&["ready_for_review","approved"].includes(c.status)}).length;
+  return `<div class="batch"><span class="mono" style="font-size:13px">${esc(b.label||"Batch")} · ${ready} of ${list.length} ready</span><div class="segs">${segs}</div></div>`;
+}
+function copyBtn(text,label){return `<button class="linkbtn" data-copy="${esc(text)}">Copy ${esc(label)}</button>`}
+
+/* ---------- screens ---------- */
+function home(){
+  const rev=S.clips.filter(c=>c.status==="ready_for_review").length, up=pendingPubs().length;
+  const posters=streamers().map(st=>{
+    const c=clipsOf(st.id)[0];
+    return `<a class="poster" href="#s-${esc(st.id)}" style="${accVars(st)}">
+      <div class="art">${c&&c.thumb_url?thumb(c):`<div class="empty">No clip yet.<br>Drop ${esc(st.name)} footage in the chat.</div>`}</div>
+      <span class="tag">${esc(st.name)}</span>
+      <div class="foot">${c?pill(c.status):pill("waiting_source")}
+        <span class="mono">${c?`${esc(c.moment||"")} · V${esc(c.version||1)}`:esc(st.platform_note||"")}</span></div></a>`}).join("");
+  return `<header class="mast"><div><h1 class="title">Vice <em>Unfiltered</em></h1></div>
+    <div class="ticker"><span class="eyebrow">${new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}</span>
+    <a href="#review">${rev} to review</a><a href="#upload">${up} to upload</a></div>${batchBar()}</header>
+  <section class="sec" aria-label="Streamers"><div class="wall">${posters||`<div class="emptybox">No streamers set up yet.</div>`}
+    <div class="drop"><span class="eyebrow">New job</span><h2>Drop the footage</h2>
+      <ol><li>Attach the source MP4 in the Claude chat and say which streamer.</li><li>Claude finds the moment, edits, mixes and runs QC.</li><li>The clip lands here under Review with its thumbnail, titles and captions.</li><li>Approve it, post it from the cards, press Uploaded.</li></ol></div></div></section>`;
+}
+
+function room(slug){
+  const st=streamerOf(slug); if(!st) return `<div class="emptybox">That streamer isn't set up. <a href="#home">Back to Home</a></div>`;
+  const clips=clipsOf(slug), approved=clips.filter(isApproved), revCount=clips.filter(c=>c.status==="ready_for_review").length;
+  const strip=streamers().map(s=>`<a href="#s-${esc(s.id)}" ${s.id===slug?'aria-current="page"':""}><span class="dot" style="background:${esc(s.accent||"#D9136F")}"></span>${esc(s.name)}</a>`).join("");
+  const posts=approved.slice(0,1).map(c=>postCards(c)).join("") || `<div class="emptybox">Nothing approved yet. Clips you approve in Review show up here, one card per account.</div>`;
+  const inEdit=clips.filter(c=>!isApproved(c)&&c.status!=="archived");
+  return `<nav class="strip" aria-label="Streamers">${strip}</nav>
+  <header class="roomhead" style="${accVars(st)}"><span class="eyebrow">${esc(st.platform_note||"")}${st.campaign?.name?` · ${esc(st.campaign.name)}`:""}</span>
+    <h1>${esc(st.name)}</h1>${batchBar([slug])}
+    <div class="row"><a class="chip" href="#review">${revCount} to review</a><a class="chip" href="#upload">Upload Desk</a><a class="chip" href="#rules">Campaign rules</a></div></header>
+  <section class="sec"><div class="sec-head"><h2>Ready to post</h2><span class="eyebrow">one card per account</span></div>${posts}</section>
+  <section class="sec"><div class="sec-head"><h2>In the edit</h2><span class="eyebrow">${inEdit.length}</span></div>
+    ${inEdit.length?`<div class="list">${inEdit.map(itemRow).join("")}</div>`:`<div class="emptybox">No clip in progress. Drop ${esc(st.name)} footage in the chat to start one.</div>`}</section>
+  <section class="sec"><div class="sec-head"><h2>Library</h2><a class="eyebrow" href="#library">All streamers</a></div>
+    ${approved.length?`<div class="list">${approved.map(itemRow).join("")}</div>`:`<div class="emptybox">Finished clips collect here.</div>`}</section>`;
+}
+
+function itemRow(c){const st=streamerOf(c.streamer);return `<div class="item"><div class="thumb">${thumb(c)}</div>
+  <div class="meta"><b>${esc(c.title||c.moment||"Untitled")}</b><span class="mono" style="font-size:12px">${esc(st?.name||c.streamer)} · ${esc(c.moment||"")} · V${esc(c.version||1)}${c.runtime_s?` · ${Number(c.runtime_s).toFixed(1)}s`:""}</span>${pill(c.status)}</div>
+  <div class="end row">${c.video_url?`<a class="btn small" href="${esc(c.video_url)}" target="_blank" rel="noopener">Watch</a>`:""}${c.status==="ready_for_review"?`<a class="btn small primary" href="#review">Review</a>`:""}</div></div>`}
+
+function postCards(c){
+  const st=streamerOf(c.streamer);
+  const cards=activeAccounts().map(a=>{
+    const ex=(c.exports||{})[a.id]||{}; const title=ex.title||c.title||""; const cap=ex.caption||""; const tags=ex.hashtags||"";
+    const p=pub(c.id,a.id); const up=p&&p.status!=="ready";
+    const camp=st?.campaign?.name;
+    return `<article class="card"><div class="top"><div class="thumb">${thumb(c)}</div><div><span class="plat">${esc(a.label)}</span>
+      <h3>${esc(title||c.moment)}</h3><span class="state">${esc(a.handle?("@"+a.handle):"Account handle not set")}</span></div></div>
+      ${a.id!=="tiktok"&&title?`<div class="field"><div class="lbl">Title ${copyBtn(title,"title")}</div><div class="val">${esc(title)}</div></div>`:""}
+      ${cap?`<div class="field"><div class="lbl">Caption ${copyBtn(cap+(tags?"\n\n"+tags:""),"caption + hashtags")}</div><div class="val">${esc(cap)}${tags?`\n\n${esc(tags)}`:""}</div></div>`:""}
+      ${ex.disclosure||c.disclosure?`<div class="field"><div class="lbl">Disclosure</div><div class="val">${esc(ex.disclosure||c.disclosure)}</div></div>`:""}
+      <div class="actions">${c.video_url?`<a class="btn small" href="${esc(c.video_url)}" target="_blank" rel="noopener">Video</a>`:""}${c.thumb_url?`<a class="btn small" href="${esc(c.thumb_url)}" target="_blank" rel="noopener">Cover</a>`:""}
+        <a class="btn small" href="${esc(a.upload)}" target="_blank" rel="noopener">Open ${esc(a.label.split(" ")[0])}</a>
+        ${up?`<span class="btn small done" aria-label="Uploaded">✓ Uploaded ${esc(fmtDate(p.uploaded_at))}</span><button class="linkbtn" data-undo="${esc(c.id)}" data-plat="${esc(a.id)}">Undo</button>`
+            :`<button class="btn small primary" data-uploaded="${esc(c.id)}" data-plat="${esc(a.id)}">Uploaded</button>`}
+        ${up&&camp?(p.status==="submitted"?`<span class="pill good">Submitted ${esc(fmtDate(p.submitted_at))}</span>`:`<button class="btn small" data-submitted="${esc(c.id)}" data-plat="${esc(a.id)}">Submitted to ${esc(camp)}</button>`):""}
+      </div></article>`}).join("");
+  return `<div class="cards">${cards}</div>`;
+}
+
+function upload(){
+  const pend=pendingPubs(), sub=needsSubmit();
+  const byClip=[...new Set(pend.map(x=>x.c.id))].map(id=>S.clips.find(c=>c.id===id));
+  return `<header class="mast"><span class="eyebrow">Manual posting</span><h1>Upload Desk</h1>
+    <p class="lede">Every approved clip, one card per account. Opening, downloading or copying never counts as posted. Press Uploaded after you post.</p></header>
+  <section class="sec"><div class="sec-head"><h2>To upload</h2><span class="eyebrow">${pend.length} posts</span></div>
+    ${byClip.length?byClip.map(c=>`<div class="sec"><div class="row"><span class="pill hot">${esc(streamerOf(c.streamer)?.name||c.streamer)}</span><b>${esc(c.moment)}</b><span class="mono">V${esc(c.version||1)}</span></div>${postCards(c)}</div>`).join(""):`<div class="emptybox">Nothing waiting. Approved clips appear here.</div>`}</section>
+  <section class="sec"><div class="sec-head"><h2>Submit to campaign</h2><span class="eyebrow">${sub.length} posts</span></div>
+    ${sub.length?`<div class="list">${sub.map(({c,a})=>`<div class="item"><div class="thumb">${thumb(c)}</div><div class="meta"><b>${esc(c.moment)}</b><span class="mono" style="font-size:12px">${esc(a.label)} · uploaded ${esc(fmtDate(pub(c.id,a.id)?.uploaded_at))}</span></div><div class="end"><button class="btn small" data-submitted="${esc(c.id)}" data-plat="${esc(a.id)}">Submitted to ${esc(streamerOf(c.streamer)?.campaign?.name)}</button></div></div>`).join("")}</div>`:`<div class="emptybox">No uploaded post is waiting for a campaign submission.</div>`}</section>`;
+}
+
+function review(){
+  const list=S.clips.filter(c=>c.status==="ready_for_review"||c.status==="revision");
+  return `<header class="mast"><span class="eyebrow">Your call</span><h1>Review</h1><p class="lede">Watch each edit. Approve it to send it to the Upload Desk, or write what to change and Claude makes the next version.</p></header>
+  <div class="reel">${list.length?list.map(c=>{const st=streamerOf(c.streamer);return `<article class="slide" id="clip-${esc(c.id)}">
+    ${c.video_url?`<video controls playsinline preload="metadata" ${c.thumb_url?`poster="${esc(c.thumb_url)}"`:""} src="${esc(c.video_url)}"></video>`:`<div class="emptybox">Video not attached yet.</div>`}
+    <div class="side"><div class="row"><span class="pill hot" style="${accVars(st)}">${esc(st?.name||c.streamer)}</span>${pill(c.status)}<span class="mono">V${esc(c.version||1)}${c.runtime_s?` · ${Number(c.runtime_s).toFixed(1)}s`:""}</span></div>
+      <h2>${esc(c.title||c.moment)}</h2>
+      ${(c.titles||[]).length?`<div class="field"><div class="lbl">Title options</div><ol class="titles">${c.titles.map(t=>`<li>${esc(t)}</li>`).join("")}</ol></div>`:""}
+      ${c.edit_notes?`<div class="field"><div class="lbl">What changed</div><div class="val">${esc(c.edit_notes)}</div></div>`:""}
+      ${c.qc?`<div class="field"><div class="lbl">QC</div><div class="val mono" style="font-size:12px">${esc(c.qc)}</div></div>`:""}
+      <div class="field"><label class="lbl" for="note-${esc(c.id)}">Changes for the next version</label><textarea id="note-${esc(c.id)}" placeholder="e.g. hit the bell 0.3 s earlier, make the caption say HE WALKED UP">${esc(c.review_note||"")}</textarea></div>
+      <div class="actions"><button class="btn primary" data-approve="${esc(c.id)}">Approve</button><button class="btn" data-revise="${esc(c.id)}">Request changes</button></div></div></article>`}).join(""):`<div class="emptybox">Nothing to review. New edits appear here as soon as they pass QC.</div>`}</div>`;
+}
+
+function library(){
+  const groups=streamers().map(st=>{const cs=clipsOf(st.id).filter(c=>c.status!=="waiting_source");return `<section class="sec"><div class="sec-head"><h2 style="color:inherit">${esc(st.name)}</h2><span class="eyebrow">${cs.length} clips</span></div>${cs.length?`<div class="list">${cs.map(itemRow).join("")}</div>`:`<div class="emptybox">No clips yet.</div>`}</section>`}).join("");
+  return `<header class="mast"><span class="eyebrow">Every version</span><h1>Library</h1><p class="lede">Full-quality exports, covers and posting text. Watching or downloading never marks anything posted.</p></header>${groups}`;
+}
+
+function rules(){
+  return `<header class="mast"><span class="eyebrow">Recheck every batch</span><h1>Campaign rules</h1><p class="lede">What each clip must carry. A rule is only current once its brief has been rechecked this batch.</p></header>
+  <div class="rules">${streamers().map(st=>{const c=st.campaign||{};return `<article class="rule" style="--acc:${esc(st.accent||"#151413")}"><h3>${esc(st.name)}</h3>
+    ${c.verified_at?`<span class="pill good">Brief checked ${esc(fmtDate(c.verified_at))}</span>`:`<span class="pill warn">Brief not checked this batch</span>`}
+    <dl>${c.name?`<dt>Campaign</dt><dd>${esc(c.name)}</dd>`:`<dt>Campaign</dt><dd>None confirmed. Post as an ordinary clip.</dd>`}
+    ${c.cta?`<dt>Caption CTA</dt><dd>${esc(c.cta)} ${copyBtn(c.cta,"CTA")}</dd>`:""}${c.hashtags?`<dt>Hashtags</dt><dd>${esc(c.hashtags)} ${copyBtn(c.hashtags,"hashtags")}</dd>`:""}
+    ${c.overlay?`<dt>Overlay</dt><dd>${esc(c.overlay)}</dd>`:""}${c.audio?`<dt>Audio</dt><dd>${esc(c.audio)}</dd>`:""}${c.disclosure?`<dt>Disclosure</dt><dd>${esc(c.disclosure)}</dd>`:""}${c.notes?`<dt>Notes</dt><dd>${esc(c.notes)}</dd>`:""}</dl></article>`}).join("")}</div>`;
+}
+
+function accounts(){
+  return `<header class="mast"><span class="eyebrow">Where clips go</span><h1>Accounts</h1><p class="lede">Vice Unfiltered posts every streamer's clips to these accounts. Links go to each platform's official upload page.</p></header>
+  <div class="cards">${PLATFORMS.map(p=>{const a=S.accounts.find(x=>x.id===p.id)||{};return `<article class="card"><span class="plat">${esc(p.label)}</span><h3>${esc(a.handle?("@"+a.handle):"Handle not set")}</h3>
+    ${a.active===false?`<span class="pill muted">Switched off</span>`:`<span class="pill good">In use</span>`}<div class="actions"><a class="btn small" href="${esc(p.upload)}" target="_blank" rel="noopener">Open upload page</a></div></article>`}).join("")}</div>`;
+}
+
+/* ---------- routing & render ---------- */
+function route(){const h=(location.hash||"#home").slice(1);return h||"home"}
+function render(){
+  const r=route();
+  document.querySelectorAll("[data-nav]").forEach(a=>{const n=a.dataset.nav;a.toggleAttribute("aria-current",n===r||(n==="home"&&r.startsWith("s-")));if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
+  const rv=S.clips.filter(c=>c.status==="ready_for_review").length, up=pendingPubs().length;
+  const br=document.getElementById("b-review"), bu=document.getElementById("b-upload");
+  br.textContent=rv; br.hidden=!rv; bu.textContent=up; bu.hidden=!up;
+  if(S.err){$main.innerHTML=`<div class="notice">${esc(S.err)}</div>`;return}
+  if(!S.ready){$main.innerHTML=`<div class="emptybox">Opening the studio…</div>`;return}
+  const view = r.startsWith("s-")?room(r.slice(2)) : r==="upload"?upload() : r==="review"?review() : r==="library"?library() : r==="rules"?rules() : r==="accounts"?accounts() : home();
+  $main.innerHTML=view;
+  document.querySelector("details.more")?.removeAttribute("open");
+}
+window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
+document.addEventListener("click",e=>{const d=document.querySelector("details.more");if(d&&d.open&&!d.contains(e.target))d.removeAttribute("open")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelector("details.more")?.removeAttribute("open")});
+
+/* ---------- actions ---------- */
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button"); if(!b) return;
+  if(b.dataset.copy!==undefined){const t=b.dataset.copy;try{await navigator.clipboard.writeText(t);toast("Copied")}catch{const r=document.createRange();const v=b.closest(".field")?.querySelector(".val")||b.parentElement;r.selectNodeContents(v);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Selected. Press copy.")}return}
+  if(!db){toast("Sign in to claude.ai to save changes");return}
+  const now=new Date().toISOString();
+  try{
+    if(b.dataset.uploaded){await db.doc(`publications/${b.dataset.uploaded}__${b.dataset.plat}`).set({clip:b.dataset.uploaded,platform:b.dataset.plat,status:"uploaded",uploaded_at:now});toast("Marked uploaded")}
+    else if(b.dataset.undo){await db.doc(`publications/${b.dataset.undo}__${b.dataset.plat}`).set({clip:b.dataset.undo,platform:b.dataset.plat,status:"ready",undone_at:now});toast("Undone")}
+    else if(b.dataset.submitted){await db.doc(`publications/${b.dataset.submitted}__${b.dataset.plat}`).update({status:"submitted",submitted_at:now});toast("Marked submitted")}
+    else if(b.dataset.approve){const id=b.dataset.approve;await db.doc(`clips/${id}`).update({status:"approved",approved_at:now,updated_at:now,review_note:document.getElementById("note-"+id)?.value||""});toast("Approved. It's on the Upload Desk.")}
+    else if(b.dataset.revise){const id=b.dataset.revise;const note=document.getElementById("note-"+id)?.value.trim();if(!note){toast("Write what to change first");document.getElementById("note-"+id)?.focus();return}await db.doc(`clips/${id}`).update({status:"revision",review_note:note,updated_at:now});toast("Sent. Tell Claude in the chat to start the next version.")}
+  }catch(err){toast(err?.code==="not_granted"?"You can view this studio but not change it":"Couldn't save. Try again.")}
+});
+
+/* ---------- data ---------- */
+render();
+(async()=>{
+  const timer=setTimeout(()=>{if(!S.ready){S.err="The studio's data didn't load. Open this page signed in to claude.ai.";render()}},10000);
+  db = await (window.claude?.use ? window.claude.use("db") : Promise.resolve(null)).catch(()=>null);
+  if(!db){clearTimeout(timer);S.err="Sign in to claude.ai to open the studio.";render();return}
+  const got=new Set(); const need=["streamers","accounts","clips","publications","batches"];
+  const key={streamers:"streamers",accounts:"accounts",clips:"clips",publications:"pubs",batches:"batches"};
+  for(const col of need){
+    db.collection(col).onSnapshot(snap=>{S[key[col]]=snap.docs.map(d=>({id:d.id,...d.data()}));got.add(col);if(got.size===need.length){S.ready=true;clearTimeout(timer)}render()},
+      err=>{clearTimeout(timer);S.err="Couldn't load the studio data ("+(err?.code||"error")+").";render()});
+  }
+})();
+})();
+</script>

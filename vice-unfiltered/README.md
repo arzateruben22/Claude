@@ -19,7 +19,8 @@ assets/      tools/
 | `exports/` | `<Streamer>_<NN>_<Moment>_V<n>.mp4` | New version = new file; approved versions are never overwritten |
 | `thumbnails/` | `<Streamer>_<NN>_<Moment>_THUMBNAIL_V<n>.png` + `.jpg` | Same versioning |
 | `deliverables/<batch>/` | The finished package: MP4, thumbnail, `EDIT_NOTES.txt`, caption, titles, ZIP | Only QC-passed files |
-| `tools/` | `inventory.py`, `qc.py` | Run with `python3 -I` |
+| `tools/` | `intake.py`, `render_clip.py`, `qc.py`, `inventory.py` | Run with `python3 -I` from `vice-unfiltered/` |
+| `studio/` | The control room page source | Published as a private claude.ai page |
 | `BATCH_TRACKER.csv` | One row per clip (spec §8 columns) | Updated at every version |
 
 ## Job flow
@@ -32,6 +33,27 @@ assets/      tools/
 6. **QC**: `tools/qc.py` runs, plus a visual check of every insert, transition, freeze and the final frame.
 7. **Thumbnail**: real frame cutouts plus a programmatic type layer, saved to `thumbnails/`.
 8. **Deliver**: the package goes to `deliverables/<batch>/`, a tracker row is added, and the files are sent in the chat.
+
+## The studio (control room)
+
+Private page: https://claude.ai/artifact/ScqKbuLk3EXQ4kEHvEhFBS (source: `studio/vice-studio.html`). It follows the Prism Studio layout with Vice Unfiltered's own look:
+
+- **Home:** a poster per streamer.
+- **Streamer room:** a strip of the other streamers, the header, the batch bar, *Ready to post* (one card per account) and *In the edit*.
+- **Upload Desk** and **Review** (approve the clip or request changes).
+- **More:** Library, Campaign rules, Accounts.
+
+All records live in the page's database, never in the page source:
+
+| Collection | Doc id | Fields |
+|---|---|---|
+| `streamers` | slug | name, platform_note, accent, accent_ink, order, archived, campaign {name, cta, hashtags, overlay, audio, disclosure, notes, verified_at} |
+| `accounts` | youtube / tiktok / instagram | handle (null until you give it), active (false = switched off everywhere) |
+| `batches` | batch01… | label, created_at, streamers[], active |
+| `clips` | `<slug>-<NN>-<moment>-v<n>` | streamer, clip_no, moment, version, batch, status (editing, qc, ready_for_review, revision, approved, archived), runtime_s, video_url, thumb_url, title, titles[], exports {youtube/tiktok/instagram: {title, caption, hashtags, disclosure}}, edit_notes, qc, review_note, created_at |
+| `publications` | `<clipId>__<platform>` | written only by the page's buttons: status (ready / uploaded / submitted), uploaded_at, submitted_at |
+
+**Delivering a clip into the studio:** once the clip passes QC, upload the MP4 and thumbnail to the studio's asset store (Artifact publish with `url`, `asset: true`, `file_paths`; 20 MiB cap per file). Then write the `clips` doc with the returned URLs and status `ready_for_review`. The clip shows up under Review. When it is approved, its cards appear in the streamer's room and on the Upload Desk. A *Request changes* note lands in `review_note`, which is read back for the next version.
 
 ## Git
 
