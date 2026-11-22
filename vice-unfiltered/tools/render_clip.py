@@ -460,18 +460,30 @@ def main():
                           capture_output=True, text=True).stderr
     m = json.loads(meas[meas.rindex("{"):meas.rindex("}") + 1])
     norm = os.path.join(tmp, "mix_norm.wav")
-    ff("-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", raw, "-af",
-       f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
-       f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,"
-       f"aresample={SR},alimiter=limit=0.82:attack=1:release=50:level=false",
-       "-c:a", "pcm_f32le", "-ar", str(SR), norm)
-    notes.append(f"Mix loudness before normalize {m['input_i']} LUFS / {m['input_tp']} dBTP -> target -14 LUFS, -1.5 dBTP")
+    aac = os.path.join(tmp, "mix.m4a")
+    ceiling_db, enc_tp = -1.7, None
+    for attempt in range(4):
+        ff("-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", raw, "-af",
+           f"loudnorm=I=-14:TP=-1.5:LRA=11:measured_I={m['input_i']}:measured_TP={m['input_tp']}:"
+           f"measured_LRA={m['input_lra']}:measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,"
+           f"aresample={SR},alimiter=limit={10 ** (ceiling_db / 20):.4f}:attack=1:release=50:level=false",
+           "-c:a", "pcm_f32le", "-ar", str(SR), norm)
+        ff("-i", norm, "-c:a", "aac", "-b:a", "256k", "-ar", str(SR), "-ac", "2", aac)
+        txt = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", aac, "-af", "ebur128=peak=true",
+                              "-f", "null", "-"], capture_output=True, text=True).stderr
+        tp = re.findall(r"Peak:\s+(-?[\d.]+|-inf) dBFS", txt)
+        enc_tp = float(tp[-1]) if tp and tp[-1] != "-inf" else -99.0
+        if enc_tp <= -1.2:
+            break
+        ceiling_db -= (enc_tp + 1.2) + 0.3   # pull the limiter down by the encoder overshoot, plus margin
+    notes.append(f"Mix loudness before normalize {m['input_i']} LUFS / {m['input_tp']} dBTP -> target -14 LUFS; "
+                 f"limiter ceiling {ceiling_db:.2f} dBFS; encoded AAC 256k true peak {enc_tp} dBTP")
 
     # --- final mux
     lst = os.path.join(tmp, "pieces.txt")
     with open(lst, "w") as f:
         f.writelines(f"file '{p}'\n" for p in vlist)
-    final_in = ["-f", "concat", "-safe", "0", "-i", lst, "-i", norm]
+    final_in = ["-f", "concat", "-safe", "0", "-i", lst, "-i", aac]
     fc = "[0:v]setpts=N/FRAME_RATE/TB[v0]"
     last = "v0"
     if job.get("overlay"):
@@ -486,7 +498,7 @@ def main():
     os.makedirs(os.path.dirname(export), exist_ok=True)
     ff(*final_in, "-filter_complex", fc, "-map", "[vout]", "-map", "1:a", "-frames:v", str(total_frames),
        "-c:v", "libx264", "-crf", "18", "-preset", "medium", "-pix_fmt", "yuv420p", "-r", str(fps),
-       "-c:a", "aac", "-b:a", "192k", "-ar", str(SR), "-ac", "2", "-movflags", "+faststart", export)
+       "-c:a", "copy", "-movflags", "+faststart", export)
 
     with open(os.path.join(work, "EDL.csv"), "w", newline="") as f:
         w = csv.writer(f)
@@ -508,7 +520,8 @@ def main():
     with open(os.path.join(work, "EDIT_NOTES.txt"), "w") as f:
         f.write(f"{os.path.basename(export)}\n\n" + "\n".join(notes) + "\n\nQC frame times: "
                 + ", ".join(f"{t:.2f}" for t in qc_times) + "\n")
-    shutil.rmtree(tmp)
+    if not os.environ.get("VU_KEEP_TMP"):
+        shutil.rmtree(tmp)
     print("export:", os.path.relpath(export, ROOT))
     r = subprocess.run([sys.executable, "-I", os.path.join(ROOT, "tools", "qc.py"), export, os.path.join(work, "qc"),
                         "--at", ",".join(str(t) for t in qc_times)], text=True)
