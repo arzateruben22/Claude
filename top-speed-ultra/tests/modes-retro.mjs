@@ -51,7 +51,7 @@ async function launch() {
 // a fresh context with these settings, booted to the menu, then a Free Drive started from the menu
 async function openDrive(browser, build, size, settings) {
   const ctx = await browser.newContext(SIZES[size]);
-  const base = { quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', start: 'I-405 North' };
+  const base = { quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', start: 'I-405 North' };
   await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { ...base, ...settings });
   const page = await ctx.newPage();
   page.setDefaultTimeout(600000);

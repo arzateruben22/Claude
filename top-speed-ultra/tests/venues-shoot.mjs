@@ -28,7 +28,7 @@ const say = (...a) => { const l = [T(), ...a].join(' '); log.push(l); console.lo
 async function open(file, phone) {
   const ctx = await browser.newContext(phone ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 } : { viewport: { width: 1440, height: 900 } });
   await ctx.addInitScript(() => {
-    localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'sunset', weather: 'clear', hudStyle: 'modern' }));
+    localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'moderate', time: 'sunset', weather: 'clear', hudStyle: 'modern' }));
     localStorage.setItem('lot57.seen', '1');
   });
   const page = await ctx.newPage(); page.setDefaultTimeout(900000);

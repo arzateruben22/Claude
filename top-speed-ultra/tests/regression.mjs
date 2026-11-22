@@ -86,7 +86,7 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
     : { viewport: { width: size[0], height: size[1] } });
   // standard Low, saved at this settings version (a profile saved without its version reads as one from before Retro Low
   // became the default, and moves to Retro Low; settings.ts SETTINGS_V): the suite's checks were tuned on standard Low
-  const base = { quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
+  const base = { quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
   await ctx.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html')) localStorage.setItem('tsu.settings', JSON.stringify(s)); }, { ...base, ...settings });
   const page = await ctx.newPage();
   // software rendering shares the CPU with other renders and builds here: a click or a screenshot can wait a while
@@ -105,6 +105,16 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
   return { ctx, page, errors, loadS, requests };
 }
 const game = (page, fn, arg) => page.evaluate(fn, arg);
+// the menu's overflow (World Map, Lifestyle, Phone, Driver, Store, Feedback, Profile); its items close it
+const openMore = (page) => page.getByRole('button', { name: 'More', exact: true }).click();
+// Settings shows one category at a time: the rail's tab on a desktop, the dropdown on a phone
+const SET_KEYS = ['graphics', 'hud', 'world', 'driving', 'sound', 'testing'];
+async function settingsSection(page, key) {
+  const phone = await page.evaluate(() => getComputedStyle(document.querySelector('.s-pick')).display !== 'none');
+  if (phone) await page.locator('.s-pick select').selectOption(key);
+  else await page.locator('.s-rail .s-tab').nth(SET_KEYS.indexOf(key)).click();
+  await page.waitForSelector('#set-' + key);
+}
 // THRUST is the jump only (2026-11-16): player-facing copy (the text on screen and every aria-label and title) that
 // still describes the hold-to-boost that was removed: Cold Thrust, a double-tap, or holding THRUST / Left Shift
 const staleThrust = (page) => page.evaluate(() => {
@@ -115,9 +125,12 @@ const staleThrust = (page) => page.evaluate(() => {
 // the Settings screen's keys line and the main menu's Store tile, read off the menu (Settings opened from the dock and
 // closed again); `name` is the frame of Settings scrolled to the keys line
 async function menuCopy(page, name) {
+  await openMore(page);
   const tile = (await page.locator('.store-open').innerText()).replace(/\s+/g, ' ').trim();
   const menuStale = await staleThrust(page);
+  await openMore(page);   // closed again
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
+  await settingsSection(page, 'driving');
   await page.waitForSelector('.panel.settings .keys', { timeout: 60000 });
   const keys = (await page.locator('.panel.settings .keys').innerText()).trim();
   const setStale = await staleThrust(page);
@@ -181,7 +194,7 @@ async function frames(page, n, timeout = FRAMES_MS) {
 // start a mode the way a player does: pick it on the menu, tap Drive, wait for the loading screen to go
 async function drive(page, label) {
   await page.getByRole('radio', { name: new RegExp(label) }).click();
-  await page.getByRole('button', { name: 'Drive', exact: true }).click();
+  await page.getByRole('button', { name: 'Start run', exact: true }).click();
   await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
 }
 // leave a paused drive for the menu the way a player does. The pause screen has one way out (owner, 2026-11-16): in
@@ -1269,19 +1282,20 @@ await group('modes', async (use) => {
   // Settings (1280 x 720) names the profile the suite drives at: its button pressed, its line lit, the slider on its value
   await check('Settings at 1280 × 720 shows the handling profile the suite drives at', async () => {
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await settingsSection(page, 'driving');
     const f = page.locator('.field.handling');
     await f.waitFor();
     await f.scrollIntoViewIfNeeded();
     const r = await game(page, readHandling);
     const name = profileName(HANDLING), file = `settings-profiles-1280-${name.toLowerCase()}.png`;
     await page.screenshot({ path: path.join(OUT, file) });
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     expect(r.value === HANDLING && r.phys === HANDLING, `slider ${r.value}, physics ${r.phys}, suite ${HANDLING}`);
     expect(r.out === `${name} · ${HANDLING.toFixed(2)}` && r.pressed.join() === (name === 'Custom' ? '' : name) && r.lit.join() === name, `reads "${r.out}", pressed ${r.pressed.join()}, lit ${r.lit.join()}`);
     expect(r.lines === (name === 'Custom' ? 4 : 3) && r.ticks === 3 && r.sideScroll === false, `${r.lines} lines, ${r.ticks} ticks, side scroll ${r.sideScroll}`);
     return `"${r.out}", ${name === 'Custom' ? 'no profile pressed, Custom' : name + ' pressed and'} lit, ${r.lines} lines ("${r.active}"), ${file}`;
   });
-  const first = await game(page, () => ({ picked: document.querySelector('.modes [aria-checked="true"] .mode-text b')?.textContent, mode: window.__game.mode }));
+  const first = await game(page, () => ({ picked: document.querySelector('.runs [aria-checked="true"]')?.textContent, mode: window.__game.mode }));
   await ctx.addInitScript(() => {
     const s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); s.mode = 'time'; localStorage.setItem('tsu.settings', JSON.stringify(s));
     localStorage.setItem('tsu.profile', JSON.stringify({ v: 1, username: 'Earlier', xp: 900, credits: 4200, racesWon: 3, runs: 5, story: { done: ['mara-1'], read: ['mara-1'] } }));
@@ -1293,24 +1307,26 @@ await group('modes', async (use) => {
   await page.reload();
   await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
   await hook(page);
-  await check('the menu offers two modes: 01 Free Drive and 02 Speed Survival, nothing else', async () => {
+  await check('the menu offers four traffic modes (01 Zero traffic, 02 Light, 03 Medium, 04 Extreme) and two run types (Free Drive, Speed Survival), nothing else', async () => {
     const r = await game(page, () => ({
-      cards: [...document.querySelectorAll('.modes [role="radio"]')].map((b) => [b.querySelector('.mode-text i')?.textContent, b.querySelector('.mode-text b')?.textContent, b.getAttribute('aria-checked')]),
+      tiles: [...document.querySelectorAll('.modes [role="radio"]')].map((b) => [b.querySelector('.mode-text i')?.textContent, b.querySelector('.mode-text b')?.textContent, b.getAttribute('aria-checked')]),
+      runs: [...document.querySelectorAll('.runs [role="radio"]')].map((b) => b.textContent),
       text: document.querySelector('.overlay.menu')?.innerText ?? '',
     }));
     await page.screenshot({ path: path.join(OUT, 'modes-menu.png') });
-    expect(JSON.stringify(r.cards.map((c) => c.slice(0, 2))) === JSON.stringify([['01', 'Free Drive'], ['02', 'Speed Survival']]), `cards: ${JSON.stringify(r.cards)}`);
+    expect(JSON.stringify(r.tiles.map((c) => c.slice(0, 2))) === JSON.stringify([['01', 'Zero traffic'], ['02', 'Light'], ['03', 'Medium'], ['04', 'Extreme']]), `tiles: ${JSON.stringify(r.tiles)}`);
+    expect(JSON.stringify(r.runs) === JSON.stringify(['Free Drive', 'Speed Survival']), `run types: ${JSON.stringify(r.runs)}`);
     expect(!/\bRaces?\b|Time Trial|rivals/i.test(r.text), `the menu still says: ${(/.{0,40}(\bRaces?\b|Time Trial|rivals).{0,40}/i.exec(r.text) ?? [''])[0]}`);
-    return r.cards.map((c) => `${c[0]} ${c[1]}`).join(', ');
+    return r.tiles.map((c) => `${c[0]} ${c[1]}`).join(', ') + ' · ' + r.runs.join(', ');
   });
   await check('a saved mode "race" or "time" loads as Free Drive; the old race data is ignored', async () => {
     const r = await game(page, async () => {
-      const g = window.__game, picked = document.querySelector('.modes [aria-checked="true"] .mode-text b')?.textContent;
+      const g = window.__game, picked = document.querySelector('.runs [aria-checked="true"]')?.textContent;
       const p = g.profile.p, out = { picked, settingsMode: 'mode' in g.settings, course: 'course' in g.settings, racesWon: 'racesWon' in p, credits: p.credits, done: p.story.done };
       // the Personal bests panel: Speed Survival and Free Drive only (the old Time Trial and race runs aren't shown)
       document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
       await new Promise((res) => setTimeout(res, 500));
-      out.board = [...document.querySelectorAll('.sheet-body .panel .seg button')].map((b) => b.textContent);
+      out.board = [...document.querySelectorAll('.sheet-body .panel .seg[aria-label="Mode"] button')].map((b) => b.textContent);
       out.boardRuns = [...document.querySelectorAll('.sheet-body .board li b')].map((b) => b.textContent);
       document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
       return out;
@@ -1326,7 +1342,7 @@ await group('modes', async (use) => {
       const wait = () => new Promise((res) => setTimeout(res, 500));
       document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
       await wait();
-      [...document.querySelectorAll('.sheet-body .panel .seg button')].find((b) => b.textContent === 'Free Drive')?.click();
+      [...document.querySelectorAll('.sheet-body .panel .seg[aria-label="Mode"] button')].find((b) => b.textContent === 'Free Drive')?.click();
       await wait();
       const rows = [...document.querySelectorAll('.sheet-body .board li')].map((li) => ({ score: li.querySelector('b')?.textContent, mark: li.querySelector('.board-tune')?.textContent ?? '' }));
       document.querySelectorAll('.dock button').forEach((b) => { if (/Bests/.test(b.textContent)) b.click(); });
@@ -1346,9 +1362,11 @@ await group('modes', async (use) => {
     return r.map(([m]) => m).join(', ');
   });
   await check('the phone and the World Map have no Races', async () => {
+    await openMore(page);
     await page.getByRole('button', { name: /^Phone/ }).click();
     const apps = await page.locator('.ph-app').allInnerTexts();
     await page.locator('.ph-home').click();
+    await openMore(page);
     await page.getByRole('button', { name: 'World Map', exact: true }).click();
     await page.waitForSelector('.worldmap canvas');
     const tabs = await page.locator('.wm-tabs button').allInnerTexts();
@@ -2298,25 +2316,28 @@ await group('progression', async (use) => {
     expect(r.brioTop < r.gtTop, `top speed GT ${fmt(r.gtTop)} vs Brio ${fmt(r.brioTop)} m/s`);
     return `"${r.noMoney}", "${r.noLevel}", bought: 11,000 left; computed top ${Math.round(r.gtTop * MPH)} → ${Math.round(r.brioTop * MPH)} mph`;
   });
-  await check('Ultra Realism: locked below level 5, tunnel vision at speed, switches off', async () => {
-    const ramp = () => game(page, () => {
+  // Ultra Realism's tunnel vision starts at 150 mph (owner, 2026-11-18; it began near 100): none at 125 mph, plenty at 200
+  await check('Ultra Realism: locked below level 5, tunnel vision starts at 150 mph (none at 125, strong at 200), switches off', async () => {
+    const ramp = (to) => game(page, (to) => {
       const g = window.__game; let t = 0;
       g.setPaused(true);
-      while (g.phys.vx < 69 && t < 90) { g.fastForward(1, {}, 75); t++; }
+      while (Math.abs(g.phys.vx - to / 2.236936) > 0.6 && t < 120) { g.fastForward(1, {}, to / 2.236936); t++; }
       return g.phys.vx;
-    });
+    }, to);
     // tunnel vision eases in on rendered frames; pausing holds the speed while it does
     const tunnelAt = async () => { await frames(page, 15); await page.waitForTimeout(1500); return game(page, () => window.__game.tunnel); };
     await game(page, () => { const g = window.__game; g.profile.p.xp = 0; g.updateSettings({ ...g.settings, ultra: true }); });
-    const v1 = await ramp(), locked = await tunnelAt();
+    const v1 = await ramp(200), locked = await tunnelAt();
     await game(page, () => { window.__game.profile.p.xp = Math.round(400 * Math.pow(5, 1.5)); });   // level 6
-    const v2 = await ramp(), on = await tunnelAt();
+    const vLow = await ramp(125), low = await tunnelAt();
+    const v2 = await ramp(200), on = await tunnelAt();
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, ultraTunnel: false }); });
     const off = await tunnelAt();
     expect(locked === 0, `tunnel ${fmt(locked)} at level 1 and ${Math.round(v1 * MPH)} mph`);
-    expect(v2 * MPH > 150 && on > 0.3, `tunnel ${fmt(on)} at ${Math.round(v2 * MPH)} mph`);
+    expect(vLow * MPH < 150 && low < 0.02, `tunnel ${fmt(low)} at ${Math.round(vLow * MPH)} mph (under 150 mph: none)`);
+    expect(v2 * MPH > 190 && on > 0.3, `tunnel ${fmt(on)} at ${Math.round(v2 * MPH)} mph`);
     expect(off < 0.05, `tunnel ${fmt(off)} with tunnel vision switched off`);
-    return `level 1: ${locked}; level 6 at ${Math.round(v2 * MPH)} mph: ${fmt(on)}; switched off: ${fmt(off)}`;
+    return `level 1 at ${Math.round(v1 * MPH)} mph: ${locked}; level 6 at ${Math.round(vLow * MPH)} mph: ${fmt(low)}, at ${Math.round(v2 * MPH)} mph: ${fmt(on)}; switched off: ${fmt(off)}`;
   });
   await check('radio cycles three stations, then off', async () => {
     const r = await game(page, () => {
@@ -2338,7 +2359,7 @@ await group('progression', async (use) => {
     const LABEL = 'Owner mode (all cars unlocked, test builds only)';
     const toMenu = async () => { await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
     const garage = async () => {
-      await page.locator('.pick', { hasText: 'Car' }).first().click();
+      await page.locator('.mp-carline').click();
       await page.waitForSelector('.panel.profile .gcell.car');
       const r = await game(page, () => {
         const panel = document.querySelector('.panel.profile');
@@ -2352,9 +2373,10 @@ await group('progression', async (use) => {
       });
       return r;
     };
-    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done' }).click(); await toMenu(); };
+    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click(); await toMenu(); };
     const owner = async (on) => {
       await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await settingsSection(page, 'testing');
       const t = page.getByLabel(LABEL);
       if (on) await t.check(); else await t.uncheck();
       await done();
@@ -2373,7 +2395,7 @@ await group('progression', async (use) => {
     await page.waitForFunction(() => window.__game.carId === 'vela-e');
     const s1 = await state();
     await done();
-    const pick = await game(page, () => [...document.querySelectorAll('.pick')].find((p) => /Car/.test(p.textContent))?.querySelector('b')?.textContent);
+    const pick = await game(page, () => document.querySelector('.mp-carline b')?.textContent);
     // a run starts in the owner's car
     await drive(page, 'Free Drive');
     const run = await game(page, () => { const g = window.__game; g.setPaused(true); return { built: g.car.config?.car, top: g.carTop() }; });
@@ -2416,15 +2438,15 @@ await group('progression', async (use) => {
     const marked = /<div id="root" data-build="owner-test">/.test(readFileSync(ART, 'utf8')), plain = !/data-build=/.test(readFileSync(GAME, 'utf8'));
     expect(marked && plain, `artifact marked ${marked}, top-speed-ultra.html unmarked ${plain}`);
     const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
-    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
+    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
     const pg = await ctx.newPage(); pg.setDefaultTimeout(240000);
     await game(page, () => window.__game.setPaused(true));   // the group's own page stays still while this one boots
     const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
     const boot = async (hash) => {
       await pg.goto('about:blank');   // a load, not a fragment change on the open page
       await pg.goto(pathToFileURL(ART).href + hash);
-      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu .pick'), null, { timeout: BOOT_MS });
-      await pg.locator('.pick', { hasText: 'Car' }).first().click({ timeout: BOOT_MS });
+      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu .mp-carline'), null, { timeout: BOOT_MS });
+      await pg.locator('.mp-carline').click({ timeout: BOOT_MS });
       await pg.waitForSelector('.panel.profile .gcell.car', { timeout: BOOT_MS });
       return pg.evaluate(() => {
         const g = window.__game, card = [...document.querySelectorAll('.panel.profile .gcell.car')].find((c) => c.querySelector('.carhead b').textContent === 'OC Hypercar');
@@ -2448,8 +2470,9 @@ await group('progression', async (use) => {
   await check('OC Hypercar: Unleashed / Race tune chip, Free Drive earnings capped at the race tune\'s pace', async () => {
     const chips = () => game(page, () => [...document.querySelectorAll('.hud-chips i')].map((e) => e.textContent));
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await settingsSection(page, 'testing');
     await page.getByLabel('Owner mode (all cars unlocked, test builds only)').check();
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     await page.waitForSelector('.overlay.menu', { timeout: 120000 });
     const was = await game(page, () => window.__game.carId);
     await game(page, () => window.__game.chooseOwnerCar('oc-hyper'));
@@ -2529,8 +2552,8 @@ await group('progression', async (use) => {
       for (let i = 0; i < d.length; i += 16) { const l = (d[i] + d[i + 1] + d[i + 2]) / 3; sum += l; max = Math.max(max, l); if (d[i + 2] > 180 && d[i + 2] > d[i] + 40) ice++; }
       return { mean: sum / (d.length / 16), max, ice, w: c.width, h: c.height };
     });
-    const open = async () => { await page.locator('.pick', { hasText: 'Car' }).first().click(); await page.waitForSelector('.gcell.car.founder .fe-stage canvas'); };
-    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done' }).click(); await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
+    const open = async () => { await page.locator('.mp-carline').click(); await page.waitForSelector('.gcell.car.founder .fe-stage canvas'); };
+    const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click(); await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
     await open();
     await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
     const t1 = await game(page, () => window.__game.revealState);
@@ -3160,19 +3183,19 @@ await group('phone', async (use) => {
   });
   // the main menu is one persistent glass sheet (owner, 2026-10-16: "more seamless"): opening a screen changes what the
   // sheet shows, the sheet and the Drive dock stay, and the dock marks where you are
-  await check('menu: one sheet; the Drive dock stays while its screens change', async () => {
+  await check('menu: one sheet; the top bar stays and marks where you are while its screens change; one Start run on the front page', async () => {
     await game(page, () => { document.querySelector('.sheet').dataset.k = 'first'; });
+    const starts0 = await page.getByRole('button', { name: 'Start run', exact: true }).count();
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
     await page.waitForTimeout(400);
     const r = await game(page, () => ({ same: document.querySelector('.sheet')?.dataset.k === 'first', title: document.querySelector('.sheet-body .panel h2')?.textContent,
-      go: !!document.querySelector('.dock .btn.go'), here: document.querySelector('.dock [aria-current="page"]')?.textContent }));
-    const drives = await page.getByRole('button', { name: 'Drive', exact: true }).count();
-    expect(r.same && r.title === 'Settings' && r.go && r.here === 'Settings', JSON.stringify(r));
-    expect(drives === 1, `${drives} Drive buttons`);
-    await page.getByRole('button', { name: 'Settings', exact: true }).click();   // the dock's button toggles back
+      here: document.querySelector('.dock [aria-current="page"]')?.getAttribute('aria-label') }));
+    expect(r.same && r.title === 'Settings' && r.here === 'Settings', JSON.stringify(r));
+    expect(starts0 === 1, `${starts0} Start run buttons`);
+    await page.getByRole('button', { name: 'Done', exact: true }).click();
     await page.waitForTimeout(400);
     expect(await page.locator('.sheet.home .modes').count() === 1, 'not back on the menu');
-    return `same sheet, dock marks ${r.here}, one Drive button`;
+    return `same sheet, the bar marks ${r.here}, one Start run button`;
   });
   await check('the keys in Settings and the Store tile on a phone: tap JUMP to hop, no Cold Thrust, no double-tap, no hold', async () => {
     const r = await menuCopy(page, 'phone-settings-keys.png');
@@ -3183,6 +3206,7 @@ await group('phone', async (use) => {
     return `keys: "${r.keys}"; Store tile: "${r.tile}"`;
   });
   await check('profile screen renders', async () => {
+    await openMore(page);
     await page.getByRole('button', { name: 'Profile', exact: true }).click();
     await page.waitForTimeout(400);
     await page.screenshot({ path: path.join(OUT, 'phone-profile.png') });
@@ -3194,7 +3218,7 @@ await group('phone', async (use) => {
   // hypercar M6: the Founder Edition's garage card at phone size: its reveal stage sits inside the card at 16:9 and plays,
   // the caption and the Replay button don't collide, and nothing scrolls sideways
   await check('the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll', async () => {
-    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.locator('.mp-carline').click();
     await page.waitForSelector('.gcell.car.founder .fe-stage canvas');
     await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
     await game(page, () => document.querySelector('.gcell.car.founder').scrollIntoView({ block: 'start' }));
@@ -3204,7 +3228,7 @@ await group('phone', async (use) => {
       const box = (q) => { const b = document.querySelector(q).getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; };
       return { stage: box('.fe-stage'), card: box('.gcell.car.founder'), cap: box('.fe-cap'), btn: box('.fe-replay'), w: innerWidth, side: document.documentElement.scrollWidth > innerWidth, state: window.__game.revealState };
     });
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     const { stage: st, card, cap, btn } = r, hit = (a, b) => !(a.r <= b.l || b.r <= a.l || a.b <= b.t || b.b <= a.t);
     expect(st.l >= card.l && st.r <= card.r && st.l >= 0 && st.r <= r.w && Math.abs((st.r - st.l) / (st.b - st.t) - 16 / 9) < 0.03, `stage ${JSON.stringify(st)} in card ${JSON.stringify(card)}`);
     expect(!hit(cap, btn) && btn.b - btn.t >= 36 && btn.r <= st.r && cap.l >= st.l, `caption ${JSON.stringify(cap)}, Replay ${JSON.stringify(btn)}`);
@@ -3216,6 +3240,7 @@ await group('phone', async (use) => {
   // its point, the slider moved off a point reads Custom with its own line, and the page never scrolls sideways
   await check('Settings at 390 × 844: Arcade, Sport and Simulation set the handling to 0.15 / 0.5 / 0.9; off those points it reads Custom; one line each; saved', async () => {
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
+    await settingsSection(page, 'driving');
     const f = page.locator('.field.handling');
     await f.waitFor();
     await f.scrollIntoViewIfNeeded();
@@ -3243,7 +3268,7 @@ await group('phone', async (use) => {
     const steps = Math.round((HANDLING - c.value) / 0.05);
     for (let k = 0; k < Math.abs(steps); k++) await page.keyboard.press(steps > 0 ? 'ArrowRight' : 'ArrowLeft');
     const back = await game(page, readHandling);
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     expect(Math.abs(back.phys - HANDLING) < 1e-9 && Math.abs(back.saved - HANDLING) < 1e-9, `not back at ${HANDLING}: ${JSON.stringify(back)}`);
     return `${seen.join('; ')}; slider to 0.85: "${c.out}", "${c.active}"; back to ${back.out}`;
   });
@@ -4242,12 +4267,12 @@ await group('launch', async (use) => {
     await page.getByRole('button', { name: 'Futuristic', exact: true }).click();
     const c = await attrs();
     expect(c.look === 'ultra' && c.base !== '#0a111d', `after Futuristic: ${JSON.stringify(c)}`);
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     return `car ${a.car}, driver ${a.driver}; Realistic base ${b.base}, saved; back to Futuristic`;
   });
   // the garage's Paint tab (U5): six paints per car, applied live to the car and kept for that car
   await check("the garage's Paint tab repaints the car live and keeps the choice", async () => {
-    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.locator('.mp-carline').click();
     await page.getByRole('button', { name: 'Paint', exact: true }).click();
     await page.getByRole('radio', { name: 'Sunset Orange' }).click();
     await frames(page, 2);
@@ -4257,14 +4282,14 @@ await group('launch', async (use) => {
     await page.getByRole('radio', { name: 'Rossini Red' }).click();
     const back = await game(page, () => window.__game.car.config.paint);
     expect(back === 0xa80d10, `back to ${back?.toString(16)}`);
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     return 'Sunset Orange on the car and saved; back to Rossini Red';
   });
   // the garage's Wheels tab (U5): two rim styles per car, fitted live (only the wheels rebuilt, never stacked) and kept
   await check("the garage's Wheels tab fits the second rim style live and keeps the choice", async () => {
     const count = () => game(page, () => { const c = window.__game.car; return { wheels: c.wheels.length, inScene: c.wheels.filter((w) => !!w.steer.parent).length, root: c.root.children.length, style: c.config.wheel }; });
     const a = await count();
-    await page.locator('.pick', { hasText: 'Car' }).first().click();
+    await page.locator('.mp-carline').click();
     await page.getByRole('button', { name: 'Wheels', exact: true }).click();
     const chips = await page.locator('.wheel-chip').count();
     await page.getByRole('radio', { name: /Cross Lace/ }).click();
@@ -4278,7 +4303,7 @@ await group('launch', async (use) => {
     await page.getByRole('radio', { name: /Forged Twin/ }).click();
     const c = await count();
     expect(c.style === 'twin5' && c.root === a.root, `back to ${c.style}, root children ${c.root}`);
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
   });
   // Lifestyle (homes): bought with earned credits, adds garage slots, starts a drive at the nearest real exit, sells for 60 %
@@ -4302,7 +4327,7 @@ await group('launch', async (use) => {
     await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Sell/ }).click();
     const b = await game(page, () => { const p = window.__game.profile.p; return { credits: p.credits, homes: p.homes.length }; });
     expect(b.credits === 2000 + 4800 && b.homes === 0, `after selling: ${JSON.stringify(b)}`);
-    await page.locator('.panel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     await game(page, (k) => { const g = window.__game, p = g.profile.p; p.credits = k.credits; p.homes = k.homes; p.home = k.home; g.profile.save(); }, before);
     return `9 homes; bought Orangewood for 8,000 (slots ${slots0} → ${a.slots}); Start pick "${pick.slice(0, 60)}"; sold for 4,800`;
   });
@@ -4926,7 +4951,7 @@ await group('store-live', async () => {
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const SITE = `http://127.0.0.1:${server.address().port}/index.html`;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
+  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
   const errors = [], calls = [];
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
   // the one item on sale since the owner's trim (2026-11-16): the OC Hypercar Founder Edition
@@ -5545,7 +5570,7 @@ await group('perf', async (use) => {
   // real frames: Low at 1280 × 720 with ?perf, driving, and the artificial frame cost hook
   if (wants('perf: ?perf shows the overlay; real frames', 'perf: the overlay at 1280', 'perf: Adaptive quality off', 'perf: Retro keeps')) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 3, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 4, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
     await p.goto(pathToFileURL(GAME).href + '?perf');
@@ -5589,7 +5614,7 @@ await group('perf', async (use) => {
   // the phone: 390 × 844 at DPR 3, ?perf, driving
   if (wants('perf: the overlay on a 390')) {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 3, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 4, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     await p.goto(pathToFileURL(GAME).href + '?perf');
     await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
