@@ -1915,9 +1915,14 @@ export class Game {
       this.tmpQ.setFromEuler(this.tmpE.set(c.lookPitch * 0.5, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
       fov = (portrait ? 80 : 60) + this.settings.fov * 0.5 + speedK * 6;
     }
-    if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION) {
-      const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032;
-      this.wantP.x += (Math.random() - 0.5) * b; this.wantP.y += (Math.random() - 0.5) * b * 1.4 + Math.sin(this.time * 23) * b * 0.4;
+    // Ultra Realism's road shake at speed: a smooth vibration from three incommensurate sines on the game clock (was
+    // fresh Math.random() every frame, which read as the whole view jittering and kept going on the pause screen, where
+    // the speed stays set: owner, 2026-11-22, "why does it shake like the outside of the car when paused and driving").
+    // The clock stops while paused, so the view holds still there.
+    if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION && !this.paused) {
+      const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032, t = this.time;
+      this.wantP.x += (Math.sin(t * 57.1) * 0.5 + Math.sin(t * 83.3 + 1.3) * 0.3 + Math.sin(t * 131.7 + 2.1) * 0.2) * b * 0.5;
+      this.wantP.y += (Math.sin(t * 61.9 + 0.7) * 0.5 + Math.sin(t * 97.1 + 2.6) * 0.3 + Math.sin(t * 143.3 + 0.4) * 0.2) * b * 0.7 + Math.sin(t * 23) * b * 0.4;
     }
     if (this.dip.t < 0.8) {
       // a hop's landing: the view drops with the body and comes back (peak at 80 ms, gone in about half a second)
@@ -1925,7 +1930,7 @@ export class Game {
       this.wantP.y -= this.dip.a * x * Math.exp(1 - x) * (lookBack ? 0.5 : 1);
       this.dip.t += dt;
     }
-    if (this.shake > 0) {
+    if (this.shake > 0 && !this.paused) {   // an impact's jolt waits out the pause screen too
       this.wantP.x += (Math.random() - 0.5) * this.shake * 0.06; this.wantP.y += (Math.random() - 0.5) * this.shake * 0.05;
       this.shake = Math.max(0, this.shake - dt * 2.5);
     }
