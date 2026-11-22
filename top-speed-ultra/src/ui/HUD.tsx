@@ -79,6 +79,8 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   // modes); its own systems' strip (the tank, Ground Lock, the hop: a line of the speed readout, hidden in the seat view,
   // where the car's own cluster shows them) and its THRUST key (with the driver's ability, a key of the controls)
   const tune = useRef<HTMLElement>(null), thr = useRef<HTMLDivElement>(null), thrPct = useRef<HTMLElement>(null), thrBar = useRef<HTMLElement>(null);
+  // the drift readout (Physics.drift): the slip angle, a bar for it and the chain's clock, up while a slide lasts
+  const drift = useRef<HTMLDivElement>(null), driftAng = useRef<HTMLElement>(null), driftBar = useRef<HTMLElement>(null), driftT = useRef<HTMLElement>(null);
   const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
@@ -179,6 +181,21 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         s.cool = cool;
       }
       put(cam.current, 'cam', h.cam);
+      // the drift readout: up while a slide counts and through the half second of grace that links one slide to the next
+      // (Physics keeps the chain's clock running then); the bar is the angle against 60 degrees
+      if (drift.current) {
+        const up = h.driftTime > 0;
+        if (drift.current.hidden === up) drift.current.hidden = !up;
+        if (up) {
+          const a = Math.abs(Math.round(h.driftAngle));
+          put(driftAng.current, 'driftAng', String(a));
+          put(driftT.current, 'driftT', h.driftTime.toFixed(1));
+          const f = Math.min(1, a / 60).toFixed(2);
+          if (driftBar.current && last.driftBar !== f) { last.driftBar = f; driftBar.current.style.transform = `scaleX(${f})`; }
+          data(drift.current, 'state', h.driftOn ? 'on' : 'link');
+          data(drift.current, 'dir', h.driftAngle > 0 ? 'l' : 'r');
+        }
+      }
       // what wakes the tucked Minimal HUD (App.tsx tucks; styles.css reads data-wake): a hard stop held 0.4 s above
       // 30 mph, and an exit coming up (the route's manoeuvre
       // within 800 m, the errand's sign within a mile), which keeps it up until it is passed
@@ -276,6 +293,13 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
             </div>
           </div>
           {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
+        </div>
+        {/* the drift readout: DRIFT, the slip angle with a bar for it, the chain's clock (styles.css puts it over the steering pad on a phone) */}
+        <div className="hud-drift" ref={drift} hidden>
+          <b>Drift</b>
+          <em><span ref={driftAng as El}>0</span>°</em>
+          <span className="hud-drift-t"><span ref={driftT as El}>0.0</span> s</span>
+          <span className="hud-drift-bar"><i ref={driftBar as El} /></span>
         </div>
         <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>
       </div>

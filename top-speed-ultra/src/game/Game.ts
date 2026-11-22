@@ -120,6 +120,10 @@ export interface Hud {
   // the OC Hypercar: which tune runs ('' for another car), and its own systems (live only on the Unleashed tune in
   // Free Drive): the tank (0..1, the jump's gas and Ground Lock's), the fans, and the hop's state in a word or two
   tune: string; thrustLive: boolean; tank: number; groundLock: boolean; hop: string;
+  // the drift readout (Physics.drift): the body's slip angle in degrees (+ when the nose points left of the way the car
+  // travels), whether it counts as a drift now, and the chain's clock in seconds (it holds half a second of grace
+  // between slides, so the readout stays up through a transition)
+  driftAngle: number; driftOn: boolean; driftTime: number;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -2341,6 +2345,7 @@ export class Game {
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
       thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, groundLock: this.hyper.fan > 0.3,
       hop: this.hopState(),
+      driftAngle: p.drift.angle, driftOn: p.drift.active, driftTime: p.drift.time,
     };
     this.ev.hud(h);
     // the car's own cluster shows the same facts (cockpit.ts / car-dash.ts): one object, filled in place
