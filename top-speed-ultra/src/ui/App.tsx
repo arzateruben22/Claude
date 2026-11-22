@@ -15,7 +15,9 @@ import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, presetFor,
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
-import { carById, figures, garageCars, PAINTS, paintFor, WHEELS, wheelFor } from '../game/cars';
+import { carById, figures, garageCars, PAINTS, paintFor, paintForEdition, cosmeticId, WHEELS, wheelFor } from '../game/cars';
+import { CAR_MILES } from '../game/progress';
+import { HypercarProgress, CarGate, ProgressStrip, RunProgressLine, VenueMembership } from './progress';
 import { GLACIER_SILVER, FOUNDER_ICE, plaqueNumber, founderWindowText } from '../game/founder';
 import { HUD, HudHandle } from './HUD';
 import { Touch } from './Touch';
@@ -26,7 +28,6 @@ import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
 import { Homes } from './Homes';
 import { unread } from '../game/story';
-import { garageSlots } from '../game/homes';
 import { ModeArt } from './ModeArt';
 import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
@@ -35,7 +36,7 @@ import { RadialMenu, RadialPick } from './RadialMenu';
 import { PerfOverlay } from './PerfOverlay';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes' | 'goals';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -391,6 +392,7 @@ export function App() {
       };
       case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
       case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} /> } : null;
+      case 'goals': return game.current ? { cls: 'profile', body: <><h2>Goals and passport</h2><ProgressStrip game={game.current} /><div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div></> } : null;
       case 'driver': return {
         cls: '', body: <>
           <h2>Driver</h2>
@@ -493,7 +495,7 @@ export function App() {
                   <h3 className="sect">Testing</h3>
                   <Toggle label="Owner mode (all cars unlocked, test builds only)" value={settings.owner} onChange={(v) => update({ owner: v })} />
                   {TEST_BUILD && <p className="fine" id="owner-test-note"><b>This test build turns owner mode on</b> every time it opens, so the OC Hypercar and every other car are ready to drive. Turn it off here for this visit, or open the game with #owner=0 in the address.</p>}
-                  <p className="fine">Every car in the garage to drive, without credits, a level or a slot. Your saved garage, credits and level stay as you earned them. A switch on this device, not a sign-in; opening the game with #owner turns it on.</p>
+                  <p className="fine">Every car in the garage to drive, without miles, cash, a level or a slot. Your saved garage, cash and level stay as you earned them. A switch on this device, not a sign-in; opening the game with #owner turns it on.</p>
                 </section>
               </div>
             </div>
@@ -523,7 +525,7 @@ export function App() {
         <span className="avatar" style={{ background: av.bg, color: av.fg }} aria-hidden="true">{(prof?.username || 'D').slice(0, 1).toUpperCase()}</span>
         <span className="player-main"><b>{prof?.username || 'Driver'}</b><small>Level {level}</small>
           <span className="xp-mini" aria-hidden="true"><i style={{ width: `${Math.min(100, (((prof?.xp ?? 0) - xpLo) / Math.max(1, xpHi - xpLo)) * 100).toFixed(1)}%` }} /></span></span>
-        <span className="player-credits"><b>{Math.floor(prof?.credits ?? 0).toLocaleString()}</b><small>credits</small></span>
+        <span className="player-credits"><b>{Math.floor(prof?.credits ?? 0).toLocaleString()}</b><small>cash</small></span>
       </button>
       <nav className="m-nav" aria-label="Main menu">
         <div className="picks">
@@ -540,6 +542,7 @@ export function App() {
         <div className="field traffic"><label>Traffic · simulated</label><Seg label="Traffic" value={settings.density} options={Object.keys(DENSITY) as Density[]} labels={(d) => DENSITY[d].label} onChange={(d) => update({ density: d })} /></div>
         <button type="button" className="rail-btn" onClick={() => setPanel('map')}><Ico name="map" />World Map</button>
         <button type="button" className="rail-btn" onClick={() => setPanel('homes')}><Ico name="home" />Lifestyle</button>
+        <button type="button" className="rail-btn" data-goals onClick={() => setPanel('goals')}><Ico name="career" />Goals</button>
         {(() => { const n = game.current ? unread(game.current.profile.p, levelOf(game.current.profile.p.xp)) : 0;
           return <button type="button" className="rail-btn" onClick={() => setPanel('phone')}><Ico name="phone" />Phone{n > 0 && <small className="new">{n} new</small>}</button>; })()}
         <span className="rail-btn off" aria-disabled="true"><Ico name="online" />Online<small>Roadmap</small></span>
@@ -563,6 +566,7 @@ export function App() {
         </div>
       </section>
       <div className="menu-aside">
+        {game.current && <HypercarProgress game={game.current} compact />}
         <button type="button" className="soon store-open" aria-label="Store" onClick={() => setPanel('store')}><small>Optional</small><b>Store</b><span>OC Hypercar · Founders package soon. The OC Hypercar Founder Edition now, the Founders package once it is in the game. Every freeway, every mode and every car you can earn stays free.</span><i aria-hidden="true">›</i></button>
         <a className="soon" href="https://claude.ai/artifact/FDj9Q6S961SLYBg1hMaqd1" target="_blank" rel="noopener noreferrer">
           <small>Coming soon</small><b>Loop Lab</b><span>An arcade track with a loop-the-loop and boost pads, separate from OC. Take a look at the preview.</span><i aria-hidden="true">↗</i>
@@ -649,6 +653,7 @@ export function App() {
       {playing && venueUi.parked && (
         <div className="venue-park" role="group" aria-label={`Parked at ${venueUi.parked}`}>
           <p className="venue-note">{venueUi.note}</p>
+          {game.current && <VenueMembership game={game.current} venue={game.current.venue()?.id ?? ''} onChange={() => rerender((n) => n + 1)} />}
           <button type="button" className="btn primary getout" ref={getOutRef} onClick={() => void game.current?.getOut()}>Get out</button>
           <button type="button" className="btn driveon" onClick={() => void game.current?.drive()}>Drive on</button>
         </div>
@@ -744,9 +749,10 @@ export function App() {
             </dl>
             {result.jobs && result.jobs.length > 0 && (
               <ul className="jobs-done" aria-label="Jobs done">
-                {result.jobs.map((j) => <li key={j.from + j.job}><b>Job done for {j.from}</b><span>{j.job} · +{j.credits.toLocaleString()} credits</span></li>)}
+                {result.jobs.map((j) => <li key={j.from + j.job}><b>Job done for {j.from}</b><span>{j.job} · +{j.credits.toLocaleString()} cash</span></li>)}
               </ul>
             )}
+            <RunProgressLine result={result} />
             <Board runs={result.board.runs} mode={result.mode} highlight={result.board.rank} />
             <div className="row">
               <button className="btn primary" onClick={() => drive(result.mode)}>Drive again</button>
@@ -1019,23 +1025,29 @@ function RimIcon({ style }: { style: string }) {
   );
 }
 
-// the garage (what you own, pick one) and the showroom (what credits can buy, by level)
+// the garage: what you own, pick one; each car shows the miles that open it (progress.ts CAR_MILES)
 function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void }) {
   const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades' | 'custom'>('cars');
   const book = game.profile;
   const [, bump] = useState(0);
   const [msg, setMsg] = useState('');
-  const p = book.p, level = levelOf(p.xp), slots = garageSlots(level, p.homes), owner = game.ownerMode;
+  const p = book.p, owner = game.ownerMode, pr = game.progress;
+  // a car that just opened glows until the garage has shown it for a few seconds
+  useEffect(() => { const t = setTimeout(() => { for (const id of Object.keys(CAR_MILES).concat('oc-hyper')) pr.clearGlow(id); bump((n) => n + 1); }, 12000); return () => clearTimeout(t); }, [pr]);
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
   return <>
     <h2>Garage{owner && <span className="chip">{TEST_BUILD ? 'Owner mode · test build' : 'Owner mode'}</span>}</h2>
-    <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {book.slotsUsed} of {slots} slots (more open every 4 levels, and with each home). Credits come from driving; nothing here costs real money.</p>
+    <p className="fine" data-garage-cash>{Math.floor(p.credits).toLocaleString()} cash · {pr.s.miles.toFixed(1)} active miles. Cars open by miles driven; cash is earned by driving and spent on looks and Vega &amp; Vinnie's. Nothing here costs real money.</p>
     {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     <Seg label="Garage" value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
     {tab === 'paint' && (() => {
       // the car you drive: its six paints, applied live to the car behind the panel and kept for that car
-      const car = carById(game.carId), now = paintFor(car, settings.paints), list = PAINTS[car.id] ?? [];
+      const car = carById(game.carId), edition = game.hypercarEdition, now = paintForEdition(car, settings.paints, edition);
+      // Glacier Silver is the Founder Edition's alone; the earned standard car doesn't offer it
+      const list = (PAINTS[car.id] ?? []).filter((x) => !(car.id === 'oc-hyper' && edition === 'standard' && x.hex === carById('oc-hyper').paint));
+      // a cash paint is bought once with earned cash, a venue paint comes with its Local legend rung
+      const gate = (x: (typeof list)[number]) => owner || (!x.cash && !x.legend) ? null : x.cash ? (pr.ownsCosmetic(cosmeticId(car.id, x.hex)) ? null : `${x.cash.toLocaleString()} cash`) : (pr.rungOf(x.legend!) >= 3 ? null : `Local legend at ${x.legend === 'stoppage' ? "Vega & Vinnie's" : 'Lot 57'}`);
       return (
         <div className="paints">
           <p className="fine">{car.name}: {list.find((x) => x.hex === now)?.name ?? 'its own paint'}. The car behind this panel takes it now.</p>
@@ -1043,9 +1055,15 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
           {(() => { const st = equippedPaint(car.id); return st ? <p className="fine">The store's {st.name} is on this car and shows instead; take it off in the Store to wear the one picked here.</p> : null; })()}
           <div className="paint-grid" role="radiogroup" aria-label={`Paint for the ${car.name}`}>
             {list.map((x) => (
-              <button key={x.hex} type="button" role="radio" aria-checked={x.hex === now} className={'paint-chip' + (x.hex === now ? ' on' : '')}
-                onClick={() => { update({ paints: { ...settings.paints, [car.id]: x.hex } }); onPick(); }}>
+              <button key={x.hex} type="button" role="radio" aria-checked={x.hex === now} className={'paint-chip' + (x.hex === now ? ' on' : '') + (gate(x) ? ' locked' : '')}
+                onClick={() => {
+                  const g = gate(x);
+                  if (g && x.cash) { const e = pr.buyCosmetic(cosmeticId(car.id, x.hex), x.cash); book.save(); if (e) { setMsg(e); bump((n) => n + 1); return; } setMsg(`${x.name} is yours`); }
+                  else if (g) { setMsg(`${x.name} comes with the ${g}`); return; }
+                  update({ paints: { ...settings.paints, [car.id]: x.hex } }); onPick(); bump((n) => n + 1);
+                }}>
                 <span className="sw" style={{ background: '#' + x.hex.toString(16).padStart(6, '0') }} /><b>{x.name}</b>
+                {gate(x) && <small className="pg-lock">{x.cash ? `Buy · ${gate(x)}` : gate(x)}</small>}
               </button>
             ))}
           </div>
@@ -1069,21 +1087,21 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
         </div>
       );
     })()}
-    {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with credits are coming later. Nothing here costs real money.</p>}
+    {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with cash are coming later. Nothing here costs real money.</p>}
     {tab === 'custom' && <p className="fine soon-note">Customize (calipers, tint, liveries in our own designs) is coming later. Nothing here costs real money.</p>}
     {/* named for its car: the menu's Drive dock stays on screen beside the garage, and is the only plain "Drive" */}
     {tab === 'cars' && <div className="drivers">
       {garageCars(owner, p.vehicles).map((c) => {
-        const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, locked = level < c.level;
+        const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, std = !!c.founder && game.hypercarEdition === 'standard', glow = pr.glowing(c.id);
         // chosen: the Founder Edition's lights wake, on its stage and on the car (Game.applyCarChoice)
         const chosen = () => { if (c.founder) game.playReveal('wake'); };
         return (
-          <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '') + (c.founder ? ' founder' : '')}>
+          <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '') + (c.founder ? ' founder' : '') + (glow ? ' unlocked-now' : '')} data-car={c.id}>
             {c.founder && <FounderStage game={game} />}
-            <div className="carhead"><span className="paint" title={c.founder ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && <span className="chip ice">Founder Edition</span>}</div>
+            <div className="carhead"><span className="paint" title={c.founder ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paintFor(c, settings.paints).toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
             <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
             <span>{c.blurb}</span>
-            {c.founder && <ul className="fe-list">
+            {c.founder && !std && <ul className="fe-list">
               <li><b>{GLACIER_SILVER.name}</b> paint and <b>{FOUNDER_ICE.name}</b> lights, on this car only</li>
               <li>A numbered plaque on the door sill and the console: <b>{plaqueNumber()}</b> until the store assigns real numbers</li>
               <li>Its lights wake in a sweep when you choose it and on the start line</li>
@@ -1092,11 +1110,10 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
             <div className="row">
               {owner ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
                 : owned ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
-                : c.founder ? <em>Founder Edition · not on sale yet (test build)</em>
-                : locked ? <em>Opens at level {c.level}</em>
-                : <button className="btn primary" onClick={() => act(() => book.buy(c.id, c.price, c.level, slots), `${c.name} is yours`)}>Buy · {c.price.toLocaleString()}</button>}
-              {!owner && owned && c.id !== 'rossini-gt' && !c.founder && <button className="btn" onClick={() => act(() => book.sell(c.id, c.price), `Sold for ${Math.round(c.price * 0.6).toLocaleString()} credits`)}>Sell</button>}
+                : c.founder ? <em>Not unlocked yet: earn it free on Founders' Road, or get the Founder Edition in the Store (test build)</em>
+                : <em>Locked: opens by miles driven</em>}
             </div>
+            {!owner && (c.founder ? (!owned && <HypercarProgress game={game} compact />) : (!owned || glow) && <CarGate game={game} id={c.id} />)}
           </div>
         );
       })}
@@ -1148,13 +1165,13 @@ function ProfilePanel({ game, onClose }: { game: Game; onClose: () => void }) {
       <div className="who-main">
         <label className="sr" htmlFor="pname">Name</label>
         <input id="pname" className="name" maxLength={20} defaultValue={p.username} onBlur={(e) => { book.rename(e.target.value); bump((n) => n + 1); }} />
-        <p>Level {level} · {Math.floor(p.credits).toLocaleString()} credits</p>
+        <p>Level {level} · {Math.floor(p.credits).toLocaleString()} cash</p>
       </div>
     </div>
     <div className="xp" role="progressbar" aria-valuemin={lo} aria-valuemax={hi} aria-valuenow={Math.floor(p.xp)} aria-label={`Level ${level} progress`}>
       <i style={{ width: `${Math.min(100, ((p.xp - lo) / Math.max(1, hi - lo)) * 100).toFixed(1)}%` }} />
     </div>
-    <p className="fine">{Math.floor(p.xp).toLocaleString()} XP · {Math.max(0, Math.ceil(hi - p.xp)).toLocaleString()} to level {level + 1}. Credits are earned by driving and only spent in the game.</p>
+    <p className="fine">{Math.floor(p.xp).toLocaleString()} XP · {Math.max(0, Math.ceil(hi - p.xp)).toLocaleString()} to level {level + 1}. Cash is earned by driving and only spent in the game.</p>
     <div className="swatches" role="group" aria-label="Avatar colour">
       {AVATARS.map((a, i) => <button key={i} aria-pressed={i === p.avatar} style={{ background: a.bg }} onClick={() => { book.setAvatar(i); bump((n) => n + 1); }} aria-label={`Colour ${i + 1}`} />)}
     </div>
