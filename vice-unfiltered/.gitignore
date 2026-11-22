@@ -1,0 +1,14 @@
+# Media and brand assets stay out of git: the host repo is public, and the meme
+# audio/visuals carry unverified third-party rights. Only docs and tools are tracked.
+assets/
+sources/
+work/
+exports/
+thumbnails/
+deliverables/
+
+# Brand spec, asset audit and batch tracker (campaigns, metrics, submission status)
+# stay local until a private repo exists for Vice Unfiltered.
+CLAUDE_MASTER_PROMPT.md
+ASSET_NOTES.md
+BATCH_TRACKER.csv
