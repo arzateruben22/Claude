@@ -2,12 +2,15 @@
 //   ?who=<cast id>&lod=0|1&quality=high|phone   one character on a neutral grey studio, as the sheets are shot;
 //        window.__cast.shot('front'|'side'|'back'|'three'|'head'|'headSide'|'headThree') frames it
 //   &fh=beard|fullBeard|stubble, &hair=<style>     the same character with another beard or hair (comparisons)
+//   ?who=preset-<name>&grey=0.5                 one of the builder's own presets (regression heads), with grey strands
+//        shot('yaw45'|'game45'|'shoe90'|'bust0')  the head from 45 degrees, at game distance, the feet, the bust
+//        shot('hair180'|'near135')  (cast r2) long hair's whole length; the head at about a metre through a wide lens
 //   ?view=lineup&lod=1                          the six side by side (front)
 //   ?view=crowd&n=18                            crowd members from the cast (crowdPerson), slots 0..n-1
 // window.__cast.ready turns true once built; stats() reports each person's triangles, calls and build time.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { buildPerson, Person } from './people';
+import { buildPerson, Person, preset, PresetName } from './people';
 import { CAST, castPerson, crowdPerson, CastId } from './cast';
 
 declare global { interface Window { __cast?: Record<string, unknown> } }
@@ -46,7 +49,7 @@ function add(o: ReturnType<typeof castPerson>, x: number, ry = 0) {
   const p = buildPerson({ ...o, quality, lod });
   const ms = Math.round(performance.now() - t0);
   p.group.position.set(x, 0, 0); p.group.rotation.y = ry;
-  p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.castShadow = true; } });
+  p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh && !m.userData.noShadow) { m.castShadow = true; } });
   scene.add(p.group); people.push(p);
   p.update(0.016);
   rows.push({ name: o.name, ...p.stats(), ms });
@@ -59,8 +62,40 @@ function shot(a: string) {
   const h = p.options.body.height;
   const head = new THREE.Vector3(); p.eyes(head);
   const ang: Record<string, number> = { front: 0, three: -0.75, side: -Math.PI / 2, back: Math.PI, head: 0, headSide: -Math.PI / 2, headThree: 0.6 };   // (the sheets' side view is the right side, nose to the right)
-  const r = ang[a] ?? 0;
-  if (a.startsWith('head')) {
+  // yaw<deg> (yaw0, yaw45, yaw90, yaw-45): the head close up from that many degrees round to the person's right;
+  // game<deg>: the same angle at game distance (2.5 m, the venue camera's field of view), for what a beard or a
+  // hairline does at the size it is played at; shoe<deg>: the feet close up
+  const ym = /^(yaw|game|shoe|bust|foot|collar|hair|near)(-?\d+)$/.exec(a);
+  const r = ym ? -Number(ym[2]) * Math.PI / 180 : ang[a] ?? 0;
+  if (ym && ym[1] === 'game') {
+    camera.fov = 55; camera.position.set(head.x + Math.sin(r) * 2.5, head.y + 0.1, head.z + Math.cos(r) * 2.5);
+    camera.lookAt(head.x, head.y - 0.02, head.z);
+  } else if (ym && ym[1] === 'shoe') {
+    camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * 1.9, 0.22, Math.cos(r) * 1.9);
+    camera.lookAt(p.group.position.x, 0.1, 0.04);
+  } else if (ym && ym[1] === 'foot') {
+    // (2026-11-15) the feet from above, as a standing person's shoes are seen (the sheets' front views look down on them)
+    camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * 1.25, 0.8, Math.cos(r) * 1.25);
+    camera.lookAt(p.group.position.x, 0.04, 0.05);
+  } else if (ym && ym[1] === 'collar') {
+    // (2026-11-16) the collar and the chest close up, from a little above (the neckline, an open shirt's fronts)
+    camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * 1.0, h * 0.88, Math.cos(r) * 1.0);
+    camera.lookAt(p.group.position.x, h * 0.8, 0.03);
+  } else if (ym && ym[1] === 'hair') {
+    // (cast r2) the whole length of long hair, from above the crown to below the shoulder blades
+    camera.fov = 26; camera.position.set(head.x + Math.sin(r) * 1.25, head.y - 0.12, head.z + Math.cos(r) * 1.25);
+    camera.lookAt(head.x, head.y - 0.17, head.z - 0.03);
+  } else if (ym && ym[1] === 'near') {
+    // (cast r2) as the venue's third-person camera sees the head at about a metre (a wide lens): what a hard alpha edge does at that size
+    camera.fov = 50; camera.position.set(head.x + Math.sin(r) * 1.0, head.y + 0.12, head.z + Math.cos(r) * 1.0);
+    camera.lookAt(head.x, head.y - 0.05, head.z);
+  } else if (ym && ym[1] === 'bust') {
+    camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * 2.6, h * 0.8, Math.cos(r) * 2.6);
+    camera.lookAt(p.group.position.x, h * 0.78, 0);
+  } else if (ym) {
+    camera.fov = 22; camera.position.set(head.x + Math.sin(r) * 0.8, head.y - 0.02, head.z + Math.cos(r) * 0.8);
+    camera.lookAt(head.x, head.y - 0.035, head.z - 0.02);
+  } else if (a.startsWith('head')) {
     const d = 1.0;
     camera.fov = 22; camera.position.set(head.x + Math.sin(r) * d, head.y - 0.02, head.z + Math.cos(r) * d);
     camera.lookAt(head.x, head.y - 0.03, head.z);
@@ -69,6 +104,7 @@ function shot(a: string) {
     camera.fov = 22; camera.position.set(p.group.position.x + Math.sin(r) * d, h * 0.53, Math.cos(r) * d);
     camera.lookAt(p.group.position.x, h * 0.5, 0);
   }
+  renderer.setSize(innerWidth, innerHeight, false);
   camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
   for (let i = 0; i < 3; i++) { for (const pp of people) pp.update(0); renderer.render(scene, camera); }
   return { tris: renderer.info.render.triangles, calls: renderer.info.render.calls };
@@ -78,8 +114,10 @@ async function main() {
   await new Promise((r) => setTimeout(r, 50));
   if (view === 'one') {
     const id = (q.get('who') ?? 'mateo-reyes') as CastId;
-    // ?fh=<facial hair> and ?hair=<style> try another value on the same character (the beard and hair comparisons)
-    const o = castPerson(id);
+    // ?fh=<facial hair> and ?hair=<style> try another value on the same character (the beard and hair comparisons);
+    // ?who=preset-<name> is one of the builder's own presets (the regression heads), &grey= its share of grey strands
+    const o = id.startsWith('preset-') ? preset(id.slice(7) as PresetName) : castPerson(id);
+    if (q.get('grey')) o.look = { ...o.look, grey: Number(q.get('grey')) };
     if (q.get('fh')) o.look = { ...o.look, facialHair: q.get('fh') as typeof o.look.facialHair };
     if (q.get('hair')) o.look = { ...o.look, hair: q.get('hair') as typeof o.look.hair };
     target = add(o, 0);
