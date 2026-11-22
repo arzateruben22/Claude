@@ -142,6 +142,22 @@ function makeBody(P: ShapeParams) {
       return out.set(-fa, 1, -fz).normalize();
     },
     halfWidth: (z: number) => WP(z),
+    // a cabin point kept under the skin (car frame, moved in place): a point outside the top surface goes in across
+    // its flank (where the surface stands steeper than 45 degrees) or down under the roof, a point outside the side
+    // below the shoulder goes in, each to m inside. Points already inside stay exactly where they are. Returns whether
+    // p moved. (The hypercar's narrow canopy over its wide sidepods: its seats' head sections, the dash's ends, the
+    // carpet's edges and the door cards' lower fronts came out through the paint; car-body cabinSilhouette and
+    // cockpit.ts keep their cabins in with this)
+    keepInside(p: THREE.Vector3, m: number) {
+      const a = Math.abs(p.x), s = Math.sign(p.x) || 1, z = p.z, Ys = shoulderY(z);
+      if (p.y < Ys) { const w = body.side(z, p.y); if (a <= w) return false; p.x = s * Math.max(0, w - m); return true; }
+      const t = body.top(z, a);
+      if (p.y <= t) return false;
+      const n = body.topNormal(p.x, z);
+      if (Math.abs(n.x) > n.y) p.x = s * Math.max(0, body.canopyX(z, p.y) - m);
+      else p.y = t - m;
+      return true;
+    },
   };
 
   // a point on the nose's corner skin at half-width ax and height y (the front-facing flank ahead of the front
@@ -1409,10 +1425,21 @@ function makeBody(P: ShapeParams) {
     // a car whose driver sits lower (the hypercar's seatDrop) has its seats, wheel and hoop lowered with them (and,
     // seated further forward, its seats, wheel and dash moved forward: seatFwd; the hoop and bulkhead stay)
     const drop = P.seatDrop ?? 0, fwd = P.seatFwd ?? 0;
-    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, drop || fwd ? g.applyMatrix4(m).translate(0, -drop, -fwd) : g.applyMatrix4(m), null, 0.3);
+    // (the hypercar's: every point outside its skin moved 4.5 cm under it (like the roll hoop), body.keepInside: its dash's box and its seats' head
+    // sections came out through the paint at the windscreen's foot and behind the side windows)
+    const tuck = (g: THREE.BufferGeometry) => {
+      if (P.interior !== 'hyper') return g;
+      const pa = g.attributes.position as THREE.BufferAttribute, q = new THREE.Vector3();
+      for (let i = 0; i < pa.count; i++) { q.fromBufferAttribute(pa, i); if (body.keepInside(q, 0.045)) pa.setXYZ(i, q.x, q.y, q.z); }
+      return g;
+    };
+    const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, tuck(drop || fwd ? g.applyMatrix4(m).translate(0, -drop, -fwd) : g.applyMatrix4(m)), null, 0.3);
     const rb = (w: number, h: number, d: number, r: number) => new RoundedBoxGeometry(w, h, d, 2, r);
     const D = P.cabinW;
-    put('interior', rb(D * 2 - 0.01, 0.2, 0.46, 0.06), mat(0, 0.755, -0.88, -0.08));
+    // (the hypercar's dash is a fine grid, so its top can follow the sunken bonnet's rear and the cowl under it, and only
+    // as wide as its windscreen's foot: as one rounded box door to door its top stood out over the bonnet in front of
+    // the glass, a dark rim round the glass's foot, and its corners showed in the front wheel wells)
+    put('interior', P.interior === 'hyper' ? new THREE.BoxGeometry(2 * (WS.xb + 0.03), 0.2, 0.46, 24, 4, 12) : rb(D * 2 - 0.01, 0.2, 0.46, 0.06), mat(0, 0.755, -0.88, -0.08));
     put('interior', rb(P.interior === 'vela' ? 0.9 : 0.5, 0.11, 0.2, 0.04), mat(-(P.seatX ?? 0.37) + (P.interior === 'vela' ? 0.2 : 0), 0.86, -0.66, -0.3));
     put('interior', rb(0.24, 0.34, 1.0, 0.04), mat(0, 0.28, -0.15));
     // the bulkhead follows the canopy, so nothing pokes out through the roof
