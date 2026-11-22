@@ -17,7 +17,7 @@ import { HEX } from './brand';
 import { ATLAS, UV } from './tex';
 import {
   UNIT, FRONT, fd, frontU, furniture, slots as allSlots, POOL_TABLES, DART_BOARDS, HIGHTOPS, RAIL_V, BAR, PATIO, PATIO_TABLES,
-  HEATERS, PATIO_PLANTERS, JUKEBOX, SCREENS,
+  HEATERS, PATIO_PLANTERS, JUKEBOX, SCREENS, PATIO_HIGHTOP, southWallV,
 } from './layout';
 
 export interface BarVenue {
@@ -89,47 +89,70 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
   const UPW = [0, 1, 0];
   const fquad = (b: Batch, pts: [number, number, number][], hex: number) => b.quadTo(P3(...pts[0]), P3(...pts[1]), P3(...pts[2]), P3(...pts[3]), UPW, hex);
   const ring = (r: P2[]) => r.map(([u, v]) => L(u, v));
-  /** an agave (or a clump of grass): stiff blades from a rosette at frame (u, v), its base at y */
-  const agave = (b: Batch, u: number, v: number, y: number, r: number) => {
-    const [x, z] = L(u, v);
-    for (let k = 0; k < 11; k++) {
-      const a = k * 2.399, len = r * (0.75 + 0.35 * ((k * 37) % 7) / 7), lean = 0.55 + 0.3 * ((k * 13) % 5) / 5;
-      const dx = Math.sin(a), dz = Math.cos(a), px = -dz * 0.05, pz = dx * 0.05;
-      const tip = [x + dx * len * lean, y + len * (1 - lean * 0.45) + 0.1, z + dz * len * lean];
-      b.tri([x + px, y, z + pz], [x - px, y, z - pz], tip, k % 3 ? 0x5d7a5a : 0x7a9a6a);
-    }
+  /** a clipped shrub: a few overlapping low-poly clumps at frame (u, v), its base at y, r wide, h tall (the owner's
+   *  photos' boxwood and red-tip hedging) */
+  const shrub = (u: number, v: number, y: number, r: number, h: number, hex = 0x33482a) => {
+    const [x, z] = L(u, v), j = Math.sin(u * 12.9898 + v * 78.233) * 0.5;
+    plants.cyl(x, y, z, r * 0.7, r, h * 0.35, 7, hex);
+    plants.cyl(x + j * r * 0.3, y + h * 0.35, z - j * r * 0.2, r, r * 0.7, h * 0.35, 7, hex === 0x33482a ? 0x3b5230 : hex);
+    plants.cyl(x - j * r * 0.25, y + h * 0.7, z + j * r * 0.25, r * 0.7, r * 0.12, h * 0.3, 7, hex === 0x33482a ? 0x455c32 : hex);
   };
 
-  // ---------------------------------------------------------------- the rest of building 61: generic unnamed units
+  // ---------------------------------------------------------------- the rest of building 61: the strip's other units
+  // (the owner's lot photos: tan stucco with brown trim, arched storefronts on stone-veneer piers, tenant sign bands,
+  // wall lamps, rooftop HVAC; the tenants are generic trades in our own words, no real business's name or mark)
   {
     const rest = ring(restRing);
-    restWalls.walls(rest, 0, UNIT.roof, (i) => [0xd8d1c2, 0xcfc7b6, 0xd8d1c2, 0xd3cbbb][i % 4]);
-    restWalls.walls(rest, UNIT.roof - 0.6, UNIT.roof - 0.35, 0x8a8577);            // blank sign bands, a reveal near the top
-    restWalls.walls(rest, UNIT.roof, UNIT.roof + 0.45, 0xd8d1c2);                   // the parapet
+    restWalls.walls(rest, 0, UNIT.roof, (i) => [0xd2b386, 0xc9a97c, 0xd2b386, 0xcdae82][i % 4]);
+    restWalls.walls(rest, UNIT.roof - 0.62, UNIT.roof - 0.42, 0x6e4b31);           // the brown trim band near the top
+    restWalls.walls(rest, UNIT.roof, UNIT.roof + 0.45, 0xd8bc90);                   // the parapet
+    restWalls.walls(rest, UNIT.roof + 0.45, UNIT.roof + 0.55, 0x6e4b31);            // its brown cap
     restRoof.cap(rest, UNIT.roof, 0xa7a49c);
     col.push(poly(rest, 'building', true));
-    // storefront bays along its long walls (dark glass, a few lit at night) and roll-up doors on the north wing's
-    // courtyard face; no names anywhere
     let area = 0; for (let i = 0; i < rest.length; i++) { const [x0, z0] = rest[i], [x1, z1] = rest[(i + 1) % rest.length]; area += x0 * z1 - x1 * z0; }
-    let k = 0;
+    let k = 0, tk = 0;
     for (let i = 0; i < rest.length; i++) {
       const [ax, az] = rest[i], [bx, bz] = rest[(i + 1) % rest.length], len = Math.hypot(bx - ax, bz - az);
       if (len < 10) continue;
-      const ux = (bx - ax) / len, uz = (bz - az) / len, nx = (area > 0 ? uz : -uz) * 0.05, nz = (area > 0 ? -ux : ux) * 0.05;
-      const Q = (t: number, y: number) => [ax + ux * t + nx, y, az + uz * t + nz];
+      const ux = (bx - ax) / len, uz = (bz - az) / len, onx = area > 0 ? uz : -uz, onz = area > 0 ? -ux : ux, nx = onx * 0.05, nz = onz * 0.05;
+      const Q = (t: number, y: number, d = 0) => [ax + ux * t + nx + onx * d, y, az + uz * t + nz + onz * d];
       const wing = i === 0;                         // the north wing's courtyard face: roll-up doors
+      const out = [nx, 0, nz];
       for (let t = 3; t + 3.4 < len - 2; t += 6.2, k++) {
-        const out = [nx, 0, nz];
         if (wing && k % 2 === 0) { restWin.quadTo(Q(t, 0), Q(t + 3.6, 0), Q(t + 3.6, 3.4), Q(t, 3.4), out, 0x8d9093); continue; }
         const lit = Math.sin(k * 91.7) > 0.55 ? 0xffffff : 0x202428;
-        restWin.quadTo(Q(t, 0.2), Q(t + 3.4, 0.2), Q(t + 3.4, 2.8), Q(t, 2.8), out, lit);
+        // the storefront: glass to 2.6 m, an arched transom over it to 3.3 m, a brown trim round the arch
+        restWin.quadTo(Q(t, 0.2), Q(t + 3.4, 0.2), Q(t + 3.4, 2.6), Q(t, 2.6), out, lit);
+        const cx = t + 1.7, N = 8;
+        for (let j = 0; j < N; j++) {
+          const a0 = (j / N) * Math.PI, a1 = ((j + 1) / N) * Math.PI, p0 = Q(cx - Math.cos(a0) * 1.7, 2.6 + Math.sin(a0) * 0.7), p1 = Q(cx - Math.cos(a1) * 1.7, 2.6 + Math.sin(a1) * 0.7);
+          restWin.quadTo(Q(cx, 2.6), p0, p1, p1, out, lit);
+          const q0 = Q(cx - Math.cos(a0) * 1.92, 2.6 + Math.sin(a0) * 0.9, 0.04), q1 = Q(cx - Math.cos(a1) * 1.92, 2.6 + Math.sin(a1) * 0.9, 0.04), r0 = Q(cx - Math.cos(a0) * 1.72, 2.6 + Math.sin(a0) * 0.72, 0.04), r1 = Q(cx - Math.cos(a1) * 1.72, 2.6 + Math.sin(a1) * 0.72, 0.04);
+          paint.quadTo(r0, q0, q1, r1, out, 0x6e4b31);
+        }
+        // the stone-veneer piers either side of the bay, and a wall lamp over each
+        for (const tp of [t - 0.55, t + 3.45]) {
+          const [px, , pz] = Q(tp + 0.27, 0, 0.06);
+          paint.box(px, 0.42, pz, 0.6, 0.84, 0.14, 0xa88a66, Math.atan2(-uz, ux));
+          const [lx, , lz] = Q(tp + 0.27, 0, 0.12);
+          lamps.box(lx, 3.05, lz, 0.22, 0.2, 0.16, 0x2a2833);
+        }
+        // a tenant band over every other bay (our own generic trades), blank on the rest
+        if (k % 2 === 1) { const [sx, , sz] = Q(cx, 0, 0.03); signs.panel(sx, 3.62, sz, 2.4, 0.5, onx, onz, ATLAS.tenants[tk++ % ATLAS.tenants.length]); }
       }
+      // rooftop HVAC units, set 4 m in from this wall
+      for (let t = 7; t < len - 5; t += 15) { const [hx, , hz] = Q(t, 0, -4.5); steel.box(hx, UNIT.roof + 0.55, hz, 1.6, 1.1, 1.2, 0xb4b7b8, Math.atan2(-uz, ux)); steel.box(hx, UNIT.roof + 1.14, hz, 0.9, 0.08, 0.9, 0x8d9091, Math.atan2(-uz, ux)); }
     }
   }
+  // rooftop HVAC on our own unit (behind the parapet band, seen from the lot)
+  for (const [u, v] of [[14, 9], [24, 6], [31, 11]] as P2[]) { fbox(steel, u - 0.8, u + 0.8, v - 0.6, v + 0.6, UNIT.roof, UNIT.roof + 1.1, 0xb4b7b8); fbox(steel, u - 0.45, u + 0.45, v - 0.45, v + 0.45, UNIT.roof + 1.1, UNIT.roof + 1.18, 0x8d9091); }
 
   // ---------------------------------------------------------------- our unit's walls (one mesh per side, full and cut)
   // night violet in the sun: the paint's own colour, lifted a step so a sunlit wall reads violet, not black
   const OAK = 0xc08a58;
+  // (Vega & Vinnie's, 2026-11-16: the outer faces take the owner's front photo's black facade, lifted a step so a
+  // sunlit wall reads as black paint, not a hole; the inside keeps S4's violet)
+  const FACADE = 0x2c2a2b;
   const VIOLET = 0x3b3672, INSIDE = 0x2f2a44, STEEL = 0x141416, TOP = UNIT.roof, CEIL = UNIT.ceiling, FL = UNIT.floor;
   const walls: BarVenue['walls'] = {};
   const doorSpecs: { id: 'front' | 'patio'; centre: P2; t: P2; n: P2; s0: number; s1: number; at: (s: number, off: number, y: number) => number[]; rot: number; collider: Collider }[] = [];
@@ -145,7 +168,7 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     // the wall's own straight run on the inner face: trim it to the neighbouring walls' inner faces (approximately,
     // by the thickness), so the inner faces meet without overlap
     const at = (s: number, off: number, y: number) => P3(w.a[0] + t[0] * s + n[0] * off, w.a[1] + t[1] * s + n[1] * off, y);
-    const outC = w.id === 'party' ? INSIDE : VIOLET;
+    const outC = w.id === 'party' ? INSIDE : FACADE;
     const nl = F.dirToLocal(n[0], n[1]), UP = [0, 1, 0], DOWN = [0, -1, 0];
     const q = (b: Batch, s0: number, s1: number, off: number, y0: number, y1: number, hex: number, facing: 1 | -1) => {
       b.quadTo(at(s0, off, y0), at(s1, off, y0), at(s1, off, y1), at(s0, off, y1), [nl[0] * facing, 0, nl[1] * facing], hex);
@@ -159,6 +182,8 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     for (const d of doors) { if (d.s0 > cursor) runs.push({ s0: cursor, s1: d.s0, kind: w.glazed ? 'glass' : 'solid' }); runs.push({ s0: d.s0, s1: d.s1, kind: 'door' }); cursor = d.s1; }
     if (cursor < len) runs.push({ s0: cursor, s1: len, kind: w.glazed ? 'glass' : 'solid' });
     const glassY = w.id === 'front' ? [0.45 + FL, 3.05] : [0.95 + FL, 2.75], doorY = 2.45;
+    // the front's glazing north of the door stops at 1.95 m: the wings mural is on the wall over it (the owner's photo)
+    const glassFor = (r: { s0: number }) => (w.id === 'front' && r.s0 >= FRONT.door[1] - 0.01 ? [0.45 + FL, 1.95] : glassY);
     // each face: the outer one (facing out, -n) and the inner one (facing in, +n), floor to ceiling inside
     for (const r of runs) {
       const ends = w.id === 'south' || w.id === 'north' ? [r.s0 === 0 ? T : r.s0, r.s1] : [r.s0, r.s1];
@@ -167,7 +192,7 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
         q(S.cut, r.s0, r.s1, 0, 0, 0.9, outC, -1); q(S.cut, ends[0], ends[1], T, FL, 0.9, INSIDE, 1);
         continue;
       }
-      const [g0, g1] = r.kind === 'door' ? [FL, doorY] : glassY;
+      const [g0, g1] = r.kind === 'door' ? [FL, doorY] : glassFor(r);
       // below the glass (a kick panel or sill), above it (the header to the roof), the jambs at the ends
       if (g0 > 0.05) { q(S.full, r.s0, r.s1, 0, 0, g0, outC, -1); q(S.full, ends[0], ends[1], T, FL, g0, INSIDE, 1); S.full.quadTo(at(r.s0, 0, g0), at(r.s1, 0, g0), at(r.s1, T, g0), at(r.s0, T, g0), UP, INSIDE); }
       q(S.full, r.s0, r.s1, 0, g1, TOP, outC, -1); q(S.full, ends[0], ends[1], T, g1, CEIL, INSIDE, 1);
@@ -190,7 +215,24 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     // the wall's top (full: under the roof edge, the parapet band rises to 5.4 m on the front and to 4.7 m round the
     // sides; cut: a capped top edge at 0.9 m)
     const band = w.id === 'front' ? UNIT.band : w.id === 'party' ? TOP : TOP + 0.4;
-    if (band > TOP) { q(S.full, 0, len, 0, TOP, band, VIOLET, -1); q(S.full, 0, len, T, TOP, band, VIOLET, 1); S.full.quadTo(at(0, 0, band), at(len, 0, band), at(len, T, band), at(0, T, band), UP, 0x2a2640); }
+    if (band > TOP) { q(S.full, 0, len, 0, TOP, band, FACADE, -1); q(S.full, 0, len, T, TOP, band, FACADE, 1); S.full.quadTo(at(0, 0, band), at(len, 0, band), at(len, T, band), at(0, T, band), UP, 0x1c1b1c); }
+    // the stone-veneer base on the outer faces (the owner's front and lot photos: ledgestone in tans and browns under
+    // the glazing and the black wall), laid stone by stone over a dark mortar backing, 3 cm proud
+    if (w.id !== 'party') for (const r of runs) {
+      if (r.kind === 'door') continue;
+      const top = r.kind === 'solid' ? 0.9 : glassFor(r)[0];
+      q(S.full, r.s0, r.s1, -0.02, 0, top, 0x4e443a, -1);
+      const STONE = [0xb89a72, 0xa88560, 0xc9ad84, 0x8f7458, 0xd2bb94, 0x9c8a74, 0xb5a58c];
+      let k = Math.floor(r.s0 * 7);
+      for (let y = 0, row = 0; y < top - 0.02; y += 0.115, row++) {
+        const y1 = Math.min(top, y + 0.105);
+        for (let s0 = r.s0, first = row % 2 ? 0.21 : 0; s0 < r.s1 - 0.05; k++, first = 0) {
+          const sl = first || 0.22 + 0.5 * (((k * 37) % 11) / 11), s1 = Math.min(r.s1, s0 + sl);
+          if (s1 - s0 > 0.06) q(S.full, Math.max(r.s0, s0 + 0.006), s1 - 0.006, -0.032, y + 0.006, y1, STONE[(k * 13) % STONE.length], -1);
+          s0 = s1;
+        }
+      }
+    }
     for (const r of runs) if (r.kind !== 'door') S.cut.quadTo(at(r.s0, 0, 0.9), at(r.s1, 0, 0.9), at(r.s1, T, 0.9), at(r.s0, T, 0.9), UP, 0x3a3550);
     // colliders: the wall as a thick segment on its centreline, gaps at the doors (a locked door closes its gap)
     const cline = (s0: number, s1: number, tag: string) => { const a = L(w.a[0] + t[0] * s0 + n[0] * T / 2, w.a[1] + t[1] * s0 + n[1] * T / 2), b = L(w.a[0] + t[0] * s1 + n[0] * T / 2, w.a[1] + t[1] * s1 + n[1] * T / 2); return seg(a[0], a[1], b[0], b[1], T, tag, true); };
@@ -466,55 +508,113 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
   }
   fbox(neon, 35.72, 35.76, 3.2, 6.3, 1.2, 1.32, HEX.lime);                                      // the score ticker under the big screen
 
-  // ---------------------------------------------------------------- the patio: paving, fence, pergola, tables, heaters
+  // ---------------------------------------------------------------- the patio (the owner's patio-night photos)
+  // Vega & Vinnie's patio, as the owner's three night photos show it: a stained concrete floor, a dark textured ceiling
+  // on black steel posts and beams, warm Edison-bulb string lights in swags, black horizontal-slat planter walls topped
+  // with shrubs (lit from below after dark), round butcher-block tables on black pedestals with black mesh bistro chairs,
+  // a tall butcher-block high-top with two black stools, two pyramid glass-tube flame heaters on wood-topped black
+  // planter pedestals and a stainless mushroom heater. Sized to the owner's rule (layout.ts PATIO: u 2-27, 140 m2)
   const PV1 = 0.0;
   {
-    const wallV = (u: number) => 0.012 * u;                                                        // the south wall's outer face
-    const pr: P2[] = [[2.0, -5.5], [24.0, -5.5], [24.0, wallV(24)], [2.0, wallV(2)]];
-    // (S4's second repair: the slab subdivided to 1 m, as the ceiling is, so the pergola's and the festoon's baked light
-    // reads on it; as one cap its few corners took no light and the patio's floor stayed dark at night)
-    concrete.plane(pr, [], (u, v) => P3(u, v, FL), [0, 1, 0], 0xd6d0c4, 1.0); concrete.walls(ring(pr), 0, FL, 0xb8b2a6);
-    // the fence: 1.1 m glass and steel, inner faces at u 2.05, u 23.95 and v -5.45; posts in the fence line
-    const fenceLine: P2[] = [[2.0, wallV(2)], [2.0, -5.5], [24.0, -5.5], [24.0, wallV(24)]];
+    const U0 = PATIO.out.u0, U1 = PATIO.out.u1, V0 = PATIO.out.v0, wallV = southWallV;
+    const pr: P2[] = [[U0, V0], [U1, V0], [U1, wallV(U1)], [U0, wallV(U0)]];
+    // the stained concrete floor, subdivided to 1 m so the bulbs' baked light reads on it
+    concrete.plane(pr, [], (u, v) => P3(u, v, FL), [0, 1, 0], 0x625c55, 1.0); concrete.walls(ring(pr), 0, FL, 0x5a544c);
+    // the fence line: steel posts and a top rail at 1.1 m (the collider), wrapped outside by the slat planter walls
+    const fenceLine: P2[] = [[U0, wallV(U0)], [U0, V0], [U1, V0], [U1, wallV(U1)]];
+    const PH = 2.95, POSTS = [2.0, 7.0, 12.0, 17.0, 22.0, 27.0];
     for (let i = 1; i < fenceLine.length; i++) {
-      const [a, b] = [fenceLine[i - 1], fenceLine[i]], len = Math.hypot(b[0] - a[0], b[1] - a[1]), n = Math.max(1, Math.round(len / 1.8));
-      for (let k = 0; k <= n; k++) { const t = k / n, u = a[0] + (b[0] - a[0]) * t, v = a[1] + (b[1] - a[1]) * t; fcyl(steel, u, v, FL, 0.035, 0.035, PATIO.fenceH, 6, STEEL, false); }
+      const [a, b] = [fenceLine[i - 1], fenceLine[i]];
       ftube(steel, [a[0], a[1], FL + PATIO.fenceH], [b[0], b[1], FL + PATIO.fenceH], 0.03, 5, STEEL);
-      glassPatio.quad(P3(a[0], a[1], FL + 0.08), P3(b[0], b[1], FL + 0.08), P3(b[0], b[1], FL + PATIO.fenceH - 0.04), P3(a[0], a[1], FL + PATIO.fenceH - 0.04), 0xffffff);
       col.push(seg(...L(a[0], a[1]), ...L(b[0], b[1]), PATIO.fenceT, 'fence', false));
+      // the slat planter wall outside the line: a black box 0.38 m deep, 0.95 m tall, horizontal slats on its face,
+      // shrubs in it rising to about 1.9 m
+      const len = Math.hypot(b[0] - a[0], b[1] - a[1]), tu = (b[0] - a[0]) / len, tv = (b[1] - a[1]) / len;
+      const nu = tv, nv = -tu;                                                   // outward (away from the patio)
+      const sgn = ((a[0] + b[0]) / 2 - 14) * nu + ((a[1] + b[1]) / 2 + 2.7) * nv > 0 ? 1 : -1, ou = nu * sgn, ov = nv * sgn;
+      const off = (t: number, d: number, y: number): [number, number, number] => [a[0] + tu * t + ou * d, a[1] + tv * t + ov * d, y];
+      const box4 = (t0: number, t1: number, d0: number, d1: number, y0: number, y1: number, hex: number) => {
+        const c = off((t0 + t1) / 2, (d0 + d1) / 2, 0); const [x, z] = L(c[0], c[1]);
+        const [lx, lz] = F.dirToLocal(tu, tv); paint.box(x, (y0 + y1) / 2, z, t1 - t0, y1 - y0, d1 - d0, hex, Math.atan2(-lz, lx));
+      };
+      box4(0, len, 0.06, 0.44, 0, 0.95, 0x161618);
+      for (let y = 0.12; y < 0.95; y += 0.13) box4(0.02, len - 0.02, 0.43, 0.47, y, y + 0.07, 0x232326);
+      for (let t = 0.3; t < len - 0.15; t += 0.42) {
+        const [pu, pv] = off(t, 0.22 + 0.06 * Math.sin(t * 5.3), 0);
+        shrub(pu, pv, 0.95, 0.27 + 0.05 * Math.sin(t * 7.1), 0.85 + 0.2 * Math.sin(t * 3.3));
+      }
     }
-    // the pergola: steel posts in the fence line, beams at 2.9 m, louvres, warm linear lights under the beams
-    const PH = 2.95;
-    for (const u of [2.0, 7.5, 13.0, 18.5, 24.0]) { fbox(steel, u - 0.06, u + 0.06, -5.56, -5.44, FL, PH, STEEL); ftube(steel, [u, -5.5, PH], [u, wallV(u), PH], 0.05, 5, STEEL); }
-    ftube(steel, [2.0, -5.5, PH], [24.0, -5.5, PH], 0.06, 5, STEEL);
-    for (let u = 2.4; u < 24.0; u += 0.55) fbox(patioWood, u - 0.04, u + 0.04, -5.45, wallV(u) - 0.05, PH + 0.04, PH + 0.2, 0xb08a60);
-    // the warm linear lights: thin strips, lit after dark (the lot heads' material: dark by day)
-    const strips = kit.get('lot-heads', m.lampHead, { glow: false });
-    for (const v of [-1.6, -3.9]) { fbox(steel, 2.3, 23.7, v - 0.025, v + 0.025, PH - 0.05, PH - 0.01, STEEL); fbox(strips, 2.3, 23.7, v - 0.018, v + 0.018, PH - 0.056, PH - 0.05, 0xffe3b0); for (let u = 4; u < 24; u += 5) light(u, v, PH - 0.2, 6, 0, 7, 1.0); }
-    // S4's second repair (the art review: the night patio toward the freeway had no lit foreground, and the pergola's
-    // warm light barely showed): a festoon of warm bulbs along the pergola's outer beam over the rail, sagging between
-    // the posts, in the venue's existing batches (no new draw call; the bulbs are the neon's amber, bright while the bar
-    // is open and brighter after dark), and its light baked on the rail, the planters, the fence's top and the rail stools
-    for (let s0 = 0; s0 < 4; s0++) {
-      const ua = [2.0, 7.5, 13.0, 18.5, 24.0][s0], ub = [2.0, 7.5, 13.0, 18.5, 24.0][s0 + 1], V = -5.42, top = PH - 0.1, sag = 0.42;
-      const at = (t: number): [number, number, number] => [ua + (ub - ua) * t, V, top - sag * 4 * t * (1 - t)];
-      for (let k = 0; k < 10; k++) ftube(steel, at(k / 10), at((k + 1) / 10), 0.006, 3, STEEL);
-      for (let k = 1; k < 13; k++) { const [u, v, y] = at(k / 13); fbox(neon, u - 0.022, u + 0.022, v - 0.022, v + 0.022, y - 0.085, y - 0.03, 0xd08a3a); }
-      for (const t of [0.3, 0.7]) { const [mu, , my] = at(t); light(mu, -5.0, my - 0.25, 4.5, 0, 6, 0.5); }
+    // black steel posts and beams, the dark textured ceiling on them
+    for (const u of POSTS) { fbox(steel, u - 0.07, u + 0.07, V0 - 0.07, V0 + 0.07, FL, PH, STEEL); fbox(steel, u - 0.05, u + 0.05, V0, wallV(u) - 0.02, PH - 0.22, PH, STEEL); }
+    fbox(steel, U0 - 0.05, U1 + 0.05, V0 - 0.07, V0 + 0.07, PH - 0.26, PH, STEEL);
+    {
+      const DOWN = [0, -1, 0], UPF = [0, 1, 0];
+      paint.plane(pr, [], (u, v) => P3(u, v, PH + 0.02), DOWN, 0x2b2724, 1.4);
+      paint.plane(pr, [], (u, v) => P3(u, v, PH + 0.16), UPF, 0x3a3a3c, 4.0);
+      paint.walls(ring([[U0 - 0.05, V0 - 0.08], [U1 + 0.05, V0 - 0.08], [U1 + 0.05, wallV(U1)], [U0 - 0.05, wallV(U0)]]), PH, PH + 0.18, 0x141416);
     }
-    // six bench tables, long axis along v, a bench each side
+    // the Edison-bulb string lights: swags along the outer beam, across the patio from the wall to the beam at every
+    // post, and two runs down its length, sagging between their ends (warm amber bulbs in the neon batch)
+    const swag = (a: [number, number, number], b: [number, number, number], n: number, sag: number) => {
+      const at = (t: number): [number, number, number] => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t - sag * 4 * t * (1 - t)];
+      for (let k = 0; k < 8; k++) ftube(steel, at(k / 8), at((k + 1) / 8), 0.005, 3, 0x111111);
+      for (let k = 1; k < n; k++) { const [u, v, y] = at(k / n); fcyl(steel, u, v, y - 0.035, 0.012, 0.012, 0.035, 4, 0x111111, false); fcyl(neon, u, v, y - 0.1, 0.014, 0.028, 0.065, 6, 0xffb24a); }
+      for (const t of [0.25, 0.75]) { const [u, v, y] = at(t); light(u, v, y - 0.2, 3.2, 0, 5, 0.6); }
+    };
+    const TOPY = PH - 0.12;
+    for (let i = 1; i < POSTS.length; i++) swag([POSTS[i - 1], V0 + 0.08, TOPY], [POSTS[i], V0 + 0.08, TOPY], 9, 0.38);
+    for (const u of POSTS) swag([u, V0 + 0.1, TOPY], [u, wallV(u) - 0.1, TOPY], 6, 0.3);
+    for (const v of [-1.6, -3.7]) for (let i = 1; i < POSTS.length; i++) swag([POSTS[i - 1], v, TOPY], [POSTS[i], v, TOPY], 8, 0.32);
+    // round butcher-block tables on black pedestal bases, four black mesh bistro chairs each (at the seat slots)
+    const chair = (su: number, sv: number, fu: number, fv: number) => {
+      const CH = 0x1b1b1d;
+      fcyl(steel, su, sv, 0.55, 0.22, 0.22, 0.04, 12, CH);                                     // the mesh seat
+      for (const [du, dv] of [[-0.15, -0.15], [0.15, -0.15], [0.15, 0.15], [-0.15, 0.15]]) ftube(steel, [su + du * 1.1, sv + dv * 1.1, FL], [su + du, sv + dv, 0.56], 0.012, 4, CH);
+      const bu = su - fu * 0.2, bv = sv - fv * 0.2;                                           // the back, away from the table
+      ftube(steel, [bu - fv * 0.17, bv + fu * 0.17, 0.57], [bu - fv * 0.19, bv + fu * 0.19, 1.02], 0.012, 4, CH);
+      ftube(steel, [bu + fv * 0.17, bv - fu * 0.17, 0.57], [bu + fv * 0.19, bv - fu * 0.19, 1.02], 0.012, 4, CH);
+      const [x, z] = L(bu - fu * 0.01, bv - fv * 0.01), [lx, lz] = F.dirToLocal(-fv, fu);
+      paint.box(x, 0.84, z, 0.38, 0.34, 0.02, 0x202022, Math.atan2(-lz, lx));                   // the mesh back panel
+    };
     for (const u of PATIO_TABLES) {
-      fbox(patioWood, u - 0.375, u + 0.375, -2.1, -0.5, 0.88, 0.93, OAK);
-      for (const du of [-0.3, 0.3]) fbox(patioWood, u + du - 0.03, u + du + 0.03, -2.0, -0.6, FL, 0.88, 0x7a5a3a);
-      for (const s of [-1, 1]) { fbox(patioWood, u + s * 0.6 - 0.15, u + s * 0.6 + 0.15, -2.05, -0.55, 0.58, 0.62, OAK); fbox(steel, u + s * 0.6 - 0.02, u + s * 0.6 + 0.02, -1.9, -0.7, FL, 0.58, STEEL); }
+      fcyl(patioWood, u, -1.3, 0.86, 0.46, 0.46, 0.06, 18, 0xc08a52);                        // the butcher-block top
+      fcyl(steel, u, -1.3, FL, 0.05, 0.05, 0.71, 6, STEEL, false);
+      fcyl(steel, u, -1.3, FL, 0.28, 0.26, 0.04, 12, STEEL);
+      for (const su of [u - 0.6, u + 0.6]) for (const sv of [-0.9, -1.7]) { const du = u - su, dv = -1.3 - sv, l = Math.hypot(du, dv); chair(su, sv, du / l, dv / l); }
+    }
+    // the high-top: a tall butcher-block table on a black post, two black stools
+    {
+      const [hu, hv] = PATIO_HIGHTOP.at;
+      fbox(patioWood, hu - 0.42, hu + 0.42, hv - 0.36, hv + 0.36, 1.1, 1.16, 0xc08a52);
+      fcyl(steel, hu, hv, FL, 0.05, 0.05, 0.95, 6, STEEL, false); fcyl(steel, hu, hv, FL, 0.25, 0.24, 0.04, 10, STEEL);
+      for (const [su, sv] of PATIO_HIGHTOP.stools) stool(su, sv, 0x1d1b1e);
     }
     // the drink rail on the fence, its 6 stools facing the freeway
     fbox(patioWood, 3.0, 9.5, -5.45, -5.15, 1.08 + FL, 1.12 + FL, OAK);
     for (let k = 0; k < 6; k++) stool(3.6 + 1.05 * k, -4.75);
-    // two tall heaters, their flames lit after dark while open
-    for (const [u, v] of HEATERS) { fcyl(steel, u, v, FL, 0.28, 0.25, 0.08, 10, 0x6a6e72); fcyl(steel, u, v, FL + 0.08, 0.05, 0.05, 2.1, 6, 0x9aa0a6, false); fcyl(steel, u, v, FL + 2.18, 0.08, 0.42, 0.18, 10, 0x9aa0a6); fcyl(lamps, u, v, FL + 1.6, 0.07, 0.07, 0.5, 6, 0xff8a40, false); light(u, v, 2.0, 5, 0, 5); }
-    // four planters of agave and grasses against the fence
-    for (const [u0, u1, v0, v1] of PATIO_PLANTERS) { fbox(concrete, u0, u1, v0, v1, FL, FL + 0.55, 0x8a8478); agave(plants, (u0 + u1) / 2, (v0 + v1) / 2, FL + 0.55, Math.min(u1 - u0, v1 - v0) * 0.55); }
+    // the heaters: two pyramid glass-tube flame heaters on wood-topped black planter pedestals, a stainless mushroom one
+    const flames = kit.get('patio-flame', m.flame, { glow: false });
+    HEATERS.forEach(([u, v], k) => {
+      if (k < 2) {
+        fbox(paint, u - 0.25, u + 0.25, v - 0.25, v + 0.25, FL, FL + 0.55, 0x161618);                         // the pedestal
+        fbox(patioWood, u - 0.28, u + 0.28, v - 0.28, v + 0.28, FL + 0.55, FL + 0.6, 0xc08a52);              // its wood top
+        const y0 = FL + 0.6, y1 = y0 + 1.45;
+        fbox(steel, u - 0.2, u + 0.2, v - 0.2, v + 0.2, y0, y0 + 0.12, 0x9aa0a6);
+        for (const [du, dv] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) ftube(steel, [u + du * 0.17, v + dv * 0.17, y0 + 0.12], [u + du * 0.09, v + dv * 0.09, y1], 0.012, 4, 0x9aa0a6);
+        fcyl(steel, u, v, y1, 0.14, 0.16, 0.05, 4, 0x9aa0a6); fcyl(steel, u, v, y1 + 0.05, 0.16, 0.02, 0.1, 4, 0x9aa0a6);
+        fcyl(glassPatio, u, v, y0 + 0.12, 0.06, 0.06, 1.3, 8, 0xffffff, false);
+        fcyl(flames, u, v, y0 + 0.22, 0.04, 0.012, 1.05, 6, 0xffffff, false);
+        light(u, v, y0 + 0.8, 5, 0, 5);
+      } else {
+        fcyl(steel, u, v, FL, 0.24, 0.22, 0.62, 14, 0xb9bec4);                                               // the tank
+        fcyl(steel, u, v, FL + 0.62, 0.05, 0.05, 1.45, 8, 0xc4c9ce, false);
+        fcyl(flames, u, v, FL + 2.07, 0.12, 0.12, 0.12, 10, 0xffffff, false);                                 // the burner's glow
+        fcyl(steel, u, v, FL + 2.19, 0.06, 0.48, 0.16, 18, 0xc4c9ce);                                         // the reflector
+        light(u, v, FL + 1.9, 4, 0, 4);
+      }
+    });
+    // planters along the fence: low black boxes with shrubs
+    for (const [u0, u1, v0, v1] of PATIO_PLANTERS) { fbox(paint, u0, u1, v0, v1, FL, FL + 0.55, 0x161618); for (let u = u0 + 0.35; u < u1 - 0.2; u += 0.6) shrub(u, (v0 + v1) / 2, FL + 0.55, 0.3, 0.6); }
     // the patio door (the leaves are the door mesh below), its approach kept clear
     void PV1;
   }
@@ -532,11 +632,40 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     tri3(rp(R.d1, R.s0 - R.flare, 0.01), rp(R.d1, R.s0, 0.01), rp(R.d0, R.s0, FL + 0.005));
     tri3(rp(R.d1, R.s1, 0.01), rp(R.d1, R.s1 + R.flare, 0.01), rp(R.d0, R.s1, FL + 0.005));
     for (let s = R.s0 + 0.1; s < R.s1; s += 0.12) fquad(marks, [rp(R.d1 - 0.05, s, 0.03), rp(R.d1 - 0.05, s + 0.05, 0.03), rp(R.d1 - 0.45, s + 0.05, 0.07), rp(R.d1 - 0.45, s, 0.07)], 0xd8b84a);
-    for (const p of FRONT.planters) {
+    // the two planters' spots (the owner's front photo): terracotta pots of red-tipped shrubs by the door's south side,
+    // and at the north end a corten planter box with the hedge wall rising out of it, "WINES COLD BEER" on its face
+    FRONT.planters.forEach((p, pi) => {
       const r: P2[] = [FS_D(p.d0, p.s0), FS_D(p.d1, p.s0), FS_D(p.d1, p.s1), FS_D(p.d0, p.s1)];
-      concrete.cap(ring(r), FL + 0.6, 0x8a8478); concrete.walls(ring(r), FL, FL + 0.6, 0x9a948a);
-      const c = FS_D((p.d0 + p.d1) / 2, (p.s0 + p.s1) / 2); agave(plants, c[0], c[1], FL + 0.6, 0.4);
+      if (pi === 0) {
+        for (const sc of [p.s0 + 0.3, p.s1 - 0.3]) {
+          const c = FS_D((p.d0 + p.d1) / 2, sc);
+          fcyl(paint, c[0], c[1], FL, 0.21, 0.29, 0.5, 14, 0xc98a5a); fcyl(paint, c[0], c[1], FL + 0.5, 0.3, 0.3, 0.06, 14, 0xb97a4c);
+          shrub(c[0], c[1], FL + 0.52, 0.27, 0.85, 0x7a4a36);
+        }
+      } else {
+        concrete.cap(ring(r), FL + 0.6, 0x7a3a22); concrete.walls(ring(r), FL, FL + 0.6, 0x8a4126);
+        // the hedge wall: a clipped box of leaves 1.1 m along the wall, 0.45 m deep, to 2.3 m, its faces in leafy tufts
+        {
+          const c = FS_D((p.d0 + p.d1) / 2, (p.s0 + p.s1) / 2), [x, z] = L(c[0], c[1]), [tx, tz] = F.dirToLocal(FRONT_S[0], FRONT_S[1]), hr = Math.atan2(-tz, tx);
+          plants.box(x, (FL + 0.6 + 2.3) / 2, z, 1.08, 2.3 - FL - 0.6, 0.44, 0x3f5a2e, hr);
+          for (const d of [p.d0 + 0.03, p.d1 - 0.03]) for (let k = 0; k < 6; k++) for (let y = FL + 0.75; y < 2.25; y += 0.28) {
+            const sk = p.s0 + 0.15 + k * 0.18 + 0.04 * Math.sin(y * 9);
+            if (d > p.d0 + 0.1 && Math.abs(sk - (p.s0 + p.s1) / 2) < 0.24 && y > 1.0 && y < 1.95) continue;   // the plaque
+            const q = FS_D(d, sk), [qx, qz] = L(q[0], q[1]);
+            plants.cyl(qx, y, qz, 0.06, 0.1, 0.17, 6, (k + Math.round(y * 10)) % 3 ? 0x4a6834 : 0x587a3c);
+          }
+        }
+        const pc = FS_D(p.d1 - 0.04, (p.s0 + p.s1) / 2); fpanel(signs, pc[0], pc[1], 1.5, 0.34, 0.76, FN_OUT, ATLAS.wines);
+      }
       col.push(poly(ring(r), 'planter', false));
+    });
+    // the red bollards along the kerb, clear of the ramp, the planters and the bike rack
+    for (const sb of [0.4, 1.9, 5.0, 6.3, 11.3, 16.0]) { const c = FS_D(3.0, sb); fcyl(paint, c[0], c[1], FL, 0.11, 0.11, 0.92, 10, 0x8c3b26); fcyl(paint, c[0], c[1], FL + 0.92, 0.11, 0.02, 0.05, 10, 0x7a3220); const [x, z] = L(c[0], c[1]); col.push(circ(x, z, 0.14, 'pole', false)); }
+    // the chalkboard A-frame beside the door, in the furniture strip
+    {
+      const c = FS_D(1.82, 6.75), b0 = FS_D(1.62, 6.75), b1 = FS_D(2.02, 6.75);
+      fpanel(signs, b0[0], b0[1], FL + 0.48, 0.56, 0.84, FN_OUT, ATLAS.aframe); fpanel(signs, b1[0], b1[1], FL + 0.48, 0.56, 0.84, FS_IN, ATLAS.aframe);
+      const [x, z] = L(c[0], c[1]); col.push(circ(x, z, 0.27, 'stand', false));
     }
     // the four-hoop bike rack and two parked bikes
     const B = FRONT.bikes;
@@ -551,9 +680,29 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
     }
     col.push(poly(ring([FS_D(B.d0, B.s0), FS_D(B.d1, B.s0), FS_D(B.d1, B.s1), FS_D(B.d0, B.s1)]), 'rack', false));
     // the wordmark on the east parapet: chalk letters, a lime halo at night, and the tagline under it
-    const a = fd(0.03, 0.6), b = fd(0.03, FRONT.len - 0.6);
-    word.uvQuad(P3(a[0], a[1], 4.1), P3(b[0], b[1], 4.1), P3(b[0], b[1], 5.35), P3(a[0], a[1], 5.35), { u0: 0, v0: 0, u1: 1, v1: 1 });
+    // the script sign over the door (the owner's front photo), 11.5 m x 1.68 m on the black wall and parapet
+    const a = fd(0.03, 3.2), b = fd(0.03, 14.7);
+    word.uvQuad(P3(a[0], a[1], 3.62), P3(b[0], b[1], 3.62), P3(b[0], b[1], 5.3), P3(a[0], a[1], 5.3), { u0: 0, v0: 0, u1: 1, v1: 1 });
     light(fd(-1.2, FRONT.len / 2)[0], fd(-1.2, FRONT.len / 2)[1], 4.6, 10, 0, 9);
+    // the wings mural over the north glazing (our own wording), the accessible-entrance sign beside the door
+    { const mc = fd(0.02, 13.75); fpanel(signs, mc[0], mc[1], 2.75, 6.4, 1.4, FN_OUT, ATLAS.mural); }
+    { const ac = fd(0.02, 7.45); fpanel(signs, ac[0], ac[1], 1.55, 0.3, 0.3, FN_OUT, ATLAS.ada); }
+    // two gooseneck lamps flanking the sign, lighting it after dark
+    for (const sl of [2.45, 15.45]) {
+      const w0 = fd(0.0, sl), w1 = fd(0.55, sl), hc = fd(0.62, sl);
+      ftube(steel, [w0[0], w0[1], 4.75], [w1[0], w1[1], 5.05], 0.02, 4, STEEL);
+      fcyl(steel, hc[0], hc[1], 4.86, 0.17, 0.05, 0.16, 10, STEEL); fcyl(lamps, hc[0], hc[1], 4.85, 0.15, 0.15, 0.01, 10, 0xffffff);
+      light(fd(0.9, sl)[0], fd(0.9, sl)[1], 4.4, 6, 0, 6, 1.2);
+    }
+    // a black awning over the glazing south of the door and over the door, cantilevered (no posts in the clear path),
+    // with Edison bulbs under its edge
+    for (const [s0, s1] of [[0.3, 7.75], [7.75, 10.15]] as [number, number][]) {
+      const p = (d: number, sx: number, y: number) => { const f = fd(d, sx); return P3(f[0], f[1], y); };
+      paint.quadTo(p(0, s0, 3.12), p(0, s1, 3.12), p(1.05, s1, 2.86), p(1.05, s0, 2.86), [0, 1, 0], 0x1a1a1c);
+      paint.quadTo(p(0, s0, 3.1), p(1.05, s0, 2.84), p(1.05, s1, 2.84), p(0, s1, 3.1), [0, -1, 0], 0x141415);
+      paint.quadTo(p(1.05, s0, 2.86), p(1.05, s1, 2.86), p(1.05, s1, 2.64), p(1.05, s0, 2.64), [FN_OUT[0], 0, FN_OUT[1]], 0x1a1a1c);
+      for (let sx = s0 + 0.35; sx < s1; sx += 0.55) { const f = fd(1.0, sx); fbox(neon, f[0] - 0.024, f[0] + 0.024, f[1] - 0.024, f[1] + 0.024, 2.5, 2.57, 0xffb24a); }
+    }
     // the double-sided blade sign at the south-east corner, 2.8 to 4.0 m up, over the walk
     const bs = fd(0.78, FRONT.blade.s);
     const [bx, bz] = L(bs[0], bs[1]), [sx, sz] = F.dirToLocal(FRONT_S[0], FRONT_S[1]);
@@ -599,7 +748,7 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
 
   // ---------------------------------------------------------------- the walk region's pieces
   const interior = insetConvex(room.inner, -0.5);                 // the region over the walls, 0.5 m past their inner faces
-  const patioPaint: P2[] = [[PATIO.u0 - 0.5, PATIO.v0 - 0.5], [PATIO.u1 + 0.5, PATIO.v0 - 0.5], [PATIO.u1 + 0.5, 0.012 * 24.5 + 0.3], [PATIO.u0 - 0.5, 0.012 * 1.5 + 0.3]];
+  const patioPaint: P2[] = [[PATIO.u0 - 0.5, PATIO.v0 - 0.5], [PATIO.u1 + 0.5, PATIO.v0 - 0.5], [PATIO.u1 + 0.5, southWallV(PATIO.u1 + 0.5) + 0.3], [PATIO.u0 - 0.5, southWallV(PATIO.u0 - 0.5) + 0.3]];
   const frontRing: P2[] = [fd(0, FRONT.walk.s0), fd(FRONT.walk.d1, FRONT.walk.s0), fd(FRONT.walk.d1, FRONT.walk.s1), fd(0, FRONT.walk.s1)];
   const lane: P2[][] = [[[14.15, 14.05], [27.6, 14.05], [27.6, 15.2], [14.15, 15.2]], [[26.8, 13.35], [27.6, 13.35], [27.6, 14.05], [26.8, 14.05]]];
   const rampLow: P2[] = [fd((FRONT.ramp.d0 + FRONT.ramp.d1) / 2, FRONT.ramp.s0 - FRONT.ramp.flare), fd(FRONT.ramp.d1 + 0.01, FRONT.ramp.s0 - FRONT.ramp.flare), fd(FRONT.ramp.d1 + 0.01, FRONT.ramp.s1 + FRONT.ramp.flare), fd((FRONT.ramp.d0 + FRONT.ramp.d1) / 2, FRONT.ramp.s1 + FRONT.ramp.flare)];
@@ -627,13 +776,13 @@ export function buildBarVenue(kit: Kit, m: BarMats, F: Frame, room: Room, restRi
       (() => { const [x, z] = L(34.6, 4.75); return { x, y: 2.4, z, kind: 'fill' as const }; })(),
       (() => { const [x, z] = L(20.4, 14.2); return { x, y: 2.6, z, kind: 'back' as const }; })(),
     ],
-    region: { front: ring(frontRing), patio: ring(patioPaint), interior: ring(interior), cut: lane.map(ring), raised: [ring(frontRing), ring([[2.0, -5.5], [24.0, -5.5], [24.0, 0.3], [2.0, 0.03]]), ring(insetConvex(room.inner, -UNIT.wallT))], rampLow: ring(rampLow) },
+    region: { front: ring(frontRing), patio: ring(patioPaint), interior: ring(interior), cut: lane.map(ring), raised: [ring(frontRing), ring([[PATIO.out.u0, PATIO.out.v0], [PATIO.out.u1, PATIO.out.v0], [PATIO.out.u1, southWallV(PATIO.out.u1) + 0.01], [PATIO.out.u0, southWallV(PATIO.out.u0) + 0.01]]), ring(insetConvex(room.inner, -UNIT.wallT))], rampLow: ring(rampLow) },
     layout: { frontRing, patioPaint, interior, lane, rampLow },
   };
 }
 
 /** into the room through the front wall, and along the front wall (s) */
-const FS_IN: P2 = [0.932, -0.362], FRONT_S: P2 = [0.362, 0.932];
+const FS_IN: P2 = [0.932, -0.362], FRONT_S: P2 = [0.362, 0.932], FN_OUT: P2 = [-0.932, 0.362];
 
 /** a convex ring grown (d < 0) or shrunk (d > 0) by d on every edge */
 function insetConvex(r: P2[], d: number): P2[] {

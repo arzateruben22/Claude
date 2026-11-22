@@ -33,6 +33,7 @@ import { RadioCard } from './RadioCard';
 import { Phone, PhoneApp } from './Phone';
 import { RadialMenu, RadialPick } from './RadialMenu';
 import { PerfOverlay } from './PerfOverlay';
+import { BAR_NAME } from '../onfoot/venues/sportsbar/brand';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
 type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes';
@@ -54,7 +55,7 @@ const PERF_URL = QUERY.has('perf');
 const BENCH_URL = QUERY.get('bench') === '1';
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 // our own venues in the Go to sheet (src/game/venues.ts; the World Map's Places tab lists them too)
-const VENUE_LIST = [{ name: 'Lot 57', blurb: 'Taproom and yard · Orangewood Ave, Anaheim' }, { name: 'Stoppage Time', blurb: 'Sports bar · Claudina Way, Anaheim' }];
+const VENUE_LIST = [{ name: 'Lot 57', blurb: 'Taproom and yard · Orangewood Ave, Anaheim' }, { name: BAR_NAME, blurb: 'Sports bar & cantina · Claudina Way, Anaheim' }];
 const ROUTES = ['I-5', 'I-405', 'CA-55', 'CA-57', 'CA-22', 'CA-91', 'CA-73', 'CA-133', 'CA-241', 'CA-261'];
 const MODE_LIST = Object.keys(MODES) as Mode[];
 const LEAVE_MS = 380;      // the loading screen's fade into the menu (styles.css: .loading-screen.leaving)
