@@ -148,6 +148,38 @@ ol.titles{margin:0;padding-left:22px;display:grid;gap:4px}
 .rule{background:var(--card);border:2px solid var(--ink);padding:var(--s4);display:grid;gap:var(--s2);border-top:10px solid var(--acc,var(--ink))}
 .rule dl{margin:0;display:grid;gap:6px} .rule dt{font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)} .rule dd{margin:0}
 
+/* asset library */
+.filters{display:flex;gap:var(--s2);overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.filters a{flex:none;min-height:40px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;text-decoration:none;font-weight:600;font-size:13px;background:var(--card)}
+.filters a b{font:500 12px/1 var(--mono)}
+.filters a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.grid{display:grid;gap:var(--s4);grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));align-items:start}
+.grid.wide{grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.tile{background:var(--card);border:2px solid var(--ink);display:grid;min-width:0}
+.tile .media{display:grid;place-items:center;height:260px;padding:10px;background:var(--paper-2);border:0;border-bottom:2px solid var(--ink);cursor:zoom-in;width:100%;overflow:hidden}
+.tile .media img{max-width:100%;max-height:240px;width:auto;height:auto;object-fit:contain;display:block}
+.checker{background-color:#e9e4da!important;background-image:linear-gradient(45deg,#cfc7b8 25%,transparent 25%),linear-gradient(-45deg,#cfc7b8 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#cfc7b8 75%),linear-gradient(-45deg,transparent 75%,#cfc7b8 75%)!important;background-size:20px 20px!important;background-position:0 0,0 10px,10px -10px,-10px 0!important}
+.tile .media.dark{background:#151413}
+.tile .body{display:grid;gap:6px;padding:var(--s3);min-width:0}
+.tile .body b{font:600 15px/1.25 var(--body);overflow-wrap:anywhere}
+.tile .fname{font:500 11px/1.3 var(--mono);color:var(--ink-3);overflow-wrap:anywhere}
+.tile .note{font-size:13px;color:var(--ink-2);margin:0}
+.tile video{width:100%;max-height:440px;aspect-ratio:9/16;background:#151413;display:block;border-bottom:2px solid var(--ink)}
+.tile audio{width:100%;height:40px}
+.sfxmeta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0}
+.sfxmeta div{background:var(--paper);border:1.5px solid var(--line-2);padding:4px 6px;min-width:0}
+.sfxmeta dt{font:600 10px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.sfxmeta dd{margin:0;font:500 13px/1.3 var(--mono)}
+.hot-peak{color:var(--bad)}
+.spec{margin:0;padding:var(--s4) var(--s3);font-size:42px;line-height:.95;text-transform:uppercase;border-bottom:2px solid var(--ink);background:var(--paper);overflow-wrap:anywhere}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:2px solid var(--ink)}
+.swatches div{height:120px;display:flex;align-items:flex-end;padding:6px;font:500 11px/1.2 var(--mono)}
+.missing ul{margin:0;padding-left:18px;display:grid;gap:2px;max-height:260px;overflow:auto;font:500 12px/1.4 var(--mono)}
+dialog.zoom{border:2px solid var(--ink);padding:0;max-width:min(96vw,1200px);max-height:92vh;background:var(--card);box-shadow:10px 10px 0 var(--ink)}
+dialog.zoom::backdrop{background:rgba(21,20,19,.75)}
+dialog.zoom .zbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-bottom:2px solid var(--ink);position:sticky;top:0;background:var(--card)}
+dialog.zoom .zimg{display:grid;place-items:center;padding:10px;overflow:auto;max-height:calc(92vh - 60px)}
+dialog.zoom img{max-width:100%;height:auto;display:block}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--nav-h) + 20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:var(--r);font-weight:600;z-index:40;box-shadow:4px 4px 0 var(--magenta)}
 .notice{border:2px solid var(--ink);background:var(--yellow);padding:var(--s3) var(--s4);font-weight:600}
 </style>
@@ -159,6 +191,7 @@ ol.titles{margin:0;padding-left:22px;display:grid;gap:4px}
     <li><a href="#home" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="9"/><rect x="14" y="4" width="7" height="6"/><rect x="14" y="13" width="7" height="7"/><rect x="3" y="16" width="7" height="4"/></svg>Home</a></li>
     <li><a href="#upload" data-nav="upload"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>Upload<span class="badge" id="b-upload" hidden></span></a></li>
     <li><a href="#review" data-nav="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>Review<span class="badge" id="b-review" hidden></span></a></li>
+    <li><a href="#assets" data-nav="assets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18"/><circle cx="9" cy="9" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Assets</a></li>
     <li class="push"><details class="more"><summary><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>More</summary>
       <div class="menu"><a href="#library" data-nav="library">Library</a><a href="#rules" data-nav="rules">Campaign rules</a><a href="#accounts" data-nav="accounts">Accounts</a></div></details></li>
   </ul>
@@ -166,6 +199,7 @@ ol.titles{margin:0;padding-left:22px;display:grid;gap:4px}
 
 <div class="shell"><main id="content" tabindex="-1"><div class="emptybox">Opening the studio…</div></main></div>
 <div class="toast" id="toast" role="status" hidden></div>
+<dialog class="zoom" id="zoom" aria-label="Full size"><div class="zbar"><b id="zoom-title"></b><button class="btn small" id="zoom-close">Close</button></div><div class="zimg" id="zoom-box"><img id="zoom-img" alt=""></div></dialog>
 
 <script>
 (() => {
@@ -174,7 +208,9 @@ const PLATFORMS = [
   {id:"tiktok", label:"TikTok", upload:"https://www.tiktok.com/upload"},
   {id:"instagram", label:"Instagram Reels", upload:"https://www.instagram.com/"}
 ];
-const S = {streamers:[], accounts:[], clips:[], pubs:[], batches:[], ready:false, err:null};
+const S = {streamers:[], accounts:[], clips:[], pubs:[], batches:[], lib:[], ready:false, err:null};
+const CATS = [["sfx","Sound effects"],["memes","Meme GIFs"],["inserts","Reaction inserts"],["roses","Roses"],["brand","Brand"],["covers","Approved covers"],["style","Style references"],["rejected","Rejected"],["edits","Example edits"],["fonts","Fonts"],["missing","Not uploaded yet"]];
+const LSTATUS = {approved:["Approved","good"],pending:["Needs your OK","warn"],reference:["Reference","muted"],rejected:["Rejected","bad"],rights:["Rights unverified","warn"]};
 const $main = document.getElementById("content");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmtDate = t => t ? new Date(t).toLocaleDateString(undefined,{month:"short",day:"numeric"}) : "";
@@ -310,17 +346,65 @@ function accounts(){
     ${a.active===false?`<span class="pill muted">Switched off</span>`:`<span class="pill good">In use</span>`}<div class="actions"><a class="btn small" href="${esc(p.upload)}" target="_blank" rel="noopener">Open upload page</a></div></article>`}).join("")}</div>`;
 }
 
+/* ---------- asset library ---------- */
+const lpill = s => {const [t,k]=LSTATUS[s]||[s||"","muted"];return t?`<span class="pill ${k}">${esc(t)}</span>`:""};
+const mb = b => b?`${(b/1e6).toFixed(b<1e6?2:1)} MB`:"";
+const fontFam = r => "vu-"+r.id;
+const loadedFonts = new Set();
+function loadFonts(){for(const r of S.lib.filter(x=>x.kind==="font"&&x.src)){if(loadedFonts.has(r.id))continue;loadedFonts.add(r.id);try{new FontFace(fontFam(r),`url("${r.src}")`).load().then(f=>{document.fonts.add(f)}).catch(()=>{})}catch{}}}
+function tile(r){
+  const name=`<div class="row" style="justify-content:space-between"><span class="fname">${esc(r.file||"")}</span>${r.file?copyBtn(r.file,"name"):""}</div>`;
+  if(r.kind==="audio"){const tp=Number(r.true_peak);return `<article class="tile"><div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div>
+    <p class="note">${esc(r.use||"")}</p><audio controls preload="none" src="${esc(r.src)}"></audio>
+    <dl class="sfxmeta"><div><dt>Length</dt><dd>${Number(r.duration_s).toFixed(2)}s</dd></div><div><dt>Starts at</dt><dd>${Number(r.onset_s).toFixed(3)}s</dd></div><div><dt>Loudness</dt><dd>${esc(r.lufs)} LUFS</dd></div><div><dt>Peak</dt><dd class="${tp>-1?"hot-peak":""}">${tp>0?"+":""}${esc(r.true_peak)} dBTP</dd></div></dl>
+    ${r.note?`<p class="note">${esc(r.note)}</p>`:""}${name}</div></article>`}
+  if(r.kind==="video") return `<article class="tile"><video controls playsinline preload="metadata" src="${esc(r.src)}"></video><div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div>
+    <span class="mono" style="font-size:12px">${Number(r.duration_s).toFixed(1)}s · ${esc(r.width)}×${esc(r.height)} · ${mb(r.bytes)}</span>${r.note?`<p class="note">${esc(r.note)}</p>`:""}${name}</div></article>`;
+  if(r.kind==="font") return `<article class="tile"><p class="spec" style="font-family:'${esc(fontFam(r))}',var(--display)">Bro thought he was tuff</p><div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div>
+    <p class="note">${esc(r.use||"")}</p><p class="note">${esc(r.note||"")}</p>${name}</div></article>`;
+  if(r.kind==="palette") return `<article class="tile"><div class="swatches">${(r.colors||[]).map(c=>`<div style="background:${esc(c.hex)};color:${["#151413","#913149"].includes(c.hex)?"#fff":"#151413"}">${esc(c.name)}<br>${esc(c.hex)}</div>`).join("")}</div>
+    <div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div><p class="note">${esc(r.note||"")}</p>
+    <div class="row">${(r.colors||[]).map(c=>copyBtn(c.hex,c.hex)).join("")}</div></div></article>`;
+  if(r.kind==="missing") return `<article class="tile missing"><div class="body"><b>${esc(r.title)}</b><p class="note">${esc(r.note||"")}</p><span class="mono" style="font-size:12px">${(r.items||[]).length} files not uploaded</span>
+    <ul>${(r.items||[]).map(i=>`<li>${esc(i.file)} <span style="color:var(--ink-3)">${esc(i.mb)} MB</span></li>`).join("")}</ul></div></article>`;
+  // image (incl. GIF)
+  const w=Number(r.width)||0,h=Number(r.height)||0, tiny=w&&w<240;
+  const tags=[r.animated?`<span class="pill hot">Animated</span>`:(r.category==="memes"?`<span class="pill muted">Still</span>`:""), r.transparent?`<span class="pill muted">Transparent</span>`:""].join("");
+  const sizeStyle=tiny?`style="width:${Math.min(w*2,400)}px"`:"";
+  return `<article class="tile"><button class="media ${r.transparent?"checker":""}" data-zoom="${esc(r.src)}" data-ztitle="${esc(r.title)}" data-zchecker="${r.transparent?1:""}" aria-label="Open ${esc(r.title)} full size">
+    <img src="${esc(r.src)}" alt="${esc(r.title)}" loading="lazy" ${w&&h?`width="${w}" height="${h}"`:""} ${sizeStyle}></button>
+    <div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div><div class="row">${tags}</div>
+    <span class="mono" style="font-size:12px">${w&&h?`${w}×${h}`:""}${r.frames>1?` · ${r.frames} frames`:""} · ${mb(r.bytes)}</span>${r.note?`<p class="note">${esc(r.note)}</p>`:""}${name}</div></article>`;
+}
+function assetsView(cat){
+  const lib=[...S.lib].sort((a,b)=>(a.order??0)-(b.order??0));
+  const count=c=>lib.filter(r=>r.category===c).length;
+  const cats=CATS.filter(([c])=>count(c));
+  const chips=`<nav class="filters" aria-label="Asset sections"><a href="#assets" ${!cat?'aria-current="page"':""}>All <b>${lib.length}</b></a>${cats.map(([c,l])=>`<a href="#assets-${c}" ${cat===c?'aria-current="page"':""}>${esc(l)} <b>${count(c)}</b></a>`).join("")}</nav>`;
+  const show=cat?cats.filter(([c])=>c===cat):cats;
+  const body=show.map(([c,l])=>{const items=lib.filter(r=>r.category===c);const wide=["sfx","edits","fonts","missing"].includes(c)||items.some(r=>r.kind==="palette");
+    return `<section class="sec" id="lib-${c}"><div class="sec-head"><h2>${esc(l)}</h2><span class="eyebrow">${items.length}</span></div><div class="grid ${wide?"wide":""}">${items.map(tile).join("")}</div></section>`}).join("");
+  return `<header class="mast"><span class="eyebrow">Everything we edit with</span><h1>Assets</h1><p class="lede">Every sound, picture, GIF, cover and font in the pack, checked against the manifest. Tap a picture to see it full size. Copy a file's exact name to ask for it in an edit.</p></header>
+    ${chips}${lib.length?body:`<div class="emptybox">The asset library is loading or empty.</div>`}`;
+}
+const zoom=document.getElementById("zoom");
+document.addEventListener("click",e=>{
+  const z=e.target.closest("[data-zoom]"); if(z){document.getElementById("zoom-img").src=z.dataset.zoom;document.getElementById("zoom-img").alt=z.dataset.ztitle||"";document.getElementById("zoom-title").textContent=z.dataset.ztitle||"";document.getElementById("zoom-box").classList.toggle("checker",!!z.dataset.zchecker);try{zoom.showModal()}catch{zoom.setAttribute("open","")}return}
+  if(e.target.id==="zoom-close"||e.target===zoom){try{zoom.close()}catch{zoom.removeAttribute("open")}}
+});
+
 /* ---------- routing & render ---------- */
 function route(){const h=(location.hash||"#home").slice(1);return h||"home"}
 function render(){
   const r=route();
-  document.querySelectorAll("[data-nav]").forEach(a=>{const n=a.dataset.nav;a.toggleAttribute("aria-current",n===r||(n==="home"&&r.startsWith("s-")));if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
+  document.querySelectorAll("[data-nav]").forEach(a=>{const n=a.dataset.nav;a.toggleAttribute("aria-current",n===r||(n==="home"&&r.startsWith("s-"))||(n==="assets"&&r.startsWith("assets-")));if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
   const rv=S.clips.filter(c=>c.status==="ready_for_review").length, up=pendingPubs().length;
   const br=document.getElementById("b-review"), bu=document.getElementById("b-upload");
   br.textContent=rv; br.hidden=!rv; bu.textContent=up; bu.hidden=!up;
   if(S.err){$main.innerHTML=`<div class="notice">${esc(S.err)}</div>`;return}
   if(!S.ready){$main.innerHTML=`<div class="emptybox">Opening the studio…</div>`;return}
-  const view = r.startsWith("s-")?room(r.slice(2)) : r==="upload"?upload() : r==="review"?review() : r==="library"?library() : r==="rules"?rules() : r==="accounts"?accounts() : home();
+  loadFonts();
+  const view = r.startsWith("s-")?room(r.slice(2)) : r==="assets"?assetsView("") : r.startsWith("assets-")?assetsView(r.slice(7)) : r==="upload"?upload() : r==="review"?review() : r==="library"?library() : r==="rules"?rules() : r==="accounts"?accounts() : home();
   $main.innerHTML=view;
   document.querySelector("details.more")?.removeAttribute("open");
 }
@@ -332,6 +416,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelect
 document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.copy!==undefined){const t=b.dataset.copy;try{await navigator.clipboard.writeText(t);toast("Copied")}catch{const r=document.createRange();const v=b.closest(".field")?.querySelector(".val")||b.parentElement;r.selectNodeContents(v);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Selected. Press copy.")}return}
+  if(!(b.dataset.uploaded||b.dataset.undo||b.dataset.submitted||b.dataset.approve||b.dataset.revise)) return;
   if(!db){toast("Sign in to claude.ai to save changes");return}
   const now=new Date().toISOString();
   try{
@@ -349,8 +434,8 @@ render();
   const timer=setTimeout(()=>{if(!S.ready){S.err="The studio's data didn't load. Open this page signed in to claude.ai.";render()}},10000);
   db = await (window.claude?.use ? window.claude.use("db") : Promise.resolve(null)).catch(()=>null);
   if(!db){clearTimeout(timer);S.err="Sign in to claude.ai to open the studio.";render();return}
-  const got=new Set(); const need=["streamers","accounts","clips","publications","batches"];
-  const key={streamers:"streamers",accounts:"accounts",clips:"clips",publications:"pubs",batches:"batches"};
+  const got=new Set(); const need=["streamers","accounts","clips","publications","batches","library"];
+  const key={streamers:"streamers",accounts:"accounts",clips:"clips",publications:"pubs",batches:"batches",library:"lib"};
   for(const col of need){
     db.collection(col).onSnapshot(snap=>{S[key[col]]=snap.docs.map(d=>({id:d.id,...d.data()}));got.add(col);if(got.size===need.length){S.ready=true;clearTimeout(timer)}render()},
       err=>{clearTimeout(timer);S.err="Couldn't load the studio data ("+(err?.code||"error")+").";render()});
