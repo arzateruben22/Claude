@@ -60,6 +60,20 @@ here, then read:
   - Log results in `PROJECT_OC_PROGRESS.md`. Never invent results.
 - **Commits** go on branch `claude/always-on`.
 
+## Lean usage (owner, 2026-11-23; overrides heavier habits below)
+
+The owner's weekly plan was running out in a day. These rules hold for every session; 1–3 matter most.
+
+1. **One chat per piece of work.** Start fresh rather than continuing a days-long chat; pick up from the progress
+   log, handoff and briefs, not from chat history.
+2. **One or two features in flight at a time**, never six.
+3. **One reviewer and at most one repair round** per feature, on the cheaper model for routine work. Save the top
+   models for the genuinely hard parts (physics, 3D characters, rendering architecture).
+4. **No recurring check-ins** (no 25-minute timers). Background jobs already report when they finish.
+5. **Targeted tests** (`--only=` the groups a change touches); the full suite only before a release.
+6. **Batch the owner's requests** at the start of a task; queue mid-build additions for the next task instead of
+   restarting a running build.
+
 ## Model policy (owner, 2026-10-16)
 
 - **Daytime (Pacific):** sessions and their agents run on Opus 5.5 for routine implementation, renders, suite runs
