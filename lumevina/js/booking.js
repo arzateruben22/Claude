@@ -1096,6 +1096,8 @@
     });
     stepsEl.hidden = captionEl.hidden = classic;
     captionEl.textContent = CAPTION[name] || "";
+    /* each step arrives the way the sign-in questions do: a short fade up out of a blur (css "Booking, on a soft gradient") */
+    captionEl.classList.remove("is-in"); void captionEl.offsetWidth; captionEl.classList.add("is-in");
     waitHost.hidden = true; waitHost.textContent = "";
     dayStatus.textContent = ""; statusEl.textContent = "";
     if (name === "services") paintCards();

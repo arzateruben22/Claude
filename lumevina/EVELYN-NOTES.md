@@ -863,3 +863,7 @@ The shop's category bar (Cleansers, Toners & mists…) was flipping between hidd
 The plan is dated: **day 1 is launch day, Tuesday, November 24, 2026; day 90 is Sunday, February 21, 2027.** The setup weeks are gone (that work is done), so launch is week 1: the site, live payments, booking on Lumevina and the Glow Membership open together, with a text and email to every client, an Instagram post, and the Founding Five. The first Saturday scoreboard is November 28. Every stretch carries its dates (week 2: Dec 1–7, the Founding Five fills; weeks 3–6: Dec 8 – Jan 4, with holiday gift certificates; weeks 7–9: Jan 5–25; weeks 10–13: Jan 26 – Feb 21, win-back, referrals and Valentine's), and so do the talent search, the scoreboard targets and the chart.
 
 The member curve keeps the same weekly pace as before, only three weeks sooner (selling starts on day 1 instead of week 4): 15 members, where Lumevina pays for itself, around week 7 (Jan 11), and the day-90 goal of 20 reached with room. These are the plan's estimates, not results.
+
+## Nov 23, 2026: booking and sign-in get the soft-gradient look
+- Signing in now asks one thing at a time (email, then name) on a soft taupe-and-blush background, with a round arrow to continue. Still a one-tap email link, no passwords.
+- Booking uses the same look: a serif headline for each step, glass cards and option rows, dark pill buttons with an arrow, and each step fading in as you move between services, the day and your details. How booking works hasn't changed.
