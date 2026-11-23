@@ -956,7 +956,16 @@ export class Game {
       if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
       // Ultra's bloom is set so the hypercar's LEDs bloom at night without the sky blowing out: a lower threshold
       // (0.85) lets the lamps and the cluster through, a touch more strength (0.3); High keeps its lighter bloom
-      if (q.bloom) { this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), q.grade ? 0.3 : 0.22, 0.45, q.grade ? 0.85 : 0.92); c.addPass(this.bloom); }
+      if (q.bloom) {
+        this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), q.grade ? 0.3 : 0.22, 0.45, q.grade ? 0.85 : 0.92);
+        // (2026-11-23) the threshold reads luminance x the frame's alpha: every material writes alpha 1, so nothing
+        // changes, except the OC Hypercar's paint, which writes its bloom share (car-mats paint o.bloom): its sunlit
+        // white body bloomed as a halo round the whole car on Ultra by day, its LEDs and every other light still bloom
+        const hp = this.bloom.materialHighPassFilter;
+        hp.fragmentShader = hp.fragmentShader.replace('float v = dot( texel.xyz, luma );', 'float v = dot( texel.xyz, luma ) * texel.a;');
+        hp.needsUpdate = true;
+        c.addPass(this.bloom);
+      }
       // Ultra's grade, one small pass between the bloom and the output pass, on the linear HDR frame: a soft
       // vignette, a chromatic aberration that is zero in the centre and about 1.5 px at the corners (red pushed out,
       // blue pulled in, radially), and a faint film grain (about ±5 % of each pixel's own value) that moves with time

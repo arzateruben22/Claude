@@ -260,7 +260,11 @@ void paintMasks(float pix) {
 // o.flakeMap (the OC Hypercar's pearl, 'high' only; ported from the unjudged G1 lane): a flake normal map this many px
 // across (car-tex flakeNormal), tiled every o.flakeTile metres (default 0.05) under the clear coat, on top of the
 // shader's own flake. Without them the material is exactly as before.
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number | [number, number, number]; flakeMap?: number; flakeTile?: number } = {}) {
+// o.bloom (the OC Hypercar): the share of its light the bloom pass counts, written to the frame's alpha (Game's bloom
+// reads luminance x alpha). Its white body lit by the sun sits well over Ultra's 0.85 threshold, and bloomed as a halo
+// round the whole car by day; at 0.3 only what is over about 2.8 (a sun glint in the clear coat) blooms. Every other
+// material writes alpha 1, so the bloom is as it was for them.
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number | [number, number, number]; flakeMap?: number; flakeTile?: number; bloom?: number } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
@@ -281,7 +285,8 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
       ...(L ? { uLift: { value: new THREE.Vector3(lv[0], lv[1], lv[2]) } } : {}),
       ...(M ? { uMask: { value: packMask(masks) }, uMaskN: { value: Math.min(MAX_MASK, masks.length) } } : {}) };
     (m.userData as { uniforms: typeof uniforms }).uniforms = uniforms;
-    patch(m, 'paint' + q + (M ? '+mask' : '') + (L ? '+lift' : ''), (sh) => {
+    const BL = o.bloom !== undefined && o.bloom < 1;
+    patch(m, 'paint' + q + (M ? '+mask' : '') + (L ? '+lift' : '') + (BL ? '+bloom' + o.bloom : ''), (sh) => {
       Object.assign(sh.uniforms, uniforms);
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vOP;\nvarying vec3 vON;')
@@ -317,6 +322,8 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
           if (paintMaskV > 0.0) material.clearcoat *= 1.0 - 0.6 * paintMaskV;` : ''}
           material.clearcoat *= 1.0 - shutLine;
           material.roughness = mix(material.roughness, 0.9, shutLine);`);
+      if (BL) sh.fragmentShader = sh.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+          gl_FragColor.a = ${o.bloom!.toFixed(3)};`);
     });
     return withAO(m, 0.2);
   });

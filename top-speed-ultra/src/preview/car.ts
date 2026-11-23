@@ -47,8 +47,11 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   // (the OC Hypercar's factory paint, judge round 1: its base coat toned per channel toward a neutral cool silver, and
   // on 'high' a flake normal map under the clear coat; other paints on it keep the plain lift)
   const PF = P.paintFinish, lift = PF?.tone && paint === P.paint ? PF.tone.map((t) => t * (PF.lift ?? 1)) as [number, number, number] : PF?.lift;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: PF?.rough ?? 0.22, metal: PF?.metal ?? 0.8, masks, env: PF?.env, lift, ...(q === 'high' && PF?.flakeMap ? { flakeMap: PF.flakeMap, flakeTile: 0.05 } : {}) } : { key, flake, rough: vela ? 0.3 : undefined });
-  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
+  // (the hypercar's paint counts 0.3 of its light toward the bloom: its sunlit body no longer blooms into a halo on
+  // Ultra by day, a glint in its clear coat still does; car-mats paint o.bloom)
+  const bloom = oc ? 0.3 : undefined;
+  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: PF?.rough ?? 0.22, metal: PF?.metal ?? 0.8, masks, env: PF?.env, lift, bloom, ...(q === 'high' && PF?.flakeMap ? { flakeMap: PF.flakeMap, flakeTile: 0.05 } : {}) } : { key, flake, rough: vela ? 0.3 : undefined });
+  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks, ...(bloom ? { bloom } : {}) });
 }
 
 // every material the car's kit can file geometry under
