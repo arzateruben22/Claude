@@ -4,6 +4,95 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-23: The new HUD: one layout, a flat graphite Retro skin and a chrome/knurled Ultra skin; the round HANDBRAKE; ABS | TCS switches
+
+Branch claude/retro-hud, on 22e60ef (claude/drift). Not committed. The owner (2026-11-22 evening PT) sent the new HUD
+layout ("this will be the new layout design for retro look", "and the brake will slide into the red brake to drift as you
+stated"), then the Ultra design ("heres the design for the ultra graphics to the best you can incorporate the intricate
+details"): one layout for both looks, two skins.
+
+**What it is** (UI, settings and two Game lines; Physics.ts, the car files and the economy files untouched):
+- **One layout** (src/ui/hud-layout.css, every rule under `.app[data-skin]`, set in one place in App.tsx from `retroOn`):
+  speed card top left ("44 MPH", the gear in an outlined square, a thin bar, "0.04 MI • BEST 67": BEST is the run's top
+  speed, the same data as Top); Pause alone in the top bar (Auto-drive under it when offered); the round map with a
+  ring and the N chip; the DRIFT chip over the steering pad; the steering pad; the round HANDBRAKE between the pad and
+  BRAKE; BRAKE and GAS with icons; CLEAR PATH (and Locked In, Focus Time) as a round key with a charge ring and a ready
+  dot over the BRAKE/GAS gap; the hypercar's JUMP as the same round key over GAS. View and Go to left the phone's top
+  bar: they are in the hold-Pause quick menu (Camera, Go to) and on their keys; a one-time hint says so on the first drive.
+- **Retro skin** (src/ui/hud-retro.css): graphite translucent panels, 16 px corners, 1 px light hairline, soft shadow;
+  white caps labels in a clean sans, numbers in the mono; one amber accent; red only for the handbrake.
+- **Ultra skin** (src/ui/hud-ultra.css): CSS only (no bitmaps): polished chrome rims (banded gradient, brushed overlay,
+  groove), glossy black glass faces with a reflection sweep; knurling (crossed hairline patterns over turned steel) on
+  the steering roller, the handbrake ring and the switch knobs; ribbed rubber BRAKE and GAS, GAS with an amber glowing
+  inner rim; tick marks round the map bezel and the CLEAR PATH gauge.
+- **The round HANDBRAKE** (Touch.tsx, both looks; the lever tab is gone): hold BRAKE and slide 18 px or more toward the
+  steering side (into the button) to pull; back inside 10 px or lift releases; pressing the button pulls while held; a
+  plain BRAKE tap never pulls. Same `input.touch.handbrake`, the same 0.22 s hold after the lift, the same 16 ms
+  vibration; the red arc fills on the pull and drains over the hold.
+- **ABS | TCS** (Ultra skin only; src/ui/Assists.tsx): two switches (role="switch", reachable by Tab) under the speed
+  card that set `Settings.abs` / `Settings.tcs` (default on, saved), which Game.ts copies to Physics' public `abs` / `tc`
+  flags at every placement and settings change; the seat display's TCS/ABS chips follow (they already read phys.tc /
+  phys.abs). One honest line the first time each is turned off.
+- **Places.** At 390 x 844: card 10..200 x 10..~95; Pause 210..254; map 264..376 (16 px down, room for the N chip); ABS |
+  TCS bar (Ultra) under the card, 34 px tall (each switch's target still 44 px); steering pad 14..146 x 766..830;
+  HANDBRAKE 156..208 (a 50 px dial); BRAKE 218..294 (68 tall); GAS 304..370 (96 tall); CLEAR PATH 238..300 x 690..752;
+  JUMP 306..368 x 662..724; DRIFT 14..146 x 718..756 (it does not cover the wheel rim in the seat view: frames below).
+  On its side the same, the ABS | TCS bar beside the card. A desktop keeps its places, skinned (the bar above the speed
+  block on Ultra). Files: src/ui/hud-layout.css, hud-retro.css, hud-ultra.css, Assists.tsx (new); Touch.tsx, HUD.tsx,
+  App.tsx, Icons.tsx, main.tsx, src/game/settings.ts, src/game/Game.ts (two lines); tests/regression.mjs;
+  tests/retrohud-frames.mjs (new).
+
+**Checked** (headless Chromium, SwiftShader, the machine at load 21-29 on 4 cores with other lanes' runs):
+- `npx tsc --noEmit` (tsconfig.json) and `-p tsconfig.game.json`: clean. `npm run build`: exactly one
+  `data-build="owner-test"` in dist/artifact.html.
+- Phone group (split runs with `--check`, the group's own order; tests/out):
+  - new: `phone handbrake` (Ultra skin, no lever; BRAKE held / 12 px swipe / steep drag: max 2.5 deg, no pull; slide from
+    BRAKE at 64 mph: brake off, handbrake on, drift to 49 deg, readout "Drift49°0.6 s"; held at 100 ms after the lift,
+    gone at 400 ms; HANDBRAKE pressed: drift to 48.7 deg, released on lift) PASS; `new HUD controls` (no overlaps at
+    390 x 844 and 844 x 390, every target 44 px or more, HANDBRAKE between the pad and BRAKE) PASS; `new HUD top bar`
+    (Pause + Auto-drive shown, View / Go to / Radio hidden; quick menu Map, Go to, Auto-drive, Garage, Settings, Camera,
+    Radio; ABS/TCS default on, Physics on, seat display on/on; TCS off: Physics.tc false, saved false, display off, the
+    help line shown; kept on a re-place) PASS; `ABS | TCS persist` (an older profile with no keys: both on; TCS off
+    survives a reload: setting false, switch false, Physics.tc false, ABS true) PASS; `Retro look` (switched through
+    Settings > Style: Retro: BRAKE tap brakes only, slide pulls, press pulls, lift releases; no lever, no ABS | TCS bar;
+    top bar Pause; no overlaps) PASS.
+  - updated: `driving HUD: condensed` PASS: 390x844 10.4% (with the Ultra ABS | TCS bar 12.3%, the bar 1.9%); 390x715
+    12.3% (with the bar 14.5%); 844x390 9.5% (with the bar 11.4%), cluster to 25.9%. The bar is reported beside the
+    owner's 12.5 % budget, not inside it: **with it, 390 x 715 is over 12.5 %** (owner's call).
+  - `OC Hypercar THRUST key at 390 x 844` (JUMP 62 x 62 over GAS, CLEAR PATH over the BRAKE/GAS gap; a press hops) PASS;
+    `THRUST in the seat view` (HUD 11.5 %) PASS; `OC Hypercar HUD at 844 x 390` PASS; `seat view` PASS; `the hood from the
+    seat` PASS; `sleeves from the seat on a phone` PASS; `cluster` (TCS/ABS on/on) PASS; `Go to lists` (20, through the
+    quick menu now) PASS; `Go to: navigation line` PASS; `follow the route` (Auto-drive under Pause) PASS; `reach` PASS;
+    `pause screen` PASS; `HUD: compass ring ... Minimal tucks the map` PASS; `Retro on a phone` PASS; the first six
+    (menu, sheet, keys, profile, Founder card, Settings) PASS; no page errors in every run.
+  - Test changes: the lever checks became the round HANDBRAKE's; Go to opens through the quick menu on a phone (hold
+    Pause, slide onto Go to, lift: `openGoTo`, `goToPlace`); the Minimal tuck check watches the map (View left the
+    phone's top bar); THRUST / ability positions are "JUMP over GAS, the ability over the BRAKE/GAS gap"; Auto-drive is
+    measured under Pause, not in the control row; four checks got a "drive first when run alone" guard.
+  - Not run to the end here: `sleeves under an overpass (High)`, the two `steering wheel` checks (another lane's arms and
+    wheel; my 30 min run limit stopped them at load 24). The full phone group was not run as one process (the split runs
+    above cover every other check in it).
+- Abilities group: 22/22 passed (594 s).
+- Boot group: loads to the menu (42.5 s), keys and Store tile, network, the barrier / scenery / structure scans (20
+  carriageways and 28 ramps), menu credits, field of view: PASS. Not finished under my time limit at this load (each
+  needs over 10 min here): no cut road surface, no cut side, roads meet level, levelled heights, baked heights, Retro Low
+  by default, autopilot, profile counted. They don't touch the HUD; settings.ts gained two keys (abs, tcs).
+- Frames (looked at; tests/out/retrohud/, `node tests/retrohud-frames.mjs`): Retro and Ultra at 390 x 844 DPR 3, the
+  drift moment (I-405 North, 30 m/s, Sport, wheel a third right, BRAKE slid into HANDBRAKE: 52-53 mph, gear 4, drift 23 deg
+  0.3 s; the owner's mockup shows 44 mph and 34 deg: same scene, our physics' numbers) chase and seat; idle; HANDBRAKE
+  pressed; CLEAR PATH charging (the ability's own trigger, then 21 s of coasting: 34 % back; the car has rolled to a stop by then); Ultra ABS on + TCS off (the real switch);
+  the hypercar with JUMP; 844 x 390; 1280 x 720. Sheets: sheet-retro-target-vs-ours-390x844.png,
+  sheet-ultra-target-vs-ours-390x844.png, sheet-ultra-parts.png (our parts beside ultra-hud-parts.webp).
+- In the seat view the DRIFT chip (y 718..756) sits under the wheel's rim (its lowest point about y 696 at 390 x 844, in the frames).
+
+**Not right yet / the owner's call:**
+- With the Ultra ABS | TCS bar the phone HUD covers 12.3 % at 390 x 844 (inside 12.5 %) but 14.5 % at 390 x 715 (the
+  claude.ai app's frame): over the 12.5 % budget there. The suite reports the bar beside the budget, not inside it.
+- Our parts are CSS: the knurl is a fine crossed-line pattern, not the mockup's photographic knurl; the chrome is a
+  banded gradient. Pause is 44 px (the mockup's is about 31 px, under the 44 px minimum). The map stays its Medium size
+  (112 px) where the mockup's is about 86 px.
+- When the ability is ready its amber ring is full, so the gauge's tick marks show only while it charges.
+
 ## 2026-11-11: A phone handbrake built into the brake pedal, and a drift readout
 
 Branch claude/drift, on v24 (5e16ab4). Suite: boot 18/18, abilities 22/22, phone all 33 checks passed (split runs). It passed a play lens (keep: a 24 px lever slide or BRAKE swipe gave a 48.8 degree drift at about 63 mph on Sport; taps, holds and a 12 px slide pulled nothing; Space still works) and a code lens. Not done: the owner choosing between the built lever and mock variant B (a separate DRIFT key, a mock frame only). The owner asked on 2026-11-17 "how do you drift on mobile device?"
