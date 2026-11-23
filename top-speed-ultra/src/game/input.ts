@@ -19,6 +19,8 @@ export interface Controls {
                       // jump only (owner, 2026-11-16), a press is a Thrust Hop and holding adds nothing
 }
 
+export const TOUCH_HB_HOLD = 0.22;   // s: see Input.hbHold
+
 const KEYS: Record<string, string> = {
   KeyW: 'up', ArrowUp: 'up', KeyS: 'down', ArrowDown: 'down', KeyA: 'left', ArrowLeft: 'left', KeyD: 'right', ArrowRight: 'right',
   Space: 'handbrake', KeyV: 'back',
@@ -39,7 +41,11 @@ export class Input {
   private idleLook = 0;
   freeLook = false;                     // free-look camera: the view stays where you leave it
   // touch inputs written by the on-screen controls
-  readonly touch = { steer: 0, gas: false, brake: false, active: false };
+  // (`handbrake`: the lever on the BRAKE pedal's inner edge, or a swipe from BRAKE toward the steering pad, is held pulled)
+  readonly touch = { steer: 0, gas: false, brake: false, handbrake: false, active: false };
+  // a touch pull of the handbrake holds at least this long after the thumb lets go: on a phone the same thumb is back on
+  // GAS at once, and a flick is how the slide is started, so a quick flick must last long enough for the rear to let go
+  private hbHold = 0;
   private padPrev: boolean[] = [];
   private padWake = false;
   // when the pad last asked for something other than driving (a menu, camera or d-pad button, or a look with the right
@@ -93,7 +99,7 @@ export class Input {
   };
   private onKeyUp = (e: KeyboardEvent) => { const k = KEYS[e.code]; if (k) this.held.delete(k); if (e.code === 'ShiftLeft') this.setThrust('key', false); };
   clear = () => {
-    this.held.clear(); this.drag = null; this.touch.gas = this.touch.brake = false; this.touch.steer = 0;
+    this.held.clear(); this.drag = null; this.touch.gas = this.touch.brake = this.touch.handbrake = false; this.touch.steer = 0; this.hbHold = 0;
     this.thrustSrc.key = this.thrustSrc.pad = this.thrustSrc.touch = false; this.c.thrust = 0;
   };
   // a THRUST source pressed or let go (keyboard, gamepad, the on-screen button): a press queues a Thrust Hop
@@ -162,7 +168,9 @@ export class Input {
       if (this.touch.steer !== 0) analogSteer = this.touch.steer;
       if (this.touch.gas) thrT = 1;
       if (this.touch.brake) brkT = 1;
+      if (this.touch.handbrake) { hb = true; this.hbHold = TOUCH_HB_HOLD; }
     }
+    if (this.hbHold > 0) { if (!this.touch.handbrake) { hb = true; this.hbHold -= dt; } }
 
     this.steerAsked = steerT !== 0 || (analogSteer !== null && analogSteer !== 0);
     this.brakeAsked = brkT > 0 || (analogBrk ?? 0) > 0.05 || hb;
