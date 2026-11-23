@@ -20,7 +20,7 @@ export function Homes({ game, onClose, onStart, onMap }: Props) {
     <div className="overlay center">
       <div className="panel wide homes">
         <h2>Lifestyle</h2>
-        <p className="fine">{Math.floor(p.credits).toLocaleString()} credits · {p.homes.length} of {HOMES.length} homes · {slots} garage {slots === 1 ? 'slot' : 'slots'}. Homes are bought with credits earned by driving; nothing here costs real money. The homes are our own; the neighbourhoods are real.</p>
+        <p className="fine">{Math.floor(p.credits).toLocaleString()} cash · {p.homes.length} of {HOMES.length} homes · {slots} garage {slots === 1 ? 'slot' : 'slots'}. Homes are bought with cash earned by driving; nothing here costs real money. The homes are our own; the neighbourhoods are real.</p>
         {msg && <p className="good" role="status">{msg}</p>}
         <ul className="home-list">
           {HOMES.map((h) => {
@@ -34,14 +34,14 @@ export function Homes({ game, onClose, onStart, onMap }: Props) {
                   <p className="home-facts">
                     <span>+{h.slots} garage {h.slots === 1 ? 'slot' : 'slots'}</span>
                     {ex && <span>Nearest exit: {ex.exit.text} · {ex.label} · {(ex.dist / 1609.344).toFixed(1)} mi</span>}
-                    {!owned && <span>{h.price.toLocaleString()} credits{locked ? ` · opens at level ${h.level}` : ''}</span>}
+                    {!owned && <span>{h.price.toLocaleString()} cash{locked ? ` · opens at level ${h.level}` : ''}</span>}
                   </p>
                   <div className="row home-actions">
                     {!owned && <button className="btn primary" disabled={locked} onClick={() => act(() => book.buyHome(h.id), `${h.name} is yours`)}>Buy · {h.price.toLocaleString()}</button>}
                     {owned && !live && <button className="btn" onClick={() => act(() => { book.setHome(h.id); return null; }, `You live at ${h.name} now`)}>Live here</button>}
                     {owned && ex && <button className="btn" onClick={() => onStart(ex.exit.key)}>Start here</button>}
                     <button className="btn ghost" onClick={() => onMap(h)}>On the map</button>
-                    {owned && <button className="btn ghost" onClick={() => act(() => book.sellHome(h.id), `${h.name} sold for ${Math.round(h.price * 0.6).toLocaleString()} credits`)}>Sell · {Math.round(h.price * 0.6).toLocaleString()}</button>}
+                    {owned && <button className="btn ghost" onClick={() => act(() => book.sellHome(h.id), `${h.name} sold for ${Math.round(h.price * 0.6).toLocaleString()} cash`)}>Sell · {Math.round(h.price * 0.6).toLocaleString()}</button>}
                   </div>
                 </div>
               </li>
