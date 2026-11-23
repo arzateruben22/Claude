@@ -1877,7 +1877,7 @@ export class Game {
       // The pitch is aimed with the field of view drawn (the setting and the speed in it), so the horizon stays put
       // as they change; aimed with the base alone, the default +10 put it at 40% (owner, v19: the top 45% sky)
       const hz = SEAT_HORIZON_P + (1 - SEAT_HORIZON_P) * this.topInsetFrac();
-      const basePitch = portrait ? -Math.atan((0.5 - hz) * 2 * Math.tan((fov / 2) * DEG)) : -0.085;
+      const basePitch = portrait ? -Math.atan((0.5 - hz) * 2 * Math.tan((fov / 2) * DEG)) : this.car.seatPitchL;   // (the hypercar's lower: car-shape seatPitchL)
       const sway = this.attract ? Math.sin(this.time * 0.25) * 0.18 : 0;
       this.tmpQ.setFromEuler(this.tmpE.set(basePitch + c.lookPitch, c.lookYaw + sway, 0));
       this.wantQ.multiply(this.tmpQ);
