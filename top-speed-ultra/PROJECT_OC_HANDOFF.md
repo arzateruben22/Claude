@@ -775,6 +775,16 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ## Opus queue (routine items waiting for a daytime session)
 
+### Next task (owner, 2026-11-23, from his iPhone at v27): a visible View (camera) button on phones
+
+"We also need to add the button to change the pov of the game unless it's there and I just can't find it?" It exists
+but is hidden on phones: `src/ui/hud-layout.css:44` hides `.tbtn.view` (and Go to) in the phone layouts (pp, pl); the
+only phone route is holding Pause for the radial menu's Camera (keyboard C). Build: show View in the phone column
+(under Pause, beside the minimap), in the Retro and Ultra skins, clear of the minimap, the route shield and the drift
+card at 393x852 and 852x393; one tap cycles the views as on desktop. Proof: phone-group check that the button is
+visible, inside the frame, overlaps nothing, and changes `__game.cam`; screenshots at both sizes. Targeted tests:
+`--only=phone`. Queued behind the hypercar cockpit round (lean rule 6).
+
 ### OC Hypercar to the owner's four references: two lanes paused 2026-11-23 (resume in a fresh chat)
 
 The owner paused all work after v27 over usage. Two hypercar lanes from session_01SwssTo7t6RP6BjTKo6BMvm stopped
