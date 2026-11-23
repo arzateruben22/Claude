@@ -407,6 +407,7 @@ export class Game {
     this.focusOnLand = false;                                   // a Focus Time queued in a hop is dropped by a reset
     this.phys.auto = this.settings.transmission === 'auto' || this.attract;
     this.phys.handling = this.settings.handling;
+    this.phys.abs = this.settings.abs || retroOn(this.settings); this.phys.tc = this.settings.tcs || retroOn(this.settings);   // the Ultra HUD's ABS | TCS switches (settings.ts); Retro has none, so it keeps both on
     this.car.teleport(this.phys);
     this.recentre();
   }
@@ -514,6 +515,7 @@ export class Game {
     else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
+    this.phys.abs = s.abs || retroOn(s); this.phys.tc = s.tcs || retroOn(s);   // Retro has no switches: both on there (the saved choice comes back on Ultra)
     if (!this.attract) this.phys.auto = s.transmission === 'auto';
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
