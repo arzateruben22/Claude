@@ -547,7 +547,9 @@ and Time Trial HUD, results and bests). `settings.modeOf()` reads any other save
   with the numbers each check saw. Run `npm run build` first. It takes about 10 minutes here.
 - Groups: `boot`, `interchanges`, `survival`, `modes`, `abilities`, `progression`, `render`, `phone`, `nav-hud` (the
   driving HUD with a destination set, phone at DPR 3 and desktop), `launch`, `store`, `store-live`, `venues`,
-  `venues-trips` (three Lot 57 round trips and the memory after each). Run some with
+  `venues-trips` (three Lot 57 round trips and the memory after each), `economy`, `economy-venue` and `economy-phone`
+  (progress.ts in the real game, Vega & Vinnie's membership and passport, and the frames at 390 x 844; the logic alone
+  is `npm run test:progress`). Run some with
   `npm test -- --only=modes,survival`. Add `--slow` to render the High and Ultra presets too.
 - `GAME_HTML=path/to/top-speed-ultra.html npm test` tests another build, such as an older commit's.
 - `SUITE_HANDLING=0.9 npm test` drives every group at that handling value (Arcade 0.15, Sport 0.5, Simulation 0.9).
@@ -567,8 +569,25 @@ and Time Trial HUD, results and bests). `settings.modeOf()` reads any other save
 ## Game systems added after the network
 
 - **`profile.ts`.** `ProfileBook.add()` takes small increments (time, distance, passes, freeways, interchanges) and
-  returns level-ups and unlocks. It saves when there's something worth saving. `buy`, `sell` and `choose` handle the
-  garage; `reward` pays story jobs. Migration lives in `migrate()`.
+  returns level-ups and unlocks. It saves when there's something worth saving. `choose` handles the garage; `reward`
+  pays story jobs. Migration lives in `migrate()`. Cars are no longer bought or sold (`buy` and `sell` only answer why
+  not): `setEarnedCars()` puts the cars progress has opened (the miles' cars, the earned OC Hypercar) into the garage,
+  outside the slot count, and keeps them through a store sync (`setStoreCars`). The credits are shown as "cash".
+- **`progress.ts` (the economy, 2026-11-22).** Pure logic with no run-time imports, so `tests/progress.mjs` loads it in
+  plain Node. `Progress` (saved as `tsu.progress`, versioned, `migrate()`) holds the active miles, Road Points, the
+  Hypercar's `earnedAt`, the venue passports, the memberships and cash cosmetics, today's goals, the streak and the
+  weekly challenge. The game feeds it `tick(dt, {mps, paid, driving, auto, wrongWay, controls, tier})` each simulation
+  step (`Game.simulate`) and the venue page's `passport()` hook once a second (`Game.startFootPoll`); it reads it for
+  the garage (`carGate`), the widgets (`founders()`, `goals()`, `stampList()`) and the result's line. Cash goes through
+  a `Wallet` (the profile's credits). Events (`carUnlock`, `hypercar`, `goal`, `stamp`, `ladder`, `break`, ...) become
+  toasts (`Game.onProgress`; in a venue, the passport card's message line). "Active" = unpaused, above 40 mph, driven
+  by you (not Auto-drive, not the attract drive, not the wrong way) and a control input in the last 30 s of simulation
+  time (steering, braking, the handbrake, or a change of throttle; a pedal held flat does not count). Under the OC
+  Hypercar's Free Drive earnings cap the miles, points and speed bonus use the capped speed (`paid`). The tunables are
+  constants at the top of the file. UI: `src/ui/progress.tsx` and `progress.css` (menu widget, garage gate, goals,
+  passport card, membership, run line) and `src/ui/progressVenue.ts` (the passport card inside a venue, plain DOM with
+  inline styles because the game's stylesheets are off while a venue is up). The venues' `passport()` hooks are in
+  `src/onfoot/main.ts` and `src/onfoot/venues/sportsbar/main.ts`.
 - **`drivers.ts`.** `DRIVERS`, `ABILITIES`, `lookFor()`, which gives the cockpit's cosmetic look, and `Ability`,
   which does duration and cooldown.
   - Clear Path sets `Traffic.scale = 0.65` (fewer spawns), `Traffic.thin()` (out of view only) and
