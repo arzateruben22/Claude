@@ -175,8 +175,11 @@ export class Input {
     if (analogSteer !== null && steerT === 0) c.steer = approach(c.steer, analogSteer, 8, dt);
     else {
       const toward = steerT !== 0 && Math.sign(steerT) === Math.sign(c.steer || steerT);
-      const rate = steerT === 0 ? 3.2 + sp * 1.5 : toward ? 2.4 - sp * 1.2 : 5;   // slower to turn in at speed, quick to centre
-      steerT *= 1 - sp * 0.35;                                                    // and you can't ask for full lock at 150 mph
+      // a little slower to turn in at speed, quick to centre; and a little short of full lock at 150 mph. Softened
+      // (owner, 2026-11-22: at 234 mph a freeway curve couldn't be followed): 2.4 - sp*1.2 and 65 % at speed held the
+      // hypercar to about 1.1 g at 234 mph with the keys; the lock itself is now sized to the grip (CarPhysics.maxDelta)
+      const rate = steerT === 0 ? 3.2 + sp * 1.5 : toward ? 2.4 - sp * 0.6 : 5;
+      steerT *= 1 - sp * 0.15;
       c.steer = approach(c.steer, steerT, rate, dt);
     }
     c.handbrake = hb;
