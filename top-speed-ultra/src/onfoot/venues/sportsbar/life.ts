@@ -31,14 +31,14 @@ import { LEAGUES, teamByAbbr, crestSvg, CHANNEL_NAMES } from '../../engine/sim/l
 import { TYPES, placed, surfaces, JUKEBOX_SPOT, ADVERT_COUNT } from './objects';
 import { PLAYER_MENU, DRINKS, FOODS, BarItem, itemById, MENU_NOTE, EMPTY } from './menu';
 import { Bartender, Server, handPoint } from './crew';
-import { SCREENS, PATIO, POOL_TABLES } from './layout';
+import { SCREENS, PATIO, POOL_TABLES, HEATERS as LAYOUT_HEATERS } from './layout';
 import type { BarPlayer } from './player';
 import { WALK } from '../../engine/player';
 import type { BarHud } from './hud';
 import type { BarView } from './views';
 import type { BarVenue } from './venue';
 import type { BarMats } from './mats';
-import { BAR_NAME } from './brand';
+import { BAR_NAME, BAR_OLD_NAMES } from './brand';
 import { Crowd } from './crowd';
 import type { VisState } from '../../engine/venue-def';
 
@@ -77,7 +77,7 @@ const SECS = 60;
 /** the two hands, in a constant (the per-frame loops make no array) */
 const KINDS = ['drink', 'food'] as const;
 /** the patio heaters (frame u, v): +2 mood at night within 2.5 m */
-const HEATERS: readonly P2[] = [[12.9, -3.95], [20.95, -3.95]];
+const HEATERS: readonly P2[] = LAYOUT_HEATERS.slice(0, 2);   // the patio's two flame heaters (layout.ts)
 /** a sip or a bite takes 2.4 s (its clip); no second one starts before it ends */
 const SIP_S = 2.4;
 /** each screen's channel by id (the featured ones follow the big screen) */
@@ -192,6 +192,8 @@ export class BarLife {
   constructor(def: VenueDef, seed = 1) {
     this.tv = new Tv(def.schedule.noiseSeed, def.schedule);
     const L = loadSave(seed); this.save = L.data; this.storage = L.storage;
+    // the rename (2026-11-16): a save written under the old name says the new one (its key stays 'sportsbar')
+    if (renameSave(this.save)) this.dirty = true;
     this.team = this.save.team;
     // a visit: one more on the device's count; 50 tokens the first time
     this.save.visits++;
@@ -1229,7 +1231,7 @@ export class BarLife {
     const [ou, ov] = F.toFrame(ray.origin.x, ray.origin.z), [du, dv] = F.toFrame(ray.direction.x, ray.direction.z), dy = ray.direction.y, oy = ray.origin.y;
     let best: SmartObject | null = null, bt = Math.min(wallT, 40);
     for (const o of this.objects) {
-      if (o.type === 'standing-floor' || o.type === 'dance-spot' || o.type === 'restroom' || o.type === 'window-rail' || o.type === 'patio-rail') continue;
+      if (o.type === 'standing-floor' || o.type === 'dance-spot' || o.type === 'restroom' || o.type === 'window-rail') continue;
       const h = this.hot(o);
       let t0 = 0, t1 = bt;
       for (const [org, dir, lo, hi] of [[ou, du, h.u0, h.u1], [oy, dy, h.y0, h.y1], [ov, dv, h.v0, h.v1]] as [number, number, number, number][]) {
@@ -1552,4 +1554,14 @@ export class BarLife {
       giveYou(id: string) { const it = itemById(id); if (!it) return null; self.give(it); return this.held(); },
     };
   }
+}
+
+/** a save written before the rename: every old name in its memories and highlights becomes the display name; true
+ *  when anything changed (the page then writes it back) */
+export function renameSave(d: SaveData): boolean {
+  let changed = false;
+  const fix = (t: string) => { let o = t; for (const n of BAR_OLD_NAMES) o = o.split(n).join(BAR_NAME); if (o !== t) changed = true; return o; };
+  for (const m of d.memories ?? []) m.text = fix(m.text);
+  if (Array.isArray(d.highlights)) d.highlights = d.highlights.map(fix);
+  return changed;
 }
