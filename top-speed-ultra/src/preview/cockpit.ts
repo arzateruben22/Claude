@@ -1044,7 +1044,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       }
       return m;
     };
-    pedal(xD - 0.25, 0.14, -0.9, 0.06, 0.17, 3);                                     // the footrest
+    pedal(xD - 0.135, 0.14, -0.9, 0.05, 0.17, 3);                                    // the footrest (inboard of the wheel's well)
     pedal(xD + 0.1, 0.13, -0.9, 0.05, 0.17, 4);                                      // the throttle
     const bm = pedal(xD - 0.04, 0.21, -0.93, 0.085, 0.062, 5);                       // the brake
     const arm = new THREE.CylinderGeometry(0.007, 0.009, 1, 8); arm.applyMatrix4(between(v3(0, 0, -0.01).applyMatrix4(bm), v3(xD - 0.04, 0.29 + floorY, -1.03))); kit.add('gloss', arm, null, 0.05);
@@ -1052,7 +1052,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     if (mats.amb) {
       // each footwell's mat outlined at its front: its front edge across and the first 35 cm of its sides
       const fy = 0.122 + floorY;
-      for (const [x0, x1] of [[xD - 0.3, -0.125], [0.125, 0.27 + 0.3]]) {
+      for (const [x0, x1] of [[-0.42, -0.125], [0.125, 0.42]]) {
         kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x0, fy, z)), v3(1, 0, 0), 0.004));
         kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x1, fy, z)), v3(1, 0, 0), 0.004));
         kit.add('amb', ambLine(range(x0, x1, 8).map((x) => v3(x, fy, -0.95)), v3(0, 0, 1), 0.004));
@@ -1062,6 +1062,19 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.004));
       // the console's top edges, from the spine's foot back past the armrest
       for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.004));
+    }
+    // the front wheels' wells in the footwells (the wheels sit back under the footwells' sides, car-body ARCHES): a
+    // carpeted arch each side, its face 3.5 mm inboard of the well's liner (|x| 0.44 m after the build's keepInside), so
+    // the footwells read as carpet to the arch, not the liner's paint behind the toe board's pushed-in edges
+    {
+      const A = { z: P.axle.zF, yc: P.axle.r, R: P.arch[0] + 0.1 }, y0 = 0.12 + floorY, zt = -1.25;
+      const f0 = Math.asin(clamp((zt - A.z) / A.R, -1, 1)), f1 = Math.acos(clamp((y0 - A.yc) / A.R, -1, 1));
+      const pts: [number, number][] = [[zt, y0]];
+      for (const f of range(f0, f1, 14)) pts.push([A.z + A.R * Math.sin(f), A.yc + A.R * Math.cos(f)]);
+      for (const sd of [-1, 1]) {
+        const g = new THREE.ShapeGeometry(new THREE.Shape(pts.map(([z, y]) => new THREE.Vector2(z, y))), 1);
+        g.rotateY(-Math.PI / 2); g.translate(sd * 0.4365, 0, 0); kit.add('carpet', g, null, 0.05);
+      }
     }
     // the roof console: a slim panel in the headliner's Alcantara behind the header, a gloss-black lens in its middle,
     // its edges lit in a V that opens toward the back
