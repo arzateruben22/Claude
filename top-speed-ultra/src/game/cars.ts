@@ -1,11 +1,13 @@
 // The cars: our own fictional makes. They share one body for now (paint changes); what changes is the machine
-// underneath: weight, power, torque, revs, drag, downforce, grip. Bought with credits earned by driving, never with
-// real money. Garage slots open up as you level.
+// underneath: weight, power, torque, revs, drag, downforce, grip. They open by active miles driven (progress.ts
+// CAR_MILES: the Brio at 50, the Corsa at 150, the Vela E at 300), the OC Hypercar by Road Points or the store; never
+// with real money. (price and level are the old credit gate, kept for the numbers; nothing reads them to sell a car.)
 
 import { SPEC } from './vehicle/Physics';
 import type { TimeOfDay, Weather } from './settings';
 import type { WheelStyle } from '../preview/car-wheel';
 import { GLACIER_SILVER } from './founder';
+import { COSMETIC_PRICE, PASSPORT } from './progress';
 
 export interface CarDef {
   id: string; name: string; blurb: string; price: number; level: number;
@@ -49,7 +51,8 @@ export const CARS: CarDef[] = [
 
 // Paints (U5, the garage's Paint tab): six per car, our own names (no carmaker's colour names), the first the car's own.
 // A paint is only ever applied to a car whose list has it, so the hypercar's Glacier Silver (founder.ts) never reaches another car.
-export interface Paint { name: string; hex: number }
+// A paint can carry a gate: `cash` (earned in-game cash, one price) or `legend` (a venue whose Local legend rung gives it).
+export interface Paint { name: string; hex: number; cash?: number; legend?: string }
 export const PAINTS: Record<string, Paint[]> = {
   'rossini-gt': [{ name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Sunset Orange', hex: 0xe5620b }, { name: 'Laguna Blue', hex: 0x1d4f9c }, { name: 'Canyon Bronze', hex: 0x8a5a2b }, { name: 'Bianco', hex: 0xf1f0ec }, { name: 'Nero', hex: 0x111214 }],
   'rossini-brio': [{ name: 'Coast Blue', hex: 0x1d4f9c }, { name: 'Seafoam', hex: 0x2fa99a }, { name: 'Dune', hex: 0xd8c7a0 }, { name: 'Rossini Red', hex: 0xa80d10 }, { name: 'Pearl', hex: 0xeeeae2 }, { name: 'Nero', hex: 0x111214 }],
@@ -57,10 +60,22 @@ export const PAINTS: Record<string, Paint[]> = {
   'vela-e': [{ name: 'Glacier White', hex: 0xf3f1ec }, { name: 'Volt Violet', hex: 0x6a3fcf }, { name: 'Electric Blue', hex: 0x2a6fdc }, { name: 'Silver', hex: 0xb9bfc8 }, { name: 'Graphite', hex: 0x3a3d42 }, { name: 'Nero', hex: 0x111214 }],
   'oc-hyper': [{ name: GLACIER_SILVER.name, hex: GLACIER_SILVER.hex }, { name: 'Ice Blue', hex: 0x9cc8ff }, { name: 'Platinum', hex: 0xe6e8ea }, { name: 'Titanium', hex: 0x7d828a }, { name: 'Midnight', hex: 0x111a33 }, { name: 'Obsidian', hex: 0x0e1116 }],
 };
+// Extra paints on every car, not sold for money: Marina Teal costs earned cash, Lot 57 Amber and Vega Night come with a
+// venue's Local legend rung (progress.ts PASSPORT).
+export const MARINA_TEAL = { name: 'Marina Teal', hex: 0x1b8a8f, cash: COSMETIC_PRICE };
+for (const id of Object.keys(PAINTS)) PAINTS[id].push({ ...MARINA_TEAL }, ...PASSPORT.map((v) => ({ name: v.legend.name, hex: v.legend.hex, legend: v.id })));
+export const cosmeticId = (carId: string, hex: number) => `paint:${carId}:${hex}`;
 // the paint a car wears: the saved choice if it is one of that car's paints, else the car's own
 export function paintFor(c: CarDef, saved?: Record<string, number>) {
   const h = saved?.[c.id];
   return h !== undefined && (PAINTS[c.id] ?? []).some((p) => p.hex === h) ? h : c.paint;
+}
+
+// the paint a car wears for an edition of the hypercar: the standard car (earned on Founders' Road) never wears Glacier
+// Silver, which stays the Founder Edition's; it wears Platinum instead
+export function paintForEdition(c: CarDef, saved: Record<string, number> | undefined, edition: 'founder' | 'standard' | null) {
+  const h = paintFor(c, saved);
+  return c.id === 'oc-hyper' && edition === 'standard' && h === GLACIER_SILVER.hex ? 0xe6e8ea : h;
 }
 
 // Wheels (U5, the garage's Wheels tab): two rim styles per car, the first the car's own (car-shape.ts), the second a
@@ -82,9 +97,9 @@ export function wheelFor(c: CarDef, saved?: Record<string, string>): WheelStyle 
 const BASE = { ...SPEC };
 export function carById(id: string) { return CARS.find((c) => c.id === id) ?? CARS[0]; }
 export const slotsFor = (level: number) => Math.min(6, 1 + Math.floor(level / 4));
-// what the garage lists (owner, 2026-10-16): the Vela E stays in the game but shows only in owner mode or once it's
-// yours. Owner mode lists every car.
-export const GARAGE_HIDDEN = ['vela-e'];
+// what the garage lists: every car. (The Vela E was hidden until owned, owner 2026-10-16; the miles ladder of 2026-11-19
+// lists it with its "Unlocks at 300 mi" card, so nothing is hidden now.) Owner mode lists every car.
+export const GARAGE_HIDDEN: string[] = [];
 export function garageCars(owner: boolean, owned: string[]) {
   return CARS.filter((c) => owner || owned.includes(c.id) || !GARAGE_HIDDEN.includes(c.id));
 }
