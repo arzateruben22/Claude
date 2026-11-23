@@ -75,6 +75,11 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // the hypercar's side scoop (M1b repair): the shared dark, drawn a few depth steps nearer (polygon offset), so the
   // skin it lies 14 mm over never fights through it, however far off the camera is
   if (P.face) extra.scoop = once('m.scoop', () => { const m = withAO(new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 0.75 })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; m.name = 'scoop'; return m; });
+  // (2026-11-23, the owner's references: a honeycomb mesh in the side intake, over the scoop's dark, drawn a step nearer
+  // still so neither the skin nor the scoop's dark fights through it)
+  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = (M.honeycomb(q, 0.05) as THREE.MeshStandardMaterial).clone(); m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
+  // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
+  if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
   return {
     ...extra,
@@ -88,7 +93,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     frit: oc ? once('m.fritOC', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x050505, roughness: 0.6, clearcoat: 0.2, clearcoatRoughness: 0.35, envMapIntensity: 0.5 }), { name: 'gloss' }))) : M.gloss(0x050505),
     trim: M.gloss(0x070708), dark,
     glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
-    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // (the hypercar on 'high', 2026-11-23: the owner's references show a grey twill on the splitter, the fins, the
+    // diffuser and the wing in daylight: a lighter tint and a finer weave than the phone's near-black one)
+    carbon: P.carbonTint === undefined ? M.carbon(q) : oc && q === 'high' ? M.carbon(q, 0.05, { tint: 0x80868f, cc: 0.05 }) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
@@ -106,13 +113,24 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
 
 // a heuristic for ambient occlusion outside: the underside and the wheel wells are dark, the lower body a little
 export function aoFor(B: CarBody) {
+  // (the OC Hypercar only, ported from the unjudged G1 lane: the wells' darkening below takes only surfaces that face
+  // into the well, toward the wheel. Its big round arches bring the outer skin inside the test's radius, and there the
+  // per-vertex darkening drew grey, stepped patches on the fenders, the bonnet's edges and the flanks behind the front
+  // wheels. Every other car keeps the test exactly as it was)
+  const facing = B.P.id === 'oc-hyper';
   return (p: V3, n: V3) => {
     let a = 0.62 + 0.38 * sstep(0.08, 0.7, p.y);
-    if (n.y < -0.4) a *= 0.55;
+    // (the hypercar: faces turning down darken over a ramp, not at a step, so the scoop's and the fenders' lower faces
+    // shade smoothly instead of in steps along the triangles)
+    if (facing) a *= 1 - 0.45 * sstep(-0.2, -0.6, n.y);
+    else if (n.y < -0.4) a *= 0.55;
     // inside the wheel wells, above the axle: the liner and the top of the tyre sit in the dark
     for (const A of B.ARCHES) {
       const d = Math.hypot(p.z - A.z, p.y - A.yc);
-      if (Math.abs(p.x) > 0.45 && Math.abs(p.x) < 1.0 && d < A.R + 0.01 && p.y > 0.4) a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
+      if (Math.abs(p.x) > 0.45 && Math.abs(p.x) < 1.0 && d < A.R + 0.01 && p.y > 0.4) {
+        if (facing && (n.y * (A.yc - p.y) + n.z * (A.z - p.z)) / Math.max(d, 1e-6) < 0.2) continue;
+        a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
+      }
     }
     return clamp(a, 0.15, 1);
   };

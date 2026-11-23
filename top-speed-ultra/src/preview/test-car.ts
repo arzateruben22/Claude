@@ -2,7 +2,7 @@
 //   ?view= seat | free-left | free-right | free-up | hood | chase | back | sky | sky-zoom | dash | beauty | rear | wheel |
 //          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing
 //   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e | oc-hyper      &q=high|phone   &world=0 to skip the game's roads
-//   &time=night (the game's night sky; default the golden-hour test light)   &bloom=1 (the game's High/Ultra bloom pass)
+//   &time=night (the game's night sky; default the golden-hour test light); &time=day (the game's day sky)   &bloom=1 (the game's High/Ultra bloom pass)
 //   &key=showroom (preview only, not the game's light: three overhead strip lights, cool white, as rect-area lights
 //                  with lit strips the reflection probe and the paint pick up; the reference sheet's night showroom)
 //   &cy=metres (front and back-ortho: the camera's height, default 0.75)
@@ -53,11 +53,16 @@ const env = stage.useGameSky((q.get('time') as 'sunset') ?? 'sunset');
 const night = q.get('time') === 'night';
 if (night) env.set('night', 'clear', true);
 else {
-  const alt = Number(q.get('alt') ?? 9) * Math.PI / 180;
-  const E = env as unknown as { targetFor(d: Date): { alt: number } };
-  const orig = E.targetFor.bind(env);
-  E.targetFor = (d: Date) => { const s = orig(d); s.alt = alt; return s; };
-  env.set('sunset', 'clear', true);
+  // (&time=day: the game's own day sky, its sun where the game puts it unless &alt is given: the owner's references
+  // of the OC Hypercar are in daylight)
+  const day = q.get('time') === 'day';
+  if (!day || q.get('alt')) {
+    const alt = Number(q.get('alt') ?? 9) * Math.PI / 180;
+    const E = env as unknown as { targetFor(d: Date): { alt: number } };
+    const orig = E.targetFor.bind(env);
+    E.targetFor = (d: Date) => { const s = orig(d); s.alt = alt; return s; };
+  }
+  env.set(day ? 'day' : 'sunset', 'clear', true);
 }
 const log: Record<string, unknown> = { view, car, quality };
 

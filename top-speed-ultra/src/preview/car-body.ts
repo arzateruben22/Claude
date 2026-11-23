@@ -450,6 +450,7 @@ function makeBody(P: ShapeParams) {
     }
 
     // arch lips (the skin's edge turned in) and the wheel-well liners
+    const hyperWell = P.noseStyle === 'hyper';
     for (const A of ARCHES) {
       if (!keep(v3(0.9, 0.6, A.z))) continue;
       for (const sd of [1, -1]) {
@@ -473,11 +474,16 @@ function makeBody(P: ShapeParams) {
         const phc = Math.asin((YSILL - A.yc) / A.R), rowsL: V3[][] = [];
         for (let k = 0; k <= 24; k++) {
           const ph = phc + (Math.PI - 2 * phc) * (k / 24), z = A.z + Math.cos(ph) * (A.R + 0.004), y = A.yc + Math.sin(ph) * (A.R + 0.004);
-          rowsL.push([v3(sd * (body.side(z, Math.max(YSILL, Math.min(y, 0.7))) - 0.03), y, z), v3(sd * 0.47, y, z)]);
+          const xo = body.side(z, Math.max(YSILL, Math.min(y, 0.7))) - 0.03;
+          // (the hypercar: its sunken bonnet runs lower than the well's top by the humps' inner sides, so the liner
+          // stays under the skin there, or it stood up through the bonnet as a dark wall, seen from the seat too)
+          const cap = (x: number, yy: number) => (hyperWell ? Math.min(yy, body.top(z, x) - 0.012) : yy);
+          rowsL.push([v3(sd * xo, cap(xo, y), z), v3(sd * 0.47, cap(0.47, y), z)]);
         }
         kit.add('liner', gridGeo(rowsL, { flip: sd > 0 }), null, 0.2);
         // inner wall of the well
         const wall = new THREE.CircleGeometry(A.R + 0.004, 24, phc, Math.PI - 2 * phc); wall.rotateY(sd * Math.PI / 2); wall.translate(sd * 0.47, A.yc, A.z);
+        if (hyperWell) { const wp = wall.attributes.position; for (let k = 0; k < wp.count; k++) wp.setY(k, Math.min(wp.getY(k), body.top(wp.getZ(k), 0.47) - 0.012)); }
         kit.add('liner', wall, null, 0.2);
       }
     }
@@ -808,7 +814,7 @@ function makeBody(P: ShapeParams) {
       if (FACE) kit.rigid(() => {
         const zLip = (ax: number) => { const y = lipY(ax); let lo = ZF - 0.05, hi = ZF + 0.6; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (body.top(m, ax) < y) lo = m; else hi = m; } return (lo + hi) / 2; };
         for (const [fx, lean] of FACE.fins) for (const sd of fx ? [-1, 1] : [1]) {
-          const yB = YSILL + 0.012, yT = lipY(fx) - 0.02, zT = zLip(fx) + 0.05, zBf = ZF + 0.1, zBack = ZF + 0.42;
+          const yB = YSILL + 0.012, yT = lipY(fx) - 0.02, zT = zLip(fx) + 0.05, zBf = ZF + 0.1 - (P.finFwd ?? 0), zBack = ZF + 0.42;
           const sh = new THREE.Shape(); sh.moveTo(zBf, yB); sh.lineTo(zBack, yB); sh.lineTo(zBack, yT); sh.lineTo(zT, yT); sh.lineTo(zT - 0.02, yT - 0.05); sh.closePath();
           const g = new THREE.ExtrudeGeometry(sh, { depth: 0.02, bevelEnabled: false }); g.rotateY(-Math.PI / 2); g.translate(sd * fx + 0.01, 0, 0);
           const gp = g.attributes.position;
@@ -1044,6 +1050,14 @@ function makeBody(P: ShapeParams) {
           kit.add(key, g);
         };
         ribbon(path, 0, 'tail', 0, 0.5);
+        // (the owner's references of 2026-11-15, ported from the unjudged G1 lane: two slim ice-blue blades along the
+        // top of the tail, from a hand's width off the centre out round each corner, 2.2 cm over the red bar; the bar
+        // stays the tail and stop light)
+        if (P.led) for (const sd of [-1, 1]) {
+          const sel = path.filter((q) => sd * q.p.x > 0.16);
+          if (sd < 0) sel.reverse();
+          if (sel.length > 1) ledStrip(sel.map((q) => q.p.clone().add(v3(0, 0.024 + Bh / 2, 0))), (i) => sel[i].n, 0.012, 0.0015);
+        }
         // the rear turn signals: the bar's outer 0.26 m each side and its wrap, amber, a hair proud (PlayerCar shows them)
         const outer = (sd: number) => path.filter((q) => (sd > 0 ? q.p.x : -q.p.x) > hw - 0.26);
         ribbon(outer(-1), 0.0012, 'sigL', 0, 0.5); ribbon(outer(1), 0.0012, 'sigR', 0, 0.5);
@@ -1102,12 +1116,15 @@ function makeBody(P: ShapeParams) {
       // exhausts: thick-walled titanium tips with a rolled lip, sooty inside
       const tips: [number, number, number, number][] = P.exhaust === 'twin' ? [[0.135, 0.54, 1, 0.058], [-0.135, 0.54, 1, 0.058]]
         : P.exhaust === 'high' ? [[0.11, P.rearMesh!.cy + 0.02, 1, 0.066], [-0.11, P.rearMesh!.cy + 0.02, 1, 0.066]]
-          : P.exhaust === 'single' ? [[0, 0.4, 1.55, 0.05]] : [];
+          : P.exhaust === 'single' ? [[0, 0.4, 1.55, 0.05]]
+            // (the OC Hypercar, the owner's references: two round tips side by side on the centre line, out of the
+            // honeycomb panel under the plate; ported from the unjudged G1 lane)
+            : P.exhaust === 'centre' ? [[0.066, 0.455, 1, 0.046], [-0.066, 0.455, 1, 0.046]] : [];
       for (const [x, y, sx, r] of tips) {
         const k = r / 0.058;
         const tip = latheGeo([[0.058 * k, ZR - 0.12], [0.064 * k, ZR - 0.02], [0.067 * k, ZR + 0.022], [0.0635 * k, ZR + 0.034], [0.0575 * k, ZR + 0.026], [0.0565 * k, ZR - 0.16]], 40, 'z', { vScale: 0.1 });
         tip.scale(sx, 1, 1); tip.translate(x, y, 0);
-        kit.add('exhaust', tip);
+        kit.add(P.exhaust === 'centre' ? 'exhaustOC' : 'exhaust', tip);
         const inner = new THREE.CircleGeometry(0.057 * k, 24); inner.scale(sx, 1, 1); inner.translate(x, y, ZR - 0.15); kit.add('dark', inner, null, 0.1);
       }
       // the lower tail: a carbon valance below the lamps' line, cut round the diffuser's mouth
@@ -1154,9 +1171,15 @@ function makeBody(P: ShapeParams) {
       const DT = D.top ?? DIFF, capY = (x: number) => Math.abs(x) <= DT ? D.h : YSILL + 0.005 + (D.h - YSILL - 0.005) * Math.max(0, (DIFF - Math.abs(x)) / (DIFF - DT));
       for (const x of D.fins) {
         const s = new THREE.Shape(), k0 = (capY(x) - YSILL - 0.005) / (D.h - YSILL - 0.005);
-        s.moveTo(D.z0, YSILL + 0.005); s.lineTo(ZR + 0.02, YSILL + 0.005);
+        // (finTail, the OC Hypercar's fins after the owner's references: tall carbon blades whose trailing edge stands
+        // D.finTail behind the tail, raked forward from the floor up to the mouth's top, 12 mm thick; ported from the
+        // unjudged G1 lane)
+        const ft = D.finTail ?? 0, th = ft ? 0.012 : 0.008;
+        s.moveTo(D.z0, YSILL + 0.005);
+        if (ft) { s.lineTo(ZR + ft, YSILL - 0.02); s.lineTo(ZR + ft * 0.55, (k0 >= 1 ? D.h : capY(x)) - 0.01); }
+        else s.lineTo(ZR + 0.02, YSILL + 0.005);
         for (let k = 8; k >= 0; k--) { const t = k / 8; s.lineTo(D.z0 + (ZR - D.z0) * t, k0 >= 1 ? yr(t) : YSILL + 0.005 + (yr(t) - YSILL - 0.005) * k0); }
-        const fin = new THREE.ExtrudeGeometry(s, { depth: 0.008, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + 0.004, 0, 0);
+        const fin = new THREE.ExtrudeGeometry(s, { depth: th, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + th / 2, 0, 0);
         kit.add(hyper ? 'carbon' : 'dark', fin, null, 1);
       }
       if (hyper) {
@@ -1266,6 +1289,12 @@ function makeBody(P: ShapeParams) {
       // (the hypercar's own 'scoop' material, M1b repair: the dark of the others, drawn a few depth steps nearer, so the
       // skin under it can't fight through at any distance: at the lineup's 180 m one depth step is about 10 cm)
       kit.add(P.face ? 'scoop' : 'dark', gridGeo(grid(dI), { flip: fl }), null, 0.2);
+      // (2026-11-23, the owner's references: a honeycomb mesh over it, 3 mm out, mapped in metres along the side)
+      if (P.face) {
+        const mg = gridGeo(grid(dI + 0.003), { flip: fl }), mu = mg.attributes.uv as THREE.BufferAttribute, mp = mg.attributes.position;
+        for (let k = 0; k < mu.count; k++) mu.setXY(k, mp.getZ(k) * sd, mp.getY(k));
+        kit.add('scoopMesh', mg);
+      }
       kit.add('carbon', gridGeo([ring(0.003, 0.02), ring(dI + 0.003, 0.006), ring(dI + 0.003, -0.006), ring(dI - 0.006, -0.008)], { closeU: true, flip: fl }), null, 0.06);
     }
     // engine-cover louvres between the haunches: dark well, gloss blades

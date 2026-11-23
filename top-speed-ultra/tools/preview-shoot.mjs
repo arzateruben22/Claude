@@ -23,7 +23,9 @@ const dir = path.join(ROOT, 'tests', 'out', 'preview', 'build', name);
 mkdirSync(dir, { recursive: true });
 mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
 const t0 = Date.now();
-await build({ entryPoints: [path.resolve(entry)], bundle: true, format: 'esm', target: 'es2022', outfile: path.join(dir, 'main.js'), logLevel: 'warning', loader: { '.json': 'json' } });
+await build({ entryPoints: [path.resolve(entry)], bundle: true, format: 'esm', target: 'es2022', outfile: path.join(dir, 'main.js'), logLevel: 'warning', loader: { '.json': 'json' },
+  // (no Vite here: an empty env, so code that reads import.meta.env (the store's config) sees test mode, as in the game's test build)
+  define: { 'import.meta.env': '{}' } });
 // inlined: a module script can't be loaded from file:// (CORS)
 const js = readFileSync(path.join(dir, 'main.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
 writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title></head><body><script type="module">${js}</script></body></html>`);
