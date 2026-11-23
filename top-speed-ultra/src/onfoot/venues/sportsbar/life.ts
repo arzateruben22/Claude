@@ -261,7 +261,7 @@ export class BarLife {
     if (keepS) { this.server.x = keepS.x; this.server.z = keepS.z; this.server.job = keepS.job; this.server.queue = keepS.queue; }
     for (const p of [this.bartender.p, this.server.p, this.house.p]) {
       // inside the unit nobody but your avatar casts into the sun's map (the roof's shadow covers them)
-      p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } });
+      p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; } });
       c.scene.add(p.group);
     }
     // the people builder's dispose() leaves the skeleton's bone texture (handoff item 6): freed here too

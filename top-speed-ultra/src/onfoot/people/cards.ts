@@ -24,9 +24,26 @@ function canvasTex(key: string, w: number, h: number, draw: (g: CanvasRenderingC
 }
 
 /** hair: strands running along v (root at v=0), tapering and thinning toward the tips. kind 'curl' waves them */
-export function hairTexture(kind: 'straight' | 'wavy' | 'curl' = 'straight') {
-  return canvasTex('hair2-' + kind, 256, 512, (g, w, h) => {
+export function hairTexture(kind: 'straight' | 'wavy' | 'curl' | 'lock' = 'straight') {
+  return canvasTex('hair3-' + kind, 256, 512, (g, w, h) => {
     g.clearRect(0, 0, w, h);
+    // (fifth pass) 'lock': one dense lock down the texture's middle (u 0.3..0.7), strands side by side with no gaps, its
+    // sides and its tip thinning out: a ringlet's ribbon reads as a lock of hair, not as loose strands
+    if (kind === 'lock') {
+      const rl = rng(4177);
+      for (let i = 0; i < 300; i++) {   // (repair 2026-11-16: every third strand is left out and the shades run darker, so a ribbon shows strands and gaps, not a flat strip)
+        if (i % 3 === 2) { rl.next(); rl.next(); rl.next(); rl.next(); rl.next(); rl.next(); rl.next(); rl.next(); rl.next(); continue; }
+        const u = (rl.next() + rl.next() + rl.next()) / 3, x0 = w * (0.27 + 0.46 * u), mid = 1 - Math.abs(u - 0.5) * 2;
+        const shade = 0.22 + 0.78 * rl.next(), end = h * (0.55 + 0.45 * Math.min(1, mid * 1.6) * (0.75 + 0.25 * rl.next()));
+        const amp = 1 + rl.next() * 2.5, fr = 0.01 + rl.next() * 0.012, ph = rl.next() * 6.28;
+        g.beginPath();
+        for (let y = 0; y <= end; y += 4) { const x = x0 + Math.sin(y * fr + ph) * amp; if (y === 0) g.moveTo(x, y); else g.lineTo(x, y); }
+        const v = Math.round(shade * 255), grad = g.createLinearGradient(0, 0, 0, end);
+        grad.addColorStop(0, `rgba(${v},${v},${v},1)`); grad.addColorStop(0.8, `rgba(${v},${v},${v},0.95)`); grad.addColorStop(1, `rgba(${v},${v},${v},0)`);
+        g.strokeStyle = grad; g.lineWidth = 1.2 + rl.next() * 1.4; g.stroke();
+      }
+      return;
+    }
     const r = rng(kind.length * 977);
     // a clump: strands bunched toward the middle, with gaps between them and ragged, thinning tips
     const n = kind === 'curl' ? 70 : 95;
@@ -93,7 +110,7 @@ export function hairLights(strength = 1) {
   return THREE.ShaderChunk.lights_physical_pars_fragment
     .replace('reflectedLight.directSpecular += irradiance * BRDF_GGX( directLight.direction, geometryViewDir, geometryNormal, material );', 'reflectedLight.directSpecular += irradiance * BRDF_GGX( directLight.direction, geometryViewDir, geometryNormal, material ) * 0.15;')
     .replace('reflectedLight.indirectSpecular += radiance * singleScattering;', 'reflectedLight.indirectSpecular += radiance * singleScattering * 0.3;')
-    .replace('void RE_Direct_Physical(', 'vec3 gHairT = vec3(0.0, 1.0, 0.0); vec3 gHairSpec = vec3(1.0); float gHairShift = 0.0;\nvoid RE_Direct_Physical(')
+    .replace('void RE_Direct_Physical(', 'vec3 gHairT = vec3(0.0, 1.0, 0.0); vec3 gHairSpec = vec3(1.0); float gHairShift = 0.0; float gHairS2 = 1.0;\nvoid RE_Direct_Physical(')
     .replace('reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );', /* glsl */ `
 	reflectedLight.directDiffuse += irradiance * BRDF_Lambert( material.diffuseColor );
 	{
@@ -106,37 +123,51 @@ export function hairLights(strength = 1) {
 	  // lights on the far side of the head must not light the hair (a half-wrap let the string lights in front turn dark hair
 	  // silver-beige from behind)
 	  float wrap = smoothstep( -0.1, 0.55, dot( geometryNormal, directLight.direction ) );
-	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.12 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.45 * strength).toFixed(3)} * sqrt( material.diffuseColor ) );
+	  reflectedLight.directSpecular += directLight.color * wrap * ( s1 * ${(0.12 * strength).toFixed(3)} * gHairSpec + s2 * ${(0.45 * strength).toFixed(3)} * gHairS2 * sqrt( material.diffuseColor ) );
 	}`);
 }
 
 export interface CardMaterial extends THREE.MeshStandardMaterial { uniformsRef: Record<string, THREE.IUniform> }
 
 /** strand-card material; `grey` mixes grey strands in by a per-strand hash */
-export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number } = {}): CardMaterial {
+export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number; /** (pack) a lighter colour toward the tips; null or unset: none */ tips?: number | null; /** (cast r2) alpha-to-coverage with the alpha sharpened to about a pixel (no 2- or 4-level coverage dither at a distance): the feathered styles' cards. Unset: exactly as before */ sharp?: boolean; /** (cast r2) the strands' tone evened out (no dark strands between light ones aliasing into stripes), times this (the cap's sheen lifts very dark hair more than its cards). Unset: as before */ even?: number } = {}): CardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, envMapIntensity: 0.35, side: THREE.DoubleSide, alphaTest: o.alphaTest ?? 0.42, transparent: false }) as CardMaterial;
   m.map = tex;
   const u: Record<string, THREE.IUniform> = {
     uCol: { value: new THREE.Color(color) }, uGrey: { value: o.grey ?? 0 }, uGreyCol: { value: new THREE.Color(o.greyColor ?? 0xbdb9b2) }, uShift: { value: o.shift ?? 0 },
+    uTipCol: { value: new THREE.Color(o.tips ?? color) }, uTip: { value: o.tips != null ? 1 : 0 },
   };
   m.uniformsRef = u;
   m.alphaToCoverage = quality === 'high';
+  const sharp = !!o.sharp && quality === 'high';
+  if (sharp) m.alphaTest = 0.002;   // (the cut is in the sharpened alpha itself, below)
   const kk = o.kk ?? true;
-  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}-${o.sheen ?? 1}`;
+  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}-${o.sheen ?? 1}` + (o.sharp ? '-sharp' : '') + (o.even ? '-even' + o.even : '');
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uShift;')
+      .replace('#include <common>', '#include <common>\nuniform vec3 uCol; uniform float uGrey; uniform vec3 uGreyCol; uniform float uShift; uniform vec3 uTipCol; uniform float uTip;')
       .replace('#include <lights_physical_pars_fragment>', kk ? hairLights(0.8) : THREE.ShaderChunk.lights_physical_pars_fragment)
       .replace('#include <map_fragment>', /* glsl */ `
 vec4 st = texture2D( map, vMapUv );
 float hsh = fract(sin(floor(vMapUv.x * 220.0) * 12.9898) * 43758.5453);
-vec3 hc = pow(uCol, vec3(1.0)) * (0.55 + 0.6 * st.r);
-hc = mix(hc, uGreyCol * (0.7 + 0.4 * st.r), step(1.0 - uGrey, hsh));
+// (uTip 0: one colour, exactly as before; 1: the strand lightens toward its tip, some strands more than others)
+vec3 hc = mix(uCol, uTipCol, uTip * smoothstep(0.3, 0.95, vMapUv.y) * (0.45 + 0.55 * hsh)) * (0.55 + 0.6 * st.r);
+// (2026-11-12) one colour per strand, but where a strand column is under a pixel wide (a beard or a head of hair at
+// game distance) the grey's mean share instead: the per-strand pick there aliased into white speckle. No grey: none
+float gStep = step(1.0 - uGrey, hsh);
+gStep = mix(gStep, uGrey, smoothstep(0.4, 1.0, fwidth(vMapUv.x * 220.0)));
+hc = mix(hc, uGreyCol * (0.7 + 0.4 * st.r), gStep);
 // darker toward the roots
 hc *= 0.7 + 0.3 * smoothstep(0.0, 0.35, vMapUv.y);
 diffuseColor.rgb = hc;
-diffuseColor.a = st.a;`)
+diffuseColor.a = st.a;${o.even ? `
+// (cast r2) a feathered style's cards: the strands' tone evened out (dark strands between light ones aliased into stripes
+// down a tail) and the shade toward the roots lighter, so a card reads as the cap's hair
+diffuseColor.rgb = mix(uCol, uTipCol, uTip * (0.12 + 0.25 * smoothstep(0.3, 0.95, vMapUv.y))) * (0.86 + 0.18 * st.r) * (0.88 + 0.12 * smoothstep(0.0, 0.35, vMapUv.y)) * ${(o.even ?? 1).toFixed(3)};` : ''}${sharp ? `
+// (cast r2) alpha-to-coverage with the alpha sharpened to about one pixel (Golus): an anti-aliased cut, no coverage dither
+diffuseColor.a = (st.a - ${(o.alphaTest ?? 0.42).toFixed(3)}) / max(fwidth(st.a), 1e-4) + 0.5;` : ''}`)
+      .replace('#include <lights_fragment_end>', o.even || o.sharp ? '#include <lights_fragment_end>\nreflectedLight.directSpecular = clamp(reflectedLight.directSpecular, 0.0, 8.0);   // (cast r2) never negative: on thin cards it went below zero and drew them black' : '#include <lights_fragment_end>')
       .replace('#include <lights_fragment_begin>', !kk ? '#include <lights_fragment_begin>' : /* glsl */ `
 {
   vec3 dpx = dFdx( -vViewPosition ), dpy = dFdy( -vViewPosition );

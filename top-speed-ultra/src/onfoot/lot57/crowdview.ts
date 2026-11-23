@@ -335,8 +335,14 @@ export class PeopleView {
     if (this.recapQ.length) { const n = this.recapQ.shift()!; if (this.byId.has(n.id)) this.paint(n); }
     // (no worker: the builder's own LOD 1 on the main thread, one person now and then; it stalls the page for about
     // a second each, so this is the fallback only)
-    if (this.recap.length && this.frameK % 45 === 0) {
-      const n = this.recap.shift()!;
+    // (repair 2026-11-16, the cast's people up close) the nearest person first, and at once when they are a step away: the
+    // queue was first in, first out, so someone 2 m from you could wait behind forty others at LOD 2 (a face of a few
+    // triangles); a build for someone within 4 m goes every 6th frame instead of every 45th
+    let bi = 0;
+    for (let i = 1; i < this.recap.length; i++) if ((this.recap[i].dist || 1e9) < (this.recap[bi].dist || 1e9)) bi = i;
+    const step = this.recap.length && (this.recap[bi].dist || 1e9) < 4 ? 6 : 45;
+    if (this.recap.length && this.frameK % step === 0) {
+      const n = this.recap.splice(bi, 1)[0];
       if (this.byId.has(n.id) && !n.m1) {
         n.p.setLod(1); const m = n.p.group.getObjectByName('lod1') as THREE.SkinnedMesh | undefined; n.p.setLod(2);
         if (m) { const holder = m.parent!; holder.visible = false; holder.name = 'lod1-view-group'; m.name = 'lod1-view'; n.m1 = m; withFill(m.material as THREE.Material, this.fillOf(n)); n.tris1 = (m.geometry.index ? m.geometry.index.count : 0) / 3; this.stats.lod1Built++; this.recapQ.push(n); }
