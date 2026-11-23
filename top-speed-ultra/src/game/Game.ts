@@ -38,7 +38,7 @@ import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
 import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar, paintFor, wheelFor, earnCapFor, tuneFor } from './cars';
+import { CARS, carById, applyCar, paintFor, paintForEdition, wheelFor, earnCapFor, tuneFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
 import type { TrafficCar } from './traffic/Traffic';
@@ -48,6 +48,9 @@ import { onStoreChange } from '../store/bus';
 import { syncGarage, serialOf } from '../store/entitlements';
 import { VENUES, Venue, VenueExit, VenueRamp, venueByName, venueRamps, toStreet, venueQuality, venueClock } from './venues';
 import { mountVenue, fade } from './onfoot';
+import { Progress, ProgressEvent, TickIn, tierOf, TIER_CASH, CAR_MILES, MEMBERSHIPS, passportVenue, GOAL_COPY, SIT_IDLE_SECS, VENUE_IDLE_SECS } from './progress';
+import { mountVenueCard, VenueCard } from '../ui/progressVenue';
+import { storeCars } from '../store/entitlements';
 import type { Mounted } from '../onfoot/embed';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
@@ -138,8 +141,10 @@ export interface Result {
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   // the car the run was in and, for the OC Hypercar, its tune ('Unleashed' in Free Drive, 'Race tune' in the scored
   // modes; '' for every other car): the run card marks the Founder Edition's runs
-  car: string; tune: string;
+  car: string; tune: string; edition?: 'standard';   // 'standard': the earned OC Hypercar (the run card then has no Founder Edition badge)
   jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
+  // what the run added to the miles, Road Points and cash (progress.ts), and where Founders' Road stands
+  progress?: { miles: number; points: number; cash: number; founders: string; badges: string[] };
 }
 export interface GameEvents {
   hud: (h: Hud) => void;
@@ -229,6 +234,10 @@ export class Game {
   private steps = 0;
   private cands: Hit[] = [];
   readonly profile = new ProfileBook();
+  // the miles, Road Points, cash bonuses, venue passport and daily goals (progress.ts): saved on this device. The wallet is
+  // the profile's credits (the one currency, shown as cash): earned only, never sold.
+  readonly progress = new Progress((() => { try { return localStorage; } catch { return null; } })(),
+    { cash: () => this.profile.p.credits, add: (n) => { this.profile.p.credits = Math.max(0, this.profile.p.credits + n); } }, Date.now, this.profile.p.vehicles);
   private offStore: () => void = () => {};
   ability = new Ability(ABILITIES.clear);
   private worldScale = 1;            // Focus Time slows the world (not you)
@@ -291,7 +300,11 @@ export class Game {
     this.scene.add(this.jets.mesh);
     this.driving = this.carId;
     this.applyDriver();
+    // the earned cars first: syncGarage drops any store-only car (the OC Hypercar) the profile doesn't know it owns, and
+    // would reset the chosen car to the first one, so a boot sync must see the earned Hypercar already in place
+    this.profile.setEarnedCars(this.progress.earnedCars());       // the cars miles and Founders' Road have opened, outside the slot count
     syncGarage(this.profile);                                     // a car from the store, outside the slot count
+    this.progress.on((e) => this.onProgress(e));
     setFounderSerial(serialOf('plaque-founder-edition'));         // the plaque's number: the server's, on the entitlement row
     this.applyCarChoice();
     // a store paint equipped or no longer owned; a store car bought, restored on sign-in, refunded or signed out (the
@@ -456,6 +469,7 @@ export class Game {
     this.setRoute(null);
     this.traffic.reseed(1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
+    this.progress.runStart();
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
     this.endAbility(); this.ability.reset();
@@ -564,10 +578,11 @@ export class Game {
     this.env.set(time, weather, instant);
   }
   // the Founder Edition's LED wake-up on the player's car (reduced motion: on at once)
-  wakeFounder() { this.car.wake(reducedMotion()); }
+  // (the paid edition's alone: the earned standard car has no Founder Ice to wake)
+  wakeFounder() { if (this.hypercarEdition === 'founder') this.car.wake(reducedMotion()); }
   // what a run's result says about its car
   private runCar() {
-    return { car: this.driving, tune: this.driving === FOUNDER_CAR ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '' };
+    return { car: this.driving, tune: this.driving === FOUNDER_CAR ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '', edition: this.driving === FOUNDER_CAR && this.hypercarEdition === 'standard' ? 'standard' as const : undefined };
   }
 
   // ------------------------------------------------------------------- the Founder Edition's reveal stage
@@ -678,8 +693,8 @@ export class Game {
     this.jets?.setPerNozzle(high ? 24 : 12);       // the hop's jets: half the sprites on the phone build
     this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
-      car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
+      car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintForEdition(c, s.paints, this.hypercarEdition), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      edition: c.founder && this.hypercarEdition === 'standard' ? 'standard' : 'founder', look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
     });
     this.style?.restyle(this.car.root);
   }
@@ -1749,7 +1764,7 @@ export class Game {
       this.overtakes++;
       this.comboT = 4;
       if (ps.close) this.nearMisses++;
-      this.earned(this.profile.add(ps.close ? { nearMiss: 1, runNearMisses: this.nearMisses } : { cleanPass: 1 }));
+      this.earned(this.profile.add(ps.close ? { nearMiss: 1, runNearMisses: this.nearMisses, cashMult: this.cashMult } : { cleanPass: 1, cashMult: this.cashMult }));
       const pts = Math.round((ps.close ? 250 : 100) * this.combo);
       this.score += pts;
       this.ev.toast(ps.close ? `Near miss +${pts}` : `Clean pass +${pts}`, 'good');
@@ -1766,11 +1781,19 @@ export class Game {
       this.prof.flush -= dt;
       if (this.prof.flush <= 0) {
         this.prof.flush = 0.5;
-        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, paid: this.prof.paid, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses }));
+        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, paid: this.prof.paid, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses, cashMult: this.cashMult }));
         this.prof.t = 0; this.prof.dist = 0; this.prof.paid = 0;
+        this.profile.setEarnedCars(this.progress.earnedCars());
       }
     }
     this.top = Math.max(this.top, Math.abs(p.vx));
+    // the miles, Road Points, the speed bonus and the goals (progress.ts): active driving only
+    if (!this.attract) {
+      const v = Math.max(0, view.v);
+      const pin = this.pin;                                       // one object reused every step: nothing allocated on the drive path
+      pin.mps = v; pin.paid = this.earnCap > 0 ? Math.min(v, this.earnCap) : undefined; pin.driving = playing; pin.auto = this.autoDrive; pin.wrongWay = this.wrongWay; pin.controls = c; pin.tier = this.trafficTier;
+      this.progress.tick(dt, pin);
+    }
     if (playing) {
       if (this.mode === 'survival') {
         if (p.vx > FAST && !this.wrongWay) { this.streak += dt; this.bestStreak = Math.max(this.bestStreak, this.streak); }
@@ -1807,7 +1830,7 @@ export class Game {
     const paid = settle(this.profile.p, this.profile.level, r);
     if (!paid.length) return undefined;
     let lvl: number | null = null;
-    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} credits`, 'good'); }
+    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} cash`, 'good'); }
     this.profile.save();
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
     return paid.map((m) => ({ from: characterById(m.from)?.name ?? m.from, job: m.job ? jobText(m.job) : '', credits: m.credits ?? 0 }));
@@ -1831,7 +1854,9 @@ export class Game {
     const board = recordRun(run);
     const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
     this.errand = null;
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, ...this.runCar() }), 1200);
+    this.progress.save();
+    const pd = this.progress.runDelta(), fnd = this.progress.founders();
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, progress: { miles: pd.miles, points: pd.points, cash: pd.cash, founders: fnd.text, badges: this.progress.badges() }, ...this.runCar() }), 1200);
   }
 
   // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
@@ -2385,6 +2410,42 @@ export class Game {
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
     };
   }
+  // ----------------------------------------------------------------------------------------- progress (progress.ts)
+  // what the progress engine says worth telling the player: cars opening, the Hypercar, goals, the passport. In a venue
+  // the game's own toasts are hidden, so the venue card shows them (footMsg).
+  private footMsg: ((t: string) => void) | null = null;
+  private say(text: string, kind: 'good' | 'info' = 'good') {
+    if (this.attract) return;
+    if (this.footMsg) this.footMsg(text); else this.ev.toast(text, kind);
+  }
+  private onProgress(e: ProgressEvent) {
+    switch (e.type) {
+      case 'carUnlock': this.profile.setEarnedCars(this.progress.earnedCars()); this.say(`Unlocked: ${carById(e.car).name} · ${CAR_MILES[e.car]} miles driven`); break;
+      case 'hypercar': this.profile.setEarnedCars(this.progress.earnedCars()); this.say("OC Hypercar unlocked: 500 Road Points. It's yours for good"); break;
+      case 'goal': this.say(`Goal done: ${e.text} · +${e.goal.cash} cash`); break;
+      case 'allthree': this.say(`All three goals done · +${e.cash} cash`); break;
+      case 'weekly': this.say(`Weekly challenge done: ${e.text} · +${e.weekly.cash} cash`); break;
+      case 'streak': this.say(`${e.count}-day streak${e.saver ? " (this week's free saver used)" : ''}${e.cash ? ` · +${e.cash} cash` : ''}`); break;
+      case 'stamp': this.footMsg?.(`Passport stamp: ${e.label}`); break;
+      case 'ladder': this.say(e.label); break;
+      case 'member': this.say(`Welcome to ${MEMBERSHIPS[e.venue]?.name ?? 'the venue'}`); break;
+      case 'break': this.say(GOAL_COPY.breakNote, 'info'); break;
+      default: break;
+    }
+  }
+  private readonly pin: TickIn = { mps: 0, driving: false, controls: { throttle: 0, brake: 0, steer: 0, handbrake: false }, tier: 'free' };
+  /** the tier of this run (progress.ts TIER_MULT): Free Drive is always `free`; Speed Survival's difficulty comes from today's
+   *  traffic density (light Easy, moderate Medium, heavy and expert Extreme) until the menu's difficulties land */
+  get trafficTier() { return tierOf(this.settings.density, this.mode); }
+  /** what a run's own pay is multiplied by: 1.5 on Extreme (progress.ts TIER_CASH) */
+  get cashMult() { return TIER_CASH[this.trafficTier]; }
+  /** which edition of the OC Hypercar this player has: the paid Founder Edition (its plaque, Glacier Silver and Founder
+   *  Ice lights; owner mode counts), the standard car earned on Founders' Road, or null (not yours) */
+  get hypercarEdition(): 'founder' | 'standard' | null {
+    if (this.settings.owner || storeCars().owned.includes(FOUNDER_CAR)) return 'founder';
+    return this.progress.hypercarEarned() ? 'standard' : null;
+  }
+
   // ----------------------------------------------------------------------------------------- the venues (Phase 3a)
   // Lot 57 and Stoppage Time (venues.ts). On one of a venue's exit ramps in Free Drive, ARRIVE_M before the street (or
   // on a tap of the venue's prompt), the screen fades and the car is parked at the venue: the game stops driving and
@@ -2412,7 +2473,9 @@ export class Game {
     // (Auto-drive hands back on arrival as at any destination, in the same toast)
     const text = `Drove ${vr.exit.street} to ${vr.venue.name} · street driving isn't built yet` + (auto ? '. Auto-drive off: you have control' : '');
     this.lastVenueToast = text;
-    void fade(true).then(() => new Promise((r) => setTimeout(r, 240))).then(() => { this.ev.toast(text, 'good'); return fade(false, 420); });
+    // (the parked panel states "Drove <road> to <venue> · street driving isn't built yet" itself and keeps it up, so a toast of the
+    // same words would stack over the membership panel: only the hand-back, which the panel doesn't say, is a toast)
+    void fade(true).then(() => new Promise((r) => setTimeout(r, 240))).then(() => { if (auto) this.ev.toast('Auto-drive off: you have control', 'info'); return fade(false, 420); });
     return true;
   }
   lastVenueToast = '';
@@ -2430,6 +2493,12 @@ export class Game {
   async getOut(): Promise<boolean> {
     const vs = this.venueState;
     if (!vs || vs.phase !== 'parked' || this.paused) return false;
+    // Vega & Vinnie's asks a one-time cash membership (owner mode skips it); the HUD's Join button buys it
+    if (!this.settings.owner && !this.progress.hasAccess(vs.vr.venue.id)) {
+      const m = MEMBERSHIPS[vs.vr.venue.id];
+      this.ev.toast(`${m.name} is members only: ${m.price.toLocaleString()} cash for a lifetime entry. Join from the Get out panel`, 'info');
+      return false;
+    }
     vs.phase = 'leaving'; this.navNow();
     this.audio.thump(3);                                          // the door
     await fade(true);
@@ -2444,7 +2513,7 @@ export class Game {
       });
       void fade(false, 300);                                      // the venue's own loading screen shows its progress
       await this.foot.ready;
-      if (this.venueState === vs) vs.phase = 'foot';
+      if (this.venueState === vs) { vs.phase = 'foot'; this.startFootPoll(vs.vr.venue.id); }
       return true;
     } catch (e) {
       this.leaveFoot(); this.hold(false);
@@ -2457,6 +2526,7 @@ export class Game {
   }
   // the venue's page off (disposed: its renderer, people, listeners and hooks), the game's UI back
   private leaveFoot() {
+    this.stopFootPoll();
     const f = this.foot; this.foot = null;
     try { f?.dispose(); } catch (e) { console.warn('venue dispose', e); }
     this.footHost?.remove(); this.footHost = null;
@@ -2467,6 +2537,47 @@ export class Game {
   }
   // a quit or a new drive while parked or on foot: no fade, nothing to drive back to
   private leaveVenue() { if (!this.venueState) return; const foot = !!this.foot || this.venueState.phase === 'foot'; this.venueState = null; if (foot) { this.leaveFoot(); this.hold(false); } }
+  // The venue passport while you walk (progress.ts): once a second the venue page's `passport()` hook says where you are, whether you
+  // sit, order or talk and whether it is paused; the game turns that into stamps, active time, Road Points and (at Vega &
+  // Vinnie's, for members) marketer cash. Standing still for 30 s counts as idle; sitting or talking counts for up to 10 min.
+  private footPoll = 0; private footCard: VenueCard | null = null;
+  private startFootPoll(id: string) {
+    this.stopFootPoll();
+    const pv = passportVenue(id), host = this.footHost; if (!pv || !host) return;
+    const pr = this.progress; pr.venueEnter(id);
+    const card = this.footCard = mountVenueCard(host, id, pr);
+    this.footMsg = (t) => card.say(t);
+    let last = performance.now(), clock = 0, lastAct = 0, holdFrom = -1e9, px = NaN, pz = NaN, spot = '', sat = false, talked = false, orders = 0;
+    const step = () => {
+      const now = performance.now(); let dt = (now - last) / 1000; last = now; dt = Math.min(dt, 2);
+      const hook = (window as unknown as { __onfoot?: { passport?: () => { spot: string | null; sitting: boolean; moving: boolean; talking: boolean; orders: number; paused: boolean; x: number; z: number } } }).__onfoot?.passport;
+      if (typeof hook !== 'function') return;
+      let s: ReturnType<NonNullable<typeof hook>>; try { s = hook(); } catch { return; }
+      clock += dt;
+      if (s.spot && s.spot !== spot) { pr.venueSpot(id, s.spot); lastAct = clock; }
+      spot = s.spot ?? '';
+      if (Math.hypot(s.x - px, s.z - pz) > 0.3 || s.moving) lastAct = clock;
+      px = s.x; pz = s.z;
+      if (s.sitting && !sat) { pr.venueDid(id, 'sit'); lastAct = holdFrom = clock; }
+      sat = s.sitting;
+      if (s.talking && !talked) { pr.venueDid(id, 'talk'); lastAct = holdFrom = clock; }
+      talked = s.talking;
+      if (s.orders > orders) { pr.venueDid(id, 'order'); lastAct = clock; }
+      orders = Math.max(orders, s.orders);
+      const holding = (s.sitting || s.talking) && clock - holdFrom <= SIT_IDLE_SECS;
+      const active = !s.paused && !document.hidden && (clock - lastAct <= VENUE_IDLE_SECS || holding);
+      pr.venueTick(id, dt, { active, social: s.talking });
+      card.update(active);
+    };
+    this.footPoll = window.setInterval(step, 1000);
+    this.progress.save();
+  }
+  private stopFootPoll() {
+    if (this.footPoll) { clearInterval(this.footPoll); this.footPoll = 0; }
+    this.footMsg = null;
+    this.footCard?.dispose(); this.footCard = null;
+    this.profile.setEarnedCars(this.progress.earnedCars()); this.progress.save(); this.profile.save();
+  }
   /** the on-ramp nearest where the exit met the street, preferring one back onto the freeway you left by */
   private onRampNear(exit: VenueExit): Path | null {
     let best: Path | null = null, bs = Infinity;
@@ -2523,7 +2634,7 @@ export class Game {
   }
 
   dispose() {
-    this.leaveVenue();
+    this.leaveVenue(); this.progress.save();
     cancelAnimationFrame(this.raf);
     this.offStore();
     removeEventListener('resize', this.onResize);
