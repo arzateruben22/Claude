@@ -30,7 +30,8 @@ await build({ entryPoints: [path.resolve(entry)], bundle: true, format: 'esm', t
 const js = readFileSync(path.join(dir, 'main.js'), 'utf8').replace(/<\/script/gi, '<\\/script');
 writeFileSync(path.join(dir, 'index.html'), `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${name}</title></head><body><script type="module">${js}</script></body></html>`);
 
-const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const launchArgs = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'];
+const browser = await chromium.launch({ args: launchArgs }).catch(() => chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: launchArgs }));
 const page = await browser.newPage({ viewport: { width: w, height: h } });
 const logs = [];
 page.on('pageerror', (e) => logs.push('pageerror: ' + e.message));

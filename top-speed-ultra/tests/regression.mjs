@@ -74,10 +74,10 @@ async function check(name, fn) {
   }
 }
 
-const browser = await chromium.launch({
-  // (gc and precise heap numbers: the venues group reads the JS heap after each round trip)
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required', '--js-flags=--expose-gc', '--enable-precise-memory-info'],
-});
+// (gc and precise heap numbers: the venues group reads the JS heap after each round trip)
+const launchArgs = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required', '--js-flags=--expose-gc', '--enable-precise-memory-info'];
+// (a machine whose pre-installed Chromium doesn't match this Playwright's build: the same fallback as tests/cast-*.mjs)
+const browser = await chromium.launch({ args: launchArgs }).catch(() => chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: launchArgs }));
 
 // how long a page may take to boot to the menu: about 13 s on an idle machine, but other passes' renders and builds
 // share these 4 cores, and under that load a boot has taken over 120 s (the boot check prints the real time)
