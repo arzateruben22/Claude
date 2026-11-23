@@ -257,19 +257,26 @@ const HYPER: ShapeParams = {
   ...CORSA, id: 'oc-hyper', name: 'OC Hypercar Prototype 01', brand: 'oc', paint: GLACIER_SILVER.hex,   // Glacier Silver: the Founder Edition's own paint (src/game/founder.ts)
   ZF: -2.43, ZR: 2.29, YSILL: 0.07,
   // 3.00 m wheelbase; 0.70 / 0.74 m tyres; tracks 1.72 / 1.69 m
-  axle: { zF: -1.52, zR: 1.48, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
+  // (2026-11-23, the owner's references of 2026-11-15: their side view puts the front wheel under the windscreen's
+  // foot and the rear one close under the tail, a front overhang about half the wheelbase: the front axle 0.24 m back
+  // and the rear one 0.08 m back, a 2.84 m wheelbase; the fenders, the haunches and the scoop follow the wheels)
+  axle: { zF: -1.28, zR: 1.56, r: 0.35, rR: 0.37, trackF: 0.86, trackR: 0.845, wF: 0.275, wR: 0.345 },
   arch: [0.4, 0.42],
   // (M1b: the coke-bottle of the sheet's TOP: the front fenders and the rear haunches stand out as pods round a
   // waist of 0.845 m at the cabin; the haunches 1.045 m)
-  WP: [[-2.43, 0.88], [-2.2, 0.955], [-1.9, 0.99], [-1.52, 1.0], [-1.15, 0.975], [-0.85, 0.93], [-0.55, 0.875], [-0.2, 0.845], [0.15, 0.845], [0.45, 0.88], [0.8, 0.96], [1.15, 1.025], [1.48, 1.045], [1.9, 1.035], [2.15, 1.015], [2.29, 0.985]],
-  FH: [[-2.43, 0.37], [-2.27, 0.43], [-2.1, 0.53], [-1.9, 0.65], [-1.7, 0.745], [-1.52, 0.79], [-1.25, 0.77], [-0.9, 0.74], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.2, 0.87], [1.48, 0.875], [1.9, 0.84], [2.15, 0.79], [2.29, 0.75]],
+  WP: [[-2.43, 0.88], [-2.2, 0.96], [-1.9, 0.995], [-1.6, 1.0], [-1.28, 1.0], [-0.95, 0.965], [-0.7, 0.915], [-0.45, 0.87], [-0.2, 0.845], [0.15, 0.845], [0.45, 0.88], [0.8, 0.96], [1.2, 1.025], [1.56, 1.045], [1.95, 1.035], [2.17, 1.015], [2.29, 0.985]],
+  // (2026-11-23: the references' fender humps climb faster off the nose and hold their crest back over the moved
+  // wheel, 0.82 m from z -1.5 to -1.05, measured on their side view at the tyres' scale)
+  FH: [[-2.43, 0.36], [-2.3, 0.44], [-2.15, 0.54], [-2.0, 0.63], [-1.85, 0.705], [-1.7, 0.765], [-1.5, 0.81], [-1.28, 0.825], [-1.05, 0.81], [-0.8, 0.77], [-0.4, 0.725], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
   // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
   // the spine and the openings sit in), up to a lip across the tail that carries the red bar
   // (M1b repair: the bonnet's middle 1 to 2.5 cm lower ahead of the cowl, so it no longer domes up into the hero
   // camera's view; its leading edge, which carries the lip, stays where it was)
   CC: [[-2.43, 0.33], [-2.25, 0.36], [-2.0, 0.41], [-1.75, 0.457], [-1.52, 0.507], [-1.15, 0.62], [-0.6, 0.74], [0.0, 0.82], [0.6, 0.84], [1.0, 0.78], [1.4, 0.72], [1.8, 0.69], [2.1, 0.7], [2.29, 0.72]],
   // (the windscreen springs from the deck at the cowl: no step under it)
-  RH: [[-1.15, 0.64], [-1.05, 0.745], [-0.9, 0.86], [-0.6, 0.97], [-0.4, 1.04], [-0.2, 1.09], [0.0, 1.115], [0.2, 1.12], [0.5, 1.1], [0.9, 1.03], [1.3, 0.96], [1.7, 0.9], [2.0, 0.86]],
+  // (2026-11-23: the references' canopy ends over the rear wheel's leading edge, about 0.89 m at z 0.95, and the deck runs
+  // on behind it between the haunches: the roof behind the seats' hoop (z 0.54) falls faster than the old fastback)
+  RH: [[-1.15, 0.64], [-1.05, 0.745], [-0.9, 0.86], [-0.6, 0.97], [-0.4, 1.04], [-0.2, 1.09], [0.0, 1.115], [0.2, 1.12], [0.5, 1.1], [0.75, 1.01], [1.0, 0.92], [1.3, 0.87], [1.7, 0.84], [2.0, 0.81]],
   // the canopy: a narrow teardrop, about half the body's width at the cabin (the sheet's TOP), running back into a
   // narrow spine to the wing
   GB: [[-1.15, 0.47], [-0.7, 0.5], [-0.1, 0.5], [0.35, 0.45], [0.7, 0.32], [1.0, 0.24], [1.4, 0.17], [1.8, 0.13], [2.0, 0.11]],
@@ -279,7 +286,7 @@ const HYPER: ShapeParams = {
   tail: { R: 0.14, p: 2.7, Ry: 0.02, tuck: 0.08, tuckY: 0.5 },
   // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
   // fender trailing edge and the diagonal into the intake)
-  scallop: { depth: 0.16, z0: -0.92, z1: -0.68, e0: 0.16, e1: 0.4, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
+  scallop: { depth: 0.16, z0: -0.84, z1: -0.6, e0: 0.16, e1: 0.4, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
   // the windscreen runs up the canopy to z -0.10 (1.11 m), 0.2 m further than the first cut, and the side glass's
   // front-top corner moves back with it so the A-pillar keeps its width: from the driver's seat (seatFwd below) the
   // header's lip then lies about 40 degrees above the eye line, over the top of the seat camera's frame both on a
