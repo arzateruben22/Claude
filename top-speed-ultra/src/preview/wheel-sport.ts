@@ -42,6 +42,17 @@ export function sportRimAt(a: number, out = new THREE.Vector3()) {
   if (y > ft) y = ft + (y - ft) * 0.45;
   return out.set(x, y, 0);
 }
+// the OC Hypercar's luxury rim (after the owner's interior reference, 2026-11-23: a squared-off rim, flat across the top
+// as well as the bottom): sportRimAt's top eased flat from 0.84 R (its own from 0.93 R) and widened 6 % into its
+// corners, its crown 1 mm under sportRimAt's (a top flattened hard from 0.8 R came down 2.5 cm and hid the cluster's
+// speed in the portrait seat view). Every degree the hands hold (GRIP 32 and 148, +-16, up to 0.74 R) is spec.ts's path
+export function hyperRimAt(a: number, out = new THREE.Vector3()) {
+  let x = Math.cos(a) * RIM_R, y = Math.sin(a) * RIM_R;
+  const fb = -RIM_R * 0.74, ft = RIM_R * 0.84;
+  if (y < fb) { y = fb + (y - fb) * 0.05; x *= 1.04; }
+  if (y > ft) { x *= 1 + 0.06 * Math.min(1, (y - ft) / (0.16 * RIM_R)); y = ft + (y - ft) * 0.72; }
+  return out.set(x, y, 0);
+}
 // the default sport wheel's rim (owner, 2026-11-16: "Make the default steering wheel circular as well too and not have
 // a flat bottom"): a true circle, no flat bottom and no flattened top. Between -0.74 R and 0.93 R (every degree the hands
 // hold) it is spec.ts rimAt's path exactly, so the grips and the hands do not move
@@ -292,7 +303,9 @@ export function addSimpleCentre(wk: Kit, o: { high: boolean; kind: 'brio' | 'vel
 }
 // sculpted upper spokes (52 mm tall at the hub, 34 mm at the rim) with brushed edges, a widget pod under each with
 // its rotary and toggle, the twin lower legs from the pods down into the flat bottom's corners, and the chin
-export function addSportSpokes(wk: Kit, o: { high: boolean }) {
+// lower: 'carbon' (the OC Hypercar, after the owner's interior reference): one wide carbon lower spoke from the hub's
+// foot into the flat bottom, a brushed V on its face, in place of the twin gloss legs and the chin
+export function addSportSpokes(wk: Kit, o: { high: boolean; lower?: 'carbon' }) {
   const segs = o.high ? 40 : 20, cs = o.high ? 6 : 3;
   for (const sd of [-1, 1]) {
     const S = (pts: [number, number][]) => pts.map(([x, y]) => [sd * x, y] as [number, number]);
@@ -310,8 +323,15 @@ export function addSportSpokes(wk: Kit, o: { high: boolean }) {
     const tb = new RoundedBoxGeometry(0.011, 0.02, 0.004, 1, 0.0018); tb.translate(sd * 0.0795, py, -0.003); wk.add('anod', tb, null, 0.02);
     const tl = new RoundedBoxGeometry(0.0052, 0.011, 0.005, 1, 0.002); tl.rotateX(-0.45); tl.translate(sd * 0.0795, py + 0.004, 0.0015); wk.add('alu', tl, null, 0.02);
     // the lower leg, from under the pod down into the flat bottom's corner, with a brushed line down its face
+    if (o.lower === 'carbon') continue;
     wk.add('gloss', leg([sd * 0.088, -0.07], [sd * 0.074, -0.126], 0.018, 0.012, -0.011), null, 0.05);
     wk.add('alu', leg([sd * 0.087, -0.082], [sd * 0.076, -0.12], 0.0028, 0.003, -0.0046), null, 0.02);
+  }
+  if (o.lower === 'carbon') {
+    const lo = extrude(roundPoly([[-0.04, -0.044], [0.04, -0.044], [0.072, -0.129], [-0.072, -0.129]], 0.008), 0.013, 0.003, cs);
+    lo.translate(0, 0, -0.017); wk.add('carbon', lo);
+    for (const sd of [-1, 1]) wk.add('alu', leg([sd * 0.05, -0.118], [sd * 0.006, -0.06], 0.0028, 0.002, -0.0034), null, 0.02);
+    return;
   }
   // the chin: where the legs meet the flat bottom, a gloss bridge with a brushed bar across its face
   const chin = new RoundedBoxGeometry(0.17, 0.016, 0.012, 2, 0.005); chin.translate(0, -0.123, -0.011); wk.add('gloss', chin, null, 0.05);

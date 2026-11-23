@@ -58,7 +58,7 @@ import * as DS from './car-dash';
 import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
 import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
-import { sportRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
+import { sportRimAt, hyperRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
@@ -268,7 +268,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const shiftLeds = (['ledG', 'ledA', 'ledR'] as const).map((k, i) => once('m.' + k, () => new THREE.MeshPhysicalMaterial({
     color: 0x0b0c0d, roughness: 0.15, clearcoat: 1, emissive: [0x2bff6a, 0xffb21e, 0xff2a24][i], emissiveIntensity: 0 })));
   [mats.led, mats.ledA, mats.ledR] = shiftLeds;
-  mats.paddleW = M.brushed(q, 0x80858c, { key: 'paddle', env: 0.4 });
+  mats.paddleW = hyper ? M.brushed(q, 0x9ea3aa, { key: 'paddleH', env: 0.45 }) : M.brushed(q, 0x80858c, { key: 'paddle', env: 0.4 });
   // the default sport wheel's spokes (wheel-sport addDefaultSpokes): brushed graphite (metal: its colour is what it
   // reflects, so a mid tone reads as satin metal against the dark dash without outshining the badge)
   mats.spokeW = M.brushed(q, 0x9097a0, { key: 'spokeW', env: 0.9 });
@@ -546,14 +546,15 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // grips) with aluminium spokes, its start button and mode dial, and the thumb pads; Vela: smooth Nappa on a round
     // hub with two slim brushed spokes, the V badge and the thumb pads.
     const ws = T.wheel, lux = T.wheelTier === 'luxury', sport = T.wheelTier !== 'own';
-    const at = lux ? sportRimAt : sport ? roundRimAt : rimAt;   // the default sport wheel: a round rim (owner, 2026-11-16)
+    const at = lux ? (hyper ? hyperRimAt : sportRimAt) : sport ? roundRimAt : rimAt;   // the default sport wheel: a round rim (owner, 2026-11-16)
     // grow: how far the zone stands proud of the rim (a factor on its section), or per point along it (0..1)
     const zone = (a0: number, a1: number, key: string, n: number, grow: number | ((t: number) => number) = 1) => {
       const f = rimFrames(a0, a1, n, at), gr = typeof grow === 'number' ? () => grow : (i: number) => grow(i / (n - 1));
       wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]) * gr(i), (i) => rimB(f.as[i]) * gr(i), segs, { around: 0.13, flip: true }));
       return f;
     };
-    const rimTop = lux ? 'carbon' : 'wheelNappa';
+    // (the hypercar's rim is Alcantara all round, as the owner's interior reference: its carbon is the lower spoke)
+    const rimTop = lux ? (hyper ? 'alcW' : 'carbon') : 'wheelNappa';
     const gripK = lux ? 'alcW' : sport ? (ws === 'gt' ? 'nappaPerf' : 'alcW') : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
     const spokeK = 'alu';
     // The grips run from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and 148 degrees, about
@@ -584,9 +585,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the material change is the join)
     // shift lights across the top, on the driver's face of the rim: four green, three amber, three red, left to right
     if (lux) for (let i = 0; i < 10; i++) {
-      const a = 2.0 - (i / 9) * 0.88, p = rimAt(a);
+      const a = 2.0 - (i / 9) * 0.88, p = hyper ? at(a) : rimAt(a);
       const led = new RoundedBoxGeometry(0.0085, 0.0042, 0.003, 1, 0.001);
-      led.rotateZ(a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
+      led.rotateZ(hyper ? Math.atan2(at(a + 0.002).y - at(a - 0.002).y, at(a + 0.002).x - at(a - 0.002).x) - Math.PI : a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add(i < 4 ? 'led' : i < 7 ? 'ledA' : 'ledR', led, null, 0.02);
     }
     // hub: the luxury wheel's slim sculpted hub (wheel-sport addSportHub) with its premium centre (addSportCentre: a
@@ -610,7 +611,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     }
     if (lux) {
       // the luxury wheel's spokes, legs, widget sets and chin, its thumb pads, and its two live displays
-      addSportSpokes(wk, { high });
+      addSportSpokes(wk, { high, lower: hyper ? 'carbon' : undefined });
       addThumbPads(wk, 0.113, -0.006, -0.0012);
       dials = wheelDials(hyper ? 'hyper' : 'std', hyper ? 0x5eb8ff : T.accent, q);
       mats.swDialL = dials.left; mats.swDialR = dials.right;
@@ -654,8 +655,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const s = new THREE.Shape();
       s.moveTo(0, -0.024); s.lineTo(0.098, -0.034); s.quadraticCurveTo(0.142, -0.02, 0.138, 0.012); s.quadraticCurveTo(0.13, 0.05, 0.09, 0.046); s.lineTo(0, 0.026); s.closePath();
       const p = extrude(s, 0.006, 0.0018, 16);
-      if (sd < 0) p.applyMatrix4(new THREE.Matrix4().makeScale(-1, 1, 1));
-      p.translate(sd * 0.045, 0.028, -0.052);
+      // (the hypercar's a lighter silver and 38 % slimmer, as the owner's interior reference's: the full blades covered
+      // the cluster's lower corners through the rim)
+      const PK = 1, PY = 0.028, PH = hyper ? 0.62 : 1;
+      p.applyMatrix4(new THREE.Matrix4().makeScale(sd < 0 ? -PK : PK, PK * PH, 1));
+      p.translate(sd * 0.045, PY, -0.052);
       const bu = p.attributes.uv as THREE.BufferAttribute, bp = p.attributes.position; for (let i = 0; i < bu.count; i++) bu.setXY(i, bp.getX(i) / 0.12, bp.getY(i) / 0.12);
       const pm = wheelM.clone().multiply(mat(0, 0, 0, 0, 0, sd * 0.1));
       // the sport wheel's: the whole blade brushed metal in a mid tone with a calm reflection (a bright, fully
@@ -664,7 +668,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // (the default sport wheel's: the same brushed blade, without the bright pull face)
       const sportP = T.wheelTier !== 'own';
       kit.add(sportP ? 'paddleW' : 'anod', p, pm);
-      if (T.wheelTier === 'luxury') { const tip = paddleTip(sd); tip.translate(sd * 0.045, 0.028, -0.052); kit.add('alu', tip, pm, 0.02); }
+      if (T.wheelTier === 'luxury') { const tip = paddleTip(sd); tip.applyMatrix4(new THREE.Matrix4().makeScale(PK, PK * PH, 1)); tip.translate(sd * 0.045, PY, -0.052); kit.add('alu', tip, pm, 0.02); }
     }
   }
 
