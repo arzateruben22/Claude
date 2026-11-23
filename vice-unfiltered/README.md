@@ -71,7 +71,17 @@ pip install onnxruntime scipy
 mkdir -p assets/models && curl -L -o assets/models/birefnet_lite.onnx https://huggingface.co/onnx-community/BiRefNet_lite-ONNX/resolve/main/onnx/model.onnx
 ```
 
-BiRefNet Lite is MIT-licensed. Each cut-out takes about 10 s on CPU.
+Also get the person-only model, which excludes chairs (used automatically when present; MIT, ~970 MB):
+
+```bash
+curl -L -o assets/models/birefnet_portrait.onnx https://huggingface.co/onnx-community/BiRefNet-portrait-ONNX/resolve/main/onnx/model.onnx
+```
+
+About 16 s per cut-out on CPU. Edges are choked 1 px and colour-decontaminated, so no background tint stays in the fringe. The white outline is 5 px (`rim`, 0 to turn it off).
+
+**Hand cleanup** when a sliver of chair survives: `"erase": [{"box":[x,y,w,h], "dark_below":75, "keep_ellipse":[cx,cy,rx,ry]}]` in portrait-crop pixels. This removes only near-black pixels in the box and protects the ellipse (e.g. a headphone cup).
+
+**GTA VI logo:** `assets/BRAND_USER/gta6_logo.png`, supplied by the owner. Set `"logo": "assets/BRAND_USER/gta6_logo.png"` only for confirmed GTA VI clips.
 
 ## Titles and captions (ChatGPT)
 

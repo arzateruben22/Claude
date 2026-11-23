@@ -360,27 +360,72 @@ HYPE_FILLS = {"green": ((150, 255, 70), (40, 205, 20)), "yellow": ((255, 245, 60
 _SESS = None
 
 
-def person_matte(im):
-    """Real-frame person cut-out with BiRefNet Lite (MIT). Keeps the largest shape, fills holes."""
-    global _SESS
+BIREFNET_PORTRAIT = os.path.join(ROOT, "assets", "models", "birefnet_portrait.onnx")
+_SESSIONS = {}
+
+
+def person_matte(im, erase=None):
+    """Real-frame person cut-out. BiRefNet-portrait (MIT) when present: people only, chairs excluded.
+    Then: keep the largest shape, fill holes, choke the edge 1 px, and apply any `erase` rules
+    (portrait-crop pixels) for hand cleanup: [x,y,w,h] or {"box":[x,y,w,h], "dark_below":75, "keep_ellipse":[cx,cy,rx,ry]}."""
     import onnxruntime as ort
     from scipy import ndimage
-    if _SESS is None:
-        _SESS = ort.InferenceSession(BIREFNET)
-    name = _SESS.get_inputs()[0].name
+    path = BIREFNET_PORTRAIT if os.path.exists(BIREFNET_PORTRAIT) else BIREFNET
+    if path not in _SESSIONS:
+        _SESSIONS[path] = ort.InferenceSession(path)
+    sess = _SESSIONS[path]
+    name = sess.get_inputs()[0].name
     x = np.asarray(im.convert("RGB").resize((1024, 1024), Image.BICUBIC), np.float32) / 255.0
     x = ((x - [0.485, 0.456, 0.406]) / [0.229, 0.224, 0.225]).astype(np.float32).transpose(2, 0, 1)[None]
-    y = _SESS.run(None, {name: x})[-1][0, 0]
+    y = sess.run(None, {name: x})[-1][0, 0]
     if y.min() < 0 or y.max() > 1:
         y = 1 / (1 + np.exp(-y))
     m = np.asarray(Image.fromarray((np.clip(y, 0, 1) * 255).astype(np.uint8)).resize(im.size, Image.BICUBIC), np.float32) / 255
     lab, n = ndimage.label(m > 0.5)
     if n > 1:
         sizes = ndimage.sum(np.ones_like(m), lab, range(1, n + 1))
-        keep = ndimage.binary_dilation(lab == (int(np.argmax(sizes)) + 1), iterations=6)
+        keep = ndimage.binary_dilation(lab == (int(np.argmax(sizes)) + 1), iterations=4)
         m = m * keep
     m = np.maximum(m, ndimage.binary_fill_holes(m > 0.5).astype(np.float32))
-    return Image.fromarray((m * 255).astype(np.uint8))
+    if erase:
+        rgb = np.asarray(im.convert("RGB"), np.float32)
+        luma = rgb @ np.array([0.299, 0.587, 0.114], np.float32)
+        yy, xx = np.mgrid[0:m.shape[0], 0:m.shape[1]]
+        kill = np.zeros_like(m, bool)
+        for e in erase:
+            e = {"box": e} if isinstance(e, (list, tuple)) else e
+            bx, by, bw, bh = e["box"]
+            sel = (xx >= bx) & (xx < bx + bw) & (yy >= by) & (yy < by + bh)
+            if "dark_below" in e:            # only near-black pixels (chairs), never skin or clothes
+                sel &= luma < e["dark_below"]
+            if "keep_ellipse" in e:          # protect a rounded shape such as a headphone cup
+                cx, cy, rx, ry = e["keep_ellipse"]
+                sel &= ((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2 > 1
+            kill |= sel
+        kill = ndimage.binary_opening(kill, iterations=1)
+        soft = ndimage.gaussian_filter(kill.astype(np.float32), 1.2)
+        m = m * (1 - np.clip(soft * 1.6, 0, 1))
+        lab, n = ndimage.label(m > 0.5)
+        if n > 1:
+            sizes = ndimage.sum(np.ones_like(m), lab, range(1, n + 1))
+            m = m * ndimage.binary_dilation(lab == (int(np.argmax(sizes)) + 1), iterations=3)
+    m = np.clip((m - 0.12) / 0.76, 0, 1)                       # crisper edge, no faint halo
+    m = np.minimum(m, ndimage.grey_erosion(m, size=(3, 3)) + 0.25)  # choke ~1 px
+    return Image.fromarray((np.clip(m, 0, 1) * 255).astype(np.uint8))
+
+
+def decontaminate(rgb, matte, sigma=4.0):
+    """Replace edge colours with colours pulled from inside the subject, so no background tint stays in the fringe."""
+    from scipy import ndimage
+    a = np.asarray(matte, np.float32) / 255
+    core = (a > 0.97).astype(np.float32)
+    img = np.asarray(rgb.convert("RGB"), np.float32)
+    num = np.stack([ndimage.gaussian_filter(img[..., k] * core, sigma) for k in range(3)], -1)
+    den = ndimage.gaussian_filter(core, sigma)[..., None]
+    fg = np.where(den > 1e-3, num / np.maximum(den, 1e-3), img)
+    w = np.clip((0.97 - a) / 0.97, 0, 1)[..., None] * (a > 0.01)[..., None]
+    out = img * (1 - w) + fg * w
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 
 
 def gradient_text(text, f, top, bottom, stroke, misreg=None):
@@ -501,7 +546,8 @@ def t_hype(job, imgs, rng):
     c.alpha_composite(speed_lines(W, H, (W // 2, 1150), rng, n=120, r_min=640))
     # streamer cut-out with white outline and colour glow
     por = imgs["portrait"]
-    m = person_matte(por)
+    m = person_matte(por, job.get("erase"))
+    por = decontaminate(por, m)
     bb = m.point(lambda v: 255 if v > 40 else 0).getbbox() or (0, 0, por.width, por.height)
     por, m = por.crop(bb), m.crop(bb)
     target_h = int(job.get("portrait_height", 960))
@@ -512,23 +558,33 @@ def t_hype(job, imgs, rng):
     cut = Image.new("RGBA", (por.width + 2 * pad, por.height + 2 * pad), (0, 0, 0, 0))
     mm = Image.new("L", cut.size, 0)
     mm.paste(m, (pad, pad))
-    rim = mm.filter(ImageFilter.MaxFilter(17))
-    halo = mm.filter(ImageFilter.MaxFilter(31)).filter(ImageFilter.GaussianBlur(18))
+    rw = int(job.get("rim", 5))
+    solid = mm.point(lambda v: 255 if v > 110 else 0)
+    rim = solid.filter(ImageFilter.MaxFilter(2 * rw + 1)).filter(ImageFilter.GaussianBlur(0.8)) if rw else Image.new("L", mm.size, 0)
+    halo = solid.filter(ImageFilter.MaxFilter(2 * rw + 21)).filter(ImageFilter.GaussianBlur(20))
     cut.paste(Image.new("RGBA", cut.size, glow + (255,)), (0, 0), halo)
     cut.paste(Image.new("RGBA", cut.size, (255, 255, 255, 255)), (0, 0), rim)
     body = Image.new("RGBA", cut.size, (0, 0, 0, 0))
     body.paste(por.convert("RGBA"), (pad, pad))
     body.putalpha(mm)
     cut.alpha_composite(body)
-    px = int((W - cut.width) / 2 + job.get("portrait_shift", 0))
+    logo_side = job.get("logo_side", "left") if job.get("logo") else None
+    shift = job.get("portrait_shift", 70 if logo_side == "left" else (-70 if logo_side == "right" else 0))
+    px = int((W - cut.width) / 2 + shift)
     py = int(job.get("portrait_top", 10)) - pad
     c.alpha_composite(cut, (px, py))
-    bursts(c, px + pad + int(cut.width * 0.10), py + pad + 140, hexrgb(job.get("burst", "#FFD21A")), rng, size=95)
+    if logo_side == "left":
+        bursts(c, min(W - 150, px + cut.width - pad - int(cut.width * 0.10)), py + pad + 140, hexrgb(job.get("burst", "#FFD21A")), rng, size=95, angle0=-80)
+    else:
+        bursts(c, px + pad + int(cut.width * 0.10), py + pad + 140, hexrgb(job.get("burst", "#FFD21A")), rng, size=95)
     # optional user-supplied logo (never recreated here)
     if job.get("logo"):
         lg = Image.open(os.path.join(ROOT, job["logo"]) if not os.path.isabs(job["logo"]) else job["logo"]).convert("RGBA")
-        lg = lg.resize((300, round(lg.height * 300 / lg.width)), Image.LANCZOS)
-        c.alpha_composite(lg, (40, 40) if job.get("logo_side", "left") == "left" else (W - 340, 40))
+        lg = lg.crop(lg.getchannel("A").getbbox())
+        lw = int(job.get("logo_width", 300))
+        lg = lg.resize((lw, round(lg.height * lw / lg.width)), Image.LANCZOS)
+        lg, lp = drop_shadow(lg, 0, 6, 10, 150)
+        c.alpha_composite(lg, (36 - lp, 44 - lp) if logo_side == "left" else (W - lw - 36 - lp, 44 - lp))
     # headline
     l1, l2 = job["headline"][0].upper(), job["headline"][-1].upper()
     hy = int(job.get("headline_y", 900))
