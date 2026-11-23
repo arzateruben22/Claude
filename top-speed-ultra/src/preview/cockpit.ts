@@ -1245,6 +1245,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // texture upload each), so the Rossinis' three don't stack their work on one frame
   const dashEvery = high ? 1 / 15 : 1 / 8, dashStep = dashEvery / Math.max(1, painters.length);
   let dashT = 1, dashI = 0;
+  const hT = { main: 1, con: 0.5 };
   group.userData.dash = hyper ? { main: painters[0], console: painters[1] } : T.binnacle === 'screen' ? { main: painters[0] } : rossini;
   // the sport wheel's displays: the latest profile, gear, TCS, tank and tune, looked at 10 times a second and drawn
   // only when one of them changed (wheel-sport wheelDials)
@@ -1269,7 +1270,14 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       leds[2].emissiveIntensity = dash.redline ? 2.6 : 0;
     }
     if (tachRed) tachRed.opacity = dash.redline ? 0.9 : 0;
-    if (painters.length && (dashT += dt) >= dashStep) { dashT = 0; painters[dashI].update(dash, !high); dashI = (dashI + 1) % painters.length; }
+    // (the hypercar's: its driver's display looked at every dashEvery as the others' main display, its console's portrait
+    // screen every other time, on a tick when the driver's display isn't drawn, so the cluster follows the game as
+    // before the console was added: taking turns, the speed, the gear and the redline updated at half the rate)
+    if (hyper) {
+      hT.main += dt; hT.con += dt;
+      if (hT.main >= dashEvery) { hT.main = 0; painters[0].update(dash, !high); }
+      else if (hT.con >= dashEvery * 2) { hT.con = 0; painters[1].update(dash, !high); }
+    } else if (painters.length && (dashT += dt) >= dashStep) { dashT = 0; painters[dashI].update(dash, !high); dashI = (dashI + 1) % painters.length; }
     rpmShown += (rpm - rpmShown) * Math.min(1, dt * 8);
     setNeedle(rpmShown + Math.sin(flutter * 23) * 12 + Math.sin(flutter * 7.3) * 18);
   };

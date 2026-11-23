@@ -3424,7 +3424,8 @@ await group('phone', async (use) => {
   // the hood from the seat on the owner's iPhone (owner, 2026-11-16, v19 at 207 mph in portrait: "the hood being more
   // presented"; his frame showed the top 45 % sky, a black A-pillar over the top-left third and only the fenders' white
   // tips at the dash's corners). The OC Hypercar at 393 x 852, the default +10, cruising (about 125 mph after the 6 s
-  // run-up): the body ahead of the cowl (bonnet, fender crowns, nose) covers at least 1.6 % of the frame and its top row
+  // run-up): the body ahead of the cowl (bonnet, fender crowns, nose) covers at least 1.6 % of the frame (scaled for the
+  // owner's wider seat view, below) and its top row
   // is above 45 % of the height, with the road over it (6196bd6e: 1.0 %, 53 rows, from 45.0 %; the reframe: 2.0 %,
   // 82 rows, from 40.3 %)
   await check('the hood from the seat on an iPhone: bonnet and fenders in view over the cowl', async () => {
@@ -3436,12 +3437,17 @@ await group('phone', async (use) => {
     });
     await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
     await frames(page, 12);
-    const r = await game(page, hoodInPage);
+    const r = await game(page, hoodInPage), wider = await game(page, () => window.__game.car.seatFov?.[0] ?? 0);
     await game(page, () => { const g = window.__game; g.setPaused(false); g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
     await page.setViewportSize({ width: 390, height: 844 });
     await frames(page, 2);
-    const out = `bonnet ${pc(r.share)} of the frame, ${r.rows} rows, from ${pc(r.top ?? 1)} down (fov ${r.fov}, ${r.mph} mph)`;
-    expect(r.share >= 0.016 && r.top !== null && r.top < 0.43, out);
+    // (the owner's wider seat view, 2026-11-23, car-shape seatFov: the hypercar's portrait seat camera draws `wider`
+    // degrees more, so the same bonnet covers less of the frame. The floor is the 1.6 % scaled by the frame's area at
+    // the fov without the widening over the fov drawn, the bonnet's size in the view kept as before: at +3 degrees and
+    // 125 mph, 1.44 %. The suite measured 1.58 % with +3, from 39.8 %, 80 rows)
+    const t = (f) => Math.tan(f / 2 * Math.PI / 180), floor = 0.016 * (t(r.fov - wider) / t(r.fov)) ** 2;
+    const out = `bonnet ${pc(r.share)} of the frame (floor ${pc(floor)}), ${r.rows} rows, from ${pc(r.top ?? 1)} down (fov ${r.fov}, ${wider} of it the hypercar's wider view, ${r.mph} mph)`;
+    expect(r.share >= floor && r.top !== null && r.top < 0.43, out);
     return out;
   });
   // the OC Hypercar's seat view sideways and on a desktop (2026-11-22, the v23 judges' note): at 852 x 393 (an iPhone on
