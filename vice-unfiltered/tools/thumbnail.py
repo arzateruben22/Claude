@@ -323,14 +323,15 @@ def t_tabloid(job, imgs, rng):
     p = photo_finish(p, rng).convert("RGBA")
     p.putalpha(torn_mask(W, 900, rng, (0, 0, 34, 0), step=12))
     place(c, p, (0, 0))
-    # brand stamp
-    st = Image.new("RGBA", (300, 150), CREAM + (255,))
-    sd = ImageDraw.Draw(st)
-    sd.text((22, 8), "VICE", font=font(ANTON, 78), fill=INK)
-    sd.rectangle([18, 104, 282, 142], fill=acc)
-    sd.text((28, 101), "UNFILTERED", font=font(ANTON, 34), fill=CREAM)
-    st.putalpha(torn_mask(300, 150, rng, (6, 6, 6, 6), step=10))
-    place(c, st, (W - 330, 46), angle=4, shadow=(6, 6, 200))
+    # brand stamp (set "brand": false for campaigns that ban logos, e.g. SypherPK)
+    if job.get("brand", True):
+        st = Image.new("RGBA", (300, 150), CREAM + (255,))
+        sd = ImageDraw.Draw(st)
+        sd.text((22, 8), "VICE", font=font(ANTON, 78), fill=INK)
+        sd.rectangle([18, 104, 282, 142], fill=acc)
+        sd.text((28, 101), "UNFILTERED", font=font(ANTON, 34), fill=CREAM)
+        st.putalpha(torn_mask(300, 150, rng, (6, 6, 6, 6), step=10))
+        place(c, st, (W - 330, 46), angle=4, shadow=(6, 6, 200))
     # headline slab
     slab = Image.new("RGBA", (W - 40, 360), INK + (255,))
     slab.putalpha(torn_mask(slab.width, slab.height, rng, (14, 10, 14, 10), step=12))

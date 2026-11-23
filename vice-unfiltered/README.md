@@ -104,6 +104,40 @@ The studio's Upload Desk schedules every approved clip in Pacific time (`setting
 - Instagram clips that can't get a slot within a day go to an optional backlog.
 - Pressing **Uploaded** records the slot it filled (`slot_at` on the publication).
 
+## Campaign checklist (check before every edit)
+
+The studio's Campaign rules page is the source of truth. Re-check the live brief each batch. Highlights that change the edit or the thumbnail:
+
+**Dom × RUCKUS (unconfirmed)**
+- Paid-content disclosure opens every clip.
+- TikTok and Shorts pay; Instagram doesn't.
+- The posting account must post only GTA 6.
+- Submit within 30 min of posting.
+
+**KreekCraft (ClipLaunch)**
+- `KreekCraft Overlay.png` for the whole clip.
+- CTA and hashtags exactly as written.
+- Likes visible.
+
+**SypherPK (Fortnite / UEFN)**
+- No logos of any kind: thumbnail `"brand": false`, no `logo`, no overlays.
+- Caption has `#fortnitecreative #uefn` plus Sypher, Maddynf or Replays.
+- Footage only from the Nov 15 VOD timestamps.
+- Nothing negative about the creators or Epic.
+
+**Dylan Page (GTA VI Marathon)**
+- No added watermarks or third-party branding: thumbnail `"brand": false`, no GTA VI `logo`.
+- Dylan stays the main focus the whole clip: memes picture-in-picture or sound only, never full-screen cutaways.
+- A new, accurate thumbnail for every clip.
+- `#DylanPage`.
+- Footage from the marathon from Nov 19.
+
+**All campaigns**
+- English text only.
+- No AI-generated footage, voices or reactions.
+- No collab posts, reposts or botting.
+- Captions and thumbnails must be true to the clip.
+
 ## The studio (control room)
 
 Private page: https://claude.ai/artifact/ScqKbuLk3EXQ4kEHvEhFBS (source: `studio/vice-studio.html`). It follows the Prism Studio layout with Vice Unfiltered's own look:
