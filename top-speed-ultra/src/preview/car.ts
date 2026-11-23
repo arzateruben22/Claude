@@ -44,7 +44,10 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   const flake = oc ? 0.2 : vela ? 0.1 : 0.15, lines = mirror ? [] : B.shutLines(), key = mirror ? id + '-mirror' : id;
   // the OC Hypercar: a bright, cool light silver and its gloss-black two-tone drawn by the paint shader (P.masks, body only)
   const masks = oc && !mirror ? P.masks : undefined;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: P.paintFinish?.rough ?? 0.22, metal: P.paintFinish?.metal ?? 0.8, masks, env: P.paintFinish?.env, lift: P.paintFinish?.lift } : { key, flake, rough: vela ? 0.3 : undefined });
+  // (the OC Hypercar's factory paint, judge round 1: its base coat toned per channel toward a neutral cool silver, and
+  // on 'high' a flake normal map under the clear coat; other paints on it keep the plain lift)
+  const PF = P.paintFinish, lift = PF?.tone && paint === P.paint ? PF.tone.map((t) => t * (PF.lift ?? 1)) as [number, number, number] : PF?.lift;
+  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: PF?.rough ?? 0.22, metal: PF?.metal ?? 0.8, masks, env: PF?.env, lift, ...(q === 'high' && PF?.flakeMap ? { flakeMap: PF.flakeMap, flakeTile: 0.05 } : {}) } : { key, flake, rough: vela ? 0.3 : undefined });
   return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
 }
 
@@ -77,7 +80,13 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   if (P.face) extra.scoop = once('m.scoop', () => { const m = withAO(new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 0.75 })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; m.name = 'scoop'; return m; });
   // (2026-11-23, the owner's references: a honeycomb mesh in the side intake, over the scoop's dark, drawn a step nearer
   // still so neither the skin nor the scoop's dark fights through it)
-  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = (M.honeycomb(q, 0.05) as THREE.MeshStandardMaterial).clone(); m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
+  // (judge round 1, 'high': the mesh couldn't be seen at any matched angle, its alpha-tested walls lost in the mips;
+  // now an opaque hex of 2 cm cells, mid-dark walls over near-black cells, the same in the tail's fascia. The phone
+  // keeps the plain dark mesh)
+  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = ((q === 'high' ? M.hexMeshOC(0.16) : M.honeycomb(q, 0.05)) as THREE.MeshStandardMaterial).clone(); if (q !== 'high') { m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; } m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
+  // (judge round 1: the bonnet's and the humps' louvre slats in satin black, not the gloss trim, which caught the sky
+  // and read as grey squares head on)
+  if (oc) extra.slat = once('m.slatOC', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.5, metalness: 0.2, envMapIntensity: 0.45 }), { name: 'slat' })));
   // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
   if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
