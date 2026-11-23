@@ -198,6 +198,7 @@
 
   /* a bigger, two-ring burst from the middle of an element */
   var burst = function (el) {
+    return;   /* (Nov 23) no sparks anywhere, the confirmation bursts included */
     if (!el || still()) return;
     requestAnimationFrame(function () {
       var r = el.getBoundingClientRect();
@@ -208,17 +209,7 @@
     });
   };
 
-  var SPARK_ON = ".btn, .btn-mb, .nc-time, .nc-pick button, [data-spark]";
-  document.addEventListener("click", function (e) {
-    var t = e.target.closest && e.target.closest(SPARK_ON);
-    if (!t || t.disabled) return;
-    var x = e.clientX, y = e.clientY;
-    if (!x && !y) {                               /* keyboard: from the middle of the button */
-      var r = t.getBoundingClientRect();
-      x = r.left + r.width / 2; y = r.top + r.height / 2;
-    }
-    spark(x, y);
-  }, true);
+  /* (Nov 23) no sparks on taps any more: Ruben asked for them gone */
 
   /* ── CountUp ───────────────────────────────────────────────────
      Takes the first number in an element's text ("$1,240", "−$85",
