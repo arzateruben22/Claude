@@ -4,6 +4,45 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: a handbrake on the phone, built into the BRAKE pedal, and a drift readout
+
+Branch claude/drift, on v24 (5e16ab4). Not committed. The owner asked on 2026-11-17 "how do you drift on mobile device?"
+and wanted something "more seamlessly integrated" than a button. The touch controls had only steering, BRAKE and GAS;
+the handbrake was on Space and a pad's A/X only.
+
+**What it is** (input and HUD only; Physics.ts is untouched):
+- **The lever.** A lever-shaped tab on BRAKE's inner edge (the side facing the steering pad): 44 x 96 px, flush with the
+  pedal and as tall as it, in the pedals' slanted slab and hairline. Slide it toward the steering pad 18 px or more to
+  pull; it lets go when the thumb is back inside 10 px or lifts. The grip rides 14 px in its slot and the lever fills
+  ember when pulled; a 16 ms vibration where the device has one (`navigator.vibrate`).
+- **The swipe.** A quick swipe from BRAKE toward the pad (18 px or more, mostly sideways) does the same, and the brake
+  lets go once it is a pull.
+- **No accidental pulls.** A tap, a hold on BRAKE, a short slide and a steep drag pull nothing.
+- **The flick.** `Input.touch.handbrake` sets `Controls.handbrake`; a touch pull holds 0.22 s past the lift so the same
+  thumb can get back on GAS (Space and the pad's A/X work as before).
+- **Layout.** The steering pad ends 8 px short of the lever (140 px wide at 390 px, was 179). On a phone's side CLEAR PATH
+  and JUMP step 44 px left of BRAKE's lever. At 390 x 844 CLEAR PATH and JUMP are unmoved, over BRAKE and GAS.
+- **The readout.** `DRIFT 34deg 0.4 s` (angle, a bar for the angle against 60 degrees, the chain's clock) from
+  `Physics.drift`, up while a slide counts and through its half second of grace (dimmed). Over the steering pad's top on
+  a phone, bottom centre on a desktop. Files: src/ui/Touch.tsx, src/game/input.ts, src/game/Game.ts (Hud fields),
+  src/ui/HUD.tsx, src/ui/styles.css, tests/regression.mjs, tests/drift-frames.mjs.
+
+**Checked** (tsc on both configs clean; `npm run build` marks the owner test build; the suite on this machine at load 20-30,
+split by `--check=` so no run passed 20 minutes; logs in tests/out/logs/):
+- New check, phone group: with BRAKE held, a 12 px slide of the lever, a 12 px swipe from BRAKE and a steep drag, the
+  handbrake stays off and the car does not drift (max 2.5 degrees); a 24 px lever slide sets `Controls.handbrake` and
+  starts a drift at 64 mph on Sport (49 degrees, 74 steps active, the first at 0.28 s); the swipe from BRAKE does the same
+  with the brake off; on lift the handbrake holds at 100 ms and is gone at 400 ms; the readout read "Drift 49deg 0.6 s".
+  The car coasts at 30 m/s with the wheel a third right, stepped through the input layer, real pointer events on the
+  real elements.
+- New check, phone group: at 390 x 844 and 844 x 390 (insets 47 px) the lever, BRAKE, GAS, the steering pad, CLEAR PATH,
+  JUMP and the readout overlap nothing, all inside the screen, the lever 44 x 96 and flush on BRAKE's inner edge.
+- The phone group's existing HUD checks include the lever (driving HUD, controls 44 px or more and no overlaps), and the
+  Hypercar checks at 390 x 844 and 844 x 390 pass with CLEAR PATH and JUMP 44 px further left on its side.
+- Frames (tests/drift-frames.mjs, 390 x 844 at 3x, and 844 x 390): tests/out/drift/. "Before" is the same build with the
+  lever and readout hidden by CSS, not an older build.
+- Not checked: a real finger on a real phone (no touch hardware here), and the vibration (headless has none).
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
