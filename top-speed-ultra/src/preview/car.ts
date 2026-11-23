@@ -86,7 +86,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // (judge round 1, 'high': the mesh couldn't be seen at any matched angle, its alpha-tested walls lost in the mips;
   // now an opaque hex of 2 cm cells, mid-dark walls over near-black cells, the same in the tail's fascia. The phone
   // keeps the plain dark mesh)
-  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = ((q === 'high' ? M.hexMeshOC(0.16) : M.honeycomb(q, 0.05)) as THREE.MeshStandardMaterial).clone(); if (q !== 'high') { m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; } m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
+  // (2026-11-23, the owner's crop: the phone's alpha-tested mesh, 5 cm cells cut at the test under the mips, drew as
+  // single dark and light pixels that crawled as the car moved; the phone takes the opaque hex too, a shade darker)
+  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = (M.hexMeshOC(0.16, q === 'high' ? 0x3a3e44 : 0x2c3035) as THREE.MeshStandardMaterial).clone(); m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
   // (judge round 1: the bonnet's and the humps' louvre slats in satin black, not the gloss trim, which caught the sky
   // and read as grey squares head on)
   // (judge round 2: head on (lowfront) the slats still read mid grey, median 124 to 152: the sky's reflection at a grazing
