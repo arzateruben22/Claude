@@ -27,7 +27,13 @@ export function RadialMenu({ at, auto = null, onPick, onCancel }: { at: { x: num
   };
   useEffect(() => {
     const move = (e: PointerEvent) => setHot(wedgeAt(e.clientX, e.clientY));
-    const up = () => { const h = hotRef.current; if (h >= 0) onPick(WEDGES[h].id); else onCancel(); };
+    // Let go: the wedge under the finger or pointer right now. (Not the highlighted one: a tap or a click lands on a wedge in the
+    // same moment the pointer enters it, before the highlight has rendered, and a quick tap on Radio would read as "the middle".)
+    // The Tab key's release has no point, so it takes the highlighted wedge.
+    const up = (e?: PointerEvent) => {
+      const h = e && (e.clientX || e.clientY) ? wedgeAt(e.clientX, e.clientY) : hotRef.current;
+      if (h >= 0) onPick(WEDGES[h].id); else onCancel();
+    };
     const key = (e: KeyboardEvent) => {
       if (e.code === 'Escape') { e.preventDefault(); onCancel(); }
       else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') { e.preventDefault(); setHot((h) => (h + 1) % WEDGES.length); }
