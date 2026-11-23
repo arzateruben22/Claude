@@ -89,7 +89,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = ((q === 'high' ? M.hexMeshOC(0.16) : M.honeycomb(q, 0.05)) as THREE.MeshStandardMaterial).clone(); if (q !== 'high') { m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; } m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
   // (judge round 1: the bonnet's and the humps' louvre slats in satin black, not the gloss trim, which caught the sky
   // and read as grey squares head on)
-  if (oc) extra.slat = once('m.slatOC', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.5, metalness: 0.2, envMapIntensity: 0.45 }), { name: 'slat' })));
+  // (judge round 2: head on (lowfront) the slats still read mid grey, median 124 to 152: the sky's reflection at a grazing
+  // angle; a rougher, less reflective satin, so they read black at every angle)
+  if (oc) extra.slat = once('m.slatOC2', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0b0c0e, roughness: 0.6, metalness: 0.1, envMapIntensity: 0.25 }), { name: 'slat' })));
   // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
   if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));

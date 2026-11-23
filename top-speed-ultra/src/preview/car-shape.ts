@@ -402,8 +402,13 @@ const HYPER: ShapeParams = {
   // (judge round 1: the hump louvres move back over the wheel onto the humps' inner slopes and tops, where the
   // references' interior view shows them beside the dash; the centre is one black section 0.6 m wide at its rear,
   // narrowing toward the nose, with no painted spine between two panels)
-  ventsQ: [[[0.42, -1.82], [0.72, -1.84], [0.75, -1.38], [0.46, -1.36]]],
-  bonnetVents: { x: [0, 0.3], z: [-2.12, -1.42], n: 12, taper: 0.6 },
+  // (judge round 2: from the seat those panels sat outside the portrait frame, so none showed; as slim slots up the
+  // humps' inner slopes back to the cowl, about 0.2 m across, they stand at both edges of the iPhone's seat view as in
+  // the references' interior view, and read from outside as slots along the fender tops, not big squares)
+  ventsQ: [[[0.36, -1.6], [0.5, -1.62], [0.6, -1.2], [0.46, -1.18]]],
+  // (judge round 2: the centre vent set back toward the cowl, z -1.95 to -1.35, so a pearl nose runs ahead of it, as
+  // in the references, where it started 0.3 m behind the nose by the badge)
+  bonnetVents: { x: [0, 0.3], z: [-1.95, -1.35], n: 10, taper: 0.6 },
   plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },

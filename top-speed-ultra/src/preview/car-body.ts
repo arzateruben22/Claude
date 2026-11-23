@@ -292,8 +292,13 @@ function makeBody(P: ShapeParams) {
     const L: ShutLine[] = [
       { plane: 'side', pts: P.door, r: 0.04 },                                                                  // doors
       ...(hy ? [] : [{ plane: 'top', pts: P.frontLid, r: 0.07 } as ShutLine]),                                 // front lid
-      { plane: 'side', pts: [[ZF + 0.58, 0.45], [ZF + 0.46, 0.655]], seg: true },                               // front bumper seams
-      { plane: 'side', pts: [[ZR - 0.58, 0.47], [ZR - 0.32, 0.84]], seg: true },                                // rear bumper seams
+      // (the hypercar has no bumper seams, 2026-11-23: its references show one skin from the nose to the door, and a
+      // 'side' line is drawn on every face turned more than a third sideways, so on its humps' inner slopes these two
+      // drew as black slashes across the bonnet and the deck, from the owner's crop)
+      ...(hy ? [] : [
+        { plane: 'side', pts: [[ZF + 0.58, 0.45], [ZF + 0.46, 0.655]], seg: true } as ShutLine,                  // front bumper seams
+        { plane: 'side', pts: [[ZR - 0.58, 0.47], [ZR - 0.32, 0.84]], seg: true } as ShutLine,                   // rear bumper seams
+      ]),
       { plane: 'side', pts: [[1.0, 0.775], [1.12, 0.775], [1.12, 0.86], [1.0, 0.86]], r: 0.015, side: 1 },     // fuel filler / charge port
     ];
     if (P.handles === 'flush') {
@@ -620,7 +625,9 @@ function makeBody(P: ShapeParams) {
     const X = (x: number, z: number) => xm + (x - xm) * W(z);
     const nx = 10, nz = 12, well: V3[][] = [];
     for (let i = 0; i <= nz; i++) { const z = z0 + (z1 - z0) * (i / nz), r: V3[] = []; for (let j = 0; j <= nx; j++) { const x = X(x0 + (x1 - x0) * (j / nx), z); r.push(v3(x, Y(x, z) + 0.002, z)); } well.push(r); }
-    kit.add('dark', gridGeo(well, { flip: false }), null, 0.2);
+    // (the hypercar's, 2026-11-23: the well in the scoop's dark, drawn a few depth steps nearer, so the skin's flat
+    // facets, which stand over its curved well in the sunken bonnet's hollow, no longer tear through its edges)
+    kit.add(slatKey === 'slat' ? 'scoop' : 'dark', gridGeo(well, { flip: false }), null, 0.2);
     // the frame: a 14 mm band round the outline, 4 mm proud, with an inner wall down to the well
     const ring = (grow: number, lift: number) => {
       const r: V3[] = [], k = 8;
@@ -657,7 +664,7 @@ function makeBody(P: ShapeParams) {
       for (let i = 0; i <= nv; i++) { const r: V3[] = []; for (let j = 0; j <= nu; j++) r.push(at(u0 + (u1 - u0) * (j / nu), v0 + (v1 - v0) * (i / nv), lift)); rr.push(r); }
       return rr;
     };
-    kit.add('dark', gridGeo(grid(0.003, 6, 16), { flip: fl }), null, 0.2);
+    kit.add(slatKey === 'slat' ? 'scoop' : 'dark', gridGeo(grid(0.003, 6, 16), { flip: fl }), null, 0.2);
     // the frame: a band round the outline, proud of the paint, with an inner lip
     const ring = (g: number, lift: number) => {
       const r: V3[] = [], k = 6, kv = 16, a0 = -g * 6, a1 = 1 + g * 6, b0 = -g, b1 = 1 + g;
