@@ -366,6 +366,21 @@
       "while_subscribed": []
     },
     {
+      "sku": "cast-pack-duo",
+      "name": "Chad & Chadaline Pack",
+      "kind": "pack",
+      "price_cents": 2222,
+      "currency": "usd",
+      "mode": "payment",
+      "grants": [
+        "cast-pack-duo-characters",
+        "cast-pack-duo-scarlatta"
+      ],
+      "available": false,
+      "grants_ready": false,
+      "while_subscribed": []
+    },
+    {
       "sku": "club-monthly",
       "name": "OC Ultra Club (monthly)",
       "kind": "club",

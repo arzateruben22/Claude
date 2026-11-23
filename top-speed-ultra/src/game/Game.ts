@@ -37,7 +37,8 @@ import { RouteChevrons } from './road/chevrons';
 import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
-import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
+import { Ability, ABILITIES, DRIVERS, characterLook } from './drivers';
+import { playableCharacter } from './castPack';
 import { CARS, carById, applyCar, paintFor, paintForEdition, wheelFor, earnCapFor, tuneFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
@@ -517,7 +518,7 @@ export class Game {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
     const ad = this.settings.adaptive !== s.adaptive || this.settings.qualityChosen !== s.qualityChosen;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
-    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
+    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin || s.character !== this.settings.character || s.packTest !== this.settings.packTest;
     const owner = s.owner !== this.settings.owner;
     const cur = carById(this.driving);
     const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
@@ -694,17 +695,23 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
-    const look = lookFor(d.id, s.presentation, s.skin);
+    // the chosen character's appearance (cast.ts) on the archetype's pose; no character yet: the archetype's look
+    // (a pack character only while the pack is unlocked: castPack.ts; else the look without a character)
+    const { look, presentation } = characterLook(d.id, playableCharacter(s)?.id ?? '', s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // the hop's jets: half the sprites on the phone build
     this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
       car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintForEdition(c, s.paints, this.hypercarEdition), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      edition: c.founder && this.hypercarEdition === 'standard' ? 'standard' : 'founder', look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
+      edition: c.founder && this.hypercarEdition === 'standard' ? 'standard' : 'founder', look, presentation, nails: look.nails !== undefined ? look.nails : presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor / characterLook)
     });
     this.style?.restyle(this.car.root);
   }
 
+  /** (tests) what the cockpit's arms show now: the look they were built with, the tone set through setTone */
+  get driverArms() { return this.car.armsLook; }
+  /** (tests) the ability the archetype gives */
+  get abilityId() { return this.ability?.def.id ?? null; }
   // who's driving: their look in the cockpit, and their ability
   private applyDriver() {
     const d = DRIVERS.find((x) => x.id === this.settings.driver) ?? DRIVERS[0];

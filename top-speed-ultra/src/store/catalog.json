@@ -271,6 +271,19 @@
     "available": false
   },
   {
+    "sku": "cast-pack-duo",
+    "name": "Chad & Chadaline Pack",
+    "kind": "pack",
+    "price_cents": 2222,
+    "currency": "usd",
+    "mode": "payment",
+    "min_age": 18,
+    "grants": ["cast-pack-duo-characters", "cast-pack-duo-scarlatta"],
+    "description": "Two more playable characters, Chad and Chadaline (working names), and the Rossini Scarlatta, sold together. For players 18 and over. Looks only: every character drives the same, and the six characters in the game today stay free.",
+    "available": false,
+    "unavailable_reason": "Coming soon. Not on sale: the Rossini Scarlatta isn't built yet."
+  },
+  {
     "sku": "club-monthly",
     "name": "OC Ultra Club (monthly)",
     "kind": "club",

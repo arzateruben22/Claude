@@ -15,6 +15,8 @@ import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, presetFor,
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
 import { DRIVERS, ABILITIES, SKINS } from '../game/drivers';
+import { CastPicker, PORTRAITS } from './CastPicker';
+import { playableCharacter } from '../game/castPack';
 import { carById, figures, garageCars, blurbFor, PAINTS, paintForEdition, cosmeticId, WHEELS, wheelFor } from '../game/cars';
 import { CAR_MILES } from '../game/progress';
 import { HypercarProgress, CarGate, ProgressStrip, RunProgressLine, VenueMembership } from './progress';
@@ -36,7 +38,7 @@ import { RadialMenu, RadialPick } from './RadialMenu';
 import { PerfOverlay } from './PerfOverlay';
 
 type Screen = 'loading' | 'menu' | 'playing' | 'paused' | 'over' | 'foot';   // foot: walking a venue (its own page is up)
-type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes' | 'goals';
+type Panel = null | 'settings' | 'start' | 'nav' | 'board' | 'profile' | 'driver' | 'cast' | 'garage' | 'feedback' | 'store' | 'map' | 'phone' | 'homes' | 'goals';
 
 const coarse = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -189,6 +191,9 @@ export function App() {
     }
     game.current = g;
     (window as unknown as { __game: Game }).__game = g;
+    // the cast's budget check (tests/regression.mjs 'cast'): the people builder loads only when asked
+    (window as unknown as { __castBudget: () => Promise<unknown> }).__castBudget = (pack?: boolean) => import('./castStage').then((m) => m.castBudget([2, 1, 0], pack === true));
+    (window as unknown as { __castInfo: () => Promise<unknown> }).__castInfo = () => import('./castStage').then((m) => { let s = {}; try { s = JSON.parse(localStorage.getItem('tsu.settings') ?? '{}') ?? {}; } catch { /* no save */ } return m.castInfo(s); });
     g.init().then(() => setScreen('menu'), (e) => setError(String(e)));
     return () => { g.dispose(); game.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -334,6 +339,7 @@ export function App() {
   const exitRoadOf = settings.exit.split(' @ ')[0];
   const myExit = settings.exit ? game.current?.exitsFor(exitRoadOf).find((e) => e.key === settings.exit) ?? null : null;
   const driver = DRIVERS.find((d) => d.id === settings.driver) ?? DRIVERS[0];
+  const castNow = playableCharacter(settings);   // (a pack character only while the pack is unlocked)
   const car = carById(game.current?.carId ?? 'rossini-gt');
   // the drive HUD's chips under the speed: the driving profile the handling slider sits on (settings.ts PROFILES, or
   // Custom between them) and the assists the physics runs at every setting (ABS and traction control). While the
@@ -420,7 +426,8 @@ export function App() {
         </>,
       };
       case 'profile': return game.current ? { cls: 'profile', body: <ProfilePanel game={game.current} onClose={() => setPanel(null)} /> } : null;
-      case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} /> } : null;
+      case 'cast': return { cls: 'wide cast', body: <CastPicker settings={settings} update={update} onClose={() => setPanel(null)} /> };
+      case 'garage': return game.current ? { cls: 'profile', body: <GaragePanel game={game.current} settings={settings} update={update} onClose={() => setPanel(null)} onPick={() => rerender((n) => n + 1)} onCharacter={() => setPanel('cast')} /> } : null;
       case 'goals': return game.current ? { cls: 'profile', body: <><h2>Goals and passport</h2><ProgressStrip game={game.current} /><div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button></div></> } : null;
       case 'driver': return {
         cls: '', body: <>
@@ -436,9 +443,13 @@ export function App() {
               );
             })}
           </div>
-          <div className="field"><label>Presentation</label><Seg label="Presentation" value={settings.presentation} options={['m', 'f']} labels={(v) => (v === 'm' ? 'Male' : 'Female')} onChange={(v) => update({ presentation: v })} /></div>
-          <div className="field"><label>Skin tone</label>
-            <div className="swatches" role="group" aria-label="Skin tone">{SKINS.map((c, i) => <button key={i} aria-pressed={settings.skin === i} style={{ background: '#' + c.toString(16).padStart(6, '0') }} onClick={() => update({ skin: i })} aria-label={`Tone ${i + 1}`} />)}</div>
+          {/* the look is the character now (2026-11-11): the old presentation and skin tone live on in a save until a
+              character is picked, and the picker opens on the closest one */}
+          <div className="field"><label>Character</label>
+            <button type="button" className="pick cast-row" onClick={() => setPanel('cast')}>
+              {castNow ? <img src={PORTRAITS[castNow.id]} alt="" width={40} height={50} /> : <span className="swatch" style={{ background: '#' + SKINS[Math.max(0, Math.min(SKINS.length - 1, settings.skin))].toString(16).padStart(6, '0') }} aria-hidden="true" />}
+              <b>{castNow ? castNow.name : 'Choose a character'}</b><i aria-hidden="true">›</i>
+            </button>
           </div>
           <p className="fine">Looks are cosmetic. Use the ability with the round button (or F). Abilities change the traffic or the grip, never the scoring rules.</p>
           <div className="row"><button className="btn primary" onClick={() => setPanel(null)}>Done</button><button className="btn" onClick={openFeedback}>Feedback</button></div>
@@ -560,6 +571,9 @@ export function App() {
         <div className="picks">
           <button type="button" className="pick" onClick={() => setPanel('garage')}>
             <Ico name="garage" /><small>Car</small><b>{car.name}</b><span>{figures(car).hp} hp</span><i aria-hidden="true">›</i>
+          </button>
+          <button type="button" className="pick cast-pick-btn" onClick={() => setPanel('cast')}>
+            {castNow ? <img className="ico-portrait" src={PORTRAITS[castNow.id]} alt="" width={28} height={35} /> : <Ico name="driver" />}<small>Character</small><b>{castNow ? castNow.name : 'Choose'}</b><span>{castNow ? castNow.from.split(';')[0] : 'Six to pick from'}</span><i aria-hidden="true">›</i>
           </button>
           <button type="button" className="pick drv" onClick={() => setPanel('driver')}>
             <Ico name="driver" /><small>Driver</small><b>{driver.name}</b><span>{ABILITIES[driver.ability].name}</span><i aria-hidden="true">›</i>
@@ -1057,7 +1071,7 @@ function RimIcon({ style }: { style: string }) {
 }
 
 // the garage: what you own, pick one; each car shows the miles that open it (progress.ts CAR_MILES)
-function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void }) {
+function GaragePanel({ game, settings, update, onClose, onPick, onCharacter }: { game: Game; settings: Settings; update: (p: Partial<Settings>) => void; onClose: () => void; onPick: () => void; onCharacter: () => void }) {
   const [tab, setTab] = useState<'cars' | 'paint' | 'wheels' | 'upgrades' | 'custom'>('cars');
   const book = game.profile;
   const [, bump] = useState(0);
@@ -1071,6 +1085,13 @@ function GaragePanel({ game, settings, update, onClose, onPick }: { game: Game; 
     <p className="fine" data-garage-cash>{Math.floor(p.credits).toLocaleString()} cash · {pr.s.miles.toFixed(1)} active miles. Cars open by miles driven; cash is earned by driving and spent on looks and Vega &amp; Vinnie's. Nothing here costs real money.</p>
     {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
+    {/* (cast, 2026-11-11) who drives: the character picker from the garage too */}
+    {(() => { const ch = playableCharacter(settings); return (
+      <button type="button" className="pick cast-row garage-cast" onClick={onCharacter}>
+        {ch ? <img src={PORTRAITS[ch.id]} alt="" width={40} height={50} /> : <span className="swatch" style={{ background: '#' + SKINS[Math.max(0, Math.min(SKINS.length - 1, settings.skin))].toString(16).padStart(6, '0') }} aria-hidden="true" />}
+        <small>Character</small><b>{ch ? ch.name : 'Choose a character'}</b><i aria-hidden="true">›</i>
+      </button>
+    ); })()}
     <Seg label="Garage" value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
     {tab === 'paint' && (() => {
       // the car you drive: its six paints, applied live to the car behind the panel and kept for that car

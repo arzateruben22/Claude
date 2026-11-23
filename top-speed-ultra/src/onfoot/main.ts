@@ -27,6 +27,7 @@ import { Player, STEP, View, Goal } from './lot57/player';
 import { Input, Action } from './lot57/input';
 import { Hud, loading, doneLoading } from './lot57/hud';
 import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
+import { castOf } from './cast';
 import * as C from './lot57/clock';
 import { ORIGIN, EDGE, PLAN, inVenue, inShed, toLocal, toGame } from './lot57/coords';
 import { Items, ItemId, MENUS, formOf } from './lot57/items';
@@ -586,7 +587,7 @@ async function main() {
     const close = third && lod0Ready && wantsLod0(quality), ultra = quality === 'ultra';
     p.setLod(close ? 0 : 1); avatarLod = close ? 0 : 1;
     // (P1d: on Low your driver casts no sun shadow, as the people don't: the phone's triangle budget)
-    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra); m.receiveShadow = true; } });
+    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra) && !m.userData.noShadow; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; } });
     if (close && !ultra && g1) { g1.visible = true; g1.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(1); m.castShadow = true; } }); }
   };
   const updateAvatar = (dt: number) => {
@@ -718,6 +719,9 @@ async function main() {
     ready: false,
     frames: 0,
     buildMs: 0,
+    /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
+    // (cast r2) each person's `face`: a point a metre in front of them (the face-on crowd frames)
+    cast() { const pool = crowd.castPool(); return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: crowd.npcs.filter((n) => n.rep !== 'off').map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts), rep: n.rep, lod: n.lod, pose: n.pose, face: G(n.x + Math.sin(n.p.group.rotation.y), n.z + Math.cos(n.p.group.rotation.y)) })), you: person ? { lod: avatarLod } : null }; },
     attribution: DATA_ATTRIBUTION,
     /** set the simulated clock: day 0-6 (Sunday 0) or a name, hour 0-24; `ms` is how long setting it took (the crowd
      *  settling, posed at once) */

@@ -660,6 +660,119 @@ viewer's own Claude through the artifact runtime's `sample` capability (consent 
 LIVE lane; the prompt below is version B, for the public launch on our own server. Slurs, hate and threats are blocked
 at every filter level (owner, same time).
 
+### Fable prompt: the six characters' graphics pass (people builder), queued 2026-11-12
+
+**TAKEN (2026-11-12) by the cast lane's graphics pass** (branch `claude/cast`, uncommitted for the judges). A Fable
+builder ran it until the owner's 92 % rule, and then an Opus continuation. What is done and what is still open:
+`PROJECT_OC_CAST.md`, "Graphics pass log". Still open there: the faces' own shapes, the helmet hair (Leila, Danny),
+the sloping shoulders, the ballooning sleeves, Marcus's muscle, and the shoes. They need the builder's geometry
+(`body.ts`, `head.ts`, `hair.ts`) and are Fable-class.
+
+**Third pass (Fable, 2026-11-15/16, uncommitted for the judges):** those open items were worked: the faces' own
+shapes and the cheek and jaw shading, flowing hair for Chadaline and Leila, Chad's curls, Danny's side part, tailored
+sleeves and shoulders, lapels, Marcus's bulk, the bent foot for heels, Chadaline's budget, and 01's new appearance
+from the owner's reference of 2026-11-15. What is done, what is still short and the proof: `PROJECT_OC_CAST.md`
+("Third pass after the weekly reset") and the progress log's entry of 2026-11-16. Still open, Fable-class: faces that
+read as the sheets' people, Chad's curls as ringlets, Marcus's V shape under a tee. Opus-class: shoe detail (laces,
+tongue, straps), pockets and seams, re-running `phone` and the desktop perf pairs on a quiet machine.
+
+**The ask.** The owner (2026-11-11) wants the characters' graphics "insane". Lane cast A's renders show the people
+builder's limits on the six (`src/onfoot/cast.ts`). The comparisons are made by `node tests/cast-shoot.mjs`, then
+`python3 tests/cast-sheets.py <sheets folder>`, into `tests/out/cast/compare-<id>-body.png` and `-head.png`. The
+reference sheets are the owner's: a body sheet and a face sheet per character, not in the repository.
+
+**The defects to fix, against the sheets:**
+- generic faces with dark smudges over the cheeks and jaw;
+- helmet-like hair on the waves and side-part styles;
+- sloping shoulders and ballooning sleeves;
+- skin-tight straight jeans and trousers;
+- Marcus not reading as muscular;
+- the full beard, a hard-edged 4 mm shell with tabs at the ears (it needs strand cards with a soft alpha edge);
+- Marcus's scar on his right eyebrow, which isn't built.
+
+**The files:** `src/onfoot/people/*`, including `face.ts`, `skin.ts`, `masks.ts` and `body.ts`. Coordinate with the
+session and branch that own them. Keep existing presets and the public API, and keep the builder's LOD budgets
+(phone: 2,500 / 14,000 / 90,000 tris).
+
+**The proof:**
+- re-shoot all six beside their sheets;
+- `npm test -- --only=cast,cast-venues` (each run under 20 minutes);
+- the frames of each venue's crowd.
+
+Log it in `PROJECT_OC_PROGRESS.md` and `PROJECT_OC_CAST.md`.
+
+### Fable prompt: the cast judges' people-builder defects (queued 2026-11-16 by the fourth pass's repair)
+
+(2026-11-16, fifth pass: most of this list was worked in `src/onfoot/people/*`; what is still open is in
+`PROJECT_OC_CAST.md`, KNOWN GAPS, "Status after the fifth pass". The hands' sleeve item is the one that needs another session.)
+
+(2026-11-23, r2 repair: Chadaline now has layered strand-card locks over a calmer cap, and Leila too. The items still
+open are listed in `PROJECT_OC_CAST.md`, KNOWN GAPS, "Status after the r2 repair". Of those, the Fable-class geometry
+is: Jas's and Kate's tails as strand-card volume (not a cap with cards on it); Chadaline's profile crease where the fall
+meets the scalp's hair; Marcus's sandals as a sole with straps, and his chest and limbs; Danny's collar's inner corners.
+The same proof applies, with `-r3` frames, plus the venues by day: `r2c/venue.mjs` in the scratchpad, or
+`tests/cast-near-crowd-shoot.mjs`.)
+
+The judges (art) rejected the cast's fourth pass on looks. The repair (Opus, 2026-11-16) did what it could outside the
+people builder: your own character at LOD 0 in Stoppage Time at HD, the crowd's LOD 1 first within 3.2 m of the camera,
+Chad's jaw, brows and stubble and Marcus's build as catalog values, daylight venue frames, and the picker's turntable
+grab. Everything below needs `src/onfoot/people/*` (hair, garments, LOD shells, body) or `src/preview/hands*`, which
+belong to another session and which the repair was told not to edit. It is Fable-class (hair, geometry, LOD).
+
+```
+Fable prompt. OC Ultra (top-speed-ultra), worktree tsu-cast, branch claude/cast (uncommitted for the judges). Read
+CLAUDE.md, PROJECT_OC_CAST.md (the KNOWN GAPS list and "Fourth pass, repair"), the newest PROJECT_OC_PROGRESS.md
+entry. Files: src/onfoot/people/{hair,cards,garments,lod,body,person}.ts and src/preview/hands-acc.ts, coordinated
+with the session that owns them; additive only (every preset and the public API build as before; new optional
+values), phone LOD budgets 2,500 / 14,000 / 90,000 tris. Fix, against the owner's sheets (owner/pack/chad,
+owner/pack/chadaline, characters/0N-name; not in the repo):
+1. Chad: a soft hairline (alpha-to-coverage or a feathered fringe of cards over the forehead; no hard notched cut-out
+   with a black rim); the curls as visible ringlet clumps, not a sponge-textured mass.
+2. Chadaline: a soft centre parting (no jagged cut or skin notch); feathered strand edges in profile (no hard black
+   alpha strands); the fur shrug's back as one continuous cream roll with no dark gaps between the bands.
+3. Jas and Kate: no helmet silhouettes: a lifted crown and loose temple strands (Jas a high, full ponytail; Kate a
+   messy low ponytail with face-framing wisps).
+4. Danny: no hard brown/black split in the hair; the open overshirt's ragged white edge at LOD 0.
+5. Marcus: pectorals in profile, not a bust (the catalog's bulk is down to 0.45; the shape is body.ts's); the tee's
+   waist; the sandals' ragged black bits; the tan-to-brown smear down the legs at LOD 2.
+6. LOD 1: an open outer layer (blazer, overshirt, bomber) shows the top under it in ragged patches; 01's cap at
+   LOD 1/2 a bowl; Chad's open collar a ragged white V.
+7. The hands (hands-acc.ts 'fur'): a shorter, slimmer 3/4 cream fur sleeve for Chadaline, which covers about a third
+   of the phone screen at full lock; the right arm crossing the hub at full lock.
+8. The hair cards' see-through holes at the side of Leila's waves on the picker's turntable (90 to 120 degrees).
+Proof: node tests/cast-shoot.mjs <ids> --suffix=-f5 and python3 tests/cast-sheets.py (--pack) <sheets> -f5, the LOD 1
+strip, npx tsc --noEmit, npm run build, npm test -- --only=cast, then cast-pack, cast-seat, cast-pack-seat,
+cast-venues, cast-pack-venues (one Playwright process at a time; each run under 20 minutes). Log in
+PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
+```
+
+### Fable prompt: real 3D character assets for the cast (a GLB pipeline), queued 2026-11-23
+
+The owner (2026-11-22, on Chad's hero render beside his sheet): "that's definitely gonna need to keep rendering to match
+it. Graphics are giving 2000's sims vibes." The code-built people (src/onfoot/people/*) have reached their ceiling for
+the named cast; the reference sheets need authored assets. The asset source is the owner's call (a commissioned 3D
+artist; an image-to-3D tool on a plan that grants commercial use, rigged in Mixamo; or a CC0 MakeHuman base finished in
+Blender). The pipeline below is source-agnostic.
+
+```
+Fable prompt. Project OC (top-speed-ultra), the named cast as real 3D assets. Branch: a new claude/cast-glb from
+claude/cast. Read CLAUDE.md, PROJECT_OC_CAST.md, PROJECT_OC_TECHNICAL_NOTES.md (the single-file build), src/onfoot/cast.ts,
+src/onfoot/people/person.ts and lod.ts, src/ui/castStage.ts, src/onfoot/venues/sportsbar/crowd.ts. Build: a loader for
+skinned, textured glTF/GLB characters (three's GLTFLoader; meshopt or Draco geometry; compressed textures where the
+build allows) behind the existing Person interface, so the picker, the venues and the avatar take a GLB cast member or
+the code-built one; a Mixamo-compatible humanoid skeleton with a retarget layer onto the current animation set (walk,
+idle, talk, laugh, sit); PBR skin (albedo, normal, roughness), eyes and authored hair cards; LOD 0/1 from the asset and
+LOD 2 (or the crowd at a distance) from the code builder; asset files loaded on demand, not inlined into the first
+page load. Budgets at phone quality: LOD 0 under 90,000 triangles, LOD 1 under 14,000, the picker and two venues still
+at their frame-time budgets (measure a perf pair). Pilot ONE character (Chad) with an owner-supplied GLB, or a CC0 or
+Mixamo-licensed placeholder until it arrives; log each asset's source and licence in PROJECT_OC_CAST.md. Rules: don't
+edit src/preview/hands*, src/preview/car-*, src/game/vehicle/Physics.ts or the cockpit camera; our own brands only;
+store stays in test mode; honest labels. Proof: npx tsc --noEmit (both configs), npm run build (one owner-test mark),
+npm test -- --only=cast, then cast-pack, cast-venues, cast-pack-venues, boot (one Playwright process at a time);
+frames: the pilot beside his sheet front/side/back and head front/3-4/profile, in both venues by day at 2 m in third
+person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
+```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.

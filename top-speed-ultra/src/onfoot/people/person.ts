@@ -6,18 +6,19 @@ import * as THREE from 'three';
 import { buildRig, Rig, B } from './body';
 import { makeSkeleton } from './skeleton';
 import { aabbBox, fieldBounds, meshPart, skinWeights, skinWeightsF, bakeAO, buildGeometry, side, dropTris, clipByRegion } from './geo';
-import { buildGarments, GarmentBuild, isShoe } from './garments';
+import { buildGarments, GarmentBuild, isShoe, isBottom, lightSole } from './garments';
 import { clothMaterial } from './cloth';
-import { buildHairVolume, HairBuild, growCards, hairCapMaterial } from './hair';
-import { LodField, Look2, Cover, Extra, reduced, paint, lodMaterial } from './lod';
+import { buildHairVolume, HairBuild, growCards, hairCapMaterial, buildBeardVolume, capBandY, hairSpec } from './hair';
+import { LodField, Look2, Cover, Extra, reduced, paint, lodMaterial, splitLooks } from './lod';
 import { Field } from './field';
 import { buildAccessories } from './acc';
 import { cardMaterial, hairTexture } from './cards';
+import { wavyCapMaterial, growWavyCards } from './hairWavy';
 import { skinMaterial, SkinMaterial } from './skin';
 import { Animator, AnimName } from './anim';
 import { PersonOptions, Quality } from './params';
-import { V3, clamp, DEG } from './math';
-import { faceMasks } from './masks';
+import { V3, clamp, DEG, lerp, smooth } from './math';
+import { faceMasks, softScalp } from './masks';
 import { MORPHS, MI, FaceController, buildLids, buildLashes, buildBrows, buildTeeth, buildEyes, morphDeltas, EyeParts } from './face';
 
 export interface Person {
@@ -84,9 +85,12 @@ function setMorphs(g: THREE.BufferGeometry, deltas: Float32Array[], normals = fa
 export function buildPerson(o: PersonOptions): Person {
   const quality: Quality = o.quality ?? 'high';
   const t0 = performance.now();
-  const shoes = o.outfit.find((g) => ['heels', 'boots', 'sneakers', 'loafers', 'flats'].includes(g.kind));
-  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : 0;
-  const rig = buildRig(o.body, o.face, heel);
+  const shoes = o.outfit.find((g) => isShoe(g.kind));
+  // (the cast's low heels lift 4.5 cm; every other shoe as before)
+  // (the pack's stilettos lift 9.5 cm; its lace-up shoes have a 2 cm heel)
+  const heel = shoes?.kind === 'heels' ? 0.07 * (o.body.height / 1.65) : shoes?.kind === 'lowHeels' ? 0.045 * (o.body.height / 1.65) : shoes?.kind === 'stilettos' ? 0.095 * (o.body.height / 1.65) : shoes?.kind === 'oxfords' ? 0.02 * (o.body.height / 1.75) : 0;
+  // (graphics pass) the pack's stilettos and the cast's low heels: the toes flat on the ground, the foot bent at its ball
+  const rig = buildRig(o.body, o.face, heel, shoes?.kind === 'stilettos' || shoes?.kind === 'lowHeels');
   const sk = makeSkeleton(rig);
   const group = new THREE.Group();
   group.name = o.name ?? `person-${o.seed}`;
@@ -101,8 +105,8 @@ export function buildPerson(o: PersonOptions): Person {
   const hf = rig.head;
   const male = o.body.sex === 'm';
   const fh = o.look.facialHair;
-  const beardAmt = !male ? 0 : fh === 'beard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? 0.75 : 0.22;
-  const skinLook = { tone: o.look.skin, lipstick: o.look.lipstick, blush: o.look.blush, beard: beardAmt, beardColor: o.look.hairColor, liner: o.look.liner, hairColor: o.look.hairColor, freckles: o.look.freckles, age: o.body.age, male };
+  const beardAmt = !male ? 0 : fh === 'beard' || fh === 'fullBeard' ? 1 : fh === 'goatee' || fh === 'moustache' ? 0.9 : fh === 'stubble' ? Math.min(0.84, o.look.stubbleAmt ?? 0.75) : fh === 'lightStubble' ? 0.42 : 0.22 * (o.look.beardShadow ?? 1);
+  const skinLook = { tone: o.look.skin, lipstick: o.look.lipstick, blush: o.look.blush, beard: beardAmt, beardColor: o.look.hairColor, liner: o.look.liner, hairColor: o.look.hairColor, freckles: o.look.freckles, age: o.body.age, male, soft: o.look.softShade ?? 0, softHair: (() => { const sp = hairSpec(o.look.hair, male); return !!sp?.soft && !sp.ring; })() };   // (cast fx5 r1: a feathered style's soft hairline on the skin)
   let bodyMat: SkinMaterial | null = null, faceMat: SkinMaterial | null = null;
   const mats: THREE.Material[] = [];
   const getBodyMat = () => (bodyMat ??= skinMaterial(skinLook, quality, 'body'));
@@ -113,7 +117,8 @@ export function buildPerson(o: PersonOptions): Person {
       (u.uHeadO.value as THREE.Vector3).set(hf.o[0], hf.o[1], hf.o[2]);
       (u.uHeadS.value as THREE.Vector3).set(hf.sx, hf.sy, hf.sz);
       (u.uLipP.value as THREE.Vector4).set(hf.mouth.y, 0.026 * o.face.mouthW, o.face.lipUpper, o.face.lipLower);
-      (u.uFaceP.value as THREE.Vector4).set(hf.eye.x, hf.nose.tip[1], hf.old, 0);   // for the per-pixel folds and under-eye bags
+      // (w: the scar through the right brow, Look.scar 'browR'; 0 for everyone else, as before)
+      (u.uFaceP.value as THREE.Vector4).set(hf.eye.x, hf.nose.tip[1], hf.old, o.look.scar === 'browR' ? 1 : 0);   // for the per-pixel folds and under-eye bags
     }
     return faceMat;
   };
@@ -134,7 +139,7 @@ export function buildPerson(o: PersonOptions): Person {
     const nv = pos.length / 3, gone = new Uint8Array(nv), gs = getGarments();
     for (let v = 0; v < nv; v++) {
       const x = pos[v * 3], y = pos[v * 3 + 1], z = pos[v * 3 + 2], b = si[v * 4];
-      for (const gb of gs) if (gb.bones.has(b) && gb.keep(x, y, z) < -(isShoe(gb.g.kind) ? 0.012 : margin)) { gone[v] = 1; break; }
+      for (const gb of gs) if (gb.g.kind !== 'sandals' && gb.bones.has(b) && gb.keep(x, y, z) < -(isShoe(gb.g.kind) ? 0.012 : margin)) { gone[v] = 1; break; }   // (a sandal hides none of the foot: with the footbed kept whole, the skin cut away inside it left a gap round the toes)
     }
     return gone;
   };
@@ -199,8 +204,23 @@ export function buildPerson(o: PersonOptions): Person {
         aFold[v * 4] += f.ax[0] * w; aFold[v * 4 + 1] += f.ax[1] * w; aFold[v * 4 + 2] += f.ax[2] * w;
       }
     }
+    // (pack, 2026-11-12) under a closed suit jacket: the shirt's triangles well inside the jacket's region are left
+    // out. Two shells 7 mm apart, each meshed at about a centimetre, cross in the armpit's crease, and the shirt showed
+    // through the jacket there; what the jacket's openings show (the collar, the cuffs, the hem) stays
+    if (gb.layer < 3 && !isShoe(gb.g.kind) && !isBottom(gb.g.kind)) {
+      const over = getGarments().find((x) => x.g.kind === 'suitJacket' || (x.layer === 3 && !!x.g.tailored && x !== gb));   // (and any tailored outer layer, graphics pass)
+      if (over) {
+        const gone = new Uint8Array(nv);
+        const mIn = over.g.open && o.look.cleanLod ? -0.007 : -0.018;   // (repair 2026-11-16: under an open overshirt the tee is cut 7 mm inside its edge; at 18 mm the tee's chest came through the shirt's fronts beside the collar as white patches)
+        // (and where the top stands outside the outer layer's own surface, inside its region, it is hidden: the tee's shoulders came through an open shirt's fronts beside the collar)
+        const poke = !!o.look.cleanLod && over.g.kind !== 'suitJacket';
+        const collarY = rig.joints[B.neck][1] - 0.08 * rig.s;
+        for (let v = 0; v < nv; v++) { const kv = over.keep(P[v * 3], P[v * 3 + 1], P[v * 3 + 2]); gone[v] = kv < mIn || (poke && kv < -0.0015 && (over.sdf.eval(P[v * 3], P[v * 3 + 1], P[v * 3 + 2], null, 0) > -0.002 || (!!over.g.open && P[v * 3 + 1] > collarY))) ? 1 : 0; }   // (and round the collar, where the collar's leaves lie over the fronts, nothing of the top inside the shirt's region shows)
+        idx = dropTris(idx, gone);
+      }
+    }
     const geo = buildGeometry(P, NR, idx, si, sw, { aCloth: { a: aCloth, n: 4 }, aFold: { a: aFold, n: 4 } });
-    const sole = gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
+    const sole = lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex();
     const mat = clothMaterial(gb.g.color, gb.g.fabric, quality, isShoe(gb.g.kind) ? sole : (gb.g.accent ?? gb.g.color));
     mats.push(mat);
     const m = new THREE.SkinnedMesh(geo.geo, mat);
@@ -243,7 +263,7 @@ export function buildPerson(o: PersonOptions): Person {
     const hb = getHair();
     if (!hb) return [];
     const th = performance.now();
-    const h = quality === 'high' ? 0.0042 : 0.0068;
+    const h = (quality === 'high' ? 0.0042 : 0.0068) * (hb.sp.meshK ?? 1);
     const { mesh } = meshPart(hb.sdf, aabbBox(hb.box[0], hb.box[1], h), h);
     const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => hb.sdf.keep(x, y, z));
     const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
@@ -256,30 +276,84 @@ export function buildPerson(o: PersonOptions): Person {
       edge[v] = clamp(-hb.sdf.keep(p[0], p[1], p[2]) / 0.013);   // 0 at the hairline (and a curtain's edges and ends), 1 well inside
       if (hb.sdf.keep(p[0], p[1], p[2]) < -0.005) roots.push(p);
       if (edge[v] > 0.12 && edge[v] < 0.5) edgeRoots.push(p);
+      // (big curls, graphics pass) how far out on its clump the vertex is, carried in the occlusion attribute's whole part
+      // (ao stays under 2 in its fraction; the cap's shader splits them), so no other hair mesh needs a new attribute
+      const tip = hb.sdf.tipAt(p[0], p[1], p[2]);
+      if (hb.sp.soft && !hb.sp.ring) ao[v] = 0.45 + 0.55 * ao[v];   // (repair 2026-11-16, smooth feathered hair: a floor under the baked shade, so the creases where the fall meets the scalp's hair are soft folds and not black cracks)
+      if (tip > 0) ao[v] = Math.min(ao[v], 0.999) + 2 * Math.round(tip * 100);
     }
     const { si, sw } = hairWeights(hb, cl.pos);
-    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 }, aEdge: { a: edge, n: 1 } });
-    const capMat = hairCapMaterial(o.look, quality);
+    // (fifth pass, ringlet clumps) each vertex's offset from its clump's axis, for the cap shader to wind the strands round
+    const capAttr: Record<string, { a: Float32Array; n: number }> = { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 }, aEdge: { a: edge, n: 1 } };
+    if (hb.sp.ring) {
+      const ring = new Float32Array(nv * 4);
+      for (let v = 0; v < nv; v++) ring.set(hb.sdf.ringAt(cl.pos[v * 3], cl.pos[v * 3 + 1], cl.pos[v * 3 + 2]), v * 4);
+      capAttr.aRing = { a: ring, n: 4 };
+    }
+    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, capAttr);
+    // (a feathered edge: the cap dissolves into strands over the last centimetre above its hairline, not over 3 mm)
+    if (hb.sp.soft) { const e = geo.geo.getAttribute('aEdge') as THREE.BufferAttribute, P = geo.geo.getAttribute('position') as THREE.BufferAttribute; const A = geo.geo.getAttribute('aAo') as THREE.BufferAttribute; for (let v = 0; v < e.count; v++) { let se = hb.sdf.softEdge(P.getX(v), P.getY(v), P.getZ(v), hb.sp.ring ? 0.028 : 0.018);
+      // (flowing hair: feathered across the forehead only. Beside the temples the hair stands off the head, and a feathered cut there let the background through in holes)
+      const sideK = hb.sp.flowing ? smooth(0.04, 0.058, Math.abs(hf.toLocal([P.getX(v), P.getY(v), P.getZ(v)])[0])) : 0; se = Math.max(se, sideK);
+      e.setX(v, Math.max(Math.min(e.getX(v), se), 0.8 * sideK)); if (!hb.sp.ring) A.setX(v, Math.min(A.getX(v), 0.999) + 2 * Math.round(se * 100)); } }   // (repair: the hairline's own ramp rides in the occlusion attribute's whole part, as the curls' tips do, so the ends of hanging hair and tails keep the hair's colour)
+    const capMat = hb.sp.wavy ? wavyCapMaterial(o.look, quality, hb.sp.wavy, hf.o, [hf.sx, hf.sy, hf.sz]) : hairCapMaterial(o.look, quality, hb.sp, hb.sp.ring || hb.sp.soft ? hf.toBody([0, 0.02, -0.05]) : undefined, hb.sp.soft && hb.sp.tie ? hf.toBody(hb.sp.tie) : undefined, hb.sp.layers ? hf.toBody([hb.sp.part, 0.09, 0]) : undefined);
     mats.push(capMat);
     const cap = new THREE.SkinnedMesh(geo.geo, capMat);
     cap.name = 'hair-cap';
+    // (cast r2, layered flowing hair) the cap takes no shadow: the fall's own shadow on the hair above it was cut by the shadow
+    // map's texels into black jagged blotches beside the ear. It still throws its shadow on the body
+    if (hb.sp.layers) cap.userData.noRecv = true;
     buildMs.hairCap = Math.round(performance.now() - th);
     const tc = performance.now();
-    const cards = growCards(hb, roots, quality, o.seed, edgeRoots);
+    const cards = hb.sp.wavy ? growWavyCards(hb, roots, quality, o.seed, edgeRoots) : growCards(hb, roots, quality, o.seed, edgeRoots);
     const cg = new THREE.BufferGeometry();
     cg.setAttribute('position', new THREE.BufferAttribute(cards.pos, 3));
     cg.setAttribute('uv', new THREE.BufferAttribute(cards.uv, 2));
     cg.setIndex(cards.idx);
-    cg.computeVertexNormals();
+    // (the swept-back wavy side part's cards carry the normals of the volume they lie on)
+    const cardN = (cards as { nrm?: Float32Array }).nrm;
+    if (cardN) cg.setAttribute('normal', new THREE.BufferAttribute(cardN, 3)); else cg.computeVertexNormals();
     const cw = hairWeights(hb, cards.pos);
     cg.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(cw.si, 4));
     cg.setAttribute('skinWeight', new THREE.BufferAttribute(cw.sw, 4));
-    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : 1 });
+    const cmat = hb.sp.wavy ? cardMaterial(o.look.hairColor, hairTexture('lock'), quality, { grey: o.look.grey, kk: true, alphaTest: 0.36, sheen: 1.2, tips: o.look.hairTips != null ? new THREE.Color(o.look.hairColor).lerp(new THREE.Color(o.look.hairTips), 0.55).getHex() : null, along: true, root: 0.8 })
+      : cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : hb.sp.soft && !hb.sp.ring ? 0.6 : 1, tips: o.look.hairTips ?? null, sharp: !!hb.sp.soft, even: hb.sp.layers ? 1.5 : undefined });   // (cast r2, the feathered styles: an anti-aliased cut with no coverage dither, an even tone and a softer sheen; the bright stripes down Jas's tail and the speckle over Chad's forehead by day. Was sheen 1.3)
     mats.push(cmat);
     const cm = new THREE.SkinnedMesh(cg, cmat);
     cm.name = 'hair-cards';
+    // (repair 2026-11-16, a feathered style) the strand cards lie on the cap's surface: taking its shadow (and throwing
+    // their own on it) drew them as hard black strings down the lit side of the hair. They are lit as the cap is, unshadowed
+    if (hb.sp.soft && !hb.sp.ring) cm.userData.noShadow = true;
     buildMs.hairCards = Math.round(performance.now() - tc);
     return [cap, cm];
+  };
+
+  // ---------------------------------------------------------------- (cast) a full beard's shell, LOD 0 only
+  const beardMeshes = (): THREE.Mesh[] => {
+    const bb = buildBeardVolume(rig, o.look);
+    if (!bb) return [];
+    const th = performance.now();
+    const h = quality === 'high' ? 0.0032 : 0.005;
+    const { mesh } = meshPart(bb.sdf, aabbBox(bb.box[0], bb.box[1], h), h);
+    const cl = clipByRegion(mesh.pos, mesh.nrm, mesh.idx, (x, y, z) => bb.sdf.keep(x, y, z));
+    const act = (v: number) => mesh.act[mesh.vblock[cl.src[v]]];
+    const ao = bakeAO(bb.sdf, cl.pos, cl.nrm, act, 0.004, 0.012);
+    const nv = cl.pos.length / 3, flow = new Float32Array(nv * 3), edge = new Float32Array(nv);
+    const si = new Uint16Array(nv * 4), sw = new Float32Array(nv * 4);
+    for (let v = 0; v < nv; v++) {
+      const p: V3 = [cl.pos[v * 3], cl.pos[v * 3 + 1], cl.pos[v * 3 + 2]];
+      flow.set(bb.flow(p), v * 3);
+      edge[v] = clamp(-bb.sdf.keep(p[0], p[1], p[2]) / 0.008);
+      const w = bb.headW(p);
+      si[v * 4] = B.head; sw[v * 4] = w[0]; si[v * 4 + 1] = B.neck; sw[v * 4 + 1] = w[1];
+    }
+    const geo = buildGeometry(cl.pos, cl.nrm, cl.idx, si, sw, { aFlow: { a: flow, n: 3 }, aAo: { a: ao, n: 1 }, aEdge: { a: edge, n: 1 } });
+    const mat = hairCapMaterial({ ...o.look, hair: 'short' }, quality);
+    mats.push(mat);
+    const m = new THREE.SkinnedMesh(geo.geo, mat);
+    m.name = 'beard';
+    buildMs.beard = Math.round(performance.now() - th);
+    return [m];
   };
 
   // ---------------------------------------------------------------- parts
@@ -292,6 +366,7 @@ export function buildPerson(o: PersonOptions): Person {
     const ao = bakeAO(rig.field, mesh.pos, mesh.nrm, act, aoD[0], aoD[1]);
     const nv = mesh.pos.length / 3;
     const aSkin = new Float32Array(nv * 4), aFace = new Float32Array(nv * 4), aMisc = new Float32Array(nv * 4);
+    const softHairline = !!getHair()?.sp.soft, softSdf = softHairline ? getHair()!.sdf : null;
     for (let v = 0; v < nv; v++) {
       aSkin[v * 4 + 2] = ao[v];
       aMisc[v * 4] = tattooOf(si, sw, v);
@@ -300,7 +375,7 @@ export function buildPerson(o: PersonOptions): Person {
         const m = faceMasks(l, hf, o.look);
         aSkin[v * 4] = m.red; aSkin[v * 4 + 1] = m.lip; aSkin[v * 4 + 3] = m.thin;
         aFace[v * 4] = m.blush; aFace[v * 4 + 1] = m.beard; aFace[v * 4 + 2] = m.eyeA; aFace[v * 4 + 3] = m.mouth;
-        aMisc[v * 4 + 1] = m.scalp; aMisc[v * 4 + 2] = m.wrink; aMisc[v * 4 + 3] = m.freck;
+        aMisc[v * 4 + 1] = softHairline ? softScalp(o.look.hair, l, 35 + 40 * hf.old, hf.male, softSdf!.fr(l)) : m.scalp; aMisc[v * 4 + 2] = m.wrink; aMisc[v * 4 + 3] = m.freck;   // (fifth pass: a soft style's hairline thins out onto the skin)
       }
     }
     return { mesh, idx, si, sw, aSkin, aFace, aMisc, nv };
@@ -333,7 +408,12 @@ export function buildPerson(o: PersonOptions): Person {
     for (const gb of getGarments()) {
       const m = clothMesh(gb);
       G.add(m);
-      if (gb.collar) G.add(collarMesh(gb, m.material as THREE.Material));
+      if (gb.collar && gb.g.kind === 'suitJacket') {
+        // (pack) the lapels in the jacket's own cloth, a shade lighter: black on black they did not read at all
+        const lm = clothMaterial(new THREE.Color(gb.g.color).lerp(new THREE.Color(0xffffff), 0.028).getHex(), gb.g.fabric, quality, gb.g.color);
+        mats.push(lm);
+        G.add(collarMesh(gb, lm));
+      } else if (gb.collar) G.add(collarMesh(gb, m.material as THREE.Material));
     }
     buildMs.clothes0 = Math.round(performance.now() - tc);
     // ---- hands
@@ -439,12 +519,13 @@ export function buildPerson(o: PersonOptions): Person {
     mats.push(...eyes.mats);
     buildMs.faceParts = Math.round(performance.now() - tf);
     for (const m of hairMeshes()) G.add(m);
+    for (const m of beardMeshes()) G.add(m);
     const ta = performance.now();
     const ac = buildAccessories(rig, o.acc, o.look, quality, outer);
     for (const m of ac.meshes) G.add(m);
     mats.push(...ac.mats);
     buildMs.acc0 = Math.round(performance.now() - ta);
-    for (const m of G.children) { m.castShadow = true; m.receiveShadow = true; (m as THREE.Mesh).frustumCulled = false; }
+    for (const m of G.children) { m.castShadow = !m.userData.noShadow; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; (m as THREE.Mesh).frustumCulled = false; }
     lashMesh.castShadow = false; browMesh.castShadow = false;
     return G;
   };
@@ -454,12 +535,16 @@ export function buildPerson(o: PersonOptions): Person {
     const gs = getGarments(), hb = getHair();
     const looks: Look2[] = [], covers: Cover[] = [], extras: Extra[] = [];
     const neckTop = rig.neckSeam + 0.01;
+    const closedOver = gs.some((x) => x.layer === 3 && !x.g.open && (x.g.kind === 'suitJacket' || !!x.g.tailored));
     for (const gb of gs) {
-      const shoe = isShoe(gb.g.kind), bottom = ['jeans', 'trousers', 'skirt', 'shorts'].includes(gb.g.kind);
-      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (gb.g.kind === 'sneakers' ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
+      const shoe = isShoe(gb.g.kind), bottom = isBottom(gb.g.kind);
+      const id = looks.push({ kind: 'cloth', color: gb.g.color, accent: gb.accent, accentColor: shoe ? (lightSole(gb.g.kind) ? (gb.g.accent ?? 0xf2f2f0) : new THREE.Color(gb.g.color).multiplyScalar(0.55).getHex()) : gb.g.accent, wear: gb.wear, rough: gb.g.fabric === 'satin' ? 0.4 : gb.g.fabric === 'leather' ? 0.45 : 0.85 }) - 1;
       const reg = gb.sdf.region;
       covers.push({ t: gb.sdf.t + (gb.layer >= 3 ? 0.004 : 0), keep: (x, y, z) => Math.max(reg(x, y, z), y - neckTop), noArms: bottom, id });
-      if (gb.sdf.drape) { const dr = gb.sdf.drape; extras.push({ d: (x, y, z) => dr.d(x, y, z), region: gb.keep, id }); }
+      // (2026-11-16) under a closed suit jacket or a closed tailored outer layer the top's own hanging profile is left
+      // out of the coarse levels: the two profiles lie millimetres apart there, and the top's showed through the jacket
+      // as white patches at the patio distance. The top still shows where the jacket's region is open (the V, the cuffs)
+      if (gb.sdf.drape && !(closedOver && gb.layer === 2)) { const dr = gb.sdf.drape; extras.push({ d: (x, y, z) => dr.d(x, y, z), region: gb.keep, id }); }
       if (gb.sdf.extra) extras.push({ d: gb.sdf.extra, region: null, id });
     }
     let hairId = -2;
@@ -479,6 +564,118 @@ export function buildPerson(o: PersonOptions): Person {
     return outerF.eval(x, y, z, null, 0);
   };
 
+  /** (fifth pass) the cap of acc.ts in a few dozen triangles, for the coarse levels' one mesh */
+  const coarseCap = (n: number) => {
+    const pos: number[] = [], nrm: number[] = [], col: number[] = [], lod: number[] = [], si: number[] = [], sw: number[] = [], idx: number[] = [];
+    const C: V3 = [0, 0.028, -0.066], R: V3 = [0.0865 + 0.007, 0.097 + 0.006, 0.1065 + 0.007], top = C[1] + R[1];
+    const kAt = (y: number) => Math.pow(Math.max(0, 1 - Math.pow(Math.abs(y - C[1]) / R[1], 2.7)), 1 / 2.7);
+    const cr = (az: number, y: number, off = 0): V3 => { const k = y < C[1] ? 1 : kAt(y); return [(R[0] * k + off) * Math.sin(az), y, C[2] + (R[2] * k + off) * Math.cos(az)]; };
+    const band = (az: number) => capBandY(C[2] + R[2] * Math.cos(az)) - 0.004;
+    let cc = new THREE.Color(o.acc.cap!);
+    const v = (l: V3, nl: V3) => { const p = hf.toBody(l), k = Math.hypot(nl[0], nl[1], nl[2]) || 1; pos.push(p[0], p[1], p[2]); nrm.push(nl[0] / k, nl[1] / k, nl[2] / k); col.push(cc.r, cc.g, cc.b); lod.push(0.95, 0); si.push(B.head, 0, 0, 0); sw.push(1, 0, 0, 0); return pos.length / 3 - 1; };
+    const NS = n === 1 ? 16 : 10, NR = n === 1 ? 4 : 3;
+    for (let i = 0; i <= NR; i++) for (let j = 0; j <= NS; j++) {
+      const az = (j / NS) * Math.PI * 2 - Math.PI, y = lerp(band(az), top, Math.sin((i / NR) * Math.PI / 2));
+      v(cr(az, y), [Math.sin(az) * kAt(y) / R[0], (y - C[1]) / (R[1] * R[1]) * 0.9 + (i === NR ? 1 : 0), Math.cos(az) * kAt(y) / R[2]]);
+    }
+    for (let i = 0; i < NR; i++) for (let j = 0; j < NS; j++) { const a = i * (NS + 1) + j, b = a + 1, c2 = a + NS + 1, d = c2 + 1; idx.push(a, b, d, a, d, c2); }
+    const NU = n === 1 ? 8 : 4, NV = n === 1 ? 2 : 1, azM = 64 * DEG, L = 0.07;
+    const brim = (u: number, w: number, under: boolean): V3 => {
+      const az = u * azM, i0 = cr(az, band(az) + 0.003, 0.001), len = L * (1 - 0.72 * Math.pow(Math.abs(u), 2.6)) * w;
+      return [i0[0] + 0.18 * Math.sin(az) * len, i0[1] - 0.13 * len - 0.013 * u * u * w - (under ? 0.004 : 0), i0[2] + len];
+    };
+    for (const under of [false, true]) {
+      cc = new THREE.Color(under ? (o.acc.capUnder ?? 0x808286) : o.acc.cap!);
+      const b0 = pos.length / 3;
+      for (let i = 0; i <= NV; i++) for (let j = 0; j <= NU; j++) v(brim((j / NU) * 2 - 1, i / NV, under), [0, under ? -1 : 1, under ? 0.1 : 0.15]);
+      for (let i = 0; i < NV; i++) for (let j = 0; j < NU; j++) { const a = b0 + i * (NU + 1) + j, b = a + 1, c2 = a + NU + 1, d = c2 + 1; if (under) idx.push(a, c2, d, a, d, b); else idx.push(a, d, c2, a, b, d); }
+    }
+    if (o.acc.capMark != null) {
+      // our own OC mark as two flat strokes on the front panel: an O and a C, a slanted hand
+      cc = new THREE.Color(o.acc.capMark);
+      const yM = 0.083, on = (a: number, b: number): V3 => cr((a + 0.22 * b) / R[2], yM + b, 0.0035);
+      const stroke = (cx: number, a0: number, a1: number, m: number) => {
+        const b0 = pos.length / 3;
+        for (let i = 0; i <= m; i++) { const a = (a0 + (i / m) * (a1 - a0)) * DEG; for (const k of [0.62, 1.3]) v(on(cx + 0.0064 * k * Math.cos(a), 0.0092 * k * Math.sin(a)), [0, 0.2, 1]); }
+        for (let i = 0; i < m; i++) { const a = b0 + i * 2; idx.push(a, a + 1, a + 3, a, a + 3, a + 2, a, a + 3, a + 1, a, a + 2, a + 3); }
+      };
+      stroke(-0.0095, 0, 360, n === 1 ? 8 : 6);
+      stroke(0.0105, 48, 312, n === 1 ? 6 : 4);
+    }
+    return { pos, nrm, col, lod, si, sw, idx };
+  };
+
+  /** (repair 2026-11-16, Look.cleanLod) a face a coarse level can show: the eyes (the white, the iris and pupil, the lash line), the
+   *  brows and the mouth as a few dozen flat triangles laid on the level's own mesh, in the same mesh (no draw call). Vertex
+   *  colours on a 5 mm mesh blurred them into smudges a few metres away, and at 6 cm there was no face at all */
+  const coarseFace = (n: number, mp: Float32Array, mi: Uint32Array, ml: Float32Array) => {
+    const pos: number[] = [], nrm: number[] = [], col: number[] = [], lod: number[] = [], si: number[] = [], sw: number[] = [], idx: number[] = [];
+    const F = o.face, o0 = hf.toBody([0, 0, 0]), zMin = hf.toBody([0, 0, -0.03])[2];
+    // the level's triangles over the face, for laying the decals on (a ray from the front, down the head's z)
+    const tris: number[] = [];
+    for (let t = 0; t < mi.length; t += 3) {
+      const a = mi[t] * 3, b = mi[t + 1] * 3, c = mi[t + 2] * 3;
+      // (skin only, aLod.y: a lock of hair in front of the cheek at the far level took the mouth's corner with it)
+      if (ml[(a / 3) * 2 + 1] + ml[(b / 3) * 2 + 1] + ml[(c / 3) * 2 + 1] < 1.5) continue;
+      if (Math.max(mp[a + 2], mp[b + 2], mp[c + 2]) < zMin || Math.min(Math.abs(mp[a] - o0[0]), Math.abs(mp[b] - o0[0]), Math.abs(mp[c] - o0[0])) > 0.1 || Math.min(mp[a + 1], mp[b + 1], mp[c + 1]) > o0[1] + 0.09 || Math.max(mp[a + 1], mp[b + 1], mp[c + 1]) < o0[1] - 0.15) continue;
+      tris.push(a, b, c);
+    }
+    const zAt = (x: number, y: number) => {
+      let best = -1e9;
+      for (let t = 0; t < tris.length; t += 3) {
+        const a = tris[t], b = tris[t + 1], c = tris[t + 2];
+        const x0 = mp[a], y0 = mp[a + 1], x1 = mp[b], y1 = mp[b + 1], x2 = mp[c], y2 = mp[c + 1];
+        const den = (y1 - y2) * (x0 - x2) + (x2 - x1) * (y0 - y2);
+        if (Math.abs(den) < 1e-12) continue;
+        const u = ((y1 - y2) * (x - x2) + (x2 - x1) * (y - y2)) / den, w = ((y2 - y0) * (x - x2) + (x0 - x2) * (y - y2)) / den, q = 1 - u - w;
+        if (u < -1e-4 || w < -1e-4 || q < -1e-4) continue;
+        const z = u * mp[a + 2] + w * mp[b + 2] + q * mp[c + 2];
+        if (z > best) best = z;
+      }
+      return best;
+    };
+    const off = n === 1 ? 0.0016 : 0.0045;
+    let cc = new THREE.Color(0xffffff), lift = 0;
+    const v = (lx: number, ly: number) => { const p = hf.toBody([lx, ly, 0]); let z = zAt(p[0], p[1]); if (z < -1e8) z = hf.toBody([0, 0, 0.02])[2]; pos.push(p[0], p[1], z + off + lift); nrm.push(0, -0.25, 0.968); col.push(cc.r, cc.g, cc.b); lod.push(1, 0); si.push(B.head, 0, 0, 0); sw.push(1, 0, 0, 0); return pos.length / 3 - 1; };
+    const fan = (pts: [number, number][], cx: number, cy: number) => { const c0 = v(cx, cy), b0 = pos.length / 3; for (const q of pts) v(q[0], q[1]); for (let i = 0; i < pts.length; i++) { const p0 = b0 + i, p1 = b0 + (i + 1) % pts.length; idx.push(c0, p0, p1, c0, p1, p0); } };   // (both windings: the level's material is one-sided)
+    const strip = (lo: [number, number][], hi: [number, number][]) => { const b0 = pos.length / 3; for (let i = 0; i < lo.length; i++) { v(lo[i][0], lo[i][1]); v(hi[i][0], hi[i][1]); } for (let i = 0; i < lo.length - 1; i++) { const a = b0 + i * 2; idx.push(a, a + 2, a + 3, a, a + 3, a + 1, a, a + 3, a + 2, a, a + 1, a + 3); } };
+    const skinC = new THREE.Color(o.look.skin), hairC = new THREE.Color(o.look.hairColor), dark = new THREE.Color(0x1b1512);
+    const es = F.eyeSize ?? 1, ex = hf.eye.x, ey = hf.eye.y, aE = 0.0128 * es, bE = 0.0052 * es, tilt = 0.14 * (F.eyeTilt ?? 0);
+    for (const sg of [1, -1]) {
+      // (the person's left eye is at +x: seen from the front the winding below faces the viewer for both, the strips being double-checked by the fans' order)
+      const E = (u: number, w: number): [number, number] => [sg * (ex + u * aE), ey + w + tilt * u * aE];
+      const up = (u: number) => bE * Math.pow(Math.max(0, 1 - u * u), 0.7), lo = (u: number) => -0.8 * bE * Math.pow(Math.max(0, 1 - u * u), 0.8);
+      const US = n === 1 ? [-1, -0.55, 0, 0.55, 1] : [-1, 0, 1];
+      const ring: [number, number][] = [...US.map((u) => E(u, up(u))), ...US.slice(1, -1).reverse().map((u) => E(u, lo(u)))];
+      if (sg < 0) ring.reverse();
+      if (n === 1) {
+        lift = 0; cc = new THREE.Color(0xddd6ce); fan(ring, sg * ex, ey);
+        const rI = 0.0058 * es, hex = (r: number): [number, number][] => { const q: [number, number][] = []; for (let i = 0; i < 6; i++) { const a = (sg > 0 ? 1 : -1) * (i / 6) * Math.PI * 2; q.push([sg * ex + r * Math.cos(a), ey + Math.max(lo(0) * 0.95, Math.min(up(0) * 0.92, r * Math.sin(a)))]); } return q; };
+        lift = 0.0004; cc = new THREE.Color(o.look.iris).multiplyScalar(0.8); fan(hex(rI), sg * ex, ey);
+        lift = 0.0008; cc = new THREE.Color(0x0c0a09); fan(hex(rI * 0.42), sg * ex, ey);
+        // the lash line along the upper lid (heavier with liner)
+        lift = 0.0008; cc = dark.clone();
+        const th = 0.0014 + 0.0012 * (o.look.liner ?? 0), a = US.map((u) => E(u, up(u) - 0.0004)), b = US.map((u) => E(u, up(u) + th * (0.5 + 0.5 * (1 - u * u))));
+        if (sg > 0) strip(a, b); else strip(b, a);
+      } else { lift = 0; cc = new THREE.Color(o.look.iris).multiplyScalar(0.35).lerp(dark, 0.5); fan(ring, sg * ex, ey); }
+      // the brow
+      lift = 0; cc = hairC.clone().multiplyScalar(0.8).lerp(skinC, 0.12);
+      const bt = 0.0026 * (o.look.browThick ?? 1) * (F.brow ?? 1) ** 0.5, BS = n === 1 ? [0, 0.3, 0.6, 0.85, 1] : [0, 0.6, 1];
+      const yB = (u: number) => ey + 0.0185 * es + 0.004 * Math.sin(Math.min(1, u * 1.35) * Math.PI) - 0.004 * u * u + tilt * 0.4 * u * 0.03;
+      const bl = BS.map((u): [number, number] => [sg * (ex - 0.0175 + 0.04 * u), yB(u) - bt * (1 - 0.6 * u)]), bh = BS.map((u): [number, number] => [sg * (ex - 0.0175 + 0.04 * u), yB(u) + bt * (1 - 0.6 * u)]);
+      if (sg > 0) strip(bl, bh); else strip(bh, bl);
+    }
+    // the mouth: the lips and the line between them
+    const mY = hf.mouth.y, mw = hf.mouth.w * 1.04, lipC = o.look.lipstick != null ? new THREE.Color(o.look.lipstick) : skinC.clone().lerp(new THREE.Color(0x7c3a36), 0.42).multiplyScalar(0.92);
+    const MS = n === 1 ? [-1, -0.6, -0.2, 0.2, 0.6, 1] : [-1, 0, 1];
+    const upL = (u: number) => (hf.mouth.upY - mY) * Math.pow(Math.max(0, 1 - u * u), 0.55) * (1 - 0.18 * Math.exp(-((u / 0.16) ** 2))), loL = (u: number) => (hf.mouth.loY - mY) * Math.pow(Math.max(0, 1 - u * u), 0.6);
+    const mid = MS.map((u): [number, number] => [-u * mw, mY]);   // (from the person's left to their right: counter-clockwise strips seen from the front)
+    lift = 0; cc = lipC.clone().multiplyScalar(0.84); strip(mid.slice().reverse(), MS.map((u): [number, number] => [-u * mw, mY + upL(u)]).reverse());
+    cc = lipC.clone(); strip(MS.map((u): [number, number] => [-u * mw, mY + loL(u)]).reverse(), mid.slice().reverse());
+    if (n === 1) { lift = 0.0005; cc = new THREE.Color(0x3a1c1a); strip(MS.map((u): [number, number] => [-u * mw * 0.97, mY - 0.0009 * (1 - 0.6 * u * u)]).reverse(), MS.map((u): [number, number] => [-u * mw * 0.97, mY + 0.0009 * (1 - 0.6 * u * u)]).reverse()); }
+    return { pos, nrm, col, lod, si, sw, idx };
+  };
+
   const buildCoarse = (n: number) => {
     const G = new THREE.Group();
     const tb = performance.now();
@@ -487,7 +684,8 @@ export function buildPerson(o: PersonOptions): Person {
     const seam = rig.neckSeam, H = rig.H;
     const parts: { pos: Float32Array; nrm: Float32Array; idx: Uint32Array; act: (Int32Array | null)[]; vb: Int32Array; f: Field }[] = [];
     const meshIn = (lo: V3, hi: V3, h: number, keep?: (x: number, y: number, z: number) => boolean) => {
-      const f = reduced(rig.field, h), lf = new LodField(f, covers, extras, armZone);
+      const f = reduced(rig.field, h, !!o.look.cleanLod), lf = new LodField(f, covers, extras, armZone);
+      lf.outerWins = !!o.look.cleanLod;
       const { mesh, idx } = meshPart(lf, aabbBox(lo, hi, h), h, keep);
       parts.push({ pos: mesh.pos, nrm: mesh.nrm, idx, act: mesh.act, vb: mesh.vblock, f });
       buildMs['mesh' + n + '_' + parts.length] = Math.round(mesh.stats.ms);
@@ -497,6 +695,13 @@ export function buildPerson(o: PersonOptions): Person {
     let lf: LodField;
     if (n === 1) {
       lf = meshIn([-0.85, -rig.heel - 0.03, -0.55], [0.85, seam + 0.02, 0.55], hq ? 0.028 : 0.034, (_x, y) => y < seam + 0.006);
+      if (o.look.cleanLod) {
+        // (fifth pass) the face itself at half the head's step: at 1 cm an eye is one vertex wide and a face a few metres
+        // away is a smear; the rest of the head stays coarse. The two overlap by a few millimetres round the face
+        const inFace = (x: number, y: number, z: number, m: number) => { const l = hf.toLocal([x, y, z]); return l[2] > -0.012 + m && l[1] > -0.128 + m && l[1] < 0.058 - m; };
+        meshIn(hf.toBody([-0.14, -0.2, -0.26]), hf.toBody([0.14, 0.17, 0.13]), hq ? 0.0105 : 0.013, (x, y, z) => y > seam - 0.014 && !inFace(x, y, z, 0.006));
+        meshIn(hf.toBody([-0.1, -0.14, -0.03]), hf.toBody([0.1, 0.075, 0.13]), hq ? 0.0052 : 0.0064, (x, y, z) => y > seam - 0.014 && inFace(x, y, z, 0));
+      } else
       meshIn(hf.toBody([-0.14, -0.2, -0.26]), hf.toBody([0.14, 0.17, 0.13]), hq ? 0.0105 : 0.013, (_x, y) => y > seam - 0.014);
     } else lf = meshIn([-0.85, -rig.heel - 0.03, -0.55], [0.85, H + 0.12, 0.55], 0.06);
     // one buffer
@@ -512,7 +717,7 @@ export function buildPerson(o: PersonOptions): Person {
       ov += p.pos.length / 3; oi += p.idx.length;
     });
     const tp = performance.now();
-    const pt = paint(lf, looks, pos, hf, o.look, male);
+    const pt = paint(lf, looks, pos, hf, o.look, male, !!o.look.cleanLod, o.look.cleanLod && n === 2 ? nrm : null);
     buildMs['paint' + n] = Math.round(performance.now() - tp);
     const tw = performance.now();
     // weights per part against the field it was meshed from
@@ -530,11 +735,24 @@ export function buildPerson(o: PersonOptions): Person {
     }
     buildMs['weights' + n] = Math.round(performance.now() - tw);
     void vPart;
-    const g = buildGeometry(pos, nrm, idx, si, sw, { color: { a: pt.col, n: 3 }, aLod: { a: pt.lod, n: 2 } });
+    // (fifth pass, Look.cleanLod) the lines where one look meets another cut clean, inside the level's triangle budget
+    const cut = o.look.cleanLod ? splitLooks(lf, { pos, nrm, idx, col: pt.col, lod: pt.lod, si, sw, comp: pt.comp }, (n === 1 ? (hq ? 20000 : 13600) : 2440) - (o.acc.cap != null ? (n === 1 ? 230 : 110) : 0) - (n === 1 ? 215 : 36) - idx.length / 3, hairId) : { pos, nrm, idx, col: pt.col, lod: pt.lod, si, sw };
+    // (fifth pass) a fitted cap at the coarse levels, in the same mesh: a crown, a brim with its under-colour and our OC mark
+    // (acc.ts builds the cap for LOD 0 only; without it the far levels showed the bare crown, a black bowl)
+    const cap = o.look.cleanLod && o.acc.cap != null ? coarseCap(n) : null;
+    const merge = <T extends Float32Array | Uint16Array>(a: T, b: number[], Ctor: new (n: number) => T) => { const out = new Ctor(a.length + b.length); out.set(a); out.set(b, a.length); return out; };
+    type Extra = ReturnType<typeof coarseCap>;
+    const join = (m0: typeof cut, e: Extra | null): typeof cut => e ? { ...m0, pos: merge(m0.pos, e.pos, Float32Array), nrm: merge(m0.nrm, e.nrm, Float32Array), col: merge(m0.col, e.col, Float32Array), lod: merge(m0.lod, e.lod, Float32Array), si: merge(m0.si, e.si, Uint16Array), sw: merge(m0.sw, e.sw, Float32Array),
+      idx: (() => { const b = m0.pos.length / 3, out = new Uint32Array(m0.idx.length + e.idx.length); out.set(m0.idx); for (let i = 0; i < e.idx.length; i++) out[m0.idx.length + i] = e.idx[i] + b; return out; })() } : m0;
+    // (repair 2026-11-16) the face's features as flat triangles on the level's own mesh (laid on it before the cap joins)
+    const faceX = o.look.cleanLod ? coarseFace(n, cut.pos, cut.idx, cut.lod) : null;
+    const fin = join(join(cut, faceX), cap);
+    const g = buildGeometry(fin.pos, fin.nrm, fin.idx, fin.si, fin.sw, { color: { a: fin.col, n: 3 }, aLod: { a: fin.lod, n: 2 } });
     const mat = lodMaterial();
     mats.push(mat);
     const m = new THREE.SkinnedMesh(g.geo, mat);
     m.name = 'lod' + n;
+    m.userData.faceTris = faceX ? faceX.idx.length / 3 : 0;   // (the regression check reads it: the face's features are in the level's mesh)
     m.frustumCulled = false; m.castShadow = n === 1; m.receiveShadow = true;
     G.add(m);
     buildMs['coarse' + n] = Math.round(performance.now() - tb);

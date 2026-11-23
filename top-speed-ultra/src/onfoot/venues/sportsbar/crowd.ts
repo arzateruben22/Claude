@@ -16,7 +16,8 @@
 //   - moods on bodies (walk speed, a slump when Low, the clips) and the crowd's reactions to the screens.
 // Nothing here is live and nobody is a real person: the crowd is simulated from the clock and seeds.
 import * as THREE from 'three';
-import { buildPerson, randomPerson } from '../../people';
+import { buildPerson } from '../../people';
+import { crowdPerson, castOf, CAST } from '../../cast';
 import type { Person, PersonOptions } from '../../people';
 import type { P2, VisState } from '../../engine/venue-def';
 import type { Quality } from '../../engine/mats';
@@ -56,6 +57,8 @@ const WALK = 1.25;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' | 'staff'; at: P2; face: P2; y: number; stand: P2; r: number; x: number; z: number; sx: number; sz: number; seatId?: number };
 type DrawMode = 'lod1' | 'lod2' | 'card' | 'off';
+/** (cast repair, 2026-11-16) people nearer the camera than this (m) get their LOD 1 built before anyone else's */
+const NEAR_LOD1 = 3.2;
 
 interface Hand { item: string; model: 'glass' | 'basket'; color: number; left: number; next: number }
 export interface Act {
@@ -114,6 +117,11 @@ export interface CrowdReport { [k: string]: unknown }
 
 export class Crowd {
   npcs: Npc[] = [];
+  /** (cast) which of the six each person here is built from: guests, spares, the staff and the house player */
+  castPool() {
+    const staff = [...this.bartenders, ...this.servers, this.host, this.barback, this.life.house as unknown as { p?: Person } | undefined].filter((x) => !!x?.p).map((x) => x!.p!.options);
+    return [...this.npcs.map((n) => n.opts), ...this.spares.map((s) => s.opts), ...staff].map((o) => castOf(o));
+  }
   byKey = new Map<string, Npc>();
   parties: Party[] = [];
   fillers = new Map<string, Filler>();
@@ -248,7 +256,7 @@ export class Crowd {
     for (const b of this.bartenders) { b.nextEmpty = () => this.takeEmpty(b.x, b.z); }
     this.barback.nextEmpty = () => this.takeEmpty(this.barback.x, this.barback.z);
   }
-  private noCast(p: Person) { p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } }); }
+  private noCast(p: Person) { p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; } }); }
   /** the nearest empty to (x, z), with a function that takes it (the barback, the bartender's flap trip) */
   private takeEmpty(x: number, z: number) {
     if (!this.empties.length) return null;
@@ -326,9 +334,16 @@ export class Crowd {
   private newNpc(party: Party, o: { regular?: Regular; opts?: PersonOptions; t: number }): Npc {
     const id = this.nextId++, r = mulberry(hash32('npc', this.seedN, id));
     const reg = o.regular ?? null;
-    // (S4's fourth pass: no body garment in the wearer's own skin colour, dress.ts; the card and the body agree)
-    const raw = o.opts ?? (reg ? randomPerson(reg.seed % 100000) : randomPerson(hash32('walkin', this.seedN, id) % 100000)), opts = apartFromSkin(raw);
+    // everyone is one of the six (the cast, 2026-11-11): a regular is always the same character (by its seed) unless
+    // their party already has that one; a walk-in's by the party and their place in it; nobody in a party is another
+    // member's double
+    const seedP = reg ? reg.seed % 100000 : hash32('walkin', this.seedN, id) % 100000;
+    let slot = reg ? reg.seed % 6 : party.id * 2 + party.members.length;
+    const taken = new Set(party.members.map((m) => castOf(m.opts)));
+    for (let k = 0; k < 6 && taken.has(CAST[((slot % 6) + 6) % 6].id); k++) slot++;
+    const raw = o.opts ?? crowdPerson(seedP, slot), opts = apartFromSkin(raw);
     if (opts !== raw) this.recoloured.add(opts);
+    // (S4's fourth pass: no body garment in the wearer's own skin colour, dress.ts; the card and the body agree)
     const featured = this.life.tv.featured(fromAbs(o.t / SECS).week, fromAbs(o.t / SECS).day);
     const n: Npc = {
       id, key: `n${id}`, name: reg ? reg.name : FIRST_NAMES[Math.floor(r() * FIRST_NAMES.length)], regular: reg ? reg.key : null,
@@ -1301,7 +1316,7 @@ export class Crowd {
   private staffLod1Job(s: StaffRec): BuildJob { return { who: s.id, level: 1, quality: this.pq, reason: 'fill', run: () => { const was = s.body.p.stats().lod; s.body.p.setLod(1); s.body.p.setLod(was as 1 | 2); s.lod1 = true; this.noCast(s.body.p); } }; }
   private spareJob(reason: BuildReason): BuildJob {
     const k = hash32('spare', this.seedN, this.nextId++);
-    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = apartFromSkin(randomPerson(k % 100000)); const p = buildPerson({ ...this.forBuild(opts), quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
+    return { who: -200, level: 2, quality: this.pq, reason, run: () => { const opts = apartFromSkin(crowdPerson(k % 100000, k % 6)); const p = buildPerson({ ...this.forBuild(opts), quality: this.pq, lod: 2 }); p.group.visible = false; p.group.name = 'spare'; this.noCast(p); this.c.scene.add(p.group); this.spares.push({ p, opts, q: this.pq }); } };
   }
   /** the next build in the plan's order: everyone live not yet built (LOD 2, nearest the camera first); then the casters'
    *  LOD 1; then the drawn LOD 1 count's, nearest first; then the 6 spares. A tap puts that person's LOD 1 first. The LOD 1
@@ -1312,7 +1327,18 @@ export class Crowd {
     const P = this.camPoint();
     let best: Npc | null = null, bd = Infinity;
     for (const n of this.npcs) { if (n.mode !== 'live' || (n.p && n.q === this.pq)) continue; const d = Math.hypot(n.x - P.x, n.z - P.z); if (d < bd) { bd = d; best = n; } }
-    if (best) return this.bodyJob(best, 2, this.pendingSwitch ? 'switch' : 'fill');
+    // (2026-11-16, cast repair) anyone within NEAR_LOD1 m of the camera on the LOD 1 list comes first, nearest first,
+    // ahead of the casters: at the bar, people a step away stayed at LOD 2 (faceless) for half a minute or more while the
+    // patio's casters were built, so the six didn't read as themselves up close
+    let near: PRec | null = null;
+    for (let i = 0; i < this.wantN; i++) {
+      const w = this.wanted[i]; if (w.d >= NEAR_LOD1 || (near && near.d <= w.d)) continue;
+      if (w.kind === 'npc' ? !w.n!.lod1 && this.byKey.has(w.n!.key) && w.n!.mode === 'live' : !w.s!.lod1) near = w;
+    }
+    // (cast fx5 r1) and ahead of the LOD 2 builds of new arrivals more than 6 m away: on a busy Saturday new guests keep
+    // arriving, and the person a step from you stayed at LOD 2 for seven minutes behind their first builds
+    if (best && (!near || bd < 6)) return this.bodyJob(best, 2, this.pendingSwitch ? 'switch' : 'fill');
+    if (near) return near.kind === 'npc' ? this.bodyJob(near.n!, 1, this.pendingSwitch ? 'switch' : 'fill') : this.staffLod1Job(near.s!);
     for (let i = 0; i < this.wantN; i++) {
       const want = this.wanted[i];
       if (want.kind === 'npc') { const n = want.n!; if (!n.lod1 && this.byKey.has(n.key) && n.mode === 'live') return this.bodyJob(n, 1, this.pendingSwitch ? 'switch' : 'fill'); }
