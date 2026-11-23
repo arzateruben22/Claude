@@ -1,0 +1,113 @@
+/* THE RETRO SKIN of the new HUD (owner, 2026-11-23, retro-hud-layout.webp: "this will be the new layout design for
+   retro look"): flat graphite panels, slightly translucent, generous rounded corners (no chamfers, no slanted slabs), a
+   1 px light hairline and a soft shadow; white caps labels in a clean sans, letter-spaced; numbers in the mono; ONE amber
+   accent (the gear badge, the bars, GAS's outline, CLEAR PATH's ring, DRIFT); red only for the handbrake (the redline and a low
+   tank turn white). The boxes are
+   hud-layout.css's; every rule here is under .app[data-skin="retro"] (App.tsx, from retroOn). Contrast, on the panel
+   composited over a white sky (#3e3f43, the worst case): white 10.5:1, the grey #c3c7cd 6.2:1, amber #f5b13a 5.6:1; the
+   handbrake's red #ff5a4a is 3.4:1 and is used only for the P icon and the arc (graphics: 3:1), never for text. */
+
+.app[data-skin="retro"] {
+  --rt-panel: rgba(30, 32, 36, 0.86); --rt-panel-2: rgba(22, 24, 27, 0.9); --rt-line: rgba(255, 255, 255, 0.2); --rt-line-2: rgba(255, 255, 255, 0.34);
+  --rt-ink: #ffffff; --rt-dim: #c3c7cd; --rt-amber: #f5b13a; --rt-amber-line: rgba(245, 177, 58, 0.9); --rt-red: #ff5a4a; --rt-red-deep: #e3362a;
+  --rt-shadow: 0 6px 16px rgba(0, 0, 0, 0.32); --rt-r: 16px; }
+
+/* the panels */
+.app[data-skin="retro"]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate,
+.app[data-skin="retro"] :is(.hud-drift, .touch-steer, .pedal)::before,
+.app[data-skin="retro"] .touch-steer { border-radius: var(--rt-r); }
+.app[data-skin="retro"]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .hud-mph { color: var(--rt-ink); }
+.app[data-skin="retro"] .hud-unit { color: var(--rt-dim); }
+.app[data-skin="retro"] .hud-gear { color: var(--rt-amber); background: rgba(0, 0, 0, 0.35); border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--rt-amber-line); }
+.app[data-skin="retro"] .hud-rpm { background: rgba(255, 255, 255, 0.16); }
+.app[data-skin="retro"] .hud-rpm div { background: var(--rt-amber) !important; }
+.app[data-skin="retro"] .hud-rpm div.red { background: var(--rt-ink) !important; }   /* the redline: the bar turns white (red is the handbrake's alone) */
+.app[data-skin="retro"] .hud-stats b::before, .app[data-skin="retro"] .hud-stats span { color: var(--rt-dim); }
+.app[data-skin="retro"] .hud-stats div::before { color: var(--rt-dim) !important; }
+.app[data-skin="retro"] .hud-auto { background: var(--rt-amber); color: #111; }
+
+/* Pause and the rail's buttons: rounded graphite squares */
+.app[data-skin="retro"] .tbar .tbtn::before { transform: none; border-radius: 12px; background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .tbar .tbtn .ico { color: var(--rt-ink); }
+.app[data-skin="retro"] .tbar .tbtn.on .ico, .app[data-skin="retro"] .tbar .tbtn.on .tcap { color: var(--rt-amber); }
+.app[data-skin="retro"] .tbar .tbtn.on::before { box-shadow: inset 0 0 0 1.5px var(--rt-amber-line), var(--rt-shadow); }
+.app[data-skin="retro"] .tbar .tbtn:focus-visible::before { outline: 2px solid var(--rt-amber); outline-offset: 2px; clip-path: none; }
+
+/* the round map: a thick light-grey ring; the N tab in a dark chip at twelve o'clock */
+.app[data-skin="retro"] .corner.map { border: 4px solid #cfd3d8; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), var(--rt-shadow); }
+.app[data-skin="retro"] .hud-compass { box-shadow: none; }
+.app[data-skin="retro"] .hud-card { padding: 3px 6px; font: 700 10px/1 var(--hud-sans); color: var(--rt-ink); background: #17181b; border-radius: 4px; box-shadow: inset 0 0 0 1px var(--rt-line); }
+.app[data-skin="retro"] .hud-n { color: var(--rt-ink); background: #17181b; }
+
+/* DRIFT: amber label, the angle big and white, the chain's time grey, an amber bar */
+.app[data-skin="retro"] .hud-drift::before { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .hud-drift { --k: var(--rt-amber); color: var(--rt-ink); }
+.app[data-skin="retro"] .hud-drift-t { color: var(--rt-dim); }
+.app[data-skin="retro"] .hud-drift-bar { background: rgba(255, 255, 255, 0.16); }
+
+/* STEER: a rounded graphite box, the label, the tick line, a white pill knob with an amber centre line */
+.app[data-skin="retro"] .touch-steer { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .touch-hint { font: 600 11px/1 var(--hud-sans); letter-spacing: 0.22em; color: var(--rt-ink); }
+.app[data-skin="retro"] .touch-rod { height: 9px; top: 36px;
+  background: linear-gradient(rgba(255, 255, 255, 0.55) 0 0) center / 100% 1.5px no-repeat,
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.55) 0 1.5px, transparent 1.5px calc(25% - 0.4px)) left center / 100% 9px no-repeat; }
+.app[data-skin="retro"] .touch-knob { border-radius: 9px; background: linear-gradient(90deg, transparent calc(50% - 1.5px), var(--rt-amber) calc(50% - 1.5px) calc(50% + 1.5px), transparent calc(50% + 1.5px)),
+  linear-gradient(90deg, #b9bdc3, #ffffff 30%, #f3f4f6 70%, #a9adb3); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(0, 0, 0, 0.25); }
+
+/* HANDBRAKE: a round graphite button, the caption over it, a red circled P, a red arc that fills while pulled */
+.app[data-skin="retro"] .hb-cap { color: var(--rt-ink); background: rgba(22, 24, 27, 0.94); box-shadow: inset 0 0 0 1px var(--rt-line), 0 3px 8px rgba(0, 0, 0, 0.3); }   /* the graphite panel with its hairline: white on it is 14:1 even over a white sky */
+.app[data-skin="retro"] .hb-dial { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .hb-track { stroke: rgba(255, 255, 255, 0.12); }
+.app[data-skin="retro"] .hb-arc { stroke: var(--rt-red); }
+.app[data-skin="retro"] .hb-face { background: #1b1c1f; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
+.app[data-skin="retro"] .hb-face .ico { color: var(--rt-red); }
+.app[data-skin="retro"] .hb-round.pulled .hb-face { background: #2a1513; box-shadow: inset 0 0 0 1px rgba(255, 90, 74, 0.5), 0 0 12px rgba(255, 90, 74, 0.35); }
+
+/* BRAKE and GAS: rounded graphite slabs, the icons over the words in white; GAS taller with a thick amber outline */
+.app[data-skin="retro"] .pedal { font: 700 15px/1 var(--hud-sans); letter-spacing: 0.08em; color: var(--rt-ink); }
+.app[data-skin="retro"] .pedal::before { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] .pedal.gas::before { box-shadow: inset 0 0 0 3px var(--rt-amber), var(--rt-shadow); }
+.app[data-skin="retro"] .pedal.brake { color: var(--rt-ink); }
+.app[data-skin="retro"] .pedal .ico { color: var(--rt-ink); }
+.app[data-skin="retro"] .pedal.down { color: #111; }
+.app[data-skin="retro"] .pedal.down .ico { color: #111; }
+.app[data-skin="retro"] .pedal.gas.down::before { background: var(--rt-amber); }
+.app[data-skin="retro"] .pedal.brake.down::before { background: #e9eaec; }
+
+/* the round keys: graphite, the icon and the name in two lines, an amber charge ring (the recharge's progress, or the
+   tank on JUMP) and an amber ready dot */
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn) { --k: var(--rt-amber); color: var(--rt-ink); }
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn)::before { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn)::after { left: 0; right: 0; top: 0; bottom: 0; height: auto; transform: none; border-radius: 50%;
+  background: conic-gradient(var(--k) calc(var(--p) * 1turn), rgba(255, 255, 255, 0.1) 0);
+  -webkit-mask: radial-gradient(circle closest-side, transparent calc(100% - 4px), #000 calc(100% - 3.5px)); mask: radial-gradient(circle closest-side, transparent calc(100% - 4px), #000 calc(100% - 3.5px)); }
+.app[data-skin="retro"] .hud-ability span::after { content: ""; display: block; width: 5px; height: 5px; margin: 3px auto 0; border-radius: 50%; background: var(--rt-amber); }
+.app[data-skin="retro"] .hud-ability:is(.cool, .on) span::after { background: rgba(255, 255, 255, 0.2); }
+.app[data-skin="retro"] .hud-ability.cool { color: var(--rt-dim); }
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn).on { color: #111; }
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn).on::before { background: var(--rt-amber); }
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn).on::after { background: conic-gradient(#111 calc(var(--p) * 1turn), rgba(0, 0, 0, 0.18) 0); }
+.app[data-skin="retro"] .hud-thrustbtn.low { --k: var(--rt-ink); color: var(--rt-dim); }   /* a low tank: the ring turns white, not red */
+.app[data-skin="retro"] :is(.hud-ability, .hud-thrustbtn):focus-visible { outline: 2px solid var(--rt-amber); outline-offset: 3px; border-radius: 50%; }
+
+/* a desktop: the same skin on the speed block, the numbers panel, the drift chip, the map ring and the rail */
+.app[data-skin="retro"][data-hud="desk"] .hud-speed { border-radius: var(--rt-r); background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"][data-hud="desk"] .hud-speed::after { display: none; }
+.app[data-skin="retro"][data-hud="desk"] .hud-rpm { transform: none; border-radius: 3px; }
+.app[data-skin="retro"][data-hud="desk"] .hud-revs i { transform: none; border-radius: 2px; }
+.app[data-skin="retro"][data-hud="desk"] .hud-revs i.on { background: var(--rt-amber); box-shadow: none; }
+.app[data-skin="retro"][data-hud="desk"] .hud-revs i:nth-child(n+7).on { background: var(--rt-ink); }   /* the top lights: white, not red */
+.app[data-skin="retro"][data-hud="desk"] .hud-chips i { border-radius: 6px; }
+.app[data-skin="retro"][data-hud="desk"] .hud-chips i:first-child { color: var(--rt-amber); box-shadow: inset 0 0 0 1px var(--rt-amber-line); }
+.app[data-skin="retro"][data-hud="desk"] :is(.hud-stats, .hud-navs, .hud-thr, .hud-clock) { clip-path: none; border-radius: 14px; background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
+.app[data-skin="retro"][data-hud="desk"] .hud-stats span { color: var(--rt-ink); }
+.app[data-skin="retro"][data-hud="desk"] .tbar .tbtn::before { clip-path: none; }
+.app[data-skin="retro"][data-hud="desk"] .tbar .tbtn { color: var(--rt-ink); }
+.app[data-skin="retro"][data-hud="desk"] .hud-drift { padding-top: 7px; }
+
+/* the OC Hypercar's line on the plate (JUMP, the tank, Lock): in the one accent */
+.app[data-skin="retro"] .hud-thr b, .app[data-skin="retro"] .hud-lock.on { color: var(--rt-amber); text-shadow: none; }
+.app[data-skin="retro"] .hud-thr-bar { transform: none; border-radius: 2px; background: rgba(255, 255, 255, 0.16); }
+.app[data-skin="retro"] .hud-thr-bar i { background: var(--rt-amber); }
+.app[data-skin="retro"] .hud-thr.low .hud-thr-bar i { background: var(--rt-ink); }
