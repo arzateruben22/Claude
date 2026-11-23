@@ -1870,7 +1870,8 @@ export class Game {
       // and the bonnet and fenders a sliver at the dash's corners; at 76 the default draws 90 (a 50-degree width) and
       // the hood 1.1x larger. Landscape's fov and pitch are unchanged, but the hypercar's eye moved (car-shape seatDrop,
       // eyeNudge), so its landscape and desktop seat views also lose the A-pillar band and show the hood.
-      const vBase = portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, SEAT_VMAX_P) : 58;
+      // (the hypercar's a few degrees wider: car-shape seatFov)
+      const vBase = (portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, SEAT_VMAX_P) : 58) + this.car.seatFov[portrait ? 0 : 1];
       fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
       // the horizon sits 31% of the way down the part of the screen below the top safe area (the notch or Dynamic
       // Island when the page runs edge to edge): with a 59 px inset the HUD comes down 59 px and the windscreen with it.
