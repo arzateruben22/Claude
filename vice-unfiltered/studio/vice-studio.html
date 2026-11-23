@@ -229,7 +229,7 @@ const PLATFORMS = [
 ];
 function allowed(c,platId){const pl=streamerOf(c.streamer)?.campaign?.platforms;return !Array.isArray(pl)||!pl.length||pl.includes(platId)}
 const S = {streamers:[], accounts:[], clips:[], pubs:[], batches:[], lib:[], ready:false, err:null};
-const CATS = [["thumbs","Thumbnail styles"],["sfx","Sound effects"],["memes","Meme GIFs"],["inserts","Reaction inserts"],["brand","Brand"],["edits","Example edits"],["fonts","Fonts"],["missing","Not uploaded yet"]];
+const CATS = [["thumbs","Thumbnail styles"],["sfx","Sound effects"],["memes","Meme GIFs"],["inserts","Reaction inserts"],["emojis","Emoji stickers"],["brand","Brand"],["edits","Example edits"],["fonts","Fonts"],["missing","Not uploaded yet"]];
 const LSTATUS = {approved:["Approved","good"],pending:["Needs your OK","warn"],reference:["Reference","muted"],rejected:["Rejected","bad"],rights:["Rights unverified","warn"]};
 const $main = document.getElementById("content");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
