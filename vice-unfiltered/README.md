@@ -19,7 +19,7 @@ assets/      tools/
 | `exports/` | `<Streamer>_<NN>_<Moment>_V<n>.mp4` | New version = new file; approved versions are never overwritten |
 | `thumbnails/` | `<Streamer>_<NN>_<Moment>_THUMBNAIL_V<n>.png` + `.jpg` | Same versioning |
 | `deliverables/<batch>/` | The finished package: MP4, thumbnail, `EDIT_NOTES.txt`, caption, titles, ZIP | Only QC-passed files |
-| `tools/` | `intake.py`, `render_clip.py`, `qc.py`, `inventory.py` | Run with `python3 -I` from `vice-unfiltered/` |
+| `tools/` | `intake.py`, `render_clip.py`, `thumbnail.py`, `qc.py`, `inventory.py` | Run with `python3 -I` from `vice-unfiltered/` |
 | `studio/` | The control room page source | Published as a private claude.ai page |
 | `BATCH_TRACKER.csv` | One row per clip (spec §8 columns) | Updated at every version |
 
@@ -33,6 +33,24 @@ assets/      tools/
 6. **QC**: `tools/qc.py` runs, plus a visual check of every insert, transition, freeze and the final frame.
 7. **Thumbnail**: real frame cutouts plus a programmatic type layer, saved to `thumbnails/`.
 8. **Deliver**: the package goes to `deliverables/<batch>/`, a tracker row is added, and the files are sent in the chat.
+
+## Thumbnail styles
+
+`tools/thumbnail.py <job.json>` builds a 1080×1920 PNG + JPG from real clip frames, with type set in code (Anton/Oswald/Bebas). It never generates faces or lettering. Samples are in `thumbnails/TEMPLATE_SAMPLES/` and in the studio under Assets → Thumbnail styles.
+
+| Style | Template | Modelled on | Best for |
+|---|---|---|---|
+| A | `poster` | IMAGE-1 / Nightclub Chaos poster | a strong face reaction |
+| B | `blocks` | the six authentic KreekCraft covers | when the gameplay moment is the story |
+| C | `tabloid` | "Bro Thought He Was Tuff" layout, rebuilt with flat type | a two-beat payoff (before/after) |
+
+**Rotation.** Every batch uses all three styles, and each streamer moves one style along per batch:
+
+- Batch 01: Dom A, KreekCraft B, Steveeeyyy C
+- Batch 02: Dom B, KreekCraft C, Steveeeyyy A
+- Batch 03: Dom C, KreekCraft A, Steveeeyyy B
+
+Then repeat. Record the style in the tracker's `thumb_style` column.
 
 ## The studio (control room)
 

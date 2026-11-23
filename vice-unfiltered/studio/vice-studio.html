@@ -209,7 +209,7 @@ const PLATFORMS = [
   {id:"instagram", label:"Instagram Reels", upload:"https://www.instagram.com/"}
 ];
 const S = {streamers:[], accounts:[], clips:[], pubs:[], batches:[], lib:[], ready:false, err:null};
-const CATS = [["sfx","Sound effects"],["memes","Meme GIFs"],["inserts","Reaction inserts"],["roses","Roses"],["brand","Brand"],["covers","Approved covers"],["style","Style references"],["rejected","Rejected"],["edits","Example edits"],["fonts","Fonts"],["missing","Not uploaded yet"]];
+const CATS = [["thumbs","Thumbnail styles"],["sfx","Sound effects"],["memes","Meme GIFs"],["inserts","Reaction inserts"],["roses","Roses"],["brand","Brand"],["covers","Approved covers"],["style","Style references"],["rejected","Rejected"],["edits","Example edits"],["fonts","Fonts"],["missing","Not uploaded yet"]];
 const LSTATUS = {approved:["Approved","good"],pending:["Needs your OK","warn"],reference:["Reference","muted"],rejected:["Rejected","bad"],rights:["Rights unverified","warn"]};
 const $main = document.getElementById("content");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -365,6 +365,8 @@ function tile(r){
   if(r.kind==="palette") return `<article class="tile"><div class="swatches">${(r.colors||[]).map(c=>`<div style="background:${esc(c.hex)};color:${["#151413","#913149"].includes(c.hex)?"#fff":"#151413"}">${esc(c.name)}<br>${esc(c.hex)}</div>`).join("")}</div>
     <div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div><p class="note">${esc(r.note||"")}</p>
     <div class="row">${(r.colors||[]).map(c=>copyBtn(c.hex,c.hex)).join("")}</div></div></article>`;
+  if(r.kind==="list") return `<article class="tile missing"><div class="body"><b>${esc(r.title)}</b><p class="note">${esc(r.note||"")}</p>
+    <ul style="max-height:none;font-size:13px">${(r.items||[]).map(i=>`<li>${esc(i.file)}</li>`).join("")}</ul></div></article>`;
   if(r.kind==="missing") return `<article class="tile missing"><div class="body"><b>${esc(r.title)}</b><p class="note">${esc(r.note||"")}</p><span class="mono" style="font-size:12px">${(r.items||[]).length} files not uploaded</span>
     <ul>${(r.items||[]).map(i=>`<li>${esc(i.file)} <span style="color:var(--ink-3)">${esc(i.mb)} MB</span></li>`).join("")}</ul></div></article>`;
   // image (incl. GIF)
