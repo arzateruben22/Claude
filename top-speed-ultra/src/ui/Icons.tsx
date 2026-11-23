@@ -19,6 +19,16 @@ const P: Record<string, JSX.Element> = {
   chat: <><path d="M4 5h16v11H9l-5 4z" /><path d="M8 9.5h8M8 12.5h5" /></>,
   home: <><path d="M3 11 12 4l9 7" /><path d="M5.5 9.3V20h13V9.3M10 20v-5.2h4V20" /></>,
   store: <><path d="M5 8h14l-1.2 12.5H6.2z" /><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5" /></>,
+  // the Retro HUD's keys (hud-retro.css): a road running away with its centre dashes (Clear Path), a stopwatch (Focus
+  // Time), a tyre's tread (Locked In), an arc over a car (the hypercar's jump), a brake disc, speed lines (GAS) and a
+  // circled P (the handbrake)
+  road: <><path d="M9.2 4 5 20M14.8 4 19 20" /><path d="M12 4.5v2.5M12 10v3M12 16v3.5" /></>,
+  focus: <><circle cx="12" cy="13.5" r="7" /><path d="M12 13.5V9.6M10 2.8h4M12 2.8v3.7M18 6.6l1.3-1.3" /></>,
+  grip: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="3.4" /><path d="M12 3.5v3.1M12 17.4v3.1M3.5 12h3.1M17.4 12h3.1M6 6l2.2 2.2M15.8 15.8 18 18M6 18l2.2-2.2M15.8 8.2 18 6" /></>,
+  jump: <><path d="M4 14c2.5-7 13.5-7 16 0" /><path d="m17 11.6 3 2.4.6-3.7" /><path d="M5 19.5h14" /></>,
+  disc: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.6" /><circle cx="12" cy="6.4" r=".7" /><circle cx="17.6" cy="12" r=".7" /><circle cx="12" cy="17.6" r=".7" /><circle cx="6.4" cy="12" r=".7" /><circle cx="16" cy="8" r=".7" /><circle cx="16" cy="16" r=".7" /><circle cx="8" cy="16" r=".7" /><circle cx="8" cy="8" r=".7" /></>,
+  speed: <><path d="M9.5 4 5 20M14.5 4 10 20M19.5 4 15 20" /></>,
+  park: <><circle cx="12" cy="12" r="9" /><path d="M9.8 16.8V7.2h3.1a2.8 2.8 0 0 1 0 5.6H9.8" /></>,
 };
 export function Ico({ name }: { name: keyof typeof P }) {
   return <svg className="ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{P[name]}</svg>;
