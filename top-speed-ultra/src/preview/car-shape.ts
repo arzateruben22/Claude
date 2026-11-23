@@ -288,7 +288,7 @@ const HYPER: ShapeParams = {
   // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
   // fender trailing edge and the diagonal into the intake)
   // (2026-11-23: it runs on to the side intake's diagonal, so the intake sits in it, not across its rear ramp)
-  scallop: { depth: 0.16, z0: -0.84, z1: -0.6, e0: 0.55, e1: 0.8, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
+  scallop: { depth: 0.11, z0: -0.84, z1: -0.6, e0: 0.35, e1: 0.68, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
   // the windscreen runs up the canopy to z -0.10 (1.11 m), 0.2 m further than the first cut, and the side glass's
   // front-top corner moves back with it so the A-pillar keeps its width: from the driver's seat (seatFwd below) the
   // header's lip then lies about 40 degrees above the eye line, over the top of the seat camera's frame both on a
