@@ -1,4 +1,4 @@
-// Stoppage Time's materials, made once (the module map's mats.ts row: the bar never calls Lot 57's makeMats, which
+// Vega & Vinnie's materials (once Stoppage Time's), made once (the module map's mats.ts row: the bar never calls Lot 57's makeMats, which
 // would build Lot 57's sign atlas and reader board). Surfaces use Lot 57's generic code-painted textures; props are
 // vertex-coloured so a family of them is one draw call. Night light is baked per vertex (engine/geom.ts) on three
 // channels: a the venue's own lights (the pergola, the facade's halo, the blade sign), b the street and lot lights,
@@ -10,6 +10,7 @@ import * as Props from '../../../game/road/props';
 import { ground } from '../../../game/textures';
 import { wordmarkTex, bladeTex, testCardTex, signsAtlas, barFloorTex, barConcreteTex } from './tex';
 import { streakTex, type StreetMats } from '../../engine/streets';
+import { canvasTex } from '../../engine/geom';
 
 const WARM_A = new THREE.Color(1.0, 0.7, 0.42);      // the pergola's warm linear lights, about 2400 K
 const WARM_B = new THREE.Color(1.0, 0.86, 0.68);     // 3000 K LED street and lot heads
@@ -63,6 +64,8 @@ export function makeBarMats() {
     wordmark: new THREE.MeshStandardMaterial({ map: word, emissiveMap: word, emissive: 0xffffff, emissiveIntensity: 0.1, transparent: true, alphaTest: 0.05, roughness: 0.6, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 }),
     blade: new THREE.MeshStandardMaterial({ map: blade.tex, emissiveMap: blade.tex, emissive: 0xffffff, emissiveIntensity: 0.4, roughness: 0.5 }),
     plant: std({ roughness: 0.85, side: THREE.DoubleSide }),
+    // (Vega & Vinnie's patio, HD and Ultra) the bistro chairs' black perforated steel: alpha-tested holes, both sides
+    mesh: std({ map: perforatedTex(), alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.5, metalness: 0.35 }),
     flame: new THREE.MeshStandardMaterial({ color: 0x30140a, emissive: 0xff7a2a, emissiveIntensity: 0 }),
     lamp: new THREE.MeshStandardMaterial({ color: 0x2a2833, roughness: 0.4, metalness: 0.5, emissive: 0xffd9a8, emissiveIntensity: 0, vertexColors: true }),
     window: new THREE.MeshStandardMaterial({ color: 0x24282c, roughness: 0.2, metalness: 0.5, emissive: 0xffd2a0, emissiveIntensity: 0, vertexColors: true }),
@@ -100,10 +103,23 @@ export function setBarNight(m: BarMats, k: number, open: boolean) {
   m.screen.color.setScalar(open ? 1 : 0.04);
   m.signsLit.emissiveIntensity = open ? 0.35 + k * 0.5 : 0.02;
   m.neon.color.setScalar(open ? 1.3 + k * 1.2 : 0.05);
-  m.wordmark.emissiveIntensity = 0.08 + k * 1.6;
+  m.wordmark.emissiveIntensity = 0.08 + k * 0.62;              // (Vega & Vinnie's cream script: brighter read lime-yellow)
   m.blade.emissiveIntensity = 0.3 + k * 1.4;
-  m.flame.emissiveIntensity = open ? k * 3.2 : 0;
+  // the patio's heaters (Vega & Vinnie's): lit while open, a low glow by day and bright after dark; the page flickers
+  // them about this base on HD and Ultra
+  m.flame.emissiveIntensity = open ? 0.7 + k * 3.0 : 0; m.flame.userData.base = m.flame.emissiveIntensity;
   m.window.emissiveIntensity = k * 0.9;
   m.glow.opacity = k * 0.55;
   m.pool.opacity = k * 0.42;
+}
+
+/** the patio chairs' perforated steel (HD and Ultra): a 4 x 4 grid of round holes per tile, white where it's metal (the
+ *  vertex colour gives the black), clear in the holes */
+function perforatedTex() {
+  return canvasTex(64, 64, (g, w, h) => {
+    g.clearRect(0, 0, w, h); g.fillStyle = '#ffffff'; g.fillRect(0, 0, w, h);
+    g.globalCompositeOperation = 'destination-out';
+    for (let j = 0; j < 4; j++) for (let i = 0; i < 4; i++) { g.beginPath(); g.arc(8 + i * 16 + (j % 2) * 8, 8 + j * 16, 5.2, 0, Math.PI * 2); g.fill(); }
+    g.globalCompositeOperation = 'source-over';
+  }, { repeat: true });
 }
