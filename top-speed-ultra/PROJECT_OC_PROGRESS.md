@@ -4,6 +4,215 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-23: freeway curves can be followed at high speed (steering limits at speed), repaired a second time after review
+
+The owner (v25, a chase-cam screenshot: the OC Hypercar Unleashed at 234 mph on the CA-91 East, in the left lane):
+"when driving high speeds it's kind of hard to turn ... basically impossible at that speed to go with the turn unless
+I'm on the other side". The spot, from the road data: 4.6 mi from the CA-91 East start (s 26,460 m) is s = 33,860 m,
+inside a right-hand curve at 33.2-34.0 km (100 m mean radius 760-1,270 m, about 950 m overall; sharpest 468 m). He was in the left
+lane, the outside of it, with no room to run wide.
+
+This entry replaces the two before it for the same work (2026-11-22 and the first repair), which were rejected. Each
+review's points are answered below, **including the ones this build does not meet**.
+
+### Where this build stands (read this first)
+
+What is fixed and measured:
+- The owner's curve at 234 mph is followed from either lane in Arcade and Sport (the first check's driver stays within 1.2-1.4 m of its lane's centre), and so is
+  the Rossini GT at 150 mph on the I-405 South and CA-91 East. A 200 mph straight with no input stays straight (0 m in 10 s). Full steer on a straight at 200-300 mph
+  gives at most 4.0° of body slip (keys and touch, both cars, Arcade, Sport and Simulation), no spin.
+- The slide catch is as it was or better: a key released at 2° or at 1° overshoots no more than 0d311bd's keys did (hypercar, GT in Sport and Simulation; GT Sport 1° is +0.4°) with the wheel peaking no
+  higher (0.49 against 0.50), and the firm limits now hold for 0.3 s after a catch ends instead of fading between 3.4° and 1.7°.
+- The softer keys come in only with speed: a held key at 30 and 80 mph turns the wheel at 0d311bd's rate to within 0.002 (checked).
+- The hypercar in Sport at 300 mph on the I-405 South (7.0-7.7 km, 5.6 g at its tightest bit, more than the tyres give), from the inside lane with the key held for 10 s: no spin, 252-258 mph lowest, body slip
+  10-11° (the first repair spun to backwards, -18 to -37 mph, 85-88°).
+
+What is **not** met:
+1. **The I-405 South's 7 km curve cannot be followed at 234 or 300 mph by the hypercar**: it needs 4.5 g at 234 mph and 5.6-7 g at 300 mph at its tightest 289 m, and the tyres give 2.65-3.56 g (Sport, Arcade) at 234
+   and 3.04-3.77 g at 300. That is grip, not steering; the car runs 5-14 m wide at 234 mph and leaves the road at 300. What the build does about it: the road lock uses all of the grip there (so the car stays on the road as long as it can) and the keys let go of the wheel after a hard barrier hit.
+2. **A reactive on/off key driver (the reviewer's "yaw" driver: every 0.1 s, aiming 0.6 s ahead) does not stay within half a lane (1.83 m)** on the owner's curve at 234 mph: 3.2 m from the inside lane, 2.7-2.8 m from
+   the outside (hypercar Arcade), 2.4-2.7 m for the GT at 150 mph. It runs wide at the entry and never hits a barrier. I tried the keys' ramp (0-2x), turn-in rate and cap (0.85-1.0) in 18 combinations (and the return rate in 8 more): 2.6-4.4 m from the inside lane on the owner's curve, no setting
+   held 1.83 m. A response lag of 0.6 s at 104 m/s alone puts the car v²k t²/2 = 4 m wide at a bend's start; this driver's own on/off cycle is most of that lag. The same curve is held to 1.2-1.4 m by the check's anticipating driver (the first repair measured 0.4-0.8 m with a full touch pad).
+   The check now holds the reactive driver to 3.6 m with no barrier (what it does) and reports the number; it does not claim 1.83 m.
+3. **Sport at 300 mph on the I-405 South with a reactive driver**: no spin and the car stays above 90 mph, but it hits a barrier (body slip 36°, 3 hits). Arcade at 300 mph with the key held 10 s **spins in the built game** (slip 59°, speed down to 1 mph, 3 hits;
+   0d311bd's keys scraped there). The cause is the same in each case, and it is not the lock: the car runs wide, then meets the end of the barrier at the off-ramp's gore (the right barrier has a gap from s = 7,266 m to 7,368 m and the next one starts with a hard post) at 127 m/s. See "The spin" below.
+4. In the 120-case table (table 5 below), 82 cases are held by the keys, 9 by touch only, 2 are steering-limited and 27 are grip: the hypercar in Simulation at 200 mph on the I-405 North (needs 1.78 g, the tyres give 2.09, keys 1.32, touch 1.63)
+   and at 234 mph on the I-405 South (steering-limited); and, "touch only", the hypercar in Simulation at 200 mph on the I-405 South and at 234 mph on CA-91 East, the race tune and the GT in Simulation at 200 mph on CA-91 East and the I-405 South, and the Corsa in Simulation at 200 mph on CA-91 East. **Simulation was not widened**: its rear lets go past about 0.9° at 200 mph (the GT spins from a held 1.5° of lock, measured), so the lock stays capped at 0.845 x the grip lock; its keys are soft except near the grip limit or sliding.
+5. The Arcade hypercar at 234 mph still misses 53 of 62 runs in the 2-2.5 g band with a pure-pursuit driver aiming 40 m ahead (9 held) and 62 of 62 aiming 70 m ahead. Why: see "The 2-2.5 g band" below. It is the driver model's aim and the keys' cap, not the stability control.
+6. The old-code numbers for the release-at-1° rows of the slide-catch check come from a Node build of 0d311bd's `Physics.ts` and `input.ts` with the real road and barriers; the browser's own 0d311bd build was not re-run for them (the stand-in the reviewer used is not a 0d311bd build either).
+
+### What the second review found, and what was done
+
+| # | the review's point | done |
+|---|---|---|
+| 1 | new spin at 300 mph in Sport after the wall | **Partly.** The held key no longer spins it (above). The suggested "limit the road lock to the grip lock when the road needs more than the grip" was tried and does not stop it: the car's outcome depends on whether it meets the gore post, and over 39 starts a few mph and 20 m apart a lock with no road part (the grip lock alone) spun 38/39 of the Sport hold runs, the old speed curve alone (when the road asks for over 0.6 of the grip) 0/39, and scaling the lock to 0.85x, 0.7x or 0.55x gave 0 to 39 of 39 depending on the profile and the driver (the outcome flips with any change; there is no stable region). What does stop it is the keys letting go after a hard hit (3.5° of slip jump in one frame on a barrier touch above ~110 mph: keys unread for 1.2 s while the car slides more than 3°): spin counts over the same 39 starts (hypercar, I-405 South, 294-306 mph, three start points) for the key held / the yaw driver / the lazy driver: Sport 12 / 2 / 4 of 39 (0d311bd: 24 / 14 / 8; the first repair: 31 / 33 / 30), Arcade 15 / 0 / 2 (0d311bd 0 / 1 / 0; first repair 39 / 0 / 0). The road lock also fades back to the grip lock above 3-7° of body slip. |
+| 2 | the I-405 South curve can't be followed; grip-limited | **Stated** (above, #1): grip-limited, 4.5-5.6 g needed. |
+| 3 | reactive key drivers leave the half-lane band on the owner's curve | **Not met** (above, #2). Added the reactive driver to the check with the honest bound. |
+| 4 | late release at 1° overshoots | **Fixed**: the firm limits hold 0.3 s after the slide drops under 3.4° (`catchT`); added the 1° cases to the slide-catch check (4 cars/profiles x 2 sides). |
+| 5 | lazy driver overcorrects into the inside barrier at curve exit | **Partly.** The lock now falls with the road as the bend ends (eased over 40 m of driving falling, 60 m rising, instead of 90 m both ways), and the 3x ramp is gated by speed. The lazy driver still touches the inside barrier on the owner's curve at 234 mph (2 hits, 9° slip): with the key never released until it is outward of the lane, its own on/off cycle swings it 3-4 m across the lane. |
+| 6 | Physics.ts: sampleRoad replaced road.sample at three call sites | **Reduced**: none of the three `road.sample` calls is replaced. A private `trackRoad` (and `meanK`) is called twice, once in `placeAt` and once in the ground step after the unchanged `road.sample`; only `maxDelta`'s `lockParts` reads what it stores. Not signed off by Physics.ts's owner (no way to ask from here): the diff is for them to read. |
+| 7 | the progress log | **Corrected** (this entry). |
+| 8 | Simulation ~200 mph with the keyboard | **Partly**: the keys are no longer firm for all of Simulation, only near the grip limit (`use` 0.6-0.85 of the lateral grip) or sliding over 1-2.5°. The lock was not enlarged (above, #4); GT Simulation held-key no-spin stands (0/16 spins, worst slip 5.0° at 200 mph, 16 tightest 300-700 m curves). |
+| 9 | Sport keyboard-only gaps at top speed | Hypercar Sport 234 mph on the I-405 North: **keys hold** (2.49 g against 2.44 needed); 200 mph on the I-5 South: **keys hold** (was touch only). The Corsa Sport at 200 mph on the I-5 South is grip (1.76 g against 2.13 needed, the tyres give 1.64). Still a gap: the hypercar Sport 300 mph on the I-405 South / North / I-5 South: grip. |
+| 10 | Arcade hypercar at 234 mph misses 53 of 62 in the 2-2.5 g band | **Explained**, below. |
+| 11 | gate the 3x ramp by speed | **Done**, and the whole softening is gated: `smoothstep(0.5, 0.9, speed/70)` (nothing under ~78 mph, all of it from ~141 mph); check added: a held key at 30 and 80 mph is within 0.002 of 0d311bd's wheel for 1 s. |
+| 12 | per-step closure in `sampleRoad` | **Removed**: `meanK` is a private method, `parts` is one reused object: nothing is allocated per step or per `maxDelta()` call. |
+| 13 | Physics.ts scope in the summary and the log | **Corrected**, next. |
+| 14 | re-run the checks | Done, below. |
+
+### What changed in the code
+
+- **`Physics.ts`** (the owner of the file allowed `maxDelta`'s curve; the rest of this is what was added to carry it, none of it changes grip, power, top speed, `steerLock()` or the road sampling):
+  - `maxDelta()` is now `max(speed, grip, road)` of `lockParts()`, one reused object (`parts`); `lockParts()` is public so the tests can read it.
+  - a field `kRoad`, a getter `roadK`, a private `trackRoad(road, s, k0, ds)` and private `meanK(...)`; called from `placeAt` and from the ground step (after the unchanged `road.sample`), not from the air step.
+  - three getters for `input.ts`: `roadBind` (how far the road part of the lock is in charge), `gripUse` (the share of the tyres' lateral grip in use) and `touching` (a barrier touch last step).
+  - the lock: (1) the speed curve, unchanged; (2) the grip lock `(L/v² + K)·a` for the lateral acceleration `a` the tyres give with the wing and the fans' suction, `K` the understeer gradient; (3) the road lock: `1.45 (Arcade) to 1.3 (Simulation) x ρ(u) x` the angle that holds the sharpest bend over the next 100 m
+    (`atan(L k) + K v² k`), `ρ = 1 + 0.5u² + 1.2u⁸` with `u` the road's share of what the car holds (the steady-state sweeps: the angle for 30/50/70/85/95 % of a car's most is 0.85-1.05 / 1.0-1.15 / 1.2-1.35 / 1.3-1.8 / 1.7-2.8 x the linear one), capped at 3.0 (Arcade) to 1.3 (Simulation) x the grip lock;
+    Simulation keeps the first repair's 1.3x and cap; the road lock fades to the grip lock between 3° and 7° of body slip. The curvature is the largest 40 m mean over four windows from 0 to 100 m ahead and the 60 m around the car, eased over 60 m of driving when it rises and 40 m when it falls.
+- **`input.ts`**: `update(dt, speed, slip, handling, use, bind, contact)`. Above ~80 mph the keys turn in at `2.4 - sp*(1.2 - 0.6 soft)` (up to 3x faster after 0.12-0.25 s) and cap at `1 - sp*(0.35 - soft*(0.2 + 0.15 bind))` (85 % of the lock, all of it where the road lock is in charge), `soft` = the speed gate x (1 - catch - Simulation near the limit). A catch (key against the slide) keeps the old limits for 0.3 s after it ends.
+  A hard barrier hit at speed (body slip jumping 3.5° in one frame on a barrier touch, above ~110 mph) lets go of the wheel: keys unread for 1.2 s while the car slides more than 3°. Touch and the pad are unchanged.
+- **`Game.ts`**: passes `gripUse`, `roadBind` and `touching` to `Input.update` (one line).
+- **`tests/regression.mjs`** (abilities): the three steering checks of before updated, and added: the reactive driver and a held key at 300 mph, the release at 1° (four cases, both sides), and the keys at 30 and 80 mph.
+
+### The spin, and the 2-2.5 g band
+
+**The spin.** On the I-405 South from s = 6,900 at 300 mph, the road's right barrier is continuous to s = 7,266, gone for 102 m (the off-ramp), and starts again with a hard post at 7,368. A car that runs wide scrapes the barrier and reaches the post at 127 m/s: the engine of the "spin" is that hit (speed 127 to 66 m/s or to a standstill, sideways speed 32-44 m/s in one step), then the counter-steer lock the held key asks for
+(`steerLock` opens to the slip plus 8°: 26° of wheel at 66 m/s) whips the car and it meets the other barrier. Held at constant wheel angles of up to 6° the hypercar in Arcade and Sport does not spin at all (steady-state sweeps at 150, 234, 300 mph). 0d311bd's keys and lock spin in 24/39 starts (Sport, key held) and 8-14/39 with the other drivers: the reviewer's stand-in scraped by luck of where it met the barrier. Because the outcome depends on a narrow geometry, no lock sizing is stable (the grip-lock-only lock spun
+38/39 of the Sport hold runs, scaled locks 0-39/39). The thing that is stable is not reading a held key through a crash.
+
+**The 2-2.5 g band.** For the Arcade hypercar at 234 mph, 31 curves (62 curve-lane runs) need 2-2.5 g at their tightest 100 m. With the pure-pursuit driver of table 6 (aiming 40 m ahead): 9/62 held; of the 53 misses, 28 had the keys at their cap (0.83 of the wheel) more than 15 % of the time, and the miss median is 2.7 m. Aiming 25 m ahead (less corner cutting): 16/62, and all 46 misses had the keys at their cap.
+So it is not the stability control's yaw target, and it is not the lock: in these curves the keys at 0.85 give 2.3-2.8 g on a constant radius (table 5) against 2.0-2.5 needed, with nothing left over for the entry, so a driver that has to turn in over 0.5 s runs 2.7-3.3 m wide. Before this work 0/62 were held with any driver. Making the cap 1.0 there (`bind` at a lower road-to-grip ratio) held 4 more of 62 (20 against 16 aiming 25 m) and made the reactive driver 0.4-0.7 m worse everywhere else, so it was not kept.
+
+### Evidence
+
+All of this is on the built game (`npm run build`; `dist/artifact.html` sha256 `4bce844e…ab25`) or, where it says Node, on `Physics.ts`, `input.ts`, `cars.ts`, `Path.ts`, `HyperAbility.ts` and `Network.ts` bundled for Node with the real road data and barriers; "before" is 0d311bd.
+
+**1. The steering lock follows the road smoothly** (the first check, in the built game): the largest step in 50 ms is 0.056° (owner's curve, Arcade, right lane), 0° (left lane), 0.028° and 0.020° (I-405 South, GT Sport, from each lane), against 0.5-3° from the raw road point.
+
+**2. The keys' slide catch** (a straight road, the car at a held speed with 15° of body slip, a driver who holds the key against the slide until the slip is under 2° or 1°, then lets go; overshoot to the other side; built game):
+
+| car, profile, speed | release | 0d311bd | this build |
+|---|---|---|---|
+| hypercar Sport 150 mph | 2° | 1.3°, 0.33 s | 1.1°, 0.36 s |
+| hypercar Simulation 150 mph | 2° | 2.0°, 0.37 s | 1.6°, 0.40 s |
+| GT Sport 120 mph | 2° | 5.0°, 0.58 s | 3.6°, 0.52 s |
+| hypercar Sport 150 mph | 1° | 2.1°, wheel 0.50 | 1.3°, wheel 0.49 |
+| hypercar Simulation 150 mph | 1° | 3.7°, wheel 0.54 | 1.8°, wheel 0.53 |
+| GT Sport 120 mph | 1° | 3.4°, wheel 0.73 | 3.8°, wheel 0.73 |
+| GT Simulation 120 mph | 1° | 28.9° (spins) | 10.8° |
+
+(The 2° rows' 0d311bd values are the first repair's measurements; the 1° rows' are from the Node build of 0d311bd. The GT in Simulation spins from a 15° slide at 120 mph on 0d311bd and on the first repair, depending on the side.)
+
+**3. Held key, tap, flick and the straights** (built game, abilities check): a 0.15 s tap moves the car 0.7-1.6 m sideways in 2 s, a left-right flick leaves it at most 2.9° of slip with the yaw rate under 0.1°/s late, a key held full to the barrier (1.3-1.8 s): slip at most 3.0° (hypercar Arcade and Sport 234 mph, GT 200 mph);
+no input for 10 s at 200 mph: 0 m. Full steer on a straight with Input.update or full touch, up to the barrier (judge run, built game, hypercar then GT): 234 mph Arcade 2.5°, Sport 3.0°; 300 mph Arcade 2.8°, Sport 3.3°; touch Sport 234 mph 3.4°, 300 mph 4.0°; Simulation 200 mph 2.3°; GT 200 mph Arcade 2.1°, Sport 2.8°, touch 3.4°; Simulation 180 mph 2.4°; no spin in any.
+
+**4. Reactive, lazy and held drivers on the real curves** (built game; the reviewer's "yaw" and "lazy" drivers and a held key; barrier gap = metres from the barrier; the walls are real):
+
+| car, profile | curve, lane, speed | driver | off its lane's centre | slip | note |
+|---|---|---|---|---|---|
+| hypercar Arcade | CA-91 East inside 234 | yaw | 3.21 m | 2.2° | gap 3.9 m |
+| hypercar Arcade | CA-91 East inside 234 | lazy | 3.9 m | 9.2° | touches the inside barrier at the exit (2 hits), 216 mph |
+| hypercar Arcade | CA-91 East outside 234 | yaw / lazy | 2.79 / 8.06 m | 2.0 / 2.5° | no barrier |
+| hypercar Arcade | CA-91 East inside 300 | yaw | 5.46 m | 2.6° | gap 2.4 m |
+| hypercar Sport | CA-91 East inside 234 | yaw / lazy | 3.99 / 3.93 m | 2.5 / 8.8° | lazy 2 hits |
+| hypercar Sport | CA-91 East inside 300 | yaw | 7.34 m | 3.6° | gap 2.2 m |
+| hypercar Arcade | I-405 South inside 234 / 300 | yaw | 6.8 / 11.0 m | 2.7 / 4.4° | no barrier (grip-limited) |
+| hypercar Sport | I-405 South inside 234 | yaw / lazy | 6.3 / 9.2 m | 3.8 / 13.6° | lazy 1 hit |
+| hypercar Arcade | I-405 South inside 300 | lazy / key held | 10.8 / 8.5 m | 14.8 / **59°** | held: 3 hits, 1 mph at the lowest |
+| hypercar Sport | I-405 South inside 300 | yaw / lazy / key held | 20.6 / 18.8 / 3.5 m | 35.9 / 20.0 / 11.1° | no spin: lowest 90 / 219 / 258 mph |
+| GT Sport | I-405 South inside / outside 150 | yaw | 2.44 / 2.13 m | 2.6° | gap 3.5 / 2.0 m |
+| GT Sport | CA-91 East inside 150 | yaw | 1.68 m | 1.8° | |
+| GT Sport | I-405 South inside 150 | lazy | 3.85 m | 2.5° | no barrier |
+
+The first check's anticipating driver (touching the keys every 50 ms with the car's understeer known) holds 1.17-1.44 m on the owner's curve and the GT's I-405 South curve, from either lane, no barrier.
+
+**5. Which curves the keys hold, and why not the others** (Node; a constant-radius curve under the car so the road lock is live, 6 s at a held speed, steady state, the keys through the real `Input.update`, full touch for comparison; "tyres can give" is the most steady path g
+with a held wheel angle up to 6°, slip under 6°, speed held; each cell is needs g: before keys/touch -> after keys/touch; w = the car runs wider than the road; verdicts: *keys hold*; *touch only* (the pad holds it, the keys do not); *steering-limited* (the tyres could give it and neither holds it); *grip* (more than the tyres give)):
+
+| car | profile | mph | tyres can give | curve (tightest 100 m radius) : needs g -> before keys/touch, after keys/touch, verdict |
+|---|---|---|---|---|
+| OC Hypercar Unleashed | Arcade | 150 | 2.91 | 91E 0.60: 1.00/1.41 -> 2.01/2.21 keys hold ; 405S 0.75: 1.00/1.41 -> 2.01/2.21 keys hold ; 405N 1.00: 1.00w/1.41 -> 2.01/2.21 keys hold ; 5S 1.20: 1.00w/1.41 -> 2.01/2.21 keys hold |
+| OC Hypercar Unleashed | Arcade | 200 | 3.21 | 91E 1.07: 1.02w/1.44 -> 2.11/2.32 keys hold ; 405S 1.34: 1.02w/1.44 -> 2.11/2.32 keys hold ; 405N 1.78: 1.02w/1.44w -> 2.11/2.32 keys hold ; 5S 2.13: 1.02w/1.44w -> 2.45/2.52 keys hold |
+| OC Hypercar Unleashed | Arcade | 234 | 3.56 | 91E 1.46: 1.07w/1.49 -> 2.33/2.55 keys hold ; 405S 1.83: 1.07w/1.49w -> 2.33/2.55 keys hold ; 405N 2.44: 1.07w/1.49w -> 2.83/2.84 keys hold ; 5S 2.91: 1.07w/1.49w -> 3.11/3.11 keys hold |
+| OC Hypercar Unleashed | Arcade | 300 | 3.77 | 91E 2.41: 1.18w/1.60w -> 2.80/3.04 keys hold ; 405S 3.01: 1.18w/1.60w -> 3.38/3.38 keys hold ; 405N 4.01: 1.18w/1.60w -> 3.77/3.75 keys hold ; 5S 4.79: 1.18w/1.60w -> 3.95w/3.94w grip |
+| OC Hypercar Unleashed | Sport | 150 | 2.46 | 91E 0.60: 1.10/1.51 -> 1.81/1.96 keys hold ; 405S 0.75: 1.10/1.51 -> 1.81/1.96 keys hold ; 405N 1.00: 1.10/1.51 -> 1.81/1.96 keys hold ; 5S 1.20: 1.10w/1.51 -> 1.81/1.96 keys hold |
+| OC Hypercar Unleashed | Sport | 200 | 2.61 | 91E 1.07: 1.09/1.50 -> 1.85/2.00 keys hold ; 405S 1.34: 1.09w/1.50 -> 1.85/2.00 keys hold ; 405N 1.78: 1.09w/1.50w -> 2.00/2.08 keys hold ; 5S 2.13: 1.09w/1.50w -> 2.28/2.28 keys hold |
+| OC Hypercar Unleashed | Sport | 234 | 2.65 | 91E 1.46: 1.12w/1.52 -> 1.99/2.15 keys hold ; 405S 1.83: 1.12w/1.52w -> 2.01/2.16 keys hold ; 405N 2.44: 1.12w/1.52w -> 2.49/2.49 keys hold ; 5S 2.91: 1.12w/1.52w -> 2.59w/2.59w grip |
+| OC Hypercar Unleashed | Sport | 300 | 3.04 | 91E 2.41: 1.18w/1.59w -> 2.53/2.58 keys hold ; 405S 3.01: 1.18w/1.59w -> 2.84w/2.84w grip ; 405N 4.01: 1.18w/1.59w -> 2.92w/2.92w grip ; 5S 4.79: 1.18w/1.59w -> 2.92w/2.92w grip |
+| OC Hypercar Unleashed | Sim | 150 | 2.12 | 91E 0.60: 1.23/1.60 -> 1.30/1.60 keys hold ; 405S 0.75: 1.23/1.60 -> 1.30/1.60 keys hold ; 405N 1.00: 1.23/1.60 -> 1.30/1.60 keys hold ; 5S 1.20: 1.23/1.60 -> 1.30/1.60 keys hold |
+| OC Hypercar Unleashed | Sim | 200 | 2.09 | 91E 1.07: 1.18/1.54 -> 1.29/1.59 keys hold ; 405S 1.34: 1.18w/1.54 -> 1.29w/1.59 touch only ; 405N 1.78: 1.18w/1.54w -> 1.32w/1.63w steering-limited ; 5S 2.13: 1.18w/1.54w -> 1.32w/1.63w grip |
+| OC Hypercar Unleashed | Sim | 234 | 2.18 | 91E 1.46: 1.18w/1.55 -> 1.35w/1.69 touch only ; 405S 1.83: 1.18w/1.55w -> 1.39w/1.73w steering-limited ; 405N 2.44: 1.18w/1.55w -> 1.39w/1.73w grip ; 5S 2.91: 1.18w/1.55w -> 1.39w/1.73w grip |
+| OC Hypercar Unleashed | Sim | 300 | 2.34 | 91E 2.41: 1.20w/1.58w -> 1.55w/1.90w grip ; 405S 3.01: 1.20w/1.58w -> 1.55w/1.90w grip ; 405N 4.01: 1.20w/1.58w -> 1.55w/1.90w grip ; 5S 4.79: 1.20w/1.58w -> 1.55w/1.90w grip |
+| OC Hypercar race tune | Arcade | 150 | 2.23 | 91E 0.60: 0.63/0.93 -> 1.28/1.45 keys hold ; 405S 0.75: 0.63w/0.93 -> 1.28/1.45 keys hold ; 405N 1.00: 0.63w/0.93w -> 1.28/1.45 keys hold ; 5S 1.20: 0.63w/0.93w -> 1.66/1.68 keys hold |
+| OC Hypercar race tune | Arcade | 200 | 2.48 | 91E 1.07: 0.63w/0.95w -> 1.56/1.77 keys hold ; 405S 1.34: 0.63w/0.95w -> 1.98/2.01 keys hold ; 405N 1.78: 0.63w/0.95w -> 2.29/2.29 keys hold ; 5S 2.13: 0.63w/0.95w -> 2.44/2.43 keys hold |
+| OC Hypercar race tune | Sport | 150 | 1.63 | 91E 0.60: 0.69/0.98 -> 1.13/1.25 keys hold ; 405S 0.75: 0.69w/0.98 -> 1.13/1.25 keys hold ; 405N 1.00: 0.69w/0.98w -> 1.30/1.34 keys hold ; 5S 1.20: 0.69w/0.98w -> 1.46/1.46 keys hold |
+| OC Hypercar race tune | Sport | 200 | 1.69 | 91E 1.07: 0.68w/1.02w -> 1.42/1.52 keys hold ; 405S 1.34: 0.68w/1.02w -> 1.65/1.66 keys hold ; 405N 1.78: 0.68w/1.02w -> 1.74/1.74 keys hold ; 5S 2.13: 0.68w/1.02w -> 1.74w/1.74w grip |
+| OC Hypercar race tune | Sim | 150 | 1.21 | 91E 0.60: 0.77/1.02 -> 0.79/1.02 keys hold ; 405S 0.75: 0.77/1.02 -> 0.79/1.02 keys hold ; 405N 1.00: 0.77w/1.02 -> 0.79w/1.02 touch only ; 5S 1.20: 0.77w/1.02w -> 0.79w/1.02w grip |
+| OC Hypercar race tune | Sim | 200 | 1.07 | 91E 1.07: 0.78w/1.22 -> 0.90w/1.46 touch only ; 405S 1.34: 0.78w/1.22w -> 0.90w/1.46 touch only ; 405N 1.78: 0.78w/1.22w -> 0.90w/1.46w grip ; 5S 2.13: 0.78w/1.22w -> 0.90w/1.46w grip |
+| Rossini GT | Arcade | 150 | 2.05 | 91E 0.60: 0.63/0.92 -> 1.15/1.29 keys hold ; 405S 0.75: 0.63w/0.92 -> 1.15/1.29 keys hold ; 405N 1.00: 0.63w/0.92w -> 1.34/1.42 keys hold ; 5S 1.20: 0.63w/0.92w -> 1.65/1.65 keys hold |
+| Rossini GT | Arcade | 200 | 2.37 | 91E 1.07: 0.63w/0.94w -> 1.56/1.66 keys hold ; 405S 1.34: 0.63w/0.94w -> 1.97/1.97 keys hold ; 405N 1.78: 0.63w/0.94w -> 2.25/2.24 keys hold ; 5S 2.13: 0.63w/0.94w -> 2.25/2.25 keys hold |
+| Rossini GT | Sport | 150 | 1.51 | 91E 0.60: 0.68/0.96 -> 1.01/1.12 keys hold ; 405S 0.75: 0.68w/0.96 -> 1.01/1.12 keys hold ; 405N 1.00: 0.68w/0.96w -> 1.31/1.31 keys hold ; 5S 1.20: 0.68w/0.96w -> 1.43/1.43 keys hold |
+| Rossini GT | Sport | 200 | 1.57 | 91E 1.07: 0.68w/0.99w -> 1.45/1.45 keys hold ; 405S 1.34: 0.68w/0.99w -> 1.59/1.59 keys hold ; 405N 1.78: 0.68w/0.99w -> 1.59w/1.59w grip ; 5S 2.13: 0.68w/0.99w -> 1.59w/1.59w grip |
+| Rossini GT | Sim | 150 | 1.04 | 91E 0.60: 0.75/0.98 -> 0.78/0.98 keys hold ; 405S 0.75: 0.75/0.98 -> 0.78/0.98 keys hold ; 405N 1.00: 0.75w/0.98w -> 0.78w/0.98w grip ; 5S 1.20: 0.75w/0.98w -> 0.78w/0.98w grip |
+| Rossini GT | Sim | 200 | 1.05 | 91E 1.07: 0.76w/1.40 -> 0.78w/1.40 touch only ; 405S 1.34: 0.76w/1.40 -> 0.78w/1.40 touch only ; 405N 1.78: 0.76w/1.40w -> 0.78w/1.40w grip ; 5S 2.13: 0.76w/1.40w -> 0.78w/1.40w grip |
+| Rossini Corsa | Arcade | 150 | 2.19 | 91E 0.60: 0.64/0.94 -> 1.27/1.42 keys hold ; 405S 0.75: 0.64w/0.94 -> 1.27/1.42 keys hold ; 405N 1.00: 0.64w/0.94w -> 1.27/1.42 keys hold ; 5S 1.20: 0.64w/0.94w -> 1.62/1.64 keys hold |
+| Rossini Corsa | Arcade | 200 | 2.58 | 91E 1.07: 0.64w/0.97w -> 1.53/1.73 keys hold ; 405S 1.34: 0.64w/0.97w -> 1.95/1.97 keys hold ; 405N 1.78: 0.64w/0.97w -> 2.34/2.34 keys hold ; 5S 2.13: 0.64w/0.97w -> 2.46/2.46 keys hold |
+| Rossini Corsa | Sport | 150 | 1.60 | 91E 0.60: 0.70/1.00 -> 1.12/1.24 keys hold ; 405S 0.75: 0.70w/1.00 -> 1.12/1.24 keys hold ; 405N 1.00: 0.70w/1.00w -> 1.30/1.33 keys hold ; 5S 1.20: 0.70w/1.00w -> 1.47/1.47 keys hold |
+| Rossini Corsa | Sport | 200 | 1.64 | 91E 1.07: 0.69w/1.02w -> 1.41/1.49 keys hold ; 405S 1.34: 0.69w/1.02w -> 1.66/1.66 keys hold ; 405N 1.78: 0.69w/1.02w -> 1.76/1.76 keys hold ; 5S 2.13: 0.69w/1.02w -> 1.76w/1.76w grip |
+| Rossini Corsa | Sim | 150 | 1.18 | 91E 0.60: 0.78/1.03 -> 0.82/1.03 keys hold ; 405S 0.75: 0.78/1.03 -> 0.82/1.03 keys hold ; 405N 1.00: 0.78w/1.03 -> 0.82w/1.03 touch only ; 5S 1.20: 0.78w/1.03w -> 0.82w/1.03w grip |
+| Rossini Corsa | Sim | 200 | 1.28 | 91E 1.07: 0.78w/1.11 -> 0.88w/1.16 touch only ; 405S 1.34: 0.78w/1.11w -> 0.88w/1.16w grip ; 405N 1.78: 0.78w/1.11w -> 0.88w/1.16w grip ; 5S 2.13: 0.78w/1.11w -> 0.88w/1.16w grip |
+
+(w = the car runs wider than the road. Verdicts after the change: {"keys":82,"touch":9,"steer":2,"grip":27} of 120 car/profile/speed/curve cases.)
+
+**6. Every main-line curve, from the inside and the outside lane** (Node; the sharpest point of each of 528 curves on the 20 carriageways, 100 m mean radius 150 m and up, 1,056 runs per line; a keyboard driver model that holds Left / Right / nothing every 50 ms from a pure-pursuit aim some metres ahead on its lane's centre and knows the car's understeer; held = the car's centre never more than half a lane, 1.83 m, from its lane's centre, slip under 20°, six seconds from 3 s before the sharpest point; "at their cap" = the wheel at 0.83 or more with the key down, over 15 % of the run):
+
+- the driver model aiming aim 40 m ahead (before = 0d311bd's keys and lock, after = this build; first the held count of 1,056 curve-lane runs, then the by-needed-g counts):
+  - before: hyperU h0.15 234 mph (aim 40 m): 138/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 0/346, <1 g 138/340
+  - after: hyperU h0.15 234 mph (aim 40 m): 877/1056 held (misses with the keys at their cap over 15 % of the time: 81); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 9/62, 1.5-2 g 194/272, 1-1.5 g 336/346, <1 g 338/340
+  - before: hyperU h0.5 234 mph (aim 40 m): 157/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 0/346, <1 g 157/340
+  - after: hyperU h0.5 234 mph (aim 40 m): 704/1056 held (misses with the keys at their cap over 15 % of the time: 136); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 67/272, 1-1.5 g 299/346, <1 g 338/340
+  - before: hyperU h0.15 300 mph (aim 40 m): 18/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/160, 2.5-3 g 0/194, 2-2.5 g 0/208, 1.5-2 g 0/204, 1-1.5 g 2/188, <1 g 16/102
+  - after: hyperU h0.15 300 mph (aim 40 m): 549/1056 held (misses with the keys at their cap over 15 % of the time: 225); 3+ g 0/160, 2.5-3 g 8/194, 2-2.5 g 64/208, 1.5-2 g 189/204, 1-1.5 g 186/188, <1 g 102/102
+  - before: gt h0.5 205 mph (aim 40 m): 243/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 0/402, <1 g 243/548
+  - after: gt h0.5 205 mph (aim 40 m): 598/1056 held (misses with the keys at their cap over 15 % of the time: 138); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 67/402, <1 g 531/548
+  - before: gt h0.5 150 mph (aim 40 m): 727/1056 held (misses with the keys at their cap over 15 % of the time: 0); 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 727/1016
+  - after: gt h0.5 150 mph (aim 40 m): 963/1056 held (misses with the keys at their cap over 15 % of the time: 37); 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 963/1016
+  - before: gt h0.9 200 mph (aim 40 m): 309/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 309/604
+  - after: gt h0.9 200 mph (aim 40 m): 364/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 364/604
+  - before: corsa h0.5 225 mph (aim 40 m): 190/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 0/368, <1 g 190/406
+  - after: corsa h0.5 225 mph (aim 40 m): 527/1056 held (misses with the keys at their cap over 15 % of the time: 143); 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 127/368, <1 g 400/406
+  - before: hyperR h0.9 200 mph (aim 40 m): 316/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 316/604
+  - after: hyperR h0.9 200 mph (aim 40 m): 419/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 419/604
+
+- the driver model aiming aim 70 m ahead (before = 0d311bd's keys and lock, after = this build; first the held count of 1,056 curve-lane runs, then the by-needed-g counts):
+  - before: hyperU h0.15 234 mph (aim 70 m): 210/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 0/346, <1 g 210/340
+  - after: hyperU h0.15 234 mph (aim 70 m): 732/1056 held (misses with the keys at their cap over 15 % of the time: 45); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 83/272, 1-1.5 g 311/346, <1 g 338/340
+  - before: hyperU h0.5 234 mph (aim 70 m): 214/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 0/346, <1 g 214/340
+  - after: hyperU h0.5 234 mph (aim 70 m): 577/1056 held (misses with the keys at their cap over 15 % of the time: 71); 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 12/272, 1-1.5 g 228/346, <1 g 337/340
+  - before: hyperU h0.15 300 mph (aim 70 m): 102/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/160, 2.5-3 g 0/194, 2-2.5 g 0/208, 1.5-2 g 0/204, 1-1.5 g 17/188, <1 g 85/102
+  - after: hyperU h0.15 300 mph (aim 70 m): 447/1056 held (misses with the keys at their cap over 15 % of the time: 99); 3+ g 0/160, 2.5-3 g 0/194, 2-2.5 g 15/208, 1.5-2 g 144/204, 1-1.5 g 186/188, <1 g 102/102
+  - before: gt h0.5 205 mph (aim 70 m): 296/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 0/402, <1 g 296/548
+  - after: gt h0.5 205 mph (aim 70 m): 488/1056 held (misses with the keys at their cap over 15 % of the time: 82); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 4/402, <1 g 484/548
+  - before: gt h0.5 150 mph (aim 70 m): 751/1056 held (misses with the keys at their cap over 15 % of the time: 0); 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 751/1016
+  - after: gt h0.5 150 mph (aim 70 m): 933/1056 held (misses with the keys at their cap over 15 % of the time: 23); 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 933/1016
+  - before: gt h0.9 200 mph (aim 70 m): 342/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 342/604
+  - after: gt h0.9 200 mph (aim 70 m): 381/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 381/604
+  - before: corsa h0.5 225 mph (aim 70 m): 240/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 0/368, <1 g 240/406
+  - after: corsa h0.5 225 mph (aim 70 m): 405/1056 held (misses with the keys at their cap over 15 % of the time: 93); 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 41/368, <1 g 364/406
+  - before: hyperR h0.9 200 mph (aim 70 m): 342/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 342/604
+  - after: hyperR h0.9 200 mph (aim 70 m): 399/1056 held (misses with the keys at their cap over 15 % of the time: 0); 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 399/604
+
+**7. Other parts of the game that drive through `maxDelta`**: `fastForward` for 20 s on the CA-91 East at a 70 m/s cruise (the autopilot): 0 hits, 157 mph at the end; Speed Survival starts and accelerates (164 mph after 10 s of full throttle); no page errors in any run.
+
+**8. The suite on the built game** (4 shared cores, load 15-37, one Playwright run at a time, every part under 20 minutes; `dist/artifact.html` sha256 `4bce844e…ab25`, the build the frames and judge runs above used; parts run in the order below):
+
+- **abilities, the steering checks** (6 checks incl. the page-errors line): 6/6 pass on this build (the three first-repair checks, the new reactive-driver/300 mph check, the 1° catch cases and the 30/80 mph keys). Earlier builds of today failed the catch check twice (a key let go after any barrier touch; GT Simulation's old overshoot taken from the wrong side), which is why the hard-hit rule needs a body-slip jump and the check has the GT Simulation value 28.9°.
+- **modes**: 10/10.
+- **boot**, in parts: A 9/9 (loads, the Settings keys and Store tile, network, barriers, scenery, the 20 carriageways); B 9/9 (the 28 ramps, cut surfaces and sides, junction levels, levelled and baked heights, menu credits, field of view); D (Retro Low by default) 2/2.
+- **launch** (Go To and errand paths through `fastForward`/`navigateTo`'s autopilot): 11/11 in one run, including the run card download, "story: Mara" and the errands (the first repair saw those two fail on a loaded machine and on 0d311bd's build alike; they passed this time).
+- **phone**, in parts: P1 7/7; P2 5/5; P3 5/5; P4 8/8; P5 6/6; P6 failed once at its second check ("OC Hypercar THRUST key at 390 × 844", the buttons were not found: the page was not in the driving view yet) and passed 5/5 on a re-run with the same checks. P7 ("sleeves under an overpass (High)") was not run: it never finishes on this machine under this load, on 0d311bd's build as well.
+- `fastForward` 20 s on the CA-91 East and Speed Survival: item 7.
+
 ## 2026-11-22: the view holds still when paused, and the speed shake is smooth
 
 The owner (v25, a pause-screen screenshot): "why does it shake like the outside of the car when paused and driving?"
