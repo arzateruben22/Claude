@@ -581,7 +581,9 @@ function makeBody(P: ShapeParams) {
     }
     return out;
   };
-  function mirrorParts(kit: Kit, side: 1 | -1, withGlass: boolean, housingKey = P.id === 'rossini-corsa' || P.id === 'oc-hyper' ? 'carbon' : 'mirrorPaint') {
+  // (the hypercar's housing and stalk in gloss black, judge round 2: in its 'high' carbon, a light grey twill, they read
+  // as polished silver from above; the references' mirrors are black)
+  function mirrorParts(kit: Kit, side: 1 | -1, withGlass: boolean, housingKey = P.id === 'oc-hyper' ? 'trim' : P.id === 'rossini-corsa' ? 'carbon' : 'mirrorPaint') {
     const q = mirrorQ(side), c = v3(side * MIRROR.at.x, MIRROR.at.y, MIRROR.at.z);
     const m = new THREE.Matrix4().compose(c, q, v3(1, 1, 1));
     const rows: V3[][] = [];
