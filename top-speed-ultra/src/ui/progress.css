@@ -1,0 +1,58 @@
+/* Progress widgets (src/ui/progress.tsx): the Hypercar's Founders' Road bar, a garage card's miles gate, the goals panel,
+   the passport. Only this file styles them, so the menu lane's styles.css rebuild does not touch them. */
+.pg { --pg-line: var(--line-2, rgba(190,212,240,.32)); display: grid; gap: 8px; padding: 12px 14px; background: var(--cell, rgba(5,9,16,.72)); box-shadow: inset 0 0 0 1px var(--line, rgba(190,212,240,.16)); color: var(--ink, #f6fbff); font: 500 13px/1.4 var(--f-ui, system-ui, sans-serif); }
+.pg h3 { margin: 0; font: 700 12px/1.2 var(--f-ui, system-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--ice-text, #8cc8ff); }
+.pg b { font-weight: 700; }
+.pg small, .pg .pg-note { color: var(--faint, #8c9bb2); font-size: 12px; line-height: 1.45; }
+.pg-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.pg-big { font: 700 20px/1.1 var(--f-mono, ui-monospace, monospace); letter-spacing: .02em; }
+.pg-bar { display: block; height: 6px; background: var(--line-2, rgba(190,212,240,.32)); overflow: hidden; }
+.pg-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--ice-deep, #1f6fd6), var(--ice, #408cff)); transition: width .4s ease; }
+.pg-bar.done i { background: linear-gradient(90deg, #6fd3a0, #8bd6ff); }
+.pg.hyper { box-shadow: inset 0 0 0 1px var(--ice-line, rgba(64,140,255,.55)), 0 0 26px var(--ice-wash, rgba(64,140,255,.1)); }
+.pg.hyper.earned { box-shadow: inset 0 0 0 1px #8bd6ff, 0 0 30px var(--ice-glow, rgba(64,140,255,.35)); }
+.pg-chip { display: inline-block; padding: 2px 8px; border: 1px solid var(--ice-line, rgba(64,140,255,.55)); color: var(--ice-text, #8cc8ff); font: 700 10.5px/1.5 var(--f-ui, system-ui); letter-spacing: .12em; text-transform: uppercase; }
+.pg-btn { min-height: 44px; padding: 0 16px; border: 1px solid var(--ice-line, rgba(64,140,255,.55)); background: var(--ice-wash, rgba(64,140,255,.1)); color: var(--ink, #f6fbff); font: 700 12.5px/1 var(--f-ui, system-ui); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.pg-btn:focus-visible { outline: 2px solid var(--ice, #408cff); outline-offset: 2px; }
+.pg-btn[disabled] { opacity: .55; cursor: default; }
+.pg-strip { display: grid; gap: 8px; }
+.pg-goal { display: grid; gap: 4px; padding: 8px 0; border-top: 1px solid var(--line, rgba(190,212,240,.16)); }
+.pg-goal:first-of-type { border-top: 0; }
+.pg-goal.done .pg-name { color: #8be3b2; }
+.pg-goal.done .pg-name::before { content: "✓ "; }
+.pg-pay { font: 600 12px/1 var(--f-mono, ui-monospace, monospace); color: var(--cyan, #8bd6ff); white-space: nowrap; }
+.pg-ladder { display: flex; gap: 4px; }
+.pg-ladder span { flex: 1; text-align: center; padding: 4px 2px; font: 700 10.5px/1.2 var(--f-ui, system-ui); letter-spacing: .06em; background: rgba(255,255,255,.07); color: var(--faint, #8c9bb2); }
+.pg-ladder span.on { background: var(--ice-deep, #1f6fd6); color: #fff; }
+.pg-stamps { display: flex; flex-wrap: wrap; gap: 5px; }
+.pg-stamps span { padding: 2px 8px; border: 1px solid var(--line-2, rgba(190,212,240,.32)); color: var(--faint, #8c9bb2); font-size: 11.5px; }
+.pg-stamps span.on { border-color: var(--ice, #408cff); color: var(--ink, #f6fbff); background: var(--ice-wash, rgba(64,140,255,.1)); }
+.pg-run { margin: 4px 0 0; padding: 8px 12px; background: var(--cell, rgba(5,9,16,.72)); box-shadow: inset 0 0 0 1px var(--line, rgba(190,212,240,.16)); color: var(--dim, #b9c6d8); font-size: 13px; line-height: 1.45; }
+.pg-run b { color: var(--ink, #f6fbff); }
+/* a garage card's miles gate and its unlock moment */
+.gate { display: grid; gap: 5px; margin-top: 2px; }
+.gate .gate-text { font: 600 12.5px/1.3 var(--f-ui, system-ui); color: var(--ice-text, #8cc8ff); }
+.gcell.unlocked-now { animation: pg-glow 2.4s ease-in-out 3; box-shadow: 0 0 0 1px var(--cyan, #8bd6ff), 0 0 28px var(--ice-glow, rgba(64,140,255,.35)); }
+.gate .gate-new { justify-self: start; }
+@keyframes pg-glow { 50% { box-shadow: 0 0 0 2px var(--cyan, #8bd6ff), 0 0 44px var(--ice, #408cff); } }
+@media (prefers-reduced-motion: reduce) { .gcell.unlocked-now { animation: none; } .pg-bar i { transition: none; } }
+.pg-paints { display: grid; gap: 4px; }
+.paint-chip small.pg-lock { display: block; color: var(--ice-text, #8cc8ff); font-size: 11px; }
+.paint-chip.locked { opacity: .78; }
+.menu-aside .pg, .m-aside .pg { margin: 0; }
+
+/* the menu's small widget: it sits in the menu's bottom row beside the Store and Loop Lab cards */
+.menu-aside > .pg.compact { flex: 0 0 clamp(230px, 28%, 330px); gap: 6px; padding: 9px 12px; }
+.pg.compact .pg-big { font-size: 15px; }
+.pg.compact h3 { font-size: 11px; }
+.pg.compact .pg-chip { font-size: 9.5px; padding: 1px 6px; }
+.pg.compact .pg-note { margin: 0; }
+@media (max-width: 900px) { .menu-aside > .pg.compact { flex: 0 0 auto; } }
+
+/* the menu widget's way into the Goals and passport panel (the left rail's Goals button is the same door) */
+.pg-open { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 44px; padding: 0 10px; border: 1px solid var(--ice-line, rgba(64,140,255,.55)); background: var(--ice-wash, rgba(64,140,255,.1)); color: var(--ink, #f6fbff); font: 700 12px/1 var(--f-ui, system-ui); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.pg-open:focus-visible { outline: 2px solid var(--ice, #408cff); outline-offset: 2px; }
+@media (hover: hover) { .pg-open:hover { background: var(--ice-deep, #1f6fd6); } }
+/* parked at a venue the car is not driven: the HUD's ability and THRUST keys step aside, so they never sit over the
+   Get out panel's Join button (390 x 844: the Clear Path key overlapped "Join · 1,200 cash") */
+.app:has(.venue-park) .hud-ability, .app:has(.venue-park) .hud-thrustbtn { visibility: hidden; pointer-events: none; }
