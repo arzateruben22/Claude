@@ -43,6 +43,25 @@ done
 sed -i 's/data-site-link href="index.html/data-site-link href="site.html/g' "$OUT/shipping.html"
 python3 scripts/preview/fold-guide.py docs/product-guide/index.html "$OUT/guide.html" && cp docs/Lumevina-Product-Guide.pdf "$OUT/"
 cp docs/hub/index.html "$OUT/index.html"
+# every page the hub opens gets a way back to it: a small "← Everything Lumevina" pill, bottom centre
+python3 - "$OUT" <<'PY'
+import sys, os, re
+out = sys.argv[1]
+BACK = ('<a href="index.html" class="hub-back" aria-label="Back to Everything Lumevina" style="position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));'
+        'transform:translateX(-50%);z-index:2147483000;display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;'
+        'background:#171717;color:#FBFAF7;font:600 13px/1 -apple-system,BlinkMacSystemFont,Inter,system-ui,sans-serif;text-decoration:none;'
+        'box-shadow:0 6px 20px rgba(0,0,0,.22);-webkit-tap-highlight-color:transparent">&larr; Everything Lumevina</a>')
+for f in sorted(os.listdir(out)):
+    if not f.endswith(".html") or f == "index.html":
+        continue
+    path = os.path.join(out, f)
+    s = open(path, encoding="utf-8").read()
+    if 'class="hub-back"' in s:
+        continue
+    i = s.lower().rfind("</body>")
+    s = s[:i] + BACK + s[i:] if i != -1 else s + BACK
+    open(path, "w", encoding="utf-8").write(s)
+PY
 # each card's picture of the page it opens (docs/hub/img; refresh with scripts/preview/hub-shots.mjs "$OUT")
 cp docs/hub/img/*.jpg "$OUT/img/"
 echo "built $OUT: $(ls "$OUT" | tr '\n' ' ')"
