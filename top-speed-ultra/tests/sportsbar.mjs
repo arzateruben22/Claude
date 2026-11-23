@@ -5,7 +5,9 @@
 //
 //   node tests/sportsbar.mjs                          every group
 //   node tests/sportsbar.mjs --only=data,walks         some groups: data, walks, seats, closed, honesty, cross,
-//                                                      budgets, rates, shadows, cars, memory, shots, lot57
+//                                                      budgets, rates, shadows, cars, memory, shots, lot57, vv
+//                                                      (vv: Vega & Vinnie's, 2026-11-16: the name, the patio's size,
+//                                                      the walk out to your car, the Car button, a lost context)
 //   node tests/sportsbar.mjs --walks=1000             how many random walks (default 1000)
 //   node tests/sportsbar.mjs --tag=r2                 a suffix for every screenshot's name (s1-...-r2.png), so a
 //                                                      repair's shots sit beside the round they replace
@@ -175,7 +177,7 @@ if (want('data')) {
     d.ramp = polyDist(rectFD(1.5, 3.3, 7.55, 10.35), rib);
     d.bikes = polyDist(rectFD(1.9, 2.9, 12.5, 15.5), rib);
     d.planter1 = polyDist(rectFD(2.1, 2.7, 2.5, 3.7), rib); d.planter2 = polyDist(rectFD(2.1, 2.7, 16.4, 17.6), rib);
-    d.patio = polyDist(boxR(1.95, 24.05, -5.55, 0.3), rib);
+    d.patio = polyDist(boxR(1.95, 27.05, -5.55, 0.3), rib);   // (the patio runs to u 27 since 2026-11-16)
     d.building = polyDist(lay.building.host, rib);
     const bad = Object.entries(d).filter(([k, v]) => (k === 'building' ? v < 3.5 : v < 0.4));
     expect(!bad.length, JSON.stringify(d));
@@ -185,11 +187,11 @@ if (want('data')) {
     const inner = lay.building.unitInner, bad = [];
     const wallV = (u) => { const a = lay.building.unitOuter[0], b = lay.building.unitOuter[1]; return a[1] + ((b[1] - a[1]) * (u - a[0])) / (b[0] - a[0]); };
     for (const z of lay.zones) if (![[z.u0, z.v0], [z.u1, z.v0], [z.u1, z.v1], [z.u0, z.v1]].every(([u, v]) => inPolyP(u, v, inner) || inner.some((p, i) => segDist(u, v, p[0], p[1], inner[(i + 1) % 4][0], inner[(i + 1) % 4][1]) < 1e-3))) bad.push(`zone ${z.id}`);
-    for (const z of lay.patio.zones) if (z.u0 < 2.05 - 1e-6 || z.u1 > 23.95 + 1e-6 || z.v0 < -5.45 - 1e-6 || z.v1 > wallV(z.u0) + 1e-6 || z.v1 > wallV(z.u1) + 1e-6) bad.push(`patio zone ${z.id}`);
+    for (const z of lay.patio.zones) if (z.u0 < 2.05 - 1e-6 || z.u1 > 26.95 + 1e-6 || z.v0 < -5.45 - 1e-6 || z.v1 > wallV(z.u0) + 1e-6 || z.v1 > wallV(z.u1) + 1e-6) bad.push(`patio zone ${z.id}`);
     const pz = new Set(lay.patio.zones.map((z) => z.id));
     for (const s of lay.slots) {
       const patio = s.at[1] < 0.2 && (pz.has(s.zone) || s.zone === '');
-      if (patio) { if (s.at[0] - s.r < 2.05 - 1e-3 || s.at[0] + s.r > 23.95 + 1e-3 || s.at[1] - s.r < -5.45 - 1e-3 || s.at[1] + s.r > wallV(s.at[0]) + 1e-3) bad.push(`patio slot ${s.id}`); }
+      if (patio) { if (s.at[0] - s.r < 2.05 - 1e-3 || s.at[0] + s.r > 26.95 + 1e-3 || s.at[1] - s.r < -5.45 - 1e-3 || s.at[1] + s.r > wallV(s.at[0]) + 1e-3) bad.push(`patio slot ${s.id}`); }
       else if (!circIn(s.at[0], s.at[1], s.r, inner)) bad.push(`slot ${s.id}`);
     }
     expect(!bad.length, bad.join(', '));
@@ -795,6 +797,113 @@ if (want('shots')) {
   }
 }
 await closeAll();
+
+// ------------------------------------------------------------------------------------------------ Vega & Vinnie's (2026-11-16)
+if (want('vv')) {
+  const NAME = 'Vega & Vinnie’s';
+  await check('vv: no "Stoppage Time" left in player-facing text in src/ (comments, the old-names list and test files aside)', async () => {
+    const { readdirSync, statSync } = await import('node:fs');
+    const walk = (d) => readdirSync(d).flatMap((f) => { const p = path.join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
+    const files = walk(path.join(ROOT, 'src')).filter((f) => /\.(ts|tsx|html|json)$/.test(f) && !/\.test\./.test(f));
+    const hits = [];
+    for (const f of files) {
+      let t = readFileSync(f, 'utf8');
+      if (/\.(ts|tsx)$/.test(f)) t = t.replace(/\/\*[\s\S]*?\*\//g, '').split('\n').map((l) => l.replace(/(^|[^:'"`])\/\/.*$/, '$1')).join('\n');
+      if (/\.html$/.test(f)) t = t.replace(/<!--[\s\S]*?-->/g, '');
+      t.split('\n').forEach((l, i) => { if (/stoppage\s*time/i.test(l) && !/BAR_OLD_NAMES/.test(l)) hits.push(`${path.relative(ROOT, f)}:${i + 1}`); });
+    }
+    expect(!hits.length, hits.join(', '));
+    return `${files.length} files scanned, none`;
+  });
+  const old = { v: 1, tokens: 12, visits: 3, firstVisitPaid: true, regularsSeed: 5, friendships: {}, memories: [{ who: 'Rocío', text: 'Beat you at pool at Stoppage Time', t: 1 }], highlights: ["A late winner at Stoppage Time", "Vega & Vinnie's patio"], team: null, favourites: { drink: 'tamarindo', food: 'wings', game: 'pool' }, settings: { autonomy: false, text: 1 }, tonight: null };
+  const { ctx, page, errors, bootS } = await open([1280, 720], 'quality=high&day=Sat&hour=15&hint=0', false, `try { localStorage.setItem('oc.onfoot.sportsbar.v1', ${JSON.stringify(JSON.stringify(old))}); } catch {}`);
+  await check('vv: boots with no console errors', async () => { expect(!errors.length, errors.join(' | ')); return `boot ${bootS} s`; });
+  await check('vv: the display name everywhere on the page: the title, the HUD title, the loading card, the about sheet, the canvas label, the credits', async () => {
+    const r = await H(page, `(() => { const t = (s) => document.querySelector(s)?.textContent ?? null;
+      return { title: document.title, place: t('#place b'), loading: t('#loading h1'), about: t('#about p'), label: document.getElementById('view').getAttribute('aria-label'), credit: t('#creditFull'), meta: document.querySelector('meta[name=description]').content,
+        any: /Stoppage/i.test(document.title + document.body.innerText + [...document.querySelectorAll('[aria-label]')].map((e) => e.getAttribute('aria-label')).join(' ') + document.querySelector('meta[name=description]').content) }; })()`);
+    expect(r.title === NAME + ' on Foot', r.title);
+    expect(r.place === NAME.toUpperCase(), r.place);
+    // (the loading card is gone once the page is up: read it from the built page)
+    r.loading = (/<div id="loading"[\s\S]*?<h1>([\s\S]*?)<small>/.exec(readFileSync(PAGE, 'utf8')) ?? [])[1]?.replace(/&amp;/g, '&') ?? null;
+    expect(r.loading === NAME.toUpperCase(), `loading: ${r.loading}`);
+    for (const k of ['about', 'label', 'credit', 'meta']) expect(String(r[k]).toLowerCase().includes(NAME.toLowerCase()), `${k}: ${r[k]}`);
+    expect(!r.any, 'Stoppage still in the page text');
+    return `title "${r.title}", HUD "${r.place}", loading "${r.loading}"`;
+  });
+  await check('vv: an old save that names Stoppage Time says Vega & Vinnie’s (its key stays oc.onfoot.sportsbar.v1)', async () => {
+    const s = await H(page, 'window.__onfoot.saveNow()');
+    const text = JSON.stringify([s.memories, s.highlights]);
+    expect(!/Stoppage/.test(text) && text.includes(NAME) && s.tokens === 12 && s.visits >= 3, text);
+    return `memories ${JSON.stringify(s.memories.map((m) => m.text))}, highlights ${JSON.stringify(s.highlights)}, tokens ${s.tokens}`;
+  });
+  await check('vv: the patio is sized to the owner\'s rule: the inside 3 to 4 times the patio (both areas printed)', async () => {
+    const a = await H(page, 'window.__onfoot.areas()'); summary.vvAreas = a;
+    console.log(`        inside ${a.inside} m2, patio ${a.patio} m2, inside / patio ${a.ratio}`);
+    expect(a.ratio >= 3 && a.ratio <= 4, `ratio ${a.ratio}`);
+    expect(a.patio >= 126 && a.patio <= 168, `patio ${a.patio} m2 outside 126-168`);
+    return `inside ${a.inside} m2, patio ${a.patio} m2, inside / patio = ${a.ratio}`;
+  });
+  await check('vv: the walk from the host stand out the door to your car: one continuous walk, no black or empty frame, no fade, no camera jump, the exposure eased', async () => {
+    const b = await H(page, "window.__onfoot.walkBegin({ view: 'third' })");
+    expect(b.walking && b.toCar, `the Car button didn't start a walk: ${JSON.stringify(b)}`);
+    const steps = [];
+    // a frame kept every 20 read-backs for the strip (host stand -> door -> walk -> car door); 10 of them kept after
+    const kept = [];
+    for (let i = 0; i < 2500; i++) {
+      const r = await H(page, 'window.__onfoot.walkStep(6)'); steps.push(r);
+      if (i % 20 === 0 || !r.walking) { const f = `vv-walk-raw-${String(i).padStart(4, '0')}.png`; await page.screenshot({ path: path.join(OUT, f), timeout: 900000 }); kept.push({ i, f, state: r.state, u: r.u, v: r.v, exposure: r.exposure, read: r.read }); }
+      if (!r.walking) break;
+    }
+    const { renameSync, unlinkSync } = await import('node:fs');
+    const pick = new Set([0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((j) => Math.round((j * (kept.length - 1)) / 9)));
+    const strip = [];
+    kept.forEach((k, j) => { if (pick.has(j)) { const f = `vv-walk-${String(strip.length).padStart(2, '0')}.png`; renameSync(path.join(OUT, k.f), path.join(OUT, f)); strip.push({ ...k, f }); } else unlinkSync(path.join(OUT, k.f)); });
+    writeFileSync(path.join(OUT, 'vv-walk-strip.json'), JSON.stringify(strip, null, 1));
+    const wl = await H(page, 'window.__onfoot.walkLog()');
+    const last = steps[steps.length - 1];
+    const bad = steps.filter((s) => s.read.mean < 12 || s.read.black > 0.6 || s.read.spread < 3);
+    const expJump = Math.max(...steps.slice(1).map((s, i) => Math.abs(s.exposure - steps[i].exposure)));
+    const flips = wl.states.map((s) => `${s.state}@${s.step}`).join(' ');
+    const ms = steps.map((s) => s.renderMs).sort((x, y) => x - y);
+    summary.vvWalk = { frames: steps.length, steps: wl.steps, states: wl.states, camJumpMax: wl.camJumpMax, camJumpAt: wl.camJumpAt, playerStepMax: wl.playerStepMax, fade: wl.fadeSeen, minMean: Math.min(...steps.map((s) => s.read.mean)), maxBlack: Math.max(...steps.map((s) => s.read.black)), minSpread: Math.min(...steps.map((s) => s.read.spread)), expJump, renderMs: { median: ms[ms.length >> 1], max: ms[ms.length - 1] }, end: last };
+    writeFileSync(path.join(OUT, 'vv-walk-log.json'), JSON.stringify({ begin: b, log: wl, steps }, null, 1));
+    console.log(`        ${steps.length} frames over ${wl.steps} steps; states ${flips}; camera's largest step ${wl.camJumpMax} m (you ${wl.playerStepMax} m a step); luma min ${summary.vvWalk.minMean}, near-black share max ${summary.vvWalk.maxBlack}, spread min ${summary.vvWalk.minSpread}; exposure's largest step ${expJump.toFixed(3)}; render ms median ${ms[ms.length >> 1]} (SwiftShader)`);
+    expect(last.nearCar, `ended away from the car: ${JSON.stringify(last.pos)}`);
+    expect(!bad.length, `black or empty frames: ${JSON.stringify(bad.slice(0, 3))}`);
+    expect(!wl.fadeSeen, 'the fade dipped');
+    expect(wl.states.some((s) => s.state === 'outside') && wl.states[0].state === 'inside', `states ${flips}`);
+    expect(wl.camJumpMax < 0.35, `the camera jumped ${wl.camJumpMax} m in one step (step ${wl.camJumpAt})`);
+    expect(expJump < 0.05, `the exposure stepped ${expJump}`);
+    return `${steps.length} frames, ${flips}; camera step max ${wl.camJumpMax} m; luma >= ${summary.vvWalk.minMean}; ended at the car door`;
+  });
+  await check('vv: the Car button walks you out on a path (no jump); a second tap skips to the car door', async () => {
+    await H(page, `(() => { const o = window.__onfoot; o.freeze(false); o.camera(null); o.view('third'); const f = o.frame(), g = (u, v) => [f.O[0] + u * f.A[0] + v * f.B[0], f.O[1] + u * f.A[1] + v * f.B[1]]; const p = g(6.0, 7.3); o.go(p[0], p[1]); })()`);
+    const p0 = await H(page, 'window.__onfoot.pos()'), car = await H(page, 'window.__onfoot.yourCar()');
+    await page.click('#car'); await frames(page, 20);
+    const p1 = await H(page, 'window.__onfoot.pos()');
+    const moved = Math.hypot(p1.x - p0.x, p1.z - p0.z);
+    expect(p1.moving && moved < 3, `after a tap: moving ${p1.moving}, ${moved.toFixed(2)} m (a jump?)`);
+    await page.click('#car'); await frames(page, 3);
+    const p2 = await H(page, 'window.__onfoot.pos()'), dDoor = Math.hypot(p2.x - car.door.x, p2.z - car.door.z);
+    expect(!p2.moving && dDoor < 0.6, `after the second tap: ${dDoor.toFixed(2)} m from the car door, moving ${p2.moving}`);
+    return `first tap: walking, ${moved.toFixed(2)} m in 20 frames; second tap: at the car door (${dDoor.toFixed(2)} m)`;
+  });
+  await check('vv: a lost WebGL context (WEBGL_lose_context) comes back and the venue is not black afterwards', async () => {
+    const before = await H(page, "(() => { const o = window.__onfoot; o.freeze(true); o.camera(null); o.view('third'); return o.readFrame(); })()");
+    await H(page, "(() => { const gl = document.getElementById('view').getContext('webgl2'); window.__lc = gl.getExtension('WEBGL_lose_context'); window.__lc.loseContext(); })()");
+    await page.waitForFunction(() => window.__onfoot.context().lost >= 1, null, { timeout: 60000 });
+    await H(page, 'window.__lc.restoreContext()');
+    await page.waitForFunction(() => window.__onfoot.context().restored >= 1, null, { timeout: 120000 });
+    const after = await H(page, "(() => { const o = window.__onfoot; o.readFrame(); return o.readFrame(); })()");
+    const c = await H(page, 'window.__onfoot.context()');
+    await H(page, 'window.__onfoot.freeze(false)');
+    expect(!c.isLost && after.mean > 15 && after.black < 0.5 && after.mean > before.mean * 0.6, `before ${JSON.stringify(before)}, after ${JSON.stringify(after)}, ${JSON.stringify(c)}`);
+    return `luma ${before.mean} before, ${after.mean} after (near-black ${after.black}); lost ${c.lost}, restored ${c.restored}`;
+  });
+  await ctx.close().catch(() => {});
+  await closeAll();
+}
 
 // ------------------------------------------------------------------------------------------------ Lot 57 unaffected
 if (want('lot57')) {

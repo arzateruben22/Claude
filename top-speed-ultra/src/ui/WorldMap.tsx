@@ -11,6 +11,7 @@ import type { Game } from '../game/Game';
 import type { Path } from '../game/world/Path';
 import { STARTS } from '../game/settings';
 import { Ico } from './Icons';
+import { BAR_NAME } from '../onfoot/venues/sportsbar/brand';
 
 // the network's projection (tools/oc-network/common.py): metres east (x) and south (z) of 33.72 N, 117.83 W
 const LAT0 = 33.72, LON0 = -117.83, KX = 111320 * Math.cos((LAT0 * Math.PI) / 180), KZ = 110574;
@@ -27,7 +28,7 @@ const CITIES: [string, number, number][] = [
 // our own places (fictional), at their real spots
 const PLACES = [
   { id: 'lot57', name: 'Lot 57', blurb: 'Our own taproom and yard on Orangewood Avenue, Anaheim. Drive there and get out.', x: -5121, z: -8345 },
-  { id: 'stoppage', name: 'Stoppage Time', blurb: 'Our own sports bar on South Claudina Way, Anaheim. Drive there and get out.', x: -6622, z: -9343 },
+  { id: 'stoppage', name: BAR_NAME, blurb: 'Our own sports bar and cantina on South Claudina Way, Anaheim. Drive there and get out.', x: -6622, z: -9343 },
 ];
 
 type Tab = 'freeways' | 'places';
