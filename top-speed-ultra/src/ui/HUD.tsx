@@ -14,10 +14,15 @@
 // camera in use), `data-live-cluster` (the car's own display shows the speed: the HUD drops its duplicate in the seat),
 // `data-wake` (something worth a look: the Minimal HUD brings the map back for it) and `data-road-new` (the road just
 // changed: its chip shows for 8 s).
+//
+// The Retro look (`retro`, App.tsx from retroOn; hud-retro.css skins it, scoped to .app[data-skin="retro"]) adds the
+// round keys' icons (the ability's by `data-abil`, JUMP's), and the phone's second line reads "BEST" with the bare
+// number (`data-n` on the Top value): the same data as Top.
 
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import type { Hud as HudData } from '../game/Game';
 import { OcMark } from './Mark';
+import { Ico } from './Icons';
 
 export interface HudHandle { set: (h: HudData) => void }
 
@@ -54,7 +59,7 @@ const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Spee
 
 type El = React.RefObject<HTMLElement>;
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void; retro?: boolean }>(function HUD({ showFps, visible, chips, onAbility, onThrust, retro = false }, ref) {
   const root = useRef<HTMLDivElement>(null);
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
@@ -120,6 +125,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       } else {
         slot(k1.current, v1.current, 1, 'Distance', '', miles(h.distance));
         slot(k2.current, v2.current, 2, 'Top', 'Top', h.top + ' mph');
+        data(v2.current, 'n', String(h.top));
         // a story errand (story.ts): its clock in the third slot (a phone shows it in place of Top)
         if (h.errand) { const t = Math.ceil(h.errand.left); slot(k3.current, v3.current, 3, 'Errand', 'Errand', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`); }
         else slot(k3.current, v3.current, 3, '', '', '');
@@ -173,6 +179,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       if (abil.current) {
         put(abilName.current, 'abil', h.ability);
         const b = abil.current, on = h.abilityOn > 0, cool = h.abilityCool;
+        data(b, 'abil', h.ability);
         b.classList.toggle('on', on); b.classList.toggle('cool', !on && cool > 0);
         b.style.setProperty('--p', String(on ? h.abilityOn : 1 - cool));
         b.setAttribute('aria-label', on ? `${h.ability} active` : cool > 0 ? `${h.ability} recharging` : `Use ${h.ability}`);
@@ -306,12 +313,14 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       {/* the driver's ability and the hypercar's THRUST: keys of the controls (on a phone they sit over the pedals, in
           the pedals' own style; on a desktop by the speed, or where the speed was in the seat view). Real buttons
           outside the hidden readouts, so a screen reader and the keyboard reach them */}
-      <button type="button" className="hud-ability" ref={abil} onClick={onAbility} aria-keyshortcuts="F"><span ref={abilName}>Ability</span></button>
+      <button type="button" className="hud-ability" ref={abil} onClick={onAbility} aria-keyshortcuts="F">
+        {retro && <><Ico name="road" /><Ico name="focus" /><Ico name="grip" /></>}<span ref={abilName}>Ability</span>
+      </button>
       {/* THRUST: a tap is a Thrust Hop, holding adds nothing (the bar along its foot is the tank; Left Shift and J too) */}
       <button type="button" className="hud-thrustbtn" ref={thrBtn} hidden aria-keyshortcuts="Shift J"
         onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ } onThrust(true); }}
         onPointerUp={() => onThrust(false)} onPointerCancel={() => onThrust(false)} onContextMenu={(e) => e.preventDefault()}>
-        <span>Jump</span>
+        {retro && <Ico name="jump" />}<span>Jump</span>
       </button>
     </div>
   );

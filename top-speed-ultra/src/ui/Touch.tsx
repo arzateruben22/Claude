@@ -9,15 +9,23 @@
 // the pedals' own slanted slab and ember hairline, no separate button. Input.touch.handbrake carries it (game/input.ts
 // keeps a flick down for a moment so the same thumb can be back on GAS); a short vibration, where the device has one,
 // and the pulled state (the grip slides in and fills ember) are the feedback.
+//
+// The Retro look (owner, 2026-11-23: "this will be the new layout design for retro look", then "and the brake will
+// slide into the red brake to drift as you stated"; App passes `retro`, hud-retro.css skins it) swaps the lever for a
+// ROUND HANDBRAKE button between the steering pad and BRAKE: the same slide from BRAKE toward the steering side (past
+// PULL_PX, so the thumb runs into the button) pulls it, sliding back inside RELEASE_PX or lifting lets go, and pressing
+// the button itself pulls it while held. Its red arc fills on the pull and drains over the 0.22 s the input layer keeps
+// a touch pull held after the lift (TOUCH_HB_HOLD). A plain BRAKE tap never pulls it. BRAKE and GAS get their icons.
 
 import { useEffect, useRef } from 'react';
-import type { Input } from '../game/input';
+import { TOUCH_HB_HOLD, type Input } from '../game/input';
+import { Ico } from './Icons';
 
 export const PULL_PX = 18;      // how far toward the steering side a thumb must slide to pull (a tap or a nudge doesn't)
 export const RELEASE_PX = 10;   // back inside this and it lets go (so a thumb resting at the line doesn't flutter)
 const GRIP_PX = 14;             // how far the lever's grip travels on screen (the thumb may go further)
 
-export function Touch({ input, manual, onShift }: { input: Input; manual: boolean; onShift: (d: 1 | -1) => void }) {
+export function Touch({ input, manual, onShift, retro = false }: { input: Input; manual: boolean; onShift: (d: 1 | -1) => void; retro?: boolean }) {
   const knob = useRef<HTMLDivElement>(null);
   const start = useRef<{ id: number; x: number } | null>(null);
   const lever = useRef<HTMLDivElement>(null), brake = useRef<HTMLDivElement>(null);
@@ -57,6 +65,13 @@ export function Touch({ input, manual, onShift }: { input: Input; manual: boolea
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, from: 'lever', swiped: true };
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ }
   };
+  // the Retro look's round button: a press pulls it while held (and sliding into it from BRAKE does, through dragMove)
+  const roundDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    drag.current = null;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ }
+    pulled(true);
+  };
   const brakeDown = (e: React.PointerEvent) => {
     pedal('brake', true)(e);
     drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, from: 'brake', swiped: false };
@@ -86,14 +101,28 @@ export function Touch({ input, manual, onShift }: { input: Input; manual: boolea
       <div className="touch-pedals">
         {manual && <div className="touch-shift"><button type="button" className="tbtn" onClick={() => onShift(-1)}>−</button><button type="button" className="tbtn" onClick={() => onShift(1)}>+</button></div>}
         <div className="brake-wrap">
-          <div className="hb-lever" ref={lever} role="button" aria-label="Handbrake: slide toward the steering pad to pull"
-            onPointerDown={leverDown} onPointerMove={dragMove} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}
-            onContextMenu={(e) => e.preventDefault()}>
-            <span className="hb-grip"><i /><b>Handbrake</b><i /></span>
-          </div>
-          <div className="pedal brake" ref={brake} onPointerDown={brakeDown} onPointerMove={dragMove} onPointerUp={brakeUp} onPointerCancel={brakeUp} role="button" aria-label="Brake (swipe toward the steering pad for the handbrake)">BRAKE</div>
+          {retro ? (
+            <div className="hb-round" ref={lever} role="button" aria-label="Handbrake: hold it, or slide from BRAKE into it"
+              style={{ '--hb-hold': `${Math.round(TOUCH_HB_HOLD * 1000)}ms` } as React.CSSProperties}
+              onPointerDown={roundDown} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}
+              onContextMenu={(e) => e.preventDefault()}>
+              <small className="hb-cap" aria-hidden="true">Handbrake</small>
+              <span className="hb-dial" aria-hidden="true">
+                <svg className="hb-ring" viewBox="0 0 56 56"><circle className="hb-track" cx="28" cy="28" r="25" /><circle className="hb-arc" cx="28" cy="28" r="25" pathLength={100} /></svg>
+                <Ico name="park" />
+              </span>
+            </div>
+          ) : (
+            <div className="hb-lever" ref={lever} role="button" aria-label="Handbrake: slide toward the steering pad to pull"
+              onPointerDown={leverDown} onPointerMove={dragMove} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}
+              onContextMenu={(e) => e.preventDefault()}>
+              <span className="hb-grip"><i /><b>Handbrake</b><i /></span>
+            </div>
+          )}
+          <div className="pedal brake" ref={brake} onPointerDown={brakeDown} onPointerMove={dragMove} onPointerUp={brakeUp} onPointerCancel={brakeUp} role="button"
+            aria-label={retro ? 'Brake (slide into HANDBRAKE to pull the handbrake)' : 'Brake (swipe toward the steering pad for the handbrake)'}>{retro ? <><Ico name="disc" /><span>BRAKE</span></> : 'BRAKE'}</div>
         </div>
-        <div className="pedal gas" onPointerDown={pedal('gas', true)} onPointerUp={pedal('gas', false)} onPointerCancel={pedal('gas', false)} role="button" aria-label="Accelerate">GAS</div>
+        <div className="pedal gas" onPointerDown={pedal('gas', true)} onPointerUp={pedal('gas', false)} onPointerCancel={pedal('gas', false)} role="button" aria-label="Accelerate">{retro ? <><Ico name="speed" /><span>GAS</span></> : 'GAS'}</div>
       </div>
     </div>
   );
