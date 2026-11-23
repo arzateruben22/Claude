@@ -26,8 +26,19 @@ export function RadialMenu({ at, auto = null, onPick, onCancel }: { at: { x: num
     return Math.floor(a / ((Math.PI * 2) / WEDGES.length)) % WEDGES.length;
   };
   useEffect(() => {
-    const move = (e: PointerEvent) => setHot(wedgeAt(e.clientX, e.clientY));
-    const up = () => { const h = hotRef.current; if (h >= 0) onPick(WEDGES[h].id); else onCancel(); };
+    // (a lift where the finger came down, with no slide since the menu opened, cancels: the hold on Pause lifts far from
+    // the menu's centre and must not pick whatever wedge lies under it; judge, 2026-11-23)
+    // (a fresh press after the menu opened, a tap on a wedge, counts as a slide: the hold's own press came before it)
+    let moved = false;
+    const move = (e: PointerEvent) => { moved = true; setHot(wedgeAt(e.clientX, e.clientY)); };
+    const down = () => { moved = true; };
+    // Let go: the wedge under the finger or pointer right now. (Not the highlighted one: a tap or a click lands on a wedge in the
+    // same moment the pointer enters it, before the highlight has rendered, and a quick tap on Radio would read as "the middle".)
+    // The Tab key's release has no point, so it takes the highlighted wedge.
+    const up = (e?: PointerEvent) => {
+      const h = !e ? hotRef.current : !moved ? -1 : (e.clientX || e.clientY) ? wedgeAt(e.clientX, e.clientY) : hotRef.current;
+      if (h >= 0) onPick(WEDGES[h].id); else onCancel();
+    };
     const key = (e: KeyboardEvent) => {
       if (e.code === 'Escape') { e.preventDefault(); onCancel(); }
       else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') { e.preventDefault(); setHot((h) => (h + 1) % WEDGES.length); }
@@ -35,8 +46,8 @@ export function RadialMenu({ at, auto = null, onPick, onCancel }: { at: { x: num
       else if (e.code === 'Enter') { e.preventDefault(); const h = hotRef.current; if (h >= 0) onPick(WEDGES[h].id); }
     };
     const keyUp = (e: KeyboardEvent) => { if (e.code === 'Tab') { e.preventDefault(); up(); } };
-    addEventListener('pointermove', move); addEventListener('pointerup', up); addEventListener('keydown', key, true); addEventListener('keyup', keyUp, true);
-    return () => { removeEventListener('pointermove', move); removeEventListener('pointerup', up); removeEventListener('keydown', key, true); removeEventListener('keyup', keyUp, true); };
+    addEventListener('pointermove', move); addEventListener('pointerdown', down); addEventListener('pointerup', up); addEventListener('keydown', key, true); addEventListener('keyup', keyUp, true);
+    return () => { removeEventListener('pointermove', move); removeEventListener('pointerdown', down); removeEventListener('pointerup', up); removeEventListener('keydown', key, true); removeEventListener('keyup', keyUp, true); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [at.x, at.y]);
   return (
