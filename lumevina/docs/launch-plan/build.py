@@ -77,20 +77,27 @@ ONE_TIME = [("Founding Five kits", "$160", "5 × cleanser + SPF at cost"),
             ("Chair cards", "$65", "A member card for the treatment room")]
 ONE_TIME_TOTAL = 160 + 480 + 65
 
-# Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13).
-LIKELY = [0, 0, 0, 0, 3, 5, 7, 9, 11, 13, 15, 17, 18, 20]
-LOW = [0, 0, 0, 0, 1, 3, 4, 5, 6, 7, 8, 10, 11, 12]
-HIGH = [0, 0, 0, 0, 5, 7, 9, 11, 14, 17, 19, 22, 24, 26]
+# Day 1 is launch day: Tuesday, November 24, 2026 (the site, live payments, booking on Lumevina and the
+# Glow Membership all open together). Day 90 is Sunday, February 21, 2027.
+import datetime as _dt
+DAY1 = _dt.date(2026, 11, 24)
+DAY90 = DAY1 + _dt.timedelta(days=89)
+fmt_d = lambda d: d.strftime("%b ") + str(d.day)
+wk = lambda a, b: "%s – %s" % (fmt_d(DAY1 + _dt.timedelta(days=7 * (a - 1))), fmt_d(min(DAY90, DAY1 + _dt.timedelta(days=7 * b - 1))))
+# Members by the end of each week, weeks 0–13 (day 90 ≈ the end of week 13). The setup weeks are done, so
+# the same weekly pace as before starts in week 1, three weeks sooner, then about one a week.
+LIKELY = [0, 3, 5, 7, 9, 11, 13, 15, 17, 18, 20, 21, 22, 23]
+LOW = [0, 1, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]
+HIGH = [0, 5, 7, 9, 11, 14, 17, 19, 22, 24, 26, 27, 28, 29]
 FLOOR_WEEK = next(i for i, v in enumerate(LIKELY) if v >= FLOOR)
 
-PACE = [("Week 1", "Count what’s there: facial clients from the last six months, visits a month, who already comes every four to eight weeks. Set up the Saturday scoreboard.", 0),
-        ("Weeks 2–3", "Live payments on, booking moves to Lumevina. In the chair, Evelyn mentions it: membership opens soon, first five get a free kit. Build an early list of 15 names.", 0),
-        ("Week 4", "Launch. The early list hears a day first, then a text and email to every client and an Instagram post. The Founding Five opens.", 3),
-        ("Week 5", "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", 5),
-        ("Weeks 6–9", "The offer after every facial, next month booked on the spot. About 45 facial visits a month; one in eight says yes.", 13),
-        ("Weeks 10–13", "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend: $15 off for them, 150 Glow Points for the member.", PLAN)]
+PACE = [("Week 1 · " + wk(1, 1), "Launch, Tuesday November 24: the site, live payments, booking on Lumevina and the Glow Membership open. A text and email to every client and an Instagram post; the Founding Five opens. The first Saturday scoreboard is November 28.", LIKELY[1]),
+        ("Week 2 · " + wk(2, 2), "The Founding Five fills. Kits handed over in person, and each founder’s next facial booked before she leaves.", LIKELY[2]),
+        ("Weeks 3–6 · " + wk(3, 6), "The offer after every facial, next month booked on the spot. Gift certificates for the holidays, and the membership as a gift.", LIKELY[6]),
+        ("Weeks 7–9 · " + wk(7, 9), "New year, new routine: the offer after every facial keeps going; one in eight says yes.", LIKELY[9]),
+        ("Weeks 10–13 · " + wk(10, 13), "Win-back texts to clients not seen in 60 days, with the member price as the reason to return. Members refer a friend: $15 off for them, 150 Glow Points for the member. Valentine’s gift certificates.", LIKELY[13])]
 
-SOURCES = [("Founding Five launch", "Early list, text, email, Instagram", 5),
+SOURCES = [("Founding Five launch", "Launch-day text, email and Instagram", 5),
            ("In the chair, after every facial", "About 1 in 8 of the facial clients offered", 7),
            ("Win-back texts", "Clients not seen in 60+ days", 4),
            ("New clients", "Google, reviews, gift certificates, neighbors", 2),
@@ -104,9 +111,9 @@ BEHIND = [("Personal invites", "Evelyn texts her 20 most loyal clients herself. 
           ("Double referrals", "Members who bring a friend that week get 300 Glow Points instead of 150."),
           ("Don’t", "Cut the dues or reopen the Founding Five. It teaches clients to wait for a deal.")]
 
-TALENT = [("Weeks 1–4", "Build the list", "Ask every client who does their lashes, brows and nails. Save the name, the Instagram, and how many clients mentioned her. Goal: 15 names."),
-          ("Weeks 5–8", "Get to know them", "Follow and book the top five as a client. Coffee with three: their business, not a deal yet. The one-hour attorney consult on pilot terms."),
-          ("Weeks 9–13", "Pick two", "The two whose clients overlap most with Evelyn’s. The one-page pilot offer drafted and ready for day 90.")]
+TALENT = [("Weeks 1–4 · " + wk(1, 4), "Build the list", "Ask every client who does their lashes, brows and nails. Save the name, the Instagram, and how many clients mentioned her. Goal: 15 names."),
+          ("Weeks 5–8 · " + wk(5, 8), "Get to know them", "Follow and book the top five as a client. Coffee with three: their business, not a deal yet. The one-hour attorney consult on pilot terms."),
+          ("Weeks 9–13 · " + wk(9, 13), "Pick two", "The two whose clients overlap most with Evelyn’s. The one-page pilot offer drafted and ready for day 90.")]
 
 GATE = [{"tag": "Day 90 · %d or more members" % FLOOR, "big": "Sign two artists", "hl": True,
          "sub": "Offer the pilot to your best two in months 4–5, live by month 6.",
@@ -276,23 +283,23 @@ FLIP_HOW = [("The numbers", "Bookkeeping’s Coming in shows the split: services
             ("Stock", "Raise or lower reorder levels on the dashboard."),
             ("Evelyn’s week", "Open or close facial slots in the booking calendar.")]
 
-SCORE = [("Members", "Against the plan: %d by day 90" % PLAN),
-         ("New clients", "Two a week by week 6"),
+SCORE = [("Members", "Against the plan: %d by day 90 (%s)" % (PLAN, fmt_d(DAY90))),
+         ("New clients", "Two a week by week 6 (" + fmt_d(DAY1 + _dt.timedelta(days=41)) + ")"),
          ("Say-yes rate", "Offered at every facial; 1 in 8 or better"),
          ("Cancellations", "Fewer than 1 in 20 a month"),
-         ("Talent list", "15 names by week 4")]
+         ("Talent list", "15 names by week 4 (" + fmt_d(DAY1 + _dt.timedelta(days=27)) + ")")]
 
 # ─────────────────────────── the story up front ───────────────────────────
-ROADMAP = [("Weeks 1–3", "Launch", "Live payments on, booking moves to Lumevina, an early list of 15 names.", True),
-           ("Days 1–90", "Members", "The offer after every facial, and new clients from Google, reviews and referrals.", True),
+ROADMAP = [("Nov 24", "Launch", "Day 1: live payments, booking on Lumevina and the Glow Membership open together.", True),
+           ("Nov 24 – " + fmt_d(DAY90), "Members", "The offer after every facial, and new clients from Google, reviews and referrals.", True),
            ("Alongside", "Talent", "A list of 15 lash, brow and nail artists. Coffee with three, pick two.", True),
            ("Months 4–12", "Artists", "Two artists try Lumevina free for 90 days. Members save 10% with them.", False),
            ("Year 1", "The network", "Go or no-go: their clients start booking Evelyn, or not.", False),
            ("Year 2", "The house", "The Lumevina Collective: a shared space and 6 to 8 artists.", False)]
 MONTH6_LEFT = round(MONTH6 * KEPT - BILLS_TOTAL, -1)
-MILES = [(5, "Week 5", "The Founding Five", "The first members, each with a free kit and next month already booked.", False),
+MILES = [(5, "Week 2", "The Founding Five", "The first members, each with a free kit and next month already booked.", False),
          (FLOOR, "Week %d" % FLOOR_WEEK, "Lumevina pays for itself", "Dues cover every business bill before the month starts. Everything else she books is hers.", True),
-         (PLAN, "Day 90", "The day-90 goal", "Room for a cancellation or a slow month, and the signal to offer two artists the pilot.", False),
+         (PLAN, "By " + fmt_d(DAY90), "The day-90 goal", "Room for a cancellation or a slow month, and the signal to offer two artists the pilot.", False),
          (MONTH6, "Month 6", "Dues pay Evelyn too", "About %s a month left from dues after the bills, before the month’s first facial." % money(MONTH6_LEFT), False)]
 
 NEW_GOAL = 2                       # new clients a week by week 6
@@ -316,14 +323,14 @@ def pace_svg():
     p = ['<svg class="chart pace" viewBox="0 0 800 300" role="img" aria-label="Members by week, first 90 days. '
          'The plan reaches %d members by week %d, when Lumevina pays for itself, and %d by day 90. The range runs from %d to %d."'
          '>' % (FLOOR, FLOOR_WEEK, PLAN, LOW[-1], HIGH[-1])]
-    for i, (a, b, name) in enumerate(((0, 3, "Set up"), (3, 5, "Launch"), (5, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
+    for i, (a, b, name) in enumerate(((0, 2, "Launch"), (2, 6, "Holidays"), (6, 9, "In the chair"), (9, 13, "Win-back and referrals"))):
         p.append('<rect x="%.1f" y="%d" width="%.1f" height="%d" class="st st%d"/>' % (x(a), Y1 - 8, x(b) - x(a), Y0 - Y1 + 8, i % 2))
         p.append('<text x="%.1f" y="%d" class="stl">%s</text>' % (x(a) + 8, Y1 + 8, name))
     for v in (5, 10, 15, 20, 25):
         p.append('<line x1="%d" x2="%d" y1="%.1f" y2="%.1f" class="grid"/>' % (X0, X1, y(v), y(v)))
         p.append('<text x="%d" y="%.1f" class="yl">%d</text>' % (X0 - 10, y(v) + 4, v))
     p.append('<line x1="%d" x2="%d" y1="%d" y2="%d" class="base"/>' % (X0, X1, Y0, Y0))
-    for w, lab in ((0, "Now"), (4, "Week 4"), (8, "Week 8"), (13, "Day 90")):
+    for w, lab in ((0, "Nov 24"), (4, fmt_d(DAY1 + _dt.timedelta(days=28))), (8, fmt_d(DAY1 + _dt.timedelta(days=56))), (13, fmt_d(DAY90))):
         anchor = "start" if w == 0 else ("end" if w == 13 else "middle")
         p.append('<text x="%.1f" y="%d" class="xl" text-anchor="%s">%s</text>' % (x(w), Y0 + 22, anchor, lab))
     hi = " ".join("%.1f,%.1f" % (x(w), y(HIGH[w])) for w in ws)
@@ -1019,7 +1026,8 @@ WEB_BODY = """
     <h1 class="h1 reveal" style="margin-top:18px">Ninety days to a spa<br>that <span class="grad">pays you first.</span></h1>
     <p class="lead reveal">Memberships pay Lumevina&rsquo;s bills before the month even starts. Once they do, every facial, wax and
     product Evelyn sells is hers. This is the road there, and what comes after.</p>
-    <div class="reveal mt2"><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start this month</div>
+    <p class="lead reveal" style="margin-top:10px"><strong>Day 1 is launch day, Tuesday, November 24, 2026. Day 90 is Sunday, February 21, 2027.</strong></p>
+    <div class="reveal mt2"><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start on launch day</div>
       <ol class="road">__ROADMAP__</ol></div>
     <div class="reveal mt2"><div class="cols-h">The milestones</div><div class="cols-s">Members, and what each number unlocks</div>
       <div class="miles">__MILES__</div></div>
@@ -1059,7 +1067,7 @@ WEB_BODY = """
     </div>
     <div class="new6">__NEWC__</div>
     <div class="perk reveal"><b>__NEWP_K__</b><span>__NEWP_V__</span></div>
-    <div class="reveal mt2"><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
+    <div class="reveal mt2"><div class="cols-h">If week 7 (__WEEK7__) ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
       <div class="costs behind four">__BEHIND__</div></div>
   </div>
 </section>
@@ -1306,7 +1314,8 @@ PRINT_BODY = """
     <p class="lead" style="margin-top:16px;max-width:6.5in">Memberships pay Lumevina&rsquo;s bills before the month even starts.
     Once they do, every facial, wax and product Evelyn sells is hers. This is the road there, and what comes after.</p>
   </div>
-  <div><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start this month</div>
+  <p class="lead" style="margin-top:6px"><strong>Day 1 is launch day, Tuesday, November 24, 2026. Day 90 is Sunday, February 21, 2027.</strong></p>
+  <div><div class="cols-h">The road</div><div class="cols-s">Six steps. The first three start on launch day</div>
     <ol class="road">__ROADMAP__</ol></div>
   <div><div class="cols-h">The milestones</div><div class="cols-s">Members, and what each number unlocks</div>
     <div class="miles">__MILES__</div></div>
@@ -1343,7 +1352,7 @@ PRINT_BODY = """
   <div class="perk"><b>__NEWP_K__</b><span>__NEWP_V__</span></div>
   <div class="two">
     <div><div class="cols-h">Where the __PLAN__ come from</div><div class="cols-s">The plan, by day 90</div>__SOURCES__</div>
-    <div><div class="cols-h">If week 7 ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
+    <div><div class="cols-h">If week 7 (__WEEK7__) ends under __BEHIND_N__ members</div><div class="cols-s">Pull these levers, in this order</div>
       <div class="costs behind" style="grid-template-columns:1fr 1fr">__BEHIND__</div></div>
   </div>
   __F3__
@@ -1489,7 +1498,7 @@ def fill(h, web):
         "__FLOOR_W__": WORDS.get(FLOOR, str(FLOOR)), "__FLOOR_W_L__": WORDS.get(FLOOR, str(FLOOR)).lower(),
         "__FLOOR__": str(FLOOR), "__PLAN__": str(PLAN), "__FLOOR2__": str(FLOOR_WITH_ARTISTS),
         "__KEPT__": "%d" % round(KEPT), "__BILLS_TOTAL__": money(BILLS_TOTAL), "__ARTIST__": "%d" % ARTIST_PERK,
-        "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%.2f" % PERKS, "__ONETIME_TOTAL__": money(ONE_TIME_TOTAL), "__BEHIND_N__": str(LIKELY[7] - 2),
+        "__BILLS_N__": str(BILLS_TOTAL), "__SUP_N__": "%d" % SUPPLIES, "__DUES_N__": "%d" % DUES, "__PERKS__": "%.2f" % PERKS, "__ONETIME_TOTAL__": money(ONE_TIME_TOTAL), "__BEHIND_N__": str(LIKELY[7] - 2), "__WEEK7__": fmt_d(DAY1 + _dt.timedelta(days=48)),
         "__ARTIST_NOTE__": ("and paying for itself then takes %d members" % FLOOR_WITH_ARTISTS) if FLOOR_WITH_ARTISTS > FLOOR
                            else ("and paying for itself still takes %d" % FLOOR),
         "__PACE_SVG__": pace_svg(), "__LANES_SVG__": lanes_svg(),

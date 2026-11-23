@@ -857,3 +857,9 @@ I can't test on a real iPhone from here, so this is based on what is known to be
 ## Shop: steadier when you scroll down fast on a phone (Nov 23)
 
 The shop's category bar (Cleansers, Toners & mists…) was flipping between hidden and shown on every little jolt of a fast scroll, repainting a huge full-width shadow each frame, and reading the page layout on every frame; the cards below were all drawn even when far off screen. Now: it hides only after a real stretch of scrolling down and returns after a real stretch back up, its full-width band is a plain layer, it no longer reads layout per frame, and cards off screen aren't drawn until you near them.
+
+## The First 90 Days now starts tomorrow, launch day (Nov 23)
+
+The plan is dated: **day 1 is launch day, Tuesday, November 24, 2026; day 90 is Sunday, February 21, 2027.** The setup weeks are gone (that work is done), so launch is week 1: the site, live payments, booking on Lumevina and the Glow Membership open together, with a text and email to every client, an Instagram post, and the Founding Five. The first Saturday scoreboard is November 28. Every stretch carries its dates (week 2: Dec 1–7, the Founding Five fills; weeks 3–6: Dec 8 – Jan 4, with holiday gift certificates; weeks 7–9: Jan 5–25; weeks 10–13: Jan 26 – Feb 21, win-back, referrals and Valentine's), and so do the talent search, the scoreboard targets and the chart.
+
+The member curve keeps the same weekly pace as before, only three weeks sooner (selling starts on day 1 instead of week 4): 15 members, where Lumevina pays for itself, around week 7 (Jan 11), and the day-90 goal of 20 reached with room. These are the plan's estimates, not results.
