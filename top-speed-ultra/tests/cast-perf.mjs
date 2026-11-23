@@ -24,7 +24,7 @@ const args = ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignor
 const browser = await chromium.launch({ args }).catch(() => chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args }));
 const phone = profile === 'phone';
 const ctx = await browser.newContext(phone ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 } : { viewport: { width: 1280, height: 720 } });
-const settings = { quality, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: 0.35, presentation: 'f', skin: 1, ...(character ? { character } : {}) };
+const settings = { quality, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: 0.35, presentation: 'f', skin: 1, ...(character ? { character, packTest: true } : {}) };   // (packTest: the pack characters' TEST unlock; a base character ignores it)
 await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), settings);
 const page = await ctx.newPage();
 page.setDefaultTimeout(900000);
