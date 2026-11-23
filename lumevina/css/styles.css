@@ -350,9 +350,7 @@ input[type="checkbox"], input[type="radio"] { accent-color: var(--mauve); }
 }
 
 .nav.scrolled {
-  background: rgba(var(--glass-rgb), 0.82);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background: var(--porcelain);   /* solid once you scroll: nothing shows through the header (or the strip above it in an app) */
   border-bottom-color: var(--ink-15);
   padding-top: 0.8rem;
   padding-bottom: 0.8rem;
@@ -7143,7 +7141,6 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
    they are plain, nearly solid instead */
 @media (pointer: coarse) {
   .nav.scrolled, .ask-fab, .mem-nudge { -webkit-backdrop-filter: none; backdrop-filter: none; }
-  .nav.scrolled { background: rgba(251, 250, 247, 0.96); }
   .ask-fab { background: rgba(251, 250, 247, 0.97); }
 }
 
