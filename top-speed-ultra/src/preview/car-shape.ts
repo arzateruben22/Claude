@@ -418,7 +418,10 @@ const HYPER: ShapeParams = {
   lowCarbon: [0.3, 0.38],
   // (judge round 1: the references' side view shows the fin zone dark under a thin pearl lip, back to the fender's
   // upright front edge about 0.4 m behind the nose)
-  noseCarbon: { z: 0.42, share: 0.8 },
+  // (2026-11-23, the owner's crop and judge round 2: as carbon quads of the skin its edge stepped with the stations and
+  // the facets' normals, a sawtooth at the fender's front; now a gloss-black wedge drawn by the paint shader, its top
+  // raked down toward the nose and its rear edge leaning back, so its edge is one clean line: masks below)
+  noseCarbon: undefined,
   // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
   // light (the front and rear views), and a warm sky doesn't turn the paint bronze
   // (M1b: metalness 0.3 -> 0.06 and the sky's reflection 1.2x: the front and rear faces, turned from the sun, read
@@ -484,6 +487,11 @@ const HYPER: ShapeParams = {
     { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.44, 0.0], [0.69, 0.0], [0.69, 0.437], [0.44, 0.364]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.67, 0.0], [0.805, 0.0], [0.805, 0.484], [0.67, 0.425]], soft: 0.004, range: [-3, -1.9] },
+    // the nose's dark fin zone from the side (in place of noseCarbon's quads): a wedge from the nose back to the
+    // fender's front edge, its top 0.24 m at the nose rising to 0.40 m, its rear edge raked back; side-facing faces only,
+    // so the fangs' forward faces stay pearl; one per side (a side mask's range is on signed x)
+    { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [0.3, 1.3] },
+    { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [-1.3, -0.3] },
     // (2026-11-23: the references' rear deck and haunch tops are all pearl: the old sheet's black spine behind the rear
     // screen, the dark deck over the tail and the haunches' teardrop openings are gone, as are the haunch fins and the
     // deck's louvres)

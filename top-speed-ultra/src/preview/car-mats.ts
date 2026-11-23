@@ -148,7 +148,9 @@ export interface ShutLine {
 // to gloss black (no metal, a darker, slightly rougher base under the same clear coat). Drawn by the paint shader, so
 // its edge is crisp at any distance and nothing is laid over the skin (no z-fighting). mirror: test |x| (one polygon
 // for both sides); soft: the edge's blend width in metres; range: limits on the plane's own axis (top: y, front: z,
-// side: x), so a mask on one face leaves the faces behind it alone.
+// side: x), so a mask on one face leaves the faces behind it alone. A 'front' mask also takes the faces turned down
+// under it (2026-11-23: the hypercar's lip, whose underside turns down over the recess step in rows too coarse to
+// follow it, showed that step as a torn silver band between the black intake zone and the lip's paint).
 export interface PaintMask { plane: 'top' | 'front' | 'side'; pts: [number, number][]; side?: -1 | 0 | 1; mirror?: boolean; soft?: number; range?: [number, number] }
 const MAX_SHUT = 14, MAX_MASK = 16;
 // inset a convex polygon by r (edges moved inward and re-intersected)
@@ -248,7 +250,7 @@ void paintMasks(float pix) {
     vec2 p; float ok, w;
     if (plane == 0) { p = vOP.zy; w = vOP.x; ok = smoothstep(0.2, 0.35, abs(vON.x)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.x * A.z)); }
     else if (plane == 1) { p = vec2(x, vOP.z); w = vOP.y; ok = smoothstep(0.2, 0.35, vON.y); }
-    else { p = vec2(x, vOP.y); w = vOP.z; ok = smoothstep(0.2, 0.35, abs(vON.z)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.z * A.z)); }
+    else { p = vec2(x, vOP.y); w = vOP.z; ok = smoothstep(0.2, 0.35, max(abs(vON.z), -vON.y)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.z * A.z)); }
     ok *= step(D.x, w) * step(w, D.y);
     float e = A.w * 0.5 + pix;
     paintMaskV = max(paintMaskV, ok * smoothstep(e, -e, shPoly(p, B.xy, B.zw, C.xy, C.zw)));

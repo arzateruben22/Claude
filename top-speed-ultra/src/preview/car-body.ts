@@ -769,7 +769,23 @@ function makeBody(P: ShapeParams) {
         return g;
       };
       kit.add('lamp', band(F, T, 1 - 46 / 128, 1 - 2 / 128));
-      kit.add('lamp', band(T, S, 1 - 54 / 128, 1 - 126 / 128));
+      // the lens in five rows from the face's top to the skin, each kept a few mm over the skin (judge round 2: as one
+      // straight span its middle dipped under the curved skin at the socket's top inner corner, and the paint stood
+      // through it as white triangular shards)
+      {
+        const R = 5, rows: V3[][] = [], off = high ? 0.003 : 0.005;
+        for (let r = 0; r <= R; r++) rows.push(T.map((t, i) => {
+          const p = t.clone().lerp(S[i], r / R), ax = Math.min(Math.abs(p.x), body.shoulder(p.z).Ws - 0.01), sk = body.top(p.z, ax) + off;
+          if (r > 0 && r < R && p.y < sk) p.y = sk;
+          return p;
+        }));
+        let g = gridGeo(rows, { flip: false });
+        const n = g.attributes.normal as THREE.BufferAttribute;
+        if (n.getX(k) * outN.x + n.getY(k) * outN.y + n.getZ(k) * outN.z < 0) g = gridGeo(rows, { flip: true });
+        const uv = g.attributes.uv as THREE.BufferAttribute;
+        for (let r = 0; r <= R; r++) for (let i = 0; i <= N; i++) uv.setXY(r * (N + 1) + i, us[i], 1 - (54 + (126 - 54) * (r / R)) / 128);
+        kit.add('lamp', g);
+      }
       // the ends: a gloss-black cap closing the wedge, facing along the blade (in at the inner end, back at the outer)
       for (const i of [0, N]) {
         const j = i ? N - 1 : 1, along = F[i].clone().sub(F[j]).normalize();
