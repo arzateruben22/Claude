@@ -13,6 +13,7 @@ import { LodField, Look2, Cover, Extra, reduced, paint, lodMaterial, splitLooks 
 import { Field } from './field';
 import { buildAccessories } from './acc';
 import { cardMaterial, hairTexture } from './cards';
+import { wavyCapMaterial, growWavyCards } from './hairWavy';
 import { skinMaterial, SkinMaterial } from './skin';
 import { Animator, AnimName } from './anim';
 import { PersonOptions, Quality } from './params';
@@ -295,7 +296,7 @@ export function buildPerson(o: PersonOptions): Person {
       // (flowing hair: feathered across the forehead only. Beside the temples the hair stands off the head, and a feathered cut there let the background through in holes)
       const sideK = hb.sp.flowing ? smooth(0.04, 0.058, Math.abs(hf.toLocal([P.getX(v), P.getY(v), P.getZ(v)])[0])) : 0; se = Math.max(se, sideK);
       e.setX(v, Math.max(Math.min(e.getX(v), se), 0.8 * sideK)); if (!hb.sp.ring) A.setX(v, Math.min(A.getX(v), 0.999) + 2 * Math.round(se * 100)); } }   // (repair: the hairline's own ramp rides in the occlusion attribute's whole part, as the curls' tips do, so the ends of hanging hair and tails keep the hair's colour)
-    const capMat = hairCapMaterial(o.look, quality, hb.sp, hb.sp.ring || hb.sp.soft ? hf.toBody([0, 0.02, -0.05]) : undefined, hb.sp.soft && hb.sp.tie ? hf.toBody(hb.sp.tie) : undefined, hb.sp.layers ? hf.toBody([hb.sp.part, 0.09, 0]) : undefined);
+    const capMat = hb.sp.wavy ? wavyCapMaterial(o.look, quality, hb.sp.wavy, hf.o, [hf.sx, hf.sy, hf.sz]) : hairCapMaterial(o.look, quality, hb.sp, hb.sp.ring || hb.sp.soft ? hf.toBody([0, 0.02, -0.05]) : undefined, hb.sp.soft && hb.sp.tie ? hf.toBody(hb.sp.tie) : undefined, hb.sp.layers ? hf.toBody([hb.sp.part, 0.09, 0]) : undefined);
     mats.push(capMat);
     const cap = new THREE.SkinnedMesh(geo.geo, capMat);
     cap.name = 'hair-cap';
@@ -304,16 +305,19 @@ export function buildPerson(o: PersonOptions): Person {
     if (hb.sp.layers) cap.userData.noRecv = true;
     buildMs.hairCap = Math.round(performance.now() - th);
     const tc = performance.now();
-    const cards = growCards(hb, roots, quality, o.seed, edgeRoots);
+    const cards = hb.sp.wavy ? growWavyCards(hb, roots, quality, o.seed, edgeRoots) : growCards(hb, roots, quality, o.seed, edgeRoots);
     const cg = new THREE.BufferGeometry();
     cg.setAttribute('position', new THREE.BufferAttribute(cards.pos, 3));
     cg.setAttribute('uv', new THREE.BufferAttribute(cards.uv, 2));
     cg.setIndex(cards.idx);
-    cg.computeVertexNormals();
+    // (the swept-back wavy side part's cards carry the normals of the volume they lie on)
+    const cardN = (cards as { nrm?: Float32Array }).nrm;
+    if (cardN) cg.setAttribute('normal', new THREE.BufferAttribute(cardN, 3)); else cg.computeVertexNormals();
     const cw = hairWeights(hb, cards.pos);
     cg.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(cw.si, 4));
     cg.setAttribute('skinWeight', new THREE.BufferAttribute(cw.sw, 4));
-    const cmat = cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : hb.sp.soft && !hb.sp.ring ? 0.6 : 1, tips: o.look.hairTips ?? null, sharp: !!hb.sp.soft, even: hb.sp.layers ? 1.5 : undefined });   // (cast r2, the feathered styles: an anti-aliased cut with no coverage dither, an even tone and a softer sheen; the bright stripes down Jas's tail and the speckle over Chad's forehead by day. Was sheen 1.3)
+    const cmat = hb.sp.wavy ? cardMaterial(o.look.hairColor, hairTexture('lock'), quality, { grey: o.look.grey, kk: true, alphaTest: 0.36, sheen: 1.2, tips: o.look.hairTips != null ? new THREE.Color(o.look.hairColor).lerp(new THREE.Color(o.look.hairTips), 0.55).getHex() : null, along: true, root: 0.8 })
+      : cardMaterial(o.look.hairColor, hairTexture(hb.sp.tex), quality, { grey: o.look.grey, kk: true, alphaTest: 0.4, sheen: hb.sp.tex === 'curl' ? 0.3 : hb.sp.soft && !hb.sp.ring ? 0.6 : 1, tips: o.look.hairTips ?? null, sharp: !!hb.sp.soft, even: hb.sp.layers ? 1.5 : undefined });   // (cast r2, the feathered styles: an anti-aliased cut with no coverage dither, an even tone and a softer sheen; the bright stripes down Jas's tail and the speckle over Chad's forehead by day. Was sheen 1.3)
     mats.push(cmat);
     const cm = new THREE.SkinnedMesh(cg, cmat);
     cm.name = 'hair-cards';

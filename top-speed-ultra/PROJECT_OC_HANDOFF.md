@@ -606,6 +606,33 @@ cast-venues, cast-pack-venues (one Playwright process at a time; each run under 
 PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
 ```
 
+### Fable prompt: real 3D character assets for the cast (a GLB pipeline), queued 2026-11-23
+
+The owner (2026-11-22, on Chad's hero render beside his sheet): "that's definitely gonna need to keep rendering to match
+it. Graphics are giving 2000's sims vibes." The code-built people (src/onfoot/people/*) have reached their ceiling for
+the named cast; the reference sheets need authored assets. The asset source is the owner's call (a commissioned 3D
+artist; an image-to-3D tool on a plan that grants commercial use, rigged in Mixamo; or a CC0 MakeHuman base finished in
+Blender). The pipeline below is source-agnostic.
+
+```
+Fable prompt. Project OC (top-speed-ultra), the named cast as real 3D assets. Branch: a new claude/cast-glb from
+claude/cast. Read CLAUDE.md, PROJECT_OC_CAST.md, PROJECT_OC_TECHNICAL_NOTES.md (the single-file build), src/onfoot/cast.ts,
+src/onfoot/people/person.ts and lod.ts, src/ui/castStage.ts, src/onfoot/venues/sportsbar/crowd.ts. Build: a loader for
+skinned, textured glTF/GLB characters (three's GLTFLoader; meshopt or Draco geometry; compressed textures where the
+build allows) behind the existing Person interface, so the picker, the venues and the avatar take a GLB cast member or
+the code-built one; a Mixamo-compatible humanoid skeleton with a retarget layer onto the current animation set (walk,
+idle, talk, laugh, sit); PBR skin (albedo, normal, roughness), eyes and authored hair cards; LOD 0/1 from the asset and
+LOD 2 (or the crowd at a distance) from the code builder; asset files loaded on demand, not inlined into the first
+page load. Budgets at phone quality: LOD 0 under 90,000 triangles, LOD 1 under 14,000, the picker and two venues still
+at their frame-time budgets (measure a perf pair). Pilot ONE character (Chad) with an owner-supplied GLB, or a CC0 or
+Mixamo-licensed placeholder until it arrives; log each asset's source and licence in PROJECT_OC_CAST.md. Rules: don't
+edit src/preview/hands*, src/preview/car-*, src/game/vehicle/Physics.ts or the cockpit camera; our own brands only;
+store stays in test mode; honest labels. Proof: npx tsc --noEmit (both configs), npm run build (one owner-test mark),
+npm test -- --only=cast, then cast-pack, cast-venues, cast-pack-venues, boot (one Playwright process at a time);
+frames: the pilot beside his sheet front/side/back and head front/3-4/profile, in both venues by day at 2 m in third
+person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
+```
+
 ## Opus queue (routine items waiting for a daytime session)
 
 - Everything in the daytime prompt above, in order.

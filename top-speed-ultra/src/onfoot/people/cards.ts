@@ -130,7 +130,7 @@ export function hairLights(strength = 1) {
 export interface CardMaterial extends THREE.MeshStandardMaterial { uniformsRef: Record<string, THREE.IUniform> }
 
 /** strand-card material; `grey` mixes grey strands in by a per-strand hash */
-export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number; /** (pack) a lighter colour toward the tips; null or unset: none */ tips?: number | null; /** (cast r2) alpha-to-coverage with the alpha sharpened to about a pixel (no 2- or 4-level coverage dither at a distance): the feathered styles' cards. Unset: exactly as before */ sharp?: boolean; /** (cast r2) the strands' tone evened out (no dark strands between light ones aliasing into stripes), times this (the cap's sheen lifts very dark hair more than its cards). Unset: as before */ even?: number } = {}): CardMaterial {
+export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality, o: { grey?: number; greyColor?: number; alphaTest?: number; kk?: boolean; shift?: number; sheen?: number; /** (pack) a lighter colour toward the tips; null or unset: none */ tips?: number | null; /** (cast r2) alpha-to-coverage with the alpha sharpened to about a pixel (no 2- or 4-level coverage dither at a distance): the feathered styles' cards. Unset: exactly as before */ sharp?: boolean; /** (cast r2) the strands' tone evened out (no dark strands between light ones aliasing into stripes), times this (the cap's sheen lifts very dark hair more than its cards). Unset: as before */ even?: number; /** (hero test) the highlight's strand direction taken along the card's length (v); unset: as before */ along?: boolean; /** (hero test) how dark the card is at its root, 0.7 when unset (as before) */ root?: number } = {}): CardMaterial {
   const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, envMapIntensity: 0.35, side: THREE.DoubleSide, alphaTest: o.alphaTest ?? 0.42, transparent: false }) as CardMaterial;
   m.map = tex;
   const u: Record<string, THREE.IUniform> = {
@@ -142,7 +142,7 @@ export function cardMaterial(color: number, tex: THREE.Texture, quality: Quality
   const sharp = !!o.sharp && quality === 'high';
   if (sharp) m.alphaTest = 0.002;   // (the cut is in the sharpened alpha itself, below)
   const kk = o.kk ?? true;
-  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}-${o.sheen ?? 1}` + (o.sharp ? '-sharp' : '') + (o.even ? '-even' + o.even : '');
+  m.customProgramCacheKey = () => `card-${quality}-${kk ? 1 : 0}-${o.sheen ?? 1}` + (o.sharp ? '-sharp' : '') + (o.even ? '-even' + o.even : '') + (o.along ? '-al' : '') + (o.root !== undefined ? '-r' + o.root : '');
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.fragmentShader = sh.fragmentShader
@@ -159,7 +159,7 @@ float gStep = step(1.0 - uGrey, hsh);
 gStep = mix(gStep, uGrey, smoothstep(0.4, 1.0, fwidth(vMapUv.x * 220.0)));
 hc = mix(hc, uGreyCol * (0.7 + 0.4 * st.r), gStep);
 // darker toward the roots
-hc *= 0.7 + 0.3 * smoothstep(0.0, 0.35, vMapUv.y);
+hc *= ${(o.root ?? 0.7).toFixed(1)} + ${(1 - (o.root ?? 0.7)).toFixed(1)} * smoothstep(0.0, 0.35, vMapUv.y);
 diffuseColor.rgb = hc;
 diffuseColor.a = st.a;${o.even ? `
 // (cast r2) a feathered style's cards: the strands' tone evened out (dark strands between light ones aliased into stripes
@@ -172,7 +172,7 @@ diffuseColor.a = (st.a - ${(o.alphaTest ?? 0.42).toFixed(3)}) / max(fwidth(st.a)
 {
   vec3 dpx = dFdx( -vViewPosition ), dpy = dFdy( -vViewPosition );
   vec2 dux = dFdx( vMapUv ), duy = dFdy( vMapUv );
-  vec3 t = dpx * duy.y - dpy * dux.y;
+  vec3 t = ${o.along ? 'dpy * dux.x - dpx * duy.x' : 'dpx * duy.y - dpy * dux.y'};
   gHairT = normalize( t - normal * dot( t, normal ) + 1e-6 );
   gHairSpec = mix( vec3(1.0, 0.95, 0.9), diffuseColor.rgb * 3.0, 0.55 ) * ${(o.sheen ?? 1).toFixed(3)};
   gHairShift = uShift;

@@ -74,7 +74,9 @@ export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | '
   | 'longWaves'        // long, loosely waved hair from a centre parting, down the back to the shoulder blades
   // (added 2026-11-15 for the graphics pass: new values only)
   | 'wavesFlow'        // shoulder-length waves from a side parting as flowing hair (layered ends, the parting's fall over the temple)
-  | 'curlsUnderCap';   // thick curls worn under a cap: they show below the cap's band at the sides and the back
+  | 'curlsUnderCap'    // thick curls worn under a cap: they show below the cap's band at the sides and the back
+  // (added 2026-11-22 from the Chad hero test, owner: 'too curly, make it more wavy or more straight': a new value only)
+  | 'sweptWavy';       // a swept-back wavy side part: the top 6 to 8 cm, combed back and across in soft waves with volume at the front, the sides and back tapered shorter, tidy over the ears and at the nape (hairWavy.ts)
 export type FacialHair = 'none' | 'stubble' | 'beard' | 'moustache' | 'goatee'
   // (cast, 2026-11-11) a short full beard with volume: the beard's shading plus a short hair shell over it (hair.ts
   // buildBeardVolume), so it reads at a distance and on dark skin. 'beard' is unchanged
