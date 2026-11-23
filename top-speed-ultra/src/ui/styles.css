@@ -1160,7 +1160,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
    CLEAR PATH 206..280 x 676..724, THRUST 296..370 x 640..688, under the wheel's hub and the cluster */
 .app[data-hud="pp"] .hud-ability { right: calc(var(--sa-r) + 20px + 74px + 16px); bottom: calc(var(--ctl-b) + 96px + 10px); width: 74px; height: 48px; padding: 0 5px 4px; font-size: 11px; letter-spacing: 0.08em; }
 .app[data-hud="pp"] .hud-thrustbtn { right: calc(var(--sa-r) + 20px); bottom: calc(var(--ctl-b) + 132px + 10px); width: 74px; height: 48px; padding: 0 5px 4px; font-size: 12px; }
-.app[data-hud="pl"] :is(.hud-ability, .hud-thrustbtn) { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 14px); width: 74px; height: 44px; padding: 0 5px 4px; font-size: 11px; letter-spacing: 0.08em; }
+.app[data-hud="pl"] :is(.hud-ability, .hud-thrustbtn) { right: calc(var(--sa-r) + 20px + 74px + 16px + 74px + 44px + 14px); width: 74px; height: 44px; padding: 0 5px 4px; font-size: 11px; letter-spacing: 0.08em; }
 .app[data-hud="pl"] .hud-ability { bottom: var(--ctl-b); }
 .app[data-hud="pl"] .hud-thrustbtn { bottom: calc(var(--ctl-b) + 52px); }
 .app:is([data-hud="pp"], [data-hud="pl"]) :is(.hud-ability, .hud-thrustbtn)::after { left: 7px; right: 7px; bottom: 5px; }
@@ -1183,8 +1183,26 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .app:is([data-hud="pp"], [data-hud="pl"]) .livechip { position: fixed; top: calc(var(--sa-t) + 8px); right: calc(var(--sa-r) + var(--edge) + var(--map) - 44px); width: 44px; min-width: 44px; height: 44px; min-height: 44px; padding: 0; }
 .app:is([data-hud="pp"], [data-hud="pl"]) .livewho { position: fixed; top: calc(var(--sa-t) + 56px); right: calc(var(--sa-r) + var(--edge)); max-height: 50vh; overflow-y: auto; }
 .app[data-hud="pp"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 96px + 8px); right: calc(var(--sa-r) + 20px + 74px + 16px + 11px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
-.app[data-hud="pl"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 22px); right: calc(var(--sa-r) + 200px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
+.app[data-hud="pl"] .tbtn.honk { position: fixed; bottom: calc(var(--ctl-b) + 22px); right: calc(var(--sa-r) + 244px + 52px + 8px); width: 44px; height: 44px; padding: 0; justify-content: center; }
 .app[data-hud="desk"] .tbar .livechip { order: -1; }
+
+/* the drift readout (Physics.drift): DRIFT, the slip angle with a bar for it, the chain's clock. A slanted slab in the
+   cluster's language with an ice edge; up while a slide counts and through the half second that links one to the next
+   (then dimmed, "link"). On a phone it sits over the steering pad's top (clear of AUTO, CLEAR PATH and JUMP, and out of the
+   open view); on its side over the pad; on a desktop bottom centre */
+.hud-drift { --k: var(--ice); position: absolute; left: calc(var(--sa-l) + 14px); bottom: calc(var(--ctl-b) + 96px + 8px + 44px + 8px); isolation: isolate; width: 160px; height: 40px; padding: 5px 12px 0 14px;
+  display: grid; grid-template-columns: auto auto 1fr; grid-template-rows: 1fr auto; align-items: baseline; column-gap: 8px; pointer-events: none; color: var(--ink); }
+.hud-drift[hidden] { display: none; }
+.hud-drift::before { content: ""; position: absolute; inset: 0; z-index: -1; transform: skewX(-8deg); background: var(--hud); box-shadow: inset 0 0 0 1px var(--line-2), inset 3px 0 0 var(--k); }
+.hud-drift b { font: 700 9.5px/1 var(--f-mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--k); }
+.hud-drift em { font: 700 20px/1 var(--f-mono); font-style: normal; letter-spacing: 0; font-variant-numeric: tabular-nums; min-width: 3.3ch; text-align: right; }
+.hud-drift-t { justify-self: end; white-space: nowrap; font: 600 11px/1 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--dim); }
+.hud-drift-bar { grid-column: 1 / -1; align-self: end; height: 3px; margin: 0 0 5px; background: var(--line-2); overflow: hidden; transform: skewX(var(--skew)); }
+.hud-drift-bar i { display: block; height: 100%; background: var(--k); transform-origin: left; transform: scaleX(0); transition: transform 100ms linear; }
+.hud-drift[data-state="link"] { opacity: 0.6; }
+.hud-drift[data-state="link"] b { color: var(--dim); }
+.app[data-hud="pl"] .hud-drift { bottom: calc(var(--ctl-b) + 96px + 8px); }
+.app[data-hud="desk"] .hud-drift { left: 50%; bottom: calc(var(--bot) + 6px); transform: translateX(-50%); }
 
 /* the OC Hypercar's systems as one slim strip by the speed (Free Drive's Unleashed tune only; its tune is one of the
    speed block's chips): THRUST, the tank's bar with the hop's 40 % mark and its figure, Ground Lock's light, the hop's
@@ -1220,7 +1238,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .panel h3 { margin: 4px 0 0; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--dim); font-weight: 600; }
 .report { width: 100%; font: 500 12.5px/1.45 var(--f-mono, ui-monospace, Menlo, Consolas, monospace); background: var(--glass); color: var(--ink); border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; resize: none; user-select: text; -webkit-user-select: text; }
 .touch { position: absolute; inset: 0; pointer-events: none; }
-.touch-steer { position: absolute; left: calc(var(--sa-l) + 14px); bottom: var(--ctl-b); width: min(46vw, 230px); height: 96px; display: grid; place-items: center; pointer-events: auto; touch-action: none;
+.touch-steer { position: absolute; left: calc(var(--sa-l) + 14px); bottom: var(--ctl-b); width: min(46vw, 230px, calc(100vw - var(--sa-l) - var(--sa-r) - 14px - 20px - 74px - 16px - 74px - 44px - 8px)); height: 96px; display: grid; place-items: center; pointer-events: auto; touch-action: none;
   background:
     linear-gradient(var(--chrome) 0 0) left top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) left top / 2px 12px no-repeat,
     linear-gradient(var(--chrome) 0 0) right top / 12px 2px no-repeat, linear-gradient(var(--chrome) 0 0) right top / 2px 12px no-repeat,
@@ -1243,14 +1261,34 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .pedal.gas.down::before { background: var(--ice); }
 .pedal.brake.down { color: var(--night); }
 .pedal.brake.down::before { background: var(--ember); }
+/* the handbrake: a lever-shaped tab on BRAKE's inner edge (the side facing the steering pad), flush with the pedal and as
+   tall as it, in the pedals' own slanted slab and ember hairline (owner: "something more seamlessly integrated", not a
+   bolted-on button). Slide it toward the pad 18 px to pull; a quick swipe from BRAKE toward the pad does the same.
+   44 x 96 px: the grip rides in the slot 14 px and fills ember when pulled. Touch.tsx sets --pull and .pulled */
+.brake-wrap { display: flex; align-items: flex-end; }
+.hb-lever { --pull: 0px; position: relative; isolation: isolate; width: 44px; height: 96px; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: pointer; }
+.hb-lever::before { content: ""; position: absolute; inset: 0 1px 0 0; z-index: -2; transform: skewX(-8deg); background: var(--hud);
+  box-shadow: inset 0 0 0 1px var(--line-2), inset 0 3px 0 var(--chrome-lo); }
+.hb-grip { position: absolute; top: 9px; bottom: 9px; right: 6px; width: 28px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 7px 0; transform: translateX(calc(var(--pull) * -1)) skewX(-8deg);
+  background: linear-gradient(90deg, var(--chrome-deep), var(--chrome-lo)); box-shadow: inset 0 0 0 1px var(--line-3, var(--line-2)), 0 2px 8px var(--shadow); transition: transform 90ms var(--ease-out), background-color 90ms; }
+.hb-grip i { display: block; width: 14px; height: 2px; background: var(--chrome); opacity: 0.85; }
+.hb-grip b { writing-mode: vertical-rl; transform: rotate(180deg); font: 700 8.5px/1 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink); }
+.hb-lever.pulled::before { background: var(--ember); box-shadow: inset 0 0 0 1px var(--ember-line), 0 0 14px var(--ember-glow); }
+.hb-lever.pulled .hb-grip { background: var(--night); box-shadow: inset 0 0 0 1px var(--ember-line); }
+.hb-lever.pulled .hb-grip i { background: var(--ember); }
+.hb-lever.pulled .hb-grip b { color: var(--ember); }
+.hb-lever:not(.pulled) .hb-grip { transition-duration: 0ms; }
+.hb-lever:not(.pulled):not(:active) .hb-grip { transition-duration: 140ms; }
+.brake-wrap .pedal.brake { width: 74px; }
+@media (prefers-reduced-motion: reduce) { .hb-grip { transition: none !important; } }
 .touch-shift { display: grid; gap: 10px; }
 .touch-shift .tbtn { min-height: 46px; min-width: 50px; padding: 0; font: 600 22px/1 var(--f-mono); }
 /* manual on a narrow phone: the shift buttons need room beside the pedals, so the pedals slim to 66 px and the steering
    rail ends 8 px short of them (at 390 px: steer 14..160, shift 168..218, brake 228..294, gas 304..370) */
 @media (max-width: 419px) {
   .touch:has(.touch-shift) .touch-pedals { gap: 10px; }
-  .touch:has(.touch-shift) .pedal { width: 66px; }
-  .touch:has(.touch-shift) .touch-steer { width: min(46vw, 230px, calc(100vw - 14px - 20px - 202px - 8px - var(--sa-l) - var(--sa-r))); }
+  .touch:has(.touch-shift) .pedal, .touch:has(.touch-shift) .brake-wrap .pedal.brake { width: 66px; }
+  .touch:has(.touch-shift) .touch-steer { width: min(46vw, 230px, calc(100vw - 14px - 20px - 202px - 44px - 8px - var(--sa-l) - var(--sa-r))); }
 }
 
 /* Ultra Realism: tunnel vision closes in from the edges as the speed builds */

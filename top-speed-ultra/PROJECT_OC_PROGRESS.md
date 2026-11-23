@@ -4,6 +4,32 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: a handbrake on the phone, built into the BRAKE pedal, and a drift readout
+
+Branch claude/drift, on v24 (5e16ab4). Not committed. The owner asked on 2026-11-17 "how do you drift on mobile device?"
+and wanted something "more seamlessly integrated" than a button. The touch controls had only steering, BRAKE and GAS;
+the handbrake was on Space and a pad's A/X only.
+
+**What it is** (input and HUD only; Physics.ts is untouched):
+- **The lever.** A lever-shaped tab on BRAKE's inner edge (the side facing the steering pad): 44 x 96 px, flush with the
+  pedal and as tall as it, in the pedals' slanted slab and hairline. Slide it toward the steering pad 18 px or more to
+  pull; it lets go when the thumb is back inside 10 px or lifts. The grip rides 14 px in its slot and the lever fills
+  ember when pulled; a 16 ms vibration where the device has one (`navigator.vibrate`).
+- **The swipe.** A quick swipe from BRAKE toward the pad (18 px or more, mostly sideways) does the same, and the brake
+  lets go once it is a pull.
+- **No accidental pulls.** A tap, a hold on BRAKE, a short slide and a steep drag pull nothing.
+- **The flick.** `Input.touch.handbrake` sets `Controls.handbrake`; a touch pull holds 0.22 s past the lift so the same
+  thumb can get back on GAS (Space and the pad's A/X work as before).
+- **Layout.** The steering pad ends 8 px short of the lever (140 px wide at 390 px, was 179). On a phone's side CLEAR PATH
+  and JUMP step 44 px left of BRAKE's lever. At 390 x 844 CLEAR PATH and JUMP are unmoved, over BRAKE and GAS.
+- **The readout.** `DRIFT 34deg 0.4 s` (angle, a bar for the angle against 60 degrees, the chain's clock) from
+  `Physics.drift`, up while a slide counts and through its half second of grace (dimmed). Over the steering pad's top on
+  a phone, bottom centre on a desktop. Files: src/ui/Touch.tsx, src/game/input.ts, src/game/Game.ts (Hud fields),
+  src/ui/HUD.tsx, src/ui/styles.css, tests/regression.mjs, tests/drift-frames.mjs.
+
+**Checked** (the numbers are in the tests' own lines, tests/out/logs/*.log): see the report for the exact suite lines.
+The mock variant B (a separate DRIFT key above BRAKE) is a frame only, not built.
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
