@@ -2817,15 +2817,15 @@ await group('render', async (use) => {
     for (const car of ['oc-hyper', 'rossini-gt', 'rossini-corsa', 'rossini-brio', 'vela-e']) {
       res[car] = await game(page, (c) => {
         const g = window.__game, was = g.car.config; g.car.configure({ ...was, car: c });
-        const grp = g.car.interior.group, inv = grp.matrixWorld.clone().invert(), out = { white: { dash: 0, door: 0, seat: 0, lum: 0 }, amb: { lip: 0, door: 0, foot: 0, console: 0, roof: 0 }, pedal: 0, mirror: 0, doorMat: '' };
+        const grp = g.car.interior.group; grp.updateMatrixWorld(true);
+        const inv = grp.matrixWorld.clone().invert(), out = { white: { dash: 0, door: 0, seat: 0, lum: 0 }, amb: { lip: 0, door: 0, foot: 0, console: 0, roof: 0 }, pedal: 0, mirror: 0, doorMat: '' };
         const inBody = (o) => { for (let a = o; a && a !== grp; a = a.parent) if (a.name === 'body') return true; return false; };
-        grp.updateMatrixWorld(true);
         grp.traverse((o) => {
           if (!o.isMesh || !o.geometry || inBody(o)) return;
           const p = o.geometry.attributes.position, m = inv.clone().multiply(o.matrixWorld), v = o.position.clone();
           const each = (fn) => { for (let i = 0; i < p.count; i++) fn(v.fromBufferAttribute(p, i).applyMatrix4(m)); };
-          if (o.name === 'white') { out.white.lum = o.material.color.getHSL({}).l; each((q) => { const a = Math.abs(q.x); if (q.z < -0.6 && a > 0.55) out.white.dash++; else if (a > 0.6 && q.z > -0.6 && q.y > 0.55) out.white.door++; else if (a < 0.6 && q.z > -0.45 && q.y < 0.75) out.white.seat++; }); }
-          if (o.name === 'amb') each((q) => { const a = Math.abs(q.x); if (q.y > 1.0) out.amb.roof++; else if (q.y < 0.15) out.amb.foot++; else if (a > 0.55 && q.z > -0.6) out.amb.door++; else if (a < 0.1 && q.z > -0.45 && q.y < 0.4) out.amb.console++; else if (q.z < -0.6 && q.y > 0.55) out.amb.lip++; });
+          if (o.name === 'white') { out.white.lum = o.material.color.getHSL({}).l; each((q) => { const a = Math.abs(q.x); if (q.z < -0.6 && a > 0.55) out.white.dash++; else if (a > 0.4 && q.z > -0.6 && q.z < -0.35 && q.y > 0.5) out.white.door++; else if (a < 0.6 && q.z > -0.45 && q.y < 0.75) out.white.seat++; }); }
+          if (o.name === 'amb') each((q) => { const a = Math.abs(q.x); if (q.y > 1.0) out.amb.roof++; else if (q.y < 0.15) out.amb.foot++; else if (a > 0.4 && q.z > -0.6) out.amb.door++; else if (a < 0.1 && q.z > -0.45 && q.y < 0.4) out.amb.console++; else if (q.z < -0.6 && q.y > 0.55) out.amb.lip++; });
           if (o.name === 'alu') each((q) => { if (q.y < 0.3 && q.z < -0.82 && q.x < -0.05 && q.x > -0.55) out.pedal++; });
           if (o.name === 'mirrorDim') each((q) => { if (q.y > 0.95 && Math.abs(q.x) < 0.2) out.mirror++; });
           if (o.name === 'doorLow') out.doorMat = o.material.name;
