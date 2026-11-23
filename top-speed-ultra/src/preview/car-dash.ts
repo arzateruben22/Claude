@@ -123,128 +123,113 @@ const ON = (b: boolean) => (b ? 1 : 0);
 
 // ------------------------------------------------------------------------------------------------ the OC Hypercar
 const HY = { ICE: '#5eb8ff', DEEP: '#1e6fd8', HOT: '#bfe8ff', TXT: '#e8f2ff', DIM: '#8fa6c0', OFF: '#17283f', RED: '#ff3b30', REDOFF: '#4a1418' };
-const hexPath = (g: CanvasRenderingContext2D, cx: number, cy: number, hw: number, hh: number, cut: number) => { g.beginPath(); g.moveTo(cx - hw + cut, cy - hh); g.lineTo(cx + hw - cut, cy - hh); g.lineTo(cx + hw, cy); g.lineTo(cx + hw - cut, cy + hh); g.lineTo(cx - hw + cut, cy + hh); g.lineTo(cx - hw, cy); g.closePath(); };
-// the rev arc over the speed: centre, radius, the angles it runs between (canvas angles, over the top), the redline
-const ARC = { x: 512, y: 200, r: 105, a0: Math.PI + 0.42, a1: Math.PI * 2 - 0.42, red: 0.88 };
-const arcAt = (f: number) => ARC.a0 + (ARC.a1 - ARC.a0) * f;
-function hyperBase(g: CanvasRenderingContext2D, low: boolean) {
-  const { ICE, DEEP, TXT, DIM, OFF, REDOFF } = HY;
-  g.fillStyle = '#03050a'; g.fillRect(0, 0, 1024, 512);
-  if (!low) { const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, 'rgba(20,50,100,0.28)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, 1024, 256); }
-  g.lineJoin = 'miter'; g.lineCap = 'butt';
-  // the frame: a wide hexagon in the deep blue, an inner echo in the ice
-  g.strokeStyle = DEEP; g.lineWidth = 4; hexPath(g, 512, 128, 486, 116, 70); g.stroke();
-  g.strokeStyle = ICE; g.lineWidth = 1.5; hexPath(g, 512, 128, 474, 106, 66); g.stroke();
-  // faint grid lines through the dark, as a display's substrate
-  if (!low) { g.strokeStyle = 'rgba(94,184,255,0.07)'; g.lineWidth = 1; for (let x = 140; x < 900; x += 40) { g.beginPath(); g.moveTo(x, 30); g.lineTo(x, 226); g.stroke(); } }
-  // the OC mark small at the top
-  drawOcMark(g, 476, 20, 72, 24, TXT);
-  // the rev arc's unlit track, its tick every tenth and the redline's dark red
-  g.lineWidth = 9; g.strokeStyle = OFF; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, ARC.a0, arcAt(ARC.red)); g.stroke();
-  g.strokeStyle = REDOFF; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), ARC.a1); g.stroke();
-  g.lineWidth = 2; g.strokeStyle = DEEP;
-  for (let k = 0; k <= 10; k++) { const a = arcAt(k / 10); g.beginPath(); g.moveTo(ARC.x + Math.cos(a) * (ARC.r + 7), ARC.y + Math.sin(a) * (ARC.r + 7)); g.lineTo(ARC.x + Math.cos(a) * (ARC.r + 13), ARC.y + Math.sin(a) * (ARC.r + 13)); g.stroke(); }
-  // MPH, the gear's box, the power bar's track, the G-meter's rings
-  text(g, 'MPH', 512, 182, 17, DIM, 500, 'center');
-  g.strokeStyle = ICE; g.lineWidth = 2; g.beginPath(); g.roundRect(492, 196, 40, 38, 5); g.stroke();
-  g.fillStyle = OFF; g.fillRect(400, 241, 224, 5);
-  // the centre screen (716..1024 x 256..512): an angular frame, the OC mark; the mode and the assists are live
-  const x0 = 716, y0 = 256;
-  g.save(); g.beginPath(); g.rect(x0, y0, 308, 256); g.clip();
-  g.fillStyle = '#05080f'; g.fillRect(x0, y0, 308, 256);
-  g.strokeStyle = DEEP; g.lineWidth = 3; hexPath(g, x0 + 154, y0 + 128, 140, 110, 30); g.stroke();
-  g.strokeStyle = ICE; g.lineWidth = 1.5; hexPath(g, x0 + 154, y0 + 128, 130, 100, 28); g.stroke();
-  drawOcMark(g, x0 + 124, y0 + 44, 60, 22, TXT);
-  g.fillStyle = HY.HOT; g.fillRect(x0 + 60, y0 + 178, 188, 2);
+// The cluster after the owner's interior reference (2026-11-23, interior.png: "the cockpit needs to match exactly to the
+// reference image"), in our own design: the display's top half (1024 x 256, the screen under the cluster hood). As
+// the reference lays it out: a thin rev arc across the top with its numerals (x1000 r/min, 0 to 9; the redline from
+// 7,000, lit with the wheel's red shift lights), the speed big in the middle with the gear under it, a horizontal bar
+// each side under a small icon (left the power in use under a thermometer with the simulated air temperature; right
+// the Thrust tank under a tank icon: the game simulates no fuel, so the reference's fuel gauge is our Thrust tank), and
+// in the corners, small, the rest of the readout the game shows (the clock, the profile and assists, the tune, Go
+// To's next turn and destination, trip and top speed, Ground Lock and the hop). The OC mark over the arc.
+const ARC = { x: 512, y: 236, r: 166, a0: Math.PI + 0.6, a1: Math.PI * 2 - 0.6, max: 9, red: 7 };
+// the arc's angle at r/min (thousands); the revs as a fraction of the 8,000 r/min redline (SPEC.redline)
+const arcAt = (k: number) => ARC.a0 + (ARC.a1 - ARC.a0) * Math.min(1, Math.max(0, k / ARC.max));
+const BAR = { y: 108, h: 9, l0: 40, l1: 322, r0: 702, r1: 984 };
+function thermo(g: CanvasRenderingContext2D, x: number, y: number, s: number, col: string) {
+  g.save(); g.translate(x, y); g.scale(s / 24, s / 24); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 2.6;
+  g.beginPath(); g.roundRect(-3.5, -11, 7, 15, 3.5); g.stroke(); g.beginPath(); g.arc(0, 7, 5.5, 0, Math.PI * 2); g.fill();
+  g.fillRect(-1.2, -4, 2.4, 9); for (const t of [-7, -3]) g.fillRect(5, t, 4, 1.8);
   g.restore();
 }
+// a tank: our Thrust tank's mark (a capsule with a valve), where the reference prints a fuel pump
+function tankIcon(g: CanvasRenderingContext2D, x: number, y: number, s: number, col: string) {
+  g.save(); g.translate(x, y); g.scale(s / 24, s / 24); g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 2.6;
+  g.beginPath(); g.roundRect(-6, -8, 12, 19, 6); g.stroke(); g.fillRect(-2.5, -12, 5, 4); g.fillRect(-6, 1, 12, 2.4);
+  g.restore();
+}
+function hyperBase(g: CanvasRenderingContext2D, low: boolean) {
+  const { ICE, DEEP, TXT, DIM, OFF, REDOFF } = HY;
+  g.fillStyle = '#020407'; g.fillRect(0, 0, 1024, 512);
+  if (!low) {
+    const gr = g.createRadialGradient(512, 150, 20, 512, 150, 520); gr.addColorStop(0, 'rgba(24,60,110,0.30)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 1024, 256);
+  }
+  g.lineJoin = 'round'; g.lineCap = 'butt';
+  // a hairline inside the screen's edge, as the glass's own border
+  g.strokeStyle = 'rgba(94,184,255,0.22)'; g.lineWidth = 2; g.beginPath(); g.roundRect(10, 8, 1004, 240, 26); g.stroke();
+  // the OC mark small over the arc
+  drawOcMark(g, 488, 16, 48, 16, DIM);
+  // the arc's unlit track and its redline's dark red; ticks every 500 r/min, numerals every 1,000
+  g.lineWidth = 5; g.strokeStyle = OFF; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, ARC.a0, arcAt(ARC.red)); g.stroke();
+  g.strokeStyle = REDOFF; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), ARC.a1); g.stroke();
+  for (let k = 0; k <= ARC.max * 2; k++) {
+    const a = arcAt(k / 2), big = k % 2 === 0, r0 = ARC.r + 6, r1 = ARC.r + (big ? 16 : 11);
+    g.strokeStyle = k / 2 >= ARC.red ? '#b3262a' : big ? ICE : DEEP; g.lineWidth = big ? 2.5 : 1.5;
+    g.beginPath(); g.moveTo(ARC.x + Math.cos(a) * r0, ARC.y + Math.sin(a) * r0); g.lineTo(ARC.x + Math.cos(a) * r1, ARC.y + Math.sin(a) * r1); g.stroke();
+    if (big) text(g, String(k / 2), ARC.x + Math.cos(a) * (ARC.r + 30), ARC.y + Math.sin(a) * (ARC.r + 30), 15, k / 2 >= ARC.red ? '#ff6a5c' : TXT, 600, 'center');
+  }
+  // MPH, and the two bars' tracks under their icons
+  text(g, 'MPH', 512, 186, 14, DIM, 600, 'center');
+  g.fillStyle = OFF; g.fillRect(BAR.l0, BAR.y, BAR.l1 - BAR.l0, BAR.h); g.fillRect(BAR.r0, BAR.y, BAR.r1 - BAR.r0, BAR.h);
+  thermo(g, BAR.l0 + 10, BAR.y - 26, 24, ICE);
+  tankIcon(g, BAR.r1 - 10, BAR.y - 26, 24, ICE);
+}
 function hyperLive(g: CanvasRenderingContext2D, r: DashReadout, low: boolean, shown: Record<string, string>) {
-  const { ICE, DEEP, HOT, TXT, DIM, RED } = HY;
+  const { ICE, HOT, TXT, DIM, RED } = HY;
   g.lineCap = 'butt';
-  // the rev arc: lit to the revs (ice, hot from three quarters), the redline lit with the wheel's red shift lights
-  const f = clamp01(r.rpmFrac);
-  g.lineWidth = 9;
-  if (f > 0.005) { g.strokeStyle = ICE; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, ARC.a0, arcAt(Math.min(f, 0.76))); g.stroke(); }
-  if (f > 0.76) { g.strokeStyle = HOT; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(0.76), arcAt(Math.min(f, ARC.red))); g.stroke(); }
-  if (r.redline) { g.strokeStyle = RED; g.lineWidth = 11; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), ARC.a1); g.stroke(); }
-  else if (f > ARC.red) { g.strokeStyle = '#a32020'; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), arcAt(f)); g.stroke(); }
-  // the speed, big and light, and the gear in its box
+  // the rev arc, lit to the revs (ice, hot from 6,000), its redline lit with the wheel's red shift lights
+  const k = clamp01(r.rpmFrac) * 8;
+  g.lineWidth = 7;
+  if (k > 0.04) { g.strokeStyle = ICE; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, ARC.a0, arcAt(Math.min(k, 6))); g.stroke(); }
+  if (k > 6) { g.strokeStyle = HOT; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(6), arcAt(Math.min(k, ARC.red))); g.stroke(); }
+  if (r.redline) { g.strokeStyle = RED; g.lineWidth = 9; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), ARC.a1); g.stroke(); }
+  else if (k > ARC.red) { g.strokeStyle = '#a32020'; g.beginPath(); g.arc(ARC.x, ARC.y, ARC.r, arcAt(ARC.red), arcAt(k)); g.stroke(); }
+  // the speed, big and light, the gear under it in the ice (the reference's "0" over "N")
   const mph = String(Math.round(r.mph)), gear = gearWord(r.gear);
-  text(g, mph, 512, 138, 82, '#f4f8ff', 300, 'center');
-  text(g, gear, 512, 216, gear.length > 1 ? 18 : 26, TXT, 700, 'center');
-  // left of the arc (right-aligned toward the speed): with THRUST live (the Unleashed tune in Free Drive) the car's own
-  // systems, big enough to read from the seat on a phone (owner, 2026-11-16: "make the thrust option and display more
-  // seamlessly integrated"; the HUD's floating THRUST box is gone from the seat view): JUMP (THRUST is the jump only
-  // since 2026-11-16), the tank's percentage large, its bar with the hop's mark (the least a hop asks for), Ground
-  // Lock's chip (filled while the fans run) and the hop's state (ready, charging, in the air, or why the last request
-  // was refused). The profile, TCS and ABS move to the right block's foot. Without THRUST: the profile, TCS and ABS,
-  // the tune and JUMP OFF
+  text(g, mph, 512, 134, 104, '#f4f8ff', 300, 'center');
+  text(g, gear, 512, 222, gear.length > 1 ? 26 : 38, HOT, 700, 'center');
+  // left of the arc: the simulated air temperature by its thermometer and the power in use (its figure, its bar); the
+  // profile and the assists, the tune, trip and top speed under it
+  const pf = clamp01(r.kw / Math.max(1, r.kwMax));
+  text(g, `${Math.round(r.tempF)}°F sim`, BAR.l0 + 26, BAR.y - 26, 17, TXT, 600, 'left', 150);
+  text(g, `${Math.round(r.kw)} kW`, BAR.l1, BAR.y - 26, 18, TXT, 700, 'right', 110);
+  if (pf > 0.005) { g.fillStyle = pf > 0.8 ? HOT : ICE; g.fillRect(BAR.l0, BAR.y, (BAR.l1 - BAR.l0) * pf, BAR.h); }
   const prof = profileWord(r.profile), tune = (r.tune || r.mode || '').toUpperCase();
+  text(g, prof, BAR.l0, 145, 18, ICE, 800, 'left', 150);
+  chip(g, BAR.l1 - 92, 133, 42, 22, 'TCS', r.tcs, ICE, 12, low); chip(g, BAR.l1 - 44, 133, 42, 22, 'ABS', r.abs, ICE, 12, low);
+  if (tune) text(g, tune, BAR.l0, 176, 15, HOT, 800, 'left', BAR.l1 - BAR.l0);
+  text(g, `TRIP ${r.tripMi.toFixed(1)} mi · TOP ${Math.round(r.topMph)} mph`, BAR.l0, 206, 14, DIM, 600, 'left', BAR.l1 - BAR.l0);
+  if (r.clock) text(g, r.clock, BAR.l0, 40, 19, TXT, 600, 'left', 140);
+  // right of the arc: the Thrust tank by its icon (with THRUST live: JUMP and the percentage, the hop's mark at 40 %),
+  // Ground Lock's chip and the hop's state under it; without: JUMP OFF. Go To's next turn across the top, the
+  // destination (or the road) at the foot
   const pct = Math.round(clamp01(r.tank) * 100), live = r.thrustLive;
   let hopWord = '';
+  text(g, 'JUMP', BAR.r0, BAR.y - 26, 17, ICE, 800, 'left', 70);
   if (live) {
-    // (what the seat shows of the display, measured on the 390 x 844 phone frames: left of the speed from about x 245
-    // under the rim from y 130, the rim and the left thumb over the rest; the rev arc's first tick reaches x 403 at y 152,
-    // so the bar and the chip stop at 396): the percentage under the rim, the word JUMP beside the bar
-    const lowTank = pct < 25, x0 = 262, x1 = 404, xb = 396, bx = 330;
-    text(g, `${pct}%`, x1, 112, 40, lowTank ? '#ffb347' : '#f4f8ff', 700, 'right', x1 - x0);
-    text(g, 'JUMP', x0, 142, 16, ICE, 800, 'left', bx - x0 - 6);
-    // the tank's bar: the fill, and the hop's mark at 40 %
-    g.fillStyle = HY.OFF; g.fillRect(bx, 137, xb - bx, 10);
-    if (pct > 0) { g.fillStyle = lowTank ? '#ffb347' : ICE; g.fillRect(bx, 137, (xb - bx) * (pct / 100), 10); }
-    g.fillStyle = '#f4f8ff'; g.fillRect(bx + (xb - bx) * 0.4 - 1.5, 132, 3, 20);
-    // Ground Lock: lit (filled, dark letters) while the fans press the car down; an outline when idle
-    g.lineWidth = 2.5; g.beginPath(); g.roundRect(x0, 160, xb - x0, 28, 6);
+    const lowTank = pct < 25;
+    text(g, `${pct}%`, BAR.r1 - 24, BAR.y - 26, 26, lowTank ? '#ffb347' : '#f4f8ff', 700, 'right', 100);
+    if (pct > 0) { g.fillStyle = lowTank ? '#ffb347' : ICE; g.fillRect(BAR.r0, BAR.y, (BAR.r1 - BAR.r0) * (pct / 100), BAR.h); }
+    g.fillStyle = '#f4f8ff'; g.fillRect(BAR.r0 + (BAR.r1 - BAR.r0) * 0.4 - 1.5, BAR.y - 4, 3, BAR.h + 8);
+    g.lineWidth = 2.5; g.beginPath(); g.roundRect(BAR.r0, 128, BAR.r1 - BAR.r0, 26, 6);
     if (r.lock) { g.fillStyle = ICE; g.fill(); } else { g.strokeStyle = ICE; g.globalAlpha = 0.55; g.stroke(); g.globalAlpha = 1; }
-    text(g, 'GROUND LOCK', (x0 + xb) / 2, 175, 17, r.lock ? '#03050a' : '#b4c8de', 800, 'center', xb - x0 - 12);
-    // the hop: ready in the hot ice, charging and tank low in amber, in the air in white, a refusal in amber
+    text(g, 'GROUND LOCK', (BAR.r0 + BAR.r1) / 2, 142, 16, r.lock ? '#03050a' : '#b4c8de', 800, 'center', BAR.r1 - BAR.r0 - 12);
     const hw = r.hop;
     hopWord = hw === 'Hop ready' ? 'HOP READY' : hw === 'Airborne' ? 'AIRBORNE' : hw === 'Hop: charging' ? 'HOP CHARGING' : hw === 'Hop: tank low' ? 'HOP: TANK LOW'
       : hw ? hw.replace(/^(Thrust Hop|No hop): /i, '').toUpperCase() : '';
     const hc = hw === 'Hop ready' ? HOT : hw === 'Airborne' ? '#f4f8ff' : '#ffb347';
-    if (hopWord) text(g, hopWord, x1, 211, 20, hc, 800, 'right', x1 - x0 + 4, 12);
-  } else {
-    text(g, prof, 404, 106, 20, ICE, 800, 'right', 92);
-    chip(g, 318, 124, 40, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 364, 124, 40, 20, 'ABS', r.abs, ICE, 12, low);
-    if (tune) text(g, tune, 404, 164, 14, HOT, 800, 'right', 92);
-    text(g, 'JUMP', 314, 190, 11, DIM, 600, 'left');
-    text(g, 'OFF', 404, 190, 15, DIM, 700, 'right');
-    g.fillStyle = HY.OFF; g.fillRect(314, 204, 90, 6);
-  }
-  // right of the arc: the next turn and its distance, the destination and its distance (or the road you're on)
+    if (hopWord) text(g, hopWord, BAR.r1, 174, 18, hc, 800, 'right', BAR.r1 - BAR.r0, 12);
+  } else text(g, 'OFF', BAR.r1 - 24, BAR.y - 26, 18, DIM, 700, 'right');
   let navLine = '';
   if (r.dest) {
-    turnArrow(g, 634, 106, 24, r.turn, ICE);
-    navLine = miles(r.nextMi); text(g, navLine, 650, 107, 18, TXT, 700, 'left', 66);
-    text(g, r.dest, 620, 140, 15, TXT, 600, 'left', 96, 11);
-    text(g, miles(r.destMi), 620, 164, 17, ICE, 700, 'left', 96);
+    turnArrow(g, BAR.r0 + 14, 40, 28, r.turn, ICE);
+    navLine = miles(r.nextMi); text(g, navLine, BAR.r0 + 36, 41, 20, TXT, 700, 'left', 120);
+    text(g, r.dest, BAR.r0, 206, 16, TXT, 600, 'left', 190, 11);
+    text(g, miles(r.destMi), BAR.r1, 206, 17, ICE, 700, 'right', 90);
   } else {
-    text(g, 'NO ROUTE', 620, 106, 12, DIM, 600, 'left');
-    if (r.road) text(g, r.road, 620, 132, 15, TXT, 600, 'left', 96, 11);
+    text(g, 'NO ROUTE', BAR.r0, 40, 14, DIM, 600, 'left');
+    if (r.road) text(g, r.road, BAR.r0, 206, 15, TXT, 600, 'left', BAR.r1 - BAR.r0, 11);
   }
-  // under the speed: the power in use (the bar and the figure) and the G-meter
-  const pf = clamp01(r.kw / Math.max(1, r.kwMax));
-  if (pf > 0.005) { g.fillStyle = pf > 0.8 ? HOT : ICE; g.fillRect(400, 241, 224 * pf, 5); }
-  text(g, `${Math.round(r.kw)} kW`, 484, 216, 15, TXT, 600, 'right');
-  gMeter(g, 566, 215, 17, r.gx, r.gy, DEEP, HOT, low);
-  // the top corners, one row each between the frame's inner line (y 22) and the hands (from y 50 in the seat view):
-  // the clock on the left, clear of the housing's edge, and the simulated temperature, labelled so, on the right (the
-  // review of 2026-11-12: at y 17 the clock sat on the lines and the temperature's first digit under the edge; a second
-  // row went under the fingers). The trip and the top speed this run go under the destination, right of the speed
-  if (r.clock) text(g, r.clock, 150, 36, 17, TXT, 600, 'left', 96);
-  text(g, `${Math.round(r.tempF)}°F sim`, 900, 36, 16, TXT, 600, 'right', 120);
-  if (live) {
-    // (with THRUST live the profile and the assists take the trip and top speed's place; those two are on the HUD)
-    text(g, prof, 620, 190, 17, ICE, 800, 'left', 96);
-    chip(g, 620, 204, 42, 20, 'TCS', r.tcs, ICE, 12, low); chip(g, 668, 204, 42, 20, 'ABS', r.abs, ICE, 12, low);
-  } else {
-    text(g, `TRIP ${r.tripMi.toFixed(1)} mi`, 620, 192, 14, DIM, 600, 'left', 96);
-    text(g, `TOP ${Math.round(r.topMph)} mph`, 620, 214, 14, DIM, 600, 'left', 96);
-  }
-  // the centre screen: the tune and the assists, each lit when on
-  text(g, tune || 'SPORT', 716 + 154, 256 + 116, 28, ICE, 700, 'center', 240);
-  text(g, 'ABS', 716 + 124, 256 + 150, 18, r.abs ? TXT : '#ff9a5c', 600, 'center');
-  text(g, 'TCS', 716 + 184, 256 + 150, 18, r.tcs ? TXT : '#ff9a5c', 600, 'center');
   shown.mph = mph; shown.gear = gear; shown.profile = prof; shown.tcs = r.tcs ? 'on' : 'off'; shown.abs = r.abs ? 'on' : 'off'; shown.tune = tune;
   shown.thrust = live ? `${pct}%` : 'off'; shown.control = 'JUMP'; shown.lock = live ? (r.lock ? 'on' : 'idle') : ''; shown.hop = hopWord; shown.turn = r.dest ? r.turn : ''; shown.next = navLine; shown.dest = r.dest; shown.redline = r.redline ? 'lit' : 'dark';
   shown.clock = r.clock; shown.trip = r.tripMi.toFixed(1); shown.top = String(Math.round(r.topMph));

@@ -364,7 +364,16 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   }
   // round vents: brushed bezel, dark throat, five vanes, a knob (and the centre stack under them)
   moved(0, sY, sZ, () => {
-  for (const [x, y, s] of [[-(D - 0.086), 0.705, 0.95], [0.03, 0.7, 1.0], [D - 0.076, 0.705, 0.95]] as [number, number, number][]) {
+  // (the hypercar, after the owner's interior reference: a slim horizontal slot left of the cluster and one at the
+  // passenger's end, no centre vent (its climate knobs sit there, on the centre spine below))
+  if (hyper) for (const [x, w] of [[-(D - 0.115), 0.15], [D - 0.105, 0.13]] as [number, number][]) {
+    const m = mat(x, 0.712, -0.66, -0.12);
+    const rim = roundRect(w + 0.012, 0.034, 0.012); rim.holes.push(roundRect(w, 0.022, 0.008));
+    const bz = extrude(rim, 0.008, 0.0015, 6); bz.translate(0, 0, -0.004); kit.add('alu', bz, m, 0.05);
+    const throat = new RoundedBoxGeometry(w, 0.022, 0.05, 2, 0.006); throat.translate(0, 0, -0.027); kit.add('gloss', throat, m, 0.05);
+    for (const y of [-0.005, 0.002]) { const v = new THREE.BoxGeometry(w - 0.006, 0.0018, 0.014); v.rotateX(0.25); v.translate(0, y, -0.008); kit.add('alu', v, m, 0.05); }
+  }
+  else for (const [x, y, s] of [[-(D - 0.086), 0.705, 0.95], [0.03, 0.7, 1.0], [D - 0.076, 0.705, 0.95]] as [number, number, number][]) {
     const m = mat(x, y, -0.652, -0.12, 0, 0, s);
     kit.add('alu', latheGeo([[0.04, -0.004], [0.046, 0.006], [0.053, 0.011], [0.0565, 0.008], [0.057, -0.004]], high ? 48 : 28, 'z', { flip: true, uRepeat: 1, vScale: 0.05 }), m);
     kit.add('gloss', latheGeo([[0.0405, -0.004], [0.04, -0.05]], 32, 'z', { flip: true }), m, 0.05);
@@ -413,14 +422,50 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // display centred on its driver, 12 % smaller and 5 cm lower in the driver's frame so the whole screen sits between
     // the rim's top and the hub from its seat camera, under the line over the cowl, on a carbon plinth, with its own
     // screen; 2 cm lower until 2026-11-16, when the driver sat 5 cm lower: in the car it is now 2 cm higher)
-    const ds = hyper ? 0.88 : 1, dy = hyper ? -0.05 : 0;
+    // (the hypercar's 0.8 since 2026-11-23, 0.88 before: under its new cluster hood the screen ends left of the centre
+    // spine's climate knobs, as the owner's interior reference's)
+    const ds = hyper ? 0.8 : 1, dy = hyper ? -0.05 : 0;
     const vM = mat((hyper ? -0.37 : -0.17) + sX, 0.862 + dy + sY, -0.635 + sZ, -0.36);
+    if (hyper) {
+      // the hypercar (after the owner's interior reference, 2026-11-23): a wide curved screen, its ends 2.5 cm nearer the
+      // driver than its middle, in a gloss-black frame, under a cluster hood in the dash's Alcantara whose brow stands
+      // over the screen and whose right end sweeps across the dash top toward the passenger, down onto the dash's lip;
+      // blue stitching along the brow and an ice-blue line under it
+      const w = 0.62 * ds, h = 0.15 * ds, BEND = 0.025, bend = (x: number) => BEND * Math.min(1.3, (2 * x / w) ** 2);
+      const bent = (g: THREE.BufferGeometry, dz = 0) => { const pa = g.attributes.position; for (let i = 0; i < pa.count; i++) pa.setZ(i, pa.getZ(i) + bend(pa.getX(i)) + dz); g.computeVertexNormals(); return g; };
+      const scr = new THREE.PlaneGeometry(w, h, high ? 32 : 16, 1); const su = scr.attributes.uv as THREE.BufferAttribute;
+      for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
+      kit.add('cluster', bent(scr, -0.0018), vM);   // the driver's display: its own mesh, named 'cluster'
+      const bez = bent(new THREE.BoxGeometry(w + 0.018, h + 0.016, 0.014, high ? 32 : 16, 1, 1), -0.0095); kit.add('gloss', bez, vM, 0.05);
+      ghost.push(bez.clone().applyMatrix4(vM));
+      // the hood: a loft across the screen (s from -1 at its left end to +1 at its right), its section (local y, z: z toward
+      // the driver) from the dash behind, over the crest, out to the brow's lip and back under it; past the left end it
+      // wraps down the screen's side, past the right end it runs on as the sweep, settling onto the dash's lip by x 0.38 m
+      const yT = h / 2, dly = 0.052, dlz = -0.039;   // (dly, dlz: the dash's lip in the screen's frame)
+      const sec = (s: number): [number, number][] => {
+        const x = s * w / 2, b = bend(Math.min(Math.abs(x), w / 2 + 0.01)), wrap = sstep(0.98, 1.1, -s), tail = sstep(1.04, 2.45, s);
+        const down = wrap * (h + 0.012);
+        const P: [number, number][] = [[yT + 0.018, -0.1], [yT + 0.035, -0.04], [yT + 0.032 - down * 0.4, 0.03], [yT + 0.026 - down, 0.055], [yT + 0.008 - down, 0.052], [yT + 0.004 - down, 0.01]];
+        return P.map(([y, z], k) => [lerp(y, dly + (k < 2 ? 0.004 : 0), tail), lerp(z + b * (k > 1 ? 1 : 0.4), dlz - 0.01 * (k < 2 ? 1 : 0), tail)]);
+      };
+      const ss = range(-1.12, 2.45, high ? 64 : 32);
+      const hood = gridGeo(ss.map((s) => sec(s).map(([y, z]) => v3(s * w / 2, y, z))), { flip: true });
+      kit.add('dashTop', hood, vM); ghost.push(hood.clone().applyMatrix4(vM));
+      // stitching along the brow, and the ice line under its lip, across the screen
+      const sb = range(-1.0, 1.0, high ? 40 : 20);
+      for (const off of [-0.0035, 0.0035]) {
+        const path = sb.map((s) => { const q = sec(s); return v3(s * w / 2, q[2][0] * 0.5 + q[3][0] * 0.5 + 0.0012, q[2][1] * 0.5 + q[3][1] * 0.5 + off); });
+        kit.add('stitch', stitchRow(path, path.map(() => v3(0, 0, 1)), path.map(() => v3(0, 1, 0))), vM);
+      }
+      if (mats.amb) kit.add('amb', ambLine(sb.map((s) => { const q = sec(s); return v3(s * w / 2, q[4][0] - 0.0005, q[4][1] - 0.006); }), v3(0, 0, 1), 0.004), vM);
+    } else {
     const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
     for (let i = 0; i < su.count; i++) su.setY(i, 0.5 + 0.5 * su.getY(i));
     scr.translate(0, 0, -0.0018); kit.add('cluster', scr, vM);   // the driver's display: its own mesh, named 'cluster'
-    const plinth = new RoundedBoxGeometry(0.34 * ds, 0.07, 0.1, 3, 0.02); plinth.translate((hyper ? -0.37 : -0.17) + sX, 0.81 + dy + sY, -0.68 + sZ); kit.add(hyper ? 'carbon' : 'nappa', plinth);
     ghost.push(bez.clone().applyMatrix4(vM));
+    }
+    const plinth = new RoundedBoxGeometry(0.34 * ds, 0.07, 0.1, 3, 0.02); plinth.translate((hyper ? -0.37 : -0.17) + sX, 0.81 + dy + sY, -0.68 + sZ); kit.add(hyper ? 'carbon' : 'nappa', plinth);
   } else {
     const plate = extrude(roundRect(0.47, 0.18, 0.02), 0.012, 0.002); plate.translate(0, 0, -0.03);
     kit.add('gloss', plate, clM, 0.05);
