@@ -332,6 +332,17 @@ def t_tabloid(job, imgs, rng):
         sd.text((28, 101), "UNFILTERED", font=font(ANTON, 34), fill=CREAM)
         st.putalpha(torn_mask(300, 150, rng, (6, 6, 6, 6), step=10))
         place(c, st, (W - 330, 46), angle=4, shadow=(6, 6, 200))
+    # optional supplied logo (e.g. a campaign's only allowed logo) on cream torn paper, top-right
+    if job.get("logo"):
+        lp = job["logo"] if os.path.isabs(job["logo"]) else os.path.join(ROOT, job["logo"])
+        lg = Image.open(lp).convert("RGBA")
+        lg = lg.crop(lg.getchannel("A").getbbox())
+        lw = int(job.get("logo_width", 230))
+        lg = lg.resize((lw, round(lg.height * lw / lg.width)), Image.LANCZOS)
+        piece = Image.new("RGBA", (lg.width + 44, lg.height + 36), CREAM + (255,))
+        piece.alpha_composite(lg, (22, 18))
+        piece.putalpha(torn_mask(piece.width, piece.height, rng, (6, 6, 6, 6), step=10))
+        place(c, piece, (W - piece.width - 34, 46), angle=4, shadow=(6, 6, 200))
     # headline slab
     slab = Image.new("RGBA", (W - 40, 360), INK + (255,))
     slab.putalpha(torn_mask(slab.width, slab.height, rng, (14, 10, 14, 10), step=12))

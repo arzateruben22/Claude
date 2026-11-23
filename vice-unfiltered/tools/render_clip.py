@@ -208,9 +208,12 @@ def zoom_filter(z, t0):
     """Eased punch-in for a chunk; z on base time, t0 = chunk base start."""
     a, b, S = z["from"] - t0, z["to"] - t0, float(z.get("scale", 1.15))
     cx, cy = z.get("center", [0.5, 0.5])
-    r = min(0.25, (z["to"] - z["from"]) / 2)
-    e = f"clip((t-{a:.4f})/{r:.4f},0,1)*clip(({b:.4f}-t)/{r:.4f},0,1)"
-    Z = f"(1+{S - 1:.4f}*({e})*({e})*(3-2*({e})))"
+    if z.get("push"):  # slow linear push-in from 1.0 to S across [from, to], held only until the next cut
+        Z = f"(1+{S - 1:.4f}*clip((t-{a:.4f})/{max(0.001, b - a):.4f},0,1))"
+    else:
+        r = min(0.25, (z["to"] - z["from"]) / 2)
+        e = f"clip((t-{a:.4f})/{r:.4f},0,1)*clip(({b:.4f}-t)/{r:.4f},0,1)"
+        Z = f"(1+{S - 1:.4f}*({e})*({e})*(3-2*({e})))"
     return (f",scale=w='trunc({W}*{Z}/2)*2':h='trunc({H}*{Z}/2)*2':eval=frame,"
             f"crop={W}:{H}:x='(iw-{W})*{cx}':y='(ih-{H})*{cy}'")
 
@@ -296,6 +299,12 @@ def main():
     lay = layout_filter(job, probe["width"], probe["height"])
     captions = [e for e in events if e["type"] == "caption"]
     zooms = [e for e in events if e["type"] == "zoom"]
+    stickers = [e for e in events if e["type"] == "sticker"]  # timed image pops over base footage
+    for k, st in enumerate(stickers):
+        st["png"] = os.path.join(tmp, f"sticker_{k}.png")
+        im = Image.open(resolve(st["file"])).convert("RGBA")
+        sz = int(st.get("size", 240))
+        im.resize((sz, round(im.height * sz / im.width)), Image.LANCZOS).save(st["png"])
     for k, c in enumerate(captions):
         c["png"] = os.path.join(tmp, f"caption_{k}.png")
         caption_png(c["text"], c.get("y", 0.38), c.get("size", 110), c.get("font", "anton"), c["png"], c.get("fill", "#FFFFFF"))
@@ -320,6 +329,22 @@ def main():
                 a_, b_ = max(0, c["from"] - t0), min(t1, c["to"]) - t0
                 chain += f";[{last}][{j + 1}:v]overlay=0:0:enable='between(t,{a_:.4f},{b_:.4f})'[v{j + 1}]"
                 last = f"v{j + 1}"
+            n_in = sum(1 for x in inputs if x == "-i") - 1  # inputs so far after the source
+            for q, st in enumerate([st for st in stickers if st["from"] < t1 and st["to"] > t0]):
+                idx = n_in + 1 + q
+                inputs += ["-loop", "1", "-framerate", str(fps), "-i", st["png"]]
+                a_, b_ = max(0, st["from"] - t0), min(t1, st["to"]) - t0
+                X, Y = float(st.get("x", 0.5)) * W, float(st.get("y", 0.4)) * H
+                if st.get("pop", True) and st["from"] >= t0:  # scale-in pop with a small overshoot over ~0.18 s
+                    pe = f"clip((t-{a_:.4f})/0.18,0,1)"
+                    K = f"if(lt({pe},0.6),0.55+0.6*{pe}/0.6,1.15-0.15*({pe}-0.6)/0.4)"
+                    chain += (f";[{idx}:v]format=rgba,scale=w='max(2,trunc(iw*{K}/2)*2)':h=-1:eval=frame[s{q}]"
+                              f";[{last}][s{q}]overlay=x='{X:.1f}-w/2':y='{Y:.1f}-h/2':eval=frame:"
+                              f"enable='between(t,{a_:.4f},{b_:.4f})'[t{q}]")
+                else:
+                    chain += (f";[{idx}:v]format=rgba[s{q}];[{last}][s{q}]overlay=x='{X:.1f}-w/2':y='{Y:.1f}-h/2':"
+                              f"enable='between(t,{a_:.4f},{b_:.4f})'[t{q}]")
+                last = f"t{q}"
             ff(*inputs, "-filter_complex", chain, "-map", f"[{last}]", "-frames:v", str(n), *venc, path)
             edl.append(["base", f"{t0:.3f}", f"{t1:.3f}", f"{out_f / fps:.3f}", f"{(out_f + n) / fps:.3f}",
                         f"source {src_time(p['f0']):.3f}-{src_time(p['f0']) + n / fps:.3f}s"])
@@ -526,6 +551,10 @@ def main():
         qc_times.append(round(t + 0.1, 3))
     for z in zooms:
         qc_times.append(round(out_frame(fr((z["from"] + z["to"]) / 2)) / fps, 3))
+    for st in stickers:
+        qc_times.append(round(out_frame(fr(st["from"] + 0.4)) / fps, 3))
+        notes.append(f'Sticker {st["file"]} at output {out_frame(fr(st["from"])) / fps:.3f}-{out_frame(fr(st["to"])) / fps:.3f}s, '
+                     f'{st.get("size", 240)}px centred at ({st.get("x", 0.5)}, {st.get("y", 0.4)}), pop={st.get("pop", True)}')
     qc_times = sorted(set(t for t in qc_times if t < total_frames / fps))
     with open(os.path.join(work, "EDIT_NOTES.txt"), "w") as f:
         f.write(f"{os.path.basename(export)}\n\n" + "\n".join(notes) + "\n\nQC frame times: "
