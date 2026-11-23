@@ -491,6 +491,15 @@ function makeBody(P: ShapeParams) {
         add(lip, sd < 0);
         add(edge(A.z - A.cut, 1), sd < 0);
         add(edge(A.z + A.cut, -1), sd > 0);
+        // (the hypercar, 2026-11-23: its round arch's liner stops at the sill, short of the arch's upright edges, so low
+        // down ahead of and behind the wheel the well was open to the cabin, whose footwell's carpet and nappa showed
+        // through the gap between the tyre and the arch from the side; a liner wall in each edge's plane, from the
+        // edge's inner side to the well's inner wall, closes it)
+        if (hyperWell) for (const [z, s2] of [[A.z - A.cut, 1], [A.z + A.cut, -1]] as [number, number][]) {
+          const yT = A.yc + Math.sqrt(Math.max(0, A.R * A.R - A.cut * A.cut)) + 0.02, rowsW: V3[][] = [];
+          for (let k = 0; k <= 4; k++) { const y = YSILL - 0.01 + (yT - YSILL + 0.01) * (k / 4); rowsW.push([v3(sd * (body.side(z, Math.max(y, YSILL)) - 0.035), y, z + s2 * 0.005), v3(sd * 0.47, y, z + s2 * 0.005)]); }
+          for (const f of [false, true]) kit.add('liner', gridGeo(rowsW, { flip: f }), null, 0.2);
+        }
         // liner: a partial cylinder round the wheel, open toward it
         const phc = Math.asin((YSILL - A.yc) / A.R), rowsL: V3[][] = [];
         for (let k = 0; k <= 24; k++) {

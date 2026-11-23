@@ -150,6 +150,10 @@ export function aoFor(B: CarBody) {
         if (facing && (n.y * (A.yc - p.y) + n.z * (A.z - p.z)) / Math.max(d, 1e-6) < 0.2) continue;
         a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
       }
+      // (the hypercar, 2026-11-23: the arch's upright edges from its axle height down to the sill face the wheel, in
+      // the well's shade; open to the sky they drew as a light strip at the arch's front edge, a tone step against the
+      // flank beside them that the references don't have)
+      else if (facing && Math.abs(p.x) > 0.45 && p.y <= 0.4 && Math.abs(Math.abs(p.z - A.z) - A.R) < 0.02 && n.z * (A.z - p.z) > 0.5) a *= 0.4;
     }
     return clamp(a, 0.15, 1);
   };
