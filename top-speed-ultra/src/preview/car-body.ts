@@ -148,14 +148,26 @@ function makeBody(P: ShapeParams) {
     // p moved. (The hypercar's narrow canopy over its wide sidepods: its seats' head sections, the dash's ends, the
     // carpet's edges and the door cards' lower fronts came out through the paint; car-body cabinSilhouette and
     // cockpit.ts keep their cabins in with this)
-    keepInside(p: THREE.Vector3, m: number) {
-      const a = Math.abs(p.x), s = Math.sign(p.x) || 1, z = p.z, Ys = shoulderY(z);
-      if (p.y < Ys) { const w = body.side(z, p.y); if (a <= w) return false; p.x = s * Math.max(0, w - m); return true; }
-      const t = body.top(z, a);
-      if (p.y <= t) return false;
-      const n = body.topNormal(p.x, z);
-      if (Math.abs(n.x) > n.y) p.x = s * Math.max(0, body.canopyX(z, p.y) - m);
-      else p.y = t - m;
+    // (2026-11-23, the owner's crop: below the shoulder only the side was tested, but the hypercar's sunken bonnet lies
+    // well under its shoulder (0.62 m at the cowl's middle, the shoulder 0.78 m), so the dash's front and the door
+    // cards' tops stood out over it at the windscreen's foot and read as 'inside'. Now the top is tested at every
+    // height. clear: a point inside but nearer the skin than that goes to that far inside (true: m), as the skin is drawn
+    // in flat facets that cut inside its curve and a face between two points just inside it can cross them; wells: a
+    // point in a wheel's well (outboard of its liner, inside its arch's circle, or anywhere in its span below the axle,
+    // where the liner stops at the sill) goes inboard of the liner)
+    keepInside(p: THREE.Vector3, m: number, o: { clear?: boolean | number; wells?: boolean } = {}) {
+      let moved = false;
+      const s = Math.sign(p.x) || 1, z = p.z, Ys = shoulderY(z), c = o.clear === true ? m : o.clear || 0;
+      if (o.wells) for (const A of ARCHES) {
+        const d = Math.hypot(z - A.z, p.y - A.yc), inWell = d < A.R + m || (p.y < A.yc && Math.abs(z - A.z) < A.R + m);
+        if (Math.abs(p.x) > 0.47 - m && inWell) { p.x = s * (0.47 - m); moved = true; }
+      }
+      if (p.y < Ys) { const w = body.side(z, p.y), a = Math.abs(p.x); if (a > w - c) { p.x = s * Math.max(0, w - (a > w ? m : c)); moved = true; } }
+      const a = Math.abs(p.x), t = body.top(z, a);
+      if (p.y <= t - c) return moved;
+      const k = p.y > t ? m : c, n = body.topNormal(p.x, z);
+      if (Math.abs(n.x) > n.y && p.y >= Ys) p.x = s * Math.max(0, body.canopyX(z, p.y) - k);
+      else p.y = t - k;
       return true;
     },
   };
@@ -1474,7 +1486,7 @@ function makeBody(P: ShapeParams) {
     const tuck = (g: THREE.BufferGeometry) => {
       if (P.interior !== 'hyper') return g;
       const pa = g.attributes.position as THREE.BufferAttribute, q = new THREE.Vector3();
-      for (let i = 0; i < pa.count; i++) { q.fromBufferAttribute(pa, i); if (body.keepInside(q, 0.045)) pa.setXYZ(i, q.x, q.y, q.z); }
+      for (let i = 0; i < pa.count; i++) { q.fromBufferAttribute(pa, i); if (body.keepInside(q, 0.045, { clear: true, wells: true })) pa.setXYZ(i, q.x, q.y, q.z); }
       return g;
     };
     const put = (key: string, g: THREE.BufferGeometry, m: THREE.Matrix4) => kit.add(key, tuck(drop || fwd ? g.applyMatrix4(m).translate(0, -drop, -fwd) : g.applyMatrix4(m)), null, 0.3);

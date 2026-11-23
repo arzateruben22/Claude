@@ -2804,6 +2804,80 @@ await group('render', async (use) => {
     expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
     return `eye ${r.eye.map(fmt)}, cabin ${r.skin.gap.toFixed(3)} m under the skin by the hoop (${r.skin.n} vertices), along the flanks ${r.flank.gap.toFixed(3)} m (${r.flank.worst}, ${r.flank.n} vertices), beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
+  // the OC Hypercar's cabin stays under its paint at the front too (2026-11-23, the owner's crop at the polish probe's
+  // q-front-left camera: tan and dark slivers at the windscreen's foot and by the mirror's stalk). Two measures:
+  // every cabin vertex (the cockpit's meshes but its glass, and the outside-only silhouette) from the front wheels to
+  // the bulkhead against the body's section, its top tested at every height (the sunken bonnet lies under the
+  // shoulder) and outside the front wheels' wells; and an ID render at that camera: the cabin's pixels outside the
+  // glass (2 px round it). 37a4a731's line: 19 silhouette vertices out at the cowl's middle, 18 nappa, 71 carbon and 183
+  // silhouette pixels on the skin at Low
+  await check('OC Hypercar: no cabin on its skin at the front (the owner\'s q-front-left camera)', async () => {
+    const r = await game(page, () => {
+      const g = window.__game, c = g.car, cfg = c.config;
+      c.configure({ ...cfg, car: 'oc-hyper', paint: 0xc8d3e8 });
+      const ext = c.exterior, sec = ext.userData.body, out = { n: 0, out: 0, gap: Infinity, at: null, worst: null, px: {} };
+      c.root.updateMatrixWorld(true);
+      const inside = (o, root) => { for (let a = o; a; a = a.parent) if (a === root) return true; return false; };
+      const GLASSY = /glass|windscreen|frit|dust|reflection/i;
+      const inCabin = (o) => { for (let a = o; a; a = a.parent) { if (a.name === 'body' && a !== ext) return false; if (a === c.interior.group) return true; } return false; };
+      const isCabin = (o) => o.isMesh && !GLASSY.test(o.name) && (inCabin(o) || (inside(o, ext) && (o.name === 'interior' || o.name === 'seatSil')));
+      const toExt = ext.matrixWorld.clone().invert();
+      for (const root of [c.interior.group, ext]) root.traverse((o) => {
+        if (!isCabin(o) || !o.geometry) return;
+        const p = o.geometry.attributes.position, v = new o.position.constructor(), m = toExt.clone().multiply(o.matrixWorld);
+        for (let i = 0; i < p.count; i++) {
+          v.fromBufferAttribute(p, i).applyMatrix4(m); const a = Math.abs(v.x);
+          if (v.z < -1.45 || v.z > 0.6 || v.y < 0.15) continue;
+          const sh = sec.shoulder(v.z), top = sec.top(v.z, Math.min(a, sh.Ws)) - v.y;
+          let gap = v.y >= sh.Ys ? Math.min(sec.canopyX(v.z, v.y) - a, top) : Math.min(sec.side(v.z, v.y) - a, top);
+          // (a front wheel's well: outboard of its liner, inside its arch)
+          if (a > 0.47 && Math.hypot(v.z - (-1.28), v.y - 0.35) < 0.42) gap = Math.min(gap, 0.47 - a);
+          out.n++; if (gap <= 0) out.out++;
+          if (gap < out.gap) { out.gap = gap; out.at = [v.x, v.y, v.z].map((q) => +q.toFixed(3)); out.worst = o.name; }
+        }
+      });
+      // the ID render at q-front-left (the polish lane's flank probe): the cabin in ID colours, the glass in a mask
+      const r = g.renderer, gl = r.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight, V3 = g.camera.position.constructor, cam = g.camera.clone();
+      cam.position.copy(c.body.localToWorld(new V3(-3.0, 1.7, -3.6)));
+      cam.up.copy(new V3(0, 1, 0).applyQuaternion(c.body.getWorldQuaternion(g.camera.quaternion.clone())));
+      cam.fov = 40; cam.aspect = W / H; cam.near = 0.05; cam.far = 3000; cam.updateProjectionMatrix();
+      cam.lookAt(c.body.localToWorld(new V3(0, 0.8, -0.3))); cam.updateMatrixWorld(true);
+      const Basic = c.pool.material.constructor, black = new Basic({ color: 0, fog: false, toneMapped: false, side: 2 }), white = new Basic({ color: 0xffffff, fog: false, toneMapped: false, side: 2 }), red = new Basic({ color: 0xff0000, fog: false, toneMapped: false, side: 2 });
+      const pass = (glass) => {
+        const saved = [], hid = [];
+        g.scene.traverse((o) => {
+          if (!o.visible || !(o.isMesh || o.isPoints || o.isLine || o.isSprite)) return;
+          const m = Array.isArray(o.material) ? o.material[0] : o.material;
+          if (!o.isMesh || m.isShaderMaterial || !inside(o, c.root)) { hid.push(o); o.visible = false; return; }
+          saved.push([o, o.material]);
+          if (isCabin(o)) { if (glass) { hid.push(o); o.visible = false; } else o.material = red; }
+          else if (GLASSY.test(o.name)) { if (glass) o.material = white; else { hid.push(o); o.visible = false; } }
+          else o.material = black;
+        });
+        const bg = g.scene.background, fog = g.scene.fog; g.scene.background = null; g.scene.fog = null;
+        r.setRenderTarget(null); r.setClearColor(0, 1); r.clear(); r.render(g.scene, cam);
+        const px = new Uint8Array(W * H * 4); gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, px);
+        for (const [o, m] of saved) o.material = m; for (const o of hid) o.visible = true; g.scene.background = bg; g.scene.fog = fog;
+        return px;
+      };
+      const id = pass(false), gp = pass(true);
+      black.dispose(); white.dispose(); red.dispose();
+      let skin = 0, seen = 0;
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const i = y * W + x; if (id[i * 4] < 128) continue; seen++;
+        let near = false;
+        for (let dy = -2; dy <= 2 && !near; dy++) for (let dx = -2; dx <= 2; dx++) { const X = x + dx, Y = y + dy; if (X >= 0 && Y >= 0 && X < W && Y < H && gp[(Y * W + X) * 4] > 60) { near = true; break; } }
+        if (!near) skin++;
+      }
+      out.px = { skin, seen, W, H };
+      c.configure({ ...cfg });
+      return out;
+    });
+    await frames(page, 3, 240000);
+    expect(r.n > 2000 && r.out === 0, `the cabin through the skin from the front wheels back: ${r.out} of ${r.n} vertices out, the worst ${r.gap.toFixed(3)} m (${r.worst}) at ${JSON.stringify(r.at)}`);
+    expect(r.px.seen > 500 && r.px.skin === 0, `the cabin on the skin at q-front-left: ${r.px.skin} px outside the glass (${r.px.seen} seen, ${r.px.W}x${r.px.H})`);
+    return `${r.n} cabin vertices from z -1.45 to 0.6, none out (the closest ${r.gap.toFixed(3)} m inside, ${r.worst}); at q-front-left ${r.px.seen} cabin px all through the glass, 0 on the skin (${r.px.W}x${r.px.H})`;
+  });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
     await frames(page, 5);

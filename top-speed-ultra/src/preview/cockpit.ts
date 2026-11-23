@@ -940,8 +940,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const pa = m.geometry.attributes.position as THREE.BufferAttribute; let moved = false;
       for (let i = 0; i < pa.count; i++) {
         q.fromBufferAttribute(pa, i);
-        if (Math.abs(q.x) < 0.25 && q.y < 0.95) continue;          // (the middle of the cabin is nowhere near the skin)
-        if (body.keepInside(q, 0.03)) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
+        // (the middle of the cabin is nowhere near the skin; but at the windscreen's foot the sunken bonnet's middle is,
+        // 2026-11-23: the dash's carbon and nappa stood out over it ahead of the glass, from the owner's crop)
+        if (Math.abs(q.x) < 0.25 && q.y < 0.95 && q.z > WS.zb + 0.3) continue;
+        // (and out of the front wheels' wells, which the wheels' move back brought under the footwells' nappa; and a
+        // point inside but within 1.2 cm of the skin goes 1.2 cm in, as a face between two such points crossed the
+        // skin's flat facets: the dash's carbon and the headliner's edges along the shoulder and the pillars' feet)
+        if (body.keepInside(q, 0.03, { wells: true, clear: 0.012 })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
       }
       if (moved) { pa.needsUpdate = true; m.geometry.computeBoundingSphere(); }
     }
