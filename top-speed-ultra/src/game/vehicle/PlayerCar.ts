@@ -45,7 +45,7 @@ export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
 // finish: a store paint's finish (gloss, metallic, satin, pearl); null or absent is the car's factory metallic flake
 // wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
-export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
+export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle; edition?: 'founder' | 'standard' }
 // paused: the game is paused (the hands' off-wheel blend and wave hold still)
 // handling, tank and tcs feed the sport steering wheel's displays: the handling value (its profile on the left dial),
 // the hypercar's Thrust tank (0..1) and whether the traction control is on (the right dial)
@@ -60,6 +60,9 @@ const POOL_ROWS = 14, POOL_LIFT = 0.025, POOL_LEVEL = 0.18;
 // (sideways along the road faster than SIG_RATE m/s for SIG_ARM s, above SIG_MIN m/s) and SIG_HOLD s after; and
 // while steering hard (the front wheels past SIG_LOCK rad) below SIG_SLOW m/s, as for a turn
 const GEARS = ['N', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];   // gear words without a string a frame
+/** the drawn wheel's angles (rad): it follows the steering ratio exactly up to the knee, then eases into the maximum
+ *  (updateCockpit says why) */
+const WHEEL_KNEE = 0.8, WHEEL_MAX = 1.05;
 const SIG_HZ = 1.5, SIG_RATE = 0.6, SIG_ARM = 0.2, SIG_HOLD = 1.0, SIG_MIN = 6, SIG_LOCK = 0.12, SIG_SLOW = 12;
 
 function disposeGeometry(o: THREE.Object3D) {
@@ -95,6 +98,10 @@ export class PlayerCar {
   private arms: DriverArms | null = null;
   private mats: Record<string, THREE.Material> = {};
   private outsideParts: THREE.Object3D[] = [];
+  /** the skin tone last given to the arms' setTone (the regression check reads it through armsLook) */
+  private armsTone = -1;
+  /** what the driver's arms show now: the look they were built with and the tone set on them (tests) */
+  get armsLook() { return this.cfg ? { ...this.cfg.look, tone: this.armsTone, presentation: this.cfg.presentation, nails: this.cfg.nails } : null; }
   private wheels: { steer: THREE.Group; spin: THREE.Group; front: boolean; r: number }[] = [];   // r: the tyre's radius
   // the OC Hypercar's Thrust Hop jets: its two diffuser nozzles (markers on the sprung body, for the jets) and the
   // compressed-air pressure gauge on its dash (a small canvas display, redrawn only when what it shows changes)
@@ -156,16 +163,20 @@ export class PlayerCar {
   // build what changed
   configure(c: CarConfig) {
     const o = this.cfg;
-    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
+    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors || o.edition !== c.edition;
     const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
-    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
+    // a new skin tone alone (another character of the same presentation and sleeves) goes through the hands' public
+    // setTone; anything else about the arms rebuilds them
+    const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify({ ...o!.look, skin: 0 }) !== JSON.stringify({ ...c.look, skin: 0 });
+    const toneChanged = !handsChanged && o!.look.skin !== c.look.skin;
     this.cfg = c;
     const t0 = performance.now();
     if (carChanged) { this.buildCarAndCockpit(c); if (c.finish) this.setPaint(c.paint, c.finish); }
     else if (paintChanged) this.setPaint(c.paint, c.finish ?? null);
     if (wheelsChanged) this.buildWheels(c);   // the garage's Wheels tab: only the four wheels are rebuilt
     if (handsChanged) this.buildHands(c);
+    else if (toneChanged && this.arms) { this.arms.setTone(c.look.skin); this.armsTone = c.look.skin; }
     this.setMirrorExclusions();
     this.stats.buildMs = Math.round(performance.now() - t0);
   }
@@ -183,13 +194,13 @@ export class PlayerCar {
     this.restoreCabinLight();
     if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
     let t = performance.now();
-    const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
+    const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false, edition: c.edition });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
     this.mats = ext.userData.materials as Record<string, THREE.Material>;
     this.outsideParts = OUTSIDE_ONLY.map((k) => ext.getObjectByName(k)).filter((x): x is THREE.Object3D => !!x);
     t = performance.now();
-    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false });
+    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false, edition: c.edition });
     this.stats.cockpitMs = Math.round(performance.now() - t);
     this.interior = ck; this.body.add(ck.group);
     ck.wheel.rotation.z = this.wheelAngle;
@@ -202,7 +213,8 @@ export class PlayerCar {
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
     // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
     // throw a cool white-blue, and their pool on the road takes the same cast (the other cars' stays as it was)
-    const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
+    const ice = !!P.led && c.edition !== 'standard';     // the earned (standard) hypercar's beams are neutral: the cool cast is Founder Ice's
+    const beamC = ice ? 0xd4e8ff : 0xfff4e6, poolC = ice ? [0.86, 0.94, 1.0] : [1, 1, 1];
     for (const b of this.beams) b.color.setHex(beamC);
     (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
     this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null, glow: ext.getObjectByName('brakeGlow') ?? null };
@@ -318,6 +330,8 @@ export class PlayerCar {
     if (this.arms) { this.arms.dispose(); this.arms.group.parent?.remove(this.arms.group); }
     const t = performance.now();
     this.arms = buildDriverArms({ look: c.look, presentation: c.presentation, nails: c.nails, quality: c.quality, room: shapeFor(c.car).armRoom });
+    // (the tone through the public setTone as well: the one path a tone change takes, whether or not the arms rebuilt)
+    this.arms.setTone(c.look.skin); this.armsTone = c.look.skin;
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
     this.arms.group.position.copy(this.armsAt);
@@ -531,7 +545,15 @@ export class PlayerCar {
   setDash(d: Partial<DashReadout>) { this.interior?.setInstruments?.(d); }
   // the steering wheel, the hands on it, and the tachometer
   updateCockpit(dt: number, s: CockpitState) {
-    const target = clamp(s.delta * SPEC.steerRatio, -2.2, 2.2);       // steering ratio, clamped so the hands stay on the rim
+    // the steering ratio, with the drawn wheel held inside the angles the driver's hands are made for (2026-11-12). The
+    // hands grip the rim at ten and two and turn rigidly with it; they read right to about +-1 rad (src/preview/hands.ts).
+    // Past that (only at low speed: at 30 m/s the physics' lock is about 0.8 rad of wheel), the old clamp of +-2.2 rad
+    // crossed the arms over the hub and the spokes and hid a hand at the bottom of the rim (tests/cast-lock.mjs frames).
+    // So the wheel follows the ratio exactly to WHEEL_KNEE and then eases into WHEEL_MAX: no clipping at full lock either
+    // way. The physics' steering is unchanged; only the drawn wheel and the hands are limited. A hand-over-hand shuffle
+    // in the hands would let the drawn wheel turn to the real lock again (listed for the session that owns hands*).
+    const raw = s.delta * SPEC.steerRatio, over = Math.abs(raw) - WHEEL_KNEE;
+    const target = over <= 0 ? raw : Math.sign(raw) * (WHEEL_KNEE + (WHEEL_MAX - WHEEL_KNEE) * Math.tanh(over / (WHEEL_MAX - WHEEL_KNEE)));
     this.wheelAngle = damp(this.wheelAngle, target, 30, dt);
     if (this.interior) {
       this.interior.wheel.rotation.z = this.wheelAngle;
@@ -576,9 +598,15 @@ export class PlayerCar {
     s.p = clamp(s.p, -0.08, 0.08); s.r = clamp(s.r, -0.07, 0.07); s.h = clamp(s.h, -0.06, 0.06);
     const joint = Math.floor(p.s / 15);
     if (joint !== this.lastJoint) { this.lastJoint = joint; if (v > 3) { s.hv -= 0.02 + v * 0.0009; s.pv += 0.03 + v * 0.0006; } }
-    const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012;
-    this.body.position.set((Math.random() - 0.5) * buzz, s.h + (Math.random() - 0.5) * buzz * 2, 0);
-    this.body.rotation.set(s.p + (Math.random() - 0.5) * buzz * 0.6, 0, s.r);
+    // the engine and road buzz: a smooth vibration from incommensurate sines on the game clock (was fresh Math.random()
+    // every frame: the cockpit camera rides on the body, so the whole view outside jittered, and it kept going on the
+    // pause screen, where the clock stops and the speed stays set; owner, 2026-11-22)
+    const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012, tb = now;
+    const n1 = Math.sin(tb * 71.3) * 0.5 + Math.sin(tb * 109.7 + 1.1) * 0.3 + Math.sin(tb * 157.9 + 2.3) * 0.2;
+    const n2 = Math.sin(tb * 67.1 + 0.4) * 0.5 + Math.sin(tb * 113.3 + 2.9) * 0.3 + Math.sin(tb * 149.1 + 1.7) * 0.2;
+    const n3 = Math.sin(tb * 79.9 + 2.2) * 0.5 + Math.sin(tb * 101.3 + 0.6) * 0.5;
+    this.body.position.set(n1 * buzz * 0.5, s.h + n2 * buzz, 0);
+    this.body.rotation.set(s.p + n3 * buzz * 0.3, 0, s.r);
     // the physics turns a tyre of SPEC.wheelR (0.345 m); each axle's own tyre turns by SPEC.wheelR / r of that, so
     // it rolls with the road (the hypercar's staggered 0.70 / 0.74 m tyres; 1 for a 0.345 m tyre)
     for (const w of this.wheels) {

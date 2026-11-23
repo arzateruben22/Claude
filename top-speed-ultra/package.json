@@ -13,6 +13,7 @@
     "test": "node tests/regression.mjs",
     "store:sync": "node tools/store-sync-catalog.mjs",
     "store:check": "node tools/store-check-catalog.mjs && node tools/store-sync-catalog.mjs --check",
+    "test:progress": "node --experimental-strip-types --no-warnings tests/progress.mjs",
     "test:story": "node --experimental-strip-types --no-warnings tests/story.mjs"
   },
   "dependencies": {

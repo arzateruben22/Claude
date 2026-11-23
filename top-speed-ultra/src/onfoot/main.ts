@@ -27,6 +27,7 @@ import { Player, STEP, View, Goal } from './lot57/player';
 import { Input, Action } from './lot57/input';
 import { Hud, loading, doneLoading } from './lot57/hud';
 import { readDriver, driverPerson, eyeHeight } from './lot57/driver';
+import { castOf } from './cast';
 import * as C from './lot57/clock';
 import { ORIGIN, EDGE, PLAN, inVenue, inShed, toLocal, toGame } from './lot57/coords';
 import { Items, ItemId, MENUS, formOf } from './lot57/items';
@@ -586,7 +587,7 @@ async function main() {
     const close = third && lod0Ready && wantsLod0(quality), ultra = quality === 'ultra';
     p.setLod(close ? 0 : 1); avatarLod = close ? 0 : 1;
     // (P1d: on Low your driver casts no sun shadow, as the people don't: the phone's triangle budget)
-    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra); m.receiveShadow = true; } });
+    p.group.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(third ? 0 : 1); m.castShadow = quality !== 'low' && (!close || ultra) && !m.userData.noShadow; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; } });
     if (close && !ultra && g1) { g1.visible = true; g1.traverse((m) => { if ((m as THREE.Mesh).isMesh) { m.layers.set(1); m.castShadow = true; } }); }
   };
   const updateAvatar = (dt: number) => {
@@ -718,6 +719,9 @@ async function main() {
     ready: false,
     frames: 0,
     buildMs: 0,
+    /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
+    // (cast r2) each person's `face`: a point a metre in front of them (the face-on crowd frames)
+    cast() { const pool = crowd.castPool(); return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: crowd.npcs.filter((n) => n.rep !== 'off').map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts), rep: n.rep, lod: n.lod, pose: n.pose, face: G(n.x + Math.sin(n.p.group.rotation.y), n.z + Math.cos(n.p.group.rotation.y)) })), you: person ? { lod: avatarLod } : null }; },
     attribution: DATA_ATTRIBUTION,
     /** set the simulated clock: day 0-6 (Sunday 0) or a name, hour 0-24; `ms` is how long setting it took (the crowd
      *  settling, posed at once) */
@@ -865,6 +869,14 @@ async function main() {
      */
     sim(seconds: number, untilStop = false, world: boolean | 'view' = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop, world); },
     pos() { const gu = player.lastGaveUp; return { ...G(player.x, player.z), lx: +player.x.toFixed(3), lz: +player.z.toFixed(3), y: +player.y.toFixed(3), heading: +player.heading.toFixed(3), yaw: +player.yaw.toFixed(3), sitting: player.seat ? player.seat.id : null, view: player.view, moving: !!player.path, speed: +player.speed.toFixed(3), gaveUp: gu ? { by: gu.by, ...G(gu.x, gu.z), left: +gu.left.toFixed(2) } : null }; },
+    /** the game's venue passport reads this once a second (src/game/Game.ts venuePoll): where you are in the venue's own
+     *  named spots, what you're doing, and how many things you've ordered; the stamps and the time are the game's */
+    passport() {
+      const x = player.x, z = player.z, inR = (r: { x0: number; x1: number; z0: number; z1: number }) => x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1;
+      const spot = inR(PLAN.shed) ? 'shed' : inR(PLAN.yard) ? 'yard' : inR(PLAN.lawn) ? 'lawn' : inR(PLAN.trucks) ? 'trucks'
+        : z > PLAN.southFence.z && z < PLAN.lot.z1 && x > PLAN.lot.x0 && x < PLAN.lot.x1 ? 'lot' : null;
+      return { spot, sitting: !!player.seat, moving: !!player.path || player.speed > 0.2, talking: !!doings.joined, orders: doings.log.filter((l) => l.startsWith('pick ')).length, paused: hud.paused, ...G(x, z) };
+    },
     colliders() { return exportColliders(set).map((c) => shiftCollider(c as Record<string, unknown>)); },
     region() { const r = grid.exportRegion(); return { ...r, x0: r.x0 + ORIGIN.x, z0: r.z0 + ORIGIN.z }; },
     seats() { return venue.seats.map((s) => ({ id: s.id, kind: s.kind, at: s.at, ...G(s.x, s.z), approach: G(s.ax, s.az) })); },

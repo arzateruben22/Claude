@@ -17,7 +17,8 @@ import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLigh
 import { Environment } from '../../../game/env/Environment';
 import { configureTextures } from '../../../game/textures';
 import * as Props from '../../../game/road/props';
-import { buildPerson, Person, randomPerson } from '../../people';
+import { buildPerson, Person } from '../../people';
+import { crowdPerson, castOf } from '../../cast';
 import { Kit, P2, rand } from '../../engine/geom';
 import { ColliderSet, exportColliders, isTall, circ } from '../../engine/collide';
 import { WalkGrid, RADIUS } from '../../engine/walkgrid';
@@ -260,8 +261,12 @@ async function main() {
   await stage();
 
   // ------------------------------------------------------------------------------------------ you
-  // Your driver: LOD 1 at the preset's people quality; at Ultra only, the close-up LOD 0, built once and never during
-  // play (during loading if the page opens at Ultra; behind a "Preparing Ultra…" sheet if you pick Ultra later).
+  // Your driver: LOD 1 at the preset's people quality; at HD and Ultra the close-up LOD 0 for third person, built once
+  // and never during play (during loading if the page opens at HD or Ultra; behind the switch's sheet if you pick one
+  // later). (2026-11-16, cast repair: it was Ultra only, so at HD your own character 2.2 m from the camera was drawn
+  // with LOD 1's coarse face and the inner top showing through an open jacket; Lot 57 already used LOD 0 at HD. Low
+  // keeps LOD 1, the phone budget, as Lot 57 does.)
+  const wantsLod0 = (qq: Quality) => qq !== 'low';
   const personOpts = driverPerson(choice);
   let person: Person | null = null, lod0Ready = false, avDirty = true;
   /** what applyAvatar last ran for (compared field by field each frame; no string is built) */
@@ -279,7 +284,7 @@ async function main() {
   const markRetroSkip = (p: Person) => p.group.traverse((o) => { if (o.name === 'hair-cap' || o.name === 'hair-cards') o.userData.retroSkip = true; });
   buildAvatar(quality);
   await stage();
-  if (quality === 'ultra') buildLod0();
+  if (wantsLod0(quality)) buildLod0();
   await stage();
   const player = new BarPlayer(set, grid, (x, z) => grid.isRoad(x, z), def, F);
   player.eye = eyeHeight(personOpts);
@@ -562,7 +567,7 @@ async function main() {
     // behind it); your avatar's close-up at Ultra too, never mid-walk
     const ultraNow = qq === 'ultra' && (rebuild || !lod0Ready);
     preparingUltra = true; barHud.busy(ultraNow ? 'Preparing Ultra…' : `Switching to ${LABEL[qq]}…`);
-    requestAnimationFrame(() => requestAnimationFrame(() => { applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); barHud.busy(null); preparingUltra = false; }));
+    requestAnimationFrame(() => requestAnimationFrame(() => { applyQuality(qq, rebuild); if (wantsLod0(qq)) buildLod0(); barHud.busy(null); preparingUltra = false; }));
   };
   hud.onQuality = (q0) => { const qq = asQuality(q0); if (!qq) return; if (qq === 'ultra' && !ultraUnlocked) { hud.toast('Ultra is locked on this device.', 3); return; } switchQuality(qq); };
   hud.onClock = (c) => { live = c.live; if (!c.live) clock = { day: c.day, hour: c.hour }; applyClock(); };
@@ -660,13 +665,13 @@ async function main() {
     const p = person; if (!p) return;
     // S2b: a game's view shows your avatar over your shoulder (darts, shuffleboard), except the pool table's overhead
     // view, which hides it (it stands just under that camera: a dark shape at the frame's edge, at every preset)
-    const third = life.gameCamOn ? !life.gameHidesYou : view !== 'first' && !(view === 'third' && hideThird), ultra = quality === 'ultra', low = quality === 'low';
-    const close = view === 'third' && third && ultra && lod0Ready;
+    const third = life.gameCamOn ? !life.gameHidesYou : view !== 'first' && !(view === 'third' && hideThird), low = quality === 'low';
+    const close = view === 'third' && third && wantsLod0(quality) && lod0Ready;
     p.setLod(close ? 0 : 1);
     const lod1 = p.group.getObjectByName('lod1') as THREE.Mesh | undefined;
     for (const n of ['lod1', 'lod2']) { const m = p.group.getObjectByName(n) as THREE.Mesh | undefined; if (m) withFillRim(m.material as THREE.Material, avFill); }
     p.group.visible = true;
-    p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; m.layers.set(0); } });
+    p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; m.layers.set(0); } });
     if (!lod1) return;
     if (low) { setHiddenCaster(lod1, false); if (!third) p.group.visible = false; return; }
     // HD and Ultra: your avatar casts with its LOD 1 body in every state, shown or as a hidden caster
@@ -795,7 +800,7 @@ async function main() {
   track(() => life.attach({ scene, camera, F, def, venue, mats, grid, set, player, hud, barHud, person: () => person, view: () => view, quality: () => quality, reduced: () => reduced,
     clock: () => { lifeClock.day = clock.day; lifeClock.hour = clock.hour; lifeClock.live = live; lifeClock.open = open; lifeClock.night = night; lifeClock.share = share; return lifeClock; }, worldMeshes, shadowHooks: { before: vis.before, after: vis.after }, input, walkToCar: () => walkToCar(false), canvas,
     // S3a: the crowd's own needs from the page
-    renderer, overheadTarget: () => overhead.target, visState: () => vis.state, avatarDrawn: () => (avLast.view === 'first' || avLast.hide || (life.gameCamOn && life.gameHidesYou) ? 0 : quality === 'ultra' && lod0Ready && view === 'third' ? 2 : view === 'overhead' || view === 'third' ? 1 : 0) }));
+    renderer, overheadTarget: () => overhead.target, visState: () => vis.state, avatarDrawn: () => (avLast.view === 'first' || avLast.hide || (life.gameCamOn && life.gameHidesYou) ? 0 : wantsLod0(quality) && lod0Ready && view === 'third' ? 2 : view === 'overhead' || view === 'third' ? 1 : 0) }));
   // S4's repair: the screens life.ts draws the broadcast on (bar-screens-tv, made in attach) take the unlit material at
   // HD and Ultra too (the old bar-screens mesh, bound above, is hidden behind them)
   { const tv = scene.getObjectByName('bar-screens-tv') as THREE.Mesh | undefined; if (tv) barLook.bind([tv]); }
@@ -939,11 +944,14 @@ async function main() {
   const gate = venue.colliders.find((c) => c.tag === 'gate')!;
   const hooks = {
     ready: false, frames: 0, buildMs: 0,
+    /** (cast) the avatar's character (null: the archetype look) and its skin tone; the six base looks the people here are built from */
+    // (cast r2) each person's `face`: a point a metre in front of them (the face-on crowd frames)
+    cast() { const pool = life.crowd ? life.crowd.castPool() : []; return { avatar: castOf(personOpts), choice: choice.character, skin: personOpts.look.skin, hair: personOpts.look.hair, height: personOpts.body.height, pool, notCast: pool.filter((x) => !x).length, people: pool.length, where: life.crowd ? life.crowd.npcs.filter((n) => n.p && n.p.group.visible).map((n) => ({ ...G(n.x, n.z), cast: castOf(n.opts), draw: n.draw, lod: n.p!.stats().lod, face: G(n.x + Math.sin(n.p!.group.rotation.y), n.z + Math.cos(n.p!.group.rotation.y)) })) : [], you: person ? { lod: person.stats().lod, tris: person.stats().tris } : null }; },
     attribution: (slice as { attribution: string }).attribution,
     setClock(day: number | string, hour: number) { live = false; clock = { day: C.parseDay(day), hour: clamp(hour, 0, 23.99) }; applyClock(); return hooks.clock(); },
     liveClock() { live = true; applyClock(); return hooks.clock(); },
     clock() { return { day: clock.day, hour: clock.hour, label: C.fmtClock(clock), open, level, share: +share.toFixed(3), night: +night.toFixed(3), business: Sch.businessDay(S, clock.day, clock.hour) }; },
-    setQuality(q0: Quality | 'high') { const qq = asQuality(q0); if (!qq || !PRESET[qq]) throw new Error('quality: low, hd (or high) or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (qq === 'ultra') buildLod0(); avDirty = true; return quality; },
+    setQuality(q0: Quality | 'high') { const qq = asQuality(q0); if (!qq || !PRESET[qq]) throw new Error('quality: low, hd (or high) or ultra'); if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const rebuild = PRESET[qq].people !== PRESET[quality].people; applyQuality(qq, rebuild); if (wantsLod0(qq)) buildLod0(); avDirty = true; return quality; },
     stats() {
       const pass = measurePass(), maps = measureMaps(pass), ao = measureAo();
       // the frame's own count again (the measuring renders above don't touch the last frame's figures)
@@ -990,6 +998,17 @@ async function main() {
     walk(sx: number, sy: number, seconds: number, run = false) { return simulate(Math.round(seconds / STEP), { x: sx, y: sy, run }); },
     sim(seconds: number, untilStop = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop); },
     pos() { const gu = player.lastGaveUp, [u, v] = F.toFrame(player.x, player.z); return { ...G(player.x, player.z), lx: +player.x.toFixed(3), lz: +player.z.toFixed(3), u: +u.toFixed(3), v: +v.toFixed(3), y: +player.y.toFixed(3), heading: +player.heading.toFixed(3), yaw: +player.yaw.toFixed(3), sitting: player.seat ? player.seat.id : null, view, moving: !!player.path, speed: +player.speed.toFixed(3), indoors: player.indoors, gaveUp: gu ? { by: gu.by, ...G(gu.x, gu.z), left: +gu.left.toFixed(2) } : null }; },
+    /** the game's venue passport reads this once a second (src/game/Game.ts venuePoll): the bar's named spots, what you're
+     *  doing and how many orders you've placed; the stamps and the time are the game's */
+    passport() {
+      const x = player.x, z = player.z, [u, v] = F.toFrame(x, z), within = (a: number, b: number, c: number, d: number) => u > a && u < b && v > c && v < d;
+      const nearStall = def.parking.stalls.some((s) => Math.hypot(s.x - x, s.z - z) < 6);
+      const inside = def.indoor(u, v);
+      const spot = within(14.0, 27.6, 11.5, 15.8) ? 'bar' : v < 0.3 && u > 2 && u < 24 ? 'patio'
+        : within(8.9, 17.4, 4.3, 9.5) || within(7.6, 12.6, 11.5, 15.8) || within(3.2, 9.9, 1.0, 1.9) ? 'games'
+        : within(20.5, 31.3, 0.75, 2.35) ? 'booths' : nearStall ? 'lot' : !inside && v >= 0.3 ? 'front' : null;
+      return { spot, sitting: !!player.seat, moving: !!player.path || player.speed > 0.2, talking: !!life.crowd?.social.youIn, orders: life.log.filter((l) => /^order \d+: .* at (the bar|a table)/.test(l.what)).length, paused: hud.paused, ...G(x, z) };
+    },
     colliders() { return exportColliders(set).map((c) => shiftCollider(c as Record<string, unknown>)); },
     region() { const r = grid.exportRegion(); return { ...r, x0: r.x0 + F.origin[0], z0: r.z0 + F.origin[1] }; },
     seats() { return venue.seats.map((s) => ({ id: s.id, kind: s.kind, at: s.at, y: s.y, ...G(s.x, s.z), approach: G(s.ax, s.az) })); },
@@ -1190,7 +1209,7 @@ async function main() {
     peopleCosts(which: string = 'npc') {
       const out: Record<string, unknown>[] = [];
       for (const quality2 of ['phone', 'high'] as const) {
-        const opts = which === 'driver' ? { ...personOpts } : randomPerson(4242);
+        const opts = which === 'driver' ? { ...personOpts } : crowdPerson(4242, 1);
         const t0 = performance.now(); const p = buildPerson({ ...opts, quality: quality2, lod: 2 as const }); const t2 = performance.now() - t0;
         const s2 = p.stats();
         let t = performance.now(); p.setLod(1); const t1 = performance.now() - t; const s1 = p.stats();
@@ -1212,7 +1231,7 @@ async function main() {
       for (const k of Object.values(kinds)) k.colours.sort();
       return { count: parked.count, quality: parked.quality, kinds };
     },
-    buildAll() { if (quality === 'ultra') buildLod0(); return life.crowd.buildAll(); },
+    buildAll() { if (wantsLod0(quality)) buildLod0(); return life.crowd.buildAll(); },
     /** a change of graphics as the pause sheet makes it: the switch sheet painted first, the switch behind it; resolves
      *  when it's done, with the sheet's text */
     switchSheet(qq: Quality) { if (qq === 'ultra') { ultraUnlocked = true; barHud.setUltra(true); } const shown: string[] = []; const o = barHud.busy.bind(barHud); barHud.busy = (t: string | null) => { if (t) shown.push(t); o(t); }; switchQuality(qq); return new Promise((res) => { const w = () => { if (!preparingUltra) { barHud.busy = o; res({ quality, sheet: shown }); } else requestAnimationFrame(w); }; w(); }); },

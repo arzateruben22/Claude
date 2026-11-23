@@ -8,7 +8,10 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor } from './settings';
+import type { Difficulty } from './settings';
+import { MinuteMeter, DriftTracker, bestOf, bestsFor, recordBest, recordDrift, driftBest, driftBests, migrateBests, shareLine, round1 } from './bests';
+import type { Board, Kind, Placed } from './bests';
 import { presetFor, retroOn, GOV_FLOOR, loadBench, saveBench, loadDisplay, saveDisplay } from './settings';
 import type { QualityPreset, Quality, Density, BenchPick } from './settings';
 import { FrameGovernor, Rung, T60, T30, STEP as GOV_STEP, capPeriod } from './render/governor';
@@ -37,8 +40,9 @@ import { RouteChevrons } from './road/chevrons';
 import { clamp, damp, lerp, smoothstep, MPH } from './util';
 import { Leaderboard, Run, recordRun } from './records';
 import { ProfileBook, Earned } from './profile';
-import { Ability, ABILITIES, DRIVERS, lookFor } from './drivers';
-import { CARS, carById, applyCar, paintFor, wheelFor, earnCapFor, tuneFor } from './cars';
+import { Ability, ABILITIES, DRIVERS, characterLook } from './drivers';
+import { playableCharacter } from './castPack';
+import { CARS, carById, applyCar, paintFor, paintForEdition, wheelFor, earnCapFor, tuneFor } from './cars';
 import { settle, characterById, jobText, type RunFacts, type Job } from './story';
 type ErrandJob = Extract<Job, { kind: 'errand' }>;
 import type { TrafficCar } from './traffic/Traffic';
@@ -48,6 +52,9 @@ import { onStoreChange } from '../store/bus';
 import { syncGarage, serialOf } from '../store/entitlements';
 import { VENUES, Venue, VenueExit, VenueRamp, venueByName, venueRamps, toStreet, venueQuality, venueClock } from './venues';
 import { mountVenue, fade } from './onfoot';
+import { Progress, ProgressEvent, TickIn, tierOf, TIER_CASH, CAR_MILES, MEMBERSHIPS, passportVenue, GOAL_COPY, SIT_IDLE_SECS, VENUE_IDLE_SECS } from './progress';
+import { mountVenueCard, VenueCard } from '../ui/progressVenue';
+import { storeCars } from '../store/entitlements';
 import type { Mounted } from '../onfoot/embed';
 
 export type CamMode = 'cockpit' | 'hood' | 'chase' | 'free' | 'cinematic';
@@ -59,8 +66,8 @@ const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Ho
 // a long lens. The menu's attract drive runs it, and its hero shot sits the car right of centre, clear of the rail.
 interface Shot { f: [number, number]; s: number; y: number; at: number; fov: number; len: number }
 const SHOTS: Shot[] = [
-  { f: [7.2, 5.0], s: 3.1, y: 0.75, at: 0.4, fov: 30, len: 8 },     // the hero: a low front three-quarter, pushing in
-  { f: [0.4, -0.6], s: 4.6, y: 0.95, at: 0.6, fov: 28, len: 6 },    // the profile, tracking alongside
+  { f: [-9.0, -7.0], s: 3.4, y: 1.35, at: 5, fov: 32, len: 8 },     // the hero: a rear three-quarter, the freeway running off ahead under the sky (a front view looked back at a sound wall)
+  { f: [-11, -9], s: -3.8, y: 1.9, at: 6, fov: 36, len: 6 },        // a high rear three-quarter from the right, the road ahead (a profile shot looked across at the sound wall)
   { f: [-6.4, -5.6], s: -2.7, y: 0.6, at: 1.8, fov: 38, len: 6 },   // a low rear three-quarter from the other side
   { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
 ];
@@ -76,6 +83,8 @@ const MISS_PR = { s: 0, d: 0 };   // missedHandOff's projection, reused
 const LANE_HINT_M = 3200;          // the lane hint shows this far before a hand-off (about 2 mi)
 const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
+const MANUAL_HOLD_S = 4;            // a Q/E or paddle shift holds the gear this long before automatic takes back over
+export const TUNNEL_FROM = 150 / MPH;   // Ultra Realism's tunnel vision begins here (m/s)
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -120,6 +129,26 @@ export interface Hud {
   // the OC Hypercar: which tune runs ('' for another car), and its own systems (live only on the Unleashed tune in
   // Free Drive): the tank (0..1, the jump's gas and Ground Lock's), the fans, and the hop's state in a word or two
   tune: string; thrustLive: boolean; tank: number; groundLock: boolean; hop: string;
+  // the drift readout (Physics.drift): the body's slip angle in degrees (+ when the nose points left of the way the car
+  // travels), whether it counts as a drift now, and the chain's clock in seconds (it holds half a second of grace
+  // between slides, so the readout stays up through a transition)
+  driftAngle: number; driftOn: boolean; driftTime: number;
+  // the run's score meter (bests.ts): a difficulty run's Fastest Minute (the live 60 s average against this device's best
+  // on the board the run counts on), or Free Drive's drift readout; kind '' on the menu
+  bests: BestsHud;
+}
+export interface BestsHud {
+  kind: Kind | ''; board: Board; diff: Difficulty | '';
+  avg: number; t: number; full: boolean; runBest: number;          // Fastest Minute: the live average, seconds in the window, whether it is a full 60 s, the run's best
+  angle: number; chain: number; chainT: number; chainBest: number; // Drift: the slip angle, the running chain's points and seconds, the run's best chain
+  best: number;                                                    // this device's best on the board (before this run)
+  counts: boolean;                                                 // false once Adaptive quality eased the traffic: the run no longer counts
+}
+// what a run's end says about its score (the end-of-run card, App.tsx BestsCard)
+export interface RunBests {
+  kind: Kind; diff: Difficulty | null; board: Board; value: number;    // this run's score on its board (0: no full minute, or no chain); diff null: Free Drive's Best drift
+  counted: boolean; why: string;                                   // false: the run did not count, and why
+  placed: Placed | null;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -134,12 +163,15 @@ export interface Report {
   time: string; weather: string; ultra: boolean;
 }
 export interface Result {
+  bests?: RunBests;
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   // the car the run was in and, for the OC Hypercar, its tune ('Unleashed' in Free Drive, 'Race tune' in the scored
   // modes; '' for every other car): the run card marks the Founder Edition's runs
-  car: string; tune: string;
+  car: string; tune: string; edition?: 'standard';   // 'standard': the earned OC Hypercar (the run card then has no Founder Edition badge)
   jobs?: { from: string; job: string; credits: number }[];   // story jobs this run completed (story.ts), already paid
+  // what the run added to the miles, Road Points and cash (progress.ts), and where Founders' Road stands
+  progress?: { miles: number; points: number; cash: number; founders: string; badges: string[] };
 }
 export interface GameEvents {
   hud: (h: Hud) => void;
@@ -223,12 +255,22 @@ export class Game {
   // run state
   private distance = 0; private score = 0; private combo = 1; private comboT = 0; private overtakes = 0;
   private top = 0; private over = false;
+  // the run's scores (bests.ts): Fastest Minute's window, the drift chain, and the board and traffic mode the run counts on
+  private manualUntil = 0;
+  readonly bests = { minute: new MinuteMeter(), drift: new DriftTracker(), diff: null as Difficulty | null, board: 'open' as Board, stored: 0, toasted: false, eased: false, crashes: 0, forgiven: 0, forgiveUntil: 0, banked: true };
+  // the traffic a difficulty's run starts with (null: Free Drive's own, settings.density) and how fast it cruises
+  private runDiff: Difficulty | null = null;
+  private get density(): Density { return this.runDiff ? DIFFICULTY[this.runDiff].density : this.settings.density; }
   private streak = 0; private bestStreak = 0; private nearMisses = 0; private collisions = 0; private wrongWay = false;
   private scrape = 0;
   private ctxLost = false;
   private steps = 0;
   private cands: Hit[] = [];
   readonly profile = new ProfileBook();
+  // the miles, Road Points, cash bonuses, venue passport and daily goals (progress.ts): saved on this device. The wallet is
+  // the profile's credits (the one currency, shown as cash): earned only, never sold.
+  readonly progress = new Progress((() => { try { return localStorage; } catch { return null; } })(),
+    { cash: () => this.profile.p.credits, add: (n) => { this.profile.p.credits = Math.max(0, this.profile.p.credits + n); } }, Date.now, this.profile.p.vehicles);
   private offStore: () => void = () => {};
   ability = new Ability(ABILITIES.clear);
   private worldScale = 1;            // Focus Time slows the world (not you)
@@ -291,7 +333,11 @@ export class Game {
     this.scene.add(this.jets.mesh);
     this.driving = this.carId;
     this.applyDriver();
+    // the earned cars first: syncGarage drops any store-only car (the OC Hypercar) the profile doesn't know it owns, and
+    // would reset the chosen car to the first one, so a boot sync must see the earned Hypercar already in place
+    this.profile.setEarnedCars(this.progress.earnedCars());       // the cars miles and Founders' Road have opened, outside the slot count
     syncGarage(this.profile);                                     // a car from the store, outside the slot count
+    this.progress.on((e) => this.onProgress(e));
     setFounderSerial(serialOf('plaque-founder-edition'));         // the plaque's number: the server's, on the entitlement row
     this.applyCarChoice();
     // a store paint equipped or no longer owned; a store car bought, restored on sign-in, refunded or signed out (the
@@ -341,8 +387,8 @@ export class Game {
     this.applyDensity();
   }
   private applyDensity() {
-    const d = DENSITY[govDensity(this.settings.density, this.govTraffic)];
-    this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.settings.density].bold : d.bold };
+    const d = DENSITY[govDensity(this.density, this.govTraffic)];
+    this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.density].bold : d.bold, speed: this.govTraffic ? DENSITY[this.density].speed : d.speed };
   }
 
   // build everything in view before showing it (yielding now and then so the page stays alive)
@@ -395,14 +441,16 @@ export class Game {
   }
 
   private placeCar(path: Path, s: number, lane: number, speed: number) {
+    this.bests.minute.broken();                                 // a reset or a teleport breaks the 60 s stretch
     this.path = path;
     if (path.main) { this.lastMain = path; this.visited.add(path.label); }
     this.phys.placeAt(path, s, path.laneCenter(clamp(lane, 0, path.lanes - 1)), speed);
     this.phys.ext.fx = 0; this.phys.ext.fz = 0;
     this.jets?.clear();
     this.focusOnLand = false;                                   // a Focus Time queued in a hop is dropped by a reset
-    this.phys.auto = this.settings.transmission === 'auto' || this.attract;
+    this.phys.auto = true; this.manualUntil = 0;     // automatic for everyone (a shift holds the gear for a moment: actions())
     this.phys.handling = this.settings.handling;
+    this.phys.abs = this.settings.abs || retroOn(this.settings); this.phys.tc = this.settings.tcs || retroOn(this.settings);   // the Ultra HUD's ABS | TCS switches (settings.ts); Retro has none, so it keeps both on
     this.car.teleport(this.phys);
     this.recentre();
   }
@@ -432,8 +480,13 @@ export class Game {
     this.audio.silence();
   }
 
-  async start(mode: Mode, startLabel = this.settings.start) {
+  // `diff`: one of the menu's three difficulties (a timed run, Speed Survival's rules: pass 'survival'); null is Free Drive, with the
+  // player's own traffic (settings.density). A difficulty sets its own traffic for the run, never the saved setting.
+  async start(mode: Mode, startLabel = this.settings.start, diff: Difficulty | null = null) {
     mode = modeOf(mode);               // only Free Drive and Speed Survival exist; anything older starts Free Drive
+    this.bankRun();                    // a run left by Restart keeps what it scored (Free Drive's Best drift, a timed run's Fastest Minute)
+    this.runDiff = mode === 'survival' ? (diff ?? 'medium') : null;   // a timed run always has a difficulty: Medium's normal rule when none is named
+    this.applyDensity();
     this.leaveVenue();
     this.applyCarChoice(mode);
     // the car's own ability comes with its tune (tuneFor): the hypercar's Unleashed tune in Free Drive has it, its race
@@ -456,8 +509,10 @@ export class Game {
     this.setRoute(null);
     this.traffic.reseed(1000 + Math.floor(Math.random() * 1e6));
     this.traffic.fill(this.view());
+    this.progress.runStart();
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
+    this.beginScores();
     this.endAbility(); this.ability.reset();
     this.input.recenter();
     await this.prebuild('Merging onto ' + m.label);
@@ -469,7 +524,7 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.leaveVenue(); this.errand = null; this.profile.save(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.bankRun(); this.runDiff = null; this.applyDensity(); this.leaveVenue(); this.errand = null; this.profile.save(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -498,7 +553,7 @@ export class Game {
     const q = this.settings.quality !== s.quality, d = this.settings.density !== s.density, st = this.settings.style !== s.style;
     const ad = this.settings.adaptive !== s.adaptive || this.settings.qualityChosen !== s.qualityChosen;
     const atmo = s.time !== this.settings.time || s.weather !== this.settings.weather;
-    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin;
+    const who = s.driver !== this.settings.driver || s.presentation !== this.settings.presentation || s.skin !== this.settings.skin || s.character !== this.settings.character || s.packTest !== this.settings.packTest;
     const owner = s.owner !== this.settings.owner;
     const cur = carById(this.driving);
     const repaint = paintFor(cur, s.paints) !== paintFor(cur, this.settings.paints) || wheelFor(cur, s.wheels) !== wheelFor(cur, this.settings.wheels);
@@ -510,7 +565,7 @@ export class Game {
     else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
-    if (!this.attract) this.phys.auto = s.transmission === 'auto';
+    this.phys.abs = s.abs || retroOn(s); this.phys.tc = s.tcs || retroOn(s);   // Retro has no switches: both on there (the saved choice comes back on Ultra)
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
@@ -556,18 +611,23 @@ export class Game {
   // session (attractAtmo); from then on the menu shows what they chose, so a change made on the menu is seen. The
   // car's atmosphere never reaches the saved settings: it lives only in the environment. Same env.set as always:
   // eased over a few seconds, or instant behind a loading screen (instant also re-snaps an unchanged atmosphere).
+  // the menu's theme sets the hour of its scene (owner, 2026-11-18: a night freeway behind Midnight); the car's weather stays
+  private menuTime: TimeOfDay | null = null;
+  // `instant`: behind the loading screen the scene starts at that hour, not easing to it once the menu is up
+  setMenuTime(t: TimeOfDay | null, instant = false) { if (this.menuTime === t) return; this.menuTime = t; if (this.attract) this.syncAtmosphere(instant); }
   private syncAtmosphere(instant = false) {
     const car = carById(this.driving).atmosphere, s = this.settings, fromCar = this.attract && this.attractAtmo;
-    const time = fromCar ? car.time : s.time, weather = fromCar ? car.weather : s.weather;
+    const time = fromCar ? (this.menuTime ?? car.time) : s.time, weather = fromCar ? car.weather : s.weather;
     if (!instant && this.shown && this.shown.time === time && this.shown.weather === weather) return;
     this.shown = { time, weather };
     this.env.set(time, weather, instant);
   }
   // the Founder Edition's LED wake-up on the player's car (reduced motion: on at once)
-  wakeFounder() { this.car.wake(reducedMotion()); }
+  // (the paid edition's alone: the earned standard car has no Founder Ice to wake)
+  wakeFounder() { if (this.hypercarEdition === 'founder') this.car.wake(reducedMotion()); }
   // what a run's result says about its car
   private runCar() {
-    return { car: this.driving, tune: this.driving === FOUNDER_CAR ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '' };
+    return { car: this.driving, tune: this.driving === FOUNDER_CAR ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '', edition: this.driving === FOUNDER_CAR && this.hypercarEdition === 'standard' ? 'standard' as const : undefined };
   }
 
   // ------------------------------------------------------------------- the Founder Edition's reveal stage
@@ -673,17 +733,23 @@ export class Game {
     const s = this.settings, c = carById(this.driving), d = DRIVERS.find((x) => x.id === s.driver) ?? DRIVERS[0];
     const store = equippedPaint(c.id);                          // a paint from the store (src/store), if you put one on
     const desktop = !(typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches);
-    const look = lookFor(d.id, s.presentation, s.skin);
+    // the chosen character's appearance (cast.ts) on the archetype's pose; no character yet: the archetype's look
+    // (a pack character only while the pack is unlocked: castPack.ts; else the look without a character)
+    const { look, presentation } = characterLook(d.id, playableCharacter(s)?.id ?? '', s.presentation, s.skin);
     const high = s.quality === 'high' || s.quality === 'ultra';
     this.jets?.setPerNozzle(high ? 24 : 12);       // the hop's jets: half the sprites on the phone build
     this.style?.unstyle(this.car.root);                         // the car swaps its own materials (paint): on the originals
     this.car.configure({
-      car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintFor(c, s.paints), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
-      look, presentation: s.presentation, nails: look.nails !== undefined ? look.nails : s.presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor)
+      car: c.id as CarId, paint: store?.hex ?? founderPaint(c.id, paintForEdition(c, s.paints, this.hypercarEdition), shapeFor(c.id as CarId).paint), finish: store?.finish ?? null, wheel: wheelFor(c, s.wheels), quality: high ? 'high' : 'phone', mirrors: high && desktop ? 'live' : 'env',
+      edition: c.founder && this.hypercarEdition === 'standard' ? 'standard' : 'founder', look, presentation, nails: look.nails !== undefined ? look.nails : presentation === 'f' ? 0x7c1426 : null,   // the driver's own polish (drivers.ts lookFor / characterLook)
     });
     this.style?.restyle(this.car.root);
   }
 
+  /** (tests) what the cockpit's arms show now: the look they were built with, the tone set through setTone */
+  get driverArms() { return this.car.armsLook; }
+  /** (tests) the ability the archetype gives */
+  get abilityId() { return this.ability?.def.id ?? null; }
   // who's driving: their look in the cockpit, and their ability
   private applyDriver() {
     const d = DRIVERS.find((x) => x.id === this.settings.driver) ?? DRIVERS[0];
@@ -1037,8 +1103,8 @@ export class Game {
     r.push({ id: 'draw', text: `Draw distance ${Math.round(q.drawDistance * 0.8)} m`, up: `Draw distance ${q.drawDistance} m` });
     r.push({ id: 'props', text: 'Scenery -25%', up: 'Scenery full' });
     // one traffic step (Moderate and up; Light never goes to none). Never in Speed Survival: its scores stay comparable
-    const dn = govDensity(this.settings.density, 1);
-    if (dn !== this.settings.density && !(this.mode === 'survival' && !this.attract)) r.push({ id: 'traffic', text: `Traffic ${DENSITY[dn].label}`, up: `Traffic ${DENSITY[this.settings.density].label}` });
+    const dn = govDensity(this.density, 1);
+    if (dn !== this.density && !(this.mode === 'survival' && !this.attract)) r.push({ id: 'traffic', text: `Traffic ${DENSITY[dn].label}`, up: `Traffic ${DENSITY[this.density].label}` });
     const floor = GOV_FLOOR[this.settings.quality];
     for (let k = 1, n = Math.round((this.startScale - floor) / 0.05); k <= n; k++) r.push({ id: 'scale', text: `Resolution ${Math.round((this.startScale - 0.05 * k) * 100)}%`, up: `Resolution ${Math.round((this.startScale - 0.05 * (k - 1)) * 100)}%` });
     return r;
@@ -1145,7 +1211,7 @@ export class Game {
     const L = this.live;
     return { level: this.gov.level, levels: this.gov.rungs.length, rungs: this.gov.rungs.map((r) => r.text), target: this.gov.fps, last: this.gov.last, actions: this.gov.actions,
       ao: !!this.gtao?.enabled, bloom: !!this.bloom?.enabled, msaa: this.composer?.renderTarget1.samples ?? 0, shadows: L.shadows, drawDistance: L.drawDistance, props: L.props,
-      traffic: govDensity(this.settings.density, this.govTraffic), scale: this.govScale, floor: GOV_FLOOR[this.settings.quality], startScale: this.startScale, on: this.govOn(), label: this.govLabel() };
+      traffic: govDensity(this.density, this.govTraffic), scale: this.govScale, floor: GOV_FLOOR[this.settings.quality], startScale: this.startScale, on: this.govOn(), label: this.govLabel() };
   }
 
   // The first-run graphics check (SMOOTH): about 5 s on the menu, behind its card. It draws the menu's own freeway drive
@@ -1326,6 +1392,7 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- input actions
   private actions() {
+    if (!this.phys.auto && !this.attract && !this.paused && this.time >= this.manualUntil) this.phys.auto = true;   // the hold ran out
     for (const a of this.input.takeActions()) {
       if (a === 'pause') { if (!this.attract && !this.over) this.setPaused(!this.paused); continue; }
       if (this.paused || this.attract) continue;
@@ -1336,9 +1403,10 @@ export class Game {
       if (a === 'ability') this.useAbility();
       if (a === 'hop') this.thrustHop();
       if (a === 'radio') this.cycleRadio();
-      if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
-        if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
+        // the gearbox is automatic (owner, 2026-11-22); a shift is a manual hold of MANUAL_HOLD_S, which every further shift
+        // renews, and then automatic takes back over
+        this.holdManual();
         const dir = a === 'shiftUp' ? 1 : -1;
         if (this.phys.shift(dir)) { this.car.flickPaddle(dir); this.audio.shift(); }
       }
@@ -1359,6 +1427,12 @@ export class Game {
     this.ev.toast(CAM_LABEL[c], 'info');
   }
   cycleCam() { this.setCam(CAMS[(CAMS.indexOf(this.cam) + 1) % CAMS.length]); }
+  // a manual hold: automatic steps aside for MANUAL_HOLD_S (every shift renews it), then takes back over (actions())
+  holdManual() {
+    if (this.attract || this.paused) return;
+    if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual for a moment · automatic takes over', 'info'); }
+    this.manualUntil = this.time + MANUAL_HOLD_S;
+  }
   pushAction(a: Parameters<Input['push']>[0]) { this.input.push(a); }
   setMapCanvas(c: HTMLCanvasElement | null) { this.mapCanvas = c; }
 
@@ -1649,8 +1723,9 @@ export class Game {
 
   // Ultra Realism: the edges close in and the world goes quiet as the speed builds, and the car buzzes at speed
   private realism(dt: number) {
-    const on = this.ultraOn(), v = Math.abs(this.phys.vx), k = smoothstep(45, 95, v);
-    this.tunnel = damp(this.tunnel, on && this.settings.ultraTunnel ? k * 0.9 : 0, 3, dt);
+    // tunnel vision starts at 150 mph (owner, 2026-11-18; it was about 100); the muffled sound keeps its own ramp
+    const on = this.ultraOn(), v = Math.abs(this.phys.vx), k = smoothstep(45, 95, v), kt = smoothstep(TUNNEL_FROM, TUNNEL_FROM + 33, v);
+    this.tunnel = damp(this.tunnel, on && this.settings.ultraTunnel ? kt * 0.9 : 0, 3, dt);
     this.audio.setMuffle(on && this.settings.ultraMuffle ? lerp(20000, 1900, k) : 20000);
   }
 
@@ -1709,8 +1784,8 @@ export class Game {
       }
       if (im.speed > 1.2) { this.scrape = Math.min(1, this.scrape + im.speed * 0.08); this.shake = Math.max(this.shake, Math.min(1, im.speed / 14)); }
       if (im.speed > 3) this.streak = 0;
-      if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) this.collisions++; }
-      if (this.mode === 'survival' && playing && im.speed > 17) this.endRun('Hit the wall');
+      if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) { this.collisions++; this.crashed(); } }
+      if (this.mode === 'survival' && playing && im.speed > 17) this.crashEnd('Hit the wall');
     }
     p.impacts.length = 0;
     // traffic
@@ -1743,9 +1818,9 @@ export class Game {
       this.traffic.bump(contact.car, dvc * along, this.time);       // pushed along -n: that much faster (or slower) along its lane
       this.shake = Math.max(this.shake, Math.min(1, contact.speed / 12));
       this.combo = 1; this.comboT = 0; this.streak = 0;
-      if (contact.speed > 2 && playing) { this.collisions++; this.profile.add({ collision: 1 }); }
+      if (contact.speed > 2 && playing) { this.collisions++; this.crashed(); this.profile.add({ collision: 1 }); }
       if (contact.speed > 3) this.audio.crash(contact.speed); else this.audio.thump(contact.speed * 3);
-      if (this.mode === 'survival' && playing && contact.speed > 7) this.endRun(`Crashed into ${cl.id === 'suv' ? 'an SUV' : cl.id === 'semi' ? 'a big rig' : 'a ' + (cl.id === 'truck' ? 'box truck' : cl.id === 'sports' ? 'sports car' : cl.id)}`);
+      if (this.mode === 'survival' && playing && contact.speed > 7) this.crashEnd(`Crashed into ${cl.id === 'suv' ? 'an SUV' : cl.id === 'semi' ? 'a big rig' : 'a ' + (cl.id === 'truck' ? 'box truck' : cl.id === 'sports' ? 'sports car' : cl.id)}`);
     }
     // wrong way?
     let rel = p.psi - this.path.heading(clamp(p.s, 0, this.path.len)); rel = Math.atan2(Math.sin(rel), Math.cos(rel));
@@ -1758,7 +1833,7 @@ export class Game {
       this.overtakes++;
       this.comboT = 4;
       if (ps.close) this.nearMisses++;
-      this.earned(this.profile.add(ps.close ? { nearMiss: 1, runNearMisses: this.nearMisses } : { cleanPass: 1 }));
+      this.earned(this.profile.add(ps.close ? { nearMiss: 1, runNearMisses: this.nearMisses, cashMult: this.cashMult } : { cleanPass: 1, cashMult: this.cashMult }));
       const pts = Math.round((ps.close ? 250 : 100) * this.combo);
       this.score += pts;
       this.ev.toast(ps.close ? `Near miss +${pts}` : `Clean pass +${pts}`, 'good');
@@ -1775,11 +1850,20 @@ export class Game {
       this.prof.flush -= dt;
       if (this.prof.flush <= 0) {
         this.prof.flush = 0.5;
-        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, paid: this.prof.paid, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses }));
+        this.earned(this.profile.add({ time: this.prof.t, distance: this.prof.dist, paid: this.prof.paid, speed: Math.abs(p.vx), streak: this.bestStreak, runNearMisses: this.nearMisses, cashMult: this.cashMult }));
         this.prof.t = 0; this.prof.dist = 0; this.prof.paid = 0;
+        this.profile.setEarnedCars(this.progress.earnedCars());
       }
     }
     this.top = Math.max(this.top, Math.abs(p.vx));
+    // the miles, Road Points, the speed bonus and the goals (progress.ts): active driving only
+    if (!this.attract) {
+      const v = Math.max(0, view.v);
+      const pin = this.pin;                                       // one object reused every step: nothing allocated on the drive path
+      pin.mps = v; pin.paid = this.earnCap > 0 ? Math.min(v, this.earnCap) : undefined; pin.driving = playing; pin.auto = this.autoDrive; pin.wrongWay = this.wrongWay; pin.controls = c; pin.tier = this.trafficTier;
+      this.progress.tick(dt, pin);
+    }
+    if (playing) this.scoreStep(dt);
     if (playing) {
       if (this.mode === 'survival') {
         if (p.vx > FAST && !this.wrongWay) { this.streak += dt; this.bestStreak = Math.max(this.bestStreak, this.streak); }
@@ -1816,7 +1900,7 @@ export class Game {
     const paid = settle(this.profile.p, this.profile.level, r);
     if (!paid.length) return undefined;
     let lvl: number | null = null;
-    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} credits`, 'good'); }
+    for (const m of paid) { lvl = this.profile.reward(m.xp ?? 0, m.credits ?? 0) ?? lvl; this.ev.toast(`${characterById(m.from)?.name ?? 'Job'}: job done · +${(m.credits ?? 0).toLocaleString()} cash`, 'good'); }
     this.profile.save();
     if (lvl) this.ev.toast(`Level ${lvl}`, 'good');
     return paid.map((m) => ({ from: characterById(m.from)?.name ?? m.from, job: m.job ? jobText(m.job) : '', credits: m.credits ?? 0 }));
@@ -1838,13 +1922,92 @@ export class Game {
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const rc = this.runCar(); if (rc.tune) run.tune = rc.tune;      // the hypercar's runs carry their tune (the board marks Unleashed)
     const board = recordRun(run);
+    const bests = this.finishScores();
     const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
     this.errand = null;
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, ...this.runCar() }), 1200);
+    this.progress.save();
+    const pd = this.progress.runDelta(), fnd = this.progress.founders();
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, bests, progress: { miles: pd.miles, points: pd.points, cash: pd.cash, founders: fnd.text, badges: this.progress.badges() }, ...this.runCar() }), 1200);
   }
 
-  // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
-  endFreeDrive() { if (!this.attract && !this.over && this.mode === 'free') { this.setPaused(false); this.score = Math.round(this.distance); this.endRun('Parked'); } }
+  // ------------------------------------------------------------------------------------------ the run's scores (bests.ts)
+  // the board a run counts on: the OC Hypercar's Unleashed tune (Free Drive) has its own; every other run, the hypercar's
+  // race tune included, is on the open board
+  private boardNow(): Board { return this.driving === FOUNDER_CAR && this.mode === 'free' ? 'unleashed' : 'open'; }
+  // test hooks (the suite checks the scoring rules, the traffic rule and the settings migration on synthetic runs)
+  get api() { return { MinuteMeter, DriftTracker, recordBest, recordDrift, bestsFor, bestOf, driftBest, driftBests, migrateBests, shareLine, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor }; }
+  // a Free Drive run's drift and a difficulty's Fastest Minute start from nothing
+  private beginScores() {
+    const b = this.bests;
+    b.minute.reset(); b.drift.reset();
+    b.diff = this.runDiff; b.board = this.boardNow(); b.stored = b.diff ? bestOf(b.board, b.diff) : driftBest(b.board);
+    b.toasted = false; b.eased = false; b.crashes = 0; b.forgiven = 0; b.forgiveUntil = 0; b.banked = false;
+  }
+  private crashed() { this.bests.minute.broken(); this.bests.drift.crash(); this.bests.crashes++; }
+  // A real crash in a timed run ends it (Speed Survival's rule), except on Easy, which forgives the first DIFFICULTY.easy.forgive
+  // of them: the run goes on (the crash still broke the 60 s stretch, crashed()). One collision is one crash: contact held over
+  // a few frames, or a second hit within a second and a half, is not counted again.
+  private crashEnd(reason: string) {
+    const b = this.bests, allowed = this.runDiff ? DIFFICULTY[this.runDiff].forgive : 0;
+    if (this.time < b.forgiveUntil) return;
+    if (b.forgiven < allowed) {
+      b.forgiven++; b.forgiveUntil = this.time + 1.5;
+      this.ev.toast(`Crash forgiven · ${allowed - b.forgiven} left on Easy`, 'info');
+      return;
+    }
+    this.endRun(reason);
+  }
+  private scoreStep(dt: number) {
+    const b = this.bests, p = this.phys;
+    if (this.govTraffic > 0) b.eased = true;
+    let live = 0;
+    if (!b.diff) {          // Free Drive: the drift readout and Best drift
+      b.drift.step(dt, (Math.atan2(Math.abs(p.vy), Math.max(1, p.vx)) * 180) / Math.PI, Math.max(0, p.vx) * MPH);
+      live = b.drift.live;
+    } else { b.minute.push(dt, Math.max(0, p.vx) * MPH); live = b.minute.best; }
+    // a toast the first time the run beats this device's best on its board (the card has the rest)
+    if (!b.toasted && !b.eased && live > 0 && live > b.stored) {
+      b.toasted = true;
+      this.ev.toast(b.diff ? `New Fastest Minute ${round1(live).toFixed(1)} mph` : `New Best drift ${Math.round(live).toLocaleString('en-US')}`, 'good');
+    }
+  }
+  // A run's score is kept when the drive ends, and also when it is left without ending (Restart, Main menu): Free Drive's
+  // Best drift (a chain still running is banked first) and a timed run's Fastest Minute (the best full 60 s so far), unless
+  // Adaptive quality eased the traffic, the same rule the end card applies. A run that ended already banked itself (finishScores).
+  private bankRun() {
+    const b = this.bests;
+    if (b.banked || this.attract) return;
+    b.banked = true;
+    if (b.diff) {
+      const v = round1(b.minute.best);
+      if (!b.eased && v > 0) recordBest(b.board, b.diff, { v, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: this.mode });
+    } else if (this.mode === 'free') {
+      b.drift.finish();
+      const v = Math.round(b.drift.best);
+      if (v > 0) recordDrift(b.board, { v, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: 'free' });
+    }
+  }
+  private finishScores(): RunBests {
+    const b = this.bests; b.drift.finish();
+    if (!b.diff) {
+      const value = Math.round(b.drift.best), placed = value > 0 && !b.banked ? recordDrift(b.board, { v: value, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: 'free' }) : null;
+      b.banked = true;
+      return { kind: 'drift', diff: null, board: b.board, value, counted: true, why: '', placed };
+    }
+    const value = round1(b.minute.best), counted = !b.eased;
+    b.banked = true;
+    const placed = counted && value > 0 ? recordBest(b.board, b.diff, { v: value, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: this.mode }) : null;
+    return { kind: 'minute', diff: b.diff, board: b.board, value, counted, why: counted ? '' : 'Adaptive quality eased the traffic to hold your frame rate, so this run does not count.', placed };
+  }
+
+  // END DRIVE (the pause screen's way out, every mode): the drive ends through endRun, so its summary and end card show and its
+  // scores are filed. Free Drive has no ending of its own, so its score is the distance; a timed run keeps the score it has.
+  endDrive() {
+    if (this.attract || this.over) return;
+    this.setPaused(false);
+    if (this.mode === 'free') { this.score = Math.round(this.distance); this.endRun('Parked'); } else this.endRun('Drive ended');
+  }
+  endFreeDrive() { this.endDrive(); }
 
   // ----------------------------------------------------------------------------------------- cameras
   private tmpQ = new THREE.Quaternion(); private tmpE = new THREE.Euler(0, 0, 0, 'YXZ'); private tmpV = new THREE.Vector3(); private wantP = new THREE.Vector3(); private wantQ = new THREE.Quaternion();
@@ -1909,7 +2072,11 @@ export class Game {
       // on the menu the hero sits right of centre, clear of the rail (a turn to the left moves the subject right)
       // and tilted down a touch so it sits above the mode cards along the bottom
       if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(-0.07, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
-      fov = (portrait ? sh.fov * 1.6 : sh.fov) + speedK * 3;
+      // on a phone's menu the car is framed wider and tipped down so it sits in the top sixth, under the bar (the front page
+      // stacks its text below it, clear of the car)
+      const menuP = this.attract && portrait;
+      fov = (portrait ? sh.fov * (menuP ? 2.4 : 1.6) : sh.fov) + speedK * 3;
+      if (menuP) { this.tmpQ.setFromEuler(this.tmpE.set(-Math.atan(0.37 * 2 * Math.tan((fov / 2) * DEG)), 0, 0)); this.wantQ.multiply(this.tmpQ); }
     } else {
       const root = this.car.root.position, psi = p.psi;
       const fwd = this.tmpV.set(Math.sin(psi), 0, Math.cos(psi));
@@ -1925,9 +2092,14 @@ export class Game {
       this.tmpQ.setFromEuler(this.tmpE.set(c.lookPitch * 0.5, c.lookYaw, 0)); this.wantQ.multiply(this.tmpQ);
       fov = (portrait ? 80 : 60) + this.settings.fov * 0.5 + speedK * 6;
     }
-    if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION) {
-      const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032;
-      this.wantP.x += (Math.random() - 0.5) * b; this.wantP.y += (Math.random() - 0.5) * b * 1.4 + Math.sin(this.time * 23) * b * 0.4;
+    // Ultra Realism's road shake at speed: a smooth vibration from three incommensurate sines on the game clock (was
+    // fresh Math.random() every frame, which read as the whole view jittering and kept going on the pause screen, where
+    // the speed stays set: owner, 2026-11-22, "why does it shake like the outside of the car when paused and driving").
+    // The clock stops while paused, so the view holds still there.
+    if (this.ultraOn() && this.settings.ultraShake && !lookBack && !REDUCED_MOTION && !this.paused) {
+      const b = smoothstep(30, 90, Math.abs(p.vx)) * 0.0032, t = this.time;
+      this.wantP.x += (Math.sin(t * 57.1) * 0.5 + Math.sin(t * 83.3 + 1.3) * 0.3 + Math.sin(t * 131.7 + 2.1) * 0.2) * b * 0.5;
+      this.wantP.y += (Math.sin(t * 61.9 + 0.7) * 0.5 + Math.sin(t * 97.1 + 2.6) * 0.3 + Math.sin(t * 143.3 + 0.4) * 0.2) * b * 0.7 + Math.sin(t * 23) * b * 0.4;
     }
     if (this.dip.t < 0.8) {
       // a hop's landing: the view drops with the body and comes back (peak at 80 ms, gone in about half a second)
@@ -1935,7 +2107,7 @@ export class Game {
       this.wantP.y -= this.dip.a * x * Math.exp(1 - x) * (lookBack ? 0.5 : 1);
       this.dip.t += dt;
     }
-    if (this.shake > 0) {
+    if (this.shake > 0 && !this.paused) {   // an impact's jolt waits out the pause screen too
       this.wantP.x += (Math.random() - 0.5) * this.shake * 0.06; this.wantP.y += (Math.random() - 0.5) * this.shake * 0.05;
       this.shake = Math.max(0, this.shake - dt * 2.5);
     }
@@ -2311,6 +2483,13 @@ export class Game {
     return this.rampSigns.get(p) ?? '';
   }
 
+  private hudBests(): BestsHud {
+    const b = this.bests, m = b.minute, d = b.drift, on = !this.attract && !this.over;
+    return {
+      kind: on ? (b.diff ? 'minute' : 'drift') : '', board: b.board, diff: b.diff ?? '', avg: m.avg, t: m.t, full: m.full, runBest: m.best,
+      angle: d.angle, chain: d.points, chainT: d.chainT, chainBest: d.best, best: b.stored, counts: !b.eased,
+    };
+  }
   private sendHud() {
     const p = this.phys;
     const [next, nextDist, turn, navAct, navTo] = this.nextManoeuvre();
@@ -2340,7 +2519,7 @@ export class Game {
       heading, tempF: this.env.tempF(), turn,
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeName : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
-      traffic: DENSITY[this.settings.density].label,
+      traffic: DENSITY[this.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
       brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
       autoOffer: this.autoDriveOffered, autoOn: this.autoDrive, lanes: this.laneHint(turn, nextDist),
@@ -2351,6 +2530,8 @@ export class Game {
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
       thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, groundLock: this.hyper.fan > 0.3,
       hop: this.hopState(),
+      driftAngle: p.drift.angle, driftOn: p.drift.active, driftTime: p.drift.time,
+      bests: this.hudBests(),
     };
     this.ev.hud(h);
     // the car's own cluster shows the same facts (cockpit.ts / car-dash.ts): one object, filled in place
@@ -2385,11 +2566,47 @@ export class Game {
       gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
       quality: presetFor(this.settings).label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
       buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
-      mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
+      mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
     };
   }
+  // ----------------------------------------------------------------------------------------- progress (progress.ts)
+  // what the progress engine says worth telling the player: cars opening, the Hypercar, goals, the passport. In a venue
+  // the game's own toasts are hidden, so the venue card shows them (footMsg).
+  private footMsg: ((t: string) => void) | null = null;
+  private say(text: string, kind: 'good' | 'info' = 'good') {
+    if (this.attract) return;
+    if (this.footMsg) this.footMsg(text); else this.ev.toast(text, kind);
+  }
+  private onProgress(e: ProgressEvent) {
+    switch (e.type) {
+      case 'carUnlock': this.profile.setEarnedCars(this.progress.earnedCars()); this.say(`Unlocked: ${carById(e.car).name} · ${CAR_MILES[e.car]} miles driven`); break;
+      case 'hypercar': this.profile.setEarnedCars(this.progress.earnedCars()); this.say("OC Hypercar unlocked: 500 Road Points. It's yours for good"); break;
+      case 'goal': this.say(`Goal done: ${e.text} · +${e.goal.cash} cash`); break;
+      case 'allthree': this.say(`All three goals done · +${e.cash} cash`); break;
+      case 'weekly': this.say(`Weekly challenge done: ${e.text} · +${e.weekly.cash} cash`); break;
+      case 'streak': this.say(`${e.count}-day streak${e.saver ? " (this week's free saver used)" : ''}${e.cash ? ` · +${e.cash} cash` : ''}`); break;
+      case 'stamp': this.footMsg?.(`Passport stamp: ${e.label}`); break;
+      case 'ladder': this.say(e.label); break;
+      case 'member': this.say(`Welcome to ${MEMBERSHIPS[e.venue]?.name ?? 'the venue'}`); break;
+      case 'break': this.say(GOAL_COPY.breakNote, 'info'); break;
+      default: break;
+    }
+  }
+  private readonly pin: TickIn = { mps: 0, driving: false, controls: { throttle: 0, brake: 0, steer: 0, handbrake: false }, tier: 'free' };
+  /** the tier of this run (progress.ts TIER_MULT): Free Drive is always `free`; a timed run's tier is the menu's difficulty
+   *  (runDiff), which is the same mapping tierOf makes from its traffic (light Easy, moderate Medium, expert Extreme) */
+  get trafficTier() { return this.runDiff && this.mode !== 'free' ? this.runDiff : tierOf(this.density, this.mode); }
+  /** what a run's own pay is multiplied by: 1.5 on Extreme (progress.ts TIER_CASH) */
+  get cashMult() { return TIER_CASH[this.trafficTier]; }
+  /** which edition of the OC Hypercar this player has: the paid Founder Edition (its plaque, Glacier Silver and Founder
+   *  Ice lights; owner mode counts), the standard car earned on Founders' Road, or null (not yours) */
+  get hypercarEdition(): 'founder' | 'standard' | null {
+    if (this.settings.owner || storeCars().owned.includes(FOUNDER_CAR)) return 'founder';
+    return this.progress.hypercarEarned() ? 'standard' : null;
+  }
+
   // ----------------------------------------------------------------------------------------- the venues (Phase 3a)
   // Lot 57 and Stoppage Time (venues.ts). On one of a venue's exit ramps in Free Drive, ARRIVE_M before the street (or
   // on a tap of the venue's prompt), the screen fades and the car is parked at the venue: the game stops driving and
@@ -2417,7 +2634,9 @@ export class Game {
     // (Auto-drive hands back on arrival as at any destination, in the same toast)
     const text = `Drove ${vr.exit.street} to ${vr.venue.name} · street driving isn't built yet` + (auto ? '. Auto-drive off: you have control' : '');
     this.lastVenueToast = text;
-    void fade(true).then(() => new Promise((r) => setTimeout(r, 240))).then(() => { this.ev.toast(text, 'good'); return fade(false, 420); });
+    // (the parked panel states "Drove <road> to <venue> · street driving isn't built yet" itself and keeps it up, so a toast of the
+    // same words would stack over the membership panel: only the hand-back, which the panel doesn't say, is a toast)
+    void fade(true).then(() => new Promise((r) => setTimeout(r, 240))).then(() => { if (auto) this.ev.toast('Auto-drive off: you have control', 'info'); return fade(false, 420); });
     return true;
   }
   lastVenueToast = '';
@@ -2435,6 +2654,12 @@ export class Game {
   async getOut(): Promise<boolean> {
     const vs = this.venueState;
     if (!vs || vs.phase !== 'parked' || this.paused) return false;
+    // Vega & Vinnie's asks a one-time cash membership (owner mode skips it); the HUD's Join button buys it
+    if (!this.settings.owner && !this.progress.hasAccess(vs.vr.venue.id)) {
+      const m = MEMBERSHIPS[vs.vr.venue.id];
+      this.ev.toast(`${m.name} is members only: ${m.price.toLocaleString()} cash for a lifetime entry. Join from the Get out panel`, 'info');
+      return false;
+    }
     vs.phase = 'leaving'; this.navNow();
     this.audio.thump(3);                                          // the door
     await fade(true);
@@ -2449,7 +2674,7 @@ export class Game {
       });
       void fade(false, 300);                                      // the venue's own loading screen shows its progress
       await this.foot.ready;
-      if (this.venueState === vs) vs.phase = 'foot';
+      if (this.venueState === vs) { vs.phase = 'foot'; this.startFootPoll(vs.vr.venue.id); }
       return true;
     } catch (e) {
       this.leaveFoot(); this.hold(false);
@@ -2462,6 +2687,7 @@ export class Game {
   }
   // the venue's page off (disposed: its renderer, people, listeners and hooks), the game's UI back
   private leaveFoot() {
+    this.stopFootPoll();
     const f = this.foot; this.foot = null;
     try { f?.dispose(); } catch (e) { console.warn('venue dispose', e); }
     this.footHost?.remove(); this.footHost = null;
@@ -2472,6 +2698,47 @@ export class Game {
   }
   // a quit or a new drive while parked or on foot: no fade, nothing to drive back to
   private leaveVenue() { if (!this.venueState) return; const foot = !!this.foot || this.venueState.phase === 'foot'; this.venueState = null; if (foot) { this.leaveFoot(); this.hold(false); } }
+  // The venue passport while you walk (progress.ts): once a second the venue page's `passport()` hook says where you are, whether you
+  // sit, order or talk and whether it is paused; the game turns that into stamps, active time, Road Points and (at Vega &
+  // Vinnie's, for members) marketer cash. Standing still for 30 s counts as idle; sitting or talking counts for up to 10 min.
+  private footPoll = 0; private footCard: VenueCard | null = null;
+  private startFootPoll(id: string) {
+    this.stopFootPoll();
+    const pv = passportVenue(id), host = this.footHost; if (!pv || !host) return;
+    const pr = this.progress; pr.venueEnter(id);
+    const card = this.footCard = mountVenueCard(host, id, pr);
+    this.footMsg = (t) => card.say(t);
+    let last = performance.now(), clock = 0, lastAct = 0, holdFrom = -1e9, px = NaN, pz = NaN, spot = '', sat = false, talked = false, orders = 0;
+    const step = () => {
+      const now = performance.now(); let dt = (now - last) / 1000; last = now; dt = Math.min(dt, 2);
+      const hook = (window as unknown as { __onfoot?: { passport?: () => { spot: string | null; sitting: boolean; moving: boolean; talking: boolean; orders: number; paused: boolean; x: number; z: number } } }).__onfoot?.passport;
+      if (typeof hook !== 'function') return;
+      let s: ReturnType<NonNullable<typeof hook>>; try { s = hook(); } catch { return; }
+      clock += dt;
+      if (s.spot && s.spot !== spot) { pr.venueSpot(id, s.spot); lastAct = clock; }
+      spot = s.spot ?? '';
+      if (Math.hypot(s.x - px, s.z - pz) > 0.3 || s.moving) lastAct = clock;
+      px = s.x; pz = s.z;
+      if (s.sitting && !sat) { pr.venueDid(id, 'sit'); lastAct = holdFrom = clock; }
+      sat = s.sitting;
+      if (s.talking && !talked) { pr.venueDid(id, 'talk'); lastAct = holdFrom = clock; }
+      talked = s.talking;
+      if (s.orders > orders) { pr.venueDid(id, 'order'); lastAct = clock; }
+      orders = Math.max(orders, s.orders);
+      const holding = (s.sitting || s.talking) && clock - holdFrom <= SIT_IDLE_SECS;
+      const active = !s.paused && !document.hidden && (clock - lastAct <= VENUE_IDLE_SECS || holding);
+      pr.venueTick(id, dt, { active, social: s.talking });
+      card.update(active);
+    };
+    this.footPoll = window.setInterval(step, 1000);
+    this.progress.save();
+  }
+  private stopFootPoll() {
+    if (this.footPoll) { clearInterval(this.footPoll); this.footPoll = 0; }
+    this.footMsg = null;
+    this.footCard?.dispose(); this.footCard = null;
+    this.profile.setEarnedCars(this.progress.earnedCars()); this.progress.save(); this.profile.save();
+  }
   /** the on-ramp nearest where the exit met the street, preferring one back onto the freeway you left by */
   private onRampNear(exit: VenueExit): Path | null {
     let best: Path | null = null, bs = Infinity;
@@ -2528,7 +2795,7 @@ export class Game {
   }
 
   dispose() {
-    this.leaveVenue();
+    this.leaveVenue(); this.progress.save();
     cancelAnimationFrame(this.raf);
     this.offStore();
     removeEventListener('resize', this.onResize);

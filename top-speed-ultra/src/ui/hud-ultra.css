@@ -1,0 +1,215 @@
+/* THE ULTRA SKIN of the new HUD (owner, 2026-11-23, ultra-hud-layout.webp and ultra-hud-parts.webp: "heres the design
+   for the ultra graphics to the best you can incorporate the intricate details"): the same boxes as the Retro skin
+   (hud-layout.css), rendered as machined metal in CSS only (gradients, repeating gradients, box-shadows; no bitmaps):
+   - a polished chrome RIM on every panel and button (light-dark-light banding, a bright top edge, a dark inner groove),
+     around a FACE of glossy black glass with a soft reflection sweep across its top;
+   - KNURLING (a fine diamond: two crossed hairline patterns over a turned-steel shading) on the steering roller, the
+     handbrake's ring and the switches' knobs;
+   - RIBBED rubber on BRAKE and GAS (horizontal grooves), GAS with an amber glowing inner rim;
+   - fine TICK marks round the map's bezel and CLEAR PATH's gauge; amber for what charges and what is on, red only for
+     the handbrake.
+   The textures are static: only the bars, arcs and knobs change while driving (HUD.tsx / Touch.tsx set a few custom
+   properties and classes, as before). Every label sits on the dark glass, never on the metal: light grey #d9dde2 on
+   the glass (#0c0d10) is 14.2:1, amber #f5b13a 10.4:1, the red P #ff4b3e 5.9:1 (on the glass's lit top #1b1e23: 12.3, 8.9, 5.0). Every rule is under .app[data-skin="ultra"]. */
+
+.app[data-skin="ultra"] {
+  --ul-ink: #f2f4f7; --ul-dim: #d9dde2; --ul-mute: #a9afb8; --ul-amber: #f5b13a; --ul-amber-hi: #ffd27a; --ul-amber-glow: rgba(255, 170, 40, 0.55); --ul-red: #ff4b3e; --ul-red-glow: rgba(255, 55, 40, 0.75);
+  /* the rim: a vertical light-dark-light banding (polished), a faint brushing across it */
+  --ul-chrome: linear-gradient(180deg, #ffffff 0%, #d4d8dd 7%, #7c828a 20%, #eef0f3 38%, #9aa0a8 52%, #474c53 70%, #b9bec5 86%, #f4f6f8 100%);
+  --ul-brush: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.07) 0 1px, rgba(0, 0, 0, 0.06) 1px 2px, transparent 2px 4px);
+  /* a round rim, turned: the light runs round it */
+  --ul-turned: conic-gradient(from 210deg, #fafbfc, #7b8089 11%, #eceef1 23%, #4d525a 37%, #d8dbe0 51%, #676d75 65%, #f3f4f6 79%, #8a9098 90%, #fafbfc);
+  /* the face: black glass, its top lit, a diagonal sweep */
+  --ul-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.045) 36%, rgba(255, 255, 255, 0) 38%), linear-gradient(180deg, #1b1e23 0%, #0c0d10 58%, #060708 100%);
+  --ul-sweep: linear-gradient(112deg, transparent 0 34%, rgba(255, 255, 255, 0.075) 44%, rgba(255, 255, 255, 0.02) 52%, transparent 60%);
+  /* knurling: a fine diamond over turned steel */
+  --ul-knurl: repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.42) 0 0.8px, transparent 0.8px 2.6px), repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.42) 0 0.8px, transparent 0.8px 2.6px),
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.35) 0.8px 1.3px, transparent 1.3px 2.6px);
+  /* the groove inside the rim, the edge outside it, the drop shadow */
+  --ul-groove: inset 0 0 0 1px rgba(0, 0, 0, 0.9), inset 0 0 0 2px rgba(255, 255, 255, 0.09), inset 0 3px 6px rgba(0, 0, 0, 0.55);
+  --ul-edge: 0 0 0 1px rgba(0, 0, 0, 0.75), 0 -1px 0 1px rgba(255, 255, 255, 0.22), 0 8px 18px rgba(0, 0, 0, 0.5);
+  --ul-r: 16px; }
+
+/* ---------------------------------------------------------------- the bezel: a rim (border-box) round a glass face */
+.app[data-skin="ultra"]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate,
+.app[data-skin="ultra"] :is(.hud-drift, .pedal)::before,
+.app[data-skin="ultra"] .tbar .tbtn::before,
+.app[data-skin="ultra"] .touch-steer,
+.app[data-skin="ultra"] .hud-assists,
+.app[data-skin="ultra"][data-hud="desk"] :is(.hud-speed, .hud-stats, .hud-navs, .hud-thr, .hud-clock) {
+  border: 4px solid transparent; border-radius: var(--ul-r);
+  background: var(--ul-sweep) padding-box, var(--ul-glass) padding-box, var(--ul-brush) border-box, var(--ul-chrome) border-box;
+  box-shadow: var(--ul-groove), var(--ul-edge); }
+.app[data-skin="ultra"]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate { padding: 6px 10px 6px 12px; gap: 3px; }   /* (3 px between the plate's lines: with a route's two lines the ABS | TCS bar under it must still end above 22% of the height, the open view) */
+.app[data-skin="ultra"][data-hud="pp"] .hud-assists { top: calc(var(--plate-b, 90px) + 5px); }
+/* (repair) when that would reach the open view (a route on a short phone; HUD.tsx sets data-assists="low"), the bar sits over the DRIFT chip */
+.app[data-skin="ultra"][data-hud="pp"]:has(.hud[data-assists="low"]) .hud-assists { top: auto; bottom: calc(var(--ctl-b) + var(--nh-steer-h) + 10px + 38px + 8px); }
+
+/* the speed card */
+.app[data-skin="ultra"] .hud-mph { color: var(--ul-ink); text-shadow: 0 1px 0 #000, 0 0 10px rgba(255, 255, 255, 0.12); }
+.app[data-skin="ultra"] .hud-unit { color: var(--ul-dim); }
+.app[data-skin="ultra"] .hud-gear { color: var(--ul-amber); font-style: italic; background: linear-gradient(180deg, #17181b, #070708); border-radius: 8px;
+  box-shadow: inset 0 0 0 1.5px var(--ul-amber), inset 0 0 8px rgba(255, 170, 40, 0.25), 0 0 8px rgba(255, 170, 40, 0.25); text-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .hud-rpm { background: rgba(255, 255, 255, 0.14); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.6); }
+.app[data-skin="ultra"] .hud-rpm div { background: linear-gradient(90deg, #c77d12, var(--ul-amber) 60%, var(--ul-amber-hi)) !important; box-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .hud-rpm div.red { background: var(--ul-red) !important; }
+.app[data-skin="ultra"] .hud-stats b::before, .app[data-skin="ultra"] .hud-stats span, .app[data-skin="ultra"] .hud-stats span::after { color: var(--ul-dim); }
+.app[data-skin="ultra"] .hud-stats div::before { color: var(--ul-mute) !important; }
+.app[data-skin="ultra"] .hud-auto { background: var(--ul-amber); color: #111; }
+
+/* ABS | TCS: a chrome pill, two switches; the lit amber track when on, a dark ribbed one when off, a knurled steel knob */
+/* the bar is 34 px tall (as the design's slim pill, and inside the HUD's cover budget); each switch's touch target is
+   still 44 px tall, overhanging the bar's box by 5 px above and below (transparent) */
+.app[data-skin="ultra"] .hud-assists { height: 34px; padding: 0 6px 0 9px; border-width: 3px; border-radius: 17px; gap: 3px; }
+.app[data-skin="ultra"] .asw { margin: -5px 0; gap: 6px; }
+.app[data-skin="ultra"] .asw b { font-size: 11px; letter-spacing: 0.06em; }
+.app[data-skin="ultra"] .asw-track { width: 38px; height: 18px; }
+.app[data-skin="ultra"] .asw-knob { width: 24px; height: 24px; }
+.app[data-skin="ultra"] .asw.on .asw-knob { transform: translateX(18px); }
+.app[data-skin="ultra"] .hud-card { transform: translate(-50%, -22%); }
+.app[data-skin="ultra"] .asw b { color: var(--ul-dim); text-shadow: 0 1px 0 #000; }
+.app[data-skin="ultra"] .asw-sep { background: linear-gradient(180deg, #f5f6f8, #6d727a 50%, #e5e7ea); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6); }
+.app[data-skin="ultra"] .asw-track { background: repeating-linear-gradient(90deg, #15171a 0 2px, #0b0c0e 2px 3px), #0b0c0e; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.9), inset 0 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.14); }
+.app[data-skin="ultra"] .asw.on .asw-track { background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0 0.6px, transparent 1px) 0 0 / 3px 3px, linear-gradient(180deg, #ffd27a, #f5a524 45%, #c97a0c);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(120, 60, 0, 0.7), 0 0 10px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .asw-knob { background: var(--ul-knurl), radial-gradient(circle at 35% 30%, #ffffff, #b4b9c0 45%, #5d636b 100%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.55); }
+.app[data-skin="ultra"] .asw-knob::before { content: ""; position: absolute; inset: 4px; border-radius: 50%;
+  background: conic-gradient(from 25deg, #f6f7f9, #8a8f97 12%, #eef0f2 25%, #6b7078 38%, #f4f5f7 50%, #8f949c 62%, #eceef1 75%, #6f747c 88%, #f6f7f9); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.6); }
+
+/* Pause (and the rail's buttons): a square chrome-rimmed glass button, brushed-steel bars */
+.app[data-skin="ultra"] .tbar .tbtn::before { transform: none; clip-path: none; border-radius: 12px; border-width: 3px; }
+.app[data-skin="ultra"] .tbar .tbtn .ico { color: #dfe3e8; filter: drop-shadow(0 1px 0 #000); }
+.app[data-skin="ultra"] .tbar .tbtn.menu .ico { stroke-width: 3.4; stroke-linecap: butt; }
+.app[data-skin="ultra"] .tbar .tbtn.on .ico, .app[data-skin="ultra"] .tbar .tbtn.on .tcap { color: var(--ul-amber); }
+.app[data-skin="ultra"] .tbar .tbtn.on::before { box-shadow: var(--ul-groove), inset 0 0 0 2px var(--ul-amber), var(--ul-edge); }
+.app[data-skin="ultra"] .tbar .tbtn:focus-visible::before { outline: 2px solid var(--ul-amber); outline-offset: 2px; }
+
+/* the map: a thick chrome bezel with fine ticks on a dark inner band, the N tab in a dark chip */
+.app[data-skin="ultra"] .corner.map { border: 1px solid #000; box-shadow: 0 8px 18px rgba(0, 0, 0, 0.5); }
+.app[data-skin="ultra"] .corner.map::after { display: block; inset: 0; border-radius: 50%; background:
+    repeating-conic-gradient(from -1deg, rgba(235, 238, 242, 0.85) 0 1.2deg, transparent 1.2deg 7.5deg),
+    #0a0b0d;
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 7px), #000 calc(100% - 6.5px)); mask: radial-gradient(closest-side, transparent calc(100% - 7px), #000 calc(100% - 6.5px)); }
+.app[data-skin="ultra"] .hud-compass { width: calc(var(--map) + 12px); height: calc(var(--map) + 12px); box-shadow: none; }
+.app[data-skin="ultra"]:is([data-hud="pp"], [data-hud="pl"]) .hud-compass { top: calc(var(--sa-t) + 16px - 6px); right: calc(var(--sa-r) + 14px - 6px); }
+.app[data-skin="ultra"][data-hud="desk"] .hud-compass { bottom: calc(var(--bot) - 6px); left: calc(var(--sa-l) + 14px - 6px); }
+/* an upright phone draws the map at the mockup's size (App.tsx ULTRA_PP_MAP: 88 px at Medium, the bezel 6 px out), so the
+   whole HUD, the ABS | TCS bar counted, stays inside the owner's 12.5 % of the screen; the plate keeps the width it has
+   beside the Retro skin's 112 px map */
+.app[data-skin="ultra"][data-hud="pp"] .hud-plate { width: calc(100% - var(--sa-l) - var(--sa-r) - 10px - 14px - (var(--map) + 24px) - 10px - 44px - 10px); }
+.app[data-skin="ultra"] .hud-compass::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ul-turned);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 7px), #000 calc(100% - 6.5px)); mask: radial-gradient(closest-side, transparent calc(100% - 7px), #000 calc(100% - 6.5px));
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.45)); }
+.app[data-skin="ultra"] .hud-card { padding: 3px 6px; font: 700 10px/1 var(--hud-sans); color: var(--ul-ink); background: linear-gradient(#202328, #08090b); border-radius: 4px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.18); }
+.app[data-skin="ultra"] .hud-n { color: var(--ul-ink); background: #0b0c0e; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35); }
+
+/* DRIFT: chrome-rimmed glass; DRIFT amber italic, the angle white, the time grey italic, an amber bar */
+.app[data-skin="ultra"] .hud-drift { --k: var(--ul-amber); color: var(--ul-ink); padding: 7px 14px 0 14px; }
+.app[data-skin="ultra"] .hud-drift::before { border-radius: 14px; }
+.app[data-skin="ultra"] .hud-drift b { font-style: italic; text-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .hud-drift-t { color: var(--ul-mute); font-style: italic; }
+.app[data-skin="ultra"] .hud-drift-bar { background: rgba(255, 255, 255, 0.12); margin-bottom: 9px; }
+.app[data-skin="ultra"] .hud-drift-bar i { box-shadow: 0 0 6px var(--ul-amber-glow); }
+
+/* STEER: a chrome-rimmed track, the label engraved on its top strip, a recessed black channel, a rod with ticks and end
+   caps, a knurled steel roller with an amber band */
+.app[data-skin="ultra"] .touch-steer { border-radius: 16px; }
+.app[data-skin="ultra"] .touch-steer::before { content: ""; position: absolute; left: 6px; right: 6px; top: 22px; bottom: 5px; border-radius: 10px;
+  background: linear-gradient(180deg, #030304, #101114 70%, #17191c); box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.95), inset 0 0 0 1px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.14); }
+.app[data-skin="ultra"] .touch-hint { top: 5px; font: 700 10.5px/1 var(--hud-sans); letter-spacing: 0.22em; color: var(--ul-dim); text-shadow: 0 -1px 0 #000, 0 1px 0 rgba(255, 255, 255, 0.12); }
+.app[data-skin="ultra"] .touch-rod { left: 14px; right: 14px; top: 38px; height: 4px; border-radius: 2px;
+  background: linear-gradient(180deg, #f4f5f7, #7d838b 55%, #3c4046); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); }
+/* the ticks, over and under the rod */
+.app[data-skin="ultra"] .touch-rod::before { content: ""; position: absolute; left: 6px; right: 6px; top: -4px; bottom: -4px;
+  background: repeating-linear-gradient(90deg, rgba(225, 229, 234, 0.75) 0 1px, transparent 1px calc(12.5% - 0.12px)); -webkit-mask: linear-gradient(#000 0 3px, transparent 3px calc(100% - 3px), #000 calc(100% - 3px)); mask: linear-gradient(#000 0 3px, transparent 3px calc(100% - 3px), #000 calc(100% - 3px)); }
+/* the end caps */
+.app[data-skin="ultra"] .touch-rod::after { content: ""; position: absolute; inset: -4px -6px; pointer-events: none;
+  background: linear-gradient(90deg, #c8ccd2, #f5f6f8 40%, #5d636b) left center / 7px 12px no-repeat, linear-gradient(90deg, #5d636b, #f5f6f8 60%, #c8ccd2) right center / 7px 12px no-repeat; border-radius: 3px; }
+.app[data-skin="ultra"] .touch-knob { top: 25px; width: 28px; height: 30px; border-radius: 6px;
+  background: linear-gradient(90deg, transparent calc(50% - 2px), var(--ul-amber) calc(50% - 2px) calc(50% + 2px), transparent calc(50% + 2px)),
+    var(--ul-knurl), linear-gradient(90deg, #3b4047 0%, #9aa0a8 18%, #f3f5f7 42%, #c4c9cf 62%, #6b7179 84%, #2c3036 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8), 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 6px rgba(255, 170, 40, 0.25); }
+
+/* HANDBRAKE: a knurled steel ring round a black glass button, the circled P glowing red, the red arc on the ring */
+.app[data-skin="ultra"] .hb-cap { color: var(--ul-dim); background: linear-gradient(#1b1e23, #08090b 70%); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9), 0 0 0 1.5px rgba(200, 205, 212, 0.55), 0 3px 8px rgba(0, 0, 0, 0.45); }   /* dark glass with a thin chrome edge: #d9dde2 on it is 13:1 or better over any scene */
+.app[data-skin="ultra"] .hb-dial { background: var(--ul-knurl), var(--ul-turned); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8), 0 6px 12px rgba(0, 0, 0, 0.5); }
+.app[data-skin="ultra"] .hb-track { stroke: transparent; }
+/* the red arc is a BAND on the knurled ring (about a fifth of it, from twelve o'clock, as in the parts sheet): the knurl stays
+   readable while the handbrake is pulled; it slides in on the pull and out over the hold */
+.app[data-skin="ultra"] .hb-arc { stroke: var(--ul-red); stroke-width: 5; stroke-dasharray: 20 180; stroke-dashoffset: 20; filter: drop-shadow(0 0 3px var(--ul-red-glow)); }
+.app[data-skin="ultra"] .hb-round.pulled .hb-arc { stroke-dashoffset: 0; }
+.app[data-skin="ultra"] .hb-face { width: calc(100% - 14px); height: calc(100% - 14px); background: radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.16), transparent 52%), radial-gradient(circle, #15171a, #050506);
+  box-shadow: 0 0 0 1.5px #c9cdd3, 0 0 0 2.5px rgba(0, 0, 0, 0.85), inset 0 2px 5px rgba(0, 0, 0, 0.8); }
+.app[data-skin="ultra"] .hb-face .ico { color: var(--ul-red); filter: drop-shadow(0 0 3px var(--ul-red-glow)); }
+.app[data-skin="ultra"] .hb-round.pulled .hb-face { background: radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.16), transparent 52%), radial-gradient(circle, #3a0c08, #0b0302); }
+
+/* BRAKE and GAS: chrome-rimmed square pads with a ribbed black rubber face; GAS with an amber glowing inner rim */
+.app[data-skin="ultra"] .pedal { font: 700 14.5px/1 var(--hud-sans); letter-spacing: 0.08em; color: var(--ul-dim); text-shadow: 0 -1px 0 #000, 0 1px 0 rgba(255, 255, 255, 0.1); }
+.app[data-skin="ultra"] .pedal::before { border-radius: 14px;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255, 255, 255, 0.1), transparent 70%) padding-box,
+    repeating-linear-gradient(180deg, #202226 0 2px, #0a0b0d 2px 3.5px, #2b2e33 3.5px 4.2px) padding-box,
+    var(--ul-brush) border-box, var(--ul-chrome) border-box;
+  box-shadow: inset 0 0 0 1px #000, inset 0 0 0 3px #0b0c0e, inset 0 0 0 4px rgba(255, 255, 255, 0.1), var(--ul-edge); }
+.app[data-skin="ultra"] .pedal.gas::before { box-shadow: inset 0 0 0 1px #000, inset 0 0 0 3.5px var(--ul-amber), inset 0 0 12px 2px var(--ul-amber-glow), var(--ul-edge), 0 0 12px rgba(255, 170, 40, 0.35); }
+.app[data-skin="ultra"] .pedal .ico { color: var(--ul-dim); filter: drop-shadow(0 1px 0 #000); }
+.app[data-skin="ultra"] .pedal.brake.down::before { background: repeating-linear-gradient(180deg, #33363b 0 2px, #16181b 2px 3.5px, #45494f 3.5px 4.2px) padding-box, var(--ul-chrome) border-box; }
+.app[data-skin="ultra"] .pedal.gas.down::before { background: radial-gradient(ellipse at 50% 60%, rgba(255, 170, 40, 0.35), transparent 70%) padding-box,
+  repeating-linear-gradient(180deg, #2a2620 0 2px, #100e0b 2px 3.5px, #3a342b 3.5px 4.2px) padding-box, var(--ul-chrome) border-box; }
+.app[data-skin="ultra"] .pedal.down { color: #fff; }
+
+/* CLEAR PATH (and every ability, and JUMP): a round black glass gauge in a chrome bezel, fine ticks round the rim, the
+   amber charge arc on the rim, the road icon, the name in two lines, an amber ready dot */
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn) { --k: var(--ul-amber); color: var(--ul-ink); text-shadow: 0 1px 0 #000; }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn)::before { border: 4px solid transparent;
+  background: radial-gradient(circle at 50% 22%, rgba(255, 255, 255, 0.17), transparent 46%) padding-box,
+    radial-gradient(circle closest-side, #121417 calc(100% - 7px), transparent calc(100% - 6.5px)) padding-box,
+    repeating-conic-gradient(rgba(230, 234, 238, 0.6) 0 1.2deg, transparent 1.2deg 10deg) padding-box,
+    linear-gradient(#08090b, #08090b) padding-box,
+    var(--ul-turned) border-box;
+  box-shadow: inset 0 0 0 1px #000, inset 0 3px 6px rgba(0, 0, 0, 0.6), var(--ul-edge); }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn) > :is(.ico, span) { position: relative; z-index: 1; }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn) .ico { color: var(--ul-ink); filter: drop-shadow(0 1px 0 #000); }
+/* the charge arc: a thin band (3 px) on the rim's outer edge, so the ticks still read under it when it is full */
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn)::after { left: 4px; right: 4px; top: 4px; bottom: 4px; height: auto; transform: none; border-radius: 50%; z-index: 0;
+  background: conic-gradient(var(--k) calc(var(--p) * 1turn), transparent 0); filter: drop-shadow(0 0 3px var(--ul-amber-glow));
+  -webkit-mask: radial-gradient(circle closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px)); mask: radial-gradient(circle closest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px)); }
+.app[data-skin="ultra"] .hud-ability span::after { content: ""; display: block; width: 5px; height: 5px; margin: 3px auto 0; border-radius: 50%; background: var(--ul-amber); box-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .hud-ability:is(.cool, .on) span::after { background: rgba(255, 255, 255, 0.18); box-shadow: none; }
+.app[data-skin="ultra"] .hud-ability.cool { color: var(--ul-dim); }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn).on { color: var(--ul-amber-hi); }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn).on::before { box-shadow: inset 0 0 0 1px #000, inset 0 0 14px rgba(255, 170, 40, 0.45), var(--ul-edge); }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn).on .ico { color: var(--ul-amber-hi); }
+.app[data-skin="ultra"] .hud-thrustbtn.low { --k: var(--ul-red); color: var(--ul-mute); }
+.app[data-skin="ultra"] :is(.hud-ability, .hud-thrustbtn):focus-visible { outline: 2px solid var(--ul-amber); outline-offset: 3px; border-radius: 50%; }
+
+/* a desktop: the speed block, the numbers and the route panel, the drift chip, the map bezel and the rail, in metal */
+.app[data-skin="ultra"][data-hud="desk"] .hud-speed { padding: 8px 14px 8px 12px; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-speed::after { display: none; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-rpm { transform: none; border-radius: 3px; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-rpm div { background: linear-gradient(0deg, #c77d12, var(--ul-amber) 60%, var(--ul-amber-hi)) !important; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-revs i { transform: none; border-radius: 2px; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-revs i.on { background: #dfe3e8; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-revs i:nth-child(n+4).on { background: var(--ul-amber); box-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"][data-hud="desk"] .hud-revs i:nth-child(n+7).on { background: var(--ul-red); box-shadow: 0 0 6px var(--ul-red-glow); }
+.app[data-skin="ultra"][data-hud="desk"] .hud-chips i { border-radius: 6px; }
+.app[data-skin="ultra"][data-hud="desk"] :is(.hud-stats, .hud-navs, .hud-thr, .hud-clock) { clip-path: none; }
+/* the chrome rim is 4 px a side inside the navigation card's 316 px: the manoeuvre row gives the 8 px back from its own
+   padding, so the turn word keeps its whole width beside 7 lanes and "5280 ft" (styles.css .hud-nav, the progression check) */
+.app[data-skin="ultra"][data-hud="desk"] .hud-navs .hud-nav { padding-left: 8px; padding-right: 10px; }
+.app[data-skin="ultra"][data-hud="desk"] .hud-stats span { color: var(--ul-ink); }
+.app[data-skin="ultra"][data-hud="desk"] .hud-thr { border-width: 3px; border-radius: 12px; }
+.app[data-skin="ultra"][data-hud="desk"] .tbar .tbtn { color: var(--ul-dim); }
+.app[data-skin="ultra"][data-hud="desk"] .hud-drift { padding-top: 8px; }
+
+/* the OC Hypercar's line on the plate (JUMP, the tank, Lock): amber on the glass */
+.app[data-skin="ultra"] .hud-thr b, .app[data-skin="ultra"] .hud-lock.on { color: var(--ul-amber); text-shadow: 0 0 6px var(--ul-amber-glow); }
+.app[data-skin="ultra"] .hud-thr-bar { transform: none; border-radius: 2px; background: rgba(255, 255, 255, 0.14); }
+.app[data-skin="ultra"] .hud-thr-bar i { background: linear-gradient(90deg, #c77d12, var(--ul-amber)); }
+.app[data-skin="ultra"] .hud-thr.low .hud-thr-bar i { background: var(--ul-red); }
+
+/* on its side: the bezel 5 px (the top cluster within 26 % of the height) */
+.app[data-skin="ultra"][data-hud="pl"] .hud-compass { width: calc(var(--map) + 10px); height: calc(var(--map) + 10px); top: calc(var(--sa-t) + 8px - 5px); right: calc(var(--sa-r) + 14px - 5px); }
+.app[data-skin="ultra"][data-hud="pl"] .hud-compass::before { -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 6px), #000 calc(100% - 5.5px)); mask: radial-gradient(closest-side, transparent calc(100% - 6px), #000 calc(100% - 5.5px)); }
+.app[data-skin="ultra"][data-hud="pl"] .hud-card { transform: translate(-50%, 0); }
+.app[data-skin="ultra"][data-hud="pl"] .corner.map::after { -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4.5px)); mask: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4.5px)); }

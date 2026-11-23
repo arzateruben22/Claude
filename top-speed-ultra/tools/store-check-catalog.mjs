@@ -37,7 +37,8 @@ const cosmetics = JSON.parse(read('src/store/cosmetics.json'));
 const { FOUNDER_UNTIL } = JSON.parse(read('src/store/founder.json'));
 const errs = [];
 // the owner's price exception to the whole-dollar rule (PROJECT_OC_MONETIZATION.md §5): this sku at this price only
-const PRICE_EXCEPTIONS = { 'hypercar-founder': 999 };
+// (2026-11-12: and the Chad & Chadaline pack at exactly $22.22, the owner's decision of 2026-11-11)
+const PRICE_EXCEPTIONS = { 'hypercar-founder': 999, 'cast-pack-duo': 2222 };
 // the founder offers, sold in the one founder window: the Founder Pack (unlisted since 2026-11-16), the OC Hypercar
 // Founder Edition, and the Founders package (the owner, 2026-11-17: the Founder Pack's successor, coming soon)
 const FOUNDER_SKUS = new Set(['founder-pack-2026', 'hypercar-founder', 'founders-package']);
@@ -82,6 +83,8 @@ for (const c of catalog) {
   if ('caveat' in c && (typeof c.caveat !== 'string' || !c.caveat)) errs.push(`${s}: caveat must be words`);
   if ('listed' in c && typeof c.listed !== 'boolean') errs.push(`${s}: listed must be true or false`);
   if (c.listed !== false && !c.available && !c.unavailable_reason) errs.push(`${s}: listed but not available, with no unavailable_reason for its coming-soon card`);
+  // an 18+ purchase is marked min_age 18 and says so in its description (the store's own rule is 13+)
+  if ('min_age' in c && (c.min_age !== 18 || !/18/.test(c.description))) errs.push(`${s}: min_age must be 18, with the description saying so`);
   if ('serial' in c) {
     if (c.serial !== true || c.mode !== 'payment') errs.push(`${s}: serial is for a one-time payment (serial: true)`);
     const seeded = readdirSync(join(root, 'server/supabase/migrations')).filter((f) => f.endsWith('.sql')).some((f) => new RegExp(`serial_counters[^;]*'${s}'`).test(read('server/supabase/migrations/' + f)));

@@ -51,7 +51,7 @@ import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, 
 import * as M from './car-mats';
 import { bodyFor } from './car-body';
 import { carMaterials, aoFor } from './car';
-import { CarId, shapeFor, seatOffset } from './car-shape';
+import { CarId, shapeFor, seatOffset, STANDARD_LED, type Edition } from './car-shape';
 import { EYE, WHEEL_AT, WHEEL_TILT, rimAt, rimA, rimB } from './spec';
 import * as G from './car-gauges';
 import * as DS from './car-dash';
@@ -60,7 +60,7 @@ import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
 import { sportRimAt, hyperRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
-export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string }
+export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string; edition?: Edition }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
 // wheelTier (owner, 2026-11-16: "I just want the hypercar and Chad car to only have it and the other cars have default
 // sports steering wheel"): 'luxury' the premium sport wheel of wheel-sport.ts (dials, knurled rings, shift lights, the
@@ -194,7 +194,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const stitchC = o.stitch ?? T.stitch;
 
   // ---------------------------------------------------------------- materials
-  const ext = carMaterials(paint, q, P.caliper, id);
+  const ext = carMaterials(paint, q, P.caliper, id, o.edition);
   const tachT = G.tachTextures(high ? 1024 : 512, P.brand === 'oc' ? 'O C' : undefined);
   const mats: Record<string, THREE.Material> = {
     ...(ext.scoop ? { scoop: ext.scoop } : {}),   // (the hypercar's side scoop, M1b repair; seen in the mirrors)
@@ -288,7 +288,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
-  if (hyper && P.led) { const led = P.led; mats.amb = once('m.amb' + q, () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide; return m; }); }
+  if (hyper && P.led) { const led = o.edition === 'standard' ? STANDARD_LED : P.led; mats.amb = once('m.amb' + q + (o.edition === 'standard' ? '-std' : ''), () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide; return m; }); }
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   const aoIn = (p: V3, n: V3) => {
@@ -1096,7 +1096,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // call. The console's sits on the lid behind the bridge, its lettering reading from the driver's seat and tilted to
   // it; the sill's lies on the driver's door sill cap ahead of the shoulder, reading front to back as the driver looks
   // down to the left. Both carry the same number line.
-  if (P.brand === 'oc') {
+  // (the standard OC Hypercar, earned on Founders' Road, has no plaques: they are the paid Founder Edition's)
+  if (P.brand === 'oc' && o.edition !== 'standard') {
     const number = o.plaque ?? plaqueNumber();
     mats.plaque = once('m.plaque' + number + q, () => new THREE.MeshPhysicalMaterial({ map: plaqueTex(number, high ? 1024 : 512), metalness: 0.65, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.08, envMapIntensity: 0.9 }));
     const put = (w: number, m: THREE.Matrix4) => {

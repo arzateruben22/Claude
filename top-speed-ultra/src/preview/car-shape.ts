@@ -531,3 +531,8 @@ export const seatOffset = (P: ShapeParams): [number, number, number] => [P.seatX
 // the rear tyre's radius (the hypercar's are bigger than its fronts)
 export const rearR = (P: ShapeParams) => P.axle.rR ?? P.axle.r;
 export const shapeFor = (id: CarId = 'rossini-gt') => SHAPES[id] ?? GT;
+
+// The earned (standard) OC Hypercar's strips and blades: a plain neutral white, never Founder Ice (the paid Founder Edition's
+// lights, reserved to it: src/game/founder.ts). Same geometry, a different light.
+export const STANDARD_LED = { color: 0xf1f3f6, halo: 0xa6aeb8, edge: 0x6a727c };
+export type Edition = 'founder' | 'standard';

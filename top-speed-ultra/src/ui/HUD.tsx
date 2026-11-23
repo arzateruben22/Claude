@@ -14,10 +14,19 @@
 // camera in use), `data-live-cluster` (the car's own display shows the speed: the HUD drops its duplicate in the seat),
 // `data-wake` (something worth a look: the Minimal HUD brings the map back for it) and `data-road-new` (the road just
 // changed: its chip shows for 8 s).
+//
+// The new HUD (owner, 2026-11-23; one layout, two skins: hud-layout.css, hud-retro.css, hud-ultra.css, scoped to
+// .app[data-skin]): the round keys carry their icons (the ability's chosen by `data-abil`, JUMP's), the phone's second
+// line reads "BEST" with the bare number (`data-n` on the Top value: the same data as Top), the plate's bottom edge is
+// `--plate-b` on the root (a ResizeObserver, only when its size changes) so the Ultra skin's ABS | TCS switches
+// (Assists, `assists`) hang under it whatever lines the plate holds.
 
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { Hud as HudData } from '../game/Game';
+import { DIFFICULTY } from '../game/settings';
 import { OcMark } from './Mark';
+import { Ico } from './Icons';
+import { Assists, type AssistsProps } from './Assists';
 
 export interface HudHandle { set: (h: HudData) => void }
 
@@ -54,8 +63,24 @@ const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Spee
 
 type El = React.RefObject<HTMLElement>;
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust }, ref) {
-  const root = useRef<HTMLDivElement>(null);
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void; assists?: AssistsProps | null; onGear?: () => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust, assists = null, onGear }, ref) {
+  const root = useRef<HTMLDivElement>(null), plate = useRef<HTMLDivElement>(null);
+  // the plate's bottom edge, for what hangs under it (the Ultra skin's ABS | TCS bar): only when its box changes
+  useEffect(() => {
+    const p = plate.current, R = root.current;
+    if (!p || !R || typeof ResizeObserver !== 'function') return;
+    // (repair, coordinating session) with a route the plate grows; where the bar would then reach into the open view
+    // (the portrait rule: nothing from 22% to 70% of the height), it moves down to sit over the DRIFT chip instead
+    const put = () => {
+      const b = Math.round(p.getBoundingClientRect().bottom);
+      R.style.setProperty('--plate-b', b > 0 ? `${b}px` : '0px');
+      const low = b + 5 + 34 > innerHeight * 0.22;
+      if ((R.dataset.assists === 'low') !== low) { if (low) R.dataset.assists = 'low'; else delete R.dataset.assists; }
+    };
+    const ro = new ResizeObserver(put); ro.observe(p); put();
+    addEventListener('resize', put);
+    return () => { ro.disconnect(); removeEventListener('resize', put); };
+  }, [visible]);
   const speed = useRef<HTMLSpanElement>(null), gear = useRef<HTMLSpanElement>(null), bar = useRef<HTMLDivElement>(null);
   const k1 = useRef<HTMLElement>(null), v1 = useRef<HTMLElement>(null), k2 = useRef<HTMLElement>(null), v2 = useRef<HTMLElement>(null);
   const k3 = useRef<HTMLElement>(null), v3 = useRef<HTMLElement>(null), fps = useRef<HTMLSpanElement>(null), cam = useRef<HTMLSpanElement>(null);
@@ -79,7 +104,11 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   // modes); its own systems' strip (the tank, Ground Lock, the hop: a line of the speed readout, hidden in the seat view,
   // where the car's own cluster shows them) and its THRUST key (with the driver's ability, a key of the controls)
   const tune = useRef<HTMLElement>(null), thr = useRef<HTMLDivElement>(null), thrPct = useRef<HTMLElement>(null), thrBar = useRef<HTMLElement>(null);
+  // the drift readout (Physics.drift): the slip angle, a bar for it and the chain's clock, up while a slide lasts
+  const drift = useRef<HTMLDivElement>(null), driftAng = useRef<HTMLElement>(null), driftBar = useRef<HTMLElement>(null), driftT = useRef<HTMLElement>(null);
   const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
+  // the score meter (bests.ts): a difficulty run's Fastest Minute, the live 60 s average against your best, or in Free Drive the drift readout
+  const bm = useRef<HTMLDivElement>(null), bmKey = useRef<HTMLElement>(null), bmVal = useRef<HTMLElement>(null), bmSub = useRef<HTMLElement>(null), bmBest = useRef<HTMLElement>(null), bmFill = useRef<HTMLElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   // a line-2 slot: its key (the long form for a desktop plate, `data-s` the short one a phone shows) and its value
@@ -118,11 +147,13 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       } else {
         slot(k1.current, v1.current, 1, 'Distance', '', miles(h.distance));
         slot(k2.current, v2.current, 2, 'Top', 'Top', h.top + ' mph');
+        data(v2.current, 'n', String(h.top));
         // a story errand (story.ts): its clock in the third slot (a phone shows it in place of Top)
         if (h.errand) { const t = Math.ceil(h.errand.left); slot(k3.current, v3.current, 3, 'Errand', 'Errand', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`); }
         else slot(k3.current, v3.current, 3, '', '', '');
       }
-      put(modeEl.current, 'modeLabel', MODE_LABEL[h.mode] ?? h.mode);
+      // a timed run is named for its difficulty (Easy, Medium, Extreme), not for the rules they share
+      put(modeEl.current, 'modeLabel', h.mode === 'survival' && h.bests.diff ? DIFFICULTY[h.bests.diff].label : MODE_LABEL[h.mode] ?? h.mode);
       // the road as a guide sign: the route shield (blue Interstate, white state route) then the direction
       const rm = /^(I|CA)-(\d+)\s*(\w+)?/.exec(h.road);
       if (shield.current) { shield.current.hidden = !rm; if (rm) { put(shield.current, 'shieldNo', rm[2]); const cls = 'shield ' + (rm[1] === 'I' ? 'i' : 'ca'); if (last.shieldCls !== cls) { last.shieldCls = cls; shield.current.className = cls; } } }
@@ -171,6 +202,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
       if (abil.current) {
         put(abilName.current, 'abil', h.ability);
         const b = abil.current, on = h.abilityOn > 0, cool = h.abilityCool;
+        data(b, 'abil', h.ability);
         b.classList.toggle('on', on); b.classList.toggle('cool', !on && cool > 0);
         b.style.setProperty('--p', String(on ? h.abilityOn : 1 - cool));
         b.setAttribute('aria-label', on ? `${h.ability} active` : cool > 0 ? `${h.ability} recharging` : `Use ${h.ability}`);
@@ -179,6 +211,44 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         s.cool = cool;
       }
       put(cam.current, 'cam', h.cam);
+      // the drift readout: up while a slide counts and through the half second of grace that links one slide to the next
+      // (Physics keeps the chain's clock running then); the bar is the angle against 60 degrees
+      if (drift.current) {
+        const up = h.driftTime > 0;
+        if (drift.current.hidden === up) drift.current.hidden = !up;
+        if (up) {
+          const a = Math.abs(Math.round(h.driftAngle));
+          put(driftAng.current, 'driftAng', String(a));
+          put(driftT.current, 'driftT', h.driftTime.toFixed(1));
+          const f = Math.min(1, a / 60).toFixed(2);
+          if (driftBar.current && last.driftBar !== f) { last.driftBar = f; driftBar.current.style.transform = `scaleX(${f})`; }
+          data(drift.current, 'state', h.driftOn ? 'on' : 'link');
+          data(drift.current, 'dir', h.driftAngle > 0 ? 'l' : 'r');
+        }
+      }
+      const m = h.bests;
+      if (bm.current) {
+        bm.current.hidden = !m.kind;
+        if (m.kind) {
+          data(bm.current, 'kind', m.kind); attr(bm.current, 'data-eased', !m.counts);
+          if (m.kind === 'minute') {
+            // the window fills for 60 s; the figure is its average so far, then the live 60 s average
+            const best = Math.max(m.best, m.runBest), shown = m.t > 0 ? m.avg : 0;
+            put(bmKey.current, 'bmKey', '60 S'); put(bmVal.current, 'bmVal', m.t > 0 ? shown.toFixed(1) : '--');
+            put(bmSub.current, 'bmSub', m.full ? 'mph' : `${Math.floor(m.t)}/60 s`);
+            put(bmBest.current, 'bmBest', best > 0 ? `Best ${best.toFixed(1)}` : 'No best yet');
+            attr(bm.current, 'data-up', m.full && best > 0 && m.avg >= best);
+            const f = (m.t / 60).toFixed(3); if (bmFill.current && last.bmFill !== f) { last.bmFill = f; bmFill.current.style.transform = `scaleX(${f})`; }
+          } else {
+            const best = Math.max(m.best, m.chainBest, m.chain);
+            put(bmKey.current, 'bmKey', 'Drift'); put(bmVal.current, 'bmVal', Math.round(m.chain).toLocaleString('en-US'));
+            put(bmSub.current, 'bmSub', `${Math.round(m.angle)}°`);
+            put(bmBest.current, 'bmBest', best > 0 ? `Best ${Math.round(best).toLocaleString('en-US')}` : 'No best yet');
+            attr(bm.current, 'data-up', m.chain > 0 && m.chain >= Math.max(m.best, m.chainBest) );
+            const f = m.chain > 0 ? '1.000' : '0.000'; if (bmFill.current && last.bmFill !== f) { last.bmFill = f; bmFill.current.style.transform = `scaleX(${f})`; }
+          }
+        }
+      }
       // what wakes the tucked Minimal HUD (App.tsx tucks; styles.css reads data-wake): a hard stop held 0.4 s above
       // 30 mph, and an exit coming up (the route's manoeuvre
       // within 800 m, the errand's sign within a mile), which keeps it up until it is passed
@@ -201,6 +271,8 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
           thr.current.classList.toggle('low', h.tank < 0.1);
           thrLock.current?.classList.toggle('on', h.groundLock);
           put(thrHop.current, 'thrHop', h.hop);
+          // the phone's plate line shows the short word (styles: "READY" for "Hop ready"); the full text stays for readers and the desktop line
+          if (thrHop.current && last.hopS !== h.hop) { last.hopS = h.hop; thrHop.current.dataset.short = h.hop.replace(/^Hop:?\s*/, ''); }
           thrHop.current?.classList.toggle('ready', h.hop === 'Hop ready');
           thrHop.current?.classList.toggle('warn', h.hop !== 'Hop ready' && h.hop !== 'Airborne');
           const b = thrBtn.current;
@@ -223,14 +295,14 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         {/* the time and the temperature: a caption over the map dial on a desktop; on a phone they are in the pause screen */}
         <div className="hud-clock"><b ref={clock as El} /><span><em ref={temp as El} /> · <i ref={note as El}>simulated</i></span></div>
         <div className="hud-road"><div className="hud-roadname"><span className="shield i" ref={shield} hidden /><span ref={road} /></div></div>
-        <div className="hud-plate">
+        <div className="hud-plate" ref={plate}>
           {/* line 1: the speed and the gear, the revs as a slanted bar; on a desktop the speed block bottom right with the
               rev lights and the chips (handling profile, assists, the hypercar's tune) */}
           <div className="hud-speed">
             <div className="hud-rpm"><div ref={bar} /></div>
             <div className="hud-main">
               <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
-              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear}>1</span></div>
+              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear} onClick={onGear}>1</span></div>
               <div className="hud-chips">{chips.map((c) => <i key={c}>{c}</i>)}<i ref={tune} style={{ display: 'none' }} /></div>
               <span className="hud-cam" ref={cam} />
             </div>
@@ -277,18 +349,33 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
           </div>
           {showFps && <span className="hud-fps" ref={fps}>-- fps</span>}
         </div>
+        {/* the drift readout: DRIFT, the slip angle with a bar for it, the chain's clock (styles.css puts it over the steering pad on a phone) */}
+        <div className="hud-drift" ref={drift} hidden>
+          <b>Drift</b>
+          <em><span ref={driftAng as El}>0</span>°</em>
+          <span className="hud-drift-t"><span ref={driftT as El}>0.0</span> s</span>
+          <span className="hud-drift-bar"><i ref={driftBar as El} /></span>
+        </div>
+        <div className="hud-bests" ref={bm} hidden aria-hidden="true">
+          <div className="bm-row"><b ref={bmKey as El} /><strong ref={bmVal as El} /><span ref={bmSub as El} /><em ref={bmBest as El} /></div>
+          <i className="bm-bar"><s ref={bmFill as El} /></i>
+        </div>
         <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>
       </div>
       {/* the driver's ability and the hypercar's THRUST: keys of the controls (on a phone they sit over the pedals, in
           the pedals' own style; on a desktop by the speed, or where the speed was in the seat view). Real buttons
           outside the hidden readouts, so a screen reader and the keyboard reach them */}
-      <button type="button" className="hud-ability" ref={abil} onClick={onAbility} aria-keyshortcuts="F"><span ref={abilName}>Ability</span></button>
+      <button type="button" className="hud-ability" ref={abil} onClick={onAbility} aria-keyshortcuts="F">
+        <Ico name="road" /><Ico name="focus" /><Ico name="grip" /><span ref={abilName}>Ability</span>
+      </button>
       {/* THRUST: a tap is a Thrust Hop, holding adds nothing (the bar along its foot is the tank; Left Shift and J too) */}
       <button type="button" className="hud-thrustbtn" ref={thrBtn} hidden aria-keyshortcuts="Shift J"
         onPointerDown={(e) => { e.preventDefault(); try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ } onThrust(true); }}
         onPointerUp={() => onThrust(false)} onPointerCancel={() => onThrust(false)} onContextMenu={(e) => e.preventDefault()}>
-        <span>Jump</span>
+        <Ico name="jump" /><span>Jump</span>
       </button>
+      {/* the Ultra skin's ABS | TCS switches (Assists.tsx): real buttons, after the keys in the tab order */}
+      {assists && <Assists {...assists} />}
     </div>
   );
 });
