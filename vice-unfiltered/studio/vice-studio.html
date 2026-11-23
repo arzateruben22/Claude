@@ -211,6 +211,12 @@ dialog.zoom img{max-width:100%;height:auto;display:block}
 
 <div class="shell"><main id="content" tabindex="-1"><div class="emptybox">Opening the studio…</div></main></div>
 <div class="toast" id="toast" role="status" hidden></div>
+<dialog class="zoom" id="editdlg" aria-label="Rename or delete"><div class="zbar"><b id="ed-title">Edit</b><button class="btn small" id="ed-close">Close</button></div>
+<div style="padding:16px;display:grid;gap:12px;min-width:min(88vw,420px)"><label class="lbl" for="ed-name" style="font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)">Name</label>
+<input id="ed-name" style="min-height:44px;border:2px solid var(--ink);border-radius:var(--r);padding:8px;background:var(--paper);font-size:16px">
+<div class="row"><button class="btn primary" id="ed-save">Save name</button></div>
+<div style="border-top:1.5px dashed var(--line-2);padding-top:12px;display:grid;gap:8px"><p class="state" id="ed-note" style="margin:0"></p>
+<div class="row"><button class="btn" id="ed-del">Delete</button><span id="ed-confirm" hidden><b>Delete for good?</b> <button class="btn small" id="ed-del-yes" style="background:var(--bad);border-color:var(--bad);color:#fff">Yes, delete</button> <button class="btn small" id="ed-del-no">Cancel</button></span></div></div></div></dialog>
 <dialog class="zoom" id="zoom" aria-label="Full size"><div class="zbar"><b id="zoom-title"></b><button class="btn small" id="zoom-close">Close</button></div><div class="zimg" id="zoom-box"><img id="zoom-img" alt=""></div></dialog>
 
 <script>
@@ -324,7 +330,7 @@ function room(slug){
   return `<nav class="strip" aria-label="Streamers">${strip}</nav>
   <header class="roomhead" style="${accVars(st)}"><span class="eyebrow">${esc(st.platform_note||"")}${st.campaign?.name?` · ${esc(st.campaign.name)}`:""}</span>
     <h1>${esc(st.name)}</h1>${batchBar([slug])}
-    <div class="row"><a class="chip" href="#review">${revCount} to review</a><a class="chip" href="#upload">Upload Desk</a><a class="chip" href="#rules">Campaign rules</a></div></header>
+    <div class="row"><a class="chip" href="#review">${revCount} to review</a><a class="chip" href="#upload">Upload Desk</a><a class="chip" href="#rules">Campaign rules</a><button class="chip" data-edit="streamers:${esc(st.id)}">Rename / delete</button></div></header>
   <section class="sec"><div class="sec-head"><h2>Ready to post</h2><span class="eyebrow">one card per account</span></div>${posts}</section>
   <section class="sec"><div class="sec-head"><h2>In the edit</h2><span class="eyebrow">${inEdit.length}</span></div>
     ${inEdit.length?`<div class="list">${inEdit.map(itemRow).join("")}</div>`:`<div class="emptybox">No clip in progress. Drop ${esc(st.name)} footage in the chat to start one.</div>`}</section>
@@ -334,7 +340,7 @@ function room(slug){
 
 function itemRow(c){const st=streamerOf(c.streamer);return `<div class="item"><div class="thumb">${thumb(c)}</div>
   <div class="meta"><b>${esc(c.title||c.moment||"Untitled")}</b><span class="mono" style="font-size:12px">${esc(st?.name||c.streamer)} · ${esc(c.moment||"")} · V${esc(c.version||1)}${c.runtime_s?` · ${Number(c.runtime_s).toFixed(1)}s`:""}</span>${pill(c.status)}</div>
-  <div class="end row">${c.video_url?`<a class="btn small" href="${esc(c.video_url)}" target="_blank" rel="noopener">Watch</a>`:""}${c.status==="ready_for_review"?`<a class="btn small primary" href="#review">Review</a>`:""}</div></div>`}
+  <div class="end row">${c.video_url?`<a class="btn small" href="${esc(c.video_url)}" target="_blank" rel="noopener">Watch</a>`:""}${c.status==="ready_for_review"?`<a class="btn small primary" href="#review">Review</a>`:""}<button class="btn small" data-edit="clips:${esc(c.id)}">Rename / delete</button></div></div>`}
 
 function postCards(c){return `<div class="cards">${activeAccounts().filter(a=>allowed(c,a.id)).map(a=>postCard(c,a)).join("")}</div>`}
 function postCard(c,a){
@@ -407,7 +413,7 @@ function library(){
 
 function rules(){
   return `<header class="mast"><span class="eyebrow">Recheck every batch</span><h1>Campaign rules</h1><p class="lede">What each clip must carry. A rule is only current once its brief has been rechecked this batch.</p></header>
-  <div class="rules">${streamers().map(st=>{const c=st.campaign||{};return `<article class="rule" style="--acc:${esc(st.accent||"#151413")}"><h3>${esc(st.name)}</h3>
+  <div class="rules">${streamers().map(st=>{const c=st.campaign||{};return `<article class="rule" style="--acc:${esc(st.accent||"#151413")}"><div class="row" style="justify-content:space-between"><h3>${esc(st.name)}</h3><button class="linkbtn" data-edit="streamers:${esc(st.id)}">Rename / delete</button></div>
     ${c.verified_at?`<span class="pill good">Brief checked ${esc(fmtDate(c.verified_at))}</span>`:`<span class="pill warn">Brief not checked this batch</span>`}
     <dl>${c.name?`<dt>Campaign</dt><dd>${esc(c.name)}</dd>`:`<dt>Campaign</dt><dd>None confirmed. Post as an ordinary clip.</dd>`}
     ${c.cta?`<dt>Caption CTA</dt><dd>${esc(c.cta)} ${copyBtn(c.cta,"CTA")}</dd>`:""}${c.hashtags?`<dt>Hashtags</dt><dd>${esc(c.hashtags)} ${copyBtn(c.hashtags,"hashtags")}</dd>`:""}
@@ -433,7 +439,7 @@ const fontFam = r => "vu-"+r.id;
 const loadedFonts = new Set();
 function loadFonts(){for(const r of S.lib.filter(x=>x.kind==="font"&&x.src)){if(loadedFonts.has(r.id))continue;loadedFonts.add(r.id);try{new FontFace(fontFam(r),`url("${r.src}")`).load().then(f=>{document.fonts.add(f)}).catch(()=>{})}catch{}}}
 function tile(r){
-  const name=`<div class="row" style="justify-content:space-between"><span class="fname">${esc(r.file||"")}</span>${r.file?copyBtn(r.file,"name"):""}</div>`;
+  const name=`<div class="row" style="justify-content:space-between"><span class="fname">${esc(r.file||"")}</span><span class="row">${r.file?copyBtn(r.file,"name"):""}<button class="linkbtn" data-edit="library:${esc(r.id)}">Rename / delete</button></span></div>`;
   if(r.kind==="audio"){const tp=Number(r.true_peak);return `<article class="tile"><div class="body"><div class="row" style="justify-content:space-between"><b>${esc(r.title)}</b>${lpill(r.status)}</div>
     <p class="note">${esc(r.use||"")}</p><audio controls preload="none" src="${esc(r.src)}"></audio>
     <dl class="sfxmeta"><div><dt>Length</dt><dd>${Number(r.duration_s).toFixed(2)}s</dd></div><div><dt>Starts at</dt><dd>${Number(r.onset_s).toFixed(3)}s</dd></div><div><dt>Loudness</dt><dd>${esc(r.lufs)} LUFS</dd></div><div><dt>Peak</dt><dd class="${tp>-1?"hot-peak":""}">${tp>0?"+":""}${esc(r.true_peak)} dBTP</dd></div></dl>
@@ -470,6 +476,38 @@ function assetsView(cat){
     ${chips}${lib.length?body:`<div class="emptybox">The asset library is loading or empty.</div>`}`;
 }
 const zoom=document.getElementById("zoom");
+/* rename / delete (streamers, clips, asset items) */
+const EDIT_FIELD={streamers:"name",clips:"title",library:"title"};
+const EDIT_KIND={streamers:"streamer",clips:"clip",library:"asset"};
+const EDIT_NOTE={streamers:"Deleting removes this streamer's page and campaign rules. Their clips stay in the database but are hidden.",
+  clips:"Deleting removes this clip, its upload cards and its slots. The video file itself is kept.",
+  library:"Deleting removes this item from Assets. The file stays published and can be added back."};
+let EDIT=null; const edlg=document.getElementById("editdlg");
+function recFor(col,id){return (col==="streamers"?S.streamers:col==="clips"?S.clips:S.lib).find(x=>x.id===id)}
+function closeEdit(){try{edlg.close()}catch{edlg.removeAttribute("open")}EDIT=null}
+document.addEventListener("click",async e=>{
+  const t=e.target.closest("[data-edit]");
+  if(t){const [col,id]=t.dataset.edit.split(":");const r=recFor(col,id);if(!r)return;EDIT={col,id};
+    document.getElementById("ed-title").textContent="Rename or delete "+EDIT_KIND[col];
+    document.getElementById("ed-name").value=r[EDIT_FIELD[col]]||r.moment||r.file||"";
+    document.getElementById("ed-note").textContent=EDIT_NOTE[col];
+    document.getElementById("ed-confirm").hidden=true;document.getElementById("ed-del").hidden=false;
+    try{edlg.showModal()}catch{edlg.setAttribute("open","")}return}
+  if(!EDIT) return;
+  const id=e.target.id;
+  if(id==="ed-close"||e.target===edlg){closeEdit();return}
+  if(id==="ed-del"){document.getElementById("ed-confirm").hidden=false;e.target.hidden=true;return}
+  if(id==="ed-del-no"){document.getElementById("ed-confirm").hidden=true;document.getElementById("ed-del").hidden=false;return}
+  if(!db){toast("Sign in to claude.ai to save changes");return}
+  try{
+    if(id==="ed-save"){const v=document.getElementById("ed-name").value.trim();if(!v){toast("Type a name first");return}
+      await db.doc(`${EDIT.col}/${EDIT.id}`).update({[EDIT_FIELD[EDIT.col]]:v});toast("Renamed");closeEdit()}
+    else if(id==="ed-del-yes"){const {col,id:rid}=EDIT;
+      if(col==="clips"){for(const p of S.pubs.filter(p=>p.clip===rid)){await db.doc(`publications/${p.id}`).delete()}}
+      await db.doc(`${col}/${rid}`).delete();toast("Deleted");closeEdit();
+      if(col==="streamers"&&route()==="s-"+rid)location.hash="#home"}
+  }catch(err){toast(err?.code==="not_granted"?"You can view this studio but not change it":"Couldn't save. Try again.")}
+});
 document.addEventListener("click",e=>{
   const z=e.target.closest("[data-zoom]"); if(z){document.getElementById("zoom-img").src=z.dataset.zoom;document.getElementById("zoom-img").alt=z.dataset.ztitle||"";document.getElementById("zoom-title").textContent=z.dataset.ztitle||"";document.getElementById("zoom-box").classList.toggle("checker",!!z.dataset.zchecker);try{zoom.showModal()}catch{zoom.setAttribute("open","")}return}
   if(e.target.id==="zoom-close"||e.target===zoom){try{zoom.close()}catch{zoom.removeAttribute("open")}}
