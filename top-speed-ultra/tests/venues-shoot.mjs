@@ -132,7 +132,7 @@ if (only !== 'desk') {
   say('Lot 57 stats', JSON.stringify(await page.evaluate(() => { const s = window.__onfoot.stats(); return { npcs: s.npcs, drawn: s.npcsDrawn, guests: s.guests, inside: s.inside, quality: s.quality, crowd: s.crowd }; })));
   await driveByButton(page, true, 'phone-lot57');
   // ---- Stoppage Time
-  await toVenue(page, 'Stoppage Time', 'phone-stoppage');
+  await toVenue(page, 'Vega & Vinnie’s', 'phone-stoppage');
   await getOut(page);
   await byYourCar(page, 'phone-stoppage');
   await page.evaluate(() => {
@@ -155,7 +155,7 @@ if (only !== 'desk') {
 }
 if (only !== 'phone') {
   const { ctx, page, errors } = await open(DESK_PAGE, false);
-  for (const [venue, prefix] of [['Lot 57', 'desk-lot57'], ['Stoppage Time', 'desk-stoppage']]) {
+  for (const [venue, prefix] of [['Lot 57', 'desk-lot57'], ['Vega & Vinnie’s', 'desk-stoppage']]) {
     await page.evaluate((v) => { const g = window.__game; g.placeCar(g.net.paths[v === 'Lot 57' ? 1142 : 124], v === 'Lot 57' ? 290 : 300, 0, 0); g.arriveVenue(); }, venue);
     await page.waitForSelector('.venue-park .getout'); await page.waitForTimeout(2500);
     if (venue === 'Lot 57') await shot(page, 'desk-1440x900-getout.png');

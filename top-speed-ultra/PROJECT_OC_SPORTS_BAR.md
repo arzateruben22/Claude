@@ -11,6 +11,72 @@ at that real site**. It has our name, our look, our interior and our menu. In th
 real bar". Its name appears only in the data tooling, as the lookup key that finds the point, never in `src/` or in
 shipped data.
 
+**The rename (owner, 2026-11-16): the bar is now "Vega & Vinnie’s"** ("the new name for stoppage time will be called
+"Vega & Vinnie’s""), a sports bar & cantina, and its outside follows the owner's 13 photos of the front, the pylon, the
+lot and the patio (claude/vv-look, 2026-11-22; `PROJECT_OC_PROGRESS.md` has what was built and checked). What changed:
+- **The name**, everywhere a player sees it, comes from one constant, `BAR_NAME` in
+  `src/onfoot/venues/sportsbar/brand.ts` (the driving game reads it through `src/game/venues.ts`). Ids, files, modules
+  and saved-data keys stay `sportsbar` (the game's venue id stays `stoppage`); a save, link or Go To target naming
+  "Stoppage Time" (or "Vega & Vinnie's" with a plain apostrophe) maps to the new name (`barName`, `renameSave`).
+  The history below keeps the old name as it was written.
+- **The outside** (venue.ts, outside.ts, tex.ts): the black facade with the cream script sign and "SPORTS BAR &
+  CANTINA", a black awning with bulbs, the stone-veneer base, the glass door, our own wings mural ("Take Flight", no
+  team), the accessible-entrance sign, the hedge wall with "WINES COLD BEER" on a corten planter, terracotta pots, red
+  bollards and a chalkboard A-frame on the front walk; the rest of building 61 as a tan stucco strip with arched
+  storefronts, stone piers, brown trim, wall lamps, rooftop HVAC and generic tenant bands in our words; the pylon at the
+  lot's street edge (cream shield, "<- OPEN", the menu list on its dark panel, two stone pillars in a hedge); the
+  street edge's hedges, stone-block wall with birds of paradise, backflow pipes, a transformer and LED light on the
+  mapped pole, two fan palms; the raised centre walkway on the courtyard's 3 m median between the stall fields, three
+  blue accessible stalls and their signs, the parking and ACCESS signs, exit arrows; across Claudina Way the
+  substation's block wall with its cypresses and the yellow kerb, a hydrant, a cobra-head light and the painted median
+  at the fork. Nothing mapped moved: the door, `def.parking.stalls` and `site.yourStall` are as before.
+  The second repair (2026-11-23) added the substation's steel (lattice bus gantries and the mapped transformers'
+  radiators, behind the wall's part nearest the lot; the cypresses along its far part), the street-edge hedge running
+  on through the pylon's taller stone pillars with wheel stops, exit arrows that draw (two, one a lane), the fork's
+  hatched median, a second hydrant and two cobra-head lights, parapets and a plain green sign gantry on the I-5's
+  mapped bridge span, the lot lights moved off the centre walkway onto stall lines, the strip corner's larger
+  transformer and LED arm, ledgestone piers and a tenant band over every bay, a pergola with two heaters over the
+  front walk south of the door, and a warm cream night glow on the wordmark (S4's lime tint retired).
+- **The patio** (layout.ts `PATIO`): u 2-27 (it was u 2-24), 140 m² inside its fence, so the 505.5 m² inside is 3.61
+  times it (the owner: "Bar inside size should be about 3-4x as much as the patio"). It grew along u, away from aisle
+  416 and the driveway (seg 418), whose closest approach (at u 20) is unchanged. Furnished from the patio-night photos
+  (the 2026-11-23 repair replaced the long tables, benches and rail stools with the photos' cafe plan): **seven round
+  butcher-block tables on black pedestals in two staggered rows**, centred (4.3, -1.3), (7.2, -4.0), (10.1, -1.3),
+  (12.75, -4.0), (15.4, -1.3), (18.9, -4.0) and (22.6, -1.3), four black mesh bistro chairs each on the diagonals 0.64 m
+  out (Lot 57's `'picnic'` seat kind; you stand beside your chair 1.25 m out along u; one 0.85 m collider circle covers
+  a table and its chairs); **a tall wood high-top with four black stools** at (25.0, -2.7); the two pyramid flame
+  heaters on wood-topped planter pedestals against the slat planter wall at (9.9, -4.55) and (15.8, -4.55) and the
+  stainless mushroom heater at (21.6, -4.5); black slat planter walls topped with leafy shrub clusters lit from below;
+  Edison bulbs in swags, a dark ceiling on black posts. The drink rail and its 6 stools are gone: 28 chairs and 4
+  high-top stools are the patio's 32 seats, as before (93 in all). The smart objects: 7 patio tables and the patio
+  high-top (the rail's type, its adverts unchanged, renamed `patio-high-top`), so the catalogue still counts 41 adverts.
+  `tools/anaheim/sportsbar_zones.py` models the same layout and passes (all stand points reached at 25 grid offsets).
+- **The walk out** (the owner: "make sure the bar exit goes to the parking lot accurately and seamlessly"): the Car
+  button walks you to your car on a path, out of the door, along the front walk and across the lot (a second tap, or
+  Lot 57's long press, skips); the third-person camera swaps shoulders when a wall crowds the side it's on, glides
+  through the door's glass frames instead of snapping, and lets back out eased (player.ts); it stays under the patio's
+  ceiling and the front's awning; the exposure eases between inside (1.0) and outside (0.93 by day, 1.08 at night);
+  no fade or load at the door.
+- **A lost WebGL context**: the venue's own canvas has one lost/restored handler (in the game too: the venue draws on
+  its own renderer and canvas, so the game's `onContextRestored` never fires for it); the restore redraws the sky's
+  PMREM environment, HD and Ultra's reflection cube and the shadow maps.
+- **The repair (2026-11-23, after the art and code reviews rejected the first pass):** the third-person camera eases
+  to a short head-follow (1.15 m back, centred) within 1.9 m of a door and never sits closer than 0.32 m to a wall,
+  glass or the hedge wall (player.ts), so the threshold no longer shows a black slab; north of the door the facade is a
+  solid black wall (as the photo) with a ledgestone wainscot to 1.1 m, the wings mural 5.4 m x 2.0 m beside the door
+  at eye height, the wordmark in our own drawn script (tex.ts `scriptText`: no system script face is needed), a
+  dark-wood door surround, a terracotta pot by the door, the hedge wall against the facade on its corten box and a
+  corten planter box under the mural; the accessible stalls moved to the three mapped stalls nearest the door (row 3)
+  and two by the strip's corner, with a blue fill and the symbol; across Claudina from the lot's exit a chain-link fence
+  on the east kerb with pines and fan palms (gaps at the two mapped driveways), the exit arrows where the exit view sees
+  them; at the strip's south-east corner (building 61's rest ring) a stucco corner pier, a wooden pole with transformer
+  and LED arm, a red-tipped hedge island and the parking-rules sign; the patio's shrubs are rounded clusters, the slat
+  walls read (charcoal slats over a near-black backing), the mushroom heater is stainless, the chairs perforated steel
+  (alpha-tested) at HD and Ultra. **Detail by mode at no extra draw call** (lod.ts): the steel, plants, paint, neon
+  and lamps batches carry a Low-only part and an HD/Ultra-only part beside their shared part, and the page picks the
+  mesh's draw range per mode; the shadow maps draw the shared part only. Low's venue group is 35 to 40 calls and 28.8k
+  to 30.9k triangles at the S1 poses (its allocation 40 and 45k); S4's Low door pass is 184.8k of 203.9k.
+
 **Status (2026-11-12, latest): S4 done**, committed on `claude/sports-bar` after the sixth pass passed the art and code reviews. The sixth pass came the art review rejected
 the fifth pass's look for two Ultra artefacts: the pool tables' pockets and legs washed pale lilac by the cloth's sheen
 (fixed: the sheen kept to the felt's blue), and a near-white band on the floor at night, the polished floor's
@@ -363,7 +429,7 @@ North is up. Schematic, not to scale. The coordinates in the table are exact.
 | Stoppage Time | building frame u 0–36 | See "Inside". Floor slab 0.15 m up, level with the raised front walk; the kerb ramp is on the walk (see "The front"). Ceiling 3.6 m inside the 4.3 m building (the lidar height). The parapet sign band on our unit rises to 5.4 m (ours). |
 | Front walk | along the east face | A raised walk 3.3 m deep with a 1.5 m clear path along the glazing, then the door ramp, a bike rack and two planters. See "The front" below. |
 | Aisle 416 | round the tip and along the front | Mapped centreline, but drawn by us: 4.5 m wide, one-way, and moved out to 6.0 m from the front wall in front of the unit. See "The front". |
-| Patio | u 2–24, v -5.5–0 (outside the south wall) | 121 m², on the strip between the arm and aisle 416 and, west of u 20, the driveway from Anaheim Way (seg 418). **Assumption:** the strip is open paving; nothing is mapped on it, and S0-data's derived lot covers its east end (25 m²). Its outer edge is 4.17 m from aisle 416's centreline at the closest point (u 20, where 416 meets 418), so 1.9 m from our 4.5 m aisle's edge and 1.2 m from 418's 6 m ribbon. It runs to u 24, not u 20 as in earlier rounds, so that its six tables and rail have walkable passages (see "Inside"). It's entered only from inside. |
+| Patio | u 2–27, v -5.5–0 (outside the south wall; u 2–24 and 121 m² until 2026-11-16) | 140 m² (2026-11-16), on the strip between the arm and aisle 416 and, west of u 20, the driveway from Anaheim Way (seg 418). **Assumption:** the strip is open paving; nothing is mapped on it, and S0-data's derived lot covers its east end (25 m²). Its outer edge is 4.17 m from aisle 416's centreline at the closest point (u 20, where 416 meets 418), so 1.9 m from our 4.5 m aisle's edge and 1.2 m from 418's 6 m ribbon. It runs to u 24, not u 20 as in earlier rounds, so that its six tables and rail have walkable passages (see "Inside"). It's entered only from inside. |
 | Courtyard lot | the derived lot polygon | Stalls are ours, 2.75 m × 5.5 m, in four rows on aisle 415's two east-west legs, all facing north or south (the module map's `lot.ts` row says why). **Estimate:** 55 to 62 stalls. "Your" stall is the courtyard stall nearest the routes' end at (-6613.2, -9374.9), about 30 m from the door. 6 m pole lights (ours; no lamps are mapped here). |
 | Perimeter | aisle 416 round the arm and spine | A drive aisle (mapped) with landscape strips (ours) between it and Anaheim Way. |
 | Street trees (ours; nothing is mapped) | the strips in front of and south of the unit | **10 trees:** 6 palms on the strip between our aisle 416 and Claudina's south-west leg, 10.1 m out from the front wall, every 6 m from s -6 to s 24 (frame (-11.6, -1.9) to (-0.7, 26.0)); 4 shade trees on the strip south of the arm, between aisle 416 and the south-west leg, at v -19, every 6 m from u -2 to u 16. The rule drops any spot within 1.0 m of a road or aisle edge, 1.5 m of a power pole, or 1.0 m of the building or patio: a fifth shade tree at u 22 falls on the driveway's ribbon. All 10 stand in the glazed sectors within 210 m, so they're in the near set (see "The allocations"). `tools/anaheim/sportsbar_sets.py` places and checks them. |
@@ -478,6 +544,10 @@ places. Capacity is never shown as a number.
 three channels (see "The games on the screens").
 
 ### The patio's layout (ours)
+
+**Replaced on 2026-11-23** (Vega & Vinnie's repair, the owner's patio-night photos): the table below is S1's layout
+as it was written; the patio now runs to u 27 and holds seven round tables, a high-top and three heaters (the note at
+the top of this document has the numbers; `layout.ts` and `sportsbar_zones.py` are the source).
 
 Frame metres, outside the south wall. From the wall south: the tables, then a passage, then the rail on the fence.
 

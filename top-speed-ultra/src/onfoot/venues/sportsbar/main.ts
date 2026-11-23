@@ -1,4 +1,4 @@
-// Stoppage Time on foot: phase S1 of PROJECT_OC_SPORTS_BAR.md, a standalone page (not yet the game). Our own
+// Vega & Vinnie’s (once Stoppage Time) on foot: phase S1 of PROJECT_OC_SPORTS_BAR.md, a standalone page (not yet the game). Our own
 // fictional sports bar at the real spot on South Claudina Way in Anaheim, built in code; the streets, the I-5 and the
 // rest of the block from OpenStreetMap through Overture (ODbL, credited on screen). You walk it as your driver from the
 // game, in first or third person or from overhead, by touch, keyboard or gamepad. The sky is the game's (the real sun
@@ -35,6 +35,8 @@ import { loadSite, NO_PEOPLE, ALLOC } from './def';
 import { makeBarMats, setBarNight, streetMats } from './mats';
 import { buildBarVenue } from './venue';
 import { buildBarLot, standInGeometry } from './lot';
+import { buildOutside, OUTSIDE } from './outside';
+import { finishLod, applyLod } from './lod';
 import { BarPlayer } from './player';
 import { BarInput, BarAction } from './input';
 import { BarHud } from './hud';
@@ -43,7 +45,7 @@ import { PRESET, LABEL } from './quality';
 import { Visibility, setHiddenCaster } from './visibility';
 import { laneTest, pathAt, pathLength } from './staff';
 import { BAR_NAME } from './brand';
-import { FRONT, fd, DOOR_START, HANDOFF, TREES, ZONES, PZONES, furniture, UNIT } from './layout';
+import { FRONT, fd, DOOR_START, HANDOFF, TREES, ZONES, PZONES, furniture, UNIT, PATIO, southWallV, patioArea } from './layout';
 import { pointInPoly as pointInRing } from '../../engine/geom';
 import { Embed, MountOptions, mountPage, optionsToParams } from '../../embed';
 import { BarLife } from './life';
@@ -130,7 +132,7 @@ async function main() {
   const dimEnvGround = () => { if (!envGround) return; (envGround.material as THREE.MeshBasicMaterial).color.setHex(envGroundHex).multiplyScalar(0.03 + 0.97 * env.daylight ** 1.5); envInternals.envDirty = true; envInternals.envT = 0; };
 
   // ------------------------------------------------------------------------------------------ build the world
-  const steps: [string, number][] = [['Reading the map', 0.06], ['Painting the textures', 0.12], ['Laying out Claudina Way and the I-5', 0.3], ['Building Stoppage Time', 0.5], ['Striping the lot', 0.58], ['Baking the lights', 0.68], ['Mapping where you can walk', 0.78], ['Your driver', 0.86], ["Building your driver's close-up", 0.92], ['Parking cars', 0.96]];
+  const steps: [string, number][] = [['Reading the map', 0.06], ['Painting the textures', 0.12], ['Laying out Claudina Way and the I-5', 0.3], [`Building ${BAR_NAME}`, 0.5], ['Striping the lot', 0.58], ['Baking the lights', 0.68], ['Mapping where you can walk', 0.78], ['Your driver', 0.86], ["Building your driver's close-up", 0.92], ['Parking cars', 0.96]];
   let si = 0; const stage = async (skipTo?: number) => { if (skipTo !== undefined) si = skipTo; loading(steps[si][1], steps[si][0] + '…'); si++; await nextFrame(); await nextFrame(); };
   const t0 = performance.now();
   await stage();
@@ -156,9 +158,17 @@ async function main() {
   const venue = buildBarVenue(kit, mats, F, room, site.restRing, site.unitOuter);
   await stage();
   const lot = buildBarLot(kit, mats, F, slice, site.lot, def.parking.stalls, site.yourStall);
+  // Vega & Vinnie's outside from the owner's photos (outside.ts): the pylon, the street edge, the centre walkway, the substation's wall
+  const outside = buildOutside(kit, mats, F, def.parking.stalls, slice as never);
   await stage();
   const world = new THREE.Group(); world.name = 'world'; world.userData.group = 'venue'; scene.add(world);
+  // (2026-11-23) detail by mode at no extra draw call (lod.ts): the split batches drawn coarse at Low, fine at HD and
+  // Ultra; and the few HD-and-Ultra-only batches (names ending '@hi': the heaters' flicker flames, the mesh chair backs)
+  const lodRanges = finishLod(kit);
   const worldMeshes = kit.finish(world, kit.emitters, true);
+  const hiOnly = worldMeshes.filter((m) => m.name.endsWith('@hi'));
+  const applyDetail = (qq: Quality) => { applyLod(worldMeshes, lodRanges, qq === 'low'); for (const m of hiOnly) m.visible = qq !== 'low'; };
+  applyDetail(quality);
   for (const m of venue.meshes) world.add(m);
   // the pool tables sit outside the kit (Ultra's pool spots need them as their own meshes), so they missed its bake
   // and read black at night on Low, which has no pool spots: bake the same night light into them now
@@ -246,7 +256,7 @@ async function main() {
   // ------------------------------------------------------------------------------------------ colliders, walk grid
   const set = new ColliderSet();
   const treeCols = def.trees.map((t) => circ(t.x, t.z, t.kind === 'palm' ? 0.36 : 0.3, 'tree', true));
-  set.add(...streets.colliders, ...venue.colliders, ...lot.colliders, mine.collider, ...venue.closedOnly, ...treeCols);
+  set.add(...streets.colliders, ...venue.colliders, ...lot.colliders, ...outside.colliders, mine.collider, ...venue.closedOnly, ...treeCols);
   const rings: P2[][] = [def.edge, lot.aisleRibbon, venue.region.front, venue.region.patio, venue.region.interior];
   let bx0 = Infinity, bz0 = Infinity, bx1 = -Infinity, bz1 = -Infinity;
   for (const r of rings) for (const [x, z] of r) { bx0 = Math.min(bx0, x); bx1 = Math.max(bx1, x); bz0 = Math.min(bz0, z); bz1 = Math.max(bz1, z); }
@@ -254,6 +264,7 @@ async function main() {
   for (const r of rings) grid.fillPoly(grid.region, r);
   for (const c of venue.region.cut) grid.fillPoly(grid.region, c, 0);            // the lane and the flap: staff only
   for (const r of venue.region.raised) grid.fillPoly(grid.raised, r);
+  for (const r of outside.raised) grid.fillPoly(grid.raised, r);              // the lot's raised centre walkway
   grid.fillPoly(grid.raised, venue.region.rampLow, 0);                             // the kerb ramp: one step at its midline
   const refreshDynamic = () => { set.all = set.all.filter((o) => !o.dyn || venue.closedOnly.includes(o)); for (const c of parked.colliders) set.all.push(c); set.rebuild(); grid.computeFree(set, true); };
   set.rebuild(); grid.computeFree(set);
@@ -282,6 +293,12 @@ async function main() {
   if (quality === 'ultra') buildLod0();
   await stage();
   const player = new BarPlayer(set, grid, (x, z) => grid.isRoad(x, z), def, F);
+  // the third-person camera stays under the patio's ceiling (2.97 m) and the front's awning (3.2 m at its edge)
+  player.doorways = venue.doors.map((d) => L(d.centre[0], d.centre[1]));
+  player.canopies = [
+    { poly: [[PATIO.out.u0 - 0.3, PATIO.out.v0 - 0.4], [PATIO.out.u1 + 0.3, PATIO.out.v0 - 0.4], [PATIO.out.u1 + 0.3, southWallV(PATIO.out.u1)], [PATIO.out.u0 - 0.3, southWallV(PATIO.out.u0)]], capY: 2.68 },
+    { poly: [fd(-0.2, 0.2), fd(1.2, 0.2), fd(1.2, 10.25), fd(-0.2, 10.25)], capY: 2.95 },
+  ];
   player.eye = eyeHeight(personOpts);
   player.reducedMotion = reduced;
   player.person = person;
@@ -345,7 +362,7 @@ async function main() {
     hud.setCrowd(level);
     hud.setClockMode(live, clock.day, clock.hour);
     // closed with you inside or on the patio: you're shown out to the front walk
-    const [pu, pv] = F.toFrame(player.x, player.z), onPatio = pu > 2 && pu < 24 && pv < 0.3 && pv > -5.5;
+    const [pu, pv] = F.toFrame(player.x, player.z), onPatio = pu > PATIO.out.u0 && pu < PATIO.out.u1 && pv < 0.3 && pv > PATIO.out.v0;
     if (!firstTime && !open && (def.indoor(pu, pv) || onPatio)) { player.seat = null; const o = L(...fd(1.2, FRONT.doorC)); player.place(o[0], o[1]); hud.toast(`${BAR_NAME} is closed · opens ${Sch.opensAt(S, clock.day, clock.hour)}`); }
     else if (player.clearance(player.x, player.z) < RADIUS - 0.02 && !player.seat) { player.place(player.x, player.z); player.rescues++; }
   };
@@ -416,6 +433,7 @@ async function main() {
   const applyQuality = (qq: Quality, rebuildPeople: boolean) => {
     const P = PRESET[qq];
     quality = qq;
+    applyDetail(qq);
     env.setQuality(P.shadows, 2600);
     renderer.shadowMap.enabled = P.shadows > 0;
     // release the old post chain: EffectComposer.dispose() frees only its two targets and its copy pass, so each pass
@@ -533,10 +551,27 @@ async function main() {
     if (a === 'Drive') { hud.toast(`${BAR_NAME} is on its own page for now. Driving out comes when it joins the game.`, 4.5); return 'drive'; }
     return null;
   };
+  /** the Car button (the owner, 2026-11-16: the bar's exit goes to the lot "accurately and seamlessly"): a tap walks
+   *  you out to your car's door on a path, through the door and across the lot, with no fade and no jump; a second tap
+   *  while that walk is on (or a long press) skips the rest of it */
+  //  (2026-11-23 repair) "on the Car button's walk" is strict: it's the path that tap started, by identity, so a
+  //  place(), a seat, a tap-to-go or any other goTo that replaces the path ends it, and a stale flag can never turn a
+  //  first tap into a skip
+  let carPath: P2[] | null = null, toCarAt = 0;
+  const onCarWalk = () => carPath !== null && player.path === carPath;
+  /** (test hook) the last few Car-button calls: skip, on the walk, a path, ms since the walk started, the queue */
+  const carLog: { t: number; skip: boolean; onWalk: boolean; path: boolean; sinceMs: number; queued: string; did: string }[] = [];
   const walkToCar = (skip: boolean) => {
-    if (skip) { player.place(lot.door.x, lot.door.z); player.yaw = site.yourStall.face + Math.PI; showPath(null); return true; }
+    const on = onCarWalk(), since = Math.round(performance.now() - toCarAt);
+    const log = (did: string) => { carLog.push({ t: Math.round(performance.now()), skip, onWalk: on, path: !!player.path, sinceMs: since, queued: input.actions.join(','), did }); if (carLog.length > 24) carLog.shift(); };
+    // (a second tap skips; one within 0.6 s of the first is the same tap seen twice, or a double tap, and is ignored)
+    if (!skip && on && since < 600) { log('ignored'); return true; }
+    if (skip || on) { log('skip'); carPath = null; player.place(lot.door.x, lot.door.z); player.yaw = site.yourStall.face + Math.PI; player.heading = player.yaw; player.resetCamEase(); showPath(null); return true; }
+    carPath = null;
     const p = player.goTo(lot.door.x, lot.door.z); showPath(p);
     if (!p) hud.toast('No way through to your car from here.');
+    else { carPath = player.path; toCarAt = performance.now(); hud.toast('Walking to your car · tap Car again to skip', 2.5); }
+    log(p ? 'walk' : 'no-path');
     return !!p;
   };
   let preparingUltra = false;
@@ -648,13 +683,23 @@ async function main() {
   if ((!firstVisit && !q.has('hint')) || q.get('hint') === '0') hud.hint(false);
   if (!coarse) { const el = document.getElementById('hint'); if (el) el.textContent = 'W A S D to walk · drag to look · click to go · E to act · V or O for the view'; }
   try { localStorage.setItem('sportsbar.seen', '1'); } catch { /* a convenience */ }
-  const _follow = new THREE.Vector3();
+  const _follow = new THREE.Vector3(), _dir = new THREE.Vector3();
   const avFill = { value: new THREE.Color(0, 0, 0) };
   const shownAct: [string | null, string | null] = [null, null];
   hud.setActions(null, null);
   let fixedCam: { p: THREE.Vector3; t: THREE.Vector3 } | null = null;
   let frozen = false;
-  const simStep = (stick: { x: number; y: number; run: boolean }) => { player.step(stick); };
+  /** on the Car button's walk, the third-person camera follows the way you walk (its look turns toward your body's
+   *  heading over about half a second), so the walk out of the door and across the lot is seen from behind you; a drag
+   *  to look (or the stick) takes the camera back */
+  let lookTouched = 0;
+  const followWalk = (dt: number) => {
+    if (!onCarWalk() || view !== 'third' || player.seat || lookTouched > 0) return;
+    let d = player.heading - player.yaw; d = Math.atan2(Math.sin(d), Math.cos(d));
+    player.yaw += d * (1 - Math.exp(-dt * 2.2));
+    player.pitch += (-0.12 - player.pitch) * (1 - Math.exp(-dt * 2));
+  };
+  const simStep = (stick: { x: number; y: number; run: boolean }) => { player.step(stick); followWalk(STEP); };
   /** your avatar's level of detail and caster, only when the view, the preset or the build changes */
   const applyAvatar = (hideThird: boolean) => {
     const p = person; if (!p) return;
@@ -708,6 +753,21 @@ async function main() {
     frameStats.calls = renderer.info.render.calls; frameStats.tris = renderer.info.render.triangles;
     if (barLook.retroOn) barLook.catchUp(); else env.renderFlare();         // S4: no lens flare in the Retro look
   };
+  /** the exposure eases between inside and outside (the owner's seamless exit): inside stays at S4's 1.0; outside it
+   *  steps down a little by day (the sunlit lot) and up a little after dark, over about half a second, so the door's
+   *  threshold has no jump in brightness. Reduced motion jumps it */
+  let exposure = 1;
+  const exposureTarget = () => (vis.state === 'inside' || view === 'overhead' ? 1 : lerp(0.93, 1.08, night));
+  const easeExposure = (dt: number) => {
+    const t = exposureTarget();
+    exposure = reduced ? t : exposure + (t - exposure) * (1 - Math.exp(-dt / 0.45));
+    renderer.toneMappingExposure = exposure;
+  };
+  /** the patio's heaters: their flames flicker on HD and Ultra (Low keeps them steady) */
+  const flicker = (t: number) => {
+    const base = mats.flame.userData.base as number | undefined; if (base === undefined) return;
+    mats.flame.emissiveIntensity = quality === 'low' || reduced ? base : base * (0.86 + 0.09 * Math.sin(t * 17.3) + 0.05 * Math.sin(t * 41.9 + 1.3));
+  };
   const placeCamera = (dt: number) => {
     const fov = innerHeight > innerWidth ? 78 : 62;
     if (Math.abs(camera.fov - fov) > 0.01) camera.fov = fov;
@@ -715,7 +775,7 @@ async function main() {
     let hide = view === 'first';
     if (fixedCam) { camera.position.copy(fixedCam.p); camera.lookAt(fixedCam.t); hide = false; }
     else if (view === 'overhead') { overhead.update(camera, dt); hide = false; }
-    else { const c = player.camera(camera); hide = c.hide; }
+    else { player.camDt = dt; const c = player.camera(camera); hide = c.hide; }
     if (!fixedCam && life.gameCamera(camera, dt)) hide = false;       // S2b: a game's own view on your turn (gamecams.ts)
     return hide;
   };
@@ -741,6 +801,7 @@ async function main() {
     }
     if (!hud.paused && !preparingUltra) {
       player.look(look.dyaw, look.dpitch);
+      if (Math.abs(look.dyaw) + Math.abs(look.dpitch) > 1e-4) lookTouched = 1.5; else lookTouched = Math.max(0, lookTouched - dt);
       const ts = performance.now();
       acc += dt; let n = 0;
       while (acc >= STEP && n < 6) { simStep(input.stick); acc -= STEP; n++; }
@@ -764,6 +825,8 @@ async function main() {
     // what's drawn: the state from the camera (the rule runs once a frame, after the camera moves)
     const np = nearPoint();
     if (vis.update(camera, view, quality, np)) avDirty = true;
+    if (!onCarWalk()) carPath = null;
+    easeExposure(dt); flicker(simTime);
     parked.update(np.x, np.z);
     if (view === 'overhead') cutNow = setOverheadCut();
     env.update(dt, live ? new Date() : simDate);
@@ -937,6 +1000,19 @@ async function main() {
   };
   const frameRing = (r: P2[]) => r.map(([x, z]) => F.toFrame(x, z).map((v) => +v.toFixed(3)));
   const gate = venue.colliders.find((c) => c.tag === 'gate')!;
+  let ctxInfo = () => ({ lost: 0, restored: 0, isLost: false });
+  /** the walk from the host stand to your car (walkBegin, walkStep): what each step saw */
+  const walkLog = { steps: 0, camJumpMax: 0, camJumpAt: -1, playerStepMax: 0, states: [] as { step: number; state: string }[], camPrev: new THREE.Vector3(), started: false, fadeSeen: false };
+  const shoelace = (r: P2[]) => { let a = 0; for (let i = 0; i < r.length; i++) { const [x0, z0] = r[i], [x1, z1] = r[(i + 1) % r.length]; a += x0 * z1 - x1 * z0; } return Math.abs(a) / 2; };
+  /** the frame as drawn, read back: mean luma (0-255), the share of near-black pixels (luma < 10) and the luma's spread */
+  const readFrame = () => {
+    const gl = renderer.getContext(), w = gl.drawingBufferWidth, h = gl.drawingBufferHeight, buf = new Uint8Array(w * h * 4);
+    renderer.setRenderTarget(null); gl.readPixels(0, 0, w, h, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+    let sum = 0, sum2 = 0, black = 0, n = 0;
+    for (let i = 0; i < buf.length; i += 4 * 7) { const y = 0.2126 * buf[i] + 0.7152 * buf[i + 1] + 0.0722 * buf[i + 2]; sum += y; sum2 += y * y; if (y < 10) black++; n++; }
+    const mean = sum / n;
+    return { w, h, mean: +mean.toFixed(1), black: +(black / n).toFixed(4), spread: +Math.sqrt(Math.max(0, sum2 / n - mean * mean)).toFixed(1) };
+  };
   const hooks = {
     ready: false, frames: 0, buildMs: 0,
     attribution: (slice as { attribution: string }).attribution,
@@ -958,7 +1034,7 @@ async function main() {
         pixelRatio: renderer.getPixelRatio(), rescues: player.rescues, gtao: !!gtao,
       };
     },
-    go(x: number, z: number) { const [lx, lz] = toL(x, z); player.seat = null; showPath(null); const ok = player.place(lx, lz); return ok ? G(player.x, player.z) : null; },
+    go(x: number, z: number) { const [lx, lz] = toL(x, z); player.seat = null; showPath(null); carPath = null; const ok = player.place(lx, lz); return ok ? G(player.x, player.z) : null; },
     tap(x: number, z: number) { const [lx, lz] = toL(x, z); const p = tapGo(lx, lz, null); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((s, c, i) => (i ? s + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     tapSeat(id: number) { const st = venue.seats[id]; if (!st) return null; const p = tapGo(st.ax, st.az, st); return p ? { waypoints: p.map(([a, b]) => G(a, b)), length: +p.reduce((sum, c, i) => (i ? sum + Math.hypot(c[0] - p[i - 1][0], c[1] - p[i - 1][1]) : 0), 0).toFixed(2) } : null; },
     tapScreen(x: number, y: number) { const p = tapScreen(x, y); return p ? { waypoints: p.length, goal: player.pathGoal?.seat ? `seat ${player.pathGoal.seat.id}` : 'ground' } : null; },
@@ -1003,6 +1079,99 @@ async function main() {
     },
     render() { render(); return { calls: frameStats.calls, triangles: frameStats.tris }; },
     freeze(on: boolean) { frozen = on; return frozen; },
+    /** (Vega & Vinnie's) the inside and the patio, m2, and their ratio (the owner: the inside is 3 to 4 times the patio) */
+    areas() { const inside = shoelace(site.unitInner), patio = patioArea(); return { inside: +inside.toFixed(1), patio: +patio.toFixed(1), ratio: +(inside / patio).toFixed(3), patioBox: PATIO }; },
+    /** where outside.ts put the photos' pieces (game x, z), and which stalls it painted as accessible */
+    outside() { return { ...OUTSIDE, adaStalls: outside.ada.map((i) => ({ i, ...G(def.parking.stalls[i].x, def.parking.stalls[i].z) })), yourStall: G(site.yourStall.x, site.yourStall.z), door: G(lot.door.x, lot.door.z) }; },
+    exposure() { return { now: +renderer.toneMappingExposure.toFixed(3), target: +exposureTarget().toFixed(3) }; },
+    context() { return ctxInfo(); },
+    /** draw one frame now and read it back (mean luma, near-black share, spread) */
+    readFrame() { render(); return readFrame(); },
+    /** the walk from the host stand to your car as the Car button makes it: you stand by the host stand facing the
+     *  door, the page's own loop is held, and the Car button's action runs (walkStep advances it) */
+    walkBegin(o: { view?: 'first' | 'third'; from?: [number, number]; faceDoor?: boolean } = {}) {
+      frozen = true; fixedCam = null; life.closeRadial();
+      setView(o.view ?? 'third');
+      const [fu, fv] = o.from ?? [6.0, 7.3], p = L(fu, fv); player.seat = null; player.place(p[0], p[1]);
+      const d = L(...fd(0, FRONT.doorC)); player.yaw = Math.atan2(d[0] - player.x, d[1] - player.z); player.heading = player.yaw; player.pitch = -0.08; player.resetCamEase();
+      const f = document.getElementById('fade'); walkLog.fadeSeen = false;
+      if (f) f.classList.remove('dip');
+      handleAction('car');
+      const path = player.path ? (player.path as unknown as { length?: number }) : null;
+      placeCamera(STEP); camera.updateMatrixWorld(); vis.update(camera, view, quality, nearPoint(), true); exposure = exposureTarget(); renderer.toneMappingExposure = exposure;
+      Object.assign(walkLog, { steps: 0, camJumpMax: 0, camJumpAt: -1, playerStepMax: 0, states: [{ step: 0, state: vis.state }], started: true });
+      walkLog.camPrev.copy(camera.position);
+      return { from: G(player.x, player.z), to: G(lot.door.x, lot.door.z), walking: !!player.path, pathPoints: path?.length ?? null, state: vis.state, toCar: onCarWalk() };
+    },
+    /** n steps of the walk (each a sim step, the doors, the camera, the avatar, the visibility rule and the exposure,
+     *  as the frame runs them), then one frame drawn and read back */
+    walkStep(n: number, o: { read?: boolean } = {}) {
+      for (let i = 0; i < n; i++) {
+        const px = player.x, pz = player.z;
+        updateDoors(STEP); simStep({ x: 0, y: 0, run: false });
+        const hide = placeCamera(STEP); updateAvatar(STEP, hide);
+        if (vis.update(camera, view, quality, nearPoint())) { avDirty = true; walkLog.states.push({ step: walkLog.steps, state: vis.state }); }
+        easeExposure(STEP);
+        const cj = camera.position.distanceTo(walkLog.camPrev), ps = Math.hypot(player.x - px, player.z - pz);
+        if (cj > walkLog.camJumpMax) { walkLog.camJumpMax = cj; walkLog.camJumpAt = walkLog.steps; }
+        walkLog.playerStepMax = Math.max(walkLog.playerStepMax, ps);
+        walkLog.camPrev.copy(camera.position); walkLog.steps++;
+        if (document.getElementById('fade')?.classList.contains('dip')) walkLog.fadeSeen = true;
+      }
+      if (!onCarWalk()) carPath = null;                                    // (as the frame loop does)
+      parked.update(nearPoint().x, nearPoint().z);
+      // the action buttons as the frame loop sets them (a frozen walk frame showed a stale "Drive")
+      { const av = available(); if (av[0] !== shownAct[0] || av[1] !== shownAct[1]) { shownAct[0] = av[0]; shownAct[1] = av[1]; hud.setActions(av[0], av[1]); } }
+      env.update(STEP * n, simDate); env.follow(_follow.set(player.x, player.y, player.z), camera, performance.now() / 1000, STEP * n);
+      const t0 = performance.now(); render(); const ms = performance.now() - t0; frames++;
+      const read = o.read === false ? null : readFrame();
+      const [u, v] = F.toFrame(player.x, player.z), [cu, cv] = F.toFrame(camera.position.x, camera.position.z);
+      // what's pressed against the lens: of 33 level rays across the view from the camera, the share that meet a wall,
+      // glass or a closed door within 0.45 m; the camera's clearance to the nearest; the distance to the nearest door
+      let near = 0; const hf = Math.atan(Math.tan((camera.fov * Math.PI) / 360) * camera.aspect), cy = (camera.getWorldDirection(_dir), Math.atan2(_dir.x, _dir.z));
+      for (let k = 0; k < 33; k++) { const a = cy - hf + (2 * hf * k) / 32; if (set.ray(camera.position.x, camera.position.z, camera.position.x + Math.sin(a) * 0.45, camera.position.z + Math.cos(a) * 0.45, (c) => c.tall && c.tag !== 'pole' && c.tag !== 'tree') < 1) near++; }
+      const doorD = Math.min(...venue.doors.map((d) => { const c = L(d.centre[0], d.centre[1]); return Math.hypot(c[0] - player.x, c[1] - player.z); }));
+      return { step: walkLog.steps, pos: G(player.x, player.z), u: +u.toFixed(2), v: +v.toFixed(2), cam: { u: +cu.toFixed(2), v: +cv.toFixed(2), y: +camera.position.y.toFixed(2), clear: +player.tallClear(camera.position.x, camera.position.z).toFixed(3), nearShare: +(near / 33).toFixed(3) }, doorD: +doorD.toFixed(2), actions: [...shownAct], state: vis.state, walking: !!player.path, toCar: onCarWalk(), exposure: +renderer.toneMappingExposure.toFixed(3), renderMs: +ms.toFixed(1), calls: renderer.info.render.calls, read, nearCar: nearCar() };
+    },
+    carLog() { return carLog.slice(); },
+    /** (test hook) the sun's map's triangles with the casters whose names match each pattern switched off in turn,
+     *  and the casters' names and their draw ranges, to see what fills the map */
+    sunBy(patterns: string[]) {
+      const casters: THREE.Mesh[] = []; scene.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh && m.castShadow) casters.push(m); });
+      const sun = () => measureMaps(measurePass()).sun?.tris ?? 0;
+      const base = sun(), out: Record<string, number> = {};
+      for (const pt of patterns) { const re = new RegExp(pt), off = casters.filter((m) => re.test(m.name || m.parent?.name || '')); for (const m of off) m.castShadow = false; out[pt] = base - sun(); for (const m of off) m.castShadow = true; }
+      const names: Record<string, number> = {}; for (const m of casters) { const k = (m.name || m.parent?.name || '?').replace(/[0-9]+/g, '#'); const g = m.geometry; const n = (g.drawRange.count !== Infinity ? g.drawRange.count : g.index ? g.index.count : g.attributes.position.count) / 3; names[k] = (names[k] ?? 0) + Math.round(n); }
+      return { base, drop: out, names };
+    },
+    /** (test hook) each shadow map's casters as drawn into it (after culling and the draw ranges the shadow hooks set):
+     *  triangles by caster name, per light, from one render with only that light's map updating */
+    mapBy() {
+      const rec = new Map<THREE.Camera, Map<string, number>>(), wrapped: [THREE.Mesh, THREE.Object3D['onBeforeShadow']][] = [];
+      scene.traverse((o) => {
+        const m = o as THREE.Mesh; if (!m.isMesh || !m.castShadow) return;
+        const prev = m.onBeforeShadow; wrapped.push([m, prev]);
+        const fn = (r: unknown, ob: unknown, c: unknown, sc: THREE.Camera, g: THREE.BufferGeometry, dm: unknown, grp: { start: number; count: number } | null) => {
+          (prev as unknown as (...a: unknown[]) => void).call(m, r, ob, c, sc, g, dm, grp);
+          const total = g.index ? g.index.count : g.attributes.position.count;
+          let st = g.drawRange.start, en = Math.min(total, g.drawRange.start + g.drawRange.count);
+          if (grp) { st = Math.max(st, grp.start); en = Math.min(en, grp.start + grp.count); }
+          const inst = (m as THREE.InstancedMesh).isInstancedMesh ? (m as THREE.InstancedMesh).count : 1;
+          const tris = Math.max(0, Math.floor((en - st) / 3)) * inst, k = (m.name || m.parent?.name || '?').replace(/[0-9]+/g, '#');
+          let t = rec.get(sc); if (!t) { t = new Map(); rec.set(sc, t); } t.set(k, (t.get(k) ?? 0) + tris);
+        };
+        m.onBeforeShadow = fn as unknown as THREE.Object3D['onBeforeShadow'];
+      });
+      try {
+        const maps = measureMaps(measurePass()), out: Record<string, { total: number; by: [string, number][] }> = {};
+        const lights: [string, THREE.Light][] = [];
+        if (renderer.shadowMap.enabled && env.sun.castShadow) lights.push(['sun', env.sun]);
+        poolSpots.forEach((l, i) => { if (l && l.castShadow) lights.push([`pool-${i + 1}`, l]); });
+        for (const [n, l] of lights) { const t = rec.get(l.shadow!.camera); out[n] = { total: maps[n]?.tris ?? 0, by: t ? [...t.entries()].sort((a, b) => b[1] - a[1]) : [] }; }
+        return out;
+      } finally { for (const [m, prev] of wrapped) m.onBeforeShadow = prev; }
+    },
+    walkLog() { return { steps: walkLog.steps, camJumpMax: +walkLog.camJumpMax.toFixed(3), camJumpAt: walkLog.camJumpAt, playerStepMax: +walkLog.playerStepMax.toFixed(3), states: walkLog.states, fadeSeen: walkLog.fadeSeen }; },
     reducedMotion(on: boolean) { hud.onMotion(on); return { reduced, bobOff: player.reducedMotion, transitionsOff: document.body.classList.contains('rm') }; },
     bobRange() { const ys: number[] = []; const e = new THREE.Vector3(); for (let i = 0; i < 60; i++) { player.step({ x: 0, y: 0.75, run: false }); ys.push(player.eyePos(e).y - player.y); } return +(Math.max(...ys) - Math.min(...ys)).toFixed(4); },
     camera(p?: [number, number, number, number, number, number] | null) { if (p === null) { fixedCam = null; return null; } if (p) { const a = toL(p[0], p[2]), b = toL(p[3], p[5]); fixedCam = { p: new THREE.Vector3(a[0], p[1], a[1]), t: new THREE.Vector3(b[0], p[4], b[1]) }; placeCamera(0); camera.updateMatrixWorld(); } return { p: G(camera.position.x, camera.position.z), y: camera.position.y }; },
@@ -1016,7 +1185,7 @@ async function main() {
     layout() {
       return {
         front: { walk: frameRing(venue.region.front), ramp: venue.layout.rampLow, planters: FRONT.planters, bikes: FRONT.bikes, frontWalk: venue.layout.frontRing },
-        patio: { fence: [[2.0, 0.024], [2.0, -5.5], [24.0, -5.5], [24.0, 0.288]], inner: [[2.05, -5.45], [23.95, -5.45]], zones: PZONES },
+        patio: { fence: [[PATIO.out.u0, southWallV(PATIO.out.u0)], [PATIO.out.u0, PATIO.out.v0], [PATIO.out.u1, PATIO.out.v0], [PATIO.out.u1, southWallV(PATIO.out.u1)]], inner: [[PATIO.u0, PATIO.v0], [PATIO.u1, PATIO.v0]], zones: PZONES },
         aisle416: { line: lot.aisle.map(([x, z]) => F.toFrame(x, z)), ribbon: frameRing(lot.aisleRibbon), width: FRONT.aisle.w },
         building: { host: frameRing(site.host.map(([x, z]) => toL(x, z))), unitOuter: site.unitOuter, unitInner: site.unitInner, rest: site.restRing },
         trees: TREES, lanePath: def.staffPath, handoff: HANDOFF, lane: (venue.layout as { lane: P2[][] }).lane, zones: ZONES, slots: venue.slots.map((s) => ({ id: s.id, zone: s.zone, group: s.group ?? null, kind: s.kind, at: s.at, r: s.r, stand: s.stand })),
@@ -1224,6 +1393,26 @@ async function main() {
   // in the game: what dispose releases (embed.ts)
   const em = embed;
   if (em) em.cleanup = () => { removeEventListener('resize', onResize); releaseS4(); s4Release = () => {}; em.release(renderer, scene, [person, parked, composer], [hud, barHud, bin]); };
+  { const t = document.querySelector('#place b'); if (t) t.textContent = BAR_NAME.toUpperCase(); }
+  // a lost WebGL context (iOS drops it in the background): the venue's own canvas, in the game too (the venue draws on
+  // its own renderer and canvas, not the game's, so the game's onContextRestored never fires for it). On the restore,
+  // what was only ever drawn on the GPU is drawn again: the sky's PMREM environment, HD and Ultra's reflection cube and
+  // the shadow maps (three re-creates programs, buffers and canvas textures itself)
+  const onLost = (e: Event) => { e.preventDefault(); ctxLost++; };
+  const onRestored = () => {
+    ctxRestored++;
+    try {
+      (env as unknown as { rebuildEnv(): void }).rebuildEnv();
+      envInternals.envDirty = true;
+      barLook.bake(cubeAt, night, true);
+      renderer.shadowMap.needsUpdate = true;
+      for (const l of poolSpots) if (l) l.shadow.needsUpdate = true;
+    } catch (err) { console.warn('context restore', err); }
+  };
+  let ctxLost = 0, ctxRestored = 0;
+  if (embed) { embed.listen(canvas, 'webglcontextlost', onLost); embed.listen(canvas, 'webglcontextrestored', onRestored); }
+  else { canvas.addEventListener('webglcontextlost', onLost); canvas.addEventListener('webglcontextrestored', onRestored); }
+  ctxInfo = () => ({ lost: ctxLost, restored: ctxRestored, isLost: renderer.getContext().isContextLost() });
   hud.show();
   loading(1, 'Ready');
   hooks.buildMs = Math.round(performance.now() - t0);
@@ -1267,7 +1456,7 @@ function plantTrees(trees: { x: number; z: number; y: number; s: number; kind: s
 }
 
 /**
- * Mount Stoppage Time in host (J1): the game passes the page's markup (html), your car and paint, the quality, the
+ * Mount Vega & Vinnie’s in host (J1): the game passes the page's markup (html), your car and paint, the quality, the
  * clock and onDrive; the page's own boot below passes nothing (the markup is there, the options are the address).
  */
 export function mount(host: HTMLElement, o: MountOptions = {}) {
