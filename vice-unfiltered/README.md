@@ -132,6 +132,15 @@ The studio's Campaign rules page is the source of truth. Re-check the live brief
 - `#DylanPage`.
 - Footage from the marathon from Nov 19.
 
+**IShowSpeed × Expedia ($8,000)**
+- Footage only from the Nov 6 stream, 2:46:29 to the end.
+- Must say "Expedia", and Expedia is a major focus.
+- Name the destination accurately.
+- `#IShowSpeed`.
+- Only the Expedia logo allowed (thumbnail `"logo"` = Expedia file, `"brand": false`).
+- TikTok, Reels and Shorts only.
+- Streamer/travel-niche account only.
+
 **All campaigns**
 - English text only.
 - No AI-generated footage, voices or reactions.
