@@ -37,6 +37,9 @@ export interface Rig {
   wrist: { p: V3; n: V3 }[];    // the hand-mesh seams (n points toward the hand), L then R
   heel: number;                 // heel height the feet are posed for (m)
   pitch: number;                // the feet's pitch for that heel (rad, about x at the ankle)
+  /** (graphics pass, 2026-11-15) the pitch again when the toes lie flat on the ground (the foot bends at its ball, as in
+   *  a high heel); 0 when the foot is pitched as one piece, as before */
+  toeBend: number;
   dims: {
     hipY: number; kneeY: number; ankleY: number; crotchY: number; waistY: number; chestY: number; shoulderY: number; navelY: number;
     hipHalf: number; waistHalf: number; chestHalf: number; shoulderX: number; thighR: number; seatZ: number; bellyZ: number; chestZ: number;
@@ -53,10 +56,13 @@ export interface Rig {
 /** subcutaneous fat thickness (m) from the 0..1 fat parameter */
 const fatT = (f: number) => 0.002 + 0.068 * Math.pow(clamp(f), 1.8);   // 0.055 left fat=1 reading only "heavy"
 
-export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
+export function buildRig(b: BodyShape, face: FaceShape, heel = 0, toeFlat = false): Rig {
   const m = b.sex === 'm';
   const H = b.height, s = H / 1.75, ws = 0.35 + 0.65 * s;
-  const T = fatT(b.fat), mu = clamp(b.muscle), soft = clamp(b.soft), ap = clamp(b.apple, -1, 1);
+  // (bulk: muscle past the old maximum; every muscle term below is linear in mu, so the chest, shoulders, arms, back,
+  // neck and legs all grow with it. Unset: mu is the clamped muscle, as before)
+  const T = fatT(b.fat), mu = clamp(b.muscle) + clamp(b.bulk ?? 0), soft = clamp(b.soft), ap = clamp(b.apple, -1, 1);
+  const muP = Math.min(mu, 1) + 0.35 * Math.max(0, mu - 1);   // (bulk: the pectorals grow wider and taller, but only a little deeper: plates, not domes)
   const fat = {
     T,
     // the belly saturates (a soft limit) while the rest keeps filling out: a very heavy body is heavy all over,
@@ -88,7 +94,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const shoulderX = (m ? 0.168 : 0.149) * ws * (1 + 0.09 * b.shoulders + 0.04 * mu) + fat.chest * 0.25;
   const hipJX = (m ? 0.083 : 0.088) * ws * (1 + 0.07 * b.hips);
   const hipHalf = (m ? 0.148 : 0.163) * ws * (1 + 0.08 * b.hips) + 0.55 * fat.hip;
-  const waistHalf = (m ? 0.127 : 0.11) * ws * (1 + 0.1 * b.waist) * (m ? 1 : 1 - 0.04 * Math.max(0, -b.waist)) + 0.75 * fat.waist + 0.012 * mu * (m ? 1 : 0.5);
+  const waistHalf = (m ? 0.127 : 0.11) * ws * (1 + 0.1 * b.waist) * (m ? 1 : 1 - 0.04 * Math.max(0, -b.waist)) + 0.75 * fat.waist + 0.012 * Math.min(mu, 1) * (m ? 1 : 0.5);
   const chestHalf = (m ? 0.137 : 0.121) * ws * (1 + 0.05 * b.shoulders) + 0.35 * fat.chest + 0.018 * mu;
   const upperArm = 0.186 * H, foreArm = 0.146 * H, handLen = 0.108 * H;
   const neckTopY = H - 0.17 * hs, neckBaseY = 0.812 * H;
@@ -127,9 +133,15 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const footLen = 0.152 * H;
   J[B.thighL] = hpL; J[B.shinL] = knL; J[B.footL] = anL;
   // heels lift the heel and pitch the foot about the ball
-  const pitch = heel > 0 ? Math.asin(clamp(heel / (footLen * 0.72), 0, 0.8)) : 0;
+  // (toeFlat: the heel rises about the ball, 16 cm ahead of it, so the pitch for the same heel is steeper)
+  const pitch = heel > 0 ? Math.asin(clamp(heel / (toeFlat ? 0.158 * s : footLen * 0.72), 0, 0.8)) : 0;
   const footP = (p: V3): V3 => { const q = sub(p, anL); return add(anL, rot(q, [1, 0, 0], pitch)); };
   J[B.toeL] = footP(add(anL, [0, -0.058 * s, 0.13 * s]));
+  // (toeFlat) the foot bends at its ball: the toes lie flat on the ground and the ball carries the weight, so the ground
+  // is under the ball (not under the toes' tip, 5 cm lower); `heel` then reports that drop for the root's lift
+  const bend = toeFlat && pitch > 0;
+  const ballW = footP(add(anL, [0.002 * s, -0.066 * s, 0.122 * s]));
+  if (bend) heel = -footP(add(anL, [0, -0.079 * s, 0.122 * s]))[1] / 0.92;
   for (const [l, r] of [[B.thighL, B.thighR], [B.shinL, B.shinR], [B.footL, B.footR], [B.toeL, B.toeR]]) J[r] = mirror(J[l]);
 
   const C = G.core;
@@ -164,7 +176,8 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   f.ea([0, 0.725 * H, -0.072 * s - 0.3 * fat.chest], 0.105 * ws + 0.3 * fat.chest, 0.115 * s, 0.04 * s + 0.25 * fat.chest, C, 0.04 * s, B.chest);
   for (const sg of [1, -1]) {
     // lats (a V on muscular backs) and the shoulder blades
-    f.ea([sg * (chestHalf * 0.78), 0.695 * H, -0.045 * s], 0.035 * ws + 0.03 * mu + 0.25 * fat.chest, 0.1 * s, 0.06 * s, C, 0.04 * s, B.chest);
+    // (bulk: the lats sit higher, under the armpits, and grow only a little past the old maximum: a V, not a barrel)
+    f.ea([sg * (chestHalf * 0.78), (b.bulk ? 0.72 : 0.695) * H, -0.045 * s], 0.035 * ws + 0.03 * muP + 0.25 * fat.chest, 0.1 * s, 0.06 * s, C, 0.04 * s, B.chest);
     f.ea([sg * 0.075 * ws, 0.75 * H, -0.085 * s - 0.25 * fat.chest], 0.055 * ws, 0.075 * s, 0.03 * s, C, 0.035 * s, B.chest);
     // trapezius slope from the neck to the shoulder
     // (it starts outside the neck column and lower, so the slope begins at the neck's base rather than under the ears)
@@ -173,7 +186,10 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
     f.rc([sg * 0.018 * ws, 0.808 * H, 0.025 * s], [sg * (shoulderX - 0.012), 0.818 * H, -0.004 * s], 0.0075 * s + 0.6 * fat.chest, 0.0085 * s + 0.4 * fat.chest, C, 0.009 * s, sg > 0 ? B.clavL : B.clavR);
     if (m || b.bust < 0.15) {
       // pectorals
-      f.ea([sg * 0.062 * ws, 0.738 * H, 0.068 * s + 0.2 * fat.chest], 0.068 * ws + 0.012 * mu, 0.052 * s + 0.01 * mu + 0.25 * fat.chest, 0.026 * s + 0.024 * mu + 0.5 * fat.chest, C, 0.035 * s, B.chest);
+      const pf = clamp(b.chestFlat ?? 0);   // (chestFlat: plates; unset, the ellipsoid where and as it was)
+      f.ea([sg * 0.062 * ws, (0.738 + 0.014 * pf) * H, (0.068 - 0.014 * pf) * s + 0.2 * fat.chest], 0.068 * ws + 0.012 * mu, (0.052 + 0.012 * pf) * s + 0.01 * mu + 0.25 * fat.chest, 0.026 * s * (1 - 0.2 * pf) + 0.024 * muP * (1 - 0.7 * pf) + 0.5 * fat.chest * (1 - 0.4 * pf), C, (0.035 + 0.012 * pf) * s, B.chest);   // (repair 2026-11-16: flatter again, set further back and blended wider: the profile still read as a bust)
+      // (bulk) the sternum between two big pectorals: a shallow groove, not a cleft
+      if (b.bulk && sg > 0) f.ea([0, 0.742 * H, 0.066 * s + 0.2 * fat.chest], 0.05 * ws, 0.055 * s, 0.018 * s + 0.022 * muP, C, 0.04 * s, B.chest);
     } else {
       // the bust (always clothed)
       // a natural shape: set a little apart and turned slightly out, the upper slope blending into the chest, the
@@ -282,7 +298,8 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
     const fa = (p: V3) => X(norm(rot(p, [1, 0, 0], pitch)));
     f.ell(F([0, -0.047, -0.036]), fa([0, 0, 1]), [0, 1, 0], 0.042, 0.031 * s, 0.031 * s, gL, 0.02 * s, bFt);    // heel
     f.cone(F([0, -0.03, -0.02]), F([0.004, -0.058, 0.115]), 0.03 * s, 0.024 * s, fa([0, 1, 0]), 0.78, 1.2, gL, 0.02 * s, bFt, 1.55);
-    f.ell(F([0.002, -0.064, 0.17]), fa([0, 0, 1]), fa([0, 1, 0]), 0.045 * s, 0.0145 * s, 0.043 * s, gL, 0.015 * s, bTo);  // toes
+    if (bend) f.ell(X(add(ballW, [0, 0.001 * s, 0.05 * s])), [0, 0, 1], [0, 1, 0], 0.052 * s, 0.0135 * s, 0.034 * s, gL, 0.015 * s, bTo);  // toes, flat, drawn together as a dress shoe holds them
+    else f.ell(F([0.002, -0.064, 0.17]), fa([0, 0, 1]), fa([0, 1, 0]), 0.045 * s, 0.0145 * s, 0.043 * s, gL, 0.015 * s, bTo);  // toes
   };
   buildLeg(1); buildLeg(-1);
 
@@ -301,7 +318,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0): Rig {
   const wristP = madd(wrL, dFore, -0.012 * s);
   f.finalize();
   return {
-    H, s, ws, joints: J, field: f, head, sigma, armAngle: armA, legAngle: legA, heel, pitch,
+    H, s, ws, joints: J, field: f, head, sigma, armAngle: armA, legAngle: legA, heel, pitch, toeBend: bend ? pitch : 0,
     neckSeam: head.toBody([0, -0.16, 0])[1],
     wrist: [{ p: wristP, n: wristN }, { p: mirror(wristP), n: mirror(wristN) }],
     dims: {
