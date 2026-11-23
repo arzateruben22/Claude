@@ -434,6 +434,7 @@ function makeBody(P: ShapeParams) {
     }
 
     // arch lips (the skin's edge turned in) and the wheel-well liners
+    const hyperWell = P.noseStyle === 'hyper';
     for (const A of ARCHES) {
       if (!keep(v3(0.9, 0.6, A.z))) continue;
       for (const sd of [1, -1]) {
@@ -457,11 +458,16 @@ function makeBody(P: ShapeParams) {
         const phc = Math.asin((YSILL - A.yc) / A.R), rowsL: V3[][] = [];
         for (let k = 0; k <= 24; k++) {
           const ph = phc + (Math.PI - 2 * phc) * (k / 24), z = A.z + Math.cos(ph) * (A.R + 0.004), y = A.yc + Math.sin(ph) * (A.R + 0.004);
-          rowsL.push([v3(sd * (body.side(z, Math.max(YSILL, Math.min(y, 0.7))) - 0.03), y, z), v3(sd * 0.47, y, z)]);
+          const xo = body.side(z, Math.max(YSILL, Math.min(y, 0.7))) - 0.03;
+          // (the hypercar: its sunken bonnet runs lower than the well's top by the humps' inner sides, so the liner
+          // stays under the skin there, or it stood up through the bonnet as a dark wall, seen from the seat too)
+          const cap = (x: number, yy: number) => (hyperWell ? Math.min(yy, body.top(z, x) - 0.012) : yy);
+          rowsL.push([v3(sd * xo, cap(xo, y), z), v3(sd * 0.47, cap(0.47, y), z)]);
         }
         kit.add('liner', gridGeo(rowsL, { flip: sd > 0 }), null, 0.2);
         // inner wall of the well
         const wall = new THREE.CircleGeometry(A.R + 0.004, 24, phc, Math.PI - 2 * phc); wall.rotateY(sd * Math.PI / 2); wall.translate(sd * 0.47, A.yc, A.z);
+        if (hyperWell) { const wp = wall.attributes.position; for (let k = 0; k < wp.count; k++) wp.setY(k, Math.min(wp.getY(k), body.top(wp.getZ(k), 0.47) - 0.012)); }
         kit.add('liner', wall, null, 0.2);
       }
     }

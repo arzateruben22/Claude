@@ -265,10 +265,11 @@ const HYPER: ShapeParams = {
   arch: [0.4, 0.42],
   // (M1b: the coke-bottle of the sheet's TOP: the front fenders and the rear haunches stand out as pods round a
   // waist of 0.845 m at the cabin; the haunches 1.045 m)
-  WP: [[-2.43, 0.88], [-2.2, 0.96], [-1.9, 0.995], [-1.6, 1.0], [-1.28, 1.0], [-0.95, 0.965], [-0.7, 0.915], [-0.45, 0.87], [-0.2, 0.845], [0.15, 0.845], [0.45, 0.88], [0.8, 0.96], [1.2, 1.025], [1.56, 1.045], [1.95, 1.035], [2.17, 1.015], [2.29, 0.985]],
-  // (2026-11-23: the references' fender humps climb faster off the nose and hold their crest back over the moved
-  // wheel, 0.82 m from z -1.5 to -1.05, measured on their side view at the tyres' scale)
-  FH: [[-2.43, 0.36], [-2.3, 0.44], [-2.15, 0.54], [-2.0, 0.63], [-1.85, 0.705], [-1.7, 0.765], [-1.5, 0.81], [-1.28, 0.825], [-1.05, 0.81], [-0.8, 0.77], [-0.4, 0.725], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
+  WP: [[-2.43, 0.88], [-2.2, 0.96], [-1.9, 0.995], [-1.6, 1.0], [-1.28, 1.0], [-0.95, 0.948], [-0.7, 0.912], [-0.45, 0.87], [-0.2, 0.845], [0.15, 0.845], [0.45, 0.88], [0.8, 0.96], [1.2, 1.025], [1.56, 1.045], [1.95, 1.035], [2.17, 1.015], [2.29, 0.985]],
+  // (2026-11-23: the references' fender humps hold their crest back over the moved wheel, about 0.82 m from z -1.5
+  // to -1.15, measured on their side view at the tyres' scale; off the nose they keep the old climb, so the blades and
+  // their beams stay under 0.5 m)
+  FH: [[-2.43, 0.36], [-2.3, 0.42], [-2.15, 0.485], [-2.0, 0.6], [-1.85, 0.695], [-1.7, 0.765], [-1.5, 0.815], [-1.28, 0.825], [-1.15, 0.8], [-1.05, 0.77], [-0.8, 0.74], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
   // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
   // the spine and the openings sit in), up to a lip across the tail that carries the red bar
   // (M1b repair: the bonnet's middle 1 to 2.5 cm lower ahead of the cowl, so it no longer domes up into the hero
@@ -282,7 +283,12 @@ const HYPER: ShapeParams = {
   // narrow spine to the wing
   GB: [[-1.15, 0.47], [-0.7, 0.5], [-0.1, 0.5], [0.35, 0.45], [0.7, 0.32], [1.0, 0.24], [1.4, 0.17], [1.8, 0.13], [2.0, 0.11]],
   ZC0: -1.15, ZC1: 2.0, DROP: 0.1, ROLL: 0.2, P: 4, K: 0.035,
-  crown: 2.6,
+  // (2026-11-23: 2.6 -> 1.6, the humps' inner slopes rise sooner off the sunken centre. With the front wheels 0.24 m
+  // back their wells' liners no longer stand up through the bonnet beside the cowl (car-body keeps them under the
+  // skin); those dark walls had been much of v25's 'hood' from the seat. The slopes now carry it: the iPhone seat view's
+  // hood share 1.8% (v25 2.0% with those walls in it), over the suite's
+  // 1.6% floor, with the bonnet's centre line where it was)
+  crown: 1.6,
   nose: { R: 0.3, p: 2.8, Ry: 0.12, tuck: 0.13, tuckY: 0.4 },
   tail: { R: 0.14, p: 2.7, Ry: 0.02, tuck: 0.08, tuckY: 0.5 },
   // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
