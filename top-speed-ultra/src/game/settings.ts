@@ -18,6 +18,9 @@ export type HudStyle = 'modern' | 'minimal';
 export type Style = 'standard' | 'retro';   // RS1: the Retro look on Low; with Low, the default for a new player (SETTINGS_V 3)
 
 export type Look = 'ultra' | 'hd';
+// The menu and Settings' colours (owner, 2026-11-18): Midnight (dark) or Velocity (light); Auto follows the device's
+// prefers-color-scheme. The in-drive HUD keeps its own look whichever is picked.
+export type Theme = 'auto' | 'light' | 'dark';
 export interface Settings {
   quality: Quality;
   adaptive: boolean;        // the frame-time governor (src/game/render/governor.ts): steps effects down to hold 60 (or a steady 30)
@@ -52,6 +55,7 @@ export interface Settings {
   // the art direction of the interface (the owner's style library, PROJECT_OC_STYLE_GUIDE.md): 'ultra' futuristic
   // luxury (the default), 'hd' modern realistic. The car still sets the accent; the look sets the surfaces and shapes
   look: Look;
+  theme: Theme;             // Settings > Graphics' Appearance: Auto follows the device, or Light (Velocity) / Dark (Midnight)
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
@@ -65,7 +69,10 @@ export const FOV_DEFAULT = 10;
 // 3: Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): settings saved before
 // it by a player who never picked the Graphics preset themselves (qualityChosen false) move to Low + Retro once; a
 // player who picked keeps their preset and style as they were.
-export const SETTINGS_V = 3;
+// 4: Graphics is only two choices, Retro Low and Ultra (owner, 2026-11-18): settings saved before it move to the nearer
+// of the two (Low and Medium to Retro Low; High and Ultra to Ultra, with Adaptive quality on behind it), once; the
+// Futuristic/Realistic look goes back to the one look. The first-run default stays Retro Low.
+export const SETTINGS_V = 4;
 
 export interface QualityPreset {
   label: string;
@@ -125,6 +132,17 @@ export const RETRO: QualityPreset = { ...QUALITY.low, label: 'Retro · Low', ren
 export const retroOn = (s: Pick<Settings, 'quality' | 'style'>) => s.quality === 'low' && s.style === 'retro';
 export const presetFor = (s: Pick<Settings, 'quality' | 'style'>): QualityPreset => (retroOn(s) ? RETRO : QUALITY[s.quality]);
 
+// The two Graphics choices the player sees (owner, 2026-11-18): Retro Low (the Low world in the Retro style) and Ultra.
+// The four internal presets stay (the graphics check, the governor and the suite use them); the menu maps onto the
+// nearer of the two. Ultra keeps Adaptive quality on behind it (the frame-time governor), so it is switched on with it.
+export type Graphics = 'retro' | 'ultra';
+export const GRAPHICS: Record<Graphics, { label: string; blurb: string }> = {
+  retro: { label: 'Retro Low', blurb: 'The default: Low\'s world in the Retro style, cel-shaded with hard sun shadows, at full resolution; 0.9 km of road. Made for phones.' },
+  ultra: { label: 'Ultra', blurb: 'Everything: bloom, 4x MSAA, ambient occlusion, a 4K shadow map, denser scenery, 2.4 km of road.' },
+};
+export const graphicsOf = (s: Pick<Settings, 'quality'>): Graphics => (s.quality === 'high' || s.quality === 'ultra' ? 'ultra' : 'retro');
+export const graphicsPatch = (g: Graphics): Partial<Settings> => (g === 'ultra' ? { quality: 'ultra', style: 'standard', adaptive: true, qualityChosen: true } : { quality: 'low', style: 'retro', qualityChosen: true });
+
 // The frame-time governor's floors (SMOOTH): the lowest render scale it may take, as a share of the preset's own
 // resolution (its pixel ratio on this screen). High and Ultra keep at least three quarters of theirs; Low and Medium
 // may go to half. The absolute floor of 0.5 device pixels per CSS pixel holds as before.
@@ -174,6 +192,20 @@ export const DENSITY: Record<Density, { label: string; perKmLane: number; bold: 
   expert:   { label: 'Expert',   perKmLane: 9.5, bold: 0.45 },
 };
 
+// The four traffic modes the menu offers for a run (owner, 2026-11-17/18), each one of the traffic densities above:
+// Zero traffic (with the drift readout and the Drift Score board), Light, Medium and Extreme (Fastest Minute boards).
+// The saved value stays `density`, so a setting saved before reads as the nearest mode (Heavy and Expert are Extreme).
+export type TrafficMode = 'zero' | 'light' | 'medium' | 'extreme';
+export const TRAFFIC: Record<TrafficMode, { label: string; density: Density; sub: string; line: string }> = {
+  zero:    { label: 'Zero traffic', density: 'none',     sub: 'Drift mode',  line: 'An empty freeway with the drift readout on: chain slides for your Drift Score.' },
+  light:   { label: 'Light',        density: 'light',    sub: 'Open road',   line: 'Simulated light traffic: room to run. Your Fastest Minute is the best 60 s average speed.' },
+  medium:  { label: 'Medium',       density: 'moderate', sub: 'Weave',       line: 'Simulated medium traffic: gaps close and open. Your Fastest Minute is the best 60 s average speed.' },
+  extreme: { label: 'Extreme',      density: 'expert',   sub: 'Hold nerve',  line: 'Simulated extreme traffic: packed lanes and aggressive drivers. Your Fastest Minute is the best 60 s average speed.' },
+};
+export const TRAFFIC_IDS = Object.keys(TRAFFIC) as TrafficMode[];
+export const trafficOf = (d: Density): TrafficMode => (d === 'none' ? 'zero' : d === 'light' ? 'light' : d === 'moderate' ? 'medium' : 'extreme');
+export const driftOn = (d: Density) => d === 'none';
+
 export const MODES: Record<Mode, { label: string; blurb: string }> = {
   free:     { label: 'Free Drive',     blurb: 'All of Orange County\'s freeways, no clock. Take any interchange.' },
   survival: { label: 'Speed Survival', blurb: 'Stay over 100 mph. Near misses and clean passes build the streak. One real crash ends it.' },
@@ -210,7 +242,7 @@ export function defaults(): Settings {
   return {
     quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
+    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', theme: 'auto', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
 }
 
@@ -266,10 +298,17 @@ function readSettings(): { s: Settings; migrated: boolean } {
     // own pick (qualityChosen): their quality and style as they were (a style never saved reads as the old 'standard')
     const chose = v.qualityChosen === true, toRetro = from < 3 && !chose;
     const style: Style = toRetro ? 'retro' : v.style === 'retro' || v.style === 'standard' ? v.style : from < 3 ? 'standard' : d.style;
+    let quality: Quality = toRetro ? 'low' : v.quality && v.quality in QUALITY ? v.quality : d.quality;
+    let style2: Style = style, adaptive = v.adaptive !== false;
+    // Graphics is two choices at SETTINGS_V 4: the nearer of Retro Low and Ultra (a pick made on any preset)
+    if (from < 4) {
+      if (quality === 'high' || quality === 'ultra') { quality = 'ultra'; style2 = 'standard'; adaptive = true; }
+      else { quality = 'low'; style2 = 'retro'; }
+    }
     const s: Settings = {
       ...d, ...v,
       fov, v: SETTINGS_V,
-      quality: toRetro ? 'low' : v.quality && v.quality in QUALITY ? v.quality : d.quality,
+      quality,
       density: v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,
@@ -283,11 +322,12 @@ function readSettings(): { s: Settings; migrated: boolean } {
       hudStyle: v.hudStyle === 'minimal' || v.hudStyle === 'modern' ? v.hudStyle : d.hudStyle,
       handling: typeof v.handling === 'number' && Number.isFinite(v.handling) ? Math.min(1, Math.max(0, v.handling)) : d.handling,
       owner: v.owner === true,
-      adaptive: v.adaptive !== false,
+      adaptive,
       qualityChosen: chose,
       showPerf: v.showPerf === true,
-      style,
-      look: v.look === 'hd' ? 'hd' : 'ultra',
+      style: style2,
+      look: from < 4 ? 'ultra' : v.look === 'hd' ? 'hd' : 'ultra',
+      theme: v.theme === 'light' || v.theme === 'dark' ? v.theme : 'auto',
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
