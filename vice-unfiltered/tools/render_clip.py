@@ -52,7 +52,7 @@ FONTS = {
     "bebas": os.path.join(ROOT, "assets/fonts/bebas-neue-latin-400-normal.woff"),
 }
 W, H, SR = 1080, 1920, 48000
-INSERTS = ("insert_image", "static", "freeze")
+INSERTS = ("insert_image", "static", "freeze", "deal_with_it")
 SFX_TARGET_LUFS = -14.0
 
 
@@ -177,6 +177,65 @@ def overlay_png(spec, out):
 
 
 # ---------------------------------------------------------------- layout
+def src_to_canvas(job, src_w, src_h, x, y):
+    """Map a source-pixel point to the 1080x1920 canvas produced by layout_filter (crop / fit / 9:16)."""
+    lay = job.get("layout", {"mode": "fit"})
+    if lay["mode"] == "crop":
+        rx, ry, rw, rh = lay["rect"]
+        s = W / rw
+        yc = int(round(float(lay.get("y", 0.5)) * H))
+        h2 = round(rh * s / 2) * 2
+        return (x - rx) * s, (y - ry) * s + yc - h2 / 2
+    if lay["mode"] == "split":
+        fx, fy, fw, fh = lay["facecam"]
+        face_h = int(lay.get("face_h", 640))
+        s = max(W / fw, face_h / fh)
+        return (x - fx) * s - (fw * s - W) / 2, (y - fy) * s - (fh * s - face_h) / 2
+    if abs(src_w / src_h - W / H) < 0.01:
+        return x * W / src_w, y * H / src_h
+    s = min(W / src_w, H / src_h)
+    return x * s + (W - src_w * s) / 2, y * s + (H - src_h * s) / 2
+
+
+def deal_with_it_frames(base_img, e, eyes_canvas, n, fps, outdir):
+    """Frozen frame + pixel glasses dropping from above the top edge onto the eyes (ease-out with a small
+    settle), then black & white with the glasses kept black. Writes n PNG frames; returns info."""
+    (lx, ly), (rx, ry) = eyes_canvas
+    g = Image.open(resolve(e.get("glasses", "assets/stickers/deal_with_it_glasses.png"))).convert("RGBA")
+    ax, ay, bx, by = e.get("lens_centers", [8 / 32, 4.5 / 7, 24 / 32, 4.5 / 7])  # fractions of the glasses PNG
+    d_eye = math.hypot(rx - lx, ry - ly)
+    scale = d_eye / ((bx - ax) * g.width) * float(e.get("fit", 1.0))
+    gw, gh = max(2, round(g.width * scale)), max(2, round(g.height * scale))
+    g = g.resize((gw, gh), Image.NEAREST)                      # nearest-neighbour keeps pixel edges crisp
+    ang = math.degrees(math.atan2(ry - ly, rx - lx))
+    pivot = ((ax + bx) / 2 * gw, (ay + by) / 2 * gh)           # midpoint between the lens centres
+    pad = int(max(gw, gh))
+    canvas_g = Image.new("RGBA", (gw + 2 * pad, gh + 2 * pad), (0, 0, 0, 0))
+    canvas_g.alpha_composite(g, (pad, pad))
+    rot = canvas_g.rotate(-ang, resample=Image.NEAREST, center=(pad + pivot[0], pad + pivot[1]))
+    pcx, pcy = pad + pivot[0], pad + pivot[1]                  # pivot location inside rot
+    tx, ty = (lx + rx) / 2, (ly + ry) / 2                      # landing point = eye midpoint
+    bbox = rot.getchannel("A").getbbox()
+    start_y = -(bbox[3] - pcy) - 10                            # whole glasses above the top edge
+    drop, c1 = float(e.get("drop", 0.7)), float(e.get("settle", 0.9))
+    color = base_img.convert("RGB")
+    gray = color.convert("L").convert("RGB")
+    for k in range(n):
+        t = k / fps
+        if t < drop:
+            p_ = t / drop
+            ease = 1 + (c1 + 1) * (p_ - 1) ** 3 + c1 * (p_ - 1) ** 2   # ease-out-back: tiny overshoot, settles
+            y = start_y + (ty - start_y) * ease
+            frame = color.copy()
+        else:
+            y = ty
+            frame = (gray if e.get("bw_after", True) else color).copy()
+        fr_ = frame.convert("RGBA")
+        fr_.alpha_composite(rot, (int(round(tx - pcx)), int(round(y - pcy))))
+        fr_.convert("RGB").save(os.path.join(outdir, f"dwi_{k:04d}.png"))
+    return {"width": gw, "height": gh, "angle": ang, "eye_dist": d_eye, "land": (tx, ty)}
+
+
 def layout_filter(job, src_w, src_h):
     lay = job.get("layout", {"mode": "fit"})
     fps = job["fps"]
@@ -266,6 +325,8 @@ def main():
         e["f"] = fr(e["at"])
         if not 0 <= e["f"] <= base_frames:
             raise SystemExit(f'{e["type"]} at {e["at"]}s is outside the base timeline ({base_frames / fps:.3f}s)')
+        if e["type"] == "deal_with_it" and "dur" not in e:
+            e["dur"] = float(e.get("drop", 0.7)) + float(e.get("hold", 0.8))
         if e["type"] == "freeze" and e.get("extend_to_sfx") and e.get("sfx"):
             _, arr, on, _ = load_sfx(e["sfx"])
             e["dur"] = len(arr) / SR - on
@@ -399,6 +460,28 @@ def main():
                         f'frame at base {ff_ / fps:.3f}s (source {src_time(ff_):.3f}s); bw={e.get("bw", True)}; '
                         f'caption="{e.get("caption", "")}"'])
             notes.append(f'Freeze at output {out_f / fps:.3f}s for {n / fps:.3f}s, caption "{e.get("caption", "")}"')
+        elif p["kind"] == "deal_with_it":
+            e = p["ev"]
+            frame = os.path.join(tmp, f"dwi_src_{k}.png")
+            ff("-ss", f'{float(e["freeze_src"]):.6f}', "-i", src, "-filter_complex", lay + "[v]", "-map", "[v]",
+               "-frames:v", "1", frame)
+            lx, ly, rx, ry = e["eyes"]
+            ec = [src_to_canvas(job, probe["width"], probe["height"], lx, ly),
+                  src_to_canvas(job, probe["width"], probe["height"], rx, ry)]
+            fdir = os.path.join(tmp, f"dwi_{k}")
+            os.makedirs(fdir, exist_ok=True)
+            info = deal_with_it_frames(Image.open(frame), e, ec, n, fps, fdir)
+            ff("-framerate", str(fps), "-i", os.path.join(fdir, "dwi_%04d.png"), "-frames:v", str(n),
+               "-vf", "format=yuv420p,setsar=1", *venc, path)
+            edl.append(["deal_with_it", f'{e["at"]:.3f}', f'{e["at"]:.3f}', f"{out_f / fps:.3f}", f"{(out_f + n) / fps:.3f}",
+                        f'freeze source {float(e["freeze_src"]):.3f}s; glasses drop {e.get("drop", 0.7)}s then B/W hold '
+                        f'{e.get("hold", 0.8)}s; audio from source {e.get("audio_src", "none")}'])
+            notes.append(f'Deal-with-it freeze at output {out_f / fps:.3f}s for {n / fps:.3f}s: frame at source '
+                         f'{float(e["freeze_src"]):.3f}s; eyes (source px) {e["eyes"]} -> canvas '
+                         f'({ec[0][0]:.0f},{ec[0][1]:.0f}) / ({ec[1][0]:.0f},{ec[1][1]:.0f}); glasses {info["width"]}x'
+                         f'{info["height"]}px (nearest-neighbour), tilt {info["angle"]:.2f} deg, land at output '
+                         f'{(out_f + round(float(e.get("drop", 0.7)) * fps)) / fps:.3f}s, then B/W; audio '
+                         + (f'continues from source {e["audio_src"]}s' if e.get("audio_src") is not None else "silent"))
         p["out0"] = out_f
         vlist.append(path)
         out_f += n
@@ -426,6 +509,18 @@ def main():
         ramp = np.linspace(0, 1, fade, dtype=np.float32)[:, None]
         chunk[:fade] *= ramp
         chunk[-fade:] *= ramp[::-1]
+        orig[a0:a0 + ns] += chunk[: total_s - a0]
+
+    for p in pieces:  # optional original audio under a deal-with-it freeze (audio keeps running, picture frozen)
+        if p["kind"] != "deal_with_it" or p["ev"].get("audio_src") is None or not src_audio:
+            continue
+        a0, ns = round(p["out0"] * spf), round(p["n"] * spf)
+        chunk = decode_audio(src, float(p["ev"]["audio_src"]), p["n"] / fps)[:ns]
+        if len(chunk) < ns:
+            chunk = np.vstack([chunk, np.zeros((ns - len(chunk), 2), np.float32)])
+        fo = int(0.03 * SR)
+        chunk[:fade] *= np.linspace(0, 1, fade, dtype=np.float32)[:, None]
+        chunk[-fo:] *= np.linspace(1, 0, fo, dtype=np.float32)[:, None]
         orig[a0:a0 + ns] += chunk[: total_s - a0]
 
     # sfx placements: (output_time_s, file, gain_db, max_len_s, duck_db)
@@ -541,6 +636,10 @@ def main():
         w.writerows(edl)
     qc_times = []
     for p in pieces:
+        if p["kind"] == "deal_with_it":
+            dn = round(float(p["ev"].get("drop", 0.7)) * fps)
+            qc_times += [round((p["out0"] + 2) / fps, 3), round((p["out0"] + dn // 2) / fps, 3),
+                         round((p["out0"] + dn) / fps, 3), round((p["out0"] + (dn + p["n"]) // 2) / fps, 3)]
         if p["kind"] in INSERTS:
             qc_times.append(round((p["out0"] + min(3, p["n"] // 2)) / fps, 3))
             if p["kind"] == "freeze":
