@@ -34,6 +34,17 @@ assets/      tools/
 7. **Thumbnail**: real frame cutouts plus a programmatic type layer, saved to `thumbnails/`.
 8. **Deliver**: the package goes to `deliverables/<batch>/`, a tracker row is added, and the files are sent in the chat.
 
+## Owner decisions (newest first)
+
+**2026-11-23**
+- **No emoji sticker pops in videos.** The Noto stickers stay in Assets for other uses, but none go into edits unless asked.
+- **No burned-in subtitles in the outlined Oswald style.** Edits go without subtitles until the owner picks a caption style. A short hook title in the top band is fine.
+- **Signature gag added:** at a big reveal, freeze on the streamer's face, pixel "deal with it" sunglasses drop from the top onto the eyes, the frame goes black-and-white, then a hard cut to a meme picture (e.g. Peter Griffin) with CapCut_Explosion_Sound on its first frame.
+- **Rose freeze** uses `drooping_crimson_rose_sticker.png`. The original Apple rose is retired.
+- **Steveeeyyy explosion insert:** the media-player screenshot is dropped. It's now `bro.jpg` with the explosion, then static.
+- **Thumbnails:** Tabloid Strip and Hype Reaction are in use; Poster and Color Block are retired.
+- **Assets tab:** trimmed to Thumbnail styles, Sound effects, Meme GIFs, Reaction inserts, Emoji stickers, Brand, Example edits, Fonts and Not uploaded yet.
+
 ## Thumbnail styles
 
 `tools/thumbnail.py <job.json>` builds a 1080×1920 PNG + JPG from real clip frames, with type set in code. It never generates faces or lettering. Samples are in `thumbnails/TEMPLATE_SAMPLES/` and in the studio under Assets → Thumbnail styles.
