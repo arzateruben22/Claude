@@ -47,6 +47,40 @@ not shown and not sold: `saleState` refuses it on the page ("Not in the store.")
 unlisted sku (the server copy carries `listed`). Nothing free was removed: the garage's own paints and rims, every
 car you can earn and every mode stay free. The sections below are the full plan as written before the trim.
 
+## Founders' Road and the economy (2026-11-22, the owner's economy brief)
+
+The store's rule "never sell a faster-than-earnable car" now holds for the OC Hypercar too, because the car can be earned:
+
+- **Earn it free by driving; the Founder Edition is in the Store.** 500 Road Points by December 31, 2026 (Pacific) unlock the
+  standard OC Hypercar for free, forever. 1 active mile is 1 point in Free Drive whatever its traffic, and in Speed Survival
+  1 on Easy, 1.25 on Medium and 1.5 on Extreme (owner update, 2026-11-22: Free Drive plus three difficulties; there is no
+  Zero / Drift mode; until the menu's difficulties land, today's traffic maps light to Easy, moderate to Medium, heavy and
+  expert to Extreme). Extreme runs also pay 1.5x cash (`TIER_CASH`). Only active miles count: unpaused, above 40 mph, driven by you (not Auto-drive, not the
+  menu's attract drive) with a control input in the last 30 seconds (a gas pedal held flat on a straight stops counting
+  after 30 s). Venue time counts too, up to 50 points a day. About 5 hours of normal driving. Code: `src/game/progress.ts`.
+- **The paid Founder Edition ($9.99, sold until the same date) is the same car without the miles, plus the collector finish.** It keeps what
+  only it has: the server-numbered plaque, Glacier Silver paint and Founder Ice lights. The earned car is the standard
+  OC Hypercar and drives exactly the same (`Game.hypercarEdition`: `founder`, `standard` or none). The standard car shows none
+  of the Founder Edition's extras: no "Founder Edition" label or reveal on its garage card, no plaque (sill or console), neutral
+  white strips and blades in place of Founder Ice, Platinum in place of Glacier Silver, no Founder badge on its run card.
+  The purchase pitch lives in the Store only: the menu's Founders' Road widget is the free goal ("312 / 500 to the OC
+  Hypercar · N days left") and never carries a price or a buy line next to a countdown. Nothing about how a
+  car drives is sold; the Founder Edition's only advantage over an earner is time and the collector finish.
+- **Cars unlock by miles, not cash:** Rossini GT from the start, the Brio at 50 active miles, the Corsa at 150, the Vela E
+  at 300. The old credit price and level gate is gone from the garage (nothing is bought or sold back; cars you already
+  owned stay yours and take no slot). The store never sold these cars, so nothing paid changes.
+- **Cash is the existing credits, shown as "cash". Earned only; never sold; no premium currency.** It comes from runs (as
+  before), a speed bonus (6 cash per active mile above 150 mph, 10 more above 200 mph; under the Hypercar's Free Drive
+  earnings cap), daily goals and the weekly challenge, and the marketer job at Vega & Vinnie's. It is spent on Vega &
+  Vinnie's one-time membership (1,200 cash) and on garage looks (Marina Teal, 800 cash). Looks only.
+- **Daily goals and streaks** are earned by playing and never target spending: no prices on them, no countdown on a
+  purchase, no random reward, a free streak saver a week, a "time for a break?" after an hour. The copy is checked by
+  `tests/progress.mjs`.
+- **Saved on the device** until the hosted backend exists; then the Road Points and miles should live on the account and
+  be server-checked so they can't be edited (open for the owner). **Open:** what happens after Dec 31 for players who
+  didn't finish (today: the points keep counting, the free window is closed; the widget says so plainly and does not
+  pitch the store; the Founder Edition's own sale ends the same day, Dec 31).
+
 ## The short version
 
 - **The rule.** Payments are built but in test mode. Nothing is charged until the owner connects Stripe and Supabase

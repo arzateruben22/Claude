@@ -865,6 +865,14 @@ async function main() {
      */
     sim(seconds: number, untilStop = false, world: boolean | 'view' = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop, world); },
     pos() { const gu = player.lastGaveUp; return { ...G(player.x, player.z), lx: +player.x.toFixed(3), lz: +player.z.toFixed(3), y: +player.y.toFixed(3), heading: +player.heading.toFixed(3), yaw: +player.yaw.toFixed(3), sitting: player.seat ? player.seat.id : null, view: player.view, moving: !!player.path, speed: +player.speed.toFixed(3), gaveUp: gu ? { by: gu.by, ...G(gu.x, gu.z), left: +gu.left.toFixed(2) } : null }; },
+    /** the game's venue passport reads this once a second (src/game/Game.ts venuePoll): where you are in the venue's own
+     *  named spots, what you're doing, and how many things you've ordered; the stamps and the time are the game's */
+    passport() {
+      const x = player.x, z = player.z, inR = (r: { x0: number; x1: number; z0: number; z1: number }) => x > r.x0 && x < r.x1 && z > r.z0 && z < r.z1;
+      const spot = inR(PLAN.shed) ? 'shed' : inR(PLAN.yard) ? 'yard' : inR(PLAN.lawn) ? 'lawn' : inR(PLAN.trucks) ? 'trucks'
+        : z > PLAN.southFence.z && z < PLAN.lot.z1 && x > PLAN.lot.x0 && x < PLAN.lot.x1 ? 'lot' : null;
+      return { spot, sitting: !!player.seat, moving: !!player.path || player.speed > 0.2, talking: !!doings.joined, orders: doings.log.filter((l) => l.startsWith('pick ')).length, paused: hud.paused, ...G(x, z) };
+    },
     colliders() { return exportColliders(set).map((c) => shiftCollider(c as Record<string, unknown>)); },
     region() { const r = grid.exportRegion(); return { ...r, x0: r.x0 + ORIGIN.x, z0: r.z0 + ORIGIN.z }; },
     seats() { return venue.seats.map((s) => ({ id: s.id, kind: s.kind, at: s.at, ...G(s.x, s.z), approach: G(s.ax, s.az) })); },
