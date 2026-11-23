@@ -1,0 +1,142 @@
+/* THE NEW HUD's LAYOUT (owner, 2026-11-23: "this will be the new layout design", then the Ultra design "to the best you
+   can incorporate the intricate details"): one DOM and one geometry for both looks, two skins over it (hud-retro.css,
+   the flat graphite Retro skin; hud-ultra.css, the chrome and knurled-metal Ultra skin). Every rule is scoped under
+   .app[data-skin] (App.tsx sets it from retroOn, in one place), so styles.css keeps its own HUD untouched underneath
+   and the menu lane's edits there merge cleanly. This file holds only boxes and places; colours, rims and textures are
+   the skins'.
+
+   At 390 x 844 (an upright phone, --ctl-b 14 px):
+   top     speed card x 10..202 y 10..~78; Pause 44 x 44 at x 216..260 (Auto-drive under it when offered); the round map
+           at the top right with its ring and the N tab. View and Go to left the top bar (they are in the hold-Pause quick
+           menu and on their keys; App.tsx shows a one-time hint).
+   bottom  the steering pad x 14..146 y 766..830 (64 tall); the round HANDBRAKE (a 50 px dial under its caption) between it
+           and BRAKE x 156..208; BRAKE x 218..294 (68 tall); GAS x 304..370 (96 tall); CLEAR PATH, a 62 px round key over the
+           BRAKE / GAS gap (x 238..300 y 690..752); JUMP (the hypercar) the same round key over GAS (x 306..368 y 662..724);
+           the DRIFT chip over the steering pad (x 14..146 y 718..756), clear of the wheel's rim in the seat view.
+   Every target 44 px or more. */
+
+.app[data-skin] { --hud-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --nh-steer-h: 64px; --nh-hb: 52px; --nh-dial: 50px; --nh-brake-w: 76px; --nh-brake-h: 68px; --nh-gas-w: 66px; --nh-gas-h: 96px; --nh-gap: 10px; --nh-key: 62px;
+  --nh-pedals: calc(var(--nh-hb) + var(--nh-gap) + var(--nh-brake-w) + var(--nh-gap) + var(--nh-gas-w)); }
+
+/* ---------------------------------------------------------------- phone (upright and on its side): the top */
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate { top: calc(var(--sa-t) + 10px); left: calc(var(--sa-l) + 10px); gap: 5px; padding: 9px 12px 9px 14px; clip-path: none; }
+.app[data-skin][data-hud="pp"] .hud-plate { width: calc(100% - var(--sa-l) - var(--sa-r) - 10px - 14px - var(--map) - 10px - 44px - 10px); }
+.app[data-skin][data-hud="pl"] .hud-plate { width: 236px; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-row { height: 34px; gap: 6px; align-items: baseline; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-mph { font: 600 36px/34px var(--f-mono); letter-spacing: -0.04em; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-unit { font: 500 11px/1 var(--f-mono); letter-spacing: 0.12em; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-gear { min-width: 30px; height: 30px; margin-left: auto; padding: 0 5px; display: grid; place-items: center; align-self: center; font: 700 19px/1 var(--f-mono); }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-rpm { height: 3px; border-radius: 2px; overflow: hidden; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats { max-height: 20px; align-items: center; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b::before { font: 500 12px/18px var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats span { font: 500 12.5px/18px var(--f-mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats div:nth-of-type(n+2)::before,
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats[data-errand] div:nth-of-type(1)::before { content: "•"; margin: 0 7px 0 5px; font: 600 10px/18px var(--hud-sans); }
+/* "BEST 67": the run's top speed as today's Top, the bare number (HUD.tsx data-n) */
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s="Top"]::before { content: "Best"; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s="Top"] + span { font-size: 0; letter-spacing: 0; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s="Top"] + span::after { content: attr(data-n); font: 500 12.5px/18px var(--f-mono); letter-spacing: 0.04em; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats div:has(b[data-s="Top"]) { gap: 6px; }
+
+/* the top bar: Pause only (Auto-drive under it when offered; Map where the map was while the window is off) */
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar { top: calc(var(--sa-t) + 10px); right: calc(var(--sa-r) + 14px + var(--map) + 10px); flex-direction: column; gap: 8px; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar :is(.tbtn.view, .tbtn.goto) { display: none; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.menu { order: -1; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn::before { clip-path: none; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { position: static; order: 0; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.mapbtn { top: calc(var(--sa-t) + 16px); right: calc(var(--sa-r) + 14px); }
+/* the round map; its ring and chips (the compass) over the map's edge, the heading's chip riding the top of the ring */
+.app[data-skin] .hud-compass { z-index: 2; }
+.app[data-skin] .hud-card { transform: translate(-50%, -40%); }
+.app[data-skin] .hud-n { top: 4px; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .corner { top: calc(var(--sa-t) + 16px); right: calc(var(--sa-r) + 14px); }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-compass { top: calc(var(--sa-t) + 16px - 5px); right: calc(var(--sa-r) + 14px - 5px); }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-road { top: calc(var(--sa-t) + 16px + var(--map) + 10px); right: calc(var(--sa-r) + 14px); }
+.app[data-skin][data-hud="pl"] .hud-road { top: calc(var(--sa-t) + 66px); right: calc(var(--sa-r) + 14px + var(--map) + 10px + 44px + 10px); }
+.app[data-skin][data-hud="pp"] .toasts { top: calc(var(--sa-t) + 178px); }
+
+/* ---------------------------------------------------------------- the controls (every layout that shows them) */
+.app[data-skin] .touch-steer { left: calc(var(--sa-l) + 14px); bottom: var(--ctl-b); height: var(--nh-steer-h);
+  width: min(220px, calc(100vw - var(--sa-l) - var(--sa-r) - 14px - 20px - var(--nh-pedals) - 10px)); background: none; display: block; overflow: hidden; }
+.app[data-skin] .touch-hint { left: 0; right: 0; top: 7px; text-align: center; }
+.app[data-skin] .touch-rod { position: absolute; left: 12px; right: 12px; top: 40px; height: 2px; pointer-events: none; }
+.app[data-skin] .touch-knob { position: absolute; left: calc(50% - 13px); top: 22px; width: 26px; height: 36px; margin: 0; clip-path: none; }
+.app[data-skin] .touch-pedals { right: calc(var(--sa-r) + 20px); bottom: var(--ctl-b); gap: var(--nh-gap); }
+.app[data-skin] .brake-wrap { gap: var(--nh-gap); }
+.app[data-skin] .pedal { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.app[data-skin] .pedal::before { transform: none; }
+.app[data-skin] .pedal .ico { width: 24px; height: 24px; }
+.app[data-skin] .brake-wrap .pedal.brake, .app[data-skin] .pedal.brake { width: var(--nh-brake-w); height: var(--nh-brake-h); }
+.app[data-skin] .pedal.gas { width: var(--nh-gas-w); height: var(--nh-gas-h); }
+/* the round HANDBRAKE: the caption over a 50 px dial; the whole column is its target */
+.hb-round { --hb-hold: 220ms; position: relative; width: var(--nh-hb, 52px); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; cursor: pointer;
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.hb-cap { font: 700 8.5px/1 var(--hud-sans, sans-serif); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+.hb-dial { position: relative; width: var(--nh-dial, 50px); height: var(--nh-dial, 50px); border-radius: 50%; display: grid; place-items: center; }
+.hb-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.hb-ring circle { fill: none; stroke-width: 4; }
+/* the red arc: full while pulled (in 80 ms), draining over the touch hold (input.ts TOUCH_HB_HOLD) after the lift */
+.hb-arc { stroke-dasharray: 100 200; stroke-dashoffset: 100; stroke-linecap: butt; transition: stroke-dashoffset var(--hb-hold) linear; }
+.hb-round.pulled .hb-arc { stroke-dashoffset: 0; transition-duration: 80ms; }
+.hb-face { position: relative; width: calc(100% - 12px); height: calc(100% - 12px); border-radius: 50%; display: grid; place-items: center; }
+.hb-face .ico { width: 26px; height: 26px; }
+@media (prefers-reduced-motion: reduce) { .hb-arc { transition: none !important; } }
+
+/* the round keys: the driver's ability (CLEAR PATH, LOCKED IN, FOCUS TIME) and the hypercar's JUMP */
+.app[data-skin] :is(.hud-ability, .hud-thrustbtn) { width: var(--nh-key); height: var(--nh-key); padding: 0; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font: 700 9.5px/1.05 var(--hud-sans); letter-spacing: 0.06em; }
+.app[data-skin] :is(.hud-ability, .hud-thrustbtn)::before { transform: none; border-radius: 50%; }
+.app[data-skin] :is(.hud-ability, .hud-thrustbtn) span { max-width: 44px; }
+.app[data-skin] :is(.hud-ability, .hud-thrustbtn) .ico { width: 17px; height: 17px; flex: none; margin-top: -2px; }
+/* the ability's icon by its name (HUD.tsx data-abil): a road for Clear Path, a stopwatch for Focus Time, a tyre for Locked In */
+.app[data-skin] .hud-ability .ico { display: none; }
+.app[data-skin] .hud-ability[data-abil="Clear Path"] .ico:nth-of-type(1), .app[data-skin] .hud-ability[data-abil="Focus Time"] .ico:nth-of-type(2),
+.app[data-skin] .hud-ability[data-abil="Locked In"] .ico:nth-of-type(3) { display: block; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-ability { right: calc(var(--sa-r) + 20px + var(--nh-gas-w) + 4px); bottom: calc(var(--ctl-b) + var(--nh-brake-h) + 10px); width: var(--nh-key); height: var(--nh-key); padding: 0; font-size: 9.5px; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-thrustbtn { right: calc(var(--sa-r) + 20px + 2px); bottom: calc(var(--ctl-b) + var(--nh-gas-h) + 10px); width: var(--nh-key); height: var(--nh-key); padding: 0; font-size: 9.5px; }
+.app[data-skin][data-hud="desk"] :is(.hud-ability, .hud-thrustbtn) { width: 64px; height: 64px; }
+.app[data-skin][data-hud="desk"] .hud-thrustbtn { right: calc(var(--act) + 64px + 12px); }
+.app[data-skin][data-hud="desk"] .hud[data-live-cluster]:is([data-view="cockpit"], [data-view="free"]) .hud-thrustbtn { right: calc(var(--sa-r) + 18px + 64px + 12px); }
+
+/* the DRIFT chip: over the steering pad, as wide as it */
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-drift { left: calc(var(--sa-l) + 14px); bottom: calc(var(--ctl-b) + var(--nh-steer-h) + 10px);
+  width: min(220px, calc(100vw - var(--sa-l) - var(--sa-r) - 14px - 20px - var(--nh-pedals) - 10px)); height: 38px; padding: 6px 10px 0 12px; column-gap: 7px; grid-template-columns: auto auto minmax(0, 1fr); }
+.app[data-skin] .hud-drift::before { transform: none; }
+.app[data-skin] .hud-drift b { font: 700 11px/1 var(--hud-sans); letter-spacing: 0.1em; }
+.app[data-skin] .hud-drift em { font: 700 19px/1 var(--f-mono); min-width: 2.6ch; letter-spacing: -0.03em; }
+.app[data-skin] .hud-drift-t { font: 500 11px/1 var(--f-mono); letter-spacing: -0.04em; }
+.app[data-skin] .hud-drift-bar { transform: none; height: 3px; margin: 0 0 6px; border-radius: 2px; }
+
+/* manual on a narrow phone: the shift buttons beside the pedals; the pedals slim and the pad shortens to fit */
+@media (max-width: 419px) {
+  .app[data-skin]:has(.touch-shift) { --nh-brake-w: 62px; --nh-gas-w: 58px; --nh-hb: 48px; --nh-dial: 46px; --nh-gap: 8px; }
+  .app[data-skin] .touch:has(.touch-shift) .touch-pedals { gap: var(--nh-gap); }
+  .app[data-skin] .touch:has(.touch-shift) .touch-steer, .app[data-skin]:has(.touch-shift) .hud-drift { width: calc(100vw - var(--sa-l) - var(--sa-r) - 14px - 20px - var(--nh-pedals) - 50px - 8px - 8px); }
+  .app[data-skin] .touch:has(.touch-shift) :is(.pedal, .brake-wrap .pedal.brake) { width: auto; }
+  .app[data-skin] .touch:has(.touch-shift) .pedal.brake { width: var(--nh-brake-w); }
+  .app[data-skin] .touch:has(.touch-shift) .pedal.gas { width: var(--nh-gas-w); }
+  .app[data-skin][data-hud="pp"]:has(.touch-shift) .hud-ability { right: calc(var(--sa-r) + 20px + var(--nh-gas-w) + 2px); width: var(--nh-key); }
+  .app[data-skin][data-hud="pp"]:has(.touch-shift) .hud-thrustbtn { width: var(--nh-key); }
+}
+
+/* ---------------------------------------------------------------- the Ultra skin's ABS | TCS bar: under the speed card */
+.hud-assists { position: absolute; pointer-events: auto; display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 10px; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-assists { left: calc(var(--sa-l) + 10px); top: calc(var(--plate-b, 90px) + 8px); }
+.app[data-skin][data-hud="pl"] .hud-assists { left: calc(var(--sa-l) + 10px + 236px + 10px); top: calc(var(--sa-t) + 15px); }   /* on its side: beside the card, so the top cluster stays shallow */
+.app[data-skin][data-hud="desk"] .hud-assists { right: calc(var(--sa-r) + 18px); bottom: calc(var(--spd-b) + var(--spd-h) + 12px); }
+.app[data-skin][data-hud="desk"]:has(.hud[data-thrust]:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"])) .hud-assists { bottom: calc(var(--spd-b) + var(--spd-h) + 12px + 30px); }
+.app[data-skin="ultra"][data-hud="desk"] .tbar { bottom: calc(var(--spd-b) + var(--spd-h) + 12px + 52px); }
+.app[data-skin="ultra"][data-hud="desk"]:has(.hud[data-thrust]:not([data-live-cluster][data-view="cockpit"]):not([data-live-cluster][data-view="free"])) .tbar { bottom: calc(var(--spd-b) + var(--spd-h) + 12px + 30px + 52px); }
+.hud-assists[hidden] { display: none; }
+/* the Minimal HUD tucks it with the map (and brings it back with it) */
+.hud-assists { transition: opacity 260ms ease-out, visibility 0s linear 0s; }
+.app.hud-idle:not(:has(.hud[data-wake])) .hud-assists { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 360ms ease-in, visibility 0s linear 420ms; }
+.asw { position: relative; display: flex; align-items: center; gap: 7px; height: 44px; min-width: 44px; padding: 0 4px; border: 0; background: none; cursor: pointer; }
+.asw b { font: 700 11.5px/1 var(--hud-sans, sans-serif); letter-spacing: 0.08em; }
+.asw-track { position: relative; width: 42px; height: 20px; border-radius: 10px; }
+.asw-knob { position: absolute; top: -3px; left: -2px; width: 26px; height: 26px; border-radius: 50%; transition: transform 160ms ease-out; }
+.asw.on .asw-knob { transform: translateX(20px); }
+.asw-sep { width: 2px; height: 24px; border-radius: 1px; }
+.asw:focus-visible { outline: 2px solid var(--ice); outline-offset: 2px; border-radius: 8px; }
+@media (prefers-reduced-motion: reduce) { .asw-knob { transition: none; } }

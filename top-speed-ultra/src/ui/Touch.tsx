@@ -1,28 +1,29 @@
 // On-screen controls for phones and tablets: drag the left pad to steer, hold GAS or BRAKE on the right.
-// (View, Map, Go to and Pause live in the top bar for every device.)
+// (Pause lives in the top bar; on a phone View and Go to are in its hold-Pause quick menu, App.tsx.)
 //
-// The handbrake is part of the BRAKE pedal (owner, 2026-11-17: "how do you drift on mobile device?", then "something
-// more seamlessly integrated"): a lever-shaped tab on the pedal's inner edge, the side that faces the steering pad. Slide
-// it toward the steering side to pull the handbrake; a quick swipe from BRAKE toward the pad does the same. A tap on
-// either does nothing but brake (on BRAKE) or nothing at all (on the lever): a pull needs a deliberate PULL_PX slide, and
-// it lets go once the thumb comes back inside RELEASE_PX or lifts. The lever and the pedal are one piece of the cluster:
-// the pedals' own slanted slab and ember hairline, no separate button. Input.touch.handbrake carries it (game/input.ts
-// keeps a flick down for a moment so the same thumb can be back on GAS); a short vibration, where the device has one,
-// and the pulled state (the grip slides in and fills ember) are the feedback.
+// The handbrake (owner, 2026-11-17: "how do you drift on mobile device?"; then the new HUD, 2026-11-23: "this will be
+// the new layout design", "and the brake will slide into the red brake to drift as you stated"): a ROUND HANDBRAKE
+// button between the steering pad and BRAKE, in both looks (hud-layout.css places it, hud-retro.css / hud-ultra.css skin
+// it). Two ways to pull it: hold BRAKE and slide toward the steering side, into the button (past PULL_PX; the brake lets
+// go once it is a pull, and sliding back inside RELEASE_PX or lifting releases it), or press the button itself (pulled
+// while held). A plain BRAKE tap never pulls it. Input.touch.handbrake carries it (game/input.ts keeps a touch pull for
+// TOUCH_HB_HOLD after the lift, so the same thumb can be back on GAS); the button's red arc fills on the pull and drains
+// over that same hold; a short vibration, where the device has one, marks the pull.
 
 import { useEffect, useRef } from 'react';
-import type { Input } from '../game/input';
+import { TOUCH_HB_HOLD, type Input } from '../game/input';
+import { Ico } from './Icons';
 
-export const PULL_PX = 18;      // how far toward the steering side a thumb must slide to pull (a tap or a nudge doesn't)
+export const PULL_PX = 18;      // how far toward the steering side a thumb must slide from BRAKE to pull (a tap or a nudge doesn't)
 export const RELEASE_PX = 10;   // back inside this and it lets go (so a thumb resting at the line doesn't flutter)
-const GRIP_PX = 14;             // how far the lever's grip travels on screen (the thumb may go further)
 
 export function Touch({ input, manual, onShift }: { input: Input; manual: boolean; onShift: (d: 1 | -1) => void }) {
   const knob = useRef<HTMLDivElement>(null);
   const start = useRef<{ id: number; x: number } | null>(null);
-  const lever = useRef<HTMLDivElement>(null), brake = useRef<HTMLDivElement>(null);
-  // the lever's own drag, and a swipe that began on BRAKE (the brake lets go once it becomes a pull)
-  const drag = useRef<{ id: number; x: number; y: number; from: 'lever' | 'brake'; swiped: boolean } | null>(null);
+  const hbBtn = useRef<HTMLDivElement>(null), brake = useRef<HTMLDivElement>(null);
+  // the two things that can hold the handbrake: a slide that began on BRAKE, and a thumb on the round button itself
+  const slideRef = useRef<{ id: number; x: number; y: number; swiped: boolean; on: boolean } | null>(null);
+  const press = useRef<number | null>(null);
   input.touch.active = true;
   useEffect(() => () => { input.touch.handbrake = false; }, [input]);
   const steer = (v: number) => { input.touch.steer = v; if (knob.current) knob.current.style.transform = `translateX(${(v * 52).toFixed(1)}px)`; };
@@ -33,45 +34,45 @@ export function Touch({ input, manual, onShift }: { input: Input; manual: boolea
     if (on) try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch { /* fine */ }
   };
 
-  // the pull: `pull` is how far the thumb has slid toward the steering side (px, never negative)
-  const pulled = (on: boolean) => {
+  // the pull: on while either source holds it
+  const sync = () => {
+    const on = press.current !== null || !!slideRef.current?.on;
     if (input.touch.handbrake === on) return;
     input.touch.handbrake = on;
-    lever.current?.classList.toggle('pulled', on);
+    hbBtn.current?.classList.toggle('pulled', on);
     if (on) { try { navigator.vibrate?.(16); } catch { /* no haptics here */ } }
   };
-  const slide = (pull: number) => {
-    const p = Math.max(0, pull);
-    lever.current?.style.setProperty('--pull', `${Math.min(GRIP_PX, p).toFixed(1)}px`);
-    if (!input.touch.handbrake && p >= PULL_PX) pulled(true);
-    else if (input.touch.handbrake && p < RELEASE_PX) pulled(false);
-  };
-  const release = () => {
-    drag.current = null;
-    pulled(false);
-    lever.current?.style.setProperty('--pull', '0px');
-  };
 
-  const leverDown = (e: React.PointerEvent) => {
+  // the round button: pulled while a thumb is on it
+  const hbDown = (e: React.PointerEvent) => {
     e.preventDefault();
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, from: 'lever', swiped: true };
+    press.current = e.pointerId;
     try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* fine */ }
+    sync();
   };
+  const hbUp = (e: React.PointerEvent) => { if (press.current === e.pointerId) { press.current = null; sync(); } };
+
+  // BRAKE: a slide toward the steering side (mostly sideways) becomes a pull; the brake lets go then
   const brakeDown = (e: React.PointerEvent) => {
     pedal('brake', true)(e);
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, from: 'brake', swiped: false };
+    slideRef.current = { id: e.pointerId, x: e.clientX, y: e.clientY, swiped: false, on: false };
   };
-  const dragMove = (e: React.PointerEvent) => {
-    const d = drag.current;
+  const brakeMove = (e: React.PointerEvent) => {
+    const d = slideRef.current;
     if (!d || e.pointerId !== d.id) return;
-    const dx = e.clientX - d.x, dy = e.clientY - d.y;
-    // from BRAKE: a swipe is mostly sideways and toward the pad; once it is one the brake lets go (it is a pull now)
-    if (!d.swiped && -dx >= PULL_PX && -dx >= 1.5 * Math.abs(dy)) {
+    const dx = e.clientX - d.x, dy = e.clientY - d.y, pull = Math.max(0, -dx);
+    if (!d.swiped && pull >= PULL_PX && pull >= 1.5 * Math.abs(dy)) {
       d.swiped = true; input.touch.brake = false; brake.current?.classList.remove('down');
     }
-    if (d.swiped) slide(-dx);
+    if (!d.swiped) return;
+    if (!d.on && pull >= PULL_PX) d.on = true;
+    else if (d.on && pull < RELEASE_PX) d.on = false;
+    sync();
   };
-  const brakeUp = (e: React.PointerEvent) => { release(); pedal('brake', false)(e); };
+  const brakeUp = (e: React.PointerEvent) => {
+    if (slideRef.current?.id === e.pointerId) slideRef.current = null;
+    sync(); pedal('brake', false)(e);
+  };
 
   return (
     <div className="touch">
@@ -81,19 +82,26 @@ export function Touch({ input, manual, onShift }: { input: Input; manual: boolea
         onPointerUp={() => { start.current = null; steer(0); }} onPointerCancel={() => { start.current = null; steer(0); }}
         aria-label="Steering: drag left or right">
         <span className="touch-hint">◀ steer ▶</span>
+        <span className="touch-rod" aria-hidden="true" />
         <div className="touch-knob" ref={knob} />
       </div>
       <div className="touch-pedals">
         {manual && <div className="touch-shift"><button type="button" className="tbtn" onClick={() => onShift(-1)}>−</button><button type="button" className="tbtn" onClick={() => onShift(1)}>+</button></div>}
         <div className="brake-wrap">
-          <div className="hb-lever" ref={lever} role="button" aria-label="Handbrake: slide toward the steering pad to pull"
-            onPointerDown={leverDown} onPointerMove={dragMove} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}
+          <div className="hb-round" ref={hbBtn} role="button" aria-label="Handbrake: hold it, or slide from BRAKE into it"
+            style={{ '--hb-hold': `${Math.round(TOUCH_HB_HOLD * 1000)}ms` } as React.CSSProperties}
+            onPointerDown={hbDown} onPointerUp={hbUp} onPointerCancel={hbUp} onLostPointerCapture={hbUp}
             onContextMenu={(e) => e.preventDefault()}>
-            <span className="hb-grip"><i /><b>Handbrake</b><i /></span>
+            <small className="hb-cap" aria-hidden="true">Handbrake</small>
+            <span className="hb-dial" aria-hidden="true">
+              <svg className="hb-ring" viewBox="0 0 56 56"><circle className="hb-track" cx="28" cy="28" r="25" /><circle className="hb-arc" cx="28" cy="28" r="25" pathLength={100} /></svg>
+              <span className="hb-face"><Ico name="park" /></span>
+            </span>
           </div>
-          <div className="pedal brake" ref={brake} onPointerDown={brakeDown} onPointerMove={dragMove} onPointerUp={brakeUp} onPointerCancel={brakeUp} role="button" aria-label="Brake (swipe toward the steering pad for the handbrake)">BRAKE</div>
+          <div className="pedal brake" ref={brake} onPointerDown={brakeDown} onPointerMove={brakeMove} onPointerUp={brakeUp} onPointerCancel={brakeUp} role="button"
+            aria-label="Brake (slide into HANDBRAKE to pull the handbrake)"><Ico name="disc" /><span>BRAKE</span></div>
         </div>
-        <div className="pedal gas" onPointerDown={pedal('gas', true)} onPointerUp={pedal('gas', false)} onPointerCancel={pedal('gas', false)} role="button" aria-label="Accelerate">GAS</div>
+        <div className="pedal gas" onPointerDown={pedal('gas', true)} onPointerUp={pedal('gas', false)} onPointerCancel={pedal('gas', false)} role="button" aria-label="Accelerate"><Ico name="speed" /><span>GAS</span></div>
       </div>
     </div>
   );
