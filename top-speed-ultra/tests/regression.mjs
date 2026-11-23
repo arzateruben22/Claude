@@ -2156,6 +2156,164 @@ await group('abilities', async (use) => {
     await hyperIn(page, 'free');
     return out.join('; ');
   });
+  // Steering at speed (owner, 2026-11-22: "basically impossible at that speed to go with the turn unless I'm on the other
+  // side", the hypercar at 234 mph on the CA-91 East: its right-hand curve at 33.2-34.0 km, 100 m mean radius 760-1270 m,
+  // 4.6 mi from the CA-91 East start). A keyboard driver through the real arrow keys' path (Input.update: its turn-in
+  // rate and its high-speed cap, then CarPhysics.maxDelta's lock): every 50 ms it holds Left, Right or nothing, from a
+  // pure-pursuit aim 50 m ahead on its lane's centre with the car's understeer (cars.ts: mass, Cf, Cr) and a lateral
+  // error term, i.e. a player who knows the car, tapping the keys. 10 s from 100 m before the curve at a held speed, from
+  // the inside lane and from the outside lane: the car's centre stays within half a lane of its lane's centre (1.83 m),
+  // no barrier touched, slip under 6°. The hypercar Unleashed at 234 mph in Arcade on the owner's curve; the Rossini GT at
+  // 150 mph in Sport on the I-405 South's left-hander at 7.0-7.7 km (radius 570-660 m). And a straight at 200 mph with no
+  // input goes straight (under 0.1 m off the line it started on in 10 s). Before the fix (input 2.4 - sp*1.2 and 65 % at speed, the old
+  // lock) the same driver held neither lane: the keys saturated and the car ran wide by 25 m and more.
+  await check('steering at speed: keyboard steer follows the owner\'s CA-91 East curve at 234 mph (hypercar, Arcade) and an I-405 South curve at 150 mph (GT, Sport) from the inside and the outside lane, in lane, no barrier; a 200 mph straight with no input stays straight', async () => {
+    const follow = async (car, h, label, s0, inside, mph) => game(page, async ({ car, h, label, s0, inside, mph }) => {
+      const g = window.__game;
+      if (g.driving !== car) { g.updateSettings({ ...g.settings, owner: true, density: 'none' }); g.chooseOwnerCar(car); await g.start('free'); g.setPaused(true); }
+      const p = g.phys, m = g.findMain(label), v0 = mph / 2.236936, L = 2.65;
+      // which way it turns, from the road itself: the mean curvature over the next 1000 m (+ left)
+      let kSum = 0; for (let s = s0; s < s0 + 1000; s += 10) kSum += m.sample(s).k;
+      const lane = (kSum > 0) === inside ? 0 : m.lanes - 1, dl = m.laneCenter(lane);
+      const C = { 'oc-hyper': [1690, 225000, 333000], 'rossini-gt': [1480, 125000, 185000] }[car], Ku = (C[0] / L) * (1.2 / C[1] - 1.45 / C[2]);
+      g.placeCar(m, s0, lane, v0); p.handling = h; g.traffic.clearAround(p.x, p.z, 5000);
+      const inp = g.input; inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0, thrust: 0 });
+      const col0 = g.collisions, pr = { s: s0, d: dl };
+      let key = 0, devMax = 0, slip = 0, vMin = 1e9, walls = 0, wallGap = 1e9, steerMax = 0, lastLock = null, lockStep = 0, lockLo = 1e9, lockHi = 0;
+      for (let i = 0; i < 1200; i++) {
+        const v = Math.max(3, p.vx);
+        m.project(p.x, p.z, pr.s, pr);
+        if (i % 6 === 0) {
+          const a = m.at(Math.min(m.len, pr.s + 50), dl), dx = a.x - p.x, dz = a.z - p.z;
+          const fwd = dx * Math.sin(p.psi) + dz * Math.cos(p.psi), left = dx * Math.cos(p.psi) - dz * Math.sin(p.psi);
+          const kap = (2 * Math.sin(Math.atan2(left, Math.max(0.1, fwd)))) / Math.max(1, Math.hypot(dx, dz));
+          const u = -(Math.atan(L * kap) + Ku * v * v * kap + 0.55 * (kap * v - p.r) * (L / v) + 0.006 * (pr.d - dl)) / p.maxDelta();
+          key = u - inp.c.steer > 0.02 ? 1 : u - inp.c.steer < -0.02 ? -1 : Math.abs(u) < 0.03 ? 0 : key;
+          inp.held.delete('left'); inp.held.delete('right'); if (key) inp.held.add(key > 0 ? 'right' : 'left');
+        }
+        inp.update(1 / 120, Math.abs(p.vx), p.vx > 3 ? Math.atan2(p.vy, p.vx) : 0, p.handling);
+        inp.c.throttle = Math.max(0, Math.min(1, 0.4 + (v0 - p.vx) * 0.6)); inp.c.brake = Math.max(0, Math.min(1, (p.vx - v0 - 0.5) * 0.3));
+        g.simulate(1 / 120);
+        if (g.steps % 6 === 0) { g.stream(1); const l = p.maxDelta() * 180 / Math.PI; if (lastLock !== null) lockStep = Math.max(lockStep, Math.abs(l - lastLock)); lastLock = l; lockLo = Math.min(lockLo, l); lockHi = Math.max(lockHi, l); }
+        m.project(p.x, p.z, pr.s, pr);
+        devMax = Math.max(devMax, Math.abs(pr.d - dl)); steerMax = Math.max(steerMax, Math.abs(inp.c.steer));
+        wallGap = Math.min(wallGap, pr.d - m.wallL - 1.02, m.wallR - 1.02 - pr.d);
+        slip = Math.max(slip, Math.abs(p.drift.angle)); vMin = Math.min(vMin, p.vx);
+        if (p.grinding) walls++;
+      }
+      inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0 });
+      return { car, h, label, s0, lane, lanes: m.lanes, turn: kSum > 0 ? 'left' : 'right', devMax: +devMax.toFixed(2), wallGap: +wallGap.toFixed(2), walls, hits: g.collisions - col0, slip: +slip.toFixed(1), mph: Math.round(vMin * 2.236936), steerMax: +steerMax.toFixed(2), lockStep: +lockStep.toFixed(3), lock: `${lockLo.toFixed(2)}-${lockHi.toFixed(2)}` };
+    }, { car, h, label, s0, inside, mph });
+    const runs = [];
+    for (const inside of [true, false]) runs.push(await follow('oc-hyper', 0.15, 'CA-91 East', 33100, inside, 234));
+    for (const inside of [true, false]) runs.push(await follow('rossini-gt', 0.5, 'I-405 South', 6900, inside, 150));
+    // the straight: 10 s at 200 mph, no key held, the GT in Sport (the car is already the GT) and the hypercar in Arcade
+    const straight = async (car, h) => game(page, async ({ car, h }) => {
+      const g = window.__game;
+      if (g.driving !== car) { g.chooseOwnerCar(car); await g.start('free'); g.setPaused(true); }
+      const st = window.findStraight('I-405 North', 1200), m = g.findMain(st.label), p = g.phys, v0 = 200 / 2.236936;
+      g.placeCar(m, st.s0 + 50, 2, v0); p.handling = h; g.traffic.clearAround(p.x, p.z, 5000);
+      const inp = g.input; inp.held.clear();
+      // sideways from the line it started on (the road's own gentle bends left out: the car is meant to go straight)
+      const x0 = p.x, z0 = p.z, rx = -Math.cos(p.psi), rz = Math.sin(p.psi); let dMax = 0, rMax = 0;
+      for (let i = 0; i < 1200; i++) {
+        inp.update(1 / 120, Math.abs(p.vx));
+        inp.c.throttle = Math.max(0, Math.min(1, 0.4 + (v0 - p.vx) * 0.6)); inp.c.brake = 0;
+        g.simulate(1 / 120); if (g.steps % 6 === 0) g.stream(1);
+        dMax = Math.max(dMax, Math.abs((p.x - x0) * rx + (p.z - z0) * rz)); rMax = Math.max(rMax, Math.abs(p.r));
+      }
+      return { car, dMax: +dMax.toFixed(3), yaw: +(rMax * 180 / Math.PI).toFixed(3), steer: inp.c.steer };
+    }, { car, h });
+    const st = [await straight('rossini-gt', 0.5), await straight('oc-hyper', 0.15)];
+    await hyperIn(page, 'free');
+    const all = ` (every run: ${runs.map((r) => `${r.car} lane ${r.lane + 1}: ${r.devMax} m, ${r.walls} barrier steps, keys to ${r.steerMax}, slip ${r.slip}°, ${r.mph} mph`).join('; ')})`;
+    for (const r of runs) {
+      const tag = `${r.car} h${r.h} on the ${r.label} (${r.turn}) from lane ${r.lane + 1} of ${r.lanes}`;
+      expect(r.devMax <= 1.83 && r.walls === 0 && r.hits === 0 && r.wallGap > 0, `${tag}: ${r.devMax} m off its lane's centre, ${r.walls} steps on a barrier, ${r.hits} hits, gap ${r.wallGap} m${all}`);
+      expect(r.slip < 6 && r.mph >= 0.95 * (r.car === 'oc-hyper' ? 234 : 150), `${tag}: slip ${r.slip}°, ${r.mph} mph`);
+      // the lock follows the road smoothly: no step over 0.1 deg between two samples 50 ms apart (the road point's own curvature stepped it by up to a degree)
+      expect(r.lockStep <= 0.1, `${tag}: the steering lock (${r.lock}°) stepped ${r.lockStep}° in 50 ms`);
+    }
+    for (const s of st) expect(s.dMax < 0.1 && s.steer === 0, `${s.car} at 200 mph with no input: ${s.dMax} m off its starting line in 10 s, yaw rate up to ${s.yaw}°/s, steer ${s.steer}`);
+    return runs.map((r) => `${r.car === 'oc-hyper' ? 'hypercar 234 mph Arcade' : 'GT 150 mph Sport'} ${r.label} ${r.turn}-hander, ${r.lane === 0 ? 'left' : 'right'} lane: within ${r.devMax} m of its lane's centre (keys to ${r.steerMax}), slip ${r.slip}°, barrier gap ${r.wallGap} m`).join('; ')
+      + `; the steering lock ${runs.map((r) => `${r.lock}° (largest step in 50 ms ${r.lockStep}°)`).join(', ')}; 200 mph, no input, 10 s: ${st.map((s) => `${s.car} ${s.dMax} m off its starting line, yaw rate under ${s.yaw}°/s`).join(', ')}`;
+  });
+  // The keys at 200+ mph on a straight road (owner, 2026-11-22: the softer high-speed key cap and the larger lock must not
+  // make a straight twitchy): a 0.15 s tap and a 0.6 s right-left flick settle straight (yaw under 0.5°/s from 3 s after the
+  // flick, no sideways reversals, never past 6° of slip, under 4 m sideways), and a key held full for 4 s (full steer) in Sport
+  // and Arcade causes no spin and no slide past 8°. Through Input.update with the real key path; full throttle to hold the speed.
+  await check('steering at speed: a key tap, a flick and a held key at 200+ mph settle straight and cause no spin (hypercar 234 mph and GT 200 mph, Arcade and Sport)', async () => {
+    const run = async (car, h, mph, script, secs) => game(page, async ({ car, h, mph, script, secs }) => {
+      const g = window.__game;
+      if (g.driving !== car) { g.updateSettings({ ...g.settings, owner: true, density: 'none' }); g.chooseOwnerCar(car); await g.start('free'); g.setPaused(true); }
+      const st = window.findStraight('I-405 North', 1200), m = g.findMain(st.label), p = g.phys, v0 = mph / 2.236936;
+      g.placeCar(m, st.s0 + 50, 2, v0); p.handling = h; g.traffic.clearAround(p.x, p.z, 5000);
+      const inp = g.input; inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0, thrust: 0 });
+      const x0 = p.x, z0 = p.z, rx = -Math.cos(p.psi), rz = Math.sin(p.psi);
+      let slip = 0, side = 0, yawLate = 0, rev = 0, lastSg = 0;
+      for (let i = 0; i < secs * 120; i++) {
+        const t = i / 120, k = script(t);
+        inp.held.delete('left'); inp.held.delete('right'); if (k) inp.held.add(k > 0 ? 'right' : 'left');
+        inp.update(1 / 120, Math.abs(p.vx), p.vx > 3 ? Math.atan2(p.vy, p.vx) : 0, p.handling);
+        inp.c.throttle = Math.max(0, Math.min(1, 0.4 + (v0 - p.vx) * 0.6)); inp.c.brake = 0;
+        g.simulate(1 / 120); if (g.steps % 6 === 0) g.stream(1);
+        slip = Math.max(slip, Math.abs(Math.atan2(p.vy, Math.max(1, p.vx))) * 180 / Math.PI);
+        side = Math.max(side, Math.abs((p.x - x0) * rx + (p.z - z0) * rz));
+        if (t > 3.2) { yawLate = Math.max(yawLate, Math.abs(p.r) * 180 / Math.PI); const sg = Math.abs(p.vy) > 0.15 ? Math.sign(p.vy) : 0; if (sg !== 0 && sg !== lastSg) { if (lastSg !== 0) rev++; lastSg = sg; } }
+      }
+      inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0 });
+      return { slip: +slip.toFixed(1), side: +side.toFixed(2), yawLate: +yawLate.toFixed(2), rev, mph: Math.round(p.vx * 2.236936) };
+    }, { car, h, mph, script, secs });
+    const tap = (t) => (t < 0.15 ? 1 : 0), flick = (t) => (t < 0.6 ? 1 : t < 1.2 ? -1 : 0), held = (t) => (t < 4 ? 1 : 0);
+    const out = [];
+    for (const [car, mph] of [['oc-hyper', 234], ['rossini-gt', 200]]) for (const [pn, h] of [['Arcade', 0.15], ['Sport', 0.5]]) {
+      const a = await run(car, h, mph, tap, 6.2), b = await run(car, h, mph, flick, 7.2), c = await run(car, h, mph, held, 6.2);
+      const tag = `${car} ${pn} ${mph} mph`;
+      for (const [what, r] of [['a 0.15 s tap', a], ['a right-left flick', b]]) expect(r.slip < 6 && r.side < 4 && r.yawLate < 0.5 && r.rev <= 1, `${tag}, ${what}: slip ${r.slip}°, ${r.side} m sideways, yaw ${r.yawLate}°/s after 3 s, ${r.rev} sideways reversals`);
+      expect(c.slip < 8 && c.mph >= 0.9 * mph, `${tag}, a key held full 4 s: slip ${c.slip}°, ${c.mph} mph`);
+      out.push(`${tag}: tap ${a.side} m sideways (slip ${a.slip}°), flick slip ${b.slip}° and yaw ${b.yawLate}°/s from 3 s on, held key slip ${c.slip}°`);
+    }
+    await hyperIn(page, 'free');
+    return out.join('; ');
+  });
+  // The keys' slide catch is the one thing the softer keyboard cap must not change (reviewer, 2026-11-23): a key held toward a
+  // slide (counter-steer) keeps the old turn-in rate and 65 % cap, so the overshoot and the catch time stay as they were. 15° of
+  // slip at a held speed on a straight, the key held toward the slide until the slip is under 2°, then let go; on 0d311bd's
+  // build the same driver overshot 1.2-1.4° (the hypercar at 150 mph, Sport), 2.0° (Simulation) and 5.0° (the GT at 120 mph,
+  // Sport) and caught in 0.33, 0.37 and 0.58 s. With the soft cap alone it overshot 2.2, 3.5 and 7.5°.
+  await check('steering at speed: a keyboard slide catch overshoots and takes as long as before (hypercar 150 mph Sport and Simulation, GT 120 mph Sport, 15° slide, released at 2°)', async () => {
+    const one = async (car, h, mph, side) => game(page, async ({ car, h, mph, side }) => {
+      const g = window.__game;
+      if (g.driving !== car) { g.updateSettings({ ...g.settings, owner: true, density: 'none' }); g.chooseOwnerCar(car); await g.start('free'); g.setPaused(true); }
+      const st = window.findStraight('I-405 North', 1200), m = g.findMain(st.label), p = g.phys, v0 = mph / 2.236936;
+      g.placeCar(m, st.s0 + 50, 2, v0); p.handling = h; g.traffic.clearAround(p.x, p.z, 5000);
+      const b0 = (15 * Math.PI / 180) * side; p.vy = v0 * Math.tan(b0); p.vx = v0 * Math.cos(b0); p.r = 0;
+      const inp = g.input; inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0, thrust: 0 });
+      let released = false, tRel = null, over = 0;
+      for (let i = 0; i < 720; i++) {
+        const beta = Math.atan2(p.vy, Math.max(1, p.vx)) * 180 / Math.PI;
+        if (!released && Math.abs(beta) < 2) { released = true; tRel = i / 120; }
+        if (released && Math.sign(beta) === -side) over = Math.max(over, Math.abs(beta));
+        inp.held.delete('left'); inp.held.delete('right'); if (!released) inp.held.add(beta > 0 ? 'left' : 'right');
+        inp.update(1 / 120, Math.abs(p.vx), p.vx > 3 ? Math.atan2(p.vy, p.vx) : 0, p.handling);
+        inp.c.throttle = Math.max(0, Math.min(1, 0.4 + (v0 - p.vx) * 0.6)); inp.c.brake = Math.max(0, Math.min(1, (p.vx - v0 - 0.5) * 0.3));
+        g.simulate(1 / 120); if (g.steps % 6 === 0) g.stream(1);
+      }
+      inp.held.clear(); Object.assign(inp.c, { throttle: 0, brake: 0, steer: 0 });
+      return { over: +over.toFixed(1), tRel: tRel === null ? 99 : +tRel.toFixed(2), mph: Math.round(p.vx * 2.236936) };
+    }, { car, h, mph, side });
+    const out = [];
+    // [car, profile, h, mph, the old overshoot, the old catch time]
+    for (const [car, pn, h, mph, o0, t0] of [['oc-hyper', 'Sport', 0.5, 150, 1.3, 0.33], ['oc-hyper', 'Simulation', 0.9, 150, 2.0, 0.37], ['rossini-gt', 'Sport', 0.5, 120, 5.0, 0.58]]) {
+      for (const side of [1, -1]) {
+        const r = await one(car, h, mph, side);
+        expect(r.over <= o0 + 1.0 && r.tRel <= t0 + 0.12 && r.mph >= 0.9 * mph, `${car} ${pn} ${mph} mph, ${side > 0 ? 'left' : 'right'} slide: overshoot ${r.over}° (as before ${o0}°), caught in ${r.tRel} s (as before ${t0} s), ${r.mph} mph after`);
+        if (side === 1) out.push(`${car === 'oc-hyper' ? 'hypercar' : 'GT'} ${pn} ${mph} mph: overshoot ${r.over}° (was ${o0}°), caught in ${r.tRel} s (was ${t0} s)`);
+      }
+    }
+    await hyperIn(page, 'free');
+    return out.join('; ');
+  });
 });
 
 await group('progression', async (use) => {
