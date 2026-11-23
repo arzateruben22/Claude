@@ -45,7 +45,7 @@ export type CarQuality = 'phone' | 'high';
 export type MirrorMode = 'live' | 'env';
 // finish: a store paint's finish (gloss, metallic, satin, pearl); null or absent is the car's factory metallic flake
 // wheel: the garage's rim style (cars.ts WHEELS); absent, the car's own
-export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle }
+export interface CarConfig { car: CarId; paint: number; finish?: PaintFinish | null; quality: CarQuality; mirrors: MirrorMode; look: DriverLook; presentation: Presentation; nails: number | null; wheel?: WheelStyle; edition?: 'founder' | 'standard' }
 // paused: the game is paused (the hands' off-wheel blend and wave hold still)
 // handling, tank and tcs feed the sport steering wheel's displays: the handling value (its profile on the left dial),
 // the hypercar's Thrust tank (0..1) and whether the traction control is on (the right dial)
@@ -154,7 +154,7 @@ export class PlayerCar {
   // build what changed
   configure(c: CarConfig) {
     const o = this.cfg;
-    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors;
+    const carChanged = !o || o.car !== c.car || o.quality !== c.quality || o.mirrors !== c.mirrors || o.edition !== c.edition;
     const paintChanged = !carChanged && (o!.paint !== c.paint || JSON.stringify(o!.finish ?? null) !== JSON.stringify(c.finish ?? null));
     const wheelsChanged = !carChanged && o!.wheel !== c.wheel;
     const handsChanged = carChanged || o!.presentation !== c.presentation || o!.nails !== c.nails || JSON.stringify(o!.look) !== JSON.stringify(c.look);
@@ -181,13 +181,13 @@ export class PlayerCar {
     this.restoreCabinLight();
     if (this.interior) { for (const m of this.interior.mirrors) m.dispose(); disposeGeometry(this.interior.group); }
     let t = performance.now();
-    const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false });
+    const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false, edition: c.edition });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
     this.mats = ext.userData.materials as Record<string, THREE.Material>;
     this.outsideParts = OUTSIDE_ONLY.map((k) => ext.getObjectByName(k)).filter((x): x is THREE.Object3D => !!x);
     t = performance.now();
-    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false });
+    const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false, edition: c.edition });
     this.stats.cockpitMs = Math.round(performance.now() - t);
     this.interior = ck; this.body.add(ck.group);
     ck.wheel.rotation.z = this.wheelAngle;
@@ -198,7 +198,8 @@ export class PlayerCar {
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
     // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
     // throw a cool white-blue, and their pool on the road takes the same cast (the other cars' stays as it was)
-    const beamC = P.led ? 0xd4e8ff : 0xfff4e6, poolC = P.led ? [0.86, 0.94, 1.0] : [1, 1, 1];
+    const ice = !!P.led && c.edition !== 'standard';     // the earned (standard) hypercar's beams are neutral: the cool cast is Founder Ice's
+    const beamC = ice ? 0xd4e8ff : 0xfff4e6, poolC = ice ? [0.86, 0.94, 1.0] : [1, 1, 1];
     for (const b of this.beams) b.color.setHex(beamC);
     (this.pool.material as THREE.MeshBasicMaterial).color.setRGB(POOL_LEVEL * poolC[0], POOL_LEVEL * poolC[1], POOL_LEVEL * poolC[2]);
     this.lamps = { L: ext.getObjectByName('sigL') ?? null, R: ext.getObjectByName('sigR') ?? null, rev: ext.getObjectByName('reverse') ?? null, glow: ext.getObjectByName('brakeGlow') ?? null };

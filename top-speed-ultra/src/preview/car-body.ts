@@ -1459,9 +1459,12 @@ function makeBody(P: ShapeParams) {
 }
 
 // ------------------------------------------------------------------------------------------------ lamps
+const ICE_NEUTRAL: Record<string, string> = { '#5eb8ff': '#f4f6f8', '#8fd0ff': '#c9ced6', '#e8f6ff': '#ffffff', '#0c4fb8': '#8a929c', '#2a7ae0': '#b4bbc4', '#9fc6ee': '#c4c9d0' };
 // The lamp textures for each car's style, drawn in code: housings, projector lenses, light guides; the tail atlas
 // has a bar lens on its left half and a round lens on its right.
-function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blade') {
+function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blade', neutral = false) {
+  // the standard OC Hypercar's blade is neutral white where the Founder Edition's is Founder Ice blue (the ice colours map to greys)
+  const ice = (c: string) => (neutral ? ICE_NEUTRAL[c] ?? c : c);
   const w = kind === 'head' ? 512 : 1024, h = 128;
   const mk = () => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')!] as const; };
   const [c, g] = mk(), [ce, ge] = mk();
@@ -1503,7 +1506,7 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       // (M1b repair: the white-blue core fills the middle 44% of the face, was 20%, and burns a little hotter, so from the
       // sheet's low hero camera the blade reads as its long lit bar, not a blue line)
       g.fillStyle = '#04060a'; g.fillRect(0, 0, w, h);
-      for (const [ctx, edge, body, core] of [[g, '#5eb8ff', '#8fd0ff', '#e8f6ff'], [ge, '#0c4fb8', '#2a7ae0', '#8fd0ff']] as const) {
+      for (const [ctx, edge, body, core] of [[g, ice('#5eb8ff'), ice('#8fd0ff'), ice('#e8f6ff')], [ge, ice('#0c4fb8'), ice('#2a7ae0'), ice('#8fd0ff')]] as const) {
         const fg = ctx.createLinearGradient(0, 2, 0, 46);
         fg.addColorStop(0, edge); fg.addColorStop(0.12, body); fg.addColorStop(0.28, core); fg.addColorStop(0.72, core); fg.addColorStop(0.88, body); fg.addColorStop(1, edge);
         ctx.fillStyle = fg; ctx.fillRect(0, 2, w, 44);
@@ -1517,7 +1520,7 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       // emissive map), hardly paint: the lens stays smoked by day, so from the hood camera, which looks down on the
       // sockets, they read as dark glass with a glow along the blade, not as blue panels
       for (const [ctx, a] of [[g, 0.12], [ge, 0.5]] as const) {
-        const sp = ctx.createLinearGradient(0, 54, 0, 72); sp.addColorStop(0, `rgba(30,111,216,${a})`); sp.addColorStop(1, 'rgba(30,111,216,0)');
+        const sp = ctx.createLinearGradient(0, 54, 0, 72); sp.addColorStop(0, neutral ? `rgba(170,178,188,${a})` : `rgba(30,111,216,${a})`); sp.addColorStop(1, neutral ? 'rgba(170,178,188,0)' : 'rgba(30,111,216,0)');
         ctx.fillStyle = sp; ctx.fillRect(0, 54, w, 18);
       }
       for (let x = 14; x < w - 110; x += 18) { g.fillStyle = 'rgba(150,170,195,0.12)'; g.fillRect(x, 56, 2, 66); }
@@ -1525,9 +1528,9 @@ function lampTex(kind: 'head' | 'tail', style: 'twin' | 'round' | 'slim' | 'blad
       for (let k = 0; k < 3; k++) {
         const x = w - 92 + k * 30, y = 90;
         g.fillStyle = '#5d646c'; g.fillRect(x - 12, y - 22, 24, 44);
-        const cg = g.createLinearGradient(x, y - 18, x, y + 18); cg.addColorStop(0, '#9fc6ee'); cg.addColorStop(0.45, '#14202e'); cg.addColorStop(1, '#05070a');
+        const cg = g.createLinearGradient(x, y - 18, x, y + 18); cg.addColorStop(0, ice('#9fc6ee')); cg.addColorStop(0.45, '#14202e'); cg.addColorStop(1, '#05070a');
         g.fillStyle = cg; g.fillRect(x - 9, y - 18, 18, 36);
-        ge.fillStyle = 'rgba(30,111,216,0.45)'; ge.fillRect(x - 6, y - 10, 12, 20);
+        ge.fillStyle = neutral ? 'rgba(170,178,188,0.45)' : 'rgba(30,111,216,0.45)'; ge.fillRect(x - 6, y - 10, 12, 20);
       }
     } else {
       // slim: a light guide along the top edge, five matrix cells under it
@@ -1574,18 +1577,19 @@ const lampCache = new Map<string, { lamp: THREE.Material; tail: THREE.Material }
 // userData.levels): 1.6 and 5 for every car's lamps, and for the hypercar's thin bar a dim tail light and a bright
 // stop, because a 2 cm bar of saturated red reads the same at 1.6 and 5 once the tone map has clipped it
 const TAIL_LEVELS: Record<'std' | 'blade', [number, number]> = { std: [1.6, 5], blade: [0.5, 6] };
-export function lampMaterials(style: 'twin' | 'round' | 'slim' | 'blade' = 'twin') {
-  if (!lampCache.has(style)) {
-    const head = lampTex('head', style), tail = lampTex('tail', style);
-    lampCache.set(style, {
+export function lampMaterials(style: 'twin' | 'round' | 'slim' | 'blade' = 'twin', neutral = false) {
+  const key = neutral ? style + '-neutral' : style;
+  if (!lampCache.has(key)) {
+    const head = lampTex('head', style, neutral), tail = lampTex('tail', style);
+    lampCache.set(key, {
       // (the blade's socket is a smoked lens in a black recess: it keeps a third of the sky's reflection, so it reads
       // dark over the lit face as on the sheet, not as a pale ledge)
       lamp: new THREE.MeshPhysicalMaterial({ map: head.map, emissive: 0xffffff, emissiveMap: head.emissiveMap, emissiveIntensity: 2.4, metalness: style === 'blade' ? 0.1 : 0.4, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: style === 'blade' ? 0.3 : 1 }),
       tail: new THREE.MeshPhysicalMaterial({ map: tail.map, emissive: 0xffffff, emissiveMap: tail.emissiveMap, emissiveIntensity: TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'][0], roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.02 }),
     });
-    lampCache.get(style)!.tail.userData.levels = TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'];
+    lampCache.get(key)!.tail.userData.levels = TAIL_LEVELS[style === 'blade' ? 'blade' : 'std'];
   }
-  return lampCache.get(style)!;
+  return lampCache.get(key)!;
 }
 
 // The GT's numbers and functions, for code written against the single-car module (car-wheel, older tests)
