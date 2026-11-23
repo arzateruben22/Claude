@@ -39,12 +39,16 @@ export class Visibility {
   // three.js 0.160.1 calls these as (renderer, object, camera, shadowCamera, geometry, depthMaterial, group)
   // (WebGLShadowMap.js renderObject; the shipped type declarations list one argument fewer), so they're typed here
   // by what the runtime passes and cast where they're set
+  private savedStart = new WeakMap<THREE.BufferGeometry, number>();
   private readonly beforeFn = (_r: unknown, o: THREE.Object3D, _c: unknown, sc: THREE.Camera, g: THREE.BufferGeometry) => {
     const bit = this.bits.get(sc) ?? 1;
     if (((o.userData.maps ?? 1) & bit) === 0) { this.savedCount.set(g, g.drawRange.count); g.drawRange.count = 0; }
+    // (2026-11-23) a batch split by mode (lod.ts) casts its shared part only at HD and Ultra
+    else if (o.userData.shadowRange) { const [st, n] = o.userData.shadowRange as [number, number]; this.savedCount.set(g, g.drawRange.count); this.savedStart.set(g, g.drawRange.start); g.drawRange.start = st; g.drawRange.count = n; }
   };
   private readonly afterFn = (_r: unknown, _o: unknown, _c: unknown, _sc: unknown, g: THREE.BufferGeometry) => {
     const n = this.savedCount.get(g); if (n !== undefined) { g.drawRange.count = n; this.savedCount.delete(g); }
+    const st = this.savedStart.get(g); if (st !== undefined) { g.drawRange.start = st; this.savedStart.delete(g); }
   };
   readonly before = this.beforeFn as unknown as THREE.Object3D['onBeforeShadow'];
   readonly after = this.afterFn as unknown as THREE.Object3D['onAfterShadow'];

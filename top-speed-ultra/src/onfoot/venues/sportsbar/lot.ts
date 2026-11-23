@@ -60,8 +60,17 @@ export function buildBarLot(kit: Kit, m: BarMats, F: Frame, slice: SliceJson, lo
   }
   // 6 m pole lights round the courtyard and by the front (ours)
   const poles: P2[] = [[-6606.5, -9384.8], [-6619, -9384.8], [-6631.5, -9384.8], [-6644, -9384.8], [-6625, -9360], [-6645, -9369], [-6620.5, -9328.8]];   // the courtyard's 3 m median, the drive along the arm's courtyard wall, and south of the patio
+  // (2026-11-23, the art review: a pole stood in the middle of the raised centre walkway) the four on the courtyard's
+  // median stand beside the walkway, not on it: on a stall line at the head of the nearest stall, 1.3 m off the
+  // walkway's centre, between two cars' noses (the stalls themselves don't move)
+  const WALK_Z = -9384.8;
   for (const g of poles) {
-    const [x, z] = toL(g);
+    let [x, z] = toL(g);
+    if (g[1] === WALK_Z) {
+      let best: Stall | null = null, bd = Infinity;
+      for (const s of stalls) { const d = Math.abs(s.x - x) + 3 * Math.abs(Math.abs(s.z - z) - D / 2 - 1.45); if (Math.abs(s.z - z) < D / 2 + 1.6 && d < bd) { bd = d; best = s; } }
+      if (best) { const sx = Math.abs(best.x - W / 2 - x) < Math.abs(best.x + W / 2 - x) ? best.x - W / 2 : best.x + W / 2; x = sx; z = z + Math.sign(best.z - z) * 1.3; }
+    }
     concrete.cyl(x, 0, z, 0.24, 0.24, 0.45, 10, 0xb9b3a7);
     steel.cyl(x, 0.45, z, 0.08, 0.06, 5.6, 8, 0x3a3d40, false);
     heads.box(x, 6.1, z, 0.5, 0.12, 0.5, 0xffffff);
