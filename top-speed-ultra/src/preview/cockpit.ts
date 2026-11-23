@@ -720,7 +720,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // just under the glass (0.39 to 0.49 m), so nothing of the tub stands out over the sidepods
   const wallX = (z: number) => hyper ? body.canopyX(z, sill(z) - 0.02) - 0.015 : 0.866;
   for (const sd of [-1, 1] as const) {
-    const zs = range(-0.94, 0.5, high ? 26 : 14);
+    // (the hypercar's in finer steps: its canopy's foot turns in sharply by the windscreen, and the door's front rows,
+    // 10 cm apart, cut across the skin there; the build's last step keeps the finer rows inside it)
+    const zs = range(-0.94, 0.5, hyper ? 72 : high ? 26 : 14);
     // (the hypercar: every door part below is moved in to its wall, and its heights scaled so the insert's top meets
     // the glass; the sill cap is built in place)
     const kw = kit.warp;
@@ -845,8 +847,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const lid = new RoundedBoxGeometry(0.21, 0.014, 0.94, 2, 0.005); lid.translate(0, 0.452, -0.13); kit.add('carbon', lid);
     const bridge = new RoundedBoxGeometry(0.08, 0.04, 0.3, 4, 0.016); bridge.translate(0, 0.475, -0.38); kit.add('alu', bridge);
     kit.warp = w;
-    const floor = new THREE.PlaneGeometry(1.74, 1.6); floor.rotateX(-Math.PI / 2); floor.translate(0, 0.12 + floorY, -0.25); kit.add('carpet', floor);
-    const toe = new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27 + floorY, -1.12); kit.add('carpet', toe);
+    // (the hypercar's in a grid, so its edges can follow its skirts' skin: the build's last step keeps them inside)
+    const floor = hyper ? new THREE.PlaneGeometry(1.74, 1.6, 12, 16) : new THREE.PlaneGeometry(1.74, 1.6); floor.rotateX(-Math.PI / 2); floor.translate(0, 0.12 + floorY, -0.25); kit.add('carpet', floor);
+    const toe = hyper ? new THREE.PlaneGeometry(1.74, 0.42, 12, 3) : new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27 + floorY, -1.12); kit.add('carpet', toe);
   }
 
   // ---------------------------------------------------------------- the Founder Edition's numbered plaques
@@ -868,10 +871,16 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     put(hyper ? 0.13 : 0.18, mat(0, 0.467 + cy, -0.1 + cz, -Math.PI / 2 + 0.3));
     // the sill cap at z -0.3: across the cap, laid on it and tilted 0.25 rad inboard; the lettering runs forward, its top outboard
     const zs = -0.3, ys = sill(zs), gx = body.canopyX(zs, ys + 0.012) - 0.008, xm = (0.845 + gx) / 2;
-    const sm = new THREE.Matrix4().makeTranslation(-xm, ys + 0.006, zs)
-      .multiply(new THREE.Matrix4().makeRotationZ(-0.25)).multiply(new THREE.Matrix4().makeRotationY(Math.PI / 2)).multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
+    // (the hypercar's sill cap is a strip a centimetre wide between its door card and its glass, and the plate laid
+    // across the others' 35 cm cap stood 18 cm out through its door top, a dark slot on the paint (2026-11-22): it
+    // stands on the door card's Alcantara insert instead, just under the cap, facing the driver, the lettering running
+    // forward)
+    const hw = hyper ? wallX(zs) - 0.008 : 0, hy = hyper ? ys - 0.045 : 0;
+    const sm = hyper ? new THREE.Matrix4().makeBasis(v3(0, 0, -1), v3(0, 1, 0), v3(1, 0, 0)).setPosition(-hw + 0.001, hy, zs)
+      : new THREE.Matrix4().makeTranslation(-xm, ys + 0.006, zs)
+        .multiply(new THREE.Matrix4().makeRotationZ(-0.25)).multiply(new THREE.Matrix4().makeRotationY(Math.PI / 2)).multiply(new THREE.Matrix4().makeRotationX(-Math.PI / 2));
     put(0.14, sm);
-    group.userData.plaques = { number, sill: { x: -xm, y: ys + 0.006, z: zs, capW: 0.845 - gx }, console: { x: 0, y: 0.459 + cy, z: -0.1 + cz } };
+    group.userData.plaques = { number, sill: hyper ? { x: -hw, y: hy, z: zs, capW: Math.abs(wallX(zs) - gx) } : { x: -xm, y: ys + 0.006, z: zs, capW: 0.845 - gx }, console: { x: 0, y: 0.459 + cy, z: -0.1 + cz } };
   }
 
   // ---------------------------------------------------------------- the car's body seen through the glass
@@ -917,7 +926,26 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   }
 
   // ---------------------------------------------------------------- build
-  kit.build(mats, group, { shadow: (k) => ['alc', 'nappa', 'tan', 'paint', 'carbon', 'plastic'].includes(k) });
+  const built = kit.build(mats, group, { shadow: (k) => ['alc', 'nappa', 'tan', 'paint', 'carbon', 'plastic'].includes(k) });
+  // the hypercar's cabin kept under its skin (car-body keepInside): its narrow canopy stands on wide sidepods, and the
+  // parts sized for the others' wide tubs came out through its paint, seen from outside (2026-11-22): the seats'
+  // head sections behind the side windows (a tan speck on the rear flank since v22), the dash's ends and the door
+  // cards' lower fronts by the windscreen's foot and at the door's leading edge, the carpet's edges along the
+  // skirts. Each vertex outside the skin goes 3 cm inside it (the skin is drawn in flat facets, which cut inside its curve); one already inside stays put, so nothing the driver
+  // sees inside the cabin moves. (The glass and frit lie on the skin itself; the plaque is placed on the door above)
+  if (hyper) {
+    const q = new THREE.Vector3();
+    for (const [k, m] of Object.entries(built)) {
+      if (/glass|frit|dust/i.test(k)) continue;
+      const pa = m.geometry.attributes.position as THREE.BufferAttribute; let moved = false;
+      for (let i = 0; i < pa.count; i++) {
+        q.fromBufferAttribute(pa, i);
+        if (Math.abs(q.x) < 0.25 && q.y < 0.95) continue;          // (the middle of the cabin is nowhere near the skin)
+        if (body.keepInside(q, 0.03)) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
+      }
+      if (moved) { pa.needsUpdate = true; m.geometry.computeBoundingSphere(); }
+    }
+  }
   // (the luxury wheel's rim carbon: the same weave with a calmer reflection, so its top and bottom stay dark at night)
   // (and a finer weave than the dash's, 4 cm a repeat, so the rim reads as twill at phone size; the thread glows a
   // little so the double stitching reads at night: the default sport wheel's too)

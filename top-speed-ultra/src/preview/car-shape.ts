@@ -95,6 +95,7 @@ export interface ShapeParams {
   hoodY?: number;                        // the game's hood camera's height (1.0 m; the hypercar's bonnet sits lower)
   seatX?: number;                        // the seats' |x| (0.37, the shared driver's frame): the driver, the wheel and both seats move to it
   eyeNudge?: [number, number, number];   // the seat camera only, off this car's eye (x, y, z m): the driver sitting up and leaning in
+  seatPitchL?: number;                   // the seat camera's pitch in landscape and on a desktop (rad; Game.updateCamera; -0.085 if absent)
   seatFwd?: number;                      // how far this car's driver sits ahead of the shared frame: the eye, the wheel, the hands, the
                                          // seats and the dash move forward (-z) by it (seatOffset); the dash's front edge stays on the glass
   armRoom?: number;                      // a door close to the driver: how far out of the driver's centreline the left elbow may sit
@@ -372,6 +373,12 @@ const HYPER: ShapeParams = {
   // (z -0.10) is then over the camera, out of frame both ways up, the left A-pillar's foot leaves the frame's top
   // left, and the bonnet's rear half and nose stand over the cowl. The hands, wheel and dash stay where they are
   eyeNudge: [0, 0.01, -0.12],
+  // in landscape and on a desktop its seat camera looks 0.24 rad down, not the others' 0.085 (2026-11-22): from that
+  // eye the frame's bottom edge cut the wheel at its hub (the hub's cover from 97 % of the height down, its centre
+  // below the frame at 852 x 393 and 1280 x 720, 200 mph) and the canopy's left frame crossed the upper left. Now the
+  // hub sits whole in the frame (to 95 %; about 99 % at a standstill, the narrower view), the horizon at 32 % (the
+  // portrait view's 31 %), the cluster at 70-77 % and the bonnet from 44 %. Portrait aims its own pitch, unchanged
+  seatPitchL: -0.24,
   // its bonnet is 0.25 m lower than the others': the hood camera comes down 0.15 m so its crests and V stay in frame
   hoodY: 0.85,
   // the LED family, as material colours: under ACES at the strip's 2.8x emissive a pale ice (the old 0xa6dcff) tone-maps

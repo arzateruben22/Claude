@@ -103,7 +103,9 @@ if (interior) {
   if (q.get('hands') === '1') {
     try {
       const [{ buildDriverArms }, { lookFor }] = await Promise.all([import('./hands'), import('../game/drivers')]);
-      const arms = buildDriverArms({ look: lookFor('closer', 'm', 1), presentation: 'm', quality });
+      // (with the car's room for the arms, as PlayerCar builds them: the OC Hypercar's door stands close to its driver,
+      // so its shoulders come in and the left elbow swings in, car-shape armRoom; the other cars have none)
+      const arms = buildDriverArms({ look: lookFor('closer', 'm', 1), presentation: 'm', quality, room: shapeFor(car).armRoom });
       ck.wheel.add(arms.group);
       log.hands = 'ok';
     } catch (e) { log.hands = String(e); }

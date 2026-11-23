@@ -2710,6 +2710,26 @@ await group('render', async (use) => {
           if (gap < out.skin.gap) { out.skin.gap = gap; out.skin.at = [v.x, v.y, v.z].map((q) => +q.toFixed(3)); }
         }
       });
+      // every cabin mesh along the flanks stays under the skin too (2026-11-22): the cockpit's meshes (not its glass,
+      // which lies on the skin) and the outside-only silhouette, each vertex from the windscreen's foot to the bulkhead
+      // (|z| 0.6) and out of the cabin's middle (|x| over 0.25), against the same section: inside the canopy's flank
+      // and under its top above the shoulder, inside the side below it. v22 to v25 had the seats' head sections 2.3 cm
+      // out behind the side windows (the tan speck on the rear flank) and the sill plaque 18 cm out of the door's top
+      out.flank = { n: 0, out: 0, gap: Infinity, at: null, worst: null }; c.root.updateMatrixWorld(true);
+      const inCabin = (o) => { for (let a = o; a; a = a.parent) { if (a.name === 'body' && a !== ext) return false; if (a === c.interior.group) return true; } return false; };
+      const GLASSY = /glass|windscreen|frit|dust|reflection/i;
+      for (const root of [c.interior.group, ext]) root.traverse((o) => {
+        if (!o.isMesh || !o.geometry || GLASSY.test(o.name)) return;
+        if (root === ext ? !(o.name === 'interior' || o.name === 'seatSil') : !inCabin(o)) return;
+        const p = o.geometry.attributes.position, v = new o.position.constructor(), m = ext.matrixWorld.clone().invert().multiply(o.matrixWorld);
+        for (let i = 0; i < p.count; i++) {
+          v.fromBufferAttribute(p, i).applyMatrix4(m); const a = Math.abs(v.x);
+          if (Math.abs(v.z) > 0.6 || a < 0.25 || v.y < 0.15) continue;
+          const Ys = sec.shoulder(v.z).Ys, gap = v.y >= Ys ? Math.min(sec.canopyX(v.z, v.y) - a, sec.top(v.z, a) - v.y) : sec.side(v.z, v.y) - a;
+          out.flank.n++; if (gap <= 0) out.flank.out++;
+          if (gap < out.flank.gap) { out.flank.gap = gap; out.flank.at = [v.x, v.y, v.z].map((q) => +q.toFixed(3)); out.flank.worst = (root === ext ? 'outside ' : 'cockpit ') + o.name; }
+        }
+      });
       // how far the beam starts from the nearest vertex of the lit blades (the exterior's 'lamp' meshes), both in the
       // car's own frame: the beam's position on the car's root against the blades' vertices in the exterior's frame (the
       // body the exterior hangs on rides and pitches over the root, so world positions would mix in the suspension)
@@ -2765,6 +2785,9 @@ await group('render', async (use) => {
     // (the gap is the lesser of the flank's and the top's: 0.023 m at 2026-11-17, at the hoop's shoulder; the plain
     // circle 0.15 m low measured -0.052 m, through the skin)
     expect(r.skin.n > 100 && r.skin.gap > 0.004, `the cabin through the skin by the roll hoop: ${r.skin.n} vertices, the closest ${r.skin.gap.toFixed(3)} m inside at ${JSON.stringify(r.skin.at)}`);
+    // (the fix: 0 of 28,493 out, the closest the bulkhead's edge, built 3 mm inside the flank; 37a4a731: 910 of 26,517
+    // out, the plaque's plinth 0.19 m out of the door top and the 'tan' seat heads 0.023 m out at (-0.398, 0.916, 0.494))
+    expect(r.flank.n > 2000 && r.flank.out === 0, `the cabin through the skin along the flanks: ${r.flank.out} of ${r.flank.n} vertices out, the worst ${r.flank.gap.toFixed(3)} m (${r.flank.worst}) at ${JSON.stringify(r.flank.at)}`);
     expect(Math.abs(r.eye[0] + 0.27) < 0.005 && Math.abs(r.eye[1] - 1.02) < 0.005 && Math.abs(r.eye[2] + 0.12) < 0.005, `the hypercar's seat camera at ${r.eye.map(fmt)} (want -0.27, 1.02, -0.12)`);
     // (the beam starts on the blade: within 4 cm of a vertex of its lit face, in the car's frame (0.023 m measured; 0.028
     // at b49f7f3), low and outboard, not at the shared default (0.62, 0.55, -2.2). Was z < -2.2 until M1b, whose plan V
@@ -2779,7 +2802,7 @@ await group('render', async (use) => {
     expect(r.rev.gear < 0 && r.rev.on && r.rev.signal === 0, `reversing (lamps on, no signal): ${JSON.stringify(r.rev)}`);
     expect(r.gauge && !r.rearView && r.back === r.was, `gauge pod ${r.gauge}, rear-view ${r.rearView}, back to ${r.back} (was ${r.was})`);
     expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
-    return `eye ${r.eye.map(fmt)}, cabin ${r.skin.gap.toFixed(3)} m under the skin by the hoop (${r.skin.n} vertices), beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
+    return `eye ${r.eye.map(fmt)}, cabin ${r.skin.gap.toFixed(3)} m under the skin by the hoop (${r.skin.n} vertices), along the flanks ${r.flank.gap.toFixed(3)} m (${r.flank.worst}, ${r.flank.n} vertices), beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
@@ -3376,6 +3399,54 @@ await group('phone', async (use) => {
     const out = `bonnet ${pc(r.share)} of the frame, ${r.rows} rows, from ${pc(r.top ?? 1)} down (fov ${r.fov}, ${r.mph} mph)`;
     expect(r.share >= 0.016 && r.top !== null && r.top < 0.43, out);
     return out;
+  });
+  // the OC Hypercar's seat view sideways and on a desktop (2026-11-22, the v23 judges' note): at 852 x 393 (an iPhone on
+  // its side) and 1280 x 720, wheel straight, cruising at 200 mph, the frame's bottom edge cut the wheel at its hub, the
+  // hub's cover from 97 % of the height down and its centre below the frame (37a4a731: hub 98-114 %, centre 106 %,
+  // horizon 43 %; the fix: hub 84-96 %, horizon 32 %, cluster 71-78 %, bonnet 2.4 % from 44 %). The hub's cover stays whole in the frame with 2 % to spare and no control over it, the cluster in
+  // the frame with nothing over it, the horizon at 28-40 %, the bonnet at least 1.6 % of the frame (car-shape seatPitchL)
+  await check('the hypercar\'s seat view on a phone sideways and on a desktop: the wheel\'s hub and the cluster in view, the bonnet over the cowl', async () => {
+    if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
+    const out = [], fails = [];
+    for (const [w, h] of [[852, 393], [1280, 720]]) {
+      await page.setViewportSize({ width: w, height: h });
+      await game(page, () => {
+        const g = window.__game;
+        g.car.configure({ ...g.car.config, car: 'oc-hyper' }); g.setCam('cockpit'); g.fastForward(6, {}, 89.4); g.phys.delta = 0;
+      });
+      await page.waitForFunction(() => window.__game.camBlend >= 1, null, { timeout: FRAMES_MS });
+      await frames(page, 6);
+      const r = await game(page, () => {
+        const g = window.__game, cam = g.camera, W = innerWidth, H = innerHeight, R = document.querySelector('.stage canvas').getBoundingClientRect();
+        cam.updateMatrixWorld(true);
+        const hub = g.car.interior.wheel.getObjectByName('wheel-hub-cover'); hub.updateMatrixWorld(true);
+        const p = hub.geometry.attributes.position, v = cam.position.clone(); let t = 1e9, b = -1e9, l = 1e9, rr = -1e9;
+        for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); hub.localToWorld(v).project(cam); const y = (R.top + (1 - v.y) / 2 * R.height) / H, x = (R.left + (v.x + 1) / 2 * R.width) / W; t = Math.min(t, y); b = Math.max(b, y); l = Math.min(l, x); rr = Math.max(rr, x); }
+        const c = g.car.interior.wheel.getWorldPosition(cam.position.clone()).project(cam);
+        return { hub: { t, b, l, r: rr }, centre: (R.top + (1 - c.y) / 2 * R.height) / H, fov: +cam.fov.toFixed(1), mph: Math.round(Math.abs(g.phys.vx) * 2.236936) };
+      });
+      const m = await game(page, hudLayoutInPage);
+      await game(page, () => window.__game.setPaused(true));
+      await frames(page, 2);
+      const hood = await game(page, hoodInPage);
+      await game(page, () => window.__game.setPaused(false));
+      const hubBox = { l: r.hub.l * w, r: r.hub.r * w, t: r.hub.t * h, b: r.hub.b * h };
+      const over = await game(page, (hb) => [...document.querySelectorAll('.touch-steer, .pedal, .touch-shift .tbtn, .hud-ability, .hud-thrustbtn, .tbtn.honk, .tbar .tbtn, .corner, .hud-plate')]
+        .filter((e) => { const q = e.getBoundingClientRect(), cs = getComputedStyle(e); return cs.display !== 'none' && q.width > 0 && q.left < hb.r && hb.l < q.right && q.top < hb.b && hb.t < q.bottom; })
+        .map((e) => String(e.className).split(' ')[0]), hubBox);
+      const line = `${w}x${h}: hub ${pc(r.hub.t)}-${pc(r.hub.b)} (centre ${pc(r.centre)}), cluster ${m.cluster ? pc(m.cluster.mid) + '-' + pc(m.cluster.bottom) : '-'}, horizon ${pc(m.horizon)}, bonnet ${pc(hood.share)} from ${pc(hood.top ?? 1)} (fov ${r.fov}, ${r.mph} mph)`;
+      if (!(r.hub.b <= 0.98 && r.hub.t >= 0.5)) fails.push(`${w}x${h}: the wheel's hub ${pc(r.hub.t)}-${pc(r.hub.b)} of the height`);
+      if (over.length) fails.push(`${w}x${h}: over the hub: ${over.join(', ')}`);
+      if (!(m.cluster && m.cluster.bottom <= 1 && m.cluster.hits.length === 0)) fails.push(`${w}x${h}: the cluster ${JSON.stringify(m.cluster)}`);
+      if (!(m.horizon >= 0.28 && m.horizon <= 0.4)) fails.push(`${w}x${h}: the horizon at ${pc(m.horizon)}`);
+      if (!(hood.share >= 0.016)) fails.push(`${w}x${h}: the bonnet ${pc(hood.share)}`);
+      out.push(line);
+    }
+    await game(page, () => { const g = window.__game; g.car.configure({ ...g.car.config, car: 'rossini-gt' }); g.setCam('chase'); });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await frames(page, 2);
+    expect(fails.length === 0, fails.join('; ') + ' | ' + out.join(' | '));
+    return out.join(' | ');
   });
   // the sleeves from the seat on a phone (owner, 2026-11-16, v18 on an iPhone: "The left arm still needs to be fixed",
   // the white shirt sleeve "one oversized, flat, untextured white slab"). The OC Hypercar's seat view at the iPhone's

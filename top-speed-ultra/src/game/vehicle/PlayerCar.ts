@@ -80,6 +80,7 @@ export class PlayerCar {
   readonly body = new THREE.Group();          // sprung: pitch, roll, heave, vibration
   readonly eye = new THREE.Object3D();
   readonly eyeNudge = new THREE.Vector3();          // the part of the eye's offset that is the seat camera's nudge (car-shape eyeNudge)
+  seatPitchL = -0.085;                               // the seat camera's landscape and desktop pitch (car-shape seatPitchL)
   readonly hood = new THREE.Object3D();
   readonly rear = new THREE.Object3D();
   readonly beams: THREE.SpotLight[] = [];     // two headlamp beams, off by day: they light the traffic and the walls
@@ -194,6 +195,7 @@ export class PlayerCar {
     const B = bodyFor(c.car), P = shapeFor(c.car);
     this.buildSunOccluder(B, ck);
     // the driver's eye (the hypercar's sits lower, further in and forward), and the headlamp beams from this car's lamps
+    this.seatPitchL = P.seatPitchL ?? -0.085;
     this.eyeNudge.set(...(P.eyeNudge ?? [0, 0, 0])); this.eye.position.copy(B.eye).add(this.eyeNudge); this.hood.position.set(0, P.hoodY ?? 1.0, -1.45);
     this.beams.forEach((b, i) => { const s = i ? 1 : -1; b.position.set(s * B.beamAt.x, B.beamAt.y, B.beamAt.z); b.target.position.set(s * B.beamAt.x, 0.9, -70); });
     // the beams' colour: warm white (halogen-like) for the Rossinis and the Vela; the hypercar's ice-blue LED blades
