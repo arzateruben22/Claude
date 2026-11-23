@@ -9,6 +9,11 @@ cockpit needs to match exactly to the reference image to the best you can do"; "
 bigger if necessary".
 Dev page matched camera: test-car.ts view=ref-int (&car=oc-hyper&time=day, 1672x941).
 
+## Owner's focus (2026-11-23, resume session)
+"I'm primarily focused on the dashboard, sports wheel design, center console, and vibe of our interior." Rank the
+cockpit's dashboard, wheel, centre console and the cabin's materials and ambient light first; the hood from the seat
+and the exterior come after. Still "match our cockpit reference the closest it can get" (interior.png).
+
 ## Part 1 (built and committed)
 Part 1 is built and committed on fix/hyper-int (HEAD 997fa15b). Nothing was pushed, and no suite group was run.
 
