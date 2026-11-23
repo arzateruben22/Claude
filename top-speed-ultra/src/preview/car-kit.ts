@@ -251,7 +251,8 @@ export class Kit {
     if (!geo.attributes.normal) geo.computeVertexNormals();
     if (uv !== 'keep' || !geo.attributes.uv) boxUV(geo, typeof uv === 'number' ? uv : 0.1);
     if (this.warp) warpGeo(geo, this.warp);
-    for (const k of Object.keys(geo.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv') geo.deleteAttribute(k);
+    // ('across': an LED ribbon's half-width vectors, car-mats led; every part filed under an LED's key carries it)
+    for (const k of Object.keys(geo.attributes)) if (k !== 'position' && k !== 'normal' && k !== 'uv' && k !== 'across') geo.deleteAttribute(k);
     if (!this.parts.has(key)) this.parts.set(key, []);
     this.parts.get(key)!.push({ g: geo });
     return this;

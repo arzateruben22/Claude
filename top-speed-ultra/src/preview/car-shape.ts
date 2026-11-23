@@ -410,8 +410,13 @@ const HYPER: ShapeParams = {
   // (judge round 1: the hump louvres move back over the wheel onto the humps' inner slopes and tops, where the
   // references' interior view shows them beside the dash; the centre is one black section 0.6 m wide at its rear,
   // narrowing toward the nose, with no painted spine between two panels)
-  ventsQ: [[[0.42, -1.82], [0.72, -1.84], [0.75, -1.38], [0.46, -1.36]]],
-  bonnetVents: { x: [0, 0.3], z: [-2.12, -1.42], n: 12, taper: 0.6 },
+  // (judge round 2: from the seat those panels sat outside the portrait frame, so none showed; as slim slots up the
+  // humps' inner slopes back to the cowl, about 0.2 m across, they stand at both edges of the iPhone's seat view as in
+  // the references' interior view, and read from outside as slots along the fender tops, not big squares)
+  ventsQ: [[[0.36, -1.6], [0.5, -1.62], [0.6, -1.2], [0.46, -1.18]]],
+  // (judge round 2: the centre vent set back toward the cowl, z -1.95 to -1.35, so a pearl nose runs ahead of it, as
+  // in the references, where it started 0.3 m behind the nose by the badge)
+  bonnetVents: { x: [0, 0.3], z: [-1.95, -1.35], n: 10, taper: 0.6 },
   plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
@@ -421,7 +426,10 @@ const HYPER: ShapeParams = {
   lowCarbon: [0.3, 0.38],
   // (judge round 1: the references' side view shows the fin zone dark under a thin pearl lip, back to the fender's
   // upright front edge about 0.4 m behind the nose)
-  noseCarbon: { z: 0.42, share: 0.8 },
+  // (2026-11-23, the owner's crop and judge round 2: as carbon quads of the skin its edge stepped with the stations and
+  // the facets' normals, a sawtooth at the fender's front; now a gloss-black wedge drawn by the paint shader, its top
+  // raked down toward the nose and its rear edge leaning back, so its edge is one clean line: masks below)
+  noseCarbon: undefined,
   // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
   // light (the front and rear views), and a warm sky doesn't turn the paint bronze
   // (M1b: metalness 0.3 -> 0.06 and the sky's reflection 1.2x: the front and rear faces, turned from the sun, read
@@ -436,7 +444,13 @@ const HYPER: ShapeParams = {
   // reference's (147, 147, 155) with a third of its spread: more metal and reflection so the flanks take the road and
   // the sky, the base coat toned from the swatch's blue toward a neutral cool silver (#C8D3E8 -> about #C3C7CE, the
   // store's swatch unchanged), and a flake normal map on 'high')
-  paintFinish: { metal: 0.62, rough: 0.2, env: 1.7, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
+  // (2026-11-23, the owner's crop: "pixels and color mismatches": grey, cloudy patches over the bonnet, the nose and the
+  // fender that read as dirt. Measured at his camera: with metalness 0.62 the base coat mirrors the sky and the road
+  // through every small turn of the skin's facets, and that, not the peel map or the baked occlusion (each toggled:
+  // the bonnet's mid-frequency spread 7.75 and 7.54 against 7.75), drew the patches; at metalness 0 it fell to 6.55
+  // and the patches went. 0.25 (6.54) keeps a little of the references' cool grey on the flanks: the white reads
+  // clean, its reflections in the clear coat, as the owner's photos do)
+  paintFinish: { metal: 0.25, rough: 0.25, env: 1.5, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
@@ -481,6 +495,15 @@ const HYPER: ShapeParams = {
     { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.44, 0.0], [0.69, 0.0], [0.69, 0.437], [0.44, 0.364]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.67, 0.0], [0.805, 0.0], [0.805, 0.484], [0.67, 0.425]], soft: 0.004, range: [-3, -1.9] },
+    // the nose's dark fin zone from the side (in place of noseCarbon's quads): a wedge from the nose back to the
+    // fender's front edge, its top 0.24 m at the nose rising to 0.40 m, its rear edge raked back; side-facing faces only,
+    // so the fangs' forward faces stay pearl; one per side (a side mask's range is on signed x)
+    { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [0.3, 1.3] },
+    { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [-1.3, -0.3] },
+    // and the nose's corners under the lip, between the blade and the fins: their side-turned faces there carried the
+    // lip's recess step in rows too coarse to follow it, a torn silver band (the face view); dark up to the lip
+    { plane: 'side', pts: [[-2.62, 0.2], [-2.2, 0.2], [-2.2, 0.4], [-2.62, 0.44]], soft: 0.004, range: [0.45, 0.86] },
+    { plane: 'side', pts: [[-2.62, 0.2], [-2.2, 0.2], [-2.2, 0.4], [-2.62, 0.44]], soft: 0.004, range: [-0.86, -0.45] },
     // (2026-11-23: the references' rear deck and haunch tops are all pearl: the old sheet's black spine behind the rear
     // screen, the dark deck over the tail and the haunches' teardrop openings are gone, as are the haunch fins and the
     // deck's louvres)

@@ -47,8 +47,11 @@ export function carPaint(paint: number, q: Quality, id: CarId = 'rossini-gt', fi
   // (the OC Hypercar's factory paint, judge round 1: its base coat toned per channel toward a neutral cool silver, and
   // on 'high' a flake normal map under the clear coat; other paints on it keep the plain lift)
   const PF = P.paintFinish, lift = PF?.tone && paint === P.paint ? PF.tone.map((t) => t * (PF.lift ?? 1)) as [number, number, number] : PF?.lift;
-  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: PF?.rough ?? 0.22, metal: PF?.metal ?? 0.8, masks, env: PF?.env, lift, ...(q === 'high' && PF?.flakeMap ? { flakeMap: PF.flakeMap, flakeTile: 0.05 } : {}) } : { key, flake, rough: vela ? 0.3 : undefined });
-  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks });
+  // (the hypercar's paint counts 0.3 of its light toward the bloom: its sunlit body no longer blooms into a halo on
+  // Ultra by day, a glint in its clear coat still does; car-mats paint o.bloom)
+  const bloom = oc ? 0.3 : undefined;
+  if (!finish) return M.paint(paint, q, lines, oc ? { key, flake, rough: PF?.rough ?? 0.22, metal: PF?.metal ?? 0.8, masks, env: PF?.env, lift, bloom, ...(q === 'high' && PF?.flakeMap ? { flakeMap: PF.flakeMap, flakeTile: 0.05 } : {}) } : { key, flake, rough: vela ? 0.3 : undefined });
+  return M.paint(paint, q, lines, { flake: finish.flake ? flake : 0, metal: finish.metalness, rough: finish.roughness, coat: finish.clearcoat, coatRough: finish.clearcoatRoughness, masks, ...(bloom ? { bloom } : {}) });
 }
 
 // every material the car's kit can file geometry under
@@ -83,10 +86,14 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // (judge round 1, 'high': the mesh couldn't be seen at any matched angle, its alpha-tested walls lost in the mips;
   // now an opaque hex of 2 cm cells, mid-dark walls over near-black cells, the same in the tail's fascia. The phone
   // keeps the plain dark mesh)
-  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = ((q === 'high' ? M.hexMeshOC(0.16) : M.honeycomb(q, 0.05)) as THREE.MeshStandardMaterial).clone(); if (q !== 'high') { m.color.setHex(0x0b0c0d); m.roughness = 0.6; m.metalness = 0.15; } m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
+  // (2026-11-23, the owner's crop: the phone's alpha-tested mesh, 5 cm cells cut at the test under the mips, drew as
+  // single dark and light pixels that crawled as the car moved; the phone takes the opaque hex too, a shade darker)
+  if (P.face) extra.scoopMesh = once('m.scoopMesh' + q, () => { const m = (M.hexMeshOC(0.16, q === 'high' ? 0x3a3e44 : 0x2c3035) as THREE.MeshStandardMaterial).clone(); m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -8; m.name = 'honeycomb'; return m; });
   // (judge round 1: the bonnet's and the humps' louvre slats in satin black, not the gloss trim, which caught the sky
   // and read as grey squares head on)
-  if (oc) extra.slat = once('m.slatOC', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0d0e10, roughness: 0.5, metalness: 0.2, envMapIntensity: 0.45 }), { name: 'slat' })));
+  // (judge round 2: head on (lowfront) the slats still read mid grey, median 124 to 152: the sky's reflection at a grazing
+  // angle; a rougher, less reflective satin, so they read black at every angle)
+  if (oc) extra.slat = once('m.slatOC2', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0b0c0e, roughness: 0.6, metalness: 0.1, envMapIntensity: 0.25 }), { name: 'slat' })));
   // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
   if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
@@ -104,7 +111,11 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     glass: P.glassTint ? M.glass('tint', P.glassTint[0], { env: P.glassTint[1], ...(P.glassTint[2] === undefined ? {} : { spec: P.glassTint[2] }) }) : M.glass('tint', 0.62, { env: 1.0 }),
     // (the hypercar on 'high', 2026-11-23: the owner's references show a grey twill on the splitter, the fins, the
     // diffuser and the wing in daylight: a lighter tint and a finer weave than the phone's near-black one)
-    carbon: P.carbonTint === undefined ? M.carbon(q) : oc && q === 'high' ? M.carbon(q, 0.05, { tint: 0x80868f, cc: 0.05 }) : M.carbon(q, 0.064, { tint: P.carbonTint }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // (judge round 2: no twill showed at any matched camera: the light 'high' tint read as a grey slab and the phone's as
+    // warm tan under the sky. Now a near-black base under a weave of 3.5x the contrast, a 2 cm map on every part (car-body CU),
+    // a calmer sky in it (0.35: the splitter's top, seen at a glancing angle, mirrored the sky as a
+    // light grey slab at 0.55); the same on the phone)
+    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.05, { tint: q === 'high' ? 0xb4bac4 : 0xa0a6b0, cc: 0.12, env: 0.35, weave: 3.5 }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
@@ -112,7 +123,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     interior: once('m.cabin' + silI, () => M.patchedStd(silI, 0.6)),
     seatSil: once('m.seatsil' + silS, () => M.patchedStd(silS, 0.55)),
     exhaust: once('m.exhaust', () => new THREE.MeshPhysicalMaterial({ color: 0x8e9097, metalness: 1, roughness: 0.3, iridescence: 0.55, iridescenceIOR: 1.9, iridescenceThicknessRange: [180, 420], side: THREE.DoubleSide })),
-    tyre: M.tyre(q, TREAD_V, P.tyreTint), machined: M.machined(q), rimPaint: P.wheel === 'multi' ? M.rimPaint(P.rimColor, 0.22) : M.rimPaint(P.rimColor), disc: M.disc(q, P.discTint),
+    tyre: M.tyre(q, TREAD_V, P.tyreTint), machined: M.machined(q), rimPaint: P.wheel === 'multi' ? M.rimPaint(P.rimColor, 0.34, { gun: true }) : M.rimPaint(P.rimColor), disc: M.disc(q, P.discTint),
     aero: once('m.aero', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x2a2d33, metalness: 0.65, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }), { name: 'aero' }))),
     nut: once('m.nut' + caliper, () => withAO(new THREE.MeshPhysicalMaterial({ color: caliper, metalness: 0.7, roughness: 0.3, clearcoat: 0.6 }))),
     caliper: once('m.cal' + caliper, () => { const m = M.caliper(caliper).clone(); m.side = THREE.DoubleSide; return m; }),
@@ -140,6 +151,10 @@ export function aoFor(B: CarBody) {
         if (facing && (n.y * (A.yc - p.y) + n.z * (A.z - p.z)) / Math.max(d, 1e-6) < 0.2) continue;
         a *= 0.3 + 0.7 * sstep(0.62, 0.35, (p.y - 0.4) / (A.R - 0.1));
       }
+      // (the hypercar, 2026-11-23: the arch's upright edges from its axle height down to the sill face the wheel, in
+      // the well's shade; open to the sky they drew as a light strip at the arch's front edge, a tone step against the
+      // flank beside them that the references don't have)
+      else if (facing && Math.abs(p.x) > 0.45 && p.y <= 0.4 && Math.abs(Math.abs(p.z - A.z) - A.R) < 0.02 && n.z * (A.z - p.z) > 0.5) a *= 0.4;
     }
     return clamp(a, 0.15, 1);
   };
@@ -174,6 +189,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id);
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   for (const k of SWITCHED_LAMPS) { const m = g.getObjectByName(k); if (m) m.visible = false; }
+  { const m = g.getObjectByName('led'); if (m) M.ledScreen(m as THREE.Mesh); }
   g.userData.thrusters = B.thrusters;
   g.userData.body = B.body;   // its section (top, canopyX): the suite checks the cabin's shapes stay under the skin
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,

@@ -23,10 +23,12 @@ const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : ph
 // carbon read pale grey at night under the full sky reflection
 // o.tint (the OC Hypercar's outside carbon, M1b): a darker, less metallic weave, so it reads black, not tan, under a
 // warm sky; without any option the material is exactly the one every other car has
-export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number; tint?: number } = {}) {
-  const tint = o.tint;
-  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? '') + (tint === undefined ? '' : 't' + tint), () => {
-    const t = tiled(X.carbonMaps(S(q, 512, 256)), tile);
+// o.weave (the OC Hypercar's outside carbon, judge round 2): a twill of this many times the shared contrast
+// (car-tex carbonMaps), so the splitter, the fins and the wing read near-black with a grey weave, not as flat slabs
+export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number; tint?: number; weave?: number } = {}) {
+  const tint = o.tint, wv = o.weave ?? 1;
+  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? '') + (tint === undefined ? '' : 't' + tint) + (wv === 1 ? '' : 'w' + wv), () => {
+    const t = tiled(X.carbonMaps(S(q, 512, 256), wv), tile);
     const m = new THREE.MeshPhysicalMaterial({
       color: tint === undefined ? new THREE.Color(1.9, 1.9, 2.0) : new THREE.Color(tint), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
       roughnessMap: t.roughnessMap, roughness: 1, metalness: tint === undefined ? 0.55 : 0.25, clearcoat: tint === undefined ? 1 : 0.55, clearcoatRoughness: o.cc ?? (tint === undefined ? 0.035 : 0.09),
@@ -146,7 +148,9 @@ export interface ShutLine {
 // to gloss black (no metal, a darker, slightly rougher base under the same clear coat). Drawn by the paint shader, so
 // its edge is crisp at any distance and nothing is laid over the skin (no z-fighting). mirror: test |x| (one polygon
 // for both sides); soft: the edge's blend width in metres; range: limits on the plane's own axis (top: y, front: z,
-// side: x), so a mask on one face leaves the faces behind it alone.
+// side: x), so a mask on one face leaves the faces behind it alone. A 'front' mask also takes the faces turned down
+// under it (2026-11-23: the hypercar's lip, whose underside turns down over the recess step in rows too coarse to
+// follow it, showed that step as a torn silver band between the black intake zone and the lip's paint).
 export interface PaintMask { plane: 'top' | 'front' | 'side'; pts: [number, number][]; side?: -1 | 0 | 1; mirror?: boolean; soft?: number; range?: [number, number] }
 const MAX_SHUT = 14, MAX_MASK = 16;
 // inset a convex polygon by r (edges moved inward and re-intersected)
@@ -246,7 +250,7 @@ void paintMasks(float pix) {
     vec2 p; float ok, w;
     if (plane == 0) { p = vOP.zy; w = vOP.x; ok = smoothstep(0.2, 0.35, abs(vON.x)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.x * A.z)); }
     else if (plane == 1) { p = vec2(x, vOP.z); w = vOP.y; ok = smoothstep(0.2, 0.35, vON.y); }
-    else { p = vec2(x, vOP.y); w = vOP.z; ok = smoothstep(0.2, 0.35, abs(vON.z)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.z * A.z)); }
+    else { p = vec2(x, vOP.y); w = vOP.z; ok = smoothstep(0.2, 0.35, max(abs(vON.z), -vON.y)) * (A.z == 0.0 ? 1.0 : step(0.0, vOP.z * A.z)); }
     ok *= step(D.x, w) * step(w, D.y);
     float e = A.w * 0.5 + pix;
     paintMaskV = max(paintMaskV, ok * smoothstep(e, -e, shPoly(p, B.xy, B.zw, C.xy, C.zw)));
@@ -260,7 +264,11 @@ void paintMasks(float pix) {
 // o.flakeMap (the OC Hypercar's pearl, 'high' only; ported from the unjudged G1 lane): a flake normal map this many px
 // across (car-tex flakeNormal), tiled every o.flakeTile metres (default 0.05) under the clear coat, on top of the
 // shader's own flake. Without them the material is exactly as before.
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number | [number, number, number]; flakeMap?: number; flakeTile?: number } = {}) {
+// o.bloom (the OC Hypercar): the share of its light the bloom pass counts, written to the frame's alpha (Game's bloom
+// reads luminance x alpha). Its white body lit by the sun sits well over Ultra's 0.85 threshold, and bloomed as a halo
+// round the whole car by day; at 0.3 only what is over about 2.8 (a sun glint in the clear coat) blooms. Every other
+// material writes alpha 1, so the bloom is as it was for them.
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number | [number, number, number]; flakeMap?: number; flakeTile?: number; bloom?: number } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
@@ -281,7 +289,8 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
       ...(L ? { uLift: { value: new THREE.Vector3(lv[0], lv[1], lv[2]) } } : {}),
       ...(M ? { uMask: { value: packMask(masks) }, uMaskN: { value: Math.min(MAX_MASK, masks.length) } } : {}) };
     (m.userData as { uniforms: typeof uniforms }).uniforms = uniforms;
-    patch(m, 'paint' + q + (M ? '+mask' : '') + (L ? '+lift' : ''), (sh) => {
+    const BL = o.bloom !== undefined && o.bloom < 1;
+    patch(m, 'paint' + q + (M ? '+mask' : '') + (L ? '+lift' : '') + (BL ? '+bloom' + o.bloom : ''), (sh) => {
       Object.assign(sh.uniforms, uniforms);
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nvarying vec3 vOP;\nvarying vec3 vON;')
@@ -317,6 +326,8 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
           if (paintMaskV > 0.0) material.clearcoat *= 1.0 - 0.6 * paintMaskV;` : ''}
           material.clearcoat *= 1.0 - shutLine;
           material.roughness = mix(material.roughness, 0.9, shutLine);`);
+      if (BL) sh.fragmentShader = sh.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+          gl_FragColor.a = ${o.bloom!.toFixed(3)};`);
     });
     return withAO(m, 0.2);
   });
@@ -346,8 +357,12 @@ export function machined(q: Quality) {
     return withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0xd6d9dd, metalness: 1, roughness: 1.0, roughnessMap: rough, normalMap: nm, normalScale: new THREE.Vector2(0.08, 0.08), anisotropy: q === 'high' ? 0.85 : 0, clearcoat: 0.6, clearcoatRoughness: 0.08 }), { name: 'machined' }));
   });
 }
-export function rimPaint(color = 0x2b2d31, rough = 0.42) {
-  return once('rimpaint' + color + (rough === 0.42 ? '' : 'r' + rough), () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color, metalness: 0.75, roughness: rough, clearcoat: 0.7, clearcoatRoughness: rough < 0.3 ? 0.04 : 0.12 }), { name: 'rimpaint' })));
+// o.gun (the OC Hypercar's rims, 2026-11-23: in the game they read bright silver, the rim's barrel and lip mirroring the
+// sky at a glancing angle, where the references have dark gunmetal): less metal, a satin coat and a calmer sky
+export function rimPaint(color = 0x2b2d31, rough = 0.42, o: { gun?: boolean } = {}) {
+  return once('rimpaint' + color + (rough === 0.42 ? '' : 'r' + rough) + (o.gun ? 'gun' : ''), () => withAO(Object.assign(new THREE.MeshPhysicalMaterial(o.gun
+    ? { color, metalness: 0.55, roughness: rough, clearcoat: 0.35, clearcoatRoughness: 0.18, envMapIntensity: 0.55 }
+    : { color, metalness: 0.75, roughness: rough, clearcoat: 0.7, clearcoatRoughness: rough < 0.3 ? 0.04 : 0.12 }), { name: 'rimpaint' })));
 }
 // tint: a dark grey carbon-ceramic disc (the OC Hypercar), so the wheel's face reads black through the spokes
 export function disc(q: Quality, tint?: number) {
@@ -368,10 +383,44 @@ export function emissive(name: string, color: number, intensity: number, base = 
 }
 // an LED strip (the OC Hypercar's ice blue): emissive through a core-and-halo map across the strip's width (v), well
 // over the bloom pass's threshold (0.92) on High and Ultra; the phone tier (Low and Medium, no bloom) runs it dimmer
+// (2026-11-23, the owner's crop: a strip 6 to 16 mm wide is under a pixel from the chase camera and most outside ones,
+// and drew as a dotted line that shimmered as the car moved. Each ribbon vertex carries 'across', its half-width vector
+// from the strip's centre line (car-body ledStrip); the vertex shader widens the strip to at least LED_MIN_PX on screen
+// and dims its glow by the square root of the widening, so a far strip reads as one steady thin line. ledScreen keeps
+// the shader's resolution in step with whatever it is drawn into)
+const LED_MIN_PX = 1.25;
 export function led(core: number, halo: number, q: Quality, edge = halo) {
-  return once('led' + core + halo + 'e' + edge + q, () => Object.assign(new THREE.MeshStandardMaterial({
-    color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
-  }), { name: 'led' }));
+  return once('led' + core + halo + 'e' + edge + q, () => {
+    const m = Object.assign(new THREE.MeshStandardMaterial({
+      color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
+    }), { name: 'led' });
+    const uRes = { value: new THREE.Vector2(1280, 720) };
+    m.userData.ledRes = uRes;
+    patch(m, 'ledmin', (sh) => {
+      sh.uniforms.uLedRes = uRes;
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nattribute vec3 across;\nuniform vec2 uLedRes;\nvarying float vLedFade;')
+        .replace('#include <begin_vertex>', `#include <begin_vertex>
+          vLedFade = 1.0;
+          if (dot(across, across) > 0.0) {
+            vec4 pa = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0), pc = projectionMatrix * modelViewMatrix * vec4(transformed - across, 1.0);
+            vec2 d = (pa.xy / max(pa.w, 1e-5) - pc.xy / max(pc.w, 1e-5)) * 0.5 * uLedRes;
+            float k = clamp(${(LED_MIN_PX / 2).toFixed(3)} / max(length(d), 1e-4), 1.0, 12.0);
+            transformed = transformed - across + across * k;
+            vLedFade = inversesqrt(k);
+          }`);
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vLedFade;')
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance *= vLedFade;');
+    });
+    return m;
+  });
+}
+// keep an LED mesh's minimum width in pixels of whatever it is drawn into (the canvas, a post target, the probe)
+export function ledScreen(mesh: THREE.Mesh) {
+  const u = ((mesh.material as THREE.Material).userData as { ledRes?: { value: THREE.Vector2 } }).ledRes;
+  if (!u || !mesh.geometry.getAttribute('across')) return;
+  mesh.onBeforeRender = (r) => { const t = r.getRenderTarget(); if (t) u.value.set(t.width, t.height); else r.getDrawingBufferSize(u.value); };
 }
 // the OC Hypercar's hex mesh on 'high' (judge round 1): opaque, its cell walls drawn by the honeycomb map as colour
 // rather than cut by alpha. The alpha-tested mesh's walls, about a sixth of each cell, average under the mips to an

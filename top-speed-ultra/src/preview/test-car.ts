@@ -1,6 +1,6 @@
 // Test page for the car part: the garage cars inside and out, from every camera the game has.
 //   ?view= seat | free-left | free-right | free-up | hood | chase | back | sky | sky-zoom | dash | beauty | rear | wheel |
-//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing |
+//          garage (&focus=<car id>: centred on that car) | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing |
 //          ref-int
 //   ref-int: the owner's interior reference's camera (control/hypercar/owner-ref-2026-11-15/interior.png, 1672 x 941),
 //          solved from the wheel's hub, rim and the car's forward vanishing point on that picture (about 10 px rms):
@@ -142,6 +142,10 @@ if (interior) {
   });
   log.buildMs = ms;
   if (view === 'garage') look(L(-5.2, 1.35, -9.5), L(2.6, 0.55, 0.4));
+  // &focus=<car id> (garage): a three-quarter hero of that car where it stands in the lineup, centred, the lineup's light
+  // and floor round it (the proof sheets' garage reveal; the plain garage view cut the hypercar at the frame's edge)
+  const fi = CAR_IDS.indexOf((q.get('focus') ?? '') as CarId);
+  if (view === 'garage' && fi >= 0) { const cx = -1.0 + fi * 2.75, cz = 1.2 - fi * 0.9; look(L(cx - 3.0, 1.25, cz - 6.2), L(cx + 0.05, 0.55, cz - 0.1)); }
   // (the long lens is opened to fit every car, nose to tail, centred on the middle one)
   if (view === 'lineup') { const mid = -8.1 + 5.4 * (CAR_IDS.length - 1) / 2, span = 5.4 * (CAR_IDS.length - 1) + 5.4; camera.fov = 2 * Math.atan(span / 2 / camera.aspect / 180) * 180 / Math.PI; look(L(-180, 0.7, mid), L(0, 0.7, mid)); }
   if (view === 'lineup-top') { camera.fov = 7.5; look(L(0, 180, 0.01), L(0, 0, 0)); }
@@ -187,7 +191,7 @@ if (interior) {
   }
 }
 if (debug && !view.startsWith('lineup')) camera.fov = view === 'wheel-side' ? 5.2 : 16;
-if (view === 'garage' && CAR_IDS.length > 4) camera.fov = 40;
+if (view === 'garage' && CAR_IDS.length > 4) camera.fov = CAR_IDS.includes((q.get('focus') ?? '') as CarId) ? 34 : 40;
 // &cam=x,y,z&at=x,y,z[&fov=deg]: any camera in the car's frame (a close look at one detail); overrides the view's
 if (q.get('cam') && q.get('at')) {
   const [cx, cy2, cz] = q.get('cam')!.split(',').map(Number), [ax, ay, az] = q.get('at')!.split(',').map(Number);
