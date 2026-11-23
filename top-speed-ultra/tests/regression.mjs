@@ -119,6 +119,8 @@ const setAdaptive = async (page, on) => { await game(page, (on) => { const g = w
 const openPerfDetails = async (page) => { const b = page.getByRole('button', { name: 'Performance details' }); if ((await b.getAttribute('aria-expanded')) !== 'true') await b.click(); };
 // the menu's overflow (World Map, Lifestyle, Phone, Driver, Store, Feedback, Profile); its items close it
 const openMore = (page) => page.getByRole('button', { name: 'More', exact: true }).click();
+// the menu's start line (the Midnight Performance menu's .mp-loc button, which opens the Start panel): "Start on <road> <exit>. Change"
+const startLine = async (page) => ((await page.locator('.mp-loc').getAttribute('aria-label')) ?? '').replace(/\s+/g, ' ');
 // the character picker from the menu (its entry is in the More overflow since the Midnight Performance menu), and that
 // entry's text (More opened and closed again)
 const openCast = async (page) => { await openMore(page); await page.locator('.mp-more .cast-pick-btn').click(); };
@@ -3021,21 +3023,31 @@ await group('progression', async (use) => {
     await frames(page, 2);
     const free = await chips();
     // 30 s each at 150 m/s (the plan's test speed: no road here lets the autopilot hold it, so the car is put back on
-    // its lane at that speed every quarter second and coasts) and at 90 m/s, both Unleashed: what each paid
+    // its lane at that speed every quarter second and coasts) and at 90 m/s, both Unleashed: what each paid. The
+    // economy (progress.ts, v27) pays on the same capped speed: its active miles, Road Points and speed-bonus cash.
+    // The cash goes to the same wallet (the profile's credits), so the run reads the economy's own cash from its run
+    // tally and takes it off: what is left is the distance pay. Today's goals and the weekly are held done meanwhile (a
+    // goal's one-off cash and points are not distance pay), and put back after. The throttle flickers by 0.03 each
+    // quarter second: a driver's input, so the miles are active (progress.ts ACTIVE); the car is placed again anyway.
     const r = await game(page, () => {
-      const g = window.__game, p = g.profile.p;
+      const g = window.__game, p = g.profile.p, pr = g.progress, d = pr.s.daily, w = pr.s.weekly;
+      const held = { goals: d.goals.map((x) => x.done), bonus: d.bonus, weekly: w?.done };
+      for (const x of d.goals) x.done = true; d.bonus = true; if (w) w.done = true;
       g.setPaused(true);
       const run = (v) => {
-        const c0 = p.credits, x0 = p.xp, d0 = p.distance, s0 = g.distance, n0 = g.steps;
+        const c0 = p.credits, x0 = p.xp, d0 = p.distance, s0 = g.distance, n0 = g.steps, e0 = pr.runDelta(), m0 = pr.s.miles;
         for (let k = 0; k < 120; k++) {
           g.traffic.clearAround(g.phys.x, g.phys.z, 400);
           g.phys.placeAt(g.path, g.phys.s, g.path.laneCenter(1), v);
-          g.fastForward(0.25, { throttle: 0, brake: 0, steer: 0 });
+          g.fastForward(0.25, { throttle: k % 2 ? 0.03 : 0, brake: 0, steer: 0 });
         }
         g.fastForward(0.5, { throttle: 0, brake: 1, steer: 0 });               // the last half second's flush
-        return { credits: p.credits - c0, xp: p.xp - x0, profileDist: p.distance - d0, driven: g.distance - s0, t: (g.steps - n0) / 120 };
+        const e1 = pr.runDelta(), bonus = e1.cash - e0.cash;
+        return { credits: p.credits - c0 - bonus, all: p.credits - c0, bonus, miles: pr.s.miles - m0, points: e1.points - e0.points, xp: p.xp - x0, profileDist: p.distance - d0, driven: g.distance - s0, t: (g.steps - n0) / 120 };
       };
-      return { driving: g.driving, mode: g.mode, cap: g.earnCap, fast: run(150), slow: run(90) };
+      const out = { driving: g.driving, mode: g.mode, cap: g.earnCap, fast: run(150), slow: run(90) };
+      d.goals.forEach((x, i) => { x.done = held.goals[i]; }); d.bonus = held.bonus; if (w) w.done = held.weekly;
+      return out;
     });
     await pauseToMenu(page);
     await drive(page, 'Speed Survival');
@@ -3062,9 +3074,17 @@ await group('progression', async (use) => {
     expect(paidFast <= capM + 20 && paidFast >= r.cap * (r.fast.t - 0.5) - 1 && Math.abs(r.fast.xp - 2 * r.fast.credits) < 1, `at 150 m/s paid for ${Math.round(paidFast)} m in ${fmt(r.fast.t)} s (cap ${Math.round(capM)} m), ${fmt(r.fast.xp)} XP for ${fmt(r.fast.credits)} credits`);
     expect(Math.abs(r.fast.profileDist - r.fast.driven) < 160, `the profile counted ${Math.round(r.fast.profileDist)} m of ${Math.round(r.fast.driven)} m driven`);
     expect(r.slow.driven < r.cap * r.slow.t && Math.abs(paidSlow - r.slow.driven) < 160, `at 90 m/s it paid for ${Math.round(paidSlow)} m of ${Math.round(r.slow.driven)} m`);
+    // the economy under the same cap: at 150 m/s its active miles (and Free Drive's 1 Road Point a mile) are the cap's
+    // metres, not the metres driven, and its speed bonus (6 + 10 cash a mile above 200 mph) is on those capped miles;
+    // at 90 m/s (under the cap) the miles are the metres driven
+    const mFast = r.fast.miles * 1609.344, mSlow = r.slow.miles * 1609.344;
+    expect(mFast <= capM + 20 && mFast >= r.cap * (r.fast.t - 0.5) - 1 && Math.abs(r.fast.points - r.fast.miles) < 0.01, `at 150 m/s the economy counted ${Math.round(mFast)} m (cap ${Math.round(capM)} m), ${fmt(r.fast.points)} Road Points for ${fmt(r.fast.miles)} mi`);
+    expect(r.fast.bonus <= r.fast.miles * 16 + 0.01 && r.fast.bonus >= r.fast.miles * 16 - 0.5, `at 150 m/s the speed bonus paid ${fmt(r.fast.bonus)} cash for ${fmt(r.fast.miles)} capped miles`);
+    expect(Math.abs(mSlow - r.slow.driven) < 160, `at 90 m/s the economy counted ${Math.round(mSlow)} m of ${Math.round(r.slow.driven)} m`);
     return `Free Drive chips ${free.join(', ')}; Survival chips ${scored.join(', ')} (cap off); cap ${fmt(r.cap)} m/s; ${fmt(r.fast.t)} s at 150 m/s: drove ${Math.round(r.fast.driven)} m, `
       + `paid ${fmt(r.fast.credits)} credits / ${fmt(r.fast.xp)} XP (${Math.round(paidFast)} m; the cap allows ${Math.round(capM)}); ${fmt(r.slow.t)} s at 90 m/s: drove ${Math.round(r.slow.driven)} m, `
-      + `paid ${Math.round(r.slow.credits)} credits / ${Math.round(r.slow.xp)} XP; profile distance ${Math.round(r.fast.profileDist)} m flat out`;
+      + `paid ${Math.round(r.slow.credits)} credits / ${Math.round(r.slow.xp)} XP; profile distance ${Math.round(r.fast.profileDist)} m flat out; `
+      + `economy at 150 m/s: ${fmt(r.fast.miles)} mi (${Math.round(mFast)} m), ${fmt(r.fast.points)} Road Points, speed bonus ${fmt(r.fast.bonus)} cash`;
   });
   // the Founder Edition's exclusives (hypercar M6, PROJECT_OC_HYPERCAR.md section 7): no serial until the store assigns
   // one, so every plaque reads No. 0000 · TEST; Glacier Silver and the Founder Ice LEDs on the hypercar only
@@ -4240,7 +4260,9 @@ await group('phone', async (use) => {
     await game(page, () => window.__game.hold(true));
     try {
       await ctx.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html') && !sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.hint.retrotbar', '1'); localStorage.setItem('tsu.hint.radial', '1'); } },
-        { quality: 'low', style: 'standard', v: 3, adaptive: false, density: 'none', hudStyle: 'modern' });
+        // (an older profile: saved at settings version 4, before the switches, with no abs or tcs key. Not version 3: since
+        // the Midnight menu's version 4 migration a pre-4 Low save moves to Retro Low, whose HUD has no ABS | TCS bar)
+        { quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'none', hudStyle: 'modern' });
       const p = await ctx.newPage(); p.setDefaultTimeout(240000);
       const read = () => p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'), sw = (k) => document.querySelector('.asw.' + k)?.getAttribute('aria-checked');
         return { abs: g.phys.abs, tc: g.phys.tc, sAbs: g.settings.abs, sTcs: g.settings.tcs, savedTcs: s.tcs ?? null, savedAbs: s.abs ?? null, swAbs: sw('abs'), swTcs: sw('tcs') }; });
@@ -5402,22 +5424,28 @@ await group('launch', async (use) => {
   const { page } = await use({ settings: { start: 'I-405 North' } });
   const road = 'CA-57 North';
   let want = null;
-  // the theme follows the car and the driver, and the Look setting switches the art direction (owner, 2026-10-21;
-  // PROJECT_OC_STYLE_GUIDE.md): <html data-car>, data-driver and data-look re-point the tokens in styles.css
-  await check('the theme follows the car and the driver; the Look setting switches the art direction and is saved', async () => {
-    const attrs = () => game(page, () => { const d = document.documentElement; return { car: d.dataset.car, driver: d.dataset.driver, look: d.dataset.look, carId: window.__game.carId, base: getComputedStyle(d).getPropertyValue('--void').trim() }; });
+  // the theme follows the car and the driver (owner, 2026-10-21; PROJECT_OC_STYLE_GUIDE.md): <html data-car>, data-driver
+  // and data-look re-point the tokens in styles.css. The Look setting is gone (owner, 2026-11-22: Appearance folded into
+  // Graphics): Ultra is the realistic look ('hd'), Retro Low the retro one ('ultra', the default art direction), saved
+  await check('the theme follows the car and the driver; the Graphics choice (Retro Low / Ultra) switches the art direction and is saved', async () => {
+    const attrs = () => game(page, () => { const d = document.documentElement, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); return { car: d.dataset.car, driver: d.dataset.driver, look: d.dataset.look, carId: window.__game.carId, base: getComputedStyle(d).getPropertyValue('--void').trim(), saved: { look: s.look, quality: s.quality, style: s.style } }; });
     const a = await attrs();
     expect(a.car === a.carId && a.driver === 'closer' && a.look === 'ultra', JSON.stringify(a));
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
-    await page.getByRole('button', { name: 'Realistic', exact: true }).click();
+    await settingsSection(page, 'graphics');
+    const old = await game(page, () => [...document.querySelectorAll('.panel.settings button, .panel.settings label')].map((b) => b.textContent.trim()).filter((t) => /^(Futuristic|Realistic|Appearance|Look)$/.test(t)));
+    expect(!old.length, `the old Look setting is still there: ${old.join(', ')}`);
+    const seg = page.locator('#set-graphics .seg[aria-label="Graphics"]');
+    await seg.getByRole('button', { name: 'Ultra', exact: true }).click();
     const b = await attrs();
-    const saved = await game(page, () => JSON.parse(localStorage.getItem('tsu.settings') || '{}').look);
-    expect(b.look === 'hd' && b.base === '#0a111d' && saved === 'hd', `after Realistic: ${JSON.stringify(b)}, saved ${saved}`);
-    await page.getByRole('button', { name: 'Futuristic', exact: true }).click();
+    expect(b.look === 'hd' && b.base === '#0a111d' && b.saved.look === 'hd' && b.saved.quality === 'ultra', `after Ultra: ${JSON.stringify(b)}`);
+    await seg.getByRole('button', { name: 'Retro Low', exact: true }).click();
     const c = await attrs();
-    expect(c.look === 'ultra' && c.base !== '#0a111d', `after Futuristic: ${JSON.stringify(c)}`);
-    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
-    return `car ${a.car}, driver ${a.driver}; Realistic base ${b.base}, saved; back to Futuristic`;
+    expect(c.look === 'ultra' && c.base !== '#0a111d' && c.saved.look === 'ultra' && c.saved.quality === 'low' && c.saved.style === 'retro', `after Retro Low: ${JSON.stringify(c)}`);
+    await page.locator('.panel.settings').getByRole('button', { name: 'Done', exact: true }).click();
+    // back to the suite's standard Low for the checks after this one (through the App, as Settings does)
+    await game(page, () => window.__updateSettings({ style: 'standard' }));
+    return `car ${a.car}, driver ${a.driver}; Ultra: look hd, base ${b.base}, saved; Retro Low: look ultra, base ${c.base}, saved low + retro; no Look setting`;
   });
   // the garage's Paint tab (U5): six paints per car, applied live to the car and kept for that car
   await check("the garage's Paint tab repaints the car live and keeps the choice", async () => {
@@ -5455,10 +5483,12 @@ await group('launch', async (use) => {
     await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     return `2 styles; Cross Lace fitted and saved, 4 wheels, root ${a.root} children throughout; back to Forged Twin`;
   });
-  // Lifestyle (homes): bought with earned credits, adds garage slots, starts a drive at the nearest real exit, sells for 60 %
-  await check('Lifestyle: a home is bought with credits, adds a garage slot, sets the start to its exit, and sells back', async () => {
+  // Lifestyle (homes, in the menu's More since the Midnight Performance menu): bought with earned credits, starts a drive
+  // at the nearest real exit, sells for 60 %. (Since the economy, v27, cars open by miles: a home's garage slot gates
+  // nothing, so the check no longer asks for one)
+  await check('Lifestyle: a home is bought with credits, sets the start to its exit, and sells back', async () => {
     const before = await game(page, () => { const p = window.__game.profile.p; const keep = { credits: p.credits, homes: [...p.homes], home: p.home }; p.credits = 10000; p.homes = []; p.home = ''; return keep; });
-    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    await openMore(page); await page.locator('.mp-more').getByRole('button', { name: 'Lifestyle', exact: true }).click();
     const cards = await page.locator('.home-card').count();
     const slots0 = await game(page, () => window.__game.profile.slots);
     await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Buy/ }).click();
@@ -5467,31 +5497,30 @@ await group('launch', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'launch-homes.png') });
     expect(cards === 9, `${cards} homes listed`);
     expect(a.credits === 2000 && a.homes.join() === 'orangewood' && a.home === 'orangewood', `after buying: ${JSON.stringify(a)}`);
-    expect(a.slots === slots0 + 1, `garage slots ${slots0} → ${a.slots}`);
     expect(locked, 'the level-15 home can be bought at level 1');
     await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: 'Start here' }).click();
-    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    const pick = await startLine(page);
     expect(/Orangewood Avenue/.test(pick), `the Start pick says "${pick}"`);
-    await page.getByRole('button', { name: 'Lifestyle', exact: true }).click();
+    await openMore(page); await page.locator('.mp-more').getByRole('button', { name: 'Lifestyle', exact: true }).click();
     await page.locator('.home-card', { hasText: 'Orangewood Studio' }).getByRole('button', { name: /^Sell/ }).click();
     const b = await game(page, () => { const p = window.__game.profile.p; return { credits: p.credits, homes: p.homes.length }; });
     expect(b.credits === 2000 + 4800 && b.homes === 0, `after selling: ${JSON.stringify(b)}`);
     await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     await game(page, (k) => { const g = window.__game, p = g.profile.p; p.credits = k.credits; p.homes = k.homes; p.home = k.home; g.profile.save(); }, before);
-    return `9 homes; bought Orangewood for 8,000 (slots ${slots0} → ${a.slots}); Start pick "${pick.slice(0, 60)}"; sold for 4,800`;
+    return `9 homes; bought Orangewood for 8,000 (garage slots ${slots0} → ${a.slots}, gating nothing); Start pick "${pick.slice(0, 60)}"; sold for 4,800`;
   });
   await check('Start panel lists every real exit on a carriageway; picking one starts 450 m before its sign', async () => {
     const exits = await game(page, (l) => window.__game.exitsFor(l), road);
     expect(exits.length >= 10, `${exits.length} exits on ${road}`);
     want = exits.find((e) => /Orangewood/.test(e.text)) ?? exits[0];
-    await page.locator('.pick', { hasText: 'Start on' }).first().click();
+    await page.locator('.mp-loc').click();
     await page.locator('.grid.roads .gcell').filter({ has: page.locator('.shield', { hasText: /^57$/ }) }).filter({ hasText: 'North' }).click();
     const listed = await page.locator('.grid.exits .gcell').count();
     await page.screenshot({ path: path.join(OUT, 'launch-exits.png') });
     expect(listed === exits.length, `${listed} listed, ${exits.length} in the data`);
     await page.locator('.grid.exits .gcell', { hasText: want.text }).first().click();
-    const pick = await page.locator('.pick', { hasText: 'Start on' }).first().innerText();
-    expect(pick.includes(want.text), `the Start pick says "${pick.replace(/\s+/g, ' ')}"`);
+    const pick = await startLine(page);
+    expect(pick.includes(want.text), `the Start pick says "${pick}"`);
     await drive(page, 'Free Drive');
     const r = await game(page, () => { const g = window.__game; return { road: g.path.label, main: g.path.main, s: g.phys.s }; });
     expect(r.main && r.road === road, `started on ${r.road}`);
@@ -5565,7 +5594,8 @@ await group('launch', async (use) => {
     const job = await page.locator('.msg-job').first().innerText();
     await page.screenshot({ path: path.join(OUT, 'launch-story-thread.png') });
     expect(badge === '1', `the Messages badge reads ${badge}`);
-    expect(/Reach 120 mph/.test(job) && /600 credits/.test(job), `the job reads "${job.replace(/\s+/g, ' ')}"`);
+    // (the one currency is shown as cash since the economy, v27: "Pays · 600 cash, 150 XP")
+    expect(/Reach 120 mph/.test(job) && /600 cash/.test(job), `the job reads "${job.replace(/\s+/g, ' ')}"`);
     await page.locator('.msg-job').first().getByRole('button', { name: 'Set it up' }).click();
     await page.waitForSelector('.overlay.menu');
     const picked = await page.getByRole('radio', { name: /Free Drive/ }).getAttribute('aria-checked');
@@ -5597,7 +5627,7 @@ await group('launch', async (use) => {
     const job = (await card.innerText()).replace(/\s+/g, ' ');
     await card.getByRole('button', { name: 'Set it up' }).click();
     await page.waitForSelector('.overlay.menu');
-    const pick = (await page.locator('.pick', { hasText: 'Start on' }).first().innerText()).replace(/\s+/g, ' ');
+    const pick = await startLine(page);
     expect(/Errand: the Imperial Highway exit off the CA-57 North, within 6:00/.test(job), `the job reads "${job}"`);
     expect(/57/.test(pick) && /North/.test(pick), `the Start pick says "${pick}"`);
     await drive(page, 'Free Drive');
@@ -5747,25 +5777,34 @@ await group('store', async (use) => {
   await check('the store order rule: a character pack first when there is one, then the Founders package, then the OC Hypercar, then the rest, each in catalog order', async () => {
     const { storeOrder } = await importServerTs('src/store/store-order.ts');
     const ids = (xs) => storeOrder(xs, 'hypercar-founder', 'founders-package').map((x) => x.sku).join(', ');
+    // this tree (claude/cast merged, v27): the Chad & Chadaline pack (sku cast-pack-duo, kind pack) is listed, and sits
+    // in the catalog after the two founder items, so the rule (not the catalog's order) puts it first
     const now = ids(listed);
-    // the Chad & Chadaline pack lives on claude/cast (sku cast-pack-duo, kind pack): a pack merged in after the others
-    const merged = ids([...listed, { sku: 'cast-pack-duo', kind: 'pack' }]);
+    const catOrder = listed.map((s) => s.sku).join(', ');
+    // without a character pack, the two founder items alone, in the rule's order
+    const without = ids(listed.filter((s) => s.sku !== 'cast-pack-duo'));
+    // the rule on its own: a pack listed last in the catalog still goes first
+    const merged = ids([...listed.filter((s) => s.sku !== 'cast-pack-duo'), { sku: 'cast-pack-duo', kind: 'pack' }]);
     const two = ids([{ sku: 'some-livery', kind: 'livery' }, { sku: 'hypercar-founder', kind: 'pack' }, { sku: 'pack-b', kind: 'pack' }, { sku: 'founders-package', kind: 'pack' }, { sku: 'pack-a', kind: 'pack' }]);
-    expect(now === 'founders-package, hypercar-founder', `this tree's list: ${now}`);
+    expect(now === 'cast-pack-duo, founders-package, hypercar-founder', `this tree's list: ${now} (catalog order ${catOrder})`);
+    expect(without === 'founders-package, hypercar-founder', `without a character pack: ${without}`);
     expect(merged === 'cast-pack-duo, founders-package, hypercar-founder', `with a character pack: ${merged}`);
     expect(two === 'pack-b, pack-a, founders-package, hypercar-founder, some-livery', `two packs: ${two}`);
-    return `this tree: ${now}; with claude/cast's pack: ${merged}; two packs keep their order: ${two}`;
+    return `this tree: ${now} (catalog order ${catOrder}); without the pack: ${without}; a pack appended: ${merged}; two packs keep their order: ${two}`;
   });
 
-  await check('the store lists exactly the Founders package (coming soon: no buy button, no test-mode notice), then the OC Hypercar Founder Edition, nothing else', async () => {
+  await check('the store lists exactly the Chad & Chadaline pack (coming soon, 18+), the Founders package (coming soon: no buy button, no test-mode notice), then the OC Hypercar Founder Edition, nothing else', async () => {
     await holdGame(page);
     await openMore(page); await page.getByRole('button', { name: 'Store', exact: true }).click();
     await page.waitForSelector('.store-panel');
     const banner = (await page.locator('.store-panel .store-mode').innerText()).replace(/\s+/g, ' ');
     expect(/test mode/i.test(banner) && banner.includes('Nothing is charged. Use 4242 4242 4242 4242.'), `banner: ${banner}`);
     const shown = await page.$$eval('.store-panel [data-sku]', (els) => els.map((e) => ({ sku: e.getAttribute('data-sku'), soon: e.getAttribute('data-soon'), price: e.querySelector('.store-price')?.textContent?.trim(), tag: !!e.querySelector('.store-test-tag'), buttons: e.querySelectorAll('button').length, text: e.textContent.replace(/\s+/g, ' ') })));
-    expect(shown.map((x) => x.sku).join(', ') === 'founders-package, hypercar-founder', `shown: ${shown.map((x) => x.sku).join(', ')}`);
-    const c = shown[0], h = shown[1];
+    // the owner's three (2026-11-17, with claude/cast merged): the Chad & Chadaline pack, the Founders package, the hypercar
+    expect(shown.map((x) => x.sku).join(', ') === 'cast-pack-duo, founders-package, hypercar-founder', `shown: ${shown.map((x) => x.sku).join(', ')}`);
+    const d = shown[0], c = shown[1], h = shown[2], duo = cat.find((s) => s.sku === 'cast-pack-duo');
+    // the pack: coming soon at its planned price, 18+, no way to pay and no test-mode notice (nothing pre-sold)
+    expect(!duo.available && duo.min_age === 18 && d.soon === 'true' && d.price === storePrice(duo) && !d.tag && d.buttons === 0 && /Coming soon/.test(d.text) && /No pre-orders/.test(d.text) && /18 and over/.test(d.text), `the Chad & Chadaline pack: ${JSON.stringify(d)}`);
     expect(h.soon === null && h.price === storePrice(hyper) && h.tag && h.buttons === 1, `the hypercar: ${JSON.stringify(h).slice(0, 200)}`);
     // the owner's words (2026-11-17), on a card with no way to pay
     const fWords = "The Founders Collection: five finishes with matching brake calipers (Obsidian, Glacier, Afterglow, Evergreen, Solar Flare), the Founder '26 badge, the Founders run-card frame and your name on the Founders roll.";
@@ -5904,7 +5943,7 @@ await group('store', async (use) => {
       sess: localStorage.getItem('ocu.store.session'),
     }));
     r.pre = pre;
-    expect(r.cards.join(', ') === 'founders-package, hypercar-founder' && r.paints.includes('paint-founders-sunset') && r.who.includes("Founder '26") && /Your Founder Pack does not include this car/.test(r.not), JSON.stringify(r));
+    expect(r.cards.join(', ') === 'cast-pack-duo, founders-package, hypercar-founder' && !r.cards.includes('founder-pack-2026') && r.paints.includes('paint-founders-sunset') && r.who.includes("Founder '26") && /Your Founder Pack does not include this car/.test(r.not), JSON.stringify(r));
     return `${before.length} storage keys kept over the reload; cards ${r.cards.join(', ')}; Your items: ${r.paints.length} paints (${r.paints.slice(0, 3).join(', ')}…); "${r.who.slice(0, 80)}"; the hypercar card: "${r.not.slice(0, 60)}…"`;
   });
 

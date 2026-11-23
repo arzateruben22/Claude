@@ -9968,3 +9968,15 @@ side against the straight tangent at the split, and the 5 curves there. It now p
   lifts on Pause with no slide and expects nothing picked.
 - Proof: tsc clean on both configs; npm run build (one owner-test mark); phone `driving HUD|Go to lists|Go to:
   navigation|follow the route|reach` 6/6.
+
+### 2026-11-23: v27 full run and its fixes (coordinating session)
+- Full run on 13d65f5: boot 18/18, economy 9/9, modes 27/27, abilities 22/22, cast 12/12, venues 13/13; store 15/18,
+  launch 9 failures, progression 12/14, phone key checks 13/14.
+- Fixed: the Ultra desktop skin's chrome rim squeezed the guidance card's turn word (hud-ultra.css: the inner padding
+  gives the 8 px back; "Keep right" 78/78 px). Stale tests brought to the owner's decisions and the new menu: the store's
+  three items (Chad pack, Founders package, Founder Edition); Graphics = Retro Low | Ultra instead of the removed Look;
+  the menu's paths (More > Lifestyle, the `.mp-loc` start line, cash wording); the hypercar earnings-cap check now
+  separates the economy's own cash and proves the economy obeys the cap (3224 m paid against a 3228 m cap at 150 m/s);
+  the ABS | TCS persist seed moved to settings v4 (a v3 Low save now migrates to Retro Low, which has no switch bar).
+- After: store 18/18, progression 14/14, launch 9/11 whole then the 2 (story wording, errand knock-on) 5/5 filtered;
+  phone `driving HUD|new HUD|persist` 5/5.

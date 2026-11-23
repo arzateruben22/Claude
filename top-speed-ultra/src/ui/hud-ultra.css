@@ -194,6 +194,9 @@
 .app[data-skin="ultra"][data-hud="desk"] .hud-revs i:nth-child(n+7).on { background: var(--ul-red); box-shadow: 0 0 6px var(--ul-red-glow); }
 .app[data-skin="ultra"][data-hud="desk"] .hud-chips i { border-radius: 6px; }
 .app[data-skin="ultra"][data-hud="desk"] :is(.hud-stats, .hud-navs, .hud-thr, .hud-clock) { clip-path: none; }
+/* the chrome rim is 4 px a side inside the navigation card's 316 px: the manoeuvre row gives the 8 px back from its own
+   padding, so the turn word keeps its whole width beside 7 lanes and "5280 ft" (styles.css .hud-nav, the progression check) */
+.app[data-skin="ultra"][data-hud="desk"] .hud-navs .hud-nav { padding-left: 8px; padding-right: 10px; }
 .app[data-skin="ultra"][data-hud="desk"] .hud-stats span { color: var(--ul-ink); }
 .app[data-skin="ultra"][data-hud="desk"] .hud-thr { border-width: 3px; border-radius: 12px; }
 .app[data-skin="ultra"][data-hud="desk"] .tbar .tbtn { color: var(--ul-dim); }
