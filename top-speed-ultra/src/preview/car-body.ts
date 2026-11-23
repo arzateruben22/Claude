@@ -1188,8 +1188,9 @@ function makeBody(P: ShapeParams) {
         else s.lineTo(ZR + 0.02, YSILL + 0.005);
         for (let k = 8; k >= 0; k--) { const t = k / 8; s.lineTo(D.z0 + (ZR - D.z0) * t, k0 >= 1 ? yr(t) : YSILL + 0.005 + (yr(t) - YSILL - 0.005) * k0); }
         const fin = new THREE.ExtrudeGeometry(s, { depth: th, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + th / 2, 0, 0);
-        // (the hypercar's fins take the splitter's weave, judge round 1: at 1 m a box the weave was too coarse to read)
-        kit.add(hyper ? 'carbon' : 'dark', fin, null, hyper ? 0.15 : 1);
+        // (the hypercar's fins, judge round 1: a 2 cm twill that reads at the owner's matched cameras; the splitter's
+        // 7.5 mm one averages to flat grey on a blade this size)
+        kit.add(hyper ? 'carbon' : 'dark', fin, null, hyper ? 0.4 : 1);
       }
       if (hyper) {
         // the plate (the OC mark), an LED outlining the diffuser's mouth and a small lit centre accent in it, and
