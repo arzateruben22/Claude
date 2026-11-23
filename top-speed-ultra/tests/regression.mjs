@@ -2804,6 +2804,50 @@ await group('render', async (use) => {
     expect(r.after.gear > 0 && r.after.vx > 20, `left driving forward: ${JSON.stringify(r.after)}`);
     return `eye ${r.eye.map(fmt)}, cabin ${r.skin.gap.toFixed(3)} m under the skin by the hoop (${r.skin.n} vertices), along the flanks ${r.flank.gap.toFixed(3)} m (${r.flank.worst}, ${r.flank.n} vertices), beam ${r.beam.map(fmt)} (${fmt(r.lampD)} m from the blade); bar ${r.free} → ${r.brake} and its haze; right signal lit ${fmt(r.lane.t)} s into a lane change (${fmt(r.lane.dd)} m); turns at ${r.turn.map((t) => fmt(t.v)).join(' and ')} m/s signal ${r.turn.map((t) => t.signal).join(', ')}; reverse lamps on in gear ${r.rev.gear}, no signal; left driving at ${fmt(r.after.vx)} m/s, 3 frames in ${fmt(warm)} s`;
   });
+  // the OC Hypercar's cabin after the owner's interior reference (2026-11-23, control/hypercar/owner-ref-2026-11-15/
+  // interior.png: "the cockpit needs to match exactly to the reference image"): white leather where the dash's ends
+  // flow into the doors, along the door cards' upper panels and on the seats' side bolsters, the door cards carbon below
+  // them, drilled aluminium pedals in the driver's footwell, a frameless rear-view mirror under a roof console, and the
+  // ice-blue ambient light under the dash's lip, along the doors, down the console, round the footwells and in the roof;
+  // none of it in the other cars (their cabins build as before: no white panels, no ambient line, no pedals, no mirror
+  // on the hypercar's own terms). Counted in the car's frame from each cockpit's meshes by material key, the outside
+  // body left out. (The base, 997fa15b, has no white leather, no pedals, no mirror and no footwell or roof light.)
+  await check('the OC Hypercar\'s cabin after the owner\'s interior reference: white dash ends, door panels and bolsters, carbon door cards, pedals, the mirror and roof console, ambient light all round; none of it in the other cars', async () => {
+    const res = {};
+    for (const car of ['oc-hyper', 'rossini-gt', 'rossini-corsa', 'rossini-brio', 'vela-e']) {
+      res[car] = await game(page, (c) => {
+        const g = window.__game, was = g.car.config; g.car.configure({ ...was, car: c });
+        const grp = g.car.interior.group, inv = grp.matrixWorld.clone().invert(), out = { white: { dash: 0, door: 0, seat: 0, lum: 0 }, amb: { lip: 0, door: 0, foot: 0, console: 0, roof: 0 }, pedal: 0, mirror: 0, doorMat: '' };
+        const inBody = (o) => { for (let a = o; a && a !== grp; a = a.parent) if (a.name === 'body') return true; return false; };
+        grp.updateMatrixWorld(true);
+        grp.traverse((o) => {
+          if (!o.isMesh || !o.geometry || inBody(o)) return;
+          const p = o.geometry.attributes.position, m = inv.clone().multiply(o.matrixWorld), v = o.position.clone();
+          const each = (fn) => { for (let i = 0; i < p.count; i++) fn(v.fromBufferAttribute(p, i).applyMatrix4(m)); };
+          if (o.name === 'white') { out.white.lum = o.material.color.getHSL({}).l; each((q) => { const a = Math.abs(q.x); if (q.z < -0.6 && a > 0.55) out.white.dash++; else if (a > 0.6 && q.z > -0.6 && q.y > 0.55) out.white.door++; else if (a < 0.6 && q.z > -0.45 && q.y < 0.75) out.white.seat++; }); }
+          if (o.name === 'amb') each((q) => { const a = Math.abs(q.x); if (q.y > 1.0) out.amb.roof++; else if (q.y < 0.15) out.amb.foot++; else if (a > 0.55 && q.z > -0.6) out.amb.door++; else if (a < 0.1 && q.z > -0.45 && q.y < 0.4) out.amb.console++; else if (q.z < -0.6 && q.y > 0.55) out.amb.lip++; });
+          if (o.name === 'alu') each((q) => { if (q.y < 0.3 && q.z < -0.82 && q.x < -0.05 && q.x > -0.55) out.pedal++; });
+          if (o.name === 'mirrorDim') each((q) => { if (q.y > 0.95 && Math.abs(q.x) < 0.2) out.mirror++; });
+          if (o.name === 'doorLow') out.doorMat = o.material.name;
+        });
+        out.live = !!grp.getObjectByName('rear-view-mirror');
+        g.car.configure({ ...was });
+        return out;
+      }, car);
+    }
+    const h = res['oc-hyper'], fails = [];
+    if (!(h.white.dash > 20 && h.white.door > 100 && h.white.seat > 100 && h.white.lum > 0.6)) fails.push(`the hypercar's white leather ${JSON.stringify(h.white)}`);
+    if (!(h.doorMat === 'carbon')) fails.push(`the hypercar's door cards are ${h.doorMat}, not carbon`);
+    if (!(h.pedal >= 3 * 24)) fails.push(`the hypercar's pedals: ${h.pedal} aluminium vertices in the footwell`);
+    if (!(h.mirror >= 8 && !h.live)) fails.push(`the hypercar's mirror: ${h.mirror} glass vertices under the roof, live ${h.live}`);
+    for (const [k, n] of Object.entries(h.amb)) if (!(n >= 8)) fails.push(`the hypercar's ambient light: ${n} vertices at the ${k}`);
+    for (const car of ['rossini-gt', 'rossini-corsa', 'rossini-brio', 'vela-e']) {
+      const r = res[car], w = r.white.dash + r.white.door + r.white.seat, a = Object.values(r.amb).reduce((x, y) => x + y, 0);
+      if (w || a || r.pedal) fails.push(`${car}: white ${w}, ambient ${a}, pedal ${r.pedal} vertices`);
+    }
+    expect(!fails.length, fails.join('; '));
+    return `the hypercar: white ${JSON.stringify(h.white)} (dash, door, seat vertices; lightness ${h.white.lum.toFixed(2)}), door cards ${h.doorMat}, pedals ${h.pedal}, mirror ${h.mirror} (live ${h.live}), ambient ${JSON.stringify(h.amb)}; the other four none`;
+  });
   await check('pause stops the simulation, resume carries on', async () => {
     const r = await game(page, () => { const g = window.__game; g.fastForward(5, {}, 35); return g.phys.s; });
     await frames(page, 5);
