@@ -4,6 +4,56 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: the "Midnight Performance" menu, light and dark themes, two graphics choices, four traffic modes and the boards
+
+Branch claude/menu, from 5e16ab4 (live v24). Not committed. Owner references: `owner/menu-2026-11-18/` (the main menu, the
+two Settings templates, today's Settings). Frames are in `tests/out/menu/` (not committed).
+
+**Built:**
+- **Menu** (`src/ui/App.tsx`, `styles.css`): top bar (OC ULTRA, GARAGE / BESTS / PROFILE, the cog, an overflow "More" with World
+  Map, Lifestyle, Phone, Driver, Store, Feedback, Profile, Loop Lab, Online "Roadmap"); a hero over the live attract drive (a night
+  freeway behind Midnight, a day one behind Velocity: `Game.setMenuTime`); chips; the car line; CHOOSE YOUR MODE with four tiles;
+  the start location, START RUN and PERSONAL BEST; the map-data credits stay. Phone (390 x 844): stacked, 2 x 2 tiles, START RUN,
+  a RACE / GARAGE / BESTS tab bar; the car is framed in the top quarter. Free Drive and Speed Survival are a small "run type"
+  choice under the chips. Slots for the economy lane: `.mp-slot[data-slot=road-points]` on the menu and `.car-slot[data-slot=unlock]`
+  on every garage card (`<App slots={{ roadPoints, carUnlock }} />`).
+- **Four modes** (`settings.ts` TRAFFIC): Zero traffic = density none (drift readout on), Light = light (2.2 cars/km/lane),
+  Medium = moderate (5), Extreme = expert (9.5, 45 % bold drivers). The saved value is still `density`.
+- **Boards** (`src/game/bests.ts`, `BestsCard.tsx`, `HUD.tsx`): Fastest Minute (best average over any continuous 60 s; a crash or
+  a reset breaks it; one decimal mph) for Light/Medium/Extreme; Drift Score (slip angle x speed summed over a chain of 10 degrees
+  or more above 20 mph; over 1.5 s straight banks it, a crash loses it) for Zero traffic. Two boards each: Open and Hypercar
+  Unleashed (the OC Hypercar in Free Drive only; its Speed Survival race tune is on Open). On this device only, labelled so. A live
+  60 s meter in the HUD, a toast on a new best, the end-of-run card (rank, gap, best, board tabs, Share copies a text line and the
+  link). A run on which Adaptive quality eased the traffic does not count (the card says so). `PROJECT_OC_MONETIZATION.md` rule 3a
+  updated to the separate board.
+- **Settings** (`src/ui/Settings.tsx`, `controls.tsx`): web tabs, one category at a time; phone back arrow, title and a category
+  dropdown, DONE pinned; one help line per control; "Compare handling" and "Performance details" disclosures; Midnight / Velocity
+  with Auto / Light / Dark (Graphics > Appearance). The in-drive HUD keeps its own look (the theme tokens sit on `.themed` only).
+- **Graphics** is Retro Low or Ultra (Ultra switches Adaptive quality on, with a one-line note); Show frame rate stays; SETTINGS_V 4
+  migrates once (Low/Medium to Retro Low, High/Ultra to Ultra with Adaptive on, the old Look back to the one look).
+- **Ultra Realism**: tunnel vision starts at 150 mph (`TUNNEL_FROM`); the muffled sound keeps its own ramp.
+
+**Checked** (headless Chromium, SwiftShader; this machine ran at load 16 to 35, so a few waits timed out and were rerun):
+- `tsc --noEmit` (both configs) clean; `npm run build` with exactly one `data-build="owner-test"` (dist/artifact.html).
+- boot 18 pass 0 fail; modes 21 pass 0 fail (incl. the new checks below); store 18 pass 0 fail; phone 26 pass + 1 timeout
+  ("sky camera", a 4 s idle wait) which passes on rerun (driving HUD, HUD compass, sky camera: 4 of 4); perf 21 pass + 1 timeout
+  ("300 ms of injected work", a 420 s wait) which passes alone. Also progression: Ultra Realism, owner mode, owner test build.
+- New checks: Fastest Minute and Drift Score on synthetic runs (exact numbers: 60 s at 100 mph reads 100; 30 s at 100 + 30 s at 150
+  reads 125; the best minute in 30 s at 50, 60 s at 180, 30 s at 50 is 180.0; a crash 59.9 s before a minute is no minute;
+  20 deg x 60 mph x 3 s + 30 deg x 80 mph x 2 s = 8,400, banked after 1.6 s straight, a crash loses a chain); the boards (ranks, gap,
+  ties, ten kept, Unleashed apart, share line); the four tiles set the traffic and a run in each of Zero and Extreme; a real 75 s
+  drive (meter 30/60 s, best 69.4 mph, one toast, the end card, Share copies the line); Settings tabs and disclosures; the two graphics
+  choices and the migration; light/dark by prefers-color-scheme and the override; tunnel vision (0 at 124 mph, 0.67 at 200 mph).
+- Suite edits: the menu's selectors (Start run, the run radios, More for Store/Phone/World Map/Profile, the Settings tabs,
+  `.mp-carline`), the Adaptive switch (now turned off and on through the game), `v: 4` seeds, the migration expectations.
+
+**Not done / not proved:**
+- No pre-change baseline suite was run (the worktree was clean at 5e16ab4; the suite was first run on the new code).
+- Drift chains were checked on synthetic input and through the HUD readout, not on a real slide in the physics.
+- The store's copy ("its Unleashed runs ... are marked") is unchanged (the monetization doc has the rewording to make there).
+- Radio is not on the menu (it stays in the drive, the pause screen and the quick menu); a phone on its side (844 x 390) was
+  not framed; no real device or GPU.
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
