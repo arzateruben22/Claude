@@ -428,7 +428,13 @@ const HYPER: ShapeParams = {
   // reference's (147, 147, 155) with a third of its spread: more metal and reflection so the flanks take the road and
   // the sky, the base coat toned from the swatch's blue toward a neutral cool silver (#C8D3E8 -> about #C3C7CE, the
   // store's swatch unchanged), and a flake normal map on 'high')
-  paintFinish: { metal: 0.62, rough: 0.2, env: 1.7, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
+  // (2026-11-23, the owner's crop: "pixels and color mismatches": grey, cloudy patches over the bonnet, the nose and the
+  // fender that read as dirt. Measured at his camera: with metalness 0.62 the base coat mirrors the sky and the road
+  // through every small turn of the skin's facets, and that, not the peel map or the baked occlusion (each toggled:
+  // the bonnet's mid-frequency spread 7.75 and 7.54 against 7.75), drew the patches; at metalness 0 it fell to 6.55
+  // and the patches went. 0.25 (6.54) keeps a little of the references' cool grey on the flanks: the white reads
+  // clean, its reflections in the clear coat, as the owner's photos do)
+  paintFinish: { metal: 0.25, rough: 0.25, env: 1.5, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
