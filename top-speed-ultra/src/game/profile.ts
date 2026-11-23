@@ -101,7 +101,7 @@ export class ProfileBook {
   // call often with small amounts; returns what changed worth telling you about. paid: the part of the distance
   // that earns XP and credits, when it is less than the distance driven (the hypercar's Free Drive earnings cap,
   // cars.ts earnCapFor); the distance driven still counts in full toward the profile's total
-  add(d: { time?: number; distance?: number; paid?: number; speed?: number; streak?: number; nearMiss?: number; cleanPass?: number; collision?: number; freeway?: string; interchange?: number; runNearMisses?: number }): Earned {
+  add(d: { time?: number; distance?: number; paid?: number; speed?: number; streak?: number; nearMiss?: number; cleanPass?: number; collision?: number; freeway?: string; interchange?: number; runNearMisses?: number; cashMult?: number }): Earned {
     const p = this.p, before = this.level;
     let xp = 0, credits = 0;
     if (d.time) p.timeDriven += d.time;
@@ -113,6 +113,7 @@ export class ProfileBook {
     if (d.collision) p.collisions += d.collision;
     if (d.interchange) { p.interchanges += d.interchange; xp += 30 * d.interchange; credits += 15 * d.interchange; }
     if (d.freeway && !p.freeways.includes(d.freeway)) { p.freeways.push(d.freeway); xp += 150; credits += 50; }
+    if (d.cashMult && d.cashMult !== 1) credits *= d.cashMult;      // Extreme runs pay more cash (progress.ts TIER_CASH); XP is unchanged
     p.xp += xp; p.credits += credits;
     const unlocked = this.check(d.runNearMisses ?? 0);
     const after = this.level;
@@ -145,40 +146,42 @@ export class ProfileBook {
   // the vehicles only the store gives, so one that isn't owned (refunded, signed out) leaves the garage. Returns
   // whether the garage changed.
   private storeOnly = new Set<string>();
+  // Cars the player's progress grants (src/game/progress.ts: the miles' cars and the earned OC Hypercar): in the garage
+  // for good, outside the slot count, and never sold. A store sync must not take them away.
+  private earned = new Set<string>();
   setStoreCars(owned: string[], all: string[]): boolean {
     this.storeOnly = new Set(all);
     const p = this.p, before = p.vehicles.join();
-    p.vehicles = p.vehicles.filter((v) => !this.storeOnly.has(v) || owned.includes(v));
+    p.vehicles = p.vehicles.filter((v) => !this.storeOnly.has(v) || owned.includes(v) || this.earned.has(v));
     for (const v of owned) if (this.storeOnly.has(v) && !p.vehicles.includes(v)) p.vehicles.push(v);
     if (!p.vehicles.includes(p.car)) p.car = p.vehicles[0];
     const changed = p.vehicles.join() !== before;
     if (changed) this.save();
     return changed;
   }
-  // the garage slots in use: every car but the store's
-  get slotsUsed() { return this.p.vehicles.filter((v) => !this.storeOnly.has(v)).length; }
-
-  // the showroom: credits only, a free garage slot, and the level it asks for. Returns why not, or null.
-  buy(id: string, price: number, level: number, slots: number): string | null {
-    if (id === 'oc-hyper') return 'The Founder Edition is never sold for credits';
-    const p = this.p;
-    if (p.vehicles.includes(id)) return 'Already in your garage';
-    if (this.storeOnly.has(id)) return 'Only from the store';
-    if (this.level < level) return `Opens at level ${level}`;
-    if (this.slotsUsed >= slots) return `Garage full (${slots} slots at your level)`;
-    if (p.credits < price) return `${Math.ceil(price - p.credits).toLocaleString()} more credits needed`;
-    p.credits -= price; p.vehicles.push(id); p.car = id; this.save();
-    return null;
+  // put the cars progress has opened into the garage (and keep them there); returns whether the garage changed
+  setEarnedCars(ids: string[]): boolean {
+    this.earned = new Set(ids);
+    const p = this.p, before = p.vehicles.join();
+    for (const v of ids) if (!p.vehicles.includes(v)) p.vehicles.push(v);
+    const changed = p.vehicles.join() !== before;
+    if (changed) this.save();
+    return changed;
   }
-  sell(id: string, price: number): string | null {
-    if (id === 'oc-hyper') return 'The Founder Edition can\'t be sold for credits';
-    const p = this.p;
-    if (id === 'rossini-gt') return 'Your first car stays';
-    if (this.storeOnly.has(id)) return 'Bought in the store: it can\'t be sold for credits';
-    if (!p.vehicles.includes(id)) return 'Not yours';
-    p.vehicles = p.vehicles.filter((v) => v !== id); p.credits += Math.round(price * 0.6);
-    if (p.car === id) p.car = 'rossini-gt';
-    this.save(); return null;
+  isEarnedCar(id: string) { return this.earned.has(id); }
+  // the garage slots in use: every car but the store's and the ones progress opened
+  get slotsUsed() { return this.p.vehicles.filter((v) => !this.storeOnly.has(v) && !this.earned.has(v)).length; }
+
+  // Cars are not bought any more (owner, 2026-11-19): they open by active miles driven (progress.ts CAR_MILES) and the OC
+  // Hypercar by Road Points or the store. Kept so older callers get a plain answer.
+  buy(id: string): string | null {
+    if (this.p.vehicles.includes(id)) return 'Already in your garage';
+    return id === 'oc-hyper' ? 'The OC Hypercar comes from Founders\' Road or the Founder Edition' : 'Cars open by miles driven now, not by cash';
+  }
+  // Cars are no longer sold back: one that opened by miles would come straight back, and cash is for cosmetics and access
+  sell(id: string): string | null {
+    if (id === 'oc-hyper') return 'The OC Hypercar can\'t be sold for cash';
+    return this.p.vehicles.includes(id) ? 'Cars stay in your garage: they opened by miles driven' : 'Not yours';
   }
   // homes (the Lifestyle menu): credits only, at the home's level; the first one bought becomes where you live
   buyHome(id: string): string | null {

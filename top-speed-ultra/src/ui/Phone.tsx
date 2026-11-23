@@ -12,7 +12,7 @@ export type PhoneApp = 'map' | 'garage' | 'radio' | 'board' | 'profile' | 'setti
 interface App { id: PhoneApp | 'credits' | 'messages' | 'contacts'; name: string; icon: Parameters<typeof Ico>[0]['name']; off?: boolean }
 const APPS: App[] = [
   { id: 'map', name: 'Map', icon: 'map' }, { id: 'garage', name: 'Garage', icon: 'garage' },
-  { id: 'radio', name: 'Radio', icon: 'radio' }, { id: 'credits', name: 'Credits', icon: 'career' }, { id: 'board', name: 'Bests', icon: 'bests' },
+  { id: 'radio', name: 'Radio', icon: 'radio' }, { id: 'credits', name: 'Cash', icon: 'career' }, { id: 'board', name: 'Bests', icon: 'bests' },
   { id: 'profile', name: 'Profile', icon: 'driver' }, { id: 'settings', name: 'Settings', icon: 'settings' }, { id: 'feedback', name: 'Feedback', icon: 'nav' },
   { id: 'homes', name: 'Homes', icon: 'home' }, { id: 'messages', name: 'Messages', icon: 'chat' }, { id: 'contacts', name: 'Contacts', icon: 'driver' },
 ];
@@ -79,7 +79,7 @@ export function Phone({ clock, name, credits, level, book, onOpen, onJob, onClos
         ) : (
           <div className="ph-credits">
             <button type="button" className="ph-back" onClick={() => setApp('home')}>‹ Apps</button>
-            <small>Credits</small>
+            <small>Cash</small>
             <b>{Math.floor(credits).toLocaleString()}</b>
             <p>Earned by driving: distance, clean passes, near misses and records. Spent in the garage. Never bought, never real money.</p>
           </div>
@@ -105,7 +105,7 @@ function Thread({ who, msgs, done, onBack, onJob }: { who: string; msgs: Message
             <p className="ph-bubble">{m.text}</p>
             {m.job && (
               <div className={'ph-job' + (ok ? ' ok' : '')}>
-                <b>{jobText(m.job)}</b><small>{ok ? 'Done' : 'Pays'} · {(m.credits ?? 0).toLocaleString()} credits, {(m.xp ?? 0).toLocaleString()} XP</small>
+                <b>{jobText(m.job)}</b><small>{ok ? 'Done' : 'Pays'} · {(m.credits ?? 0).toLocaleString()} cash, {(m.xp ?? 0).toLocaleString()} XP</small>
                 {!ok && <button type="button" className="btn primary" onClick={() => onJob(m.job!)}>Set it up</button>}
               </div>
             )}
