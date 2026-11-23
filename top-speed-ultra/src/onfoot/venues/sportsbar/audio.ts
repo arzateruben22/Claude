@@ -84,11 +84,22 @@ export class BarAudio {
 
   /** the page's pieces; the sound starts on the first tap or key (a browser needs a gesture), or from the test hook */
   private go: (() => void) | null = null;
+  /** the context made in the gesture, before its graph is built (start() takes it over) */
+  private pre: AudioContext | null = null;
+  private goT = 0;
   attach(h: AudioCtxHooks) {
     this.h = h;
-    const go = () => { this.start(); removeEventListener('pointerdown', go); removeEventListener('keydown', go); this.go = null; };
+    // vv-look repair: the sound starts on the tap's pointerup (or a key), never on pointerdown: building the graph
+    // (two 2 s noise buffers, the impulse, the buses) between a button's pointerdown and pointerup made the Car
+    // button's 550 ms hold read a plain tap as a long press (a skip). Only the context is made in the gesture (cheap;
+    // Safari wants it there); the graph is built a task later, after the tap has been handled
+    const go = () => {
+      removeEventListener('pointerup', go); removeEventListener('keydown', go); this.go = null;
+      if (!this.ctx && !this.pre) { const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext; if (AC) { this.pre = new AC(); void this.pre.resume(); } }
+      this.goT = window.setTimeout(() => { this.goT = 0; if (this.h) this.start(); }, 0);
+    };
     this.go = go;
-    addEventListener('pointerdown', go); addEventListener('keydown', go);
+    addEventListener('pointerup', go); addEventListener('keydown', go);
     // the pause sheet's four sliders
     for (const b of BUSES) {
       const el = document.getElementById('mix-' + b) as HTMLInputElement | null;
@@ -109,7 +120,7 @@ export class BarAudio {
     if (this.ctx || !this.h) { void this.ctx?.resume(); return !!this.ctx; }
     const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AC) return false;
-    const ctx = new AC(); this.ctx = ctx;
+    const ctx = this.pre ?? new AC(); this.pre = null; this.ctx = ctx;
     void ctx.resume();
     // noise: white for the murmur, the cheers and the one-shots; pink (Voss) for the freeway
     const n = ctx.sampleRate * 2;
@@ -336,7 +347,9 @@ export class BarAudio {
    *  the context closed (its nodes and buffers go with it), the first-tap listeners removed. Safe to call twice; the
    *  page can start a fresh one after (start() makes a new context) */
   dispose() {
-    if (this.go) { removeEventListener('pointerdown', this.go); removeEventListener('keydown', this.go); this.go = null; }
+    if (this.go) { removeEventListener('pointerup', this.go); removeEventListener('keydown', this.go); this.go = null; }
+    if (this.goT) { clearTimeout(this.goT); this.goT = 0; }
+    if (this.pre) { void this.pre.close().catch(() => { /* closed */ }); this.pre = null; }
     const ctx = this.ctx;
     if (ctx) {
       try { this.juke?.radio.stop(); } catch { /* already stopped */ }

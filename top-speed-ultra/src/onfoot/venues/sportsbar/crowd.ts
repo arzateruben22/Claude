@@ -38,7 +38,7 @@ import { DRINKS, FOODS, itemById, EMPTY } from './menu';
 import { Bartender, Server, Host, Barback, handPoint } from './crew';
 import { setHiddenCaster } from './visibility';
 import { Cards, SEATED, STANDING, CHEERING, CardPose, LOOKS } from './cards';
-import { SCREENS, fd, FRONT, POOL_TABLES } from './layout';
+import { SCREENS, fd, FRONT, POOL_TABLES, PATIO, southWallV } from './layout';
 import type { BarLife } from './life';
 import { withFillRim } from './look';
 import { apartFromSkin } from './dress';
@@ -96,7 +96,7 @@ interface StaffRec { role: 'bartender' | 'server' | 'host' | 'barback' | 'house'
 interface Empty { x: number; y: number; z: number; yaw: number; model: 'glass' | 'basket' }
 /** one person in the frame's people list: pooled entries, refilled in place each frame and sorted by distance (no
  *  allocation in the draw path); `want` marks the LOD 1 queue's people and `cast` the casting people */
-interface PRec { kind: 'npc' | 'staff'; n: Npc | null; s: StaffRec | null; x: number; z: number; d: number; indoor: boolean; want: boolean; cast: boolean }
+interface PRec { kind: 'npc' | 'staff'; n: Npc | null; s: StaffRec | null; x: number; z: number; d: number; indoor: boolean; roofed: boolean; want: boolean; cast: boolean }
 /** the plates' scale at the pass (one vector, read by putAt) */
 const PLATE_SCALE = new THREE.Vector3(0.12, 0.012, 0.12);
 
@@ -194,7 +194,7 @@ export class Crowd {
       const bm = /^booth (\d) /.exec(s.id); if (bm) tid = `booth ${bm[1]}`;
       if (s.group?.startsWith('ht')) tid = `high-top ${+s.group.slice(2) + 1}`;
       if (s.group?.startsWith('pt')) tid = `patio table ${+s.group.slice(2) + 1}`;
-      const patio = s.at[1] < 0 && s.at[0] > 2 && s.at[0] < 24;
+      const patio = s.at[1] < 0 && s.at[0] > 2 && s.at[0] < 27;           // (the patio runs to u 27 since 2026-11-16)
       const fillerOk = s.kind !== 'staff' && !NO_FILLER_ZONES.has(s.zone) && !s.id.endsWith(' player') && s.id !== 'jukebox spot' && !s.id.startsWith('restroom') && s.zone !== 'front walk' && s.id !== 'shuffleboard thrower';
       const id = tid ?? `single ${s.id}`;
       let u = this.units.get(id);
@@ -1335,15 +1335,15 @@ export class Crowd {
     let k = 0;
     for (const n of this.npcs) {
       if (n.mode !== 'live' || n.hiddenUntil > T) continue;
-      let r = R[k]; if (!r) { r = { kind: 'npc', n: null, s: null, x: 0, z: 0, d: 0, indoor: false, want: false, cast: false }; R[k] = r; }
+      let r = R[k]; if (!r) { r = { kind: 'npc', n: null, s: null, x: 0, z: 0, d: 0, indoor: false, roofed: false, want: false, cast: false }; R[k] = r; }
       r.kind = 'npc'; r.n = n; r.s = null; r.x = n.x; r.z = n.z; k++;
     }
     for (const s of this.staff) {
       if (!s.body.on) continue;
-      let r = R[k]; if (!r) { r = { kind: 'staff', n: null, s: null, x: 0, z: 0, d: 0, indoor: false, want: false, cast: false }; R[k] = r; }
+      let r = R[k]; if (!r) { r = { kind: 'staff', n: null, s: null, x: 0, z: 0, d: 0, indoor: false, roofed: false, want: false, cast: false }; R[k] = r; }
       r.kind = 'staff'; r.n = null; r.s = s; r.x = s.body.x; r.z = s.body.z; k++;
     }
-    for (let i = 0; i < k; i++) { const r = R[i]; r.d = Math.hypot(r.x - P.x, r.z - P.z); r.indoor = this.indoorXZ(r.x, r.z); r.want = false; r.cast = false; }
+    for (let i = 0; i < k; i++) { const r = R[i]; r.d = Math.hypot(r.x - P.x, r.z - P.z); r.indoor = this.indoorXZ(r.x, r.z); r.roofed = !r.indoor && this.roofedXZ(r.x, r.z); r.want = false; r.cast = false; }
     // an insertion sort over the first k entries (about 110 at most; no comparator closure, no work array)
     for (let i = 1; i < k; i++) { const r = R[i]; let j = i - 1; while (j >= 0 && R[j].d > r.d) { R[j + 1] = R[j]; j--; } R[j + 1] = r; }
     this.recN = k;
@@ -1368,6 +1368,10 @@ export class Crowd {
   private camPoint() { const c = this.c, o = this._cam; if (c.view() === 'overhead') { const t = this.life.overheadTarget(); o.x = t.x; o.z = t.z; } else { o.x = c.camera.position.x; o.z = c.camera.position.z; } return o; }
   private indoorAt(x: number, z: number) { return this.indoorXZ(x, z); }
   /** inside the unit at local (x, z): the frame's (u, v) worked out inline (no tuple) */
+  /** (vv-look r3) under the patio's ceiling (its whole footprint, u 2-27, from the fence to the south wall): the sun
+   *  never reaches there, so the people under it cast nothing into the sun's map (the café plan seats more guests on the
+   *  patio than S4's corridor did, and at Ultra they had filled the map's 19 places, 60-78k triangles over S1's row) */
+  private roofedXZ(x: number, z: number) { const A = this.F.A, B = this.F.B, u = x * A[0] + z * A[1], v = x * B[0] + z * B[1]; return u > PATIO.out.u0 && u < PATIO.out.u1 && v > PATIO.out.v0 && v < southWallV(u); }
   private indoorXZ(x: number, z: number) { const A = this.F.A, B = this.F.B; return this.c.def.indoor(x * A[0] + z * A[1], x * B[0] + z * B[1]); }
   /** a pool spot's bit for someone at its 8 slots (4 players: you and the house when you play there; 4 watchers) */
   private poolBit(x: { kind: 'npc' | 'staff'; n?: Npc | null; s?: StaffRec | null }) {
@@ -1422,7 +1426,7 @@ export class Crowd {
   private drawModes(state: VisState, avatarDrawn: 0 | 1 | 2) {
     const q = this.quality, B = this.c.def.budgets[q], dr = B.drawn[state], R = this.recs, N = this.recN, pq = this.pq;
     let casters = 0;
-    if (q !== 'low') for (let i = 0; i < N && casters < B.castPeople - 1; i++) { const x = R[i]; const built = x.kind === 'npc' ? !!x.n!.p && x.n!.q === pq && x.n!.lod1 : x.s!.lod1; if (built && !x.indoor) { x.cast = true; casters++; } }
+    if (q !== 'low') for (let i = 0; i < N && casters < B.castPeople - 1; i++) { const x = R[i]; const built = x.kind === 'npc' ? !!x.n!.p && x.n!.q === pq && x.n!.lod1 : x.s!.lod1; if (built && !x.indoor && !x.roofed) { x.cast = true; casters++; } }
     const outside = state === 'outside';
     const meshCap = outside ? dr.atLod - (avatarDrawn ? 1 : 0) : Infinity;
     const lod1Cap = Math.max(0, dr.lod1 - (avatarDrawn === 1 ? 1 : 0));
@@ -1465,7 +1469,7 @@ export class Crowd {
     const c = this.c.clock(), inside = this.indoorAt(x, z), k = this.quality === 'low' ? 1 : 0.55;
     if (inside && c.open) { f.value.setRGB(0.34 * k, 0.29 * k, 0.24 * k); return; }
     // inline, as indoorXZ does: this runs per body per frame, so it makes no array (the code review of S4's third pass)
-    const A = this.F.A, B = this.F.B, u = x * A[0] + z * A[1], v = x * B[0] + z * B[1], patio = c.open && u > 2 && u < 24 && v < 0.3 && v > -5.5;
+    const A = this.F.A, B = this.F.B, u = x * A[0] + z * A[1], v = x * B[0] + z * B[1], patio = c.open && u > PATIO.out.u0 && u < PATIO.out.u1 && v < 0.3 && v > PATIO.out.v0;
     if (patio) f.value.setRGB(0.26 * c.night, 0.19 * c.night, 0.13 * c.night); else f.value.setRGB(0.12 * c.night, 0.11 * c.night, 0.1 * c.night);
   }
   private applyBody(p: Person, mode: DrawMode, bits: number, key: string) {
