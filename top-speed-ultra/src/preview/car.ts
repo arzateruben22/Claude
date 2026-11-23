@@ -122,7 +122,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     interior: once('m.cabin' + silI, () => M.patchedStd(silI, 0.6)),
     seatSil: once('m.seatsil' + silS, () => M.patchedStd(silS, 0.55)),
     exhaust: once('m.exhaust', () => new THREE.MeshPhysicalMaterial({ color: 0x8e9097, metalness: 1, roughness: 0.3, iridescence: 0.55, iridescenceIOR: 1.9, iridescenceThicknessRange: [180, 420], side: THREE.DoubleSide })),
-    tyre: M.tyre(q, TREAD_V, P.tyreTint), machined: M.machined(q), rimPaint: P.wheel === 'multi' ? M.rimPaint(P.rimColor, 0.22) : M.rimPaint(P.rimColor), disc: M.disc(q, P.discTint),
+    tyre: M.tyre(q, TREAD_V, P.tyreTint), machined: M.machined(q), rimPaint: P.wheel === 'multi' ? M.rimPaint(P.rimColor, 0.34, { gun: true }) : M.rimPaint(P.rimColor), disc: M.disc(q, P.discTint),
     aero: once('m.aero', () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0x2a2d33, metalness: 0.65, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }), { name: 'aero' }))),
     nut: once('m.nut' + caliper, () => withAO(new THREE.MeshPhysicalMaterial({ color: caliper, metalness: 0.7, roughness: 0.3, clearcoat: 0.6 }))),
     caliper: once('m.cal' + caliper, () => { const m = M.caliper(caliper).clone(); m.side = THREE.DoubleSide; return m; }),

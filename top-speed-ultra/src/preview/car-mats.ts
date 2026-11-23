@@ -357,8 +357,12 @@ export function machined(q: Quality) {
     return withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color: 0xd6d9dd, metalness: 1, roughness: 1.0, roughnessMap: rough, normalMap: nm, normalScale: new THREE.Vector2(0.08, 0.08), anisotropy: q === 'high' ? 0.85 : 0, clearcoat: 0.6, clearcoatRoughness: 0.08 }), { name: 'machined' }));
   });
 }
-export function rimPaint(color = 0x2b2d31, rough = 0.42) {
-  return once('rimpaint' + color + (rough === 0.42 ? '' : 'r' + rough), () => withAO(Object.assign(new THREE.MeshPhysicalMaterial({ color, metalness: 0.75, roughness: rough, clearcoat: 0.7, clearcoatRoughness: rough < 0.3 ? 0.04 : 0.12 }), { name: 'rimpaint' })));
+// o.gun (the OC Hypercar's rims, 2026-11-23: in the game they read bright silver, the rim's barrel and lip mirroring the
+// sky at a glancing angle, where the references have dark gunmetal): less metal, a satin coat and a calmer sky
+export function rimPaint(color = 0x2b2d31, rough = 0.42, o: { gun?: boolean } = {}) {
+  return once('rimpaint' + color + (rough === 0.42 ? '' : 'r' + rough) + (o.gun ? 'gun' : ''), () => withAO(Object.assign(new THREE.MeshPhysicalMaterial(o.gun
+    ? { color, metalness: 0.55, roughness: rough, clearcoat: 0.35, clearcoatRoughness: 0.18, envMapIntensity: 0.55 }
+    : { color, metalness: 0.75, roughness: rough, clearcoat: 0.7, clearcoatRoughness: rough < 0.3 ? 0.04 : 0.12 }), { name: 'rimpaint' })));
 }
 // tint: a dark grey carbon-ceramic disc (the OC Hypercar), so the wheel's face reads black through the spokes
 export function disc(q: Quality, tint?: number) {
