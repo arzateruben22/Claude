@@ -377,10 +377,44 @@ export function emissive(name: string, color: number, intensity: number, base = 
 }
 // an LED strip (the OC Hypercar's ice blue): emissive through a core-and-halo map across the strip's width (v), well
 // over the bloom pass's threshold (0.92) on High and Ultra; the phone tier (Low and Medium, no bloom) runs it dimmer
+// (2026-11-23, the owner's crop: a strip 6 to 16 mm wide is under a pixel from the chase camera and most outside ones,
+// and drew as a dotted line that shimmered as the car moved. Each ribbon vertex carries 'across', its half-width vector
+// from the strip's centre line (car-body ledStrip); the vertex shader widens the strip to at least LED_MIN_PX on screen
+// and dims its glow by the square root of the widening, so a far strip reads as one steady thin line. ledScreen keeps
+// the shader's resolution in step with whatever it is drawn into)
+const LED_MIN_PX = 1.25;
 export function led(core: number, halo: number, q: Quality, edge = halo) {
-  return once('led' + core + halo + 'e' + edge + q, () => Object.assign(new THREE.MeshStandardMaterial({
-    color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
-  }), { name: 'led' }));
+  return once('led' + core + halo + 'e' + edge + q, () => {
+    const m = Object.assign(new THREE.MeshStandardMaterial({
+      color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
+    }), { name: 'led' });
+    const uRes = { value: new THREE.Vector2(1280, 720) };
+    m.userData.ledRes = uRes;
+    patch(m, 'ledmin', (sh) => {
+      sh.uniforms.uLedRes = uRes;
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nattribute vec3 across;\nuniform vec2 uLedRes;\nvarying float vLedFade;')
+        .replace('#include <begin_vertex>', `#include <begin_vertex>
+          vLedFade = 1.0;
+          if (dot(across, across) > 0.0) {
+            vec4 pa = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0), pc = projectionMatrix * modelViewMatrix * vec4(transformed - across, 1.0);
+            vec2 d = (pa.xy / max(pa.w, 1e-5) - pc.xy / max(pc.w, 1e-5)) * 0.5 * uLedRes;
+            float k = clamp(${(LED_MIN_PX / 2).toFixed(3)} / max(length(d), 1e-4), 1.0, 12.0);
+            transformed = transformed - across + across * k;
+            vLedFade = inversesqrt(k);
+          }`);
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', '#include <common>\nvarying float vLedFade;')
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance *= vLedFade;');
+    });
+    return m;
+  });
+}
+// keep an LED mesh's minimum width in pixels of whatever it is drawn into (the canvas, a post target, the probe)
+export function ledScreen(mesh: THREE.Mesh) {
+  const u = ((mesh.material as THREE.Material).userData as { ledRes?: { value: THREE.Vector2 } }).ledRes;
+  if (!u || !mesh.geometry.getAttribute('across')) return;
+  mesh.onBeforeRender = (r) => { const t = r.getRenderTarget(); if (t) u.value.set(t.width, t.height); else r.getDrawingBufferSize(u.value); };
 }
 // the OC Hypercar's hex mesh on 'high' (judge round 1): opaque, its cell walls drawn by the honeycomb map as colour
 // rather than cut by alpha. The alpha-tested mesh's walls, about a sixth of each cell, average under the mips to an

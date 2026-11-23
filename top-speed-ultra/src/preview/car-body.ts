@@ -707,6 +707,10 @@ function makeBody(P: ShapeParams) {
       if (gn.getX(0) * n0.x + gn.getY(0) * n0.y + gn.getZ(0) * n0.z < 0) g = gridGeo(rows, { flip: true });
       const uv = g.attributes.uv as THREE.BufferAttribute;
       for (let i = 0; i < rows.length; i++) for (let j = 0; j < 2; j++) uv.setXY(i * 2 + j, i / (rows.length - 1), j);
+      // each vertex's half-width vector from the centre line (car-mats led: a minimum width on screen)
+      const ac = new Float32Array(rows.length * 6);
+      for (let i = 0; i < rows.length; i++) { const h = rows[i][1].clone().sub(rows[i][0]).multiplyScalar(0.5); ac.set([-h.x, -h.y, -h.z, h.x, h.y, h.z], i * 6); }
+      g.setAttribute('across', new THREE.BufferAttribute(ac, 3));
       kit.add(key, g);
     };
     // the hypercar's blades (M2): a lit face standing on the nose along the head quad's swept front edge round the
