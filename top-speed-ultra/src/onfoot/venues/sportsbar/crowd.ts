@@ -67,6 +67,8 @@ const WALK = 1.25;
 const clamp = (v: number, a: number, b: number) => (v < a ? a : v > b ? b : v);
 type Slot = { id: string; zone: string; group?: string; kind: 'seat' | 'stand' | 'staff'; at: P2; face: P2; y: number; stand: P2; r: number; x: number; z: number; sx: number; sz: number; seatId?: number };
 type DrawMode = 'lod1' | 'lod2' | 'card' | 'off';
+/** (cast repair, 2026-11-16) people nearer the camera than this (m) get their LOD 1 built before anyone else's */
+const NEAR_LOD1 = 3.2;
 
 interface Hand { item: string; model: 'glass' | 'basket'; color: number; left: number; next: number }
 export interface Act {
@@ -262,7 +264,7 @@ export class Crowd {
     for (const b of this.bartenders) { b.nextEmpty = () => this.takeEmpty(b.x, b.z); }
     this.barback.nextEmpty = () => this.takeEmpty(this.barback.x, this.barback.z);
   }
-  private noCast(p: Person) { p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = true; } }); }
+  private noCast(p: Person) { p.group.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.castShadow = false; m.receiveShadow = !m.userData.noShadow && !m.userData.noRecv; } }); }
   /** the nearest empty to (x, z), with a function that takes it (the barback, the bartender's flap trip) */
   private takeEmpty(x: number, z: number) {
     if (!this.empties.length) return null;
@@ -1310,7 +1312,18 @@ export class Crowd {
     const P = this.camPoint();
     let best: Npc | null = null, bd = Infinity;
     for (const n of this.npcs) { if (n.mode !== 'live' || (n.p && n.q === this.pq)) continue; const d = Math.hypot(n.x - P.x, n.z - P.z); if (d < bd) { bd = d; best = n; } }
-    if (best) return this.bodyJob(best, 2, this.pendingSwitch ? 'switch' : 'fill');
+    // (2026-11-16, cast repair) anyone within NEAR_LOD1 m of the camera on the LOD 1 list comes first, nearest first,
+    // ahead of the casters: at the bar, people a step away stayed at LOD 2 (faceless) for half a minute or more while the
+    // patio's casters were built, so the six didn't read as themselves up close
+    let near: PRec | null = null;
+    for (let i = 0; i < this.wantN; i++) {
+      const w = this.wanted[i]; if (w.d >= NEAR_LOD1 || (near && near.d <= w.d)) continue;
+      if (w.kind === 'npc' ? !w.n!.lod1 && this.byKey.has(w.n!.key) && w.n!.mode === 'live' : !w.s!.lod1) near = w;
+    }
+    // (cast fx5 r1) and ahead of the LOD 2 builds of new arrivals more than 6 m away: on a busy Saturday new guests keep
+    // arriving, and the person a step from you stayed at LOD 2 for seven minutes behind their first builds
+    if (best && (!near || bd < 6)) return this.bodyJob(best, 2, this.pendingSwitch ? 'switch' : 'fill');
+    if (near) return near.kind === 'npc' ? this.bodyJob(near.n!, 1, this.pendingSwitch ? 'switch' : 'fill') : this.staffLod1Job(near.s!);
     for (let i = 0; i < this.wantN; i++) {
       const want = this.wanted[i];
       if (want.kind === 'npc') { const n = want.n!; if (!n.lod1 && this.byKey.has(n.key) && n.mode === 'live') return this.bodyJob(n, 1, this.pendingSwitch ? 'switch' : 'fill'); }
