@@ -1572,7 +1572,7 @@ export class Game {
     this.adapt(interval);
     this.actions();
     if (!this.paused) {
-      this.input.update(dt, Math.abs(this.phys.vx));
+      this.input.update(dt, Math.abs(this.phys.vx), this.phys.vx > 3 ? Math.atan2(this.phys.vy, this.phys.vx) : 0);
       if (this.attract) this.autopilot(this.input.c);
       else this.takeOver(this.input.steerAsked, this.input.brakeAsked);
       this.acc += dt;

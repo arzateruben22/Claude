@@ -127,6 +127,7 @@ export class CarPhysics {
   private stillT = 0;
   private proj = { s: 0, d: 0 };
   private rp: RoadPoint = { x: 0, y: 0, z: 0, h: 0, k: 0, slope: 0 };
+  private kRoad = 0;          // the road's curvature around the car, smoothed (see sampleRoad)
   private at = { x: 0, y: 0, z: 0, h: 0 };
   private wallBuf: Wall[] = [];
   private grinding = false;   // in contact with a barrier last step
@@ -134,9 +135,51 @@ export class CarPhysics {
   get speed() { return Math.sqrt(this.vx * this.vx + this.vy * this.vy); }
   get altitude() { return this.air.alt; }
   get ratio() { return this.gear < 0 ? SPEC.reverse : SPEC.gears[this.gear - 1]; }
-  // the most the front wheels will turn at this speed: full lock when parking, a few degrees at 200 mph
-  // (what the tyres can use: past ~100 mph a fraction of a degree already asks for more than the grip there is)
-  maxDelta(v = Math.abs(this.vx)) { return clamp((L * 13.5) / (v * v + 1) + 0.03 * (1 - smoothstep(18, 55, v)) + 0.0065, 0.0065, 0.52) * (1 + this.handling * 0.35) * SPEC.steerGain; }
+  // the most the front wheels will turn at this speed: full lock when parking, a few degrees at 200 mph. Three parts,
+  // the largest wins (owner, 2026-11-22: at 234 mph on the 91 a gentle curve couldn't be followed from the inside lane):
+  //  - the speed curve (unchanged): about 1.4 g of ordinary grip, all the lock there is at parking and city speeds;
+  //  - the grip the car has at this speed: the wheel angle that asks for the lateral g its tyres can give with the
+  //    wing's downforce and the caller's suction (the hypercar's fans) pressing them down, so a car with downforce gets
+  //    lock that matches its grip at speed (the old curve gave the hypercar 1.5 g at 234 mph at full lock, its tyres ~3.6 g);
+  //  - the road under the car: 1.3 x the angle that holds its curvature at this speed, so a freeway curve can always
+  //    be followed from any lane while the grip allows it, capped at a margin over the grip lock (past it in Sim the
+  //    rear lets go: no spin from holding full lock)
+  // The wheel angle for a steady lateral acceleration a is (L/v² + K)·a, K the understeer gradient (m/L)(b/Cf − a/Cr)
+  // of the linear tyres (close to what the car does: the GT's 0.00099 and the hypercar's 0.00062 rad per m/s² against
+  // 0.00098-0.00102 and 0.0004-0.0007 from a steady-state sweep).
+  maxDelta(v = Math.abs(this.vx)) {
+    const speedLock = clamp((L * 13.5) / (v * v + 1) + 0.03 * (1 - smoothstep(18, 55, v)) + 0.0065, 0.0065, 0.52) * (1 + this.handling * 0.35) * SPEC.steerGain;
+    if (v < 5) return speedLock;
+    const mg = SPEC.mass * G, press = Math.max(0, 0.5 * RHO * SPEC.ClA * v * v + this.ext.fz) / mg;
+    const mu = (1.12 + 0.3 * (1 - this.handling)) * this.grip * clamp(1 - SPEC.loadSens * press, 0.7, 1.1);
+    const aGrip = mu * G * (1 + press);                                   // the lateral acceleration the tyres can give
+    const K = Math.max(0, (SPEC.mass / L) * (SPEC.b / SPEC.Cf - SPEC.a / SPEC.Cr));
+    const perA = L / (v * v) + K;                                         // wheel angle per m/s² of lateral acceleration
+    // Simulation keeps a fifth back (near the GT's top speed it snaps past ~0.9°: its rear lets go, where Arcade's and
+    // Sport's stability control hold it), and the road's share stops just over that; Arcade may ask twice the grip lock
+    const sim = smoothstep(0.5, 0.9, this.handling), lin = perA * aGrip;
+    const gripLock = lin * (1 - 0.2 * sim);
+    const cap = lin * lerp(2.0, 1.3, smoothstep(0.15, 0.9, this.handling)) * (1 - 0.35 * sim);
+    const k = this.kRoad;
+    const roadLock = Math.min(cap, 1.3 * (Math.atan(L * k) + K * v * v * k));
+    return Math.min(0.52, Math.max(speedLock, gripLock, roadLock));
+  }
+  // the curvature of the road under and just ahead of the car (1/m, always positive), as of the last step: the larger
+  // of the mean over the 100 m ahead and over 60 m around the car, from the heading's change (the road point's own k
+  // steps from one 0.5 m sample to the next, and the lock followed it by up to a degree in 50 ms). Set once per step
+  // (and at placeAt), so the autopilot's maxDelta() calls between steps see the value the step used.
+  get roadK() { return this.kRoad; }
+  private sampleRoad(road: Path, s: number, out: RoadPoint) {
+    const p = road.sample(s, out), len = road.len;
+    const mean = (a: number, b: number) => {
+      a = Math.max(0, a); b = Math.min(len, b);
+      if (b - a < 20) return Math.abs(p.k);
+      return Math.abs(road.heading(b) - road.heading(a)) / (b - a);
+    };
+    // a window pushed back inside the road near its end keeps its length
+    this.kRoad = Math.max(mean(Math.min(s, len - 100), Math.min(s, len - 100) + 100), mean(Math.min(s - 30, len - 60), Math.min(s - 30, len - 60) + 60));
+    return p;
+  }
   // the lock available to a steer request on this side (+1 left, -1 right): maxDelta()'s speed limit, opened up on the
   // counter-steer side (the front wheels turned toward the direction of travel) to the body slip angle plus an 8°
   // margin, up to a road car's 38° of lock, so a slide can be caught and straightened; steering into the slide stays
@@ -153,6 +196,7 @@ export class CarPhysics {
     this.x = this.px = p.x; this.z = this.pz = p.z; this.y = p.y; this.psi = this.ppsi = p.h; this.roadH = p.h;
     this.vx = speed; this.vy = 0; this.r = 0; this.delta = 0;
     this.s = s; this.d = d; this.gear = speed > 20 ? 4 : 1; this.shiftT = 0;
+    this.sampleRoad(road, clamp(s, 0, road.len), this.rp);
     this.wF = this.wR = speed / SPEC.wheelR; this.kF = this.kR = 0; this.spin = 0;
     this.absP.f = this.absP.r = 1; this.tcM = 1;
     this.airborne = false; this.air.alt = 0; this.air.t = 0;
@@ -436,7 +480,7 @@ export class CarPhysics {
     // where are we on the road; the barriers keep us on it
     road.project(this.x, this.z, this.s, this.proj);
     this.s = this.proj.s; this.d = this.proj.d;
-    const p = road.sample(Math.min(Math.max(this.s, 0), road.len), this.rp);
+    const p = this.sampleRoad(road, Math.min(Math.max(this.s, 0), road.len), this.rp);
     this.y = p.y; this.slope = p.slope; this.roadH = p.h;
     net.wallsNear(this.x, this.z, this.y, 4, this.wallBuf);
     const fx = sf, fz = cf, rx = -cf, rz = sf;
@@ -477,7 +521,7 @@ export class CarPhysics {
     this.x = at.x; this.z = at.z; this.roadH = at.h; this.psi = at.h + A.rel;
     const tau = Math.min(1, A.t / A.T);
     A.alt = 4 * A.peak * tau * (1 - tau); A.vz = ((4 * A.peak) / A.T) * (1 - 2 * tau);
-    const p = road.sample(this.s, this.rp);
+    const p = this.sampleRoad(road, this.s, this.rp);
     this.y = p.y + A.alt; this.slope = p.slope;
     const w = this.vx / SPEC.wheelR;
     this.wF = this.wR = w; this.kF = this.kR = 0; this.spin = 0;

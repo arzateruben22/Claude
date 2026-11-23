@@ -4,6 +4,149 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: freeway curves can be followed at high speed (steering limits at speed)
+
+The owner (v25, a chase-cam screenshot: the OC Hypercar Unleashed at 234 mph on the CA-91 East, in the left lane):
+"when driving high speeds it's kind of hard to turn ... basically impossible at that speed to go with the turn unless
+I'm on the other side". The spot, from the road data: 4.6 mi from the CA-91 East start (s 26,460 m) is s ≈ 33,860 m,
+inside a right-hand curve at 33.2-34.0 km (100 m mean radius 760-1,270 m, about 950 m overall). He was in the left
+lane, the outside of it, with no room to run wide.
+
+**Cause (measured).** Three limits stacked:
+- `input.ts` (keyboard): turn-in `2.4 - sp*1.2` and `steerT *= 1 - sp*0.35`: the keys asked for 65 % of the lock above
+  157 mph. (Touch passes the pad's deflection straight through; the gamepad squares the stick. Neither had a cap.)
+- `CarPhysics.maxDelta()`: `(L*13.5)/(v²+1) + …`, tuned to ~1.4 g of ordinary grip; it ignored downforce and the car's
+  understeer, so at 234 mph the hypercar's whole lock was 0.74°: 1.07 g with the keys (a 1,041 m circle), 1.49 g with
+  full touch, where its tyres (wing + fans) give about 3.6 g in Arcade. The curve needs 1.17 g (1.46 g at its tightest
+  100 m).
+- Arcade's stability control steers toward an understeering yaw target; the lock it needs at speed is several times
+  the kinematic angle `atan(L·k)`, so a floor of 1.3 × atan(L·k) alone (as first proposed) would change nothing above
+  about 60 mph.
+
+**Fix.**
+- `CarPhysics.maxDelta()` (the curve only; `steerLock()`'s counter-steer opening, grip, power and top speed are
+  unchanged): the largest of (1) the old speed curve, unchanged, (2) a grip lock: the wheel angle `(L/v² + K)·a` that asks
+  for the lateral acceleration `a` the tyres can give with the wing's downforce and the fans' suction (`ext.fz`) on
+  them (load sensitivity included), `K = (m/L)(b/Cf − a/Cr)` the car's understeer gradient (it matches a steady-state
+  sweep: GT 0.00099 predicted, 0.00098-0.00102 measured; hypercar 0.00062 predicted, 0.0004-0.0007 measured, rad per m/s²), and (3) a road lock: 1.3 × `(atan(L·|k|) + K·v²·|k|)` from the
+  road point under the car (`roadK`, a new getter on the last step's road sample), capped at 2.0 × the grip lock in Arcade,
+  1.7 × in Sport. Simulation keeps a fifth of the grip lock back and caps the road lock at 0.85 × (the GT at 200 mph in
+  Sim snaps past ~0.9° with the throttle held).
+- `input.ts`: keyboard turn-in `2.4 - sp*0.6`, cap `1 - sp*0.15` (85 % of the lock at speed); return to centre unchanged.
+- Not done: the optional Arcade road-follow assist.
+
+**Before / after (Node, the game's own Physics.ts, cars.ts, Path.ts, HyperAbility.ts bundled; steady state at a held
+speed with full steer held, path g = v²/R of the path driven; "tyres can give" = the most steady path g with any held
+wheel angle up to 6°, slip under 6°, speed held):**
+
+| car | profile | mph | needed g: owner 91E (950/762 m) · 405S (610 m) · 405N (457 m) · 5S (383 m) | tyres can give | before: keys · touch | after: keys · touch |
+|---|---|---|---|---|---|---|
+| OC Hypercar Unleashed | Arcade | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 2.65 | 1.40 · 1.73 | 2.15 · 2.27 |
+| OC Hypercar Unleashed | Arcade | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.91 | 1.00 · 1.41 | 2.01 · 2.21 |
+| OC Hypercar Unleashed | Arcade | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 3.21 | 1.02 · 1.44 | 2.11 · 2.32 |
+| OC Hypercar Unleashed | Arcade | 234 | 1.17/1.46 · 1.83/1.96 · 2.44 · 2.91 | 3.57 | 1.07 · 1.49 | 2.33 · 2.55 |
+| OC Hypercar Unleashed | Arcade | 300 | 1.93/2.41 · 3.01/3.23 · 4.01 · 4.79 | 3.78 | 1.18 · 1.60 | 2.78 · 3.04 |
+| OC Hypercar Unleashed | Sport | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 2.37 | 1.54 · 1.84 | 1.97 · 2.07 |
+| OC Hypercar Unleashed | Sport | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.46 | 1.10 · 1.51 | 1.81 · 1.96 |
+| OC Hypercar Unleashed | Sport | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 2.59 | 1.09 · 1.50 | 1.85 · 2.00 |
+| OC Hypercar Unleashed | Sport | 234 | 1.17/1.46 · 1.83/1.96 · 2.44 · 2.91 | 2.76 | 1.12 · 1.52 | 1.99 · 2.15 |
+| OC Hypercar Unleashed | Sport | 300 | 1.93/2.41 · 3.01/3.23 · 4.01 · 4.79 | 2.92 | 1.18 · 1.59 | 2.31 · 2.48 |
+| OC Hypercar Unleashed | Sim | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 2.14 | 1.68 · 1.89 | 1.82 · 1.89 |
+| OC Hypercar Unleashed | Sim | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.12 | 1.23 · 1.60 | 1.47 · 1.60 |
+| OC Hypercar Unleashed | Sim | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 2.09 | 1.18 · 1.54 | 1.46 · 1.59 |
+| OC Hypercar Unleashed | Sim | 234 | 1.17/1.46 · 1.83/1.96 · 2.44 · 2.91 | 2.07 | 1.18 · 1.55 | 1.56 · 1.69 |
+| OC Hypercar Unleashed | Sim | 300 | 1.93/2.41 · 3.01/3.23 · 4.01 · 4.79 | 2.12 | 1.20 · 1.58 | 1.74 · 1.89 |
+| OC Hypercar race tune | Arcade | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.80 | 0.94 · 1.17 | 1.18 · 1.27 |
+| OC Hypercar race tune | Arcade | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.20 | 0.63 · 0.93 | 1.28 · 1.45 |
+| OC Hypercar race tune | Arcade | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 2.48 | 0.63 · 0.95 | 1.56 · 1.77 |
+| OC Hypercar race tune | Sport | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.45 | 1.00 · 1.18 | 1.11 · 1.18 |
+| OC Hypercar race tune | Sport | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.63 | 0.69 · 0.98 | 1.13 · 1.25 |
+| OC Hypercar race tune | Sport | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.69 | 0.68 · 1.02 | 1.36 · 1.52 |
+| OC Hypercar race tune | Sim | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.16 | 1.02 · 1.12 | 1.08 · 1.12 |
+| OC Hypercar race tune | Sim | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.21 | 0.77 · 1.03 | 0.93 · 1.03 |
+| OC Hypercar race tune | Sim | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.06 | 0.78 · 1.24 | 1.11 · 1.46 |
+| Rossini GT | Arcade | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.70 | 0.94 · 1.16 | 1.09 · 1.18 |
+| Rossini GT | Arcade | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.05 | 0.63 · 0.92 | 1.15 · 1.29 |
+| Rossini GT | Arcade | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 2.38 | 0.63 · 0.94 | 1.34 · 1.52 |
+| Rossini GT | Sport | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.37 | 0.99 · 1.15 | 1.09 · 1.15 |
+| Rossini GT | Sport | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.51 | 0.68 · 0.96 | 1.01 · 1.12 |
+| Rossini GT | Sport | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.57 | 0.68 · 0.99 | 1.16 · 1.30 |
+| Rossini GT | Sim | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.03 | 0.99 · 1.07 | 1.04 · 1.07 |
+| Rossini GT | Sim | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.04 | 0.75 · 0.98 | 0.90 · 0.98 |
+| Rossini GT | Sim | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.08 | 0.76 · 1.41 | 0.98 · 1.41 |
+| Rossini Corsa | Arcade | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.78 | 0.96 · 1.18 | 1.17 · 1.26 |
+| Rossini Corsa | Arcade | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 2.20 | 0.64 · 0.94 | 1.27 · 1.42 |
+| Rossini Corsa | Arcade | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 2.58 | 0.64 · 0.97 | 1.53 · 1.73 |
+| Rossini Corsa | Sport | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.45 | 1.02 · 1.19 | 1.13 · 1.19 |
+| Rossini Corsa | Sport | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.60 | 0.70 · 1.00 | 1.12 · 1.24 |
+| Rossini Corsa | Sport | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.65 | 0.69 · 1.02 | 1.33 · 1.47 |
+| Rossini Corsa | Sim | 100 | 0.21/0.27 · 0.33/0.36 · 0.45 · 0.53 | 1.16 | 1.04 · 1.12 | 1.09 · 1.12 |
+| Rossini Corsa | Sim | 150 | 0.48/0.60 · 0.75/0.81 · 1.00 · 1.20 | 1.19 | 0.78 · 1.03 | 0.94 · 1.03 |
+| Rossini Corsa | Sim | 200 | 0.86/1.07 · 1.34/1.43 · 1.78 · 2.13 | 1.28 | 0.78 · 1.11 | 1.03 · 1.16 |
+
+(g = v²/R of the path the car drives, steady, at a held speed, full steer held; * = slip over 6° or the speed not held. "Tyres can give": the most steady path g with any held wheel angle up to 6°, slip under 6°, speed held. Arcade's stability control adds path g beyond the tyres' own force, so its numbers can exceed the friction circle.)
+
+**Every main-line curve** (the sharpest point of each curve on the 20 carriageways, 528 curves, 100 m mean radius 150 m
+and up), followed for 6 s from the inside and from the outside lane by a keyboard driver model (holds Left / Right /
+nothing every 50 ms from a pure-pursuit aim 50 m ahead that knows the car's understeer; "held" = the car's centre never
+more than half a lane, 1.83 m, from its lane's centre, slip under 20°):
+
+- before: hyperU h0.15 234 mph: 364/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 62/346, <1 g 302/340
+- after:  hyperU h0.15 234 mph: 819/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 5/62, 1.5-2 g 153/272, 1-1.5 g 323/346, <1 g 338/340
+- before: hyperU h0.5 234 mph: 363/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 0/272, 1-1.5 g 64/346, <1 g 299/340
+- after:  hyperU h0.5 234 mph: 660/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/16, 2.5-3 g 0/20, 2-2.5 g 0/62, 1.5-2 g 42/272, 1-1.5 g 282/346, <1 g 336/340
+- before: hyperU h0.15 300 mph: 128/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/160, 2.5-3 g 0/194, 2-2.5 g 0/208, 1.5-2 g 0/204, 1-1.5 g 51/188, <1 g 77/102
+- after:  hyperU h0.15 300 mph: 489/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/160, 2.5-3 g 2/194, 2-2.5 g 36/208, 1.5-2 g 165/204, 1-1.5 g 184/188, <1 g 102/102
+- before: gt h0.15 205 mph: 243/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 0/402, <1 g 243/548
+- after:  gt h0.15 205 mph: 702/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 2/76, 1-1.5 g 165/402, <1 g 535/548
+- before: gt h0.5 205 mph: 257/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 0/402, <1 g 257/548
+- after:  gt h0.5 205 mph: 533/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/20, 1.5-2 g 0/76, 1-1.5 g 34/402, <1 g 499/548
+- before: gt h0.5 150 mph: 731/1056 curve-lane runs held the lane; by the needed g (100 m mean): 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 731/1016
+- after:  gt h0.5 150 mph: 926/1056 curve-lane runs held the lane; by the needed g (100 m mean): 1.5-2 g 0/8, 1-1.5 g 0/32, <1 g 926/1016
+- before: gt h0.9 200 mph: 320/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 320/604
+- after:  gt h0.9 200 mph: 422/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 422/604
+- before: corsa h0.5 225 mph: 186/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 0/368, <1 g 186/406
+- after:  corsa h0.5 225 mph: 471/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/10, 2.5-3 g 0/18, 2-2.5 g 0/40, 1.5-2 g 0/214, 1-1.5 g 91/368, <1 g 380/406
+- before: hyperR h0.9 200 mph: 330/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 0/362, <1 g 330/604
+- after:  hyperR h0.9 200 mph: 459/1056 curve-lane runs held the lane; by the needed g (100 m mean): 3+ g 0/8, 2.5-3 g 0/2, 2-2.5 g 0/16, 1.5-2 g 0/64, 1-1.5 g 2/362, <1 g 457/604
+
+The rest are grip, not steering: curves that need more lateral g than the tyres give at that speed (the tightest
+main-line curves, 250-450 m, need 2.5-4.5 g at 234 mph) can't be followed at that speed in any profile, and grip is
+not ours to raise. In Simulation the GT at 200 mph is still lock- and grip-limited (its tyres give ~1.1-1.3 g before
+the rear lets go; held full keyboard lock with full throttle through a curve tighter than that spins it at 180-200
+mph, as full touch lock already did before; Arcade and Sport plow wide instead).
+
+**Stability** (straight road, full throttle to hold the speed, all four cars × three profiles × 100-234 mph): a key
+held full for 3 s, a full left-right flick and a 0.15 s tap: no spin anywhere (max slip 5.2°, the GT in Sim at 200
+mph, from 2.7°); a 0.15 s tap now moves the car 0.6-1.7 m sideways over 2 s (was 0.3-1.3 m); no input: 0 m in 10 s.
+
+**Checks.**
+- New check (abilities group), on the built game: "steering at speed: keyboard steer follows the owner's CA-91 East
+  curve at 234 mph (hypercar, Arcade) and an I-405 South curve at 150 mph (GT, Sport) from the inside and the outside
+  lane, in lane, no barrier; a 200 mph straight with no input stays straight". The keys go through `Input.update`.
+  After: hypercar right lane within 1.41 m of its lane's centre (keys to 0.73), left lane 1.31 m (keys to 0.70), slip
+  1.9°/1.8°; GT left lane 1.41 m, right lane 1.39 m (keys to 0.86), slip 2.2°; no barrier; 200 mph with no input 0 m off
+  its starting line for both cars. Before (the same check on a build of 0d311bd): hypercar right lane 18.2 m off and on
+  the barrier (53 steps), left lane 3.56 m and 201 steps on the left barrier, keys stuck at 0.65; GT 18.8 m and 17.8 m off,
+  the second spun (36°, down to 52 mph).
+- Chase-cam pair on the owner's curve, hypercar 234 mph Arcade, left lane, 5 s in (s ≈ 33,618 m), 3D frame without HUD:
+  tests/out/steer-91e-234mph-chase-before.png (on the left shoulder against the barrier, 3.52 m left of its lane's
+  centre, keys at 0.65 of a 0.75° lock, 229 mph) and tests/out/steer-91e-234mph-chase-after.png (in the left lane, 0.93
+  m off, keys at 0.22 of a 1.63° lock, 234 mph).
+- tsc --noEmit (tsconfig.json and tsconfig.game.json): no errors. npm run build: passes, one owner-test mark
+  ("artifact page marked as the owner test build (owner mode on)").
+- Suite on the built game, run in parts so no run passes 20 minutes (4 shared cores, load 22-37), each part with the
+  checks that set up its page:
+  - modes: 10/10 passed.
+  - abilities (three parts): 10/10, 10/10 and 7/7 passed, the new check and Ground Lock (25 m/s 1.54 → 2.07 g, 40 m/s
+    1.49 → 1.98 g Arcade, 1.42 → 1.97 g Simulation) included.
+  - phone: every check passed in a part except "sleeves under an overpass (High)", which never finished here (a High
+    render under this load: a 240 s frame wait timed out twice, and the 20-25 minute limit once); on 0d311bd's build it
+    also ran into the 20 minute limit without a result, so it is the machine, not steering. The
+    "steering wheel: each car's parts" check counted 24,002 triangles on the hypercar's wheel once, when it ran after
+    the forearm and overpass-sleeve checks in the same page; run on its own it passes on this build and on 0d311bd's
+    (12,118 triangles both).
+
 ## 2026-11-22: the view holds still when paused, and the speed shake is smooth
 
 The owner (v25, a pause-screen screenshot): "why does it shake like the outside of the car when paused and driving?"
