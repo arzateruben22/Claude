@@ -792,7 +792,7 @@ function makeBody(P: ShapeParams) {
       if (FACE) kit.rigid(() => {
         const zLip = (ax: number) => { const y = lipY(ax); let lo = ZF - 0.05, hi = ZF + 0.6; for (let i = 0; i < 30; i++) { const m = (lo + hi) / 2; if (body.top(m, ax) < y) lo = m; else hi = m; } return (lo + hi) / 2; };
         for (const [fx, lean] of FACE.fins) for (const sd of fx ? [-1, 1] : [1]) {
-          const yB = YSILL + 0.012, yT = lipY(fx) - 0.02, zT = zLip(fx) + 0.05, zBf = ZF + 0.1, zBack = ZF + 0.42;
+          const yB = YSILL + 0.012, yT = lipY(fx) - 0.02, zT = zLip(fx) + 0.05, zBf = ZF + 0.1 - (P.finFwd ?? 0), zBack = ZF + 0.42;
           const sh = new THREE.Shape(); sh.moveTo(zBf, yB); sh.lineTo(zBack, yB); sh.lineTo(zBack, yT); sh.lineTo(zT, yT); sh.lineTo(zT - 0.02, yT - 0.05); sh.closePath();
           const g = new THREE.ExtrudeGeometry(sh, { depth: 0.02, bevelEnabled: false }); g.rotateY(-Math.PI / 2); g.translate(sd * fx + 0.01, 0, 0);
           const gp = g.attributes.position;
@@ -1250,6 +1250,12 @@ function makeBody(P: ShapeParams) {
       // (the hypercar's own 'scoop' material, M1b repair: the dark of the others, drawn a few depth steps nearer, so the
       // skin under it can't fight through at any distance: at the lineup's 180 m one depth step is about 10 cm)
       kit.add(P.face ? 'scoop' : 'dark', gridGeo(grid(dI), { flip: fl }), null, 0.2);
+      // (2026-11-23, the owner's references: a honeycomb mesh over it, 3 mm out, mapped in metres along the side)
+      if (P.face) {
+        const mg = gridGeo(grid(dI + 0.003), { flip: fl }), mu = mg.attributes.uv as THREE.BufferAttribute, mp = mg.attributes.position;
+        for (let k = 0; k < mu.count; k++) mu.setXY(k, mp.getZ(k) * sd, mp.getY(k));
+        kit.add('scoopMesh', mg);
+      }
       kit.add('carbon', gridGeo([ring(0.003, 0.02), ring(dI + 0.003, 0.006), ring(dI + 0.003, -0.006), ring(dI - 0.006, -0.008)], { closeU: true, flip: fl }), null, 0.06);
     }
     // engine-cover louvres between the haunches: dark well, gloss blades

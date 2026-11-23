@@ -104,6 +104,7 @@ export interface ShapeParams {
   // metres inside the fangs (|x| < xf), so a crisp silver lip overhangs a dark intake zone; fins: vertical carbon
   // fins standing in it (x, and how far the top leans in), from the splitter up under the lip
   face?: { lip: [number, number][]; xf: number; recess: number; fins: [number, number][] };
+  finFwd?: number;                       // the face's fins stand this far ahead of the recessed face at their foot, on the splitter
   // M1b, the hypercar's tail: the face between the valance (y0) and the bar (y1) is a recess `depth` deep, inset
   // `inset` from the tail's sides, so the silver haunches wrap round it; the red bar runs along its top edge and
   // round the tail's corners
@@ -303,9 +304,12 @@ const HYPER: ShapeParams = {
   // (M1b: the sheet's big scoop behind the door: a dark wedge from the door's rear edge down and back to the sill,
   // its front edge upright along the door, its rear edge the diagonal into the skirt; 0.179 m2 in side view, 1.8x
   // the first cut's 0.099)
-  intake: null, intakeQ: [[0.17, 0.3], [0.98, 0.3], [0.4, 0.65], [0.19, 0.65]],
+  // (2026-11-23, the owner's references: a bigger triangle, its front edge leaning back from the sill behind the door to
+  // an apex at 0.67 m over the scoop, its long diagonal down to the rear wheel: 0.205 m2 in side view; filled with mesh)
+  intake: null, intakeQ: [[0.13, 0.27], [1.08, 0.27], [0.5, 0.67], [0.46, 0.67]],
   louvre: null,
-  door: [[-0.56, 0.29], [0.1, 0.29], [0.14, 0.82], [-0.98, 0.8]],   // its front and lower edges lie along the scoop's creases
+  // its front and lower edges lie along the scoop's creases (2026-11-23: its rear edge along the intake's front edge)
+  door: [[-0.56, 0.29], [0.13, 0.29], [0.47, 0.82], [-0.98, 0.8]],
   frontLid: [[-0.5, -2.25], [0.5, -2.25], [0.55, -1.25], [-0.55, -1.25]],
   // the blade: a slim lamp along the fender's lower front edge, sweeping up and out to the corner: its outer end
   // bends back up the fender's corner (bladeSweep), so in the FRONT view it climbs from 0.38 m at the inner end to
@@ -330,7 +334,8 @@ const HYPER: ShapeParams = {
   // half the tail's width and angles down and out to the tail's lower corners)
   diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.6, -0.43, -0.26, -0.09, 0.09, 0.26, 0.43, 0.6], top: 0.47 },
   // (M1b: proud 0.24 -> 0.12, so the blade tucks under the nose: its leading edge 3 cm ahead of the lip's point)
-  splitter: { w: 1.94, d: 0.66, proud: 0.12, canards: false },
+  // (2026-11-23: the references' splitter stands well clear of the nose, about 0.2 m in their side view)
+  splitter: { w: 1.94, d: 0.7, proud: 0.2, canards: false },
   wing: { span: 1.71, chord: 0.36, y: 0.98, z: 1.98, mountX: 0.42, plate: [0.55, 0.25] },
   scoop: true, bonnetVent: false, fenderVents: false, handles: 'hidden',
   mirrorAt: [0.98, 0.86, -0.92], cabinW: 0.8,
@@ -366,15 +371,16 @@ const HYPER: ShapeParams = {
   // to this car (src/game/founder.ts holds these three colours)
   led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo, edge: FOUNDER_ICE.edge },
   bar: { len: 1.66, h: 0.02 },
-  // (M1b: along the haunches' crests, outboard of the teardrop openings)
-  fins: { x: [0.8, 0.74], z: [1.0, 2.06], h: 0.06 },
-  // two long vents along the front fenders' inner walls, by the cowl
-  ventsQ: [[[0.37, -1.86], [0.47, -1.88], [0.6, -1.24], [0.47, -1.22]]],
+  // (2026-11-23, the owner's references, outside and from the seat: a black louvred panel on each fender hump's top,
+  // ahead of the wheel, from its inner slope up to the crest; and a black vented section on the sunken bonnet's centre)
+  ventsQ: [[[0.46, -2.04], [0.74, -2.08], [0.8, -1.6], [0.5, -1.56]]],
+  bonnetVents: { x: [0.055, 0.3], z: [-2.06, -1.58], n: 7 },
   plate: { w: 0.52, h: 0.11, y: 0.46 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
   // (M1b: lower, so the fangs come down silver at the nose and the haunches wrap the tail down to the valance)
-  lowCarbon: [0.3, 0.53],
+  // (2026-11-23: the references' haunches stay pearl down to the diffuser behind the rear wheels)
+  lowCarbon: [0.3, 0.3],
   // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
   // light (the front and rear views), and a warm sky doesn't turn the paint bronze
   // (M1b: metalness 0.3 -> 0.06 and the sky's reflection 1.2x: the front and rear faces, turned from the sun, read
@@ -384,13 +390,13 @@ const HYPER: ShapeParams = {
   // sheet's (152, 163, 185))
   paintFinish: { metal: 0.06, rough: 0.28, env: 1.35, lift: 1.2 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
-  // (M1b: the silver cross-ribs over the openings are gone, they read as wires; under the wing, between the swan
-  // necks, two louvred vents either side of the spine are the structure the sheet's REAR shows there)
-  deckVents: { x: [0.15, 0.37], z: [1.74, 2.12], n: 6 },
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
   // is set back 0.10 m into a dark intake zone with a central divider and angular fins
-  face: { lip: [[0, 0.33], [0.45, 0.372], [0.585, 0.402], [0.675, 0.437], [0.72, 0.458], [0.81, 0.49]], xf: 0.8, recess: 0.1, fins: [[0, 0], [0.23, 0.02], [0.47, 0.06]] },
+  face: { lip: [[0, 0.33], [0.45, 0.372], [0.585, 0.402], [0.675, 0.437], [0.72, 0.458], [0.81, 0.49]], xf: 0.8, recess: 0.1, fins: [[0.1, 0], [0.25, 0.01], [0.4, 0.025], [0.55, 0.04], [0.69, 0.055]] },
+  // (2026-11-23, the owner's references: ten tall carbon blades across the face, five a side, standing forward on the
+  // splitter (finFwd) from its front third up under the lip, over a honeycomb mesh)
+  finFwd: 0.14,
   // M1b, the tail: recessed 0.10 m from the valance's top up to 7.5 cm under the tail's upper edge, inset 6 cm from
   // its sides, the haunches wrapping round it
   tailRecess: { depth: 0.1, inset: 0.06, y0: 0.38, lip: 0.075 },
@@ -411,8 +417,6 @@ const HYPER: ShapeParams = {
     // just behind the badge, so the bonnet reads silver
     { plane: 'top', mirror: true, pts: [[-0.05, -2.2], [0.01, -2.2], [0.05, -1.15], [-0.05, -1.15]], soft: 0.005 },
     { plane: 'top', mirror: true, pts: [[-0.05, -2.275], [0.0, -2.275], [0.045, -2.19], [-0.05, -2.165]], soft: 0.004 },
-    // and a dark socket round each cowl vent (the two hood vents either side of the spine)
-    { plane: 'top', mirror: true, pts: [[0.32, -1.93], [0.49, -1.96], [0.66, -1.19], [0.43, -1.15]], soft: 0.008 },
     // M1b: the A-pillars gloss black, so the canopy reads as one dark shape with no silver strut between the
     // windscreen and the side glass (the sheet's hero and FRONT)
     { plane: 'top', mirror: true, pts: [[0.4, -1.16], [0.53, -1.16], [0.45, -0.05], [0.36, -0.05]], soft: 0.005 },
@@ -426,16 +430,9 @@ const HYPER: ShapeParams = {
     { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.44, 0.0], [0.69, 0.0], [0.69, 0.437], [0.44, 0.364]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.67, 0.0], [0.805, 0.0], [0.805, 0.484], [0.67, 0.425]], soft: 0.004, range: [-3, -1.9] },
-    // the spine: the top of the canopy's tail behind the rear screen, tapering to the wing (its steep flanks stay
-    // silver: the buttresses), and the deck's centre over the tail
-    { plane: 'top', mirror: true, pts: [[-0.05, 0.98], [0.16, 0.98], [0.07, 2.05], [-0.05, 2.05]], soft: 0.006 },
-    { plane: 'top', mirror: true, pts: [[-0.05, 1.86], [0.42, 1.86], [0.5, 2.4], [-0.05, 2.4]], soft: 0.008, range: [0, 0.8] },
-    // M1b: each haunch opening is one of the sheet's large dark teardrops, its point forward and in by the canopy,
-    // its round end over the rear wheel (three convex pieces, each running 3 cm into the next along its own edges, so
-    // no half-tone seam shows where two meet)
-    { plane: 'top', mirror: true, pts: [[0.36, 0.64], [0.42, 0.64], [0.77, 1.375], [0.215, 1.375]], soft: 0.008 },
-    { plane: 'top', mirror: true, pts: [[0.22, 1.33], [0.77, 1.33], [0.655, 1.69], [0.335, 1.69]], soft: 0.008 },
-    { plane: 'top', mirror: true, pts: [[0.345, 1.66], [0.645, 1.66], [0.57, 1.74], [0.42, 1.74]], soft: 0.008 },
+    // (2026-11-23: the references' rear deck and haunch tops are all pearl: the old sheet's black spine behind the rear
+    // screen, the dark deck over the tail and the haunches' teardrop openings are gone, as are the haunch fins and the
+    // deck's louvres)
   ],
 };
 
