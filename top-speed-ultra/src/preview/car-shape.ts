@@ -492,6 +492,10 @@ const HYPER: ShapeParams = {
     // so the fangs' forward faces stay pearl; one per side (a side mask's range is on signed x)
     { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [0.3, 1.3] },
     { plane: 'side', pts: [[-2.53, 0.0], [-2.07, 0.0], [-1.97, 0.4], [-2.53, 0.24]], soft: 0.004, range: [-1.3, -0.3] },
+    // and the nose's corners under the lip, between the blade and the fins: their side-turned faces there carried the
+    // lip's recess step in rows too coarse to follow it, a torn silver band (the face view); dark up to the lip
+    { plane: 'side', pts: [[-2.62, 0.2], [-2.2, 0.2], [-2.2, 0.4], [-2.62, 0.44]], soft: 0.004, range: [0.45, 0.86] },
+    { plane: 'side', pts: [[-2.62, 0.2], [-2.2, 0.2], [-2.2, 0.4], [-2.62, 0.44]], soft: 0.004, range: [-0.86, -0.45] },
     // (2026-11-23: the references' rear deck and haunch tops are all pearl: the old sheet's black spine behind the rear
     // screen, the dark deck over the tail and the haunches' teardrop openings are gone, as are the haunch fins and the
     // deck's louvres)

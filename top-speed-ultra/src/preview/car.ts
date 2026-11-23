@@ -113,8 +113,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
     // diffuser and the wing in daylight: a lighter tint and a finer weave than the phone's near-black one)
     // (judge round 2: no twill showed at any matched camera: the light 'high' tint read as a grey slab and the phone's as
     // warm tan under the sky. Now a near-black base under a weave of 3.5x the contrast, a 2 cm map on every part (car-body CU),
-    // a calmer sky in it; the same on the phone)
-    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.05, { tint: q === 'high' ? 0xb4bac4 : 0xa0a6b0, cc: 0.12, env: 0.55, weave: 3.5 }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
+    // a calmer sky in it (0.35: the splitter's top, seen at a glancing angle, mirrored the sky as a
+    // light grey slab at 0.55); the same on the phone)
+    carbon: P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.05, { tint: q === 'high' ? 0xb4bac4 : 0xa0a6b0, cc: 0.12, env: 0.35, weave: 3.5 }), grille: M.honeycomb(q, 0.15), liner: M.stipple(q, 0x161617, 0.05),
     lamp: lamps.lamp, tail: lamps.tail,
     chrome: M.chrome(0.12, 0xd8dadd), mirror: M.chrome(0.015, 0xb9bfc6), rubber: M.rubber(),
     badge: once('m.badge' + P.brand, () => new THREE.MeshPhysicalMaterial({ map: badgeTex(256, P.brand), roughness: 0.3, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.03 })),
