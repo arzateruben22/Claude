@@ -136,34 +136,39 @@
     { group: "Waxing", key: "waxing", subs: [
       { group: "Brazilian & Bikini", items: [
         { id: "brazilian-wax", name: "Brazilian Wax", price: 75, min: 40, deposit: 30,
-          desc: "Everything from the front, sides, labia and between the cheeks, completely smooth, or leave a small strip." },
+          desc: "Everything from the front, sides, labia and between the cheeks, completely smooth, or leave a small strip.",
+          about: "Removes all the hair from the front, including the sides, labia, and in between the cheeks—everything gone, completely smooth. You can also choose to leave a small strip- if you prefer." },
         { id: "wax-wednesday", name: "Wax Wednesday", price: 65, min: 40, deposit: 30, note: "Wednesdays only",
-          desc: "$10 off a Brazilian on any Wednesday. Please book it on a Wednesday only." },
+          desc: "$10 off a Brazilian on any Wednesday. Please book it on a Wednesday only.",
+          about: "Enjoy $10 off when you book a Brazilian on any Wednesdays. Please avoid booking this service if it is not on a Wednesday." },
         { id: "brazilian-wax-mini-vajacial", name: "Brazilian Wax + Mini Vajacial", price: 95, min: 50, deposit: 30,
-          desc: "A full Brazilian, extractions if needed, ingrown hair removal and a cooling, hydrating mask to soothe and prevent ingrowns." },
+          desc: "A full Brazilian, extractions if needed, ingrown hair removal and a cooling, hydrating mask to soothe and prevent ingrowns.",
+          about: "Take your Brazilian wax to the next level with this post-wax skin treatment designed to soothe, clarify, and prevent ingrown hairs. This service includes a full Brazilian wax, extractions (if needed), ingrown hair removal, and a cooling, hydrating mask to calm the skin and leave the area smooth, refreshed, and glowing." },
         { id: "bikini-line-wax", name: "Bikini Line", price: 40, min: 40, deposit: 30,
-          desc: "Just outside the underwear line, about four fingers out. Doesn’t include the butt strip." },
-        { id: "inner-thigh-add-on", name: "Inner Thigh Add-On", price: 25, min: 15, deposit: 0, addon: true,
-          desc: "All hair on the inner thigh, past the four fingers a Brazilian already covers." }
+          desc: "Just outside the underwear line, about four fingers out. Doesn’t include the butt strip.",
+          about: "Removes hair just outside the underwear line—about four fingers out. It keeps things clean so no hair shows when you’re wearing a bikini or underwear. Does not include butt strip." },
+        { id: "inner-thigh-add-on", name: "Inner Thigh Add On", price: 25, min: 15, deposit: 0, addon: true,
+          desc: "All hair on the inner thigh, past the four fingers a Brazilian already covers.",
+          about: "Includes all hair on the inner thigh.\nA small portion of the inner thigh is already waxed during a Brazilian, it extends four fingers from the bikini line. This is a good add on service if hair extends past four fingers from the bikini line." }
       ] },
       { group: "Body", items: [
         { id: "underarm-wax", name: "Underarm Wax", price: 20, min: 20, deposit: 0 },
-        { id: "full-arm-wax", name: "Full Arm", price: 60, min: 40, deposit: 30, desc: "All hair on the arm." },
-        { id: "half-arm-wax", name: "Half Arm", price: 30, min: 30, deposit: 20, desc: "Half of the arms; your choice of which half." },
+        { id: "full-arm-wax", name: "Full Arm", price: 60, min: 40, deposit: 30, desc: "All hair on the arm.", about: "Includes all hair on the arm." },
+        { id: "half-arm-wax", name: "Half Arm", price: 30, min: 30, deposit: 20, desc: "Half of the arms; your choice of which half.", about: "Includes hair on half of the arms (your choice on which half)." },
         { id: "full-back-wax", name: "Full Back", price: 60, min: 45, deposit: 30 },
         { id: "half-back-wax", name: "Half Back", price: 30, min: 25, deposit: 20 },
-        { id: "full-stomach-wax", name: "Full Stomach Wax", price: 35, min: 45, deposit: 0, desc: "All the hair on the abdomen and between the breasts." },
-        { id: "stomach-strip-wax", name: "Stomach Strip Add-On", price: 10, min: 10, deposit: 0, addon: true, desc: "The line of hair under the belly button, toward the bikini." },
-        { id: "full-butt-wax", name: "Full Butt", price: 40, min: 45, deposit: 20, desc: "The entire area, including the cheeks and between them." }
+        { id: "full-stomach-wax", name: "Full Stomach Wax", price: 35, min: 45, deposit: 0, desc: "All the hair on the abdomen and between the breasts.", about: "Includes all the hair on the abdomen and between the breast." },
+        { id: "stomach-strip-wax", name: "Stomach Strip Add On", price: 10, min: 10, deposit: 0, addon: true, desc: "The line of hair under the belly button, toward the bikini.", about: "Line of hair underneath the belly button towards the bikini." },
+        { id: "full-butt-wax", name: "Full Butt", price: 40, min: 45, deposit: 20, desc: "The entire area, including the cheeks and between them.", about: "A complete hair removal service that includes the entire butt area, including the cheeks and between the cheeks." }
       ] },
       { group: "Face", items: [
-        { id: "brow-menu", name: "Brows", price: 25, from: true, min: 30, deposit: 0,
+        { id: "brow-menu", name: "Brow Wax + Tweeze", price: 25, from: true, min: 30, deposit: 0,
           options: [
             { id: "brow-wax-tweeze", name: "Brow Wax + Tweeze", short: "Brow wax + tweeze", price: 25, min: 30 },
             { id: "brow-underarm-wax", name: "Brow Wax + Underarm Wax", short: "Brows + underarms", price: 45, min: 30 }
           ] },
         { id: "upper-lip-wax", name: "Upper Lip", price: 10, min: 10, deposit: 0 },
-        { id: "nostril-wax", name: "Nostril Wax", price: 10, min: 15, deposit: 0, desc: "Hair removal from inside the nose." }
+        { id: "nostril-wax", name: "Nostril Wax", price: 10, min: 15, deposit: 0, desc: "Hair removal from inside the nose.", about: "Removal of hair from the inside of the nose." }
       ] }
     ] }
   ];

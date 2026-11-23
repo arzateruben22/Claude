@@ -6955,8 +6955,12 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .svc-card[data-tone="linen"] { --tone-bg: #F1EEE8; --tone-fg: #171717; --tone-soft: #403D39; --tone-line: rgba(64, 61, 57, 0.28); }
 .svc-card[data-tone="stone"] { --tone-bg: #D8D4CD; --tone-fg: #171717; --tone-soft: #2E2B28; --tone-line: rgba(23, 23, 23, 0.3); }
 
-.svc-lift { filter: drop-shadow(0 36px 40px rgba(var(--shadow-rgb), 0.2)); }
-.svc-shape { position: relative; overflow: hidden; border-radius: 24px; background: var(--tone-bg); color: var(--tone-fg); box-shadow: inset 0 0 0 1px var(--tone-line); }
+.svc-lift { display: block; }
+.svc-shape {
+  position: relative; overflow: hidden; border-radius: 24px; background: var(--tone-bg); color: var(--tone-fg);
+  /* a plain shadow, painted once (a filter's shadow is redone every frame the card moves) */
+  box-shadow: inset 0 0 0 1px var(--tone-line), 0 30px 50px -28px rgba(var(--shadow-rgb), 0.45), 0 12px 24px -16px rgba(var(--shadow-rgb), 0.3);
+}
 .svc-face {
   display: flex; flex-direction: column; align-items: flex-start;
   min-height: 24rem; padding: clamp(1.3rem, 3vw, 2.3rem);
@@ -7004,8 +7008,12 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 }
 .is-deck .svc-card {
   grid-area: 1 / 1; width: min(100%, 60rem); margin-top: 3svh;
-  transform-origin: 50% 25%; will-change: transform, filter;
+  transform-origin: 50% 25%; will-change: transform;
+  transform: translate3d(0, 108svh, 0);                    /* before the script's first frame, so nothing flashes */
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
+.is-deck .svc-card:first-child { transform: none; }
+.is-deck .svc-dim { will-change: opacity; }                /* its own layer: the dim changes without repainting the card */
 .is-deck .svc-face { min-height: min(27rem, calc(var(--stage-h) - 14svh)); }
 
 @media (max-width: 760px) {

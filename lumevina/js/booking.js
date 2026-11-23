@@ -1128,7 +1128,18 @@
       };
       if (g.subs) g.subs.forEach(function (sg) { add(sg.items, sg.group); }); else add(g.items, "");
     });
+    /* waxing is one list on her GlossGenius page, in her order, without the menu's sub-headings */
+    var wax = ENTRIES.filter(function (e) { return e.group === "Waxing"; });
+    if (wax.length) {
+      var rank = function (e) { var i = WAX_ORDER.indexOf(e.it.id); return i === -1 ? 99 : i; };
+      wax.forEach(function (e) { e.sub = ""; });
+      wax.sort(function (a, b) { return rank(a) - rank(b); });
+      ENTRIES = ENTRIES.filter(function (e) { return e.group !== "Waxing"; }).concat(wax);
+    }
   };
+  var WAX_ORDER = ["brazilian-wax", "wax-wednesday", "bikini-line-wax", "brazilian-wax-mini-vajacial", "underarm-wax", "inner-thigh-add-on",
+    "stomach-strip-wax", "full-stomach-wax", "full-butt-wax", "nostril-wax", "upper-lip-wax", "brow-menu", "full-arm-wax", "half-arm-wax",
+    "full-back-wax", "half-back-wax"];
   var listOf = function (e) { return e.opts.length ? e.opts.map(function (x) { return x.o; }) : [e.it]; };
   var svcOf = function (x) { return byId[x.id]; };
   /* "$220+" and "60+ min": the lowest, and a + when the options differ */
@@ -1139,10 +1150,12 @@
     var lo = paid.length ? Math.min.apply(null, paid) : 0, hi = Math.max.apply(null, prices);
     var mins = list.map(function (x) { return x.min || (svcOf(x) ? svcOf(x).dur : 0); }).filter(Boolean);
     var m0 = mins.length ? Math.min.apply(null, mins) : 0, m1 = mins.length ? Math.max.apply(null, mins) : 0;
+    var opts = e.opts.length > 1;   /* as on GlossGenius: a service with options shows "$220+ | 60+ min", even when they match */
+    var plus = opts || hi > lo || list.some(function (x) { return x.from; });
     return {
-      lo: lo, plus: hi > lo || list.some(function (x) { return x.from; }),
-      price: usd(lo) + (hi > lo || list.some(function (x) { return x.from; }) ? "+" : ""),
-      time: m0 ? m0 + (m1 > m0 ? "+" : "") + " min" : "",
+      lo: lo, plus: plus,
+      price: usd(lo) + (plus ? "+" : ""),
+      time: m0 ? m0 + (opts || m1 > m0 ? "+" : "") + " min" : "",
       mins: m0
     };
   };
@@ -1155,6 +1168,13 @@
     var ids = idsOf(e);
     return state.services.filter(function (s) { return ids.indexOf(s.id) !== -1; })[0] || null;
   };
+  /* her words when they are short (as GlossGenius shows the whole description), else the short menu line */
+  var cardText = function (e) {
+    var full = String(e.it.about || "");
+    var t = full && full.length <= 520 ? full : String(e.it.desc || "");
+    return t.split(/\n+/).filter(Boolean);
+  };
+  var PAY_LATER_MIN = 50;   /* GlossGenius shows the pay-over-time line from about $50 up (Affirm starts there) */
   var payLaterOn = function () { return !(window.LUMEVINA_CONFIG && window.LUMEVINA_CONFIG.payLater === false); };
   var usd = function (n) { return "$" + (Math.round(n) === n ? n.toLocaleString("en-US") : n.toFixed(2)); };   /* $220, $83.20 */
   var el = function (tag, cls, text) {
@@ -1196,14 +1216,14 @@
       if (e.it.note) top.appendChild(el("span", "bk-card-note", e.it.note));
       card.appendChild(top);
       if (dep) card.appendChild(el("p", "bk-card-dep", "$" + dep.toFixed(2) + " deposit required"));
-      card.appendChild(el("p", "bk-card-desc", e.it.desc || ""));
+      cardText(e).forEach(function (t) { card.appendChild(el("p", "bk-card-desc", t)); });
       var foot = el("div", "bk-card-foot");
       if (e.opts.length > 1) foot.appendChild(el("p", "bk-card-opts", e.opts.length + " options"));
       var pt = el("p", "bk-card-pt");
       pt.appendChild(el("span", "", span.price));
       if (span.time) { pt.appendChild(el("i", "", "|")); pt.appendChild(el("span", "", span.time)); }
       foot.appendChild(pt);
-      if (payLaterOn() && span.lo > 0) {
+      if (payLaterOn() && span.lo >= PAY_LATER_MIN) {
         var pl = el("p", "bk-card-later");
         ["Affirm", "Klarna", "Afterpay"].forEach(function (n) { pl.appendChild(el("b", "", n)); });
         pl.appendChild(el("span", "", "Pay over time where your total qualifies."));

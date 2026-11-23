@@ -97,7 +97,7 @@
     if (s.ask) meta.push("Message Evelyn first");
     if (s.addon) meta.push("Added to another service");
     $(".svc-meta").textContent = meta.filter(Boolean).join(" · ");
-    $(".svc-later").hidden = !(it.price > 0) || !!s.ask || !!s.addon;
+    $(".svc-later").hidden = !(it.price >= 50) || !!s.ask || !!s.addon;
     var about = $(".svc-about");
     about.textContent = "";
     String(s.about || s.desc || "").split(/\n+/).concat(o && o.extra ? [o.extra] : []).filter(Boolean).forEach(function (para, i, all) {

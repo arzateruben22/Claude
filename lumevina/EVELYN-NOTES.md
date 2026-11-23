@@ -832,3 +832,15 @@ From her screens of the booking page (Ageless Grace Facial, Refresh Peel, Correc
 - **The chat** follows: the deposit answer says $30 for a consultation, and the peel answers use the live prices ($230 and $240).
 
 If she changed anything else on her page, send its screen and I'll match it.
+
+## Her waxing page, matched; the Services deck runs smoother (Nov 23)
+
+**Waxing, from her GlossGenius screens.** Every price, time and deposit already matched (Brazilian $75, Wax Wednesday $65, Bikini Line $40, Brazilian + Mini Vajacial $95, Underarm $20, Full Stomach $35, Full Butt $40 with a $20 deposit, Nostril $10, Upper Lip $10, Full Arm and Full Back $60, Half Arm and Half Back $30). What changed:
+- **Her own descriptions** for 12 services (the menu had a short paraphrase). They show in each service's details and on the booking cards; the menu list keeps the short line.
+- **Her names:** "Inner Thigh Add On" and "Stomach Strip Add On" (no hyphen), and the brow card is "Brow Wax + Tweeze", as on her page.
+- **The "+" on options, as on GlossGenius:** any service with options shows "$25+ | 30+ min", even when the options take the same time (her Custom Facial shows "60+ min" with two 60-minute options).
+- **Pay over time shows from $50 up**, as on her page (the $40 Bikini Line and Full Butt don't carry it; the Brazilian, Wax Wednesday, Mini Vajacial, Full Arm and Full Back do). It was on every priced service before.
+- **Booking order for waxing is hers:** one list, in her order, without the menu's sub-headings. The two add-ons still appear only once another service is chosen.
+- **Not changed:** the ProCell menu stays as Evelyn wrote it; none of these screens touch it. **To check:** her Brow Wax + Tweeze card says "30+ min", which on her page just means "has options"; I kept both options at 30 minutes, as the earlier screens had them.
+
+**The deck, smoother (phone and desktop).** What I changed: nothing is measured while you scroll (the page is measured once, and again when it changes size or a scroll starts), and a frame writes only what changed; the cards at rest carry no blur at all (the edges of the stacked cards are sharp now) and the arriving card blurs less on a phone; the shadow is a plain shadow instead of a filter that was redrawn every frame; the dim is its own layer; and on a phone the cards follow your finger exactly (no extra smoothing), while a mouse or trackpad gets a snappier spring. **Honest note:** I could not time this on a real phone from here; in a throttled test browser (no graphics chip) the slow frames dropped from about 8 to about 4 in a 75-frame scroll, but that test is noisy.
