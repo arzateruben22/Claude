@@ -513,7 +513,9 @@ function makeBody(P: ShapeParams) {
         kit.add('liner', gridGeo(rowsL, { flip: sd > 0 }), null, 0.2);
         // inner wall of the well
         const wall = new THREE.CircleGeometry(A.R + 0.004, 24, phc, Math.PI - 2 * phc); wall.rotateY(sd * Math.PI / 2); wall.translate(sd * 0.47, A.yc, A.z);
-        if (hyperWell) { const wp = wall.attributes.position; for (let k = 0; k < wp.count; k++) wp.setY(k, Math.min(wp.getY(k), body.top(wp.getZ(k), 0.47) - 0.012)); }
+        // (capped 4 mm under the bonnet, 2026-11-23: at 12 mm the gap over its top, seen through the arch's top, showed
+        // the footwell's nappa behind it on Ultra's hero camera)
+        if (hyperWell) { const wp = wall.attributes.position; for (let k = 0; k < wp.count; k++) wp.setY(k, Math.min(wp.getY(k), body.top(wp.getZ(k), 0.47) - 0.004)); }
         kit.add('liner', wall, null, 0.2);
       }
     }
