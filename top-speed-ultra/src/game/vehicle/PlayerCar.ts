@@ -387,7 +387,7 @@ export class PlayerCar {
     };
     set('amb', high ? lerp(2.6, 1.8, k) : lerp(2.0, 1.4, k), null);
     set('screenH', lerp(1.0, 1.25, k), null);
-    for (const key of ['alc', 'alcW', 'nappa', 'carbon', 'plastic', 'head']) set(key, null, lerp(1.0, 0.6, k));
+    for (const key of ['alc', 'alcW', 'nappa', 'carbon', 'plastic', 'head', 'white', 'doorLow']) set(key, null, lerp(1.0, 0.6, k));
   }
   private restoreCabinLight() {
     for (const [m, b] of this.cabinBase) { m.emissiveIntensity = b.e; m.envMapIntensity = b.env; }

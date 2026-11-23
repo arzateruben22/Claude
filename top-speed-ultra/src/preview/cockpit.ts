@@ -244,6 +244,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.dashTop = T.dash === 'alc' ? mats.alc : mats.nappa;
   mats.band = T.band === 'carbon' ? mats.carbon : mats.alu;
   mats.doorLow = T.door === 'carbon' ? mats.carbon : mats.nappa;
+  // the hypercar after the owner's interior reference (2026-11-23, part 2): white leather for the panels that flow from
+  // the dash's ends into the doors and for the seats' side bolsters, and carbon door cards under a calm clear coat (the
+  // M2 card's full gloss, a hand's width from the eye at a grazing angle, mirrored the sky as a grey slab: this one takes
+  // a third of the sky's reflection, under a rougher coat, so it stays dark)
+  if (hyper) {
+    mats.white = M.leather(q, 0xd4d7dc, { tile: 0.12, sheen: 0.45 }); (mats.white as THREE.Material).side = THREE.DoubleSide;
+    mats.doorLow = M.carbon(q, 0.05, { tint: 0x80868f, env: 0.3, cc: 0.14 });
+    // the cabin's carbon (the spine, the lower dash, the sill caps, the plinth) the exterior's darker tinted weave: the
+    // untinted, fully metallic one lit pale grey in the sun, where the reference's carbon stays a dark grey weave
+    mats.carbon = ext.carbon; mats.band = ext.carbon;
+  }
   // the sport wheels' Alcantara grips (a shade lighter than the dash's, so the grips and their stitching still read on
   // a phone at night)
   mats.alcW = M.alcantara(q, 0x353539, 0.05);
@@ -335,15 +346,25 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const LOWER = sh([[-0.628, 0.62], [-0.632, 0.555], [-0.67, 0.495], [-0.78, 0.445], [-0.96, 0.41]]);
   const top = loftX(xs, dashTop, true);
   kit.add('dashTop', top); ghost.push(top);
-  kit.add('nappa', loftX(xs, () => LIP, true));
-  kit.add('nappa', loftX(xs, () => FASCIA, true));
-  kit.add('plastic', loftX(xs, () => LOWER, true));
+  // (the hypercar, after the owner's interior reference: the lip and fascia white leather at each end, where the dash
+  // flows into the white panels along the doors, black Nappa between; its lower dash carbon, door to door)
+  const XW: [number, number] = [-0.6, 0.58];
+  const xsSeg: [number[], string][] = hyper ? [
+    [[...xs.filter((x) => x < XW[0]), XW[0]], 'white'],
+    [[XW[0], ...xs.filter((x) => x > XW[0] && x < XW[1]), XW[1]], 'nappa'],
+    [[XW[1], ...xs.filter((x) => x > XW[1])], 'white'],
+  ] : [[xs, 'nappa']];
+  for (const [xx, k] of xsSeg) {
+    kit.add(k, loftX(xx, () => LIP, true));
+    kit.add(k, loftX(xx, () => FASCIA, true));
+  }
+  kit.add(hyper ? 'carbon' : 'plastic', loftX(xs, () => LOWER, true));
   // dash ends against the doors
   for (const sd of [-1, 1]) {
     const x = sd * (D - 0.001), pts = [...dashTop(x), ...LIP.slice(1), ...FASCIA.slice(1), ...LOWER.slice(1)];
     const sh = new THREE.Shape(pts.map(([z, y]) => new THREE.Vector2(z, y)));
     const cap = new THREE.ShapeGeometry(sh, 1); cap.rotateY(-Math.PI / 2); cap.translate(x, 0, 0);
-    kit.add('nappa', cap, null, 0.1);
+    kit.add(hyper ? 'white' : 'nappa', cap, null, 0.1);
   }
   // the defrost slot along the base of the glass, and the twin stitch lines where the lip meets the top
   {
@@ -361,7 +382,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       kit.add('band', b, null, T.band === 'alu' ? 0.12 : 'keep');
       const l = new THREE.BoxGeometry(x1 - x0, 0.0025, 0.004); l.rotateX(-0.12); l.translate((x0 + x1) / 2, 0.735, -0.655); kit.add('alu', l, null, 0.05);
     };
-    band(-(D - 0.006), -0.64); band(T.binnacle === 'screen' ? 0.06 : -0.1, D - 0.006);
+    // (the hypercar's: none across its white ends)
+    if (!hyper) band(-(D - 0.006), -0.64);
+    band(T.binnacle === 'screen' ? 0.06 : -0.1, hyper ? XW[1] : D - 0.006);
     });
   }
   // round vents: brushed bezel, dark throat, five vanes, a knob (and the centre stack under them)
@@ -862,15 +885,30 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // lower panel up to the armrest, the armrest (cognac), the Alcantara insert, the sill cap to the glass
     kit.add('doorLow', loftZ(zs, (z) => { const a = arm(z); return [[X(0.866), 0.2], [X(0.862), 0.36], [X(0.858), 0.5], [X(0.85 - 0.02 * a), 0.545], [X(0.85 - 0.055 * a), 0.585]]; }, flip));
     kit.add('tan', loftZ(zs, (z) => { const a = arm(z); return [[X(0.85 - 0.055 * a), 0.585], [X(0.85 - 0.068 * a), 0.618], [X(0.85 - 0.06 * a), 0.646], [X(0.856 - 0.03 * a), 0.664], [X(0.858), 0.676]]; }, flip));
-    kit.add('alc', loftZ(zs, () => [[X(0.858), 0.676], [X(0.86), 0.74], [X(0.858), 0.81]], flip));
+    // (the hypercar's: a band of white leather, flowing back from the dash's white ends, over a carbon card, under a
+    // dark Alcantara top: the owner's interior reference)
+    if (hyper) { kit.add('white', loftZ(zs, () => [[X(0.858), 0.676], [X(0.8595), 0.71], [X(0.86), 0.74]], flip)); kit.add('alc', loftZ(zs, () => [[X(0.86), 0.74], [X(0.858), 0.81]], flip)); }
+    else kit.add('alc', loftZ(zs, () => [[X(0.858), 0.676], [X(0.86), 0.74], [X(0.858), 0.81]], flip));
     if (!hyper) kit.add('nappa', loftZ(zs, (z) => { const ys = sill(z), gx = body.canopyX(z, ys + 0.012) - 0.008; return [[X(0.858), 0.81], [X(0.856), ys - 0.05], [X(0.845), ys - 0.012], [X(Math.min(0.84, gx + 0.006)), ys + 0.002], [X(gx - 0.002), ys + 0.006]]; }, flip));
     // stitches along the armrest's top edge
     for (const off of [0, 0.004]) {
       const path = zs.filter((z) => arm(z) > 0.05).map((z) => { const a = arm(z); return v3(X(0.856 - 0.03 * a - 0.0015), 0.664 - off, z); });
       if (path.length > 2) kit.add('stitchDark', stitchRow(path, path.map(() => v3(0, 1, 0)), path.map(() => v3(-sd, 0, 0))));
     }
-    // the hypercar's ambient line along the door card's Alcantara insert
-    if (hyper && mats.amb) kit.add('amb', ambLine(zs.map((z) => v3(X(0.8565), 0.735, z)), v3(0, 1, 0), 0.005));
+    // the hypercar's ambient lines (after the owner's interior reference): one along the white panel's lower edge, and
+    // one sweeping down the carbon card from its front top to its rear foot, under the armrest
+    if (hyper && mats.amb) {
+      kit.add('amb', ambLine(zs.map((z) => v3(X(0.8565), 0.68, z)), v3(0, 1, 0), 0.005));
+      const faceX = (y: number) => y < 0.36 ? lerp(0.866, 0.862, (y - 0.2) / 0.16) : lerp(0.862, 0.858, clamp((y - 0.36) / 0.14, 0, 1));
+      const sw = range(-0.92, 0.3, 40).map((z) => { const t = (z + 0.92) / 1.22, y = 0.6 - 0.36 * (1 - (1 - t) ** 2); return v3(X(faceX(y) - 0.0016), y, z); });
+      kit.add('amb', ambLine(sw, v3(0, 0.8, 0.6).normalize(), 0.005));
+      // the window switches: a gloss pad on the card's face ahead of the armrest, four brushed rockers on it (nearly
+      // flush, 6 mm proud at most: the left forearm passes over them to the rim)
+      const pad = new RoundedBoxGeometry(0.006, 0.05, 0.085, 2, 0.0025); pad.translate(X(0.8525), 0.53, -0.43); kit.add('gloss', pad, null, 0.05);
+      for (const [dz, dy] of [[-0.02, 0.011], [0.02, 0.011], [-0.02, -0.011], [0.02, -0.011]]) {
+        const r = new RoundedBoxGeometry(0.006, 0.014, 0.026, 2, 0.002); r.translate(X(0.849), 0.53 + dy, -0.43 + dz); kit.add('alu', r, null, 0.02);
+      }
+    }
     // a carbon strip under the sill, the pull strap, the release, a speaker
     if (!hyper) { const strip = new RoundedBoxGeometry(0.012, 0.022, 1.36, 2, 0.004); strip.translate(X(0.853), 0.8, -0.22); kit.add('carbon', strip); }
     // the pull strap: a loop of cognac leather, flat in section, its ends in small aluminium clamps
@@ -922,7 +960,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // cushion along z: from the front edge back to the backrest
     const cz = range(-0.2, 0.28, 10);
     const cush = (key: string, us: number[]) => kit.add(key, gridGeo(cz.map((z) => { const f = sstep(-0.2, -0.12, z); return us.map((u) => v3(cx + u, 0.25 + 0.06 * f + bol(u) * f + 0.02 * (1 - f) * 0, z)); }), { flip: true }));
-    cush('tan', U.slice(0, 5)); cush('tanPerf', U.slice(4, 9)); cush('tan', U.slice(8));
+    // (the hypercar's side bolsters white leather round black Alcantara centres, the owner's interior reference)
+    const bk = hyper ? 'white' : 'tan';
+    cush(bk, U.slice(0, 5)); cush('tanPerf', U.slice(4, 9)); cush(bk, U.slice(8));
     const front = new RoundedBoxGeometry(0.54, 0.14, 0.06, 3, 0.025); front.translate(cx, 0.22, -0.2); kit.add('tan', front);
     // backrest, reclined 22 degrees, with a head section
     const up = v3(0, Math.cos(0.38), Math.sin(0.38)), fwd = v3(0, -Math.sin(0.38), Math.cos(0.38)).negate(), base = v3(cx, 0.3, 0.28);
@@ -931,8 +971,15 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const head = sstep(0.52, 0.6, h), narrow = 1 - 0.42 * head;
       return us.map((u) => base.clone().addScaledVector(up, h).add(v3(u * narrow, 0, 0)).addScaledVector(fwd, (bol(u) * (1 - 0.5 * head) - d) + 0.02 * Math.sin(Math.PI * h / 0.8)));
     }), { flip: true }));
-    back('tan', U.slice(0, 5)); back('tanPerf', U.slice(4, 9)); back('tan', U.slice(8));
+    back(bk, U.slice(0, 5)); back('tanPerf', U.slice(4, 9)); back(bk, U.slice(8));
     back('carbon', [U[0], -0.2, -0.1, 0, 0.1, 0.2, U[12]].map((u) => u * 1.02), 0.075);
+    // the hypercar's ice-blue stitching: along each bolster's seam and twin lines down the centre, cushion and back
+    if (hyper) for (const u of [-0.13, -0.022, 0.022, 0.13]) {
+      const cp = cz.slice(1).map((z) => { const f = sstep(-0.2, -0.12, z); return v3(cx + u, 0.25 + 0.06 * f + bol(u) * f + 0.0025, z); });
+      kit.add('stitch', stitchRow(cp, cp.map(() => v3(1, 0, 0)), cp.map(() => v3(0, 1, 0)), 0.003));
+      const bp = hs.slice(1, -1).map((h) => { const head = sstep(0.52, 0.6, h); return base.clone().addScaledVector(up, h).add(v3(u * (1 - 0.42 * head), 0, 0)).addScaledVector(fwd, bol(u) * (1 - 0.5 * head) + 0.02 * Math.sin(Math.PI * h / 0.8) + 0.0025); });
+      kit.add('stitch', stitchRow(bp, bp.map(() => v3(1, 0, 0)), bp.map(() => fwd), 0.003));
+    }
   });
   // ---------------------------------------------------------------- the Corsa: a roll hoop behind the seats, a four-point harness on the passenger seat
   if (P.interior === 'corsa' || hyper) {
@@ -976,6 +1023,59 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // (the hypercar's in a grid, so its edges can follow its skirts' skin: the build's last step keeps them inside)
     const floor = hyper ? new THREE.PlaneGeometry(1.74, 1.6, 12, 16) : new THREE.PlaneGeometry(1.74, 1.6); floor.rotateX(-Math.PI / 2); floor.translate(0, 0.12 + floorY, -0.25); kit.add('carpet', floor);
     const toe = hyper ? new THREE.PlaneGeometry(1.74, 0.42, 12, 3) : new THREE.PlaneGeometry(1.74, 0.42); toe.rotateX(-0.85); toe.translate(0, 0.27 + floorY, -1.12); kit.add('carpet', toe);
+  }
+
+  // ---------------------------------------------------------------- the hypercar's footwell, console light, roof console
+  // (after the owner's interior reference, 2026-11-23): drilled aluminium pedals on the dark floor (a tall footrest, a
+  // short wide brake hung from under the dash, a tall floor-hinged throttle, each a brushed plate with dark slots), an
+  // ice-blue line round each footwell's mat and under the dash's lower edge, the console's top edges lit back to the
+  // armrest, and a roof console behind the windscreen's header with two ice lines in a V and a frameless rear-view
+  // mirror on a short stem. The mirror's face is the environment map dimmed (no extra render, no live mirror: the
+  // seat camera sits ahead of the header, so from the seat it is beside the driver's head, out of the frame, and the
+  // view ahead stays clear in portrait). In the car's frame; the pedals stand on the floor (floorY) under the dash's
+  // lower edge (the driver's frame's y and z)
+  if (hyper) {
+    const xD = -0.37 + sX, up = v3(0, 0.75, -0.66).normalize(), nP = v3(1, 0, 0).cross(up).normalize();
+    const pedal = (x: number, y0: number, z0: number, w: number, h: number, slots: number) => {
+      const m = new THREE.Matrix4().makeBasis(v3(1, 0, 0), up, nP).setPosition(v3(x, y0 + floorY, z0).addScaledVector(up, h / 2));
+      kit.add('alu', new RoundedBoxGeometry(w, h, 0.007, 2, 0.003), m, 0.05);
+      for (let k = 0; k < slots; k++) {
+        const sl = new RoundedBoxGeometry(0.0055, h * 0.72, 0.0016, 1, 0.0007); sl.translate((k - (slots - 1) / 2) * (w * 0.72 / Math.max(1, slots - 1)), 0, 0.0034); kit.add('gloss', sl, m, 0.05);
+      }
+      return m;
+    };
+    pedal(xD - 0.25, 0.14, -0.9, 0.06, 0.17, 3);                                     // the footrest
+    pedal(xD + 0.1, 0.13, -0.9, 0.05, 0.17, 4);                                      // the throttle
+    const bm = pedal(xD - 0.04, 0.21, -0.93, 0.085, 0.062, 5);                       // the brake
+    const arm = new THREE.CylinderGeometry(0.007, 0.009, 1, 8); arm.applyMatrix4(between(v3(0, 0, -0.01).applyMatrix4(bm), v3(xD - 0.04, 0.29 + floorY, -1.03))); kit.add('gloss', arm, null, 0.05);
+    const hinge = new RoundedBoxGeometry(0.05, 0.016, 0.03, 2, 0.005); hinge.translate(xD + 0.1, 0.13 + floorY, -0.905); kit.add('gloss', hinge, null, 0.05);
+    if (mats.amb) {
+      // each footwell's mat outlined at its front: its front edge across and the first 35 cm of its sides
+      const fy = 0.122 + floorY;
+      for (const [x0, x1] of [[xD - 0.3, -0.125], [0.125, 0.27 + 0.3]]) {
+        kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x0, fy, z)), v3(1, 0, 0), 0.004));
+        kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x1, fy, z)), v3(1, 0, 0), 0.004));
+        kit.add('amb', ambLine(range(x0, x1, 8).map((x) => v3(x, fy, -0.95)), v3(0, 0, 1), 0.004));
+      }
+      // under the dash's lower edge, each side of the spine
+      const [lz, ly] = LOWER[LOWER.length - 1];
+      for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.004));
+      // the console's top edges, from the spine's foot back past the armrest
+      for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.004));
+    }
+    // the roof console: a slim panel in the headliner's Alcantara behind the header, a gloss-black lens in its middle,
+    // its edges lit in a V that opens toward the back
+    const zc = wsXZ(0, 1)[1] + 0.11, yc = body.top(zc, 0) - 0.024 - 0.006;
+    const pod = new RoundedBoxGeometry(0.12, 0.012, 0.17, 2, 0.005); pod.translate(0, yc, zc); kit.add('head', pod, null, 0.05);
+    const lens = new RoundedBoxGeometry(0.06, 0.004, 0.09, 2, 0.0018); lens.translate(0, yc - 0.006, zc + 0.01); kit.add('gloss', lens, null, 0.05);
+    if (mats.amb) for (const sd of [-1, 1]) kit.add('amb', ambLine(range(0, 1, 6).map((t) => v3(sd * lerp(0.034, 0.054, t), yc - 0.0064, zc - 0.07 + 0.14 * t)), v3(1, 0, 0), 0.004));
+    // the mirror: frameless, its glass edge to edge on a gloss back, on a short stem from the console's front
+    const mb = v3(0.02, yc - 0.055, zc - 0.1);
+    const nrm = eye.clone().sub(mb).normalize().add(v3(0, 0.75, 2.3).sub(mb).normalize()).normalize();
+    const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrm)); look.updateMatrix();
+    const back = new RoundedBoxGeometry(0.21, 0.056, 0.014, 3, 0.012); back.translate(0, 0, -0.008); kit.add('gloss', back, look.matrix, 0.05);
+    const face = new RoundedBoxGeometry(0.206, 0.052, 0.001, 3, 0.0005); kit.add('mirrorDim', face, look.matrix, 0.2);
+    const stem = new THREE.CylinderGeometry(0.006, 0.007, 1, 10); stem.applyMatrix4(between(v3(0.02, yc - 0.004, zc - 0.07), mb.clone().addScaledVector(nrm, -0.014))); kit.add('gloss', stem, null, 0.02);
   }
 
   // ---------------------------------------------------------------- the Founder Edition's numbered plaques
