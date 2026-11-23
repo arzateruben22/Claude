@@ -23,6 +23,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 import type { Hud as HudData } from '../game/Game';
+import { DIFFICULTY } from '../game/settings';
 import { OcMark } from './Mark';
 import { Ico } from './Icons';
 import { Assists, type AssistsProps } from './Assists';
@@ -62,7 +63,7 @@ const MODE_LABEL: Record<string, string> = { free: 'Free Drive', survival: 'Spee
 
 type El = React.RefObject<HTMLElement>;
 
-export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void; assists?: AssistsProps | null }>(function HUD({ showFps, visible, chips, onAbility, onThrust, assists = null }, ref) {
+export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; chips: string[]; onAbility: () => void; onThrust: (on: boolean) => void; assists?: AssistsProps | null; onGear?: () => void }>(function HUD({ showFps, visible, chips, onAbility, onThrust, assists = null, onGear }, ref) {
   const root = useRef<HTMLDivElement>(null), plate = useRef<HTMLDivElement>(null);
   // the plate's bottom edge, for what hangs under it (the Ultra skin's ABS | TCS bar): only when its box changes
   useEffect(() => {
@@ -106,6 +107,8 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
   // the drift readout (Physics.drift): the slip angle, a bar for it and the chain's clock, up while a slide lasts
   const drift = useRef<HTMLDivElement>(null), driftAng = useRef<HTMLElement>(null), driftBar = useRef<HTMLElement>(null), driftT = useRef<HTMLElement>(null);
   const thrLock = useRef<HTMLElement>(null), thrHop = useRef<HTMLElement>(null), thrBtn = useRef<HTMLButtonElement>(null);
+  // the score meter (bests.ts): a difficulty run's Fastest Minute, the live 60 s average against your best, or in Free Drive the drift readout
+  const bm = useRef<HTMLDivElement>(null), bmKey = useRef<HTMLElement>(null), bmVal = useRef<HTMLElement>(null), bmSub = useRef<HTMLElement>(null), bmBest = useRef<HTMLElement>(null), bmFill = useRef<HTMLElement>(null);
   const last: Record<string, string> = {};
   const put = (el: HTMLElement | null, key: string, text: string) => { if (el && last[key] !== text) { el.textContent = text; last[key] = text; } };
   // a line-2 slot: its key (the long form for a desktop plate, `data-s` the short one a phone shows) and its value
@@ -149,7 +152,8 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
         if (h.errand) { const t = Math.ceil(h.errand.left); slot(k3.current, v3.current, 3, 'Errand', 'Errand', `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`); }
         else slot(k3.current, v3.current, 3, '', '', '');
       }
-      put(modeEl.current, 'modeLabel', MODE_LABEL[h.mode] ?? h.mode);
+      // a timed run is named for its difficulty (Easy, Medium, Extreme), not for the rules they share
+      put(modeEl.current, 'modeLabel', h.mode === 'survival' && h.bests.diff ? DIFFICULTY[h.bests.diff].label : MODE_LABEL[h.mode] ?? h.mode);
       // the road as a guide sign: the route shield (blue Interstate, white state route) then the direction
       const rm = /^(I|CA)-(\d+)\s*(\w+)?/.exec(h.road);
       if (shield.current) { shield.current.hidden = !rm; if (rm) { put(shield.current, 'shieldNo', rm[2]); const cls = 'shield ' + (rm[1] === 'I' ? 'i' : 'ca'); if (last.shieldCls !== cls) { last.shieldCls = cls; shield.current.className = cls; } } }
@@ -222,6 +226,29 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
           data(drift.current, 'dir', h.driftAngle > 0 ? 'l' : 'r');
         }
       }
+      const m = h.bests;
+      if (bm.current) {
+        bm.current.hidden = !m.kind;
+        if (m.kind) {
+          data(bm.current, 'kind', m.kind); attr(bm.current, 'data-eased', !m.counts);
+          if (m.kind === 'minute') {
+            // the window fills for 60 s; the figure is its average so far, then the live 60 s average
+            const best = Math.max(m.best, m.runBest), shown = m.t > 0 ? m.avg : 0;
+            put(bmKey.current, 'bmKey', '60 S'); put(bmVal.current, 'bmVal', m.t > 0 ? shown.toFixed(1) : '--');
+            put(bmSub.current, 'bmSub', m.full ? 'mph' : `${Math.floor(m.t)}/60 s`);
+            put(bmBest.current, 'bmBest', best > 0 ? `Best ${best.toFixed(1)}` : 'No best yet');
+            attr(bm.current, 'data-up', m.full && best > 0 && m.avg >= best);
+            const f = (m.t / 60).toFixed(3); if (bmFill.current && last.bmFill !== f) { last.bmFill = f; bmFill.current.style.transform = `scaleX(${f})`; }
+          } else {
+            const best = Math.max(m.best, m.chainBest, m.chain);
+            put(bmKey.current, 'bmKey', 'Drift'); put(bmVal.current, 'bmVal', Math.round(m.chain).toLocaleString('en-US'));
+            put(bmSub.current, 'bmSub', `${Math.round(m.angle)}°`);
+            put(bmBest.current, 'bmBest', best > 0 ? `Best ${Math.round(best).toLocaleString('en-US')}` : 'No best yet');
+            attr(bm.current, 'data-up', m.chain > 0 && m.chain >= Math.max(m.best, m.chainBest) );
+            const f = m.chain > 0 ? '1.000' : '0.000'; if (bmFill.current && last.bmFill !== f) { last.bmFill = f; bmFill.current.style.transform = `scaleX(${f})`; }
+          }
+        }
+      }
       // what wakes the tucked Minimal HUD (App.tsx tucks; styles.css reads data-wake): a hard stop held 0.4 s above
       // 30 mph, and an exit coming up (the route's manoeuvre
       // within 800 m, the errand's sign within a mile), which keeps it up until it is passed
@@ -275,7 +302,7 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
             <div className="hud-rpm"><div ref={bar} /></div>
             <div className="hud-main">
               <div className="hud-revs" ref={revs}>{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</div>
-              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear}>1</span></div>
+              <div className="hud-row"><span className="hud-mph" ref={speed}>0</span><span className="hud-unit">mph</span><span className="hud-auto" ref={autoTag} hidden>AUTO</span><span className="hud-gear" ref={gear} onClick={onGear}>1</span></div>
               <div className="hud-chips">{chips.map((c) => <i key={c}>{c}</i>)}<i ref={tune} style={{ display: 'none' }} /></div>
               <span className="hud-cam" ref={cam} />
             </div>
@@ -328,6 +355,10 @@ export const HUD = forwardRef<HudHandle, { showFps: boolean; visible: boolean; c
           <em><span ref={driftAng as El}>0</span>°</em>
           <span className="hud-drift-t"><span ref={driftT as El}>0.0</span> s</span>
           <span className="hud-drift-bar"><i ref={driftBar as El} /></span>
+        </div>
+        <div className="hud-bests" ref={bm} hidden aria-hidden="true">
+          <div className="bm-row"><b ref={bmKey as El} /><strong ref={bmVal as El} /><span ref={bmSub as El} /><em ref={bmBest as El} /></div>
+          <i className="bm-bar"><s ref={bmFill as El} /></i>
         </div>
         <div className="hud-wrong" ref={wrong} hidden>WRONG WAY</div>
       </div>

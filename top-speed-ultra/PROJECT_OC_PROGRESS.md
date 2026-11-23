@@ -4,6 +4,24 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-23: claude/final-live merges the Midnight Performance menu (claude/menu) over v26 + the lanes
+
+Merge of origin/claude/menu into claude/final-live (v26, pause-shake, economy, drift, retro-hud, cast). Both intents kept:
+- The menu owns the main menu, Settings (Retro Low | Ultra, SETTINGS_V 5), the pause screen and Messages in Profile; Phone.tsx
+  stays deleted (nothing imports it; its "cash" wording moved into Messages.tsx).
+- settings.ts: one Settings with both sides' fields (abs, tcs, character, packTest; tile, theme). `retroOn` is unchanged: the
+  Retro Low choice saves quality low + style retro (retroOn true, data-skin "retro"), Ultra saves quality ultra (false, "ultra").
+- Economy: the Road Points widget fills the menu's road-points slot (its button opens Goals and passport); the garage's
+  "Unlocks at N mi" gates fill each card's unlock slot; Goals is also in More and on Profile. A timed run's tier is now the
+  menu's difficulty (Easy 1, Medium 1.25, Extreme 1.5); Free Drive stays 1.
+- Cast: the Character entry is in More; the garage's character row and the Driver panel's row stay.
+- HUD: the drift readout and the menu's score meter (Fastest Minute / Best drift) both render; ABS | TCS and the gear tap both wired.
+- Suite: base settings v5 with the tsu.test.keep / window.name logic and the menu's warm.html exception; HEAD's checks moved to
+  the new menu (.mp-carline for the garage, More for the character, Retro Low for the Retro look, `window.__updateSettings`
+  to step back to the suite's look).
+- Proof: tsc clean on both configs; node --check tests/regression.mjs; npm run build (one owner-test mark); store:check ok.
+  The Playwright suites were not run in this step.
+
 ## 2026-11-23: the OC Hypercar's cabin stays inside its paint; its seat view sideways and on a desktop shows the wheel's hub
 
 Branch fix/hyper-polish on v25 (37a4a731), published as main link v26. Commits:
@@ -569,6 +587,151 @@ split by `--check=` so no run passed 20 minutes; logs in tests/out/logs/):
 - Frames (tests/drift-frames.mjs, 390 x 844 at 3x, and 844 x 390): tests/out/drift/. "Before" is the same build with the
   lever and readout hidden by CSS, not an older build.
 - Not checked: a real finger on a real phone (no touch hardware here), and the vibration (headless has none).
+
+## 2026-11-23: the Midnight menu, repair 2 (the play review's six blockers; branch claude/menu, not committed)
+
+Frames are `*-r2.png` in `tests/out/` (not committed). Each fix below says how it was checked; this entry supersedes the repair-1
+entry where they differ (the pause screen's exit, the timed runs' copy, the radio wedge note, the "seen but not fixed" frames).
+
+**Fixed:**
+1. **Fastest Minute is kept however a timed run is left.** `Game.bankRun` (was `bankDrift`) files a difficulty run's best full
+   60 s, or Free Drive's Best drift, when the run is left by Restart (`start`), by `quitToMenu`, and by the new `Game.endDrive`
+   (the old `endFreeDrive` is an alias); an eased run (Adaptive quality took the traffic down) is skipped, the same rule as the end
+   card. **The pause screen's exit is END DRIVE in every mode** (the timed runs' MAIN MENU is gone): it ends the run through `endRun`,
+   so the end card shows; the card's Main menu goes on to the menu. Check (modes): Easy, 70 s at 44.8 m/s, Pause > End drive: before 0,
+   after 100.2 mph, card "New best · #1 on this device"; Medium Restart filed 100.2 and the new run's window started at 0; leaving
+   by `quitToMenu` filed 111.9; an eased Extreme run kept 0; the HUD's mode label read "Easy".
+2. **Phone menu: START RUN is fully above the tab bar** for every tile in both themes: it ends 37 to 65 px above the tabs (the old
+   first view cut it in half). What changed: the hero's sub-line is hidden on a phone (the line under the tiles says it), the top
+   padding is `clamp(92px, 13.4vh, 150px)` instead of `clamp(100px, 19vh, 220px)`, and the attract camera tips the car higher
+   (`0.37` for `0.27` in `Game.updateCamera`) so it sits under the bar, above the eyebrow. Check (phone): DOM rects for 4 tiles x 2
+   themes, nothing scrolled, `elementFromPoint` on the button's top and bottom edge.
+3. **End card:** the Fastest Minute card (value, rank / gap, Share) now comes right after the headline, above the points and the
+   numbers, and the card is 560 px wide (three buttons share one row; the numbers sit three across). At 1280 x 720 and 390 x 844, dark
+   and light, Share, the value and the rank line are inside the window and end above the sticky button row (check: modes, 4
+   geometry reads). The end card keeps its dark in-drive look in the light scheme too (it is not one of the themed screens).
+4. **Light-theme phone hero:** the eyebrow, headline and the rest sit on a backing that scrolls with them (nearly solid paper from just
+   above the eyebrow), so they never sit on the car, in the first view or scrolled to the end (frame `menu-light-phone-scrolled-r2.png`).
+5. **Copy:** no "THE 60 SECOND RUN", no "60 SEC" chip, no "Stay over 100 mph". One message: your Fastest Minute is your best 60 s
+   average speed; Easy forgives the first two crashes (the third ends it); a crash ends Medium and Extreme. The in-drive HUD names the
+   difficulty (Easy / Medium / Extreme) instead of "Speed Survival". The end card's "Longest streak over 100" is still the points stat.
+6. **Radial Radio wedge:** `RadialMenu` now picks the wedge under the pointer when it lifts (a tap lands on a wedge in the same moment
+   the pointer enters it, before the highlight has rendered, so it read as "the middle" and cancelled). The suite check uses the real
+   touch gesture: a window `pointermove` to the Radio wedge's centre and `pointerup` there (radio card opens), a real click on the wedge
+   (opens), and `pointerup` at the hub's centre (closes, no card, no pause).
+- Also: the difficulties' hero chips are only the crash rule (the "Light / Heavy / Expert" traffic words overlapped the sub-line and disagreed with the traffic chip). `MinuteMeter` is a fixed-size ring buffer (two Float64Array(32768), steps under 1/240 s folded into the newest slot), no
+  allocation while driving (check: heap -1.08 MB, i.e. none, over 1,000,000 steps; worst difference from a brute-force 60 s average
+  0 mph at 120 Hz, 400 Hz and uneven steps). The `FAST` comment is back. Graphics has one help line (the choice's description, and on
+  Ultra the Adaptive note with the live "Now:" readout). Behind Midnight the menu scene starts at night behind the loading screen
+  (`setMenuTime(t, instant)`), so the first view is the night freeway (it was easing from dusk, a lavender sky, for over ten seconds
+  under SwiftShader).
+
+**Checked:** `tsc --noEmit` with both configs clean; `npm run build`, exactly one `data-build="owner-test"`.
+- **boot 18/18, store 18/18, perf 22/22** (one group at a time, on the final build except where noted below).
+- **modes: 25 of 27 in the one full run** (17 min; the two failures were my two new checks: an upper-case match on the card's
+  "FASTEST MINUTE" text, and a "more than 50 checks" count that only reached 17). Both fixed in the test, and both pass on a filtered
+  rerun (`--check=`); the other 25 were not rerun after those two test-only edits. After the last code change (the difficulties' chips:
+  the traffic word left the chips, the appended "Light / Moderate / Expert traffic" chip stays on Free Drive only) the hero copy, the
+  tile list, the tile-to-traffic mapping and the themes checks were rerun: 5/5. The full modes group is not one 27/27 run.
+- **phone: every one of the 27 checks passed, but not in one run** (the whole group is about an hour here). Runs, in group order and
+  each starting with its own page: (1) menu fits, START RUN, one sheet, keys, profile, Founder Edition, Settings at 390, driving HUD,
+  seat view, hood, both sleeves checks: 13 pass (the "THRUST in the seat view" check also matched my "seat view" filter and failed
+  because the hypercar steps it needs were not selected; it passed in run 3); (2) steering wheel, wheel centre, cluster, Go to x2: pass;
+  (2b) driving HUD, follow the route, reach (the Radio wedge, by touch gesture and by tap, and the middle), pause screen, HUD compass:
+  6/6; (3) driving HUD, reach, pause screen, HUD compass, both sky camera checks, Retro on a phone, the three THRUST / hypercar checks:
+  11/11; (4) menu fits and START RUN on the final build: 3/3. The first reach attempt failed only because my test measured the wedge
+  while it was still fanning out (and the HUD compass check after it failed on the state that left); the test now waits for the
+  animation. Run 1's START RUN check ran before the scrolling backing was added to the phone hero (CSS only, no layout change); run 4
+  repeated it on the final build.
+- **Frames, all looked at** (Chromium; 390 x 844 at DPR 2 here, not 3, to keep the software renderer lean): `end-card-{dark,light}-{desk,phone}-r2.png`
+  (the Fastest Minute card in view above the button row in all four; the card is the same dark look in both schemes), `menu-{dark,light}-phone-{freedrive,extreme}-r2.png`
+  (START RUN above the tab bar; the eyebrow below the car), `menu-light-phone-scrolled-r2.png` (scrolled to the end, text on paper, not on the car),
+  menu dark desktop (a night freeway), light desktop (Extreme selected, one chip). The scripts and extra frames are in the session's scratchpad.
+- **Not done / not proved:** no single full-group 27/27 phone run; the 390 x 844 frames are DPR 2; a short phone (under about 760 px
+  tall) will scroll the first view, so START RUN is guaranteed above the tab bar at 390 x 844 only; real-device frame rates are unmeasured.
+
+## 2026-11-22/23: the "Midnight Performance" menu, light and dark themes, two graphics choices, Free Drive + three difficulties and the boards (repair 1)
+
+Branch claude/menu, from 5e16ab4 (live v24). Not committed. Owner references: `owner/menu-2026-11-18/`. Frames are in
+`tests/out/menu/` (not committed), the repair's are named `*-r1.png`. This entry replaces the earlier "four traffic modes"
+one: the build was converted to the owner's three updates of 2026-11-22, nothing of the four-mode version is kept.
+
+**Built:**
+- **Menu** (`src/ui/App.tsx`, `styles.css`): top bar (OC ULTRA, GARAGE / BESTS / PROFILE, the cog, an overflow "More": World Map,
+  Lifestyle, Driver, Store, Feedback, Loop Lab; no Phone, no Online "Roadmap" item any more); a hero over the live attract drive;
+  chips; the car line; CHOOSE YOUR MODE with four tiles; the start location, START RUN and the personal best; the map-data
+  credits. Phone (390 x 844): stacked, 2 x 2 tiles, a RACE / GARAGE / BESTS tab bar. Slots for the economy lane stay
+  (`.mp-slot[data-slot=road-points]`, `.car-slot[data-slot=unlock]`).
+- **The tiles (owner, 2026-11-22 4:45 PM): FREE DRIVE, EASY, MEDIUM, EXTREME.** `TrafficMode`, `TRAFFIC`, `HERO.zero`, TileIcon's slide
+  and `kindOf`'s drift board are gone, with the run-type radio (Free Drive / Speed Survival) that sat in the hero. The pick is
+  saved as `settings.tile`. Free Drive: mode Free, the player's own traffic (`settings.density`, set by a Light / Moderate / Heavy /
+  Expert row under the tiles), an Offline / Online switch on the tile (Online is disabled and labelled "coming soon: live servers";
+  the game stays offline), and a "Best drift" personal best on the tile. The three difficulties are the timed runs (Speed Survival's
+  rules, `Game.start('survival', start, difficulty)`; the saved density is never changed by them): **Easy** = Light traffic (2.2
+  cars/km/lane) and a forgiving crash rule (the first two real crashes are forgiven, the third ends the run; a crash still breaks
+  the 60 s of Fastest Minute); **Medium** = Moderate (5); **Extreme** = Expert (9.5, 45 % aggressive drivers) cruising 12 % faster
+  (`TrafficLevel.speed`); on both a real crash ends the run. Recorded (settings.ts `FREE_DRIVE_ONLINE`, `trafficFor`): when Free
+  Drive Online exists it starts with Light traffic (owner, 4:50 PM); offline Free Drive keeps the player's own choice.
+- **Hero copy** matches the tile: Free Drive says "No clock", "Drift tracked" and nothing of the 60 second run; Easy / Medium /
+  Extreme say "the 60 second run" with their crash rule ("2 crashes forgiven" / "No crashes").
+- **Boards** (`src/game/bests.ts`, `BestsCard.tsx`, `HUD.tsx`): Fastest Minute per difficulty, each with Open and Hypercar Unleashed
+  (`tsu.bests.v2`); Free Drive's Best drift is a personal best kept in the same two lists (banked when the drive ends, and on
+  Restart or leaving), not a board. Saved v1 bests move once (Light to Easy, Medium and Extreme stay, Zero traffic's Drift Score to
+  Best drift). A saved density `none` reads as Light. **Known gap:** the OC Hypercar's Unleashed tune exists only in Free Drive and
+  the timed runs use its race tune, so a difficulty's Hypercar Unleashed board cannot be filled yet; the Bests screen says so.
+  `PROJECT_OC_MONETIZATION.md` rule 3a is updated to this.
+- **Settings** (`Settings.tsx`, `controls.tsx`): web tabs / phone dropdown, DONE pinned, one help line per control. **The Gearbox
+  section is gone** (SETTINGS_V 5; a saved `manual` reads `auto`): the car is automatic; Q/E and the touch paddles are a manual hold
+  of 4 s (`Game.holdManual`, renewed by each shift) after which automatic takes back over; on a touch screen a tap on the HUD's
+  gear starts a hold and the paddles show while it lasts; the M key (a permanent toggle) is removed. **Appearance is gone** as a
+  section: Graphics = Retro Low (the retro look) or Ultra (the realistic `hd` look at full quality, Adaptive quality on), the saved
+  `look` follows it; the Auto / Light / Dark control stays as "Menu theme". Sound has a Radio switch (works while driving) and the
+  Radio volume.
+- **Pause screen** (`App.tsx`, `styles.css .pause-ov`), in the Midnight / Velocity design: the run line, RESUME, MAP, STORE, SETTINGS,
+  RESTART and END DRIVE (MAIN MENU in the timed runs). The Phone and Radio tiles are gone; Settings opened from it is the menu's own
+  `SettingsPanel`. The radio stays on the drive's radio button (the quick menu on a phone), B and Settings > Sound.
+- **PROFILE** holds the Phone's story messages, contacts and jobs ("Set it up" picks the tile and freeway) beside the profile card
+  (`src/ui/Messages.tsx`; the handset `Phone.tsx` and its CSS are deleted, no story text was). The top bar's Profile shows the unread count.
+- **Attract drive:** the menu's shots are all rear three-quarters looking down the freeway (a front shot and a profile shot looked
+  back at a sound wall); behind Midnight the scene is the night freeway (`Game.setMenuTime`). **Light theme:** the selected tile
+  is a solid Velocity blue with white text.
+- **Ultra Realism:** tunnel vision starts at 150 mph (`TUNNEL_FROM`).
+
+**Checked** (headless Chromium, SwiftShader; this machine ran at load 16 to 35, one Playwright process at a time):
+- `tsc --noEmit` clean with both configs (tsconfig.json, tsconfig.game.json); `npm run build` with exactly one `data-build="owner-test"`.
+- **boot 18/18. store 18/18. perf 22/22.** (one group at a time; logs `tests/out/menu-r1-*.log`)
+- **modes 24 of 25 in the full run; the 25th passed on rerun.** The one failure ("the tiles map the difficulties") was my test
+  reading the saved traffic after a game-side `updateSettings` (which does not save); the test now picks Heavy on the Free Drive
+  traffic row, and that check passed on its own with the menu and Best-drift checks (4/4). After the last code change (the gear
+  tap / `holdManual`) the gearbox and Easy-forgiveness checks were rerun alone (3/3).
+- **phone 26 of 27.** The failure is "reach: hold Pause for the six-wedge quick menu; its Radio wedge opens the radio card": the
+  suite's old route (Pause > Radio tile) is gone, and a Playwright mouse or tap on the Radio wedge did not open the card here, while
+  the keyboard route (hold Pause, six Right arrows, Enter) did, in a stand-alone script (6 wedges, the card opened). The suite check
+  now uses the keyboard route; I did not rerun the whole phone group for it (about an hour on this machine). I did not find out why
+  a pointer pick of that wedge does not open the card; the wedge code is unchanged from 5e16ab4.
+- New or changed checks (modes group): the menu has Free Drive (with the Offline / Online switch, "coming soon: live servers") and
+  Easy / Medium / Extreme and no Zero tile and no run-type radio; the difficulties start 2.2 / 5 / 9.5 cars per km per lane (Extreme at
+  1.12x speed) and leave the saved traffic alone, Free Drive keeps Heavy and online would start Light; Easy forgives two crashes
+  (one collision is not counted twice, a crash still breaks the 60 s), Medium and Extreme end on the first; Best drift is recorded in
+  Free Drive (a 3 s slide read 3,620, kept after End drive, shown on the tile, Share line; a 12,000 chain kept by Restart); old
+  v1 bests and a saved density `none` migrate; boards keyed by difficulty; the gearbox is automatic and a shift holds manual for 4 s;
+  a saved `manual` reads `auto` at version 5 and the look follows the graphics; no Gearbox or Appearance section; the hero copy per
+  tile; the light theme's selected tile contrast (solid, over 4.5:1). Phone group: the pause screen has Map, Store, Settings, Restart,
+  End drive only (no Phone, no Radio), takes the theme tokens, keeps the run line, fits 390 x 844; Settings from the pause screen is the
+  menu's component with the Radio switch in Sound; the story checks run from PROFILE's Messages.
+- **Frames, all looked at** (Chromium at 1280 x 720, and 390 x 844 at DPR 3 from `dist/top-speed-ultra.html`; in `tests/out/menu/`,
+  `*-r1.png`): menu (Free Drive selected) and menu with Medium selected, Settings (Graphics and Driving), the pause screen and
+  Settings opened from it, in dark and light at both sizes (light phone and light desktop have no run frames); the 60 s meter filling
+  and full and the end-of-run card on dark desktop and dark phone (Easy run, 69.4 mph, "New best, #1 on this device", Share).
+  What they show: the hero is a rear three-quarter of the car on the freeway with traffic ahead (dusk-dark behind Midnight, day behind
+  Velocity); the light theme's selected tile is solid blue with white text. Seen but not fixed: at 1280 x 720 the end-of-run panel
+  scrolls and its sticky button row covers the lower part of the board card until scrolled; the in-drive HUD still names a
+  difficulty run "Speed Survival".
+
+**Not done / not proved:**
+- No pre-change baseline suite was run. Drift chains were checked on synthetic input and through the HUD readout, not on a real
+  slide in the physics. The Hypercar Unleashed board of a difficulty cannot be filled yet (above). The store's copy ("its Unleashed
+  runs ... are marked") is unchanged. No real device or GPU; a phone on its side (844 x 390) was not framed.
 
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
@@ -9797,3 +9960,11 @@ side against the straight tangent at the split, and the 5 curves there. It now p
 - Proof: tsc clean on both configs; npm run build (one owner-test mark); phone group A
   (`driving HUD|phone handbrake|new HUD|persist|Retro look`) 7/7; `driving HUD|Go to lists|Go to: navigation|follow the
   route` 5/5 (390x760 cover 15.4% with the route, controls from 79.7%; 844x390 14.3%).
+### 2026-11-23: the Midnight menu, the last judge's quick-menu fix (coordinating session)
+- After repair 2 the play judge kept the menu; the code judge's one blocker: a lift in place on Pause (no slide) picked
+  the wedge under the finger (it opened the World Map), where 5e16ab4 cancelled.
+- Fixed in RadialMenu.tsx: a pointer lift with no slide and no fresh press since the menu opened cancels; a slide or a
+  tap on a wedge still picks it; the Tab key's release still takes the highlighted wedge. The 'reach' check now also
+  lifts on Pause with no slide and expects nothing picked.
+- Proof: tsc clean on both configs; npm run build (one owner-test mark); phone `driving HUD|Go to lists|Go to:
+  navigation|follow the route|reach` 6/6.
