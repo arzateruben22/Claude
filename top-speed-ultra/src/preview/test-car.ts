@@ -1,6 +1,12 @@
 // Test page for the car part: the garage cars inside and out, from every camera the game has.
 //   ?view= seat | free-left | free-right | free-up | hood | chase | back | sky | sky-zoom | dash | beauty | rear | wheel |
-//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing
+//          garage | lineup | lineup-top | side | top | front | mirror | dmirror | door | wheelck | hero | rear34 | wing |
+//          ref-int
+//   ref-int: the owner's interior reference's camera (control/hypercar/owner-ref-2026-11-15/interior.png, 1672 x 941),
+//          solved from the wheel's hub, rim and the car's forward vanishing point on that picture (about 10 px rms):
+//          (0.088, 0.865, 0.28) m in the car's frame (between the seats, a little right of the middle, at a seated
+//          driver's chin height), yawed 10.65 degrees left and pitched 14.96 down, a 78 degree horizontal lens. Shoot it at
+//          1672x941 with &time=day to set it beside the picture
 //   &car=rossini-gt | rossini-brio | rossini-corsa | vela-e | oc-hyper      &q=high|phone   &world=0 to skip the game's roads
 //   &time=night (the game's night sky; default the golden-hour test light); &time=day (the game's day sky)   &bloom=1 (the game's High/Ultra bloom pass)
 //   &key=showroom (preview only, not the game's light: three overhead strip lights, cool white, as rect-area lights
@@ -38,7 +44,7 @@ const rim = (q.get('rim') ?? undefined) as import('./car-wheel').WheelStyle | un
 const portrait = q.get('portrait') === '1';
 const debug = ['side', 'top', 'front', 'lineup', 'lineup-top', 'back-ortho', 'wheel-side', 'top-full'].includes(view);
 const wantWorld = !debug && q.get('world') !== '0';
-const interior = ['seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view);
+const interior = ['ref-int', 'seat', 'free-left', 'free-right', 'free-up', 'dash', 'mirror', 'dmirror', 'door', 'wheelck', 'grip'].includes(view);
 
 const FOV: Record<string, number> = {
   seat: portrait ? 96 : 58, 'free-left': 66, 'free-right': 66, 'free-up': 66, hood: portrait ? 92 : 62, chase: portrait ? 80 : 60, sky: 50, 'sky-zoom': 7, back: 62,
@@ -111,6 +117,8 @@ if (interior) {
     } catch (e) { log.hands = String(e); }
   }
   if (view === 'seat') carCam(EYE_C, 0, portrait ? -0.27 : -0.085);
+  // (the reference's camera is fixed in the car's frame, not the driver's: the picture's car has its own seats)
+  if (view === 'ref-int') { carCam(new THREE.Vector3(0.088, 0.865, 0.28), 10.65 * Math.PI / 180, -14.96 * Math.PI / 180); camera.fov = 2 * Math.atan(Math.tan(39 * Math.PI / 180) / camera.aspect) * 180 / Math.PI; }
   if (view === 'free-left') carCam(EYE_C, 1.2, -0.22);
   if (view === 'free-right') carCam(EYE_C, -1.05, -0.3);
   if (view === 'free-up') carCam(EYE_C, -0.25, 0.75);
