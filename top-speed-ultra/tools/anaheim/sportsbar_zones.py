@@ -6,7 +6,7 @@
    0.25 m, cut at the party wall's face, u 35.8), or inside the patio's fence; no two zones overlap; no two slots
    overlap, nor a slot and a zone that isn't its own. Seats are circles of radius 0.45 m; standing, staff and player
    spots radius 0.3 m (Lot 57's RADIUS as measured). Seats that one piece of furniture spaces are exempt from each other:
-   the booth run's seats, one high-top's four stools, one patio table's four seats. Touching is allowed; overlapping
+   the booth run's seats, one high-top's four stools, one patio table's four chairs. Touching is allowed; overlapping
    by more than 1 mm isn't.
 2. Walking, on a model of Lot 57's walk grid as measured (L12: world-aligned 0.5 m cells, so 24.5 degrees off the
    frame; a cell is in the region when its centre is; a cell is free when it and its four neighbours are in the region
@@ -56,7 +56,8 @@ for i in range(0, len(d['bld'][61]['p']), 2):
     g = (x / 10 - O[0], z / 10 - O[1]); ring.append((g[0] * A[0] + g[1] * A[1], g[0] * B[0] + g[1] * B[1]))
 HOST = Polygon(ring)
 INNER = HOST.buffer(-0.25, join_style=2).intersection(box(-5, -5, 35.8, 30))
-PATIO = box(2.05, -5.45, 23.95, 1.0).difference(HOST)          # inside the fence, outside the building
+# (2026-11-16, the owner: the inside 3 to 4 times the patio) the patio runs to u 27 now, not u 24 (layout.ts PATIO)
+PATIO = box(2.05, -5.45, 26.95, 1.0).difference(HOST)          # inside the fence, outside the building
 SEAT, STAND = 0.45, 0.3
 def front_u(v, d_in):                 # a point d_in metres in from the front wall's inner face, at frame v
     v0 = v + 0.362 * d_in; return 0.388 * v0 + 0.27 + 0.932 * d_in
@@ -67,12 +68,20 @@ ZONES = {                             # name: (u0, u1, v0, v1)
     'tv wall': (35.6, 35.8, 0.8, 9.0), 'standing floor': (31.5, 35.5, 0.8, 8.6), 'booths': (20.5, 31.3, 0.75, 2.35),
     'high-tops': (19.5, 31.0, 3.0, 10.0), 'water station': (29.0, 29.6, 11.2, 11.6), 'host stand': (6.5, 7.1, 7.95, 8.45),
 }
-TABLES = [4.2, 7.1, 10.0, 12.9, 15.8, 20.95]                  # the patio's six bench tables, centred at v -1.3
-PZONES = {'patio rail': (3.0, 9.5, -5.45, -5.15), 'patio door': (18.0, 19.8, -1.5, 0.0),
-          'heater 1': (12.6, 13.2, -4.25, -3.65), 'heater 2': (20.65, 21.25, -4.25, -3.65),
+# (2026-11-23, the owner's night photos) the patio's cafe plan: seven round tables in two staggered rows, four bistro
+# chairs each on the diagonals 0.64 m out; the two flame heaters and the mushroom heater by the slat planter wall; the
+# high-top with four stools at the east end (layout.ts PATIO_TABLES, PT_CHAIRS, PT_R, HEATERS, PATIO_HIGHTOP)
+TABLES = [(4.3, -1.3), (7.2, -4.0), (10.1, -1.3), (12.75, -4.0), (15.4, -1.3), (18.9, -4.0), (22.6, -1.3)]
+CHAIRS = [(0.45, 0.45), (-0.45, 0.45), (-0.45, -0.45), (0.45, -0.45)]
+PT_R = 0.85
+HEATERS = [(9.9, -4.55), (15.8, -4.55), (21.6, -4.5)]
+HT, HT_STOOLS = (25.0, -2.7), [(24.45, -2.7), (25.55, -2.7), (25.0, -2.15), (25.0, -3.25)]
+PZONES = {'patio door': (18.0, 19.8, -1.5, 0.0),
+          **{f'heater {k + 1}': (u - 0.3, u + 0.3, v - 0.3, v + 0.3) for k, (u, v) in enumerate(HEATERS)},
           'planter 1': (2.1, 2.9, -5.4, -4.4), 'planter 2': (9.9, 11.7, -5.45, -4.95),
           'planter 3': (14.1, 15.9, -5.45, -4.95), 'planter 4': (22.0, 23.9, -5.45, -4.95),
-          **{f'patio table {k + 1}': (u - 0.75, u + 0.75, -2.1, -0.5) for k, u in enumerate(TABLES)}}
+          'planter 5': (25.1, 26.9, -5.45, -4.95), 'patio high-top': (23.8, 26.2, -3.8, -1.6),
+          **{f'patio table {k + 1}': (u - 0.95, u + 0.95, v - 0.95, v + 0.95) for k, (u, v) in enumerate(TABLES)}}
 SLOTS = []                            # (name, owner zone or None, furniture group or None, u, v, radius, stand point)
 for i, u in enumerate(14.6 + 1.05 * k for k in range(9)): SLOTS.append((f'bar stool {i + 1}', 'bar', None, u, 12.85, SEAT, (u, 12.25)))
 for i, u in enumerate((13.75, 23.8, 24.45, 25.1)): SLOTS.append((f'bar gap {i + 1}', 'bar', None, u, 12.95, STAND, (u, 12.95)))
@@ -92,10 +101,13 @@ SLOTS += [('shuffleboard thrower', 'shuffleboard', None, 2.7, 1.45, STAND, (2.7,
           ('water', 'water station', None, 29.3, 10.85, STAND, (29.3, 10.85)),
           ('pass server 1', 'kitchen', None, 30.6, 10.35, STAND, (30.6, 10.35)),
           ('pass server 2', 'kitchen', None, 30.6, 11.0, STAND, (30.6, 11.0)), ('host', 'host stand', None, 6.8, 7.6, STAND, (6.8, 7.6))]
-PSLOTS = [(f'patio rail stool {k + 1}', 'patio rail', None, 3.6 + 1.05 * k, -4.75, SEAT, (3.6 + 1.05 * k, -3.95)) for k in range(6)]
-for k, u in enumerate(TABLES):        # a bench each side (east and west), two seats a bench; you stand beside the bench
-    for su, au in ((u - 0.6, u - 1.3), (u + 0.6, u + 1.3)):
-        for sv in (-0.9, -1.7): PSLOTS.append((f'patio table {k + 1}', f'patio table {k + 1}', f'pt{k}', su, sv, SEAT, (au, sv)))
+PSLOTS = []
+for k, (u, v) in enumerate(TABLES):   # four chairs facing the table; you stand beside your chair, 1.25 m out along u
+    for du, dv in CHAIRS:
+        PSLOTS.append((f'patio table {k + 1}', f'patio table {k + 1}', f'pt{k}', u + du, v + dv, SEAT, (u + math.copysign(1.25, du), v + dv)))
+for k, (su, sv) in enumerate(HT_STOOLS):   # the patio's high-top's four stools; you stand 0.55 m further out
+    fu, fv = HT[0] - su, HT[1] - sv; l = math.hypot(fu, fv)
+    PSLOTS.append((f'patio high-top {k + 1}', 'patio high-top', 'pht', su, sv, SEAT, (su - fu / l * 0.55, sv - fv / l * 0.55)))
 
 bad = 0
 def fail(msg):
@@ -133,8 +145,8 @@ for cu, cv in [(21.0, 4.6), (24.6, 4.6), (28.2, 4.6), (21.0, 8.6), (24.6, 8.6), 
 for v in (2.9, 3.95, 5.0, 6.05, 10.6, 11.65, 12.7, 13.75): SOLID.append(ci(front_u(v, 0.6), v, 0.2))
 for v0, v1 in ((2.5, 6.3), (10.0, 15.0)):                      # the window rails' shelves, 0.3 m deep on the glazing
     SOLID.append(Polygon([(front_u(v0, 0), v0), (front_u(v1, 0), v1), (front_u(v1, 0.3), v1), (front_u(v0, 0.3), v0)]))
-SOLID += [bx(3.0, 9.5, -5.45, -5.15)] + [ci(3.6 + 1.05 * k, -4.75, 0.2) for k in range(6)]
-SOLID += [bx(u - 0.75, u + 0.75, -2.1, -0.5) for u in TABLES] + [ci(12.9, -3.95, 0.3), ci(20.95, -3.95, 0.3)]
+SOLID += [ci(u, v, PT_R) for u, v in TABLES] + [ci(u, v, 0.36) for u, v in HEATERS]   # a table and its chairs; the heaters
+SOLID += [ci(*HT, 0.4)] + [ci(u, v, 0.2) for u, v in HT_STOOLS]   # the patio's high-top and its stools
 SOLID += [box(*(lambda r: (r[0], r[2], r[1], r[3]))(PZONES[p])) for p in PZONES if p.startswith('planter')]
 WALK = unary_union([INNER, PATIO, bx(17.95, 19.85, -0.2, 0.8)])   # the room, the patio and the patio door's opening
 EDGE, SOLIDS = WALK.boundary, unary_union(SOLID)
