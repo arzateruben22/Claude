@@ -1,7 +1,7 @@
 // Keyboard, gamepad, mouse and touch, folded into one smooth analog input.
 // Keys give targets; the game eases throttle, brake and steering toward them so a tap is a nudge and a hold is full lock.
 
-import { clamp } from './util';
+import { clamp, smoothstep } from './util';
 
 export type Action =
   | 'shiftUp' | 'shiftDown' | 'camera' | 'reset' | 'pause' | 'transmission' | 'hud' | 'corner' | 'ability' | 'radio' | 'hop';
@@ -48,6 +48,7 @@ export class Input {
   // whether the last update had the driver asking to steer or to brake (keys, touch or a pad; gas alone doesn't count):
   // either one takes the car back from Auto-drive (Game)
   steerAsked = false;
+  private keyDir = 0; private keyT = 0;   // which way the steering key has been held, and for how long (s)
   brakeAsked = false;
   private keyBound = false;
   // THRUST, the OC Hypercar's jump (owner, 2026-11-16: "make the thrust option to only have the ability to jump over"):
@@ -122,8 +123,9 @@ export class Input {
   takeActions(): Action[] { const a = this.queue; this.queue = []; return a; }
   push(a: Action) { this.queue.push(a); }
 
-  // dt in seconds; speed in m/s (steering slows down as speed rises)
-  update(dt: number, speed: number) {
+  // dt in seconds; speed in m/s (steering slows down as speed rises); slip the body slip angle (rad, the sign of the
+  // sideways velocity: + left) so the keys can tell a catch from a turn-in; handling the car's profile (0 Arcade, 1 Sim)
+  update(dt: number, speed: number, slip = 0, handling = 0) {
     const c = this.c;
     let thrT = this.held.has('up') ? 1 : 0, brkT = this.held.has('down') ? 1 : 0;
     let steerT = (this.held.has('right') ? 1 : 0) - (this.held.has('left') ? 1 : 0);
@@ -172,11 +174,27 @@ export class Input {
     else c.throttle = approach(c.throttle, thrT, thrT > c.throttle ? 3.2 : 6, dt);
     if (analogBrk !== null) c.brake = Math.max(analogBrk, brkT);
     else c.brake = approach(c.brake, brkT, brkT > c.brake ? 4.5 : 7, dt);
-    if (analogSteer !== null && steerT === 0) c.steer = approach(c.steer, analogSteer, 8, dt);
+    if (analogSteer !== null && steerT === 0) { c.steer = approach(c.steer, analogSteer, 8, dt); this.keyDir = 0; this.keyT = 0; }
     else {
       const toward = steerT !== 0 && Math.sign(steerT) === Math.sign(c.steer || steerT);
-      const rate = steerT === 0 ? 3.2 + sp * 1.5 : toward ? 2.4 - sp * 1.2 : 5;   // slower to turn in at speed, quick to centre
-      steerT *= 1 - sp * 0.35;                                                    // and you can't ask for full lock at 150 mph
+      // At speed the keys turn in a little slower and stop a little short of full lock (owner, 2026-11-22: at 234 mph a
+      // freeway curve couldn't be followed with 2.4 - sp*1.2 and 65 %: that held the hypercar to about 1.1 g; the lock
+      // itself is now sized to the grip, CarPhysics.maxDelta, so the keys only need to ask for most of it). The old,
+      // firmer limits stay for a slide catch: a key held against the slide (the car moving sideways the way the wheels
+      // are turned, once the slip passes about 2-3.5 degrees) takes the old turn-in rate and cap, so a catch behaves
+      // as it did. Simulation keeps them too: its rear lets go past the grip (a held key at full throttle through a
+      // curve tighter than the car can hold spun the GT at 160-200 mph with the softer cap, where the old cap only
+      // plowed), so its keys stop at 65 % of the lock above 157 mph as they always did.
+      const catching = steerT !== 0 && slip * steerT < 0 ? smoothstep(0.03, 0.06, Math.abs(slip)) : 0;
+      const firm = Math.max(catching, smoothstep(0.5, 0.9, handling));
+      // A key held past a tap turns in faster: the first 0.12 s at the rate above (a tap moves the wheel no further than it
+      // did), then up to 3x it by 0.25 s, so the lock is there in about 0.3 s instead of half a second at 234 mph (a curve
+      // entered from the outside lane ran 3.3 m wide with the keys, 0.7 m with a full touch pad). Not for Simulation or a catch.
+      const dir = Math.sign(steerT);
+      this.keyT = dir !== 0 && dir === this.keyDir ? this.keyT + dt : 0; this.keyDir = dir;
+      const ramp = 1 + 2 * smoothstep(0.12, 0.25, this.keyT) * (1 - firm);
+      const rate = steerT === 0 ? 3.2 + sp * 1.5 : toward ? (2.4 - sp * (0.6 + 0.6 * firm)) * ramp : 5;
+      steerT *= 1 - sp * (0.15 + 0.2 * firm);
       c.steer = approach(c.steer, steerT, rate, dt);
     }
     c.handbrake = hb;
