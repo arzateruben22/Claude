@@ -558,7 +558,7 @@ def t_hype(job, imgs, rng):
     cut = Image.new("RGBA", (por.width + 2 * pad, por.height + 2 * pad), (0, 0, 0, 0))
     mm = Image.new("L", cut.size, 0)
     mm.paste(m, (pad, pad))
-    rw = int(job.get("rim", 5))
+    rw = int(job.get("rim", 0))
     solid = mm.point(lambda v: 255 if v > 110 else 0)
     rim = solid.filter(ImageFilter.MaxFilter(2 * rw + 1)).filter(ImageFilter.GaussianBlur(0.8)) if rw else Image.new("L", mm.size, 0)
     halo = solid.filter(ImageFilter.MaxFilter(2 * rw + 21)).filter(ImageFilter.GaussianBlur(20))

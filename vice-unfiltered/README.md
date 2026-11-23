@@ -77,7 +77,7 @@ Also get the person-only model, which excludes chairs (used automatically when p
 curl -L -o assets/models/birefnet_portrait.onnx https://huggingface.co/onnx-community/BiRefNet-portrait-ONNX/resolve/main/onnx/model.onnx
 ```
 
-About 16 s per cut-out on CPU. Edges are choked 1 px and colour-decontaminated, so no background tint stays in the fringe. The white outline is 5 px (`rim`, 0 to turn it off).
+About 16 s per cut-out on CPU. Edges are choked 1 px and colour-decontaminated, so no background tint stays in the fringe. No white outline by default (owner's call). `rim` sets one in px if ever wanted.
 
 **Hand cleanup** when a sliver of chair survives: `"erase": [{"box":[x,y,w,h], "dark_below":75, "keep_ellipse":[cx,cy,rx,ry]}]` in portrait-crop pixels. This removes only near-black pixels in the box and protects the ellipse (e.g. a headphone cup).
 
@@ -88,6 +88,21 @@ About 16 s per cut-out on CPU. Edges are choked 1 px and colour-decontaminated, 
 `tools/titles.py <job.json>` sends ONLY facts verified from the footage to ChatGPT (OpenAI API, model picked automatically). It asks for 5 emoji-heavy, clickbait-but-true titles, a favourite, and YouTube, TikTok and Instagram captions. It then checks emoji counts, length, unverified quotes, an unconfirmed game name, the streamer name, and campaign CTA/hashtags/disclosure copied verbatim. A person still checks every option against the clip before delivery.
 
 The API key comes from the environment's network secret for `api.openai.com`. No key is stored in files.
+
+## Posting schedule
+
+The studio's Upload Desk schedules every approved clip in Pacific time (`settings/schedule` in the studio database; editable under More → Accounts).
+
+| Account | Slots (PT) |
+|---|---|
+| TikTok | 6/day: 07:30, 10:00, 12:30, 15:00, 17:30, 20:00 |
+| YouTube Shorts | 6/day: each TikTok slot + 15 min |
+| Instagram Reels | 3/day: 11:00, 16:00, 19:30 |
+
+- Each approved clip takes the next free slot per account, in approval order.
+- A slot missed by more than 45 min rolls to the next free one.
+- Instagram clips that can't get a slot within a day go to an optional backlog.
+- Pressing **Uploaded** records the slot it filled (`slot_at` on the publication).
 
 ## The studio (control room)
 

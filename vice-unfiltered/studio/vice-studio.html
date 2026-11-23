@@ -148,6 +148,18 @@ ol.titles{margin:0;padding-left:22px;display:grid;gap:4px}
 .rule{background:var(--card);border:2px solid var(--ink);padding:var(--s4);display:grid;gap:var(--s2);border-top:10px solid var(--acc,var(--ink))}
 .rule dl{margin:0;display:grid;gap:6px} .rule dt{font:600 12px/1.2 var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)} .rule dd{margin:0}
 
+/* posting schedule */
+.slot{display:inline-flex;align-items:center;gap:6px;font:600 12px/1.2 var(--mono);padding:5px 8px;border:1.5px solid var(--ink);border-radius:var(--r);background:var(--paper)}
+.slot.due{background:var(--yellow)} .slot.today{background:var(--card)} .slot.later{color:var(--ink-2)}
+.timeline{display:grid;gap:var(--s3);background:var(--card);border:2px solid var(--ink);padding:var(--s3)}
+.tl-row{display:grid;grid-template-columns:130px minmax(0,1fr);gap:var(--s3);align-items:start}
+@media (max-width:560px){.tl-row{grid-template-columns:1fr}}
+.tl-plat{font:400 18px/1 var(--display);text-transform:uppercase;padding-top:6px}
+.tl-slots{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.tl-slot{flex:none;display:grid;gap:2px;min-width:112px;max-width:160px;padding:6px 8px;border:1.5px solid var(--ink);border-radius:var(--r);font-size:12px;line-height:1.25;background:var(--paper);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-slot b{font:600 12px/1.2 var(--mono)}
+.tl-slot.set{background:var(--card)} .tl-slot.done{background:var(--good);border-color:var(--good);color:#fff}
+.tl-slot.late{background:var(--yellow)} .tl-slot.open{border-style:dashed;color:var(--ink-3)} .tl-slot.past{opacity:.45;border-style:dashed}
 /* asset library */
 .filters{display:flex;gap:var(--s2);overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
 .filters a{flex:none;min-height:40px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:2px solid var(--ink);border-radius:999px;text-decoration:none;font-weight:600;font-size:13px;background:var(--card)}
@@ -242,9 +254,49 @@ function batchBar(slugs){
 }
 function copyBtn(text,label){return `<button class="linkbtn" data-copy="${esc(text)}">Copy ${esc(label)}</button>`}
 
+/* ---------- posting schedule (Pacific by default; slot times live in settings/schedule) ---------- */
+const DEFAULT_SCHEDULE = {timezone:"America/Los_Angeles", grace_minutes:45, platforms:{
+  tiktok:{slots:["07:30","10:00","12:30","15:00","17:30","20:00"]},
+  youtube:{slots:["07:45","10:15","12:45","15:15","17:45","20:15"]},
+  instagram:{slots:["11:00","16:00","19:30"], max_delay_days:1}}};
+let SCHED = {};
+function schedCfg(){const s=(S.settings||[]).find(x=>x.id==="schedule");return s&&s.platforms?s:DEFAULT_SCHEDULE}
+function TZ(){return schedCfg().timezone||"America/Los_Angeles"}
+function tzParts(t,tz){const o={};for(const p of new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(new Date(t)))o[p.type]=p.value;return {y:+o.year,m:+o.month,d:+o.day,h:+o.hour%24,mi:+o.minute,s:+o.second}}
+function tzOffset(t,tz){const p=tzParts(t,tz);return Date.UTC(p.y,p.m-1,p.d,p.h,p.mi,p.s)-Math.floor(t/1000)*1000}
+function zoned(y,m,d,h,mi,tz){const g=Date.UTC(y,m-1,d,h,mi);let t=g-tzOffset(g,tz);const o2=tzOffset(t,tz);if(g-o2!==t)t=g-o2;return t}
+function dayKey(t){const p=tzParts(t,TZ());return `${p.y}-${String(p.m).padStart(2,"0")}-${String(p.d).padStart(2,"0")}`}
+function fmtTime(t){return new Date(t).toLocaleTimeString("en-US",{timeZone:TZ(),hour:"numeric",minute:"2-digit"})}
+function fmtDay(t,now){const k=dayKey(t);if(k===dayKey(now))return "Today";if(k===dayKey(now+86400000))return "Tomorrow";return new Date(t).toLocaleDateString("en-US",{timeZone:TZ(),weekday:"short",month:"short",day:"numeric"})}
+function tzLabel(){const n=new Intl.DateTimeFormat("en-US",{timeZone:TZ(),timeZoneName:"short"}).formatToParts(new Date()).find(p=>p.type==="timeZoneName");return n?n.value:""}
+function slotTimes(slots,from,days){const out=[];const p0=tzParts(from,TZ());for(let i=0;i<days;i++){const base=zoned(p0.y,p0.m,p0.d,12,0,TZ())+i*86400000;const p=tzParts(base,TZ());for(const s of slots){const [h,mi]=s.split(":").map(Number);out.push(zoned(p.y,p.m,p.d,h,mi,TZ()))}}return out.sort((a,b)=>a-b)}
+function computeSchedule(now){
+  const cfg=schedCfg(), grace=(cfg.grace_minutes??45)*60000, out={};
+  const approved=S.clips.filter(isApproved).sort((a,b)=>(a.approved_at||a.updated_at||"").localeCompare(b.approved_at||b.updated_at||"")||a.id.localeCompare(b.id));
+  for(const a of activeAccounts()){
+    const pc=(cfg.platforms||{})[a.id]; if(!pc||!(pc.slots||[]).length) continue;
+    const occupied=new Set(S.pubs.filter(p=>p.platform===a.id&&p.status&&p.status!=="ready"&&p.slot_at).map(p=>p.slot_at));
+    const cand=slotTimes(pc.slots,now-grace,21);
+    for(const c of approved){
+      const key=c.id+"__"+a.id, p=pub(c.id,a.id);
+      if(p&&p.status&&p.status!=="ready"){out[key]={at:p.slot_at||Date.parse(p.uploaded_at)||null,state:"uploaded"};continue}
+      const appr=Date.parse(c.approved_at||c.updated_at||"")||0, start=Math.max(now-grace,appr);
+      const slot=cand.find(t=>t>=start&&!occupied.has(t));
+      if(slot===undefined){out[key]={at:null,state:"unscheduled"};continue}
+      if(pc.max_delay_days&&slot-Math.max(appr,now)>pc.max_delay_days*86400000){out[key]={at:null,state:"backlog"};continue}
+      occupied.add(slot);
+      out[key]={at:slot,overdue:slot<now,state:slot<=now+3600000?"due":(dayKey(slot)===dayKey(now)?"today":"later")};
+    }
+  }
+  return out;
+}
+function slotChip(info,now){if(!info)return "";if(info.state==="uploaded")return "";if(info.state==="backlog")return `<span class="pill muted">Instagram cap reached · optional</span>`;if(!info.at)return `<span class="pill muted">No slot</span>`;
+  return `<span class="slot ${info.state}">${info.overdue?"Post now · was ":""}${esc(fmtDay(info.at,now))} ${esc(fmtTime(info.at))} ${esc(tzLabel())}</span>`}
+
 /* ---------- screens ---------- */
 function home(){
-  const rev=S.clips.filter(c=>c.status==="ready_for_review").length, up=pendingPubs().length;
+  const rev=S.clips.filter(c=>c.status==="ready_for_review").length, up=Object.values(SCHED).filter(v=>v.state==="due").length;
+  const nextUp=Object.values(SCHED).filter(v=>v.at&&v.state!=="uploaded").sort((a,b)=>a.at-b.at)[0];
   const posters=streamers().map(st=>{
     const c=clipsOf(st.id)[0];
     return `<a class="poster" href="#s-${esc(st.id)}" style="${accVars(st)}">
@@ -254,7 +306,7 @@ function home(){
         <span class="mono">${c?`${esc(c.moment||"")} · V${esc(c.version||1)}`:esc(st.platform_note||"")}</span></div></a>`}).join("");
   return `<header class="mast"><div><h1 class="title">Vice <em>Unfiltered</em></h1></div>
     <div class="ticker"><span class="eyebrow">${new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}</span>
-    <a href="#review">${rev} to review</a><a href="#upload">${up} to upload</a></div>${batchBar()}</header>
+    <a href="#review">${rev} to review</a><a href="#upload">${up} to post now</a>${nextUp?`<a href="#upload">next slot ${esc(fmtTime(nextUp.at))} ${esc(tzLabel())}</a>`:""}</div>${batchBar()}</header>
   <section class="sec" aria-label="Streamers"><div class="wall">${posters||`<div class="emptybox">No streamers set up yet.</div>`}
     <div class="drop"><span class="eyebrow">New job</span><h2>Drop the footage</h2>
       <ol><li>Attach the source MP4 in the Claude chat and say which streamer.</li><li>Claude finds the moment, edits, mixes and runs QC.</li><li>The clip lands here under Review with its thumbnail, titles and captions.</li><li>Approve it, post it from the cards, press Uploaded.</li></ol></div></div></section>`;
@@ -281,14 +333,15 @@ function itemRow(c){const st=streamerOf(c.streamer);return `<div class="item"><d
   <div class="meta"><b>${esc(c.title||c.moment||"Untitled")}</b><span class="mono" style="font-size:12px">${esc(st?.name||c.streamer)} · ${esc(c.moment||"")} · V${esc(c.version||1)}${c.runtime_s?` · ${Number(c.runtime_s).toFixed(1)}s`:""}</span>${pill(c.status)}</div>
   <div class="end row">${c.video_url?`<a class="btn small" href="${esc(c.video_url)}" target="_blank" rel="noopener">Watch</a>`:""}${c.status==="ready_for_review"?`<a class="btn small primary" href="#review">Review</a>`:""}</div></div>`}
 
-function postCards(c){
-  const st=streamerOf(c.streamer);
-  const cards=activeAccounts().map(a=>{
+function postCards(c){return `<div class="cards">${activeAccounts().map(a=>postCard(c,a)).join("")}</div>`}
+function postCard(c,a){
+  const st=streamerOf(c.streamer), now=Date.now(), info=SCHED[c.id+"__"+a.id];
+  {
     const ex=(c.exports||{})[a.id]||{}; const title=ex.title||c.title||""; const cap=ex.caption||""; const tags=ex.hashtags||"";
-    const p=pub(c.id,a.id); const up=p&&p.status!=="ready";
+    const p=pub(c.id,a.id); const up=p&&p.status&&p.status!=="ready";
     const camp=st?.campaign?.name;
     return `<article class="card"><div class="top"><div class="thumb">${thumb(c)}</div><div><span class="plat">${esc(a.label)}</span>
-      <h3>${esc(title||c.moment)}</h3><span class="state">${esc(a.handle?("@"+a.handle):"Account handle not set")}</span></div></div>
+      <h3>${esc(title||c.moment)}</h3><span class="state">${esc(a.handle?("@"+a.handle):"Account handle not set")}</span><div style="margin-top:6px">${slotChip(info,now)}</div></div></div>
       ${a.id!=="tiktok"&&title?`<div class="field"><div class="lbl">Title ${copyBtn(title,"title")}</div><div class="val">${esc(title)}</div></div>`:""}
       ${cap?`<div class="field"><div class="lbl">Caption ${copyBtn(cap+(tags?"\n\n"+tags:""),"caption + hashtags")}</div><div class="val">${esc(cap)}${tags?`\n\n${esc(tags)}`:""}</div></div>`:""}
       ${ex.disclosure||c.disclosure?`<div class="field"><div class="lbl">Disclosure</div><div class="val">${esc(ex.disclosure||c.disclosure)}</div></div>`:""}
@@ -297,17 +350,35 @@ function postCards(c){
         ${up?`<span class="btn small done" aria-label="Uploaded">✓ Uploaded ${esc(fmtDate(p.uploaded_at))}</span><button class="linkbtn" data-undo="${esc(c.id)}" data-plat="${esc(a.id)}">Undo</button>`
             :`<button class="btn small primary" data-uploaded="${esc(c.id)}" data-plat="${esc(a.id)}">Uploaded</button>`}
         ${up&&camp?(p.status==="submitted"?`<span class="pill good">Submitted ${esc(fmtDate(p.submitted_at))}</span>`:`<button class="btn small" data-submitted="${esc(c.id)}" data-plat="${esc(a.id)}">Submitted to ${esc(camp)}</button>`):""}
-      </div></article>`}).join("");
-  return `<div class="cards">${cards}</div>`;
+      </div></article>`;
+  }
+}
+
+function todayTimeline(now){
+  const cfg=schedCfg(), today=dayKey(now);
+  const byAt={}; for(const [k,v] of Object.entries(SCHED)){if(v.at)byAt[k.split("__")[1]+"@"+v.at]=k.split("__")[0]}
+  const posted={}; for(const p of S.pubs){if(p.slot_at&&p.status&&p.status!=="ready")posted[p.platform+"@"+p.slot_at]=p.clip}
+  const rows=activeAccounts().map(a=>{const pc=(cfg.platforms||{})[a.id]; if(!pc) return "";
+    const times=slotTimes(pc.slots||[],now,1).filter(t=>dayKey(t)===today);
+    return `<div class="tl-row"><span class="tl-plat">${esc(a.label)}</span><div class="tl-slots">${times.map(t=>{const doneClip=posted[a.id+"@"+t], clipId=doneClip||byAt[a.id+"@"+t], c=clipId&&S.clips.find(x=>x.id===clipId);
+      const cls=doneClip?"done":(c?(t<now?"late":"set"):(t<now?"past":"open"));
+      return `<span class="tl-slot ${cls}" title="${esc(c?(streamerOf(c.streamer)?.name||"")+" · "+(c.moment||""):"Open slot")}"><b>${esc(fmtTime(t))}</b>${c?esc((streamerOf(c.streamer)?.name||"")+" · "+(c.moment||"")):(t<now?"passed":"open")}${doneClip?" ✓":""}</span>`}).join("")}</div></div>`}).join("");
+  return `<div class="timeline">${rows}</div>`;
 }
 
 function upload(){
-  const pend=pendingPubs(), sub=needsSubmit();
-  const byClip=[...new Set(pend.map(x=>x.c.id))].map(id=>S.clips.find(c=>c.id===id));
-  return `<header class="mast"><span class="eyebrow">Manual posting</span><h1>Upload Desk</h1>
-    <p class="lede">Every approved clip, one card per account. Opening, downloading or copying never counts as posted. Press Uploaded after you post.</p></header>
-  <section class="sec"><div class="sec-head"><h2>To upload</h2><span class="eyebrow">${pend.length} posts</span></div>
-    ${byClip.length?byClip.map(c=>`<div class="sec"><div class="row"><span class="pill hot">${esc(streamerOf(c.streamer)?.name||c.streamer)}</span><b>${esc(c.moment)}</b><span class="mono">V${esc(c.version||1)}</span></div>${postCards(c)}</div>`).join(""):`<div class="emptybox">Nothing waiting. Approved clips appear here.</div>`}</section>
+  const now=Date.now(), sub=needsSubmit();
+  const items=Object.entries(SCHED).filter(([k,v])=>v.state!=="uploaded").map(([k,v])=>{const [cid,pl]=k.split("__");return {c:S.clips.find(x=>x.id===cid),a:activeAccounts().find(x=>x.id===pl),info:v}}).filter(x=>x.c&&x.a);
+  const sorted=st=>items.filter(x=>x.info.state===st).sort((x,y)=>(x.info.at||0)-(y.info.at||0));
+  const block=(title,list,empty)=>`<section class="sec"><div class="sec-head"><h2>${title}</h2><span class="eyebrow">${list.length} posts</span></div>${list.length?`<div class="cards">${list.map(x=>postCard(x.c,x.a)).join("")}</div>`:`<div class="emptybox">${empty}</div>`}</section>`;
+  const cfg=schedCfg(), counts=activeAccounts().map(a=>`${(cfg.platforms?.[a.id]?.slots||[]).length} ${a.label.split(" ")[0]}`).join(" · ");
+  return `<header class="mast"><span class="eyebrow">Manual posting · ${esc(tzLabel())}</span><h1>Upload Desk</h1>
+    <p class="lede">Each approved clip takes the next free slot on every account. Post it in the app, then press Uploaded. Opening, downloading or copying never counts as posted. Missed slots roll to the next free one.</p></header>
+  <section class="sec"><div class="sec-head"><h2>Today's slots</h2><a class="eyebrow" href="#accounts">${esc(counts)} a day · edit</a></div>${todayTimeline(now)}</section>
+  ${block("Post now",sorted("due"),"Nothing due in the next hour.")}
+  ${block("Later today",sorted("today"),"No more posts scheduled today.")}
+  ${block("Coming up",sorted("later"),"Nothing scheduled beyond today. Approve clips in Review to fill the slots.")}
+  ${sorted("backlog").length||sorted("unscheduled").length?block("Instagram backlog",[...sorted("backlog"),...sorted("unscheduled")],""):""}
   <section class="sec"><div class="sec-head"><h2>Submit to campaign</h2><span class="eyebrow">${sub.length} posts</span></div>
     ${sub.length?`<div class="list">${sub.map(({c,a})=>`<div class="item"><div class="thumb">${thumb(c)}</div><div class="meta"><b>${esc(c.moment)}</b><span class="mono" style="font-size:12px">${esc(a.label)} · uploaded ${esc(fmtDate(pub(c.id,a.id)?.uploaded_at))}</span></div><div class="end"><button class="btn small" data-submitted="${esc(c.id)}" data-plat="${esc(a.id)}">Submitted to ${esc(streamerOf(c.streamer)?.campaign?.name)}</button></div></div>`).join("")}</div>`:`<div class="emptybox">No uploaded post is waiting for a campaign submission.</div>`}</section>`;
 }
@@ -343,7 +414,13 @@ function rules(){
 function accounts(){
   return `<header class="mast"><span class="eyebrow">Where clips go</span><h1>Accounts</h1><p class="lede">Vice Unfiltered posts every streamer's clips to these accounts. Links go to each platform's official upload page.</p></header>
   <div class="cards">${PLATFORMS.map(p=>{const a=S.accounts.find(x=>x.id===p.id)||{};return `<article class="card"><span class="plat">${esc(p.label)}</span><h3>${esc(a.handle?("@"+a.handle):"Handle not set")}</h3>
-    ${a.active===false?`<span class="pill muted">Switched off</span>`:`<span class="pill good">In use</span>`}<div class="actions"><a class="btn small" href="${esc(p.upload)}" target="_blank" rel="noopener">Open upload page</a></div></article>`}).join("")}</div>`;
+    ${a.active===false?`<span class="pill muted">Switched off</span>`:`<span class="pill good">In use</span>`}<div class="actions"><a class="btn small" href="${esc(p.upload)}" target="_blank" rel="noopener">Open upload page</a></div></article>`}).join("")}</div>
+  <section class="sec"><div class="sec-head"><h2>Posting slots</h2><span class="eyebrow">${esc(TZ())} (${esc(tzLabel())})</span></div>
+    <p class="lede">Times are 24-hour, comma separated, in Pacific time. Keep at least 2 hours between slots on the same account. Each approved clip fills the next free slot.</p>
+    <div class="cards">${PLATFORMS.map(p=>{const pc=schedCfg().platforms?.[p.id]||{slots:[]};return `<article class="card"><span class="plat">${esc(p.label)}</span>
+      <div class="field"><label class="lbl" for="slots-${p.id}">Slots (${(pc.slots||[]).length} a day)</label><input id="slots-${p.id}" value="${esc((pc.slots||[]).join(", "))}" style="min-height:44px;border:2px solid var(--ink);border-radius:var(--r);padding:8px;background:var(--paper)"></div>
+      ${p.id==="instagram"?`<p class="state">Clips that can't get an Instagram slot within ${esc(pc.max_delay_days??1)} day go to the optional Instagram backlog.</p>`:""}</article>`}).join("")}</div>
+    <div class="row"><button class="btn primary" data-save-schedule="1">Save slots</button></div></section>`;
 }
 
 /* ---------- asset library ---------- */
@@ -400,7 +477,8 @@ function route(){const h=(location.hash||"#home").slice(1);return h||"home"}
 function render(){
   const r=route();
   document.querySelectorAll("[data-nav]").forEach(a=>{const n=a.dataset.nav;a.toggleAttribute("aria-current",n===r||(n==="home"&&r.startsWith("s-"))||(n==="assets"&&r.startsWith("assets-")));if(a.hasAttribute("aria-current"))a.setAttribute("aria-current","page")});
-  const rv=S.clips.filter(c=>c.status==="ready_for_review").length, up=pendingPubs().length;
+  try{SCHED=computeSchedule(Date.now())}catch(e){SCHED={}}
+  const rv=S.clips.filter(c=>c.status==="ready_for_review").length, up=Object.values(SCHED).filter(v=>v.state==="due").length;
   const br=document.getElementById("b-review"), bu=document.getElementById("b-upload");
   br.textContent=rv; br.hidden=!rv; bu.textContent=up; bu.hidden=!up;
   if(S.err){$main.innerHTML=`<div class="notice">${esc(S.err)}</div>`;return}
@@ -411,6 +489,7 @@ function render(){
   document.querySelector("details.more")?.removeAttribute("open");
 }
 window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0)});
+setInterval(()=>{const r=route();if(S.ready&&(r==="upload"||r==="home"||r.startsWith("s-"))&&!document.activeElement?.matches?.("input,textarea,video,audio"))render()},60000);
 document.addEventListener("click",e=>{const d=document.querySelector("details.more");if(d&&d.open&&!d.contains(e.target))d.removeAttribute("open")});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelector("details.more")?.removeAttribute("open")});
 
@@ -418,12 +497,24 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelect
 document.addEventListener("click",async e=>{
   const b=e.target.closest("button"); if(!b) return;
   if(b.dataset.copy!==undefined){const t=b.dataset.copy;try{await navigator.clipboard.writeText(t);toast("Copied")}catch{const r=document.createRange();const v=b.closest(".field")?.querySelector(".val")||b.parentElement;r.selectNodeContents(v);const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Selected. Press copy.")}return}
-  if(!(b.dataset.uploaded||b.dataset.undo||b.dataset.submitted||b.dataset.approve||b.dataset.revise)) return;
+  if(!(b.dataset.uploaded||b.dataset.undo||b.dataset.submitted||b.dataset.approve||b.dataset.revise||b.dataset.saveSchedule)) return;
   if(!db){toast("Sign in to claude.ai to save changes");return}
   const now=new Date().toISOString();
   try{
-    if(b.dataset.uploaded){await db.doc(`publications/${b.dataset.uploaded}__${b.dataset.plat}`).set({clip:b.dataset.uploaded,platform:b.dataset.plat,status:"uploaded",uploaded_at:now});toast("Marked uploaded")}
-    else if(b.dataset.undo){await db.doc(`publications/${b.dataset.undo}__${b.dataset.plat}`).set({clip:b.dataset.undo,platform:b.dataset.plat,status:"ready",undone_at:now});toast("Undone")}
+    if(b.dataset.uploaded){const info=SCHED[b.dataset.uploaded+"__"+b.dataset.plat];await db.doc(`publications/${b.dataset.uploaded}__${b.dataset.plat}`).set({clip:b.dataset.uploaded,platform:b.dataset.plat,status:"uploaded",uploaded_at:now,slot_at:info&&info.at?info.at:Date.now()});toast("Marked uploaded")}
+    else if(b.dataset.undo){await db.doc(`publications/${b.dataset.undo}__${b.dataset.plat}`).set({clip:b.dataset.undo,platform:b.dataset.plat,status:"ready",slot_at:null,undone_at:now});toast("Undone")}
+    else if(b.dataset.saveSchedule){
+      const cur=schedCfg(), platforms={};
+      for(const p of PLATFORMS){
+        const raw=(document.getElementById("slots-"+p.id)?.value||"").split(",").map(s=>s.trim()).filter(Boolean);
+        const bad=raw.find(s=>!/^([01]?\d|2[0-3]):[0-5]\d$/.test(s)); if(bad){toast(`"${bad}" isn't a time like 07:30`);return}
+        const slots=[...new Set(raw.map(s=>s.padStart(5,"0")))].sort();
+        const mins=slots.map(s=>+s.slice(0,2)*60+ +s.slice(3));
+        for(let i=1;i<mins.length;i++){if(mins[i]-mins[i-1]<120){toast(`${p.label}: keep 2 hours between ${slots[i-1]} and ${slots[i]}`);return}}
+        platforms[p.id]={...(cur.platforms?.[p.id]||{}),slots};
+      }
+      await db.doc("settings/schedule").set({...cur,platforms,updated_at:now});toast("Slots saved");
+    }
     else if(b.dataset.submitted){await db.doc(`publications/${b.dataset.submitted}__${b.dataset.plat}`).update({status:"submitted",submitted_at:now});toast("Marked submitted")}
     else if(b.dataset.approve){const id=b.dataset.approve;await db.doc(`clips/${id}`).update({status:"approved",approved_at:now,updated_at:now,review_note:document.getElementById("note-"+id)?.value||""});toast("Approved. It's on the Upload Desk.")}
     else if(b.dataset.revise){const id=b.dataset.revise;const note=document.getElementById("note-"+id)?.value.trim();if(!note){toast("Write what to change first");document.getElementById("note-"+id)?.focus();return}await db.doc(`clips/${id}`).update({status:"revision",review_note:note,updated_at:now});toast("Sent. Tell Claude in the chat to start the next version.")}
@@ -436,8 +527,8 @@ render();
   const timer=setTimeout(()=>{if(!S.ready){S.err="The studio's data didn't load. Open this page signed in to claude.ai.";render()}},10000);
   db = await (window.claude?.use ? window.claude.use("db") : Promise.resolve(null)).catch(()=>null);
   if(!db){clearTimeout(timer);S.err="Sign in to claude.ai to open the studio.";render();return}
-  const got=new Set(); const need=["streamers","accounts","clips","publications","batches","library"];
-  const key={streamers:"streamers",accounts:"accounts",clips:"clips",publications:"pubs",batches:"batches",library:"lib"};
+  const got=new Set(); const need=["streamers","accounts","clips","publications","batches","library","settings"];
+  const key={streamers:"streamers",accounts:"accounts",clips:"clips",publications:"pubs",batches:"batches",library:"lib",settings:"settings"};
   for(const col of need){
     db.collection(col).onSnapshot(snap=>{S[key[col]]=snap.docs.map(d=>({id:d.id,...d.data()}));got.add(col);if(got.size===need.length){S.ready=true;clearTimeout(timer)}render()},
       err=>{clearTimeout(timer);S.err="Couldn't load the studio data ("+(err?.code||"error")+").";render()});
