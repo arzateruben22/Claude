@@ -2,11 +2,12 @@
 // adverts (the deltas are the expected total over the action; a continuous advert's are its rates over the 5 sim-minute
 // window), and every placed object with the layout slots it's used from. 41 adverts across the types, as the plan
 // counts them: bar counter 4, booth 6, high-top 6, window rail 3, screens 1, standing floor 1, pool table 2, dartboard
-// 1, shuffleboard 1, jukebox 1, water station 1, restroom 1, dance spot 1, patio table 7, patio rail 5. S2b makes the
+// 1, shuffleboard 1, jukebox 1, water station 1, restroom 1, dance spot 1, patio table 7, patio high-top 5 (the patio
+// rail's five until the 2026-11-23 café plan). S2b makes the
 // pool tables, the dartboards and the shuffleboard playable against the house player; Watch pool waits for other
 // people's games (S3a's crowd), so it's in the catalogue but not offered yet (`later`).
 import type { Advert, SmartObjectType, SmartObject } from '../../engine/sim/objects';
-import { HIGHTOPS, PATIO_TABLES, RAIL_V, SCREENS, POOL_TABLES, DART_BOARDS, JUKEBOX } from './layout';
+import { HIGHTOPS, PATIO_TABLES, PT_CHAIRS, PATIO_HIGHTOP, RAIL_V, SCREENS, POOL_TABLES, DART_BOARDS, JUKEBOX } from './layout';
 import type { P2 } from '../../engine/venue-def';
 
 const W = 5;   // the scoring window (sim minutes)
@@ -37,7 +38,7 @@ export const TYPES: Record<string, SmartObjectType & { later?: string[] }> = {
   restroom: { type: 'restroom', label: 'The restrooms', adverts: [A('restroom', 'Restroom', { bladder: 100 }, [1, 2], ['comfort'], { requires: ['npcOnly'] })] },
   'dance-spot': { type: 'dance-spot', label: 'The dance spot', adverts: [A('dance', 'Dance', { fun: 35, social: 10, energy: -12 }, [3, 5], ['dance'], { requires: ['open', 'gameNight'] })] },
   'patio-table': { type: 'patio-table', label: 'A patio table', adverts: [sit, eat, chat, watch('Watch the patio screens'), ...order('table'), freeway] },
-  'patio-rail': { type: 'patio-rail', label: 'The patio rail', adverts: [sit, eat, chat, watch('Watch the patio screens'), freeway] },
+  'patio-high-top': { type: 'patio-high-top', label: 'The patio high-top', adverts: [sit, eat, chat, watch('Watch the patio screens'), freeway] },
 };
 /** the number of adverts across the catalogue's types (the plan's 41) */
 export const ADVERT_COUNT = Object.values(TYPES).reduce((a, t) => a + t.adverts.length, 0);
@@ -68,8 +69,8 @@ export function placed(): SmartObject[] {
   out.push(O('jukebox', 'jukebox', 'The jukebox', [], JUKEBOX, [0.7, 0.5], [0, 1.6]));
   out.push(O('water', 'water-station', 'The water station', ['water'], [29.3, 11.4], [0.6, 0.4], [0, 1.35]));
   out.push(O('restrooms', 'restroom', 'The restrooms', [], [29.3, 11.62], [3.4, 0.1], [0, 2.3]));
-  PATIO_TABLES.forEach((u, k) => out.push(O(`patio-table-${k + 1}`, 'patio-table', `Patio table ${k + 1}`, (['east', 'west'] as const).flatMap((s) => [-0.9, -1.7].map((v) => `patio table ${k + 1} ${s} ${v}`)), [u, -1.3], [1.5, 1.6], [0, 0.95])));
-  out.push(O('patio-rail', 'patio-rail', 'The patio rail', Array.from({ length: 6 }, (_, k) => `patio rail stool ${k + 1}`), [6.25, -5.0], [6.5, 0.7], [0, 1.15]));
+  PATIO_TABLES.forEach(([u, v], k) => out.push(O(`patio-table-${k + 1}`, 'patio-table', `Patio table ${k + 1}`, PT_CHAIRS.map((c) => `patio table ${k + 1} ${c.id}`), [u, v], [1.7, 1.7], [0, 0.95])));
+  out.push(O('patio-high-top', 'patio-high-top', 'The patio high-top', PATIO_HIGHTOP.stools.map((_, k) => `patio high-top ${k + 1}`), PATIO_HIGHTOP.at, [1.7, 1.7], [0, 1.2]));
   return out;
 }
 /** the table surfaces empties and served items are set down on (frame u, v, height): the counter's customer edge, the
@@ -79,6 +80,7 @@ export function surfaces(): { at: P2; y: number; object: string }[] {
   for (let k = 0; k < 24; k++) out.push({ at: [14.4 + k * 0.52, 13.55], y: 1.22, object: 'bar' });
   for (let b = 0; b < 5; b++) for (const dv of [-0.18, 0.18]) out.push({ at: [20.5 + 2.15 * b + 1.075, 1.55 + dv], y: 0.95, object: `booth-${b + 1}` });
   HIGHTOPS.forEach(([u, v], t) => { for (const [du, dv] of [[0.12, 0.12], [-0.12, -0.12], [0.12, -0.12], [-0.12, 0.12]]) out.push({ at: [u + du, v + dv], y: 1.17, object: `high-top-${t + 1}` }); });
-  PATIO_TABLES.forEach((u, k) => { for (const v of [-0.9, -1.7]) for (const du of [-0.18, 0.18]) out.push({ at: [u + du, v], y: 0.93, object: `patio-table-${k + 1}` }); });
+  PATIO_TABLES.forEach(([u, v], k) => { for (const c of PT_CHAIRS) out.push({ at: [u + c.d[0] * 0.42, v + c.d[1] * 0.42], y: 0.93, object: `patio-table-${k + 1}` }); });
+  for (const [du, dv] of [[0.14, 0.14], [-0.14, -0.14], [0.14, -0.14], [-0.14, 0.14]]) out.push({ at: [PATIO_HIGHTOP.at[0] + du, PATIO_HIGHTOP.at[1] + dv], y: 1.17, object: 'patio-high-top' });
   return out;
 }

@@ -18,7 +18,8 @@
 // coloured pools moving over it; still under reduced motion), and the I-5's light streams (streaks along the road that
 // keep their size far off: engine/streets.ts), longest and brightest at Ultra.
 // S4's repair (after review): the screens drawn unlit at HD and Ultra (a glossy lit screen caught the TV-wall fill's
-// highlight as a white hotspot over the pitch); the wordmark kept lime at night at HD and Ultra (bloom had blown the
+// highlight as a white hotspot over the pitch); the wordmark kept lime at night at HD and Ultra (Vega & Vinnie's: a
+// warm cream since 2026-11-23) (bloom had blown the
 // chalk letters to white); the graphics table's Details row: soft light cones under the pool pendants at HD and Ultra
 // and dust turning in them at Ultra (still under reduced motion; neither at Low); the dance pools brighter and wider;
 // the dartboards' sisal at HD and Ultra (surfaces.ts).
@@ -99,9 +100,10 @@ const PIPE: Record<Quality, Pipe> = {
   hd: { retro: false, relief: 256, aniso: 8, rim: 1, grade: 1, cube: 128, clearcoat: 0, sheen: 0, floorRough: 0.26, streams: { stretch: 1.3, grow: 26, lift: 0, tall: 1.4, long: 2.0, head: 2.6, tail: 3.0 }, cones: true, dust: false, sisal: 512, coneGain: 0.17, dustGain: 0, vinylCoat: 0, envGain: 1, boxProject: false, floorColor: 0xb9b4ac, floorEnv: 1, patioRelief: 0, patioCoat: 0 },
   ultra: { retro: false, relief: 512, aniso: 16, rim: 1.2, grade: 1.35, cube: 256, clearcoat: 1, sheen: 1, floorRough: 0.08, streams: { stretch: 1.4, grow: 26, lift: 0, tall: 1.4, long: 2.0, head: 3.0, tail: 3.4 }, cones: true, dust: true, sisal: 1024, coneGain: 0.34, dustGain: 1.0, vinylCoat: 0.7, envGain: 1.45, boxProject: true, floorColor: 0x8f8a83, floorEnv: 1.6, patioRelief: 0.45, patioCoat: 0.8 },
 };
-/** the wordmark's emissive tint at HD and Ultra after dark: lime over the chalk letters, so tone mapping and bloom keep
- *  the hue (white emissive on chalk at 1.68 went to near white under bloom); Low keeps white (its pass lifts colour) */
-const WORD_LIME = new THREE.Color(0.62, 1.0, 0.3);
+/** the wordmark's emissive tint after dark (Vega & Vinnie's, 2026-11-23, the art review: S4's lime, kept from the
+ *  old brand, made the cream script glow lime): a warm cream, its green and blue held down so tone mapping and bloom
+ *  keep the photo's warm cream (white emissive on the letters at 1.68 went to near white under bloom) */
+const WORD_CREAM = new THREE.Color(1.0, 0.72, 0.46);
 
 // display space, after the output pass: a soft vignette, a touch of contrast, warm highlights and cool shadows, and
 // the golden hour's warmth through the frame (strongest in the light)
@@ -484,13 +486,12 @@ export class BarLook {
   get retroOn() { return this.retro !== null; }
   /** how the I-5's streams are drawn at this mode (engine/streets.ts's update) */
   get streamLook(): StreamLook { return PIPE[this.quality].streams; }
-  /** the wordmark after dark: Low as mats.ts sets it (white on the chalk, its pass lifts the colour); HD and Ultra
-   *  lime over the chalk at a lower level, so the letters stay lime under tone mapping and bloom spreads a lime halo */
+  /** the wordmark after dark: a warm cream at every mode (Low a little brighter: its pass flattens light), so the
+   *  letters stay cream under tone mapping and bloom spreads a warm halo, as in the owner's front photo */
   private signs() {
     const w = this.mats.wordmark;
-    if (this.quality === 'low') { w.emissive.setRGB(1, 1, 1); w.emissiveIntensity = 0.08 + this.night * 1.6; return; }
-    w.emissive.setRGB(1, 1, 1).lerp(WORD_LIME, Math.min(1, this.night * 1.4));
-    w.emissiveIntensity = 0.08 + this.night * 1.05;
+    w.emissive.setRGB(1, 0.86, 0.7).lerp(WORD_CREAM, Math.min(1, this.night * 1.4));
+    w.emissiveIntensity = 0.08 + this.night * (this.quality === 'low' ? 1.2 : 0.85);
   }
   /** the drawing buffer changed size (a resize or a new pixel ratio) */
   resize() { if (this.retro) { this.renderer.getDrawingBufferSize(this.bufSize); this.retro.setSize(this.bufSize.x, this.bufSize.y); } }
