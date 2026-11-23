@@ -231,6 +231,26 @@ export function peelNormal(n = 256): THREE.Texture {
   });
 }
 
+// metallic flake (the OC Hypercar's pearl on 'high'; ported from the unjudged G1 lane): a tangent-space normal map of
+// tiny flat platelets, each tilted at random (most a little, a few a lot, so a few catch the light as sparkles), about
+// 3 texels across, between them the binder (flat). Tiled small under the clear coat; its mips average to flat, so at
+// a distance it reads as a smooth pearl.
+export function flakeNormal(n = 512): THREE.Texture {
+  return once('flake' + n, () => {
+    const d = new Uint8Array(n * n * 4), cell = 3, cells = Math.floor(n / cell);
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+      const cx = Math.min(cells - 1, Math.floor(x / cell)), cy = Math.min(cells - 1, Math.floor(y / cell));
+      const a = hash(cx, cy, 91), b = hash(cx, cy, 92), c = hash(cx, cy, 93);
+      const on = hash(cx, cy, 94) < 0.82;
+      const tilt = on ? (c < 0.9 ? 0.18 * a : 0.55 * a) : 0, ang = b * Math.PI * 2;
+      const nx = Math.sin(tilt) * Math.cos(ang), ny = Math.sin(tilt) * Math.sin(ang), nz = Math.cos(tilt);
+      const i = (y * n + x) * 4;
+      d[i] = (nx * 0.5 + 0.5) * 255; d[i + 1] = (ny * 0.5 + 0.5) * 255; d[i + 2] = (nz * 0.5 + 0.5) * 255; d[i + 3] = 255;
+    }
+    return dataTex(d, n, n, false);
+  });
+}
+
 // ------------------------------------------------------------------------------------------------ tyres
 // u around the tyre, v across its section (0 outer bead .. 1 inner bead). treadV is where the tread sits in v.
 // Shoulder slots cross the tread edges; the sidewall has fine mould rings and a satin finish, and road dust settles

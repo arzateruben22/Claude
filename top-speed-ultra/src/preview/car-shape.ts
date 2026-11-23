@@ -68,6 +68,7 @@ export interface ShapeParams {
   fenderVents: boolean;
   handles: 'hidden' | 'flush';
   mirrorAt: [number, number, number];
+  mirrorScale?: number; mirrorStalk?: number;   // the hypercar: a bigger door mirror on a longer stalk (both 1 if absent)
   cabinW: number;                        // inner door-card half-width
   wheel: WheelStyle;
   rimColor: number; caliper: number;
@@ -81,15 +82,16 @@ export interface ShapeParams {
                                          // the tone-mapped strip reads as the reference's ice blue, not white)
   bar?: { len: number; h: number };      // the full-width red tail bar
   fins?: { x: [number, number]; z: [number, number]; h: number };   // twin fins on the rear deck, front to back
-  bonnetVents?: { x: [number, number]; z: [number, number]; n: number };   // a louvred vent each side of the bonnet's centre
+  bonnetVents?: { x: [number, number]; z: [number, number]; n: number; taper?: number };   // a louvred vent each side of the bonnet's centre (x[0] 0: one across it, its front taper times as wide as its rear)
   plate?: { w: number; h: number; y: number };   // the rear plate (the OC mark)
   splitterStep?: { w: number; d: number; h: number };   // a second, raised splitter tier behind the blade
   thrusters?: { x: number; y: number; r: number };   // two small nozzles set into the diffuser (fired in a later milestone)
   intakeQ?: [number, number][];          // a side intake shaped as a quad (side plane z, y): bottom-front, bottom-rear, top-rear, top-front
+  noseCarbon?: { z: number; share: number };   // the side-facing skin within z of the nose is carbon up to this share of the side's height (a dark fin zone seen from the side)
   lowCarbon?: [number, number];          // the skin ahead of the front wheels and behind the rears is carbon up to these shares of the side's height
   crown?: number;                        // the deck's profile across: rises as u^crown from the centre to the fender crest (a sunken bonnet between peaked crests)
   masks?: PaintMask[];                   // gloss-black regions of the paint (the two-tone), drawn by the paint shader
-  paintFinish?: { metal: number; rough: number; env?: number; lift?: number };   // env: the paint's reflection strength (1); lift: its base coat drawn this much lighter (linear)
+  paintFinish?: { metal: number; rough: number; env?: number; lift?: number; tone?: [number, number, number]; flakeMap?: number };   // env: the paint's reflection strength (1); lift: its base coat drawn this much lighter (linear); tone: the factory paint's base coat times this per channel too; flakeMap: a flake normal map this many px across on 'high'
   tyreTint?: number; discTint?: number;  // darker rubber, a dark grey carbon-ceramic disc
   ventsQ?: [number, number][][];         // louvred vents as quads on the top surface (x, z: inner-front, outer-front, outer-rear, inner-rear; mirrored)
   hoodY?: number;                        // the game's hood camera's height (1.0 m; the hypercar's bonnet sits lower)
@@ -270,7 +272,9 @@ const HYPER: ShapeParams = {
   // (2026-11-23: the references' fender humps hold their crest back over the moved wheel, about 0.82 m from z -1.5
   // to -1.15, measured on their side view at the tyres' scale; off the nose they keep the old climb, so the blades and
   // their beams stay under 0.5 m)
-  FH: [[-2.43, 0.36], [-2.3, 0.42], [-2.15, 0.485], [-2.0, 0.6], [-1.85, 0.695], [-1.7, 0.765], [-1.5, 0.815], [-1.28, 0.825], [-1.15, 0.8], [-1.05, 0.77], [-0.8, 0.74], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
+  // (judge round 1: the crest held up over the wheel to the cowl, 0.875 m from z -1.28 to -1.15 and falling to the
+  // door from there, so both humps stand over the dash from the seat, as in the references' interior view)
+  FH: [[-2.43, 0.36], [-2.3, 0.42], [-2.15, 0.485], [-2.0, 0.6], [-1.85, 0.695], [-1.7, 0.775], [-1.5, 0.845], [-1.28, 0.875], [-1.15, 0.875], [-1.05, 0.85], [-0.9, 0.805], [-0.75, 0.77], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
   // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
   // the spine and the openings sit in), up to a lip across the tail that carries the red bar
   // (M1b repair: the bonnet's middle 1 to 2.5 cm lower ahead of the cowl, so it no longer domes up into the hero
@@ -349,7 +353,9 @@ const HYPER: ShapeParams = {
   splitter: { w: 1.94, d: 0.7, proud: 0.2, canards: false },
   wing: { span: 1.71, chord: 0.36, y: 0.98, z: 1.98, mountX: 0.42, plate: [0.55, 0.25] },
   scoop: true, bonnetVent: false, fenderVents: false, handles: 'hidden',
-  mirrorAt: [0.98, 0.86, -0.92], cabinW: 0.8,
+  // (judge round 1, the references: bigger mirrors on long stalks from the door's middle, not small ones at the
+  // A-pillar's foot)
+  mirrorAt: [1.0, 0.93, -0.66], mirrorScale: 1.15, mirrorStalk: 1.6, cabinW: 0.8,
   wheel: 'multi', rimColor: 0x101318, caliper: 0x1f4fd8,
   // the Corsa's carbon buckets, harnesses and roll hoop with the hypercar's own trim (cockpit.ts 'hyper')
   interior: 'hyper',
@@ -388,17 +394,26 @@ const HYPER: ShapeParams = {
   // to this car (src/game/founder.ts holds these three colours)
   led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo, edge: FOUNDER_ICE.edge },
   // (2026-11-23: 12 mm, so the references' ice-blue tail blades over it carry the tail; it is still the stop light)
-  bar: { len: 1.66, h: 0.012 },
+  // (judge round 1: no red bar in sight; h is the blades' height, 26 mm, and the stop lamp is hidden in the fascia,
+  // car-body's recessed tail)
+  bar: { len: 1.66, h: 0.026 },
   // (2026-11-23, the owner's references, outside and from the seat: a black louvred panel on each fender hump's top,
   // ahead of the wheel, from its inner slope up to the crest; and a black vented section on the sunken bonnet's centre)
-  ventsQ: [[[0.46, -2.04], [0.74, -2.08], [0.8, -1.6], [0.5, -1.56]]],
-  bonnetVents: { x: [0.055, 0.3], z: [-2.06, -1.58], n: 7 },
+  // (judge round 1: the hump louvres move back over the wheel onto the humps' inner slopes and tops, where the
+  // references' interior view shows them beside the dash; the centre is one black section 0.6 m wide at its rear,
+  // narrowing toward the nose, with no painted spine between two panels)
+  ventsQ: [[[0.42, -1.82], [0.72, -1.84], [0.75, -1.38], [0.46, -1.36]]],
+  bonnetVents: { x: [0, 0.3], z: [-2.12, -1.42], n: 12, taper: 0.6 },
   plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
   // (M1b: lower, so the fangs come down silver at the nose and the haunches wrap the tail down to the valance)
   // (2026-11-23: the references' haunches stay pearl down to the diffuser behind the rear wheels)
-  lowCarbon: [0.3, 0.3],
+  // (judge round 1: the tail's lower corners carbon round the diffuser, up to 0.38 of the side behind the rear wheels)
+  lowCarbon: [0.3, 0.38],
+  // (judge round 1: the references' side view shows the fin zone dark under a thin pearl lip, back to the fender's
+  // upright front edge about 0.4 m behind the nose)
+  noseCarbon: { z: 0.42, share: 0.8 },
   // a light, cool silver: at metalness 0.3 the faces turned away from the sun take the sky's light and still read
   // light (the front and rear views), and a warm sky doesn't turn the paint bronze
   // (M1b: metalness 0.3 -> 0.06 and the sky's reflection 1.2x: the front and rear faces, turned from the sun, read
@@ -409,7 +424,11 @@ const HYPER: ShapeParams = {
   // (2026-11-23, the owner's references: a pearl, not a chalk white: their paint shades from near white on the tops to
   // a mid silver on the flanks, with the sky and the road clearly in it. The base coat no longer lifted (1.2 -> 0.95),
   // a little more metal (0.2), a finer base (0.22) and the sky's reflection 1.5x)
-  paintFinish: { metal: 0.2, rough: 0.22, env: 1.5, lift: 0.95 },
+  // (judge round 1: still flat chalk white at the matched angles, the door's median (201, 208, 215) against the side
+  // reference's (147, 147, 155) with a third of its spread: more metal and reflection so the flanks take the road and
+  // the sky, the base coat toned from the swatch's blue toward a neutral cool silver (#C8D3E8 -> about #C3C7CE, the
+  // store's swatch unchanged), and a flake normal map on 'high')
+  paintFinish: { metal: 0.62, rough: 0.2, env: 1.7, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
@@ -420,7 +439,9 @@ const HYPER: ShapeParams = {
   finFwd: 0.14,
   // M1b, the tail: recessed 0.10 m from the valance's top up to 7.5 cm under the tail's upper edge, inset 6 cm from
   // its sides, the haunches wrapping round it
-  tailRecess: { depth: 0.1, inset: 0.06, y0: 0.38, lip: 0.075 },
+  // (judge round 1: the opening out to 2.5 cm of the tail's sides and 5.5 cm under its top edge, a black fascia, not a
+  // white frame round a mesh panel)
+  tailRecess: { depth: 0.1, inset: 0.025, y0: 0.38, lip: 0.055 },
   archRound: true,
   // (the exterior carbon, M1b: about a third of the shared weave's brightness, less metal and a softer clear coat, so
   // the splitter, the skirts and the wing read black by day, as on the sheet, not tan under the golden-hour sky)
@@ -434,10 +455,8 @@ const HYPER: ShapeParams = {
   faceStations: [0.015, 0.135, 0.005, 0.01],
   // the gloss-black two-tone (x, z in plan; mirrored)
   masks: [
-    // M1b: the bonnet's spine, a narrow dark strip from the badge to the cowl (10 cm wide there) with an arrow tip
-    // just behind the badge, so the bonnet reads silver
-    { plane: 'top', mirror: true, pts: [[-0.05, -2.2], [0.01, -2.2], [0.05, -1.15], [-0.05, -1.15]], soft: 0.005 },
-    { plane: 'top', mirror: true, pts: [[-0.05, -2.275], [0.0, -2.275], [0.045, -2.19], [-0.05, -2.165]], soft: 0.004 },
+    // (M1b's bonnet spine, a narrow dark strip from the badge to the cowl with an arrow tip, is gone: the black
+    // vented centre replaces it, judge round 1)
     // M1b: the A-pillars gloss black, so the canopy reads as one dark shape with no silver strut between the
     // windscreen and the side glass (the sheet's hero and FRONT)
     { plane: 'top', mirror: true, pts: [[0.4, -1.16], [0.53, -1.16], [0.45, -0.05], [0.36, -0.05]], soft: 0.005 },

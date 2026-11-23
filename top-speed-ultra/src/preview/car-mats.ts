@@ -256,7 +256,11 @@ void paintMasks(float pix) {
 // metallic paint: a base coat with flakes under a clear coat; the flakes are a per-pixel random tilt of the base
 // layer's normal, hashed in the car's own space (so they stay put as you move) at about the size of a pixel
 // coat and coatRough set the clear coat (default 1 and 0.03): the store's gloss, satin and pearl finishes use them
-export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number } = {}) {
+// o.lift may be per channel ([r, g, b], the OC Hypercar's factory silver drawn more neutral than its swatch).
+// o.flakeMap (the OC Hypercar's pearl, 'high' only; ported from the unjudged G1 lane): a flake normal map this many px
+// across (car-tex flakeNormal), tiled every o.flakeTile metres (default 0.05) under the clear coat, on top of the
+// shader's own flake. Without them the material is exactly as before.
+export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flake?: number; metal?: number; rough?: number; coat?: number; coatRough?: number; key?: string; masks?: PaintMask[]; env?: number; lift?: number | [number, number, number]; flakeMap?: number; flakeTile?: number } = {}) {
   const key = 'paint' + hex + q + (o.key ?? '') + JSON.stringify(lines) + JSON.stringify(o);
   return once(key, () => {
     const m = new THREE.MeshPhysicalMaterial({
@@ -264,13 +268,17 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
       clearcoatNormalMap: X.peelNormal(S(q, 256, 128)), clearcoatNormalScale: new THREE.Vector2(0.05, 0.05),
     });
     const peel = m.clearcoatNormalMap!.clone(); peel.repeat.set(4, 4); peel.needsUpdate = true; m.clearcoatNormalMap = peel;
+    if (o.flakeMap) {
+      const ft = X.flakeNormal(o.flakeMap).clone(); ft.repeat.setScalar(1 / (o.flakeTile ?? 0.05)); ft.anisotropy = 8; ft.needsUpdate = true;
+      m.normalMap = ft; m.normalScale = new THREE.Vector2(0.55, 0.55);
+    }
     m.name = 'paint';
     const masks = o.masks ?? [], M = masks.length > 0;
     // lift (the OC Hypercar, M1b): the base coat drawn this much lighter than its colour (linear, capped at 0.97), in the
     // shader so it holds when the game repaints the material (PlayerCar.setPaint); without it the shader is unchanged
-    const L = o.lift !== undefined && o.lift !== 1;
+    const L = o.lift !== undefined && (Array.isArray(o.lift) || o.lift !== 1), lv = Array.isArray(o.lift) ? o.lift : [o.lift ?? 1, o.lift ?? 1, o.lift ?? 1];
     const uniforms = { uShut: { value: packShut(lines) }, uShutN: { value: Math.min(MAX_SHUT, lines.length) }, uFlake: { value: q === 'high' ? (o.flake ?? 0.15) : 0 },
-      ...(L ? { uLift: { value: o.lift! } } : {}),
+      ...(L ? { uLift: { value: new THREE.Vector3(lv[0], lv[1], lv[2]) } } : {}),
       ...(M ? { uMask: { value: packMask(masks) }, uMaskN: { value: Math.min(MAX_MASK, masks.length) } } : {}) };
     (m.userData as { uniforms: typeof uniforms }).uniforms = uniforms;
     patch(m, 'paint' + q + (M ? '+mask' : '') + (L ? '+lift' : ''), (sh) => {
@@ -279,7 +287,7 @@ export function paint(hex: number, q: Quality, lines: ShutLine[] = [], o: { flak
         .replace('#include <common>', '#include <common>\nvarying vec3 vOP;\nvarying vec3 vON;')
         .replace('#include <begin_vertex>', '#include <begin_vertex>\nvOP = position; vON = normal;');
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', '#include <common>\n' + PAINT_PARS + (M ? MASK_PARS : '') + (L ? 'uniform float uLift;\n' : ''))
+        .replace('#include <common>', '#include <common>\n' + PAINT_PARS + (M ? MASK_PARS : '') + (L ? 'uniform vec3 uLift;\n' : ''))
         .replace('#include <color_fragment>', `#include <color_fragment>${L ? `
           diffuseColor.rgb = min(diffuseColor.rgb * uLift, vec3(0.97));` : ''}
           float pixW = length(fwidth(vOP)) * 0.7 + 1e-5;
@@ -364,6 +372,18 @@ export function led(core: number, halo: number, q: Quality, edge = halo) {
   return once('led' + core + halo + 'e' + edge + q, () => Object.assign(new THREE.MeshStandardMaterial({
     color: 0x0a0e13, emissive: 0xffffff, emissiveMap: X.ledTex(core, halo, edge), emissiveIntensity: q === 'high' ? 2.8 : 1.7, roughness: 0.25, metalness: 0,
   }), { name: 'led' }));
+}
+// the OC Hypercar's hex mesh on 'high' (judge round 1): opaque, its cell walls drawn by the honeycomb map as colour
+// rather than cut by alpha. The alpha-tested mesh's walls, about a sixth of each cell, average under the mips to an
+// alpha under the test, so at any distance it vanished into the black behind it; drawn as colour the walls average
+// to a dark grey with a pattern that holds. tile: metres per 8 cells (0.16: 2 cm cells)
+export function hexMeshOC(tile = 0.16, color = 0x3a3e44) {
+  return once('hexOC' + tile + color, () => {
+    const h = X.honeycombMaps(512);
+    const a = h.alphaMap.clone(), n = h.normalMap.clone();
+    for (const t of [a, n]) { t.repeat.set(1 / tile, 1 / tile); t.anisotropy = 8; t.needsUpdate = true; }
+    return withAO(Object.assign(new THREE.MeshStandardMaterial({ color, map: a, normalMap: n, normalScale: new THREE.Vector2(1.2, 1.2), roughness: 0.62, metalness: 0.25 }), { name: 'honeycomb' }));
+  });
 }
 export function honeycomb(q: Quality, tile = 0.09) {
   return once('honey' + q + tile, () => {
