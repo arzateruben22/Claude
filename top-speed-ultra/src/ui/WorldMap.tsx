@@ -245,7 +245,7 @@ export function WorldMap({ game, driving, navTarget, onClose, onNavigate, onStar
             {[...HOMES].sort((a, b) => Number(owned.includes(b.id)) - Number(owned.includes(a.id))).map((hm) => {
               const q = homeXZ(hm), mine = owned.includes(hm.id);
               return <button key={hm.id} type="button" className={'wm-item place' + (focusHome === hm.id ? ' on' : '')} onClick={() => setView({ cx: q.x, cz: q.z, mpp: 8 })}>
-                <b>{hm.name}{hm.id === home ? ' · home' : ''}</b><small>{hm.area} · {mine ? 'yours' : `${hm.price.toLocaleString()} credits, Lifestyle`}</small>
+                <b>{hm.name}{hm.id === home ? ' · home' : ''}</b><small>{hm.area} · {mine ? 'yours' : `${hm.price.toLocaleString()} cash, Lifestyle`}</small>
               </button>;
             })}
             <div className="wm-item place off" aria-disabled="true"><b>Characters</b><small>Roadmap</small></div>

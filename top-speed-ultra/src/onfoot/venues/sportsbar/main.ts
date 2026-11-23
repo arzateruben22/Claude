@@ -990,6 +990,17 @@ async function main() {
     walk(sx: number, sy: number, seconds: number, run = false) { return simulate(Math.round(seconds / STEP), { x: sx, y: sy, run }); },
     sim(seconds: number, untilStop = false) { return simulate(Math.round(seconds / STEP), { x: 0, y: 0, run: false }, untilStop); },
     pos() { const gu = player.lastGaveUp, [u, v] = F.toFrame(player.x, player.z); return { ...G(player.x, player.z), lx: +player.x.toFixed(3), lz: +player.z.toFixed(3), u: +u.toFixed(3), v: +v.toFixed(3), y: +player.y.toFixed(3), heading: +player.heading.toFixed(3), yaw: +player.yaw.toFixed(3), sitting: player.seat ? player.seat.id : null, view, moving: !!player.path, speed: +player.speed.toFixed(3), indoors: player.indoors, gaveUp: gu ? { by: gu.by, ...G(gu.x, gu.z), left: +gu.left.toFixed(2) } : null }; },
+    /** the game's venue passport reads this once a second (src/game/Game.ts venuePoll): the bar's named spots, what you're
+     *  doing and how many orders you've placed; the stamps and the time are the game's */
+    passport() {
+      const x = player.x, z = player.z, [u, v] = F.toFrame(x, z), within = (a: number, b: number, c: number, d: number) => u > a && u < b && v > c && v < d;
+      const nearStall = def.parking.stalls.some((s) => Math.hypot(s.x - x, s.z - z) < 6);
+      const inside = def.indoor(u, v);
+      const spot = within(14.0, 27.6, 11.5, 15.8) ? 'bar' : v < 0.3 && u > 2 && u < 24 ? 'patio'
+        : within(8.9, 17.4, 4.3, 9.5) || within(7.6, 12.6, 11.5, 15.8) || within(3.2, 9.9, 1.0, 1.9) ? 'games'
+        : within(20.5, 31.3, 0.75, 2.35) ? 'booths' : nearStall ? 'lot' : !inside && v >= 0.3 ? 'front' : null;
+      return { spot, sitting: !!player.seat, moving: !!player.path || player.speed > 0.2, talking: !!life.crowd?.social.youIn, orders: life.log.filter((l) => /^order \d+: .* at (the bar|a table)/.test(l.what)).length, paused: hud.paused, ...G(x, z) };
+    },
     colliders() { return exportColliders(set).map((c) => shiftCollider(c as Record<string, unknown>)); },
     region() { const r = grid.exportRegion(); return { ...r, x0: r.x0 + F.origin[0], z0: r.z0 + F.origin[1] }; },
     seats() { return venue.seats.map((s) => ({ id: s.id, kind: s.kind, at: s.at, y: s.y, ...G(s.x, s.z), approach: G(s.ax, s.az) })); },
