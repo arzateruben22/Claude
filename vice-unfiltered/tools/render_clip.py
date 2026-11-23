@@ -11,7 +11,9 @@ assets/CORE_2026-11-22/):
  "streamer": "KreekCraft", "slug": "kreekcraft", "clip_no": 1, "moment": "Nightclub", "version": 1,
  "source": "sources/KreekCraft/x.mp4",
  "segments": [{"in": 12.3, "out": 20.1}],          # source cuts; concatenated = BASE timeline
- "layout": {"mode": "fit"}  |  {"mode": "split", "facecam": [x,y,w,h], "gameplay": [x,y,w,h], "face_h": 640},
+ "layout": {"mode": "fit"}  |  {"mode": "split", "facecam": [x,y,w,h], "gameplay": [x,y,w,h], "face_h": 640}
+           |  {"mode": "crop", "rect": [x,y,w,h], "y": 0.5}   # rect fit to 1080 wide, centred at y (fraction of 1920),
+                                                             # over a blurred fill of the SAME rect (nothing outside leaks in)
  "fps": 30,
  "events": [                                       # at/from/to are BASE times (before insertions)
    {"type": "insert_image", "file": "IMAGES/Reaction_Inserts/bro.jpg", "at": 7.0, "dur": 1.5,
@@ -143,9 +145,10 @@ def draw_caption(canvas, text, y_frac, size=110, font="anton", fill=(255, 255, 2
     return (y + bbox[1], y + bbox[3])
 
 
-def caption_png(text, y, size, font, out):
+def caption_png(text, y, size, font, out, fill="#FFFFFF"):
     c = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    draw_caption(c, text, y, size, font)
+    fill = tuple(int(fill.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)) if isinstance(fill, str) else tuple(fill)
+    draw_caption(c, text, y, size, font, fill=fill)
     c.save(out)
 
 
@@ -186,6 +189,13 @@ def layout_filter(job, src_w, src_h):
                 f"[a]crop={fw}:{fh}:{fx}:{fy},scale={W}:{face_h}:force_original_aspect_ratio=increase,crop={W}:{face_h}[f];"
                 f"[b]crop={gw}:{gh}:{gx}:{gy},scale={W}:{game_h}:force_original_aspect_ratio=increase,crop={W}:{game_h}[g];"
                 f"[f][g]vstack,setsar=1")
+    if lay["mode"] == "crop":
+        x, y, w, h = lay["rect"]
+        yc = int(round(float(lay.get("y", 0.5)) * H))
+        return (f"[0:v]fps={fps},crop={w}:{h}:{x}:{y},split[a][b];"
+                f"[a]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},boxblur=40:3,eq=brightness=-0.14[bg];"
+                f"[b]scale={W}:-2:flags=lanczos[fg];"
+                f"[bg][fg]overlay=0:{yc}-h/2,setsar=1")
     if abs(src_w / src_h - W / H) < 0.01:
         return f"[0:v]fps={fps},scale={W}:{H},setsar=1"
     return (f"[0:v]fps={fps},split[a][b];"
@@ -288,7 +298,7 @@ def main():
     zooms = [e for e in events if e["type"] == "zoom"]
     for k, c in enumerate(captions):
         c["png"] = os.path.join(tmp, f"caption_{k}.png")
-        caption_png(c["text"], c.get("y", 0.38), c.get("size", 110), c.get("font", "anton"), c["png"])
+        caption_png(c["text"], c.get("y", 0.38), c.get("size", 110), c.get("font", "anton"), c["png"], c.get("fill", "#FFFFFF"))
 
     vlist, edl = [], []
     venc = ["-c:v", "libx264", "-crf", "8", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-r", str(fps),
