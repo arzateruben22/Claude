@@ -25,19 +25,29 @@
   buttons.forEach(function (btn) {
     var rect = btn.querySelector(".btn-mb-border rect");
     var glow = btn.querySelector(".btn-mb-glow");
-    if (rect && glow) items.push({ rect: rect, glow: glow });
+    if (rect && glow) items.push({ btn: btn, rect: rect, glow: glow, seen: false, length: 0 });
   });
   if (!items.length) return;
 
   var rm = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var rafId = null;
+  var touch = window.matchMedia("(pointer: coarse)");
+  var rafId = null, skip = 0;
+
+  /* a button off screen costs nothing: the loop runs only while at least one is in view
+     (it used to run for every button, all the time, even scrolled far away) */
+  var anySeen = function () { return items.some(function (it) { return it.seen; }); };
 
   var tick = function (time) {
+    rafId = null;
+    if (!anySeen()) return;
+    if (touch.matches && (skip ^= 1)) { rafId = requestAnimationFrame(tick); return; }   /* 30 fps is plenty on a phone */
     items.forEach(function (item) {
-      var length = 0;
-      try { length = item.rect.getTotalLength(); } catch (err) { return; }
-      if (!length) return;
-      var progress = (time % DURATION) / DURATION * length;
+      if (!item.seen) return;
+      if (!item.length) {
+        try { item.length = item.rect.getTotalLength(); } catch (err) { return; }
+      }
+      if (!item.length) return;
+      var progress = (time % DURATION) / DURATION * item.length;
       var pt = item.rect.getPointAtLength(progress);
       item.glow.style.transform =
         "translate(" + pt.x + "px," + pt.y + "px) translate(-50%,-50%)";
@@ -46,7 +56,7 @@
   };
 
   var play = function () {
-    if (rafId === null && !rm.matches && !document.hidden) {
+    if (rafId === null && !rm.matches && !document.hidden && anySeen()) {
       rafId = requestAnimationFrame(tick);
     }
   };
@@ -55,7 +65,19 @@
     if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   };
 
-  play();
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var it = items.filter(function (x) { return x.btn === e.target; })[0];
+        if (it) { it.seen = e.isIntersecting; if (e.isIntersecting) it.length = 0; }   /* measure again: it may have been hidden or resized */
+      });
+      if (anySeen()) play(); else pause();
+    }, { rootMargin: "60px 0px" });
+    items.forEach(function (it) { io.observe(it.btn); });
+  } else {
+    items.forEach(function (it) { it.seen = true; });
+    play();
+  }
 
   if (rm.addEventListener) {
     rm.addEventListener("change", function () { pause(); play(); });

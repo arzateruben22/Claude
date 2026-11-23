@@ -844,3 +844,12 @@ If she changed anything else on her page, send its screen and I'll match it.
 - **Not changed:** the ProCell menu stays as Evelyn wrote it; none of these screens touch it. **To check:** her Brow Wax + Tweeze card says "30+ min", which on her page just means "has options"; I kept both options at 30 minutes, as the earlier screens had them.
 
 **The deck, smoother (phone and desktop).** What I changed: nothing is measured while you scroll (the page is measured once, and again when it changes size or a scroll starts), and a frame writes only what changed; the cards at rest carry no blur at all (the edges of the stacked cards are sharp now) and the arriving card blurs less on a phone; the shadow is a plain shadow instead of a filter that was redrawn every frame; the dim is its own layer; and on a phone the cards follow your finger exactly (no extra smoothing), while a mouse or trackpad gets a snappier spring. **Honest note:** I could not time this on a real phone from here; in a throttled test browser (no graphics chip) the slow frames dropped from about 8 to about 4 in a 75-frame scroll, but that test is noisy.
+
+## iPhone: the Services cards no longer lag (Nov 23)
+
+"Still laggy on iPhone." Three causes, all fixed:
+1. **Scrolling the cards with a script.** A phone scrolls on its own thread; a script that moves the cards in step with it always trails the finger. On a phone (any touch screen, or a narrow window) the four cards are now a plain **sticky stack**: each card sticks a little lower than the one before and the next slides over it, done entirely by the browser, with no script, no blur and no 3D. A mouse or trackpad on a computer keeps the dealt, tilting version.
+2. **Blur behind the header and the chat button.** The glass blur on the header and the Ask Lumevina button was redrawn on every frame the cards moved under them. On a touch screen they are plain, nearly solid now (same colour, less see-through).
+3. **A hidden animation running all the time.** The glowing borders on six buttons were being recalculated 60 times a second, even for buttons far off screen. They now animate only while on screen (and at 30 frames a second on a phone), and stop completely when none is visible.
+
+I can't test on a real iPhone from here, so this is based on what is known to be slow in iPhone's Safari; if it still stutters somewhere, tell me where (which section, scrolling up or down) and I'll go after that exact spot.

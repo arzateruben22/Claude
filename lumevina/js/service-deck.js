@@ -4,6 +4,8 @@
    rises from below leaning toward you and out of focus, and flattens and sharpens
    as it lands; the cards beneath lean back, sink and dim.
    Without JS, or with reduced motion, the CSS leaves a plain list of the cards.
+   On a touch screen (or a narrow window) it does nothing at all: the css makes the cards a sticky stack, which the
+   browser scrolls itself, in step with the finger. This script is the mouse and trackpad version.
 
    Kept cheap on purpose, so it holds 60 fps on a phone:
    - the page is measured once (and again when it changes size or a scroll starts),
@@ -132,7 +134,15 @@
     });
     seen = [];
   };
-  var sync = function () { if (mq.matches) disable(); else { enable(); kick(); } };
+  /* a touch screen (or a narrow window) gets the plain sticky stack from the css: nothing runs per frame */
+  var narrow = window.matchMedia("(max-width: 760px)");
+  var stack = function () { return touch.matches || narrow.matches; };
+  var sync = function () {
+    if (mq.matches) { disable(); deck.classList.remove("is-stack"); return; }
+    if (stack()) { disable(); deck.classList.add("is-stack"); return; }
+    deck.classList.remove("is-stack");
+    enable(); kick();
+  };
 
   window.addEventListener("scroll", wake, { passive: true });
   var remeasure = function () { if (on) { measure(); target = x = progress(); seen = []; paint(x); } };
@@ -143,8 +153,10 @@
   window.addEventListener("load", later);
   /* anything above the deck changing height (an image or a font arriving, a panel opening) moves it */
   if ("ResizeObserver" in window) new ResizeObserver(later).observe(document.body);
-  if (mq.addEventListener) mq.addEventListener("change", sync);
-  else if (mq.addListener) mq.addListener(sync);
+  [mq, touch, narrow].forEach(function (q) {
+    if (q.addEventListener) q.addEventListener("change", sync);
+    else if (q.addListener) q.addListener(sync);
+  });
 
   /* only run while the deck is on screen */
   if ("IntersectionObserver" in window) {

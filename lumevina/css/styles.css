@@ -7121,3 +7121,26 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 .booking-modal.is-classic .bk-back, .booking-modal.is-classic .bk-next, .booking-modal.is-classic .bk-or,
 .booking-modal.is-classic .bk-wait, .booking-modal.is-classic .bk-more, .booking-modal.is-classic .bk-wait-box { display: none; }
 .bk-cat .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ─── Services deck, on a touch screen: a plain sticky stack ───
+   A phone scrolls on its own thread and a script can't keep cards in step with it (they trail the
+   finger), so there the cards are just sticky: each one sticks a little lower than the one before and the next
+   slides over it. The browser does all of it, with no script, no filter and no 3D. */
+.svc-deck.is-stack { margin-bottom: var(--space-5); }
+.is-stack .svc-stage { display: flex; flex-direction: column; gap: 6svh; padding-bottom: 4svh; }
+.is-stack .svc-card {
+  position: sticky; width: min(100%, 60rem); margin-inline: auto;
+  top: calc(var(--nav-bottom, 4.6rem) + 0.8rem + var(--i, 0) * 0.9rem);
+}
+.is-stack .svc-card:nth-child(1) { --i: 0; } .is-stack .svc-card:nth-child(2) { --i: 1; }
+.is-stack .svc-card:nth-child(3) { --i: 2; } .is-stack .svc-card:nth-child(4) { --i: 3; }
+.is-stack .svc-card:nth-child(5) { --i: 4; } .is-stack .svc-card:nth-child(6) { --i: 5; }
+.is-stack .svc-face { min-height: min(24rem, 58svh); }
+
+/* a live backdrop blur redraws under the header and the chat button every frame the page moves: on a phone
+   they are plain, nearly solid instead */
+@media (pointer: coarse) {
+  .nav.scrolled, .ask-fab, .mem-nudge { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav.scrolled { background: rgba(251, 250, 247, 0.96); }
+  .ask-fab { background: rgba(251, 250, 247, 0.97); }
+}
