@@ -1,5 +1,5 @@
 // The places you can drive to and get out at (PROJECT_OC_ON_FOOT.md "Getting there" and Phase 3a; PROJECT_OC_SPORTS_BAR.md
-// "Joining the game later", J1): Lot 57 and Stoppage Time, our own fictional venues. Each is reached from the exit
+// "Joining the game later", J1): Lot 57 and Vega & Vinnie’s (once Stoppage Time), our own fictional venues. Each is reached from the exit
 // ramps the data workflow's freeway-link files list (src/data/anaheim/freeway-link.json and
 // sportsbar-freeway-link.json, the authoritative ones), where each ramp meets the real street. Street driving isn't
 // built yet: about 80 m before the ramp meets the street the game fades and parks you in your stall, and says so.
@@ -9,6 +9,7 @@ import type { Network } from './world/Network';
 import type { Path } from './world/Path';
 import { STEP } from './world/Path';
 import type { Quality, TimeOfDay } from './settings';
+import { BAR_NAME, barName } from '../onfoot/venues/sportsbar/brand';
 
 export type VenueId = 'lot57' | 'stoppage';
 export interface VenueExit {
@@ -29,14 +30,16 @@ const exitOf = (e: RawExit, street?: string): VenueExit => ({
 });
 const pick = (link: { exits: RawExit[] }, ramps: number) => link.exits.find((e) => e.ramp_paths[0] === ramps)!;
 
-/** the plan's exits for each venue, the default first (Lot 57: the CA-57 South exit to Orangewood; Stoppage Time: the
+/** the plan's exits for each venue, the default first (Lot 57: the CA-57 South exit to Orangewood; Vega & Vinnie’s: the
  *  I-5 North exit to Disney Way / Katella, ramp 124) */
 export const VENUES: Venue[] = [
   { id: 'lot57', name: 'Lot 57', exits: [exitOf(pick(lotLink, 1142)), exitOf(pick(lotLink, 1264)), exitOf(pick(lotLink, 562))] },
   // (the I-5 South exit's route runs a few metres of Manchester Avenue, then east on Katella: the street it's named for)
-  { id: 'stoppage', name: 'Stoppage Time', exits: [exitOf(pick(barLink, 124)), exitOf(pick(barLink, 791), 'Katella Ave')] },
+  { id: 'stoppage', name: BAR_NAME, exits: [exitOf(pick(barLink, 124)), exitOf(pick(barLink, 791), 'Katella Ave')] },
 ];
-export const venueByName = (name: string | null) => VENUES.find((v) => v.name === name) ?? null;
+/** a venue by its name; the bar's old name (Stoppage Time) or its name with a plain apostrophe, from an old save or
+ *  link, maps to the bar (the id stays 'stoppage') */
+export const venueByName = (name: string | null) => (name === null ? null : VENUES.find((v) => v.name === barName(name)) ?? null);
 
 /** one of a venue's ramps: how far along it the street is (Infinity: the street is on the next ramp of the exit) */
 export interface VenueRamp { venue: Venue; exit: VenueExit; path: Path; sTerm: number }
@@ -64,7 +67,7 @@ export function toStreet(map: Map<Path, VenueRamp>, r: VenueRamp, s: number): nu
   return r.path.len - s;
 }
 
-/** the venue's graphics for the game's preset: Low and Ultra as they are; High is the venues' High (Stoppage Time
+/** the venue's graphics for the game's preset: Low and Ultra as they are; High is the venues' High (Vega & Vinnie’s
  *  calls it HD); Medium is Low on a touch screen (the venues' phone budget) and High on a desktop */
 export function venueQuality(q: Quality, coarse: boolean): 'low' | 'high' | 'ultra' {
   return q === 'ultra' ? 'ultra' : q === 'high' ? 'high' : q === 'medium' && !coarse ? 'high' : 'low';
