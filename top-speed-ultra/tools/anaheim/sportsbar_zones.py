@@ -56,7 +56,8 @@ for i in range(0, len(d['bld'][61]['p']), 2):
     g = (x / 10 - O[0], z / 10 - O[1]); ring.append((g[0] * A[0] + g[1] * A[1], g[0] * B[0] + g[1] * B[1]))
 HOST = Polygon(ring)
 INNER = HOST.buffer(-0.25, join_style=2).intersection(box(-5, -5, 35.8, 30))
-PATIO = box(2.05, -5.45, 23.95, 1.0).difference(HOST)          # inside the fence, outside the building
+# (2026-11-16, the owner: the inside 3 to 4 times the patio) the patio runs to u 27 now, not u 24 (layout.ts PATIO)
+PATIO = box(2.05, -5.45, 26.95, 1.0).difference(HOST)          # inside the fence, outside the building
 SEAT, STAND = 0.45, 0.3
 def front_u(v, d_in):                 # a point d_in metres in from the front wall's inner face, at frame v
     v0 = v + 0.362 * d_in; return 0.388 * v0 + 0.27 + 0.932 * d_in
@@ -72,6 +73,7 @@ PZONES = {'patio rail': (3.0, 9.5, -5.45, -5.15), 'patio door': (18.0, 19.8, -1.
           'heater 1': (12.6, 13.2, -4.25, -3.65), 'heater 2': (20.65, 21.25, -4.25, -3.65),
           'planter 1': (2.1, 2.9, -5.4, -4.4), 'planter 2': (9.9, 11.7, -5.45, -4.95),
           'planter 3': (14.1, 15.9, -5.45, -4.95), 'planter 4': (22.0, 23.9, -5.45, -4.95),
+          'heater 3': (24.2, 24.8, -4.7, -4.1), 'planter 5': (25.1, 26.9, -5.45, -4.95), 'patio high-top': (24.2, 26.0, -2.6, -0.8),
           **{f'patio table {k + 1}': (u - 0.75, u + 0.75, -2.1, -0.5) for k, u in enumerate(TABLES)}}
 SLOTS = []                            # (name, owner zone or None, furniture group or None, u, v, radius, stand point)
 for i, u in enumerate(14.6 + 1.05 * k for k in range(9)): SLOTS.append((f'bar stool {i + 1}', 'bar', None, u, 12.85, SEAT, (u, 12.25)))
@@ -96,6 +98,8 @@ PSLOTS = [(f'patio rail stool {k + 1}', 'patio rail', None, 3.6 + 1.05 * k, -4.7
 for k, u in enumerate(TABLES):        # a bench each side (east and west), two seats a bench; you stand beside the bench
     for su, au in ((u - 0.6, u - 1.3), (u + 0.6, u + 1.3)):
         for sv in (-0.9, -1.7): PSLOTS.append((f'patio table {k + 1}', f'patio table {k + 1}', f'pt{k}', su, sv, SEAT, (au, sv)))
+for k, (su, sv, fu, fv) in enumerate(((24.65, -1.4, 1, 0), (25.4, -2.15, 0, 1))):   # the patio's high-top's two stools; you stand 0.55 m further out
+    PSLOTS.append((f'patio high-top {k + 1}', 'patio high-top', 'pht', su, sv, SEAT, (su - fu * 0.55, sv - fv * 0.55)))
 
 bad = 0
 def fail(msg):
@@ -134,7 +138,8 @@ for v in (2.9, 3.95, 5.0, 6.05, 10.6, 11.65, 12.7, 13.75): SOLID.append(ci(front
 for v0, v1 in ((2.5, 6.3), (10.0, 15.0)):                      # the window rails' shelves, 0.3 m deep on the glazing
     SOLID.append(Polygon([(front_u(v0, 0), v0), (front_u(v1, 0), v1), (front_u(v1, 0.3), v1), (front_u(v0, 0.3), v0)]))
 SOLID += [bx(3.0, 9.5, -5.45, -5.15)] + [ci(3.6 + 1.05 * k, -4.75, 0.2) for k in range(6)]
-SOLID += [bx(u - 0.75, u + 0.75, -2.1, -0.5) for u in TABLES] + [ci(12.9, -3.95, 0.3), ci(20.95, -3.95, 0.3)]
+SOLID += [bx(u - 0.75, u + 0.75, -2.1, -0.5) for u in TABLES] + [ci(12.9, -3.95, 0.3), ci(20.95, -3.95, 0.3), ci(24.5, -4.4, 0.3)]
+SOLID += [ci(25.4, -1.4, 0.4), ci(24.65, -1.4, 0.2), ci(25.4, -2.15, 0.2)]   # the patio's high-top and its stools
 SOLID += [box(*(lambda r: (r[0], r[2], r[1], r[3]))(PZONES[p])) for p in PZONES if p.startswith('planter')]
 WALK = unary_union([INNER, PATIO, bx(17.95, 19.85, -0.2, 0.8)])   # the room, the patio and the patio door's opening
 EDGE, SOLIDS = WALK.boundary, unary_union(SOLID)
