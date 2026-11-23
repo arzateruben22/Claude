@@ -478,7 +478,7 @@ export function hyperConsole(q: 'phone' | 'high'): DashPainter {
     const [c, g] = canvas(W, H);
     const t = tex(c), w = watch(14);
     const { ICE, DEEP, HOT, TXT, DIM, OFF } = HY;
-    const trace: number[] = []; let lastT = -1e9;
+    const trace: number[] = []; let lastT = -1e9, lastTrip = -1;
     // the knobs' faces, drawn once: a dark disc, a fine ice ring (the knob's own ring is geometry), an icon
     const knobs = () => {
       for (let i = 0; i < 3; i++) {
@@ -506,9 +506,10 @@ export function hyperConsole(q: 'phone' | 'high'): DashPainter {
     const p: DashPainter = {
       tex: t, draws: 0, shown: {},
       update(r, lowNow) {
-        // the speed's trace, a sample a second, the last 60
+        // the speed's trace, a sample a second while the car covers ground, the last 60 (paused, or stopped, it holds: a
+        // display redrawn while nothing in the game moves would cost a redraw and an upload for nothing)
         const now = performance.now();
-        if (now - lastT >= 1000) { lastT = now; trace.push(r.mph); if (trace.length > 60) trace.shift(); }
+        if (now - lastT >= 1000 && r.tripMi !== lastTrip) { lastT = now; lastTrip = r.tripMi; trace.push(r.mph); if (trace.length > 60) trace.shift(); }
         const cur = w.cur;
         cur[0] = Math.round(clamp01(r.rpmFrac) * 12); cur[1] = Math.round(clamp01(r.kw / Math.max(1, r.kwMax)) * 12); cur[2] = Math.round(clamp01(r.tank) * 50); cur[3] = ON(r.thrustLive); cur[4] = ON(r.lock);
         cur[5] = r.tune || r.mode; cur[6] = r.profile; cur[7] = ON(r.tcs); cur[8] = ON(r.abs); cur[9] = r.clock; cur[10] = trace.length ? trace.length * 1000 + Math.round(trace[trace.length - 1]) : 0;
