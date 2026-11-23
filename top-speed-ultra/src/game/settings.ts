@@ -55,6 +55,10 @@ export interface Settings {
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
+  // the car's ABS and traction control (the Ultra HUD's ABS | TCS switches, 2026-11-23): Game sets Physics.abs / .tc
+  // from these at every placement and settings change; both on by default
+  abs: boolean;
+  tcs: boolean;
   v: number;                // the settings' version (SETTINGS_V): which defaults a saved value was made under
 }
 
@@ -210,7 +214,7 @@ export function defaults(): Settings {
   return {
     quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
+    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', paints: {}, wheels: {}, radioFavs: [], abs: true, tcs: true, v: SETTINGS_V,
   };
 }
 
@@ -291,6 +295,8 @@ function readSettings(): { s: Settings; migrated: boolean } {
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
+      abs: v.abs !== false,
+      tcs: v.tcs !== false,
     };
     return { s, migrated: from < SETTINGS_V };
   } catch { return { s: d, migrated: false }; }
