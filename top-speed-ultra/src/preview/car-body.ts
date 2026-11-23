@@ -391,7 +391,7 @@ function makeBody(P: ShapeParams) {
         // (the hypercar's nose, judge round 1: ahead of NC.z the side-facing skin is carbon up to NC.share of the side,
         // so from the side the dark fin zone shows under a thin pearl lip and ends at the fender's upright front edge, as
         // in the references; the corners' forward faces, the fangs, stay pearl)
-        (NC !== null && c.z < ZF + NC.z && Math.abs(n.x) > 0.55 && row < Math.round(NC.share * (nS - 1))));
+        (NC !== null && c.z < ZF + NC.z && Math.abs(n.x) > 0.25 && row < Math.round(NC.share * (nS - 1))));
       // through the scoop's diagonal ends (the hypercar), each quad is split along the diagonal that lies closer to
       // the surface: along the crease, not across it (a cross split shades the crease as a zigzag)
       if (zones.length && row < 1e8 && zones.some(([za, zb]) => c.z > za && c.z < zb)) {
@@ -929,7 +929,9 @@ function makeBody(P: ShapeParams) {
         // (M1b, the face: on the fang's own front face along its inner edge, 5 cm outside the intake, from just under
         // the lip down to the splitter, so it shows from the front three-quarter too, not only head on)
         const o = (FACE ? 0.05 : 0.02) * gu, vTop = FACE ? 1.55 : 1.12;
-        for (let k = 0; k <= 14; k++) { const p = at(1 + o, vTop - vTop * (k / 14), rl + 0.002), z = p.z, nn = cornerN(p.y, z); pts.push(p); ns.push(v3(sd * nn.x, nn.y, nn.z)); }
+        // (judge round 1: points over the skin's top at their x are dropped, where the strip's upper end stood in the air
+        // beside the far corner, seen from the front three-quarter)
+        for (let k = 0; k <= 14; k++) { const p = at(1 + o, vTop - vTop * (k / 14), rl + 0.002), z = p.z, nn = cornerN(p.y, z); if (FACE && p.y > body.top(z, Math.abs(p.x)) - 0.006) continue; pts.push(p); ns.push(v3(sd * nn.x, nn.y, nn.z)); }
         const S = P.splitter, last = pts[pts.length - 1], yS = YSILL - 0.003;
         for (let k = 1; k <= 5; k++) { const t = k / 5; pts.push(v3(last.x + sd * 0.07 * t, last.y + (yS - last.y) * Math.min(1, t * 2.5), last.z - (S.proud - 0.08) * t)); ns.push(v3(sd * 0.6, 0.8, -0.2).normalize()); }
         ledStrip(pts, (i) => ns[i], 0.012, 0.002);
@@ -1035,12 +1037,12 @@ function makeBody(P: ShapeParams) {
         const hg = new THREE.ShapeGeometry(new THREE.Shape(tailRecessOutline(0.032)), 4); hg.translate(0, 0, zb + 0.006);
         { const hu = hg.attributes.uv as THREE.BufferAttribute, hp = hg.attributes.position; for (let k = 0; k < hu.count; k++) hu.setXY(k, hp.getX(k), hp.getY(k)); }
         kit.add('scoopMesh', hg);
-        // the stop lamp (the tail material, so it brightens on the brakes): a 3 cm strip on the underside of the top
+        // the stop lamp (the tail material, so it brightens on the brakes): a 1.6 cm strip on the underside of the top
         // wall, at the floor's end, facing down
         {
           const xr = Math.max(...o1.map((q) => q.x)) - 0.06, rowsL: V3[][] = [];
           const wy = (x: number, z: number) => { const t = (ZR - z) / (ZR - zb); return recessTopY(x) + (recessTopY(x, 0.03) - recessTopY(x)) * t - 0.002; };
-          for (let k = 0; k <= 24; k++) { const x = -xr + 2 * xr * (k / 24); rowsL.push([v3(x, wy(x, zb + 0.004), zb + 0.004), v3(x, wy(x, zb + 0.034), zb + 0.034)]); }
+          for (let k = 0; k <= 24; k++) { const x = -xr + 2 * xr * (k / 24); rowsL.push([v3(x, wy(x, zb + 0.004), zb + 0.004), v3(x, wy(x, zb + 0.02), zb + 0.02)]); }
           let lg = gridGeo(rowsL, { flip: false });
           if ((lg.attributes.normal as THREE.BufferAttribute).getY(0) > 0) lg = gridGeo(rowsL, { flip: true });
           const lu = lg.attributes.uv as THREE.BufferAttribute;

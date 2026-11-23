@@ -272,9 +272,9 @@ const HYPER: ShapeParams = {
   // (2026-11-23: the references' fender humps hold their crest back over the moved wheel, about 0.82 m from z -1.5
   // to -1.15, measured on their side view at the tyres' scale; off the nose they keep the old climb, so the blades and
   // their beams stay under 0.5 m)
-  // (judge round 1: the crest held up behind the wheel by the cowl, 0.85 m from z -1.28 to -1.15 and falling to the
+  // (judge round 1: the crest held up over the wheel to the cowl, 0.875 m from z -1.28 to -1.15 and falling to the
   // door from there, so both humps stand over the dash from the seat, as in the references' interior view)
-  FH: [[-2.43, 0.36], [-2.3, 0.42], [-2.15, 0.485], [-2.0, 0.6], [-1.85, 0.695], [-1.7, 0.765], [-1.5, 0.825], [-1.28, 0.85], [-1.15, 0.85], [-1.05, 0.83], [-0.9, 0.795], [-0.75, 0.765], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
+  FH: [[-2.43, 0.36], [-2.3, 0.42], [-2.15, 0.485], [-2.0, 0.6], [-1.85, 0.695], [-1.7, 0.775], [-1.5, 0.845], [-1.28, 0.875], [-1.15, 0.875], [-1.05, 0.85], [-0.9, 0.805], [-0.75, 0.77], [-0.4, 0.72], [0.2, 0.77], [0.8, 0.84], [1.25, 0.87], [1.56, 0.875], [1.95, 0.84], [2.17, 0.79], [2.29, 0.75]],
   // the deck's centre: low between the front fenders (the sunken bonnet) and between the rear haunches (the recess
   // the spine and the openings sit in), up to a lip across the tail that carries the red bar
   // (M1b repair: the bonnet's middle 1 to 2.5 cm lower ahead of the cowl, so it no longer domes up into the hero
@@ -428,7 +428,7 @@ const HYPER: ShapeParams = {
   // reference's (147, 147, 155) with a third of its spread: more metal and reflection so the flanks take the road and
   // the sky, the base coat toned from the swatch's blue toward a neutral cool silver (#C8D3E8 -> about #C3C7CE, the
   // store's swatch unchanged), and a flake normal map on 'high')
-  paintFinish: { metal: 0.5, rough: 0.2, env: 1.7, lift: 1, tone: [0.95, 0.88, 0.76], flakeMap: 512 },
+  paintFinish: { metal: 0.62, rough: 0.2, env: 1.7, lift: 0.92, tone: [0.95, 0.9, 0.8], flakeMap: 512 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
