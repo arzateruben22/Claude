@@ -134,9 +134,37 @@ export class CarPhysics {
   get speed() { return Math.sqrt(this.vx * this.vx + this.vy * this.vy); }
   get altitude() { return this.air.alt; }
   get ratio() { return this.gear < 0 ? SPEC.reverse : SPEC.gears[this.gear - 1]; }
-  // the most the front wheels will turn at this speed: full lock when parking, a few degrees at 200 mph
-  // (what the tyres can use: past ~100 mph a fraction of a degree already asks for more than the grip there is)
-  maxDelta(v = Math.abs(this.vx)) { return clamp((L * 13.5) / (v * v + 1) + 0.03 * (1 - smoothstep(18, 55, v)) + 0.0065, 0.0065, 0.52) * (1 + this.handling * 0.35) * SPEC.steerGain; }
+  // the most the front wheels will turn at this speed: full lock when parking, a few degrees at 200 mph. Three parts,
+  // the largest wins (owner, 2026-11-22: at 234 mph on the 91 a gentle curve couldn't be followed from the inside lane):
+  //  - the speed curve (unchanged): about 1.4 g of ordinary grip, all the lock there is at parking and city speeds;
+  //  - the grip the car has at this speed: the wheel angle that asks for the lateral g its tyres can give with the
+  //    wing's downforce and the caller's suction (the hypercar's fans) pressing them down, so a car with downforce gets
+  //    lock that matches its grip at speed (the old curve stopped at ~0.75 g for the hypercar at 234 mph);
+  //  - the road under the car: 1.3 x the angle that holds its curvature at this speed, so a freeway curve can always
+  //    be followed from any lane while the grip allows it, capped at a margin over the grip lock (past it in Sim the
+  //    rear lets go: no spin from holding full lock)
+  // The wheel angle for a steady lateral acceleration a is (L/v² + K)·a, K the understeer gradient (m/L)(b/Cf − a/Cr)
+  // of the linear tyres (it is what the car does: the GT's 0.00099 and the hypercar's 0.00062 rad per m/s² match a
+  // steady-state sweep).
+  maxDelta(v = Math.abs(this.vx)) {
+    const speedLock = clamp((L * 13.5) / (v * v + 1) + 0.03 * (1 - smoothstep(18, 55, v)) + 0.0065, 0.0065, 0.52) * (1 + this.handling * 0.35) * SPEC.steerGain;
+    if (v < 5) return speedLock;
+    const mg = SPEC.mass * G, press = Math.max(0, 0.5 * RHO * SPEC.ClA * v * v + this.ext.fz) / mg;
+    const mu = (1.12 + 0.3 * (1 - this.handling)) * this.grip * clamp(1 - SPEC.loadSens * press, 0.7, 1.1);
+    const aGrip = mu * G * (1 + press);                                   // the lateral acceleration the tyres can give
+    const K = Math.max(0, (SPEC.mass / L) * (SPEC.b / SPEC.Cf - SPEC.a / SPEC.Cr));
+    const perA = L / (v * v) + K;                                         // wheel angle per m/s² of lateral acceleration
+    // Simulation keeps a fifth back (near the GT's top speed it snaps past ~0.9°: its rear lets go, where Arcade's and
+    // Sport's stability control hold it), and the road's share stops just over that; Arcade may ask twice the grip lock
+    const sim = smoothstep(0.5, 0.9, this.handling), lin = perA * aGrip;
+    const gripLock = lin * (1 - 0.2 * sim);
+    const cap = lin * lerp(2.0, 1.3, smoothstep(0.15, 0.9, this.handling)) * (1 - 0.35 * sim);
+    const k = Math.abs(this.roadK);
+    const roadLock = Math.min(cap, 1.3 * (Math.atan(L * k) + K * v * v * k));
+    return Math.min(0.52, Math.max(speedLock, gripLock, roadLock));
+  }
+  // the curvature of the road under the car (1/m, + left), as of the last step
+  get roadK() { return this.rp.k; }
   // the lock available to a steer request on this side (+1 left, -1 right): maxDelta()'s speed limit, opened up on the
   // counter-steer side (the front wheels turned toward the direction of travel) to the body slip angle plus an 8°
   // margin, up to a road car's 38° of lock, so a slide can be caught and straightened; steering into the slide stays
