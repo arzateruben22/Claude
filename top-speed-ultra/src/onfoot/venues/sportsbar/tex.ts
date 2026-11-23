@@ -1,12 +1,17 @@
-// Stoppage Time's own code-painted art (ours): the wordmark, the "+3" added-time board on the blade sign, the still
+// Vega & Vinnie's own code-painted art (ours; the bar was Stoppage Time until 2026-11-16): the script wordmark, the
+// blade sign, the pylon, the wings mural (our own wording), the strip's tenant bands, the lot's signs, the still
 // "SIMULATED" test card the screens show in S1, and one atlas for the boards, the pictograms and the signs. Every
 // string drawn here is plain and honest: nothing says the screens or the crowd are anything but simulated.
 import * as THREE from 'three';
 import { canvasTex, rand } from '../../engine/geom';
-import { BAR_NAME, BAR_TAGLINE, PALETTE } from './brand';
+import { BAR_NAME, BAR_LINE, BAR_PYLON_LINE, PALETTE } from './brand';
 
 const SANS = '"Avenir Next", "Segoe UI", system-ui, Arial, sans-serif';
 const WIDE = '"Arial Black", "Helvetica Neue", Arial, sans-serif';
+/** the script: a system script face where the device has one, else an italic serif (no web font is loaded) */
+const SCRIPT = '"Snell Roundhand", "Segoe Script", "Brush Script MT", "URW Chancery L", Georgia, "DejaVu Serif", "Liberation Serif", serif';
+const SERIF = 'Georgia, "Times New Roman", "DejaVu Serif", "Liberation Serif", serif';
+const NAVY = '#1f2a44';
 
 /** a rounded rectangle path */
 function rr(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -31,39 +36,39 @@ export function dotText(g: CanvasRenderingContext2D, text: string, x: number, y:
   }
 }
 
-/** the wordmark: wide extended capitals, chalk, with a lime halo (the halo is the emissive part at night) */
+/** the wordmark on the black facade (the owner's front photo): "Vega & Vinnie's" in cream script and "SPORTS BAR &
+ *  CANTINA" in cream serif capitals under it, on a clear ground (a warm halo is the emissive part at night). The
+ *  canvas is 2048 x 448, drawn over a 9.4 m x 2.05 m quad */
 export function wordmarkTex() {
-  return canvasTex(2048, 256, (g, w, h) => {
+  return canvasTex(2048, 448, (g, w, h) => {
     g.clearRect(0, 0, w, h);
-    g.save(); g.translate(w / 2, h * 0.5); g.scale(1.55, 1);       // stretched horizontally (Lot 57 squeezes its letters)
-    g.font = `900 132px ${WIDE}`; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.shadowColor = PALETTE.lime; g.shadowBlur = 26; g.fillStyle = PALETTE.chalk;
-    g.fillText(BAR_NAME.toUpperCase(), 0, -6);
-    g.shadowBlur = 0; g.fillText(BAR_NAME.toUpperCase(), 0, -6);
+    g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    g.save(); g.translate(w / 2, h * 0.56); g.transform(1, 0, -0.12, 1, 0, 0);
+    g.font = `italic 400 236px ${SCRIPT}`;
+    g.shadowColor = 'rgba(255,214,150,0.9)'; g.shadowBlur = 22; g.fillStyle = PALETTE.cream;
+    g.fillText(BAR_NAME, 0, 0); g.shadowBlur = 0; g.fillText(BAR_NAME, 0, 0);
     g.restore();
-    g.font = `700 34px ${SANS}`; g.textAlign = 'center'; g.fillStyle = PALETTE.lime;
-    g.fillText(BAR_TAGLINE.toUpperCase().split('').join(' '), w / 2, h - 30);
+    g.font = `500 112px ${SERIF}`; g.fillStyle = PALETTE.cream;
+    g.save(); g.translate(w / 2, h - 34); g.scale(1.06, 1);
+    g.shadowColor = 'rgba(255,214,150,0.8)'; g.shadowBlur = 14; g.fillText(BAR_LINE.toUpperCase(), 0, 0); g.shadowBlur = 0; g.fillText(BAR_LINE.toUpperCase(), 0, 0);
+    g.restore();
   });
 }
 
-/** the blade sign's face: the "+3" board, or the closed notice */
+/** the blade sign's face: black, the script name in cream, OPEN or the closed notice under it. `draw(n, closed)` keeps
+ *  the page's old call (n was Stoppage Time's added-time count, unused now) */
 export function bladeTex() {
   const c = document.createElement('canvas'); c.width = 256; c.height = 512;
   const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
-  const draw = (n: number, closed: string | null) => {
+  const draw = (_n: number, closed: string | null) => {
     const g = c.getContext('2d')!;
-    g.fillStyle = PALETTE.violet; g.fillRect(0, 0, 256, 512);
-    rr(g, 16, 16, 224, 480, 28); g.fillStyle = '#121026'; g.fill(); g.lineWidth = 6; g.strokeStyle = PALETTE.lime; g.stroke();
-    g.fillStyle = PALETTE.chalk; g.font = `900 30px ${WIDE}`; g.textAlign = 'center';
-    g.save(); g.translate(128, 108); g.scale(1.2, 1); g.fillText('STOPPAGE', 0, 0); g.fillText('TIME', 0, 38); g.restore();
-    if (closed) {
-      g.fillStyle = PALETTE.chalk; g.font = `700 30px ${SANS}`;
-      g.fillText('Closed', 128, 280); g.font = `600 24px ${SANS}`; g.fillText(closed, 128, 322);
-    } else {
-      rr(g, 40, 210, 176, 150, 18); g.fillStyle = '#0b0a18'; g.fill();
-      dotText(g, `+${n}`, 58, 236, 12.4, PALETTE.lime, '#1d2a10');
-    }
-    g.fillStyle = PALETTE.coral; g.fillRect(40, 420, 176, 10);
+    g.fillStyle = PALETTE.facade; g.fillRect(0, 0, 256, 512);
+    rr(g, 14, 14, 228, 484, 22); g.lineWidth = 5; g.strokeStyle = PALETTE.cream; g.stroke();
+    g.fillStyle = PALETTE.cream; g.textAlign = 'center';
+    g.font = `italic 400 64px ${SCRIPT}`; g.fillText('Vega &', 128, 120); g.fillText('Vinnie’s', 128, 200);
+    g.font = `500 22px ${SERIF}`; g.fillText('SPORTS BAR', 128, 250); g.fillText('& CANTINA', 128, 278);
+    if (closed) { g.font = `700 30px ${SANS}`; g.fillText('Closed', 128, 370); g.font = `600 22px ${SANS}`; g.fillText(closed, 128, 408); }
+    else { rr(g, 52, 330, 152, 70, 10); g.fillStyle = '#b8322a'; g.fill(); g.fillStyle = PALETTE.cream; g.font = `700 40px ${SERIF}`; g.fillText('OPEN', 128, 380); }
     tex.needsUpdate = true;
   };
   draw(3, null);
@@ -92,14 +97,21 @@ export function testCardTex(w = 1024, h = 576) {
 
 /** where each piece sits in the atlas (UV rects, v up) */
 export interface UV { u0: number; v0: number; u1: number; v1: number }
-const R = (x: number, y: number, w: number, h: number, S = 1024): UV => ({ u0: x / S, v0: 1 - (y + h) / S, u1: (x + w) / S, v1: 1 - y / S });
+const R = (x: number, y: number, w: number, h: number, S = 1024, T = 2048): UV => ({ u0: x / S, v0: 1 - (y + h) / T, u1: (x + w) / S, v1: 1 - y / T });
 export const ATLAS = {
   chalkboard: R(0, 0, 512, 360), rules: R(512, 0, 512, 200), restroom: R(512, 200, 160, 160), exit: R(672, 200, 200, 90),
   dartboard: R(0, 360, 256, 256), kitchen: R(256, 360, 384, 200), scarves: R(0, 640, 1024, 120), menu: R(640, 360, 384, 260), plate: R(0, 780, 512, 120),
+  // the outside (the owner's 13 photos; our own art and wording): the lower half of the atlas
+  mural: R(0, 1024, 1024, 224), shield: R(0, 1408, 384, 400), openBoard: R(384, 1408, 384, 96), menuPanel: R(384, 1504, 384, 304),
+  wines: R(768, 1408, 128, 288), aframe: R(896, 1408, 128, 192), ada: R(896, 1600, 128, 128), adaStall: R(768, 1696, 128, 112),
+  tenants: [0, 1, 2, 3, 4, 5, 6, 7].map((k) => R((k % 4) * 256, 1808 + Math.floor(k / 4) * 56, 256, 56)),
+  parking: R(0, 1920, 160, 128), access: R(160, 1920, 192, 72), backflow: R(352, 1920, 96, 48), hvac: R(448, 1920, 128, 96), stucco: R(576, 1920, 448, 128),
 };
+/** the strip's other tenants: generic trades in our own plain words, no real business's name or mark */
+export const TENANTS = ['NUTRITION & WELLNESS', 'DRY CLEANERS', 'TAX & NOTARY', 'PHONE REPAIR', 'NAIL STUDIO', 'BARBER', 'DENTAL OFFICE', 'INSURANCE'];
 export function signsAtlas() {
-  return canvasTex(1024, 1024, (g) => {
-    g.fillStyle = '#222'; g.fillRect(0, 0, 1024, 1024);
+  return canvasTex(1024, 2048, (g) => {
+    g.fillStyle = '#222'; g.fillRect(0, 0, 1024, 2048);
     // the chalkboard: "On the screens tonight" (S2a writes the fictional fixtures)
     g.fillStyle = '#20262a'; g.fillRect(0, 0, 512, 360); g.strokeStyle = '#7a5a3a'; g.lineWidth = 14; g.strokeRect(7, 7, 498, 346);
     g.fillStyle = PALETTE.chalk; g.textAlign = 'center'; g.font = `700 34px ${SANS}`; g.fillText('ON THE SCREENS', 256, 64); g.fillText('TONIGHT', 256, 104);
@@ -149,7 +161,86 @@ export function signsAtlas() {
     g.font = `500 22px ${SANS}`; ['Wings · Fries · Tacos', 'Nachos · Sliders', 'Sodas · Aguas frescas', 'Coffee · Zero-proof beer'].forEach((t, i) => g.fillText(t, 832, 460 + i * 36));
     // a nameplate: the bar's name in small type
     g.fillStyle = PALETTE.violet; g.fillRect(0, 780, 512, 120); g.fillStyle = PALETTE.lime; g.font = `900 52px ${WIDE}`; g.fillText(BAR_NAME.toUpperCase(), 256, 858);
+    outsideArt(g);
   });
+}
+
+/** the outside's art in the atlas's lower half (y 1024 to 2048) */
+function outsideArt(g: CanvasRenderingContext2D) {
+  g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  // the wings mural on the black wall: two spread white wings feathered in red, and our own words between them (the
+  // owner's photo shows a real team's mark and slogan there: never reproduced; ours names no team)
+  g.fillStyle = '#2c2a2b'; g.fillRect(0, 1024, 1024, 384);
+  // (drawn on a 1024 x 384 design, squeezed to the 224 px band the 6.4 m x 1.4 m panel shows)
+  g.save(); g.translate(0, 1024); g.scale(1, 224 / 384); g.translate(0, -1024);
+  const wing = (dir: 1 | -1) => {
+    const cx = 512, cy = 1290;
+    for (let row = 0; row < 4; row++) {
+      const n = 9 - row, len0 = 330 - row * 62;
+      for (let k = 0; k < n; k++) {
+        const t = k / (n - 1), ang = (-0.95 + t * 1.25) - row * 0.05, len = len0 * (0.72 + 0.28 * Math.sin(t * Math.PI));
+        const x0 = cx + dir * (40 + row * 28 + t * 40), y0 = cy - 40 + row * 14 - t * 30;
+        const x1 = x0 + dir * Math.cos(ang) * len, y1 = y0 + Math.sin(ang) * len * 0.75;
+        g.save(); g.translate(x0, y0); g.rotate(Math.atan2(y1 - y0, x1 - x0));
+        g.beginPath(); g.ellipse(len / 2, 0, len / 2, 13 - row * 1.5, 0, 0, Math.PI * 2);
+        g.fillStyle = row === 3 ? '#f2ece4' : '#fbf8f2'; g.fill(); g.lineWidth = 3; g.strokeStyle = '#c8343a'; g.stroke();
+        g.restore();
+      }
+    }
+  };
+  wing(-1); wing(1);
+  g.restore();
+  g.fillStyle = '#fbf8f2'; g.font = `italic 600 40px ${SCRIPT}`; g.fillText('Take Flight', 512, 1062);
+  g.font = `italic 400 22px ${SCRIPT}`; g.fillStyle = '#d9d2c4'; g.fillText('— V & V', 900, 1236);
+  g.fillStyle = '#26301f'; g.fillRect(0, 1248, 1024, 160);
+  // the pylon's shield: cream, a dark frame, the name in navy script and SPORTS CANTINA under a rule
+  g.fillStyle = '#2b2a2c'; g.fillRect(0, 1408, 384, 400);
+  g.beginPath(); g.moveTo(24, 1440); g.quadraticCurveTo(110, 1418, 192, 1436); g.quadraticCurveTo(274, 1418, 360, 1440); g.lineTo(360, 1690);
+  g.quadraticCurveTo(300, 1730, 192, 1790); g.quadraticCurveTo(84, 1730, 24, 1690); g.closePath();
+  g.fillStyle = PALETTE.cream; g.fill(); g.lineWidth = 8; g.strokeStyle = '#1b1a1c'; g.stroke();
+  g.fillStyle = NAVY; g.font = `italic 700 70px ${SCRIPT}`; g.fillText('Vega &', 192, 1545); g.fillText('Vinnie’s', 192, 1622);
+  g.fillStyle = '#b0612a'; g.fillRect(96, 1640, 192, 6);
+  g.fillStyle = NAVY; g.font = `700 30px ${SERIF}`; g.fillText(BAR_PYLON_LINE.toUpperCase(), 192, 1690);
+  // the "<- OPEN" board
+  g.fillStyle = PALETTE.cream; g.fillRect(384, 1408, 384, 96); g.lineWidth = 6; g.strokeStyle = '#1b1a1c'; g.strokeRect(387, 1411, 378, 90);
+  g.fillStyle = NAVY; g.font = `700 60px ${SERIF}`; g.fillText('← OPEN', 576, 1478);
+  // the dark panel under them: the menu list (the owner's older pylon photo's list, on the current pylon's blank panel)
+  g.fillStyle = '#1e1e21'; g.fillRect(384, 1504, 384, 304);
+  g.fillStyle = PALETTE.cream; g.font = `700 32px ${SERIF}`; g.fillText(BAR_PYLON_LINE.toUpperCase(), 576, 1552);
+  g.fillRect(420, 1566, 312, 3);
+  g.font = `600 26px ${SERIF}`;
+  [['COLD BEER', 'KITCHEN'], ['LIVE SPORTS', 'HAPPY HOUR'], ['POOL · DARTS', 'PATIO']].forEach(([a, b], i) => {
+    g.fillStyle = PALETTE.cream; g.fillText(a, 486, 1618 + i * 64); g.fillStyle = b === 'HAPPY HOUR' ? '#e0574a' : PALETTE.cream; g.fillText(b, 670, 1618 + i * 64);
+  });
+  // "WINES COLD BEER" stacked, cream on the hedge wall's dark plaque
+  g.fillStyle = '#26301f'; g.fillRect(768, 1408, 128, 288); g.fillStyle = PALETTE.cream; g.font = `600 34px ${SERIF}`;
+  ['WINES', 'COLD', 'BEER'].forEach((t, i) => g.fillText(t, 832, 1490 + i * 70));
+  // the chalkboard A-frame: a wood frame, a beer mug and crossed forks in chalk
+  g.fillStyle = '#b88a4a'; g.fillRect(896, 1408, 128, 192); g.fillStyle = '#1f2322'; g.fillRect(906, 1418, 108, 172);
+  g.fillStyle = '#e8b030'; g.fillRect(934, 1452, 40, 52); g.fillStyle = '#f4f0e4'; g.beginPath(); g.ellipse(954, 1450, 24, 10, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#f4f0e4'; g.lineWidth = 4; g.strokeRect(934, 1452, 40, 52); g.beginPath(); g.arc(978, 1476, 10, -1.2, 1.2); g.stroke();
+  g.beginPath(); g.moveTo(926, 1530); g.lineTo(994, 1574); g.moveTo(994, 1530); g.lineTo(926, 1574); g.stroke();
+  // the accessible-entrance sign (blue, a plain seated figure of our own drawing)
+  g.fillStyle = '#1f4fa3'; g.fillRect(896, 1600, 128, 128); g.strokeStyle = '#fff'; g.lineWidth = 3; g.strokeRect(900, 1604, 120, 120);
+  g.fillStyle = '#fff'; g.font = `700 15px ${SANS}`; g.fillText('ACCESSIBLE', 960, 1628); g.fillText('ENTRANCE', 960, 1646);
+  g.beginPath(); g.arc(960, 1662, 6, 0, 7); g.fill(); g.fillRect(956, 1670, 7, 20); g.fillRect(956, 1688, 22, 6);
+  g.lineWidth = 4; g.beginPath(); g.arc(958, 1700, 14, 0.3, 3.6); g.stroke();
+  // the accessible stall's painted symbol (the same figure, white on blue, for the asphalt)
+  g.fillStyle = '#2a62c8'; g.fillRect(768, 1696, 128, 112); g.fillStyle = '#fff'; g.beginPath(); g.arc(828, 1718, 9, 0, 7); g.fill();
+  g.fillRect(822, 1730, 10, 30); g.fillRect(822, 1756, 32, 9); g.lineWidth = 6; g.strokeStyle = '#fff'; g.beginPath(); g.arc(826, 1772, 20, 0.3, 3.6); g.stroke();
+  // the tenant bands: dark plaques with plain white words
+  TENANTS.forEach((t, k) => { const x = (k % 4) * 256, y = 1808 + Math.floor(k / 4) * 56; g.fillStyle = '#2c2c2e'; g.fillRect(x, y, 256, 56); g.fillStyle = '#f2f2f2'; g.font = `700 ${t.length > 14 ? 22 : 26}px ${SANS}`; g.fillText(t, x + 128, y + 37); });
+  // the lot's signs: PARKING FOR CUSTOMERS ONLY / VIOLATORS WILL BE TOWED, and the blue ACCESS arrow
+  g.fillStyle = '#f4f4f0'; g.fillRect(0, 1920, 160, 128); g.strokeStyle = '#222'; g.lineWidth = 4; g.strokeRect(4, 1924, 152, 120);
+  g.fillStyle = '#1a1a1a'; g.font = `700 17px ${SANS}`; ['PARKING FOR', 'CUSTOMERS', 'ONLY', 'VIOLATORS WILL', 'BE TOWED'].forEach((t, i) => g.fillText(t, 80, 1950 + i * 21));
+  g.fillStyle = '#1f4fa3'; g.fillRect(160, 1920, 192, 72); g.strokeStyle = '#fff'; g.lineWidth = 3; g.strokeRect(164, 1924, 184, 64);
+  g.fillStyle = '#fff'; g.font = `700 26px ${SANS}`; g.fillText('ACCESS →', 256, 1966);
+  // a backflow preventer's yellow tag, the HVAC units' grille
+  g.fillStyle = '#e2c23a'; g.fillRect(352, 1920, 96, 48);
+  g.fillStyle = '#b9bcbd'; g.fillRect(448, 1920, 128, 96); g.fillStyle = '#8d9091'; for (let y = 1926; y < 2012; y += 8) g.fillRect(452, y, 120, 3);
+  // tan stucco with a faint trowel texture (the strip's walls)
+  g.fillStyle = '#c7a77a'; g.fillRect(576, 1920, 448, 128);
+  for (let i = 0; i < 900; i++) { const x = 576 + ((i * 97) % 448), y = 1920 + ((i * 53) % 128); g.fillStyle = i % 2 ? 'rgba(255,240,215,0.12)' : 'rgba(90,70,40,0.1)'; g.fillRect(x, y, 6, 3); }
 }
 
 /** the bar's polished concrete floor (S4's second repair; it shared Lot 57's polishedTex): the same pale slab and 4 m
