@@ -29,7 +29,8 @@ export interface PlayerView {
 }
 export interface Contact { car: TrafficCar; speed: number; nx: number; nz: number; depth: number }
 export interface PassEvent { car: TrafficCar; clean: boolean; close: boolean; gap: number; rel: number }
-export interface TrafficLevel { perKmLane: number; bold: number }
+// `speed`: a multiplier on every car's cruising speed (Extreme's faster traffic; 1 when absent)
+export interface TrafficLevel { perKmLane: number; bold: number; speed?: number }
 
 const A = IDM.accel, B = IDM.comfort;
 
@@ -129,7 +130,7 @@ export class Traffic {
     for (const o of this.cars) if (o.path === p && (o.lane === lane || o.to === lane) && Math.abs(o.s - s) < (c.len + this.classes[o.cls].len) / 2 + 22) return false;
     const bold = this.r() < this.level.bold;
     const pref = 1.1 - 0.2 * (lane / Math.max(1, p.lanes - 1));      // faster on the left
-    const v0 = (c.speed[0] + this.r() * (c.speed[1] - c.speed[0])) * pref * (bold ? 1.18 : 1);
+    const v0 = (c.speed[0] + this.r() * (c.speed[1] - c.speed[0])) * pref * (bold ? 1.18 : 1) * (this.level.speed ?? 1);
     const d = p.laneCenter(lane);
     const paint = c.fixedColor ? c.fixedColor[Math.floor(this.r() * c.fixedColor.length)] : PAINTS[Math.floor(this.r() * PAINTS.length)];
     this.cars.push({ cls, path: p, s, d, v: v0 * (0.92 + this.r() * 0.08), v0, lane, from: lane, to: lane, t: -1, sig: 0, sigT: 0, acc: 0, ps: s, pd: d,
