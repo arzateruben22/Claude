@@ -38,7 +38,7 @@ import type { BarHud } from './hud';
 import type { BarView } from './views';
 import type { BarVenue } from './venue';
 import type { BarMats } from './mats';
-import { BAR_NAME } from './brand';
+import { BAR_NAME, BAR_OLD_NAMES } from './brand';
 import { Crowd } from './crowd';
 import type { VisState } from '../../engine/venue-def';
 
@@ -192,6 +192,8 @@ export class BarLife {
   constructor(def: VenueDef, seed = 1) {
     this.tv = new Tv(def.schedule.noiseSeed, def.schedule);
     const L = loadSave(seed); this.save = L.data; this.storage = L.storage;
+    // the rename (2026-11-16): a save written under the old name says the new one (its key stays 'sportsbar')
+    if (renameSave(this.save)) this.dirty = true;
     this.team = this.save.team;
     // a visit: one more on the device's count; 50 tokens the first time
     this.save.visits++;
@@ -1552,4 +1554,14 @@ export class BarLife {
       giveYou(id: string) { const it = itemById(id); if (!it) return null; self.give(it); return this.held(); },
     };
   }
+}
+
+/** a save written before the rename: every old name in its memories and highlights becomes the display name; true
+ *  when anything changed (the page then writes it back) */
+export function renameSave(d: SaveData): boolean {
+  let changed = false;
+  const fix = (t: string) => { let o = t; for (const n of BAR_OLD_NAMES) o = o.split(n).join(BAR_NAME); if (o !== t) changed = true; return o; };
+  for (const m of d.memories ?? []) m.text = fix(m.text);
+  if (Array.isArray(d.highlights)) d.highlights = d.highlights.map(fix);
+  return changed;
 }

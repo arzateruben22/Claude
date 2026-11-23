@@ -34,15 +34,27 @@ export const ZONES: Zone[] = ([
   ['high-tops', 19.5, 31.0, 3.0, 10.0], ['water station', 29.0, 29.6, 11.2, 11.6], ['host stand', 6.5, 7.1, 7.95, 8.45],
 ] as [string, number, number, number, number][]).map(([id, u0, u1, v0, v1]) => ({ id, room: 'inside' as const, u0, u1, v0, v1 }));
 
-export const PATIO = { u0: 2.05, u1: 23.95, v0: -5.45, fenceT: 0.1, fenceH: 1.1, door: [18.0, 19.8] as [number, number] };
+/** the patio (the owner, 2026-11-16: "Bar inside size should be about 3-4x as much as the patio"): the fence's inner
+ *  faces at u 2.05 and u 26.95 and v -5.45 (its centreline at u 2.0, u 27.0 and v -5.5), so the patio runs u 2-27
+ *  (it ran to u 24 before the owner's rule: 121 m2, 4.2x the inside). It grew along u, away from aisle 416 and the
+ *  driveway (seg 418), whose closest points to the patio stay where they were (u 20; see "Site plan") */
+export const PATIO = { u0: 2.05, u1: 26.95, v0: -5.45, fenceT: 0.1, fenceH: 1.1, door: [18.0, 19.8] as [number, number], out: { u0: 2.0, u1: 27.0, v0: -5.5 } };
+/** the south wall's outer face in the frame: v at u (the arm's south wall isn't exactly on v = 0) */
+export const southWallV = (u: number) => 0.012 * u;
+/** the patio's area inside its fence (the fence's inner faces to the south wall's outer face), m2 */
+export const patioArea = () => { const { u0, u1, v0 } = PATIO; return ((u1 - u0) * (southWallV(u0) - v0 + southWallV(u1) - v0)) / 2; };
 export const PATIO_TABLES = [4.2, 7.1, 10.0, 12.9, 15.8, 20.95];
-export const HEATERS: P2[] = [[12.9, -3.95], [20.95, -3.95]];
-export const PATIO_PLANTERS: [number, number, number, number][] = [[2.1, 2.9, -5.4, -4.4], [9.9, 11.7, -5.45, -4.95], [14.1, 15.9, -5.45, -4.95], [22.0, 23.9, -5.45, -4.95]];
+/** the two pyramid flame heaters on their planter pedestals, and the stainless mushroom heater (the owner's patio photos) */
+export const HEATERS: P2[] = [[12.9, -3.95], [20.95, -3.95], [24.5, -4.4]];
+/** the patio's high-top (a tall butcher-block table, two black stools), in the patio's new east end */
+export const PATIO_HIGHTOP = { at: [25.4, -1.4] as P2, stools: [[24.65, -1.4], [25.4, -2.15]] as P2[] };
+export const PATIO_PLANTERS: [number, number, number, number][] = [[2.1, 2.9, -5.4, -4.4], [9.9, 11.7, -5.45, -4.95], [14.1, 15.9, -5.45, -4.95], [22.0, 23.9, -5.45, -4.95], [25.1, 26.9, -5.45, -4.95]];
 export const PZONES: Zone[] = ([
   ['patio rail', 3.0, 9.5, -5.45, -5.15], ['patio door', 18.0, 19.8, -1.5, 0.0],
-  ['heater 1', 12.6, 13.2, -4.25, -3.65], ['heater 2', 20.65, 21.25, -4.25, -3.65],
+  ['heater 1', 12.6, 13.2, -4.25, -3.65], ['heater 2', 20.65, 21.25, -4.25, -3.65], ['heater 3', 24.2, 24.8, -4.7, -4.1],
   ...PATIO_PLANTERS.map((p, i) => [`planter ${i + 1}`, ...p]),
   ...PATIO_TABLES.map((u, k) => [`patio table ${k + 1}`, u - 0.75, u + 0.75, -2.1, -0.5]),
+  ['patio high-top', 24.2, 26.0, -2.6, -0.8],
 ] as [string, number, number, number, number][]).map(([id, u0, u1, v0, v1]) => ({ id, room: 'patio' as const, u0, u1, v0, v1 }));
 
 export const POOL_TABLES: P2[] = [[11.0, 6.9], [15.3, 6.9]];
@@ -97,6 +109,8 @@ export function slots(): SlotDef[] {
       for (const sv of [-0.9, -1.7]) out.push(S(`patio table ${k + 1} ${f > 0 ? 'east' : 'west'} ${sv}`, `patio table ${k + 1}`, `pt${k}`, 'picnic', [su, sv], [f, 0], BENCH_Y, [au, sv]));
     }
   });
+  // the patio's high-top: two stools facing it along u, stand-to-sit points 0.55 m further out along u
+  PATIO_HIGHTOP.stools.forEach(([su, sv], k) => { const f = norm(PATIO_HIGHTOP.at[0] - su, PATIO_HIGHTOP.at[1] - sv); out.push(S(`patio high-top ${k + 1}`, 'patio high-top', 'pht', 'hightop', [su, sv], f, STOOL_Y, [su - f[0] * 0.55, sv - f[1] * 0.55])); });
   return out;
 }
 
@@ -122,6 +136,8 @@ export function furniture(): FCol[] {
   for (let k = 0; k < 6; k++) ci('patio rail', 'stool', 3.6 + 1.05 * k, -4.75, 0.2);
   PATIO_TABLES.forEach((u, k) => bx(`patio table ${k + 1}`, 'table', u - 0.75, u + 0.75, -2.1, -0.5));
   HEATERS.forEach(([u, v], k) => ci(`heater ${k + 1}`, 'heater', u, v, 0.3, true));
+  ci('patio high-top', 'table', PATIO_HIGHTOP.at[0], PATIO_HIGHTOP.at[1], 0.4);
+  for (const [u, v] of PATIO_HIGHTOP.stools) ci('patio high-top', 'stool', u, v, 0.2);
   PATIO_PLANTERS.forEach(([u0, u1, v0, v1], k) => bx(`planter ${k + 1}`, 'planter', u0, u1, v0, v1));
   return out;
 }
