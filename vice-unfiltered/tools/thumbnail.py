@@ -351,7 +351,217 @@ def t_tabloid(job, imgs, rng):
     return c
 
 
-TEMPLATES = {"poster": t_poster, "blocks": t_blocks, "tabloid": t_tabloid}
+# ---------- Hype Reaction (owner's style reference, 2026-11-23) ----------
+MONT = os.path.join(FONTS, "montserrat-latin-900-italic.woff")
+EMOJI_FONT = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
+BIREFNET = os.path.join(ROOT, "assets", "models", "birefnet_lite.onnx")
+HYPE_FILLS = {"green": ((150, 255, 70), (40, 205, 20)), "yellow": ((255, 245, 60), (255, 176, 0)),
+              "pink": ((255, 120, 200), (230, 30, 130)), "white": ((255, 255, 255), (230, 230, 230))}
+_SESS = None
+
+
+def person_matte(im):
+    """Real-frame person cut-out with BiRefNet Lite (MIT). Keeps the largest shape, fills holes."""
+    global _SESS
+    import onnxruntime as ort
+    from scipy import ndimage
+    if _SESS is None:
+        _SESS = ort.InferenceSession(BIREFNET)
+    name = _SESS.get_inputs()[0].name
+    x = np.asarray(im.convert("RGB").resize((1024, 1024), Image.BICUBIC), np.float32) / 255.0
+    x = ((x - [0.485, 0.456, 0.406]) / [0.229, 0.224, 0.225]).astype(np.float32).transpose(2, 0, 1)[None]
+    y = _SESS.run(None, {name: x})[-1][0, 0]
+    if y.min() < 0 or y.max() > 1:
+        y = 1 / (1 + np.exp(-y))
+    m = np.asarray(Image.fromarray((np.clip(y, 0, 1) * 255).astype(np.uint8)).resize(im.size, Image.BICUBIC), np.float32) / 255
+    lab, n = ndimage.label(m > 0.5)
+    if n > 1:
+        sizes = ndimage.sum(np.ones_like(m), lab, range(1, n + 1))
+        keep = ndimage.binary_dilation(lab == (int(np.argmax(sizes)) + 1), iterations=6)
+        m = m * keep
+    m = np.maximum(m, ndimage.binary_fill_holes(m > 0.5).astype(np.float32))
+    return Image.fromarray((m * 255).astype(np.uint8))
+
+
+def gradient_text(text, f, top, bottom, stroke, misreg=None):
+    base = text_layer(text, f, (255, 255, 255), stroke=0)
+    w, h = base.size
+    grad = Image.new("RGBA", (w, h))
+    gd = ImageDraw.Draw(grad)
+    for yy in range(h):
+        t = yy / max(1, h - 1)
+        gd.line([(0, yy), (w, yy)], fill=tuple(int(top[i] + (bottom[i] - top[i]) * t) for i in range(3)) + (255,))
+    grad.putalpha(base.getchannel("A"))
+    outl = text_layer(text, f, INK, stroke=stroke, stroke_fill=INK)
+    out = Image.new("RGBA", outl.size, (0, 0, 0, 0))
+    out.alpha_composite(outl)
+    out.alpha_composite(grad, ((outl.width - w) // 2, (outl.height - h) // 2))
+    return out
+
+
+def drop_shadow(layer, dx=8, dy=12, blur=6, a=170):
+    pad = blur * 3 + max(abs(dx), abs(dy))
+    out = Image.new("RGBA", (layer.width + 2 * pad, layer.height + 2 * pad), (0, 0, 0, 0))
+    sh = Image.new("RGBA", layer.size, (0, 0, 0, 0))
+    sh.putalpha(layer.getchannel("A").point(lambda v: v * a // 255))
+    out.alpha_composite(sh, (pad + dx, pad + dy))
+    out = out.filter(ImageFilter.GaussianBlur(blur))
+    out.alpha_composite(layer, (pad, pad))
+    return out, pad
+
+
+def emoji_layer(ch, px):
+    f = ImageFont.truetype(EMOJI_FONT, 109)
+    tmp = Image.new("RGBA", (160, 160), (0, 0, 0, 0))
+    ImageDraw.Draw(tmp).text((8, 8), ch, font=f, embedded_color=True)
+    tmp = tmp.crop(tmp.getbbox())
+    return tmp.resize((px, round(tmp.height * px / tmp.width)), Image.LANCZOS)
+
+
+def brush(w, h, color, rng):
+    """Tapered marker swoosh, slightly curved, for under the key word."""
+    layer = Image.new("RGBA", (w, h + 20), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    top, bot = [], []
+    for i in range(0, 41):
+        t = i / 40
+        x = t * w
+        yc = h * 0.55 - math.sin(t * math.pi) * h * 0.18 + rng.uniform(-1.5, 1.5)
+        half = (h * 0.5) * (0.25 + 0.75 * math.sin(min(1, t * 1.15) * math.pi * 0.95)) * (1 - 0.65 * t)
+        top.append((x, yc - half))
+        bot.append((x, yc + half * 0.7))
+    d.polygon(top + bot[::-1], fill=color + (255,))
+    return layer
+
+
+def arrow(c, start, end, color=(235, 25, 35), width=26, bend=0.35):
+    sx, sy = start
+    ex, ey = end
+    mx, my = (sx + ex) / 2, (sy + ey) / 2
+    nx, ny = -(ey - sy), (ex - sx)
+    cx, cy = mx + nx * bend, my + ny * bend
+    pts = [((1 - t) ** 2 * sx + 2 * (1 - t) * t * cx + t * t * ex, (1 - t) ** 2 * sy + 2 * (1 - t) * t * cy + t * t * ey)
+           for t in [i / 40 for i in range(41)]]
+    ang = math.atan2(ey - pts[-4][1], ex - pts[-4][0])
+    head = width * 2.4
+    tri = [(ex + math.cos(ang) * head * 0.5, ey + math.sin(ang) * head * 0.5),
+           (ex + math.cos(ang + 2.5) * head, ey + math.sin(ang + 2.5) * head),
+           (ex + math.cos(ang - 2.5) * head, ey + math.sin(ang - 2.5) * head)]
+    d = ImageDraw.Draw(c)
+    d.line(pts[:-3], fill=(255, 255, 255), width=width + 14, joint="curve")
+    d.polygon(tri, fill=(255, 255, 255), outline=(255, 255, 255), width=14)
+    d.line(pts[:-3], fill=color, width=width, joint="curve")
+    d.polygon(tri, fill=color)
+
+
+def bursts(c, x, y, color, rng, n=3, size=70, angle0=-150):
+    d = ImageDraw.Draw(c)
+    for k in range(n):
+        a = math.radians(angle0 + k * 32 + rng.uniform(-4, 4))
+        r0, r1 = size * 0.45, size * (1.15 + 0.12 * (k % 2))
+        p0 = (x + math.cos(a) * r0, y + math.sin(a) * r0)
+        p1 = (x + math.cos(a) * r1, y + math.sin(a) * r1)
+        d.line([p0, p1], fill=INK, width=22)
+        d.line([p0, p1], fill=color, width=14)
+
+
+def speed_lines(w, h, center, rng, n=150, r_min=520):
+    layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    cx, cy = center
+    for _ in range(n):
+        a = rng.uniform(0, 2 * math.pi)
+        r0 = rng.uniform(r_min, r_min + 380)
+        r1 = r0 + rng.uniform(160, 520)
+        d.line([(cx + math.cos(a) * r0, cy + math.sin(a) * r0), (cx + math.cos(a) * r1, cy + math.sin(a) * r1)],
+               fill=(255, 255, 255, rng.randint(70, 170)), width=rng.randint(2, 7))
+    return layer.filter(ImageFilter.GaussianBlur(0.8))
+
+
+def t_hype(job, imgs, rng):
+    glow = hexrgb(job.get("glow", "#FF2A2A"))
+    under = hexrgb(job.get("underline", "#FF2D8A"))
+    top, bottom = HYPE_FILLS.get(job.get("fill", "yellow"), HYPE_FILLS["yellow"])
+    main = imgs["main"]
+    # background: the clip's own gameplay, blurred and darkened, with a colour glow
+    bg = cover(main, W, H).filter(ImageFilter.GaussianBlur(16))
+    bg = Image.blend(bg, Image.new("RGB", (W, H), (12, 8, 20)), 0.58).convert("RGBA")
+    gl = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(gl).ellipse([-200, -260, W + 200, 1100], fill=glow + (80,))
+    bg.alpha_composite(gl.filter(ImageFilter.GaussianBlur(160)))
+    c = bg
+    # sharp gameplay across the bottom, fading up into the background
+    gh = 900
+    g = photo_finish(cover(main, W, gh), rng).convert("RGBA")
+    fade = Image.linear_gradient("L").resize((W, 260))
+    a = Image.new("L", (W, gh), 255)
+    a.paste(fade, (0, 0))
+    g.putalpha(a)
+    c.alpha_composite(g, (0, H - gh))
+    c.alpha_composite(speed_lines(W, H, (W // 2, 1150), rng, n=120, r_min=640))
+    # streamer cut-out with white outline and colour glow
+    por = imgs["portrait"]
+    m = person_matte(por)
+    bb = m.point(lambda v: 255 if v > 40 else 0).getbbox() or (0, 0, por.width, por.height)
+    por, m = por.crop(bb), m.crop(bb)
+    target_h = int(job.get("portrait_height", 960))
+    s = min(target_h / por.height, 1040 / por.width)
+    por = photo_finish(por.resize((round(por.width * s), round(por.height * s)), Image.LANCZOS), rng)
+    m = m.resize(por.size, Image.LANCZOS)
+    pad = 60
+    cut = Image.new("RGBA", (por.width + 2 * pad, por.height + 2 * pad), (0, 0, 0, 0))
+    mm = Image.new("L", cut.size, 0)
+    mm.paste(m, (pad, pad))
+    rim = mm.filter(ImageFilter.MaxFilter(17))
+    halo = mm.filter(ImageFilter.MaxFilter(31)).filter(ImageFilter.GaussianBlur(18))
+    cut.paste(Image.new("RGBA", cut.size, glow + (255,)), (0, 0), halo)
+    cut.paste(Image.new("RGBA", cut.size, (255, 255, 255, 255)), (0, 0), rim)
+    body = Image.new("RGBA", cut.size, (0, 0, 0, 0))
+    body.paste(por.convert("RGBA"), (pad, pad))
+    body.putalpha(mm)
+    cut.alpha_composite(body)
+    px = int((W - cut.width) / 2 + job.get("portrait_shift", 0))
+    py = int(job.get("portrait_top", 10)) - pad
+    c.alpha_composite(cut, (px, py))
+    bursts(c, px + pad + int(cut.width * 0.10), py + pad + 140, hexrgb(job.get("burst", "#FFD21A")), rng, size=95)
+    # optional user-supplied logo (never recreated here)
+    if job.get("logo"):
+        lg = Image.open(os.path.join(ROOT, job["logo"]) if not os.path.isabs(job["logo"]) else job["logo"]).convert("RGBA")
+        lg = lg.resize((300, round(lg.height * 300 / lg.width)), Image.LANCZOS)
+        c.alpha_composite(lg, (40, 40) if job.get("logo_side", "left") == "left" else (W - 340, 40))
+    # headline
+    l1, l2 = job["headline"][0].upper(), job["headline"][-1].upper()
+    hy = int(job.get("headline_y", 900))
+    f1 = fit_font(MONT, l1, 980, 150)
+    t1, p1 = drop_shadow(text_layer(l1, f1, (255, 255, 255), stroke=12, stroke_fill=INK))
+    emo = job.get("emoji", "")
+    emo_w = 150 if emo else 0
+    f2 = fit_font(MONT, l2, 980 - emo_w, 175)
+    t2, p2 = drop_shadow(gradient_text(l2, f2, top, bottom, stroke=13))
+    x1 = (W - (t1.width - 2 * p1)) // 2 - p1
+    c.alpha_composite(t1, (x1, hy - p1))
+    y2 = hy + t1.height - 2 * p1 + 10
+    line2_w = t2.width - 2 * p2 + (emo_w + 10 if emo else 0)
+    x2 = (W - line2_w) // 2 - p2
+    br = brush(int((t2.width - 2 * p2) * 1.05), 46, under, rng)
+    c.alpha_composite(br, (x2 + p2 - 10, y2 + t2.height - 2 * p2 - 20))
+    c.alpha_composite(t2, (x2, y2 - p2))
+    if emo:
+        e = emoji_layer(emo, emo_w)
+        c.alpha_composite(e, (x2 + t2.width - p2 + 4, y2 + (t2.height - 2 * p2 - e.height) // 2 + 6))
+    # optional arrow from under the headline to a point on the gameplay (fractions of the canvas)
+    if job.get("arrow"):
+        a0 = job["arrow"].get("from", [0.62, 0.66])
+        a1 = job["arrow"]["to"]
+        arrow(c, (a0[0] * W, a0[1] * H), (a1[0] * W, a1[1] * H), bend=job["arrow"].get("bend", 0.3))
+    # optional inset reaction box
+    if "second" in imgs:
+        box = framed(imgs["second"], 300, 300, rng, border=10, border_color=(235, 25, 35))
+        place(c, box, (30, 1300), angle=-3, shadow=(0, 0, 0))
+    return c
+
+
+TEMPLATES = {"poster": t_poster, "blocks": t_blocks, "tabloid": t_tabloid, "hype": t_hype}
 
 
 def main():

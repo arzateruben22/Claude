@@ -36,21 +36,48 @@ assets/      tools/
 
 ## Thumbnail styles
 
-`tools/thumbnail.py <job.json>` builds a 1080×1920 PNG + JPG from real clip frames, with type set in code (Anton/Oswald/Bebas). It never generates faces or lettering. Samples are in `thumbnails/TEMPLATE_SAMPLES/` and in the studio under Assets → Thumbnail styles.
+`tools/thumbnail.py <job.json>` builds a 1080×1920 PNG + JPG from real clip frames, with type set in code. It never generates faces or lettering. Samples are in `thumbnails/TEMPLATE_SAMPLES/` and in the studio under Assets → Thumbnail styles.
 
-| Style | Template | Modelled on | Best for |
+| Style | Template | Status | Look |
 |---|---|---|---|
-| A | `poster` | IMAGE-1 / Nightclub Chaos poster | a strong face reaction |
-| B | `blocks` | the six authentic KreekCraft covers | when the gameplay moment is the story |
-| C | `tabloid` | "Bro Thought He Was Tuff" layout, rebuilt with flat type | a two-beat payoff (before/after) |
+| Tabloid Strip | `tabloid` | **In use** | Full-bleed portrait, black torn headline slab (Anton), two-panel strip |
+| Hype Reaction | `hype` | **In use** | The owner's three references: real streamer cut-out with white rim and glow, Montserrat Black Italic headline with a neon key word, brush underline, emoji, bursts, speed lines, optional arrow, inset and logo |
+| Comic Pop Poster | `poster` | Retired (kept) | |
+| Color Block Cover | `blocks` | Retired (kept) | |
 
-**Rotation.** Every batch uses all three styles, and each streamer moves one style along per batch:
+**Rotation.** Alternate the two styles in use and flip each streamer every batch:
 
-- Batch 01: Dom A, KreekCraft B, Steveeeyyy C
-- Batch 02: Dom B, KreekCraft C, Steveeeyyy A
-- Batch 03: Dom C, KreekCraft A, Steveeeyyy B
+- Batch 01: Dom Hype, KreekCraft Tabloid, Steveeeyyy Hype
+- Batch 02: Dom Tabloid, KreekCraft Hype, Steveeeyyy Tabloid
 
-Then repeat. Record the style in the tracker's `thumb_style` column.
+A third style gets added when the owner has one. Record the style in the tracker's `thumb_style` column.
+
+**Hype job extras:**
+
+- `emoji`: one character, rendered with Noto Color Emoji.
+- `fill`: green / yellow / pink / white.
+- `underline`, `glow`, `burst`: hex colours.
+- `arrow`: `{"from":[x,y],"to":[x,y]}` in canvas fractions.
+- `second`: an inset reaction box.
+- `logo`: a logo file the owner supplies. Never recreated. Use it only on confirmed GTA VI clips.
+
+**One-time setup for cut-outs** (fresh session):
+
+```bash
+pip install onnxruntime scipy
+```
+
+```bash
+mkdir -p assets/models && curl -L -o assets/models/birefnet_lite.onnx https://huggingface.co/onnx-community/BiRefNet_lite-ONNX/resolve/main/onnx/model.onnx
+```
+
+BiRefNet Lite is MIT-licensed. Each cut-out takes about 10 s on CPU.
+
+## Titles and captions (ChatGPT)
+
+`tools/titles.py <job.json>` sends ONLY facts verified from the footage to ChatGPT (OpenAI API, model picked automatically). It asks for 5 emoji-heavy, clickbait-but-true titles, a favourite, and YouTube, TikTok and Instagram captions. It then checks emoji counts, length, unverified quotes, an unconfirmed game name, the streamer name, and campaign CTA/hashtags/disclosure copied verbatim. A person still checks every option against the clip before delivery.
+
+The API key comes from the environment's network secret for `api.openai.com`. No key is stored in files.
 
 ## The studio (control room)
 
