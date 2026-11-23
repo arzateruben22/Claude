@@ -24,7 +24,9 @@ assets/CORE_2026-11-22/):
     "caption": "this sht aint tuff gng", "sfx": "Sad_Violin_Meme.mp3", "sfx_gain_db": 0, "extend_to_sfx": false},
    {"type": "sfx", "file": "Undertaker_Bell.mp3", "at": 3.2, "gain_db": -3, "duck_db": -8, "len": 4.2},
    {"type": "caption", "text": "HE WALKED UP?!", "from": 0.0, "to": 2.0, "y": 0.38, "size": 110, "font": "anton"},
-   {"type": "zoom", "from": 15.0, "to": 17.0, "scale": 1.15, "center": [0.5, 0.3]}
+   {"type": "zoom", "from": 15.0, "to": 17.0, "scale": 1.15, "center": [0.5, 0.3]},  # optional "ramp": 0.08 (s) for a snappier
+                                                                                    # punch-in; "push": true = linear push-in
+   {"type": "bw", "from": 20.0, "to": 22.2}        # timed black & white window on base footage (overlays stay colour)
  ],
  "overlay": {"file": "IMAGES/Brand/KreekCraft Overlay.png", "y": 0.30, "width": 700}
 }
@@ -270,7 +272,7 @@ def zoom_filter(z, t0):
     if z.get("push"):  # slow linear push-in from 1.0 to S across [from, to], held only until the next cut
         Z = f"(1+{S - 1:.4f}*clip((t-{a:.4f})/{max(0.001, b - a):.4f},0,1))"
     else:
-        r = min(0.25, (z["to"] - z["from"]) / 2)
+        r = float(z["ramp"]) if z.get("ramp") else min(0.25, (z["to"] - z["from"]) / 2)
         e = f"clip((t-{a:.4f})/{r:.4f},0,1)*clip(({b:.4f}-t)/{r:.4f},0,1)"
         Z = f"(1+{S - 1:.4f}*({e})*({e})*(3-2*({e})))"
     return (f",scale=w='trunc({W}*{Z}/2)*2':h='trunc({H}*{Z}/2)*2':eval=frame,"
@@ -360,6 +362,7 @@ def main():
     lay = layout_filter(job, probe["width"], probe["height"])
     captions = [e for e in events if e["type"] == "caption"]
     zooms = [e for e in events if e["type"] == "zoom"]
+    bws = [e for e in events if e["type"] == "bw"]  # timed black & white windows on base footage
     stickers = [e for e in events if e["type"] == "sticker"]  # timed image pops over base footage
     for k, st in enumerate(stickers):
         st["png"] = os.path.join(tmp, f"sticker_{k}.png")
@@ -383,6 +386,9 @@ def main():
             for z in zooms:
                 if z["from"] < t1 and z["to"] > t0:
                     chain += zoom_filter(z, t0)
+            for w_ in bws:
+                if w_["from"] < t1 and w_["to"] > t0:
+                    chain += f",hue=s=0:enable='between(t,{max(0, w_['from'] - t0):.4f},{min(t1, w_['to']) - t0:.4f})'"
             chain += ",tpad=stop_mode=clone:stop_duration=2[v0]"
             inputs, last = ["-ss", f"{src_time(p['f0']):.6f}", "-i", src], "v0"
             for j, c in enumerate([c for c in captions if c["from"] < t1 and c["to"] > t0]):
@@ -650,6 +656,10 @@ def main():
         qc_times.append(round(t + 0.1, 3))
     for z in zooms:
         qc_times.append(round(out_frame(fr((z["from"] + z["to"]) / 2)) / fps, 3))
+    for w_ in bws:
+        qc_times.append(round(out_frame(fr((w_["from"] + w_["to"]) / 2)) / fps, 3))
+        notes.append(f'Black & white window: output {out_frame(fr(w_["from"])) / fps:.3f}-{out_frame(fr(w_["to"])) / fps:.3f}s '
+                     f'(base footage keeps playing; overlays stay colour)')
     for st in stickers:
         qc_times.append(round(out_frame(fr(st["from"] + 0.4)) / fps, 3))
         notes.append(f'Sticker {st["file"]} at output {out_frame(fr(st["from"])) / fps:.3f}-{out_frame(fr(st["to"])) / fps:.3f}s, '
