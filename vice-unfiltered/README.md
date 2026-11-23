@@ -137,7 +137,7 @@ The studio's Campaign rules page is the source of truth. Re-check the live brief
 - Must say "Expedia", and Expedia is a major focus.
 - Name the destination accurately.
 - `#IShowSpeed`.
-- Only the Expedia logo allowed (thumbnail `"logo"` = Expedia file, `"brand": false`).
+- Only the Expedia logo allowed (thumbnail `"brand": false`, `"logo"` = an Expedia file). Files are in `assets/BRAND_USER/expedia/`: `*_white-text.png` on dark backgrounds (Hype), `*_dark-text.png` on light ones (Tabloid).
 - TikTok, Reels and Shorts only.
 - Streamer/travel-niche account only.
 
