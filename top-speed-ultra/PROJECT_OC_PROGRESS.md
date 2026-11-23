@@ -4,6 +4,158 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-23: Vega & Vinnie’s repair: a clean camera through the door, Low back under its budget, the photos matched closer (claude/vv-look, uncommitted)
+
+The art and code reviews rejected the first pass (the entry below) for the camera grazing the door's jamb at the
+threshold (half the frame a black slab), the budgets and venue suites not shown green, and weak matches to the owner's
+exit, strip-corner and front photos. **Fixed:**
+- **The camera** (player.ts): within 1.9 m of a door it eases to a short head-follow (1.15 m back, centred) and it
+  never sits closer than 0.32 m to a wall, glass or the hedge wall; the walk check (sportsbar.mjs vv) now reads every
+  step within 2.2 m of a door and fails a frame there over 15% near-black, or any frame with a wall within 0.45 m
+  across more than 30% of the view (33 level rays). The walk's frames refresh the action buttons (no stale "Drive").
+- **Low's budget**: detail by mode inside one batch at no extra draw call (new lod.ts): the steel, plants, paint, neon,
+  lamps, patio-wood and concrete batches carry Low-only and HD/Ultra-only parts, the mesh's draw range picks them, and
+  the shadow maps draw the shared part only (visibility.ts's shadow hooks); the patio's steel, wood and floor, the
+  rooftop HVAC and the outside's steel, birds of paradise and street-side trees sit in both parts, so they're drawn at
+  every mode but kept out of HD and Ultra's sun map (Ultra's had no room). The veneer is one textured quad per 3.5 m
+  (the atlas's ledgestone strip); Low gets fewer swags with crossed-quad bulbs, block chairs, fewer larger shrubs,
+  face-only piers and lamps; the flicker flames and the heaters' glass are HD/Ultra-only batches (Low draws the flames
+  steady in the lamps batch, as before).
+- **The Car button** ignores a second tap within 0.6 s of the first (a double tap, or the same tap seen twice).
+- **The front**: north of the door a solid black wall with a ledgestone wainscot to 1.1 m, the wings mural (ours) 5.4 x
+  2.0 m beside the door at eye height, the wordmark in our own drawn script (no system script font is needed), a dark
+  wood door surround, a big terracotta pot by the door, the hedge wall on a corten base against the facade and a corten
+  planter box under the mural. The sill and soffit faces seen from outside are black, not the inside's violet.
+- **The lot**: the accessible stalls on the three mapped stalls nearest the front door (row 3) and two at the strip's
+  corner, blue-filled with the symbol; the street-edge hedge 0.4 m further out and narrower (clear of the stall by the
+  pylon); across Claudina from the exit a chain-link fence (alpha-tested) with pines and fan palms, gaps at the two
+  mapped driveways; the exit arrows where the exit view sees them; at the strip's south-east corner (the rest ring's
+  corner) a stucco pier with a brown cornice, a wooden pole with transformer and LED arm, a red-tipped hedge island and
+  the parking-rules sign.
+- **The patio**: rounded shrub clusters lit softly from below, charcoal slats over a near-black backing, a stainless
+  mushroom heater (no white glow), perforated alpha-tested chair seats and backs at HD and Ultra.
+
+**Checked** (headless Chromium, SwiftShader, 4 shared cores at load near 20; numbers as printed):
+- `npx tsc --noEmit` on tsconfig.json and tsconfig.game.json: clean. `npm run build`: owner-test mark once in
+  dist/artifact.html, none in dist/top-speed-ultra.html. The standalone sports-bar build: built.
+- `sportsbar.mjs --only=budgets`, the base build 5e16ab4 and this lane at the same poses (each preset its own run):
+  Low base 4 of 9, lane 4 of 9, the same poses failing the S1 "without people or items" row (door, tv-east,
+  overhead at 844x390 and door, overhead at 390x844: base 152.5k/155.3k/146.1k/148.6k/147.0k, lane
+  162.7k/165.4k/156.4k/158.8k/156.7k, against 101.4k; the crowd's 80.5k counts in both). Low's venue group: base
+  36-40 calls / 18.9-20.9k, lane 35-40 calls / 28.8-30.9k (allocation 40 / 45k). HD: base 4 of 9, lane 4 of 9, the
+  same poses; venue 39-44 calls / 54.5-56.6k (50 / 90k). Ultra: base 2 of 9 (pool-1's map 41,939 triangles at door,
+  tv-east and both 390x844 poses; stall's people row 614.8k of 611.4k; overhead's sun map 604.8k of 604.7k); lane
+  first 2 of 9 (the same pool-1 and stall failures, the sun map at patio 631.6k and overhead 633.0k), then after the
+  shadow changes 3 of 9: patio passes (sun map 602.3k, base 603.4k), overhead now stops only at the same pool-1 map
+  as base, and stall's people row is 646.4k (base 614.8k; the venue row 44 / 56.6k within its 60 / 150k). The pool-1
+  map and the stall row fail on base too.
+- `sportsbar-s4.mjs --only=budgets` (run before the last shadow-only changes, which only take triangles out of HD
+  and Ultra's maps): Low 9 of 9 (door 184.8k of 203.9k, 9.4% headroom; tv-east 183.9k; overhead 177.1k of 197.9k;
+  phone door 184.9k), HD 9 of 9, Ultra 9 of 9 (both sizes).
+- `sportsbar.mjs --only=vv` (three full runs, the last on the final build): the walk check passes: 450 frames over
+  1770 steps, inside to outside at step 173, the camera's largest step 0.064 m, luma min 47.7, near-black max 11.6%
+  (on the front walk, by the black wall), at the doors (169 frames) near-black at most 7.7%, no surface within 0.45 m
+  of the camera, camera clearance at least 0.345 m, the exposure's largest step 0.003, no fade, ended at the car door
+  (about 15 minutes). The rename, old-save, patio-ratio and context checks pass (context: lost 1, restored 1, luma 89.1
+  before and after). **The Car-button check fails when it runs right after the walk** (the first tap ends at the car
+  door, 37.41 m: a jump), in all three runs, even after two fixes (walkStep clears the walk-to-car flag as the frame
+  loop does; a second tap within 0.6 s is ignored). It passes in a run without the walk (`--vv-nowalk`: 7 of 7,
+  2.73 m in 20 frames, then 0.38 m from the door), and a Playwright probe that walks the whole way (with the test's
+  old save and its viewport change) then taps Car walks normally; the cause inside the test's sequence isn't found.
+- `npm test -- --only=venues,venues-trips`: venues 11 of 11; the Lot 57 round-trips check was cut by the time limit,
+  then passed alone (`--only=venues-trips`: 2 of 2). `--only=boot`: 17 of 18, the Retro-Low check cut by the time
+  limit, then passed alone.
+- Frames (-r1 names, taken before the last shadow-only and Car-button changes): the walk at HD 1280x720 with frames
+  at steps 160, 174, 180, 186, 192, 198, 216 (the threshold) and 492, 540 (the hedge wall), the 10-frame strip; HD by
+  day (front, pylon, exit, strip corner, walkway, street, substation, the accessible stalls) and at night (front, patio
+  1-3); Low (front, pylon, strip corner, patio 2), Ultra (front, exit, patio 1-2), the phone at 390x844 DPR 3 (front,
+  exit, patio 2); each beside its reference photo (sheets). No console errors in any shoot.
+
+**Not right yet:** the Car-button check after the walk (above); the exit view shows the fence, a pine and a palm across
+Claudina and the overpass only as a far band (the mapped I-5 crosses Claudina about 170 m north, so it can't sit right
+behind the fence as in the photo); the centre walkway still runs on the courtyard's mapped median toward the west wing,
+not at our door; the night wordmark's halo reads a little lime under the HD grade; Ultra's pool-1 map and stall row
+fail on base too.
+
+## 2026-11-22/23: Vega & Vinnie’s: the rename, the outside from the owner's 13 photos, the patio sized to the inside, the walk out to your car (claude/vv-look, base 5e16ab4, uncommitted)
+
+**The owner (2026-11-16):** the sports bar is renamed "Vega & Vinnie’s"; the outside follows the owner's 13 photos
+(the front, the pylon, the lot, the strip, the street, the patio at night); "Bar inside size should be about 3-4x as
+much as the patio"; "make sure the bar exit goes to the parking lot accurately and seamlessly".
+
+**Built** (`PROJECT_OC_SPORTS_BAR.md`'s note at the top has the details):
+- **The rename.** One constant, `BAR_NAME = 'Vega & Vinnie’s'` in `src/onfoot/venues/sportsbar/brand.ts`, read by the
+  Go To list and the HUD destination (src/game/venues.ts), the World Map's Places, the menu's venue list (App.tsx: the
+  name only), the venue's HUD title, toasts, menus, signs, the standalone page's title and copy, the loading card and
+  the credits. Ids, files and save keys stay `sportsbar` (the game's id stays `stoppage`). `venueByName` maps "Stoppage
+  Time" and the plain-apostrophe spelling to the bar; `renameSave` rewrites an old save's memories and highlights.
+- **The outside** (venue.ts, the new outside.ts, tex.ts' atlas is now 1024 x 2048 with the outside's art in its lower
+  half): the black facade, the cream script sign with SPORTS BAR & CANTINA, gooseneck lamps, a black awning with bulbs,
+  stone-veneer bases laid stone by stone, the glass door, our own wings mural ("Take Flight", no team or logo), the
+  accessible-entrance sign, the WINES COLD BEER hedge wall on a corten planter, terracotta pots, six red bollards, a
+  chalkboard A-frame; the rest of building 61 as a tan stucco strip (arched storefronts, stone piers, brown trim, wall
+  lamps, rooftop HVAC, eight generic tenant bands in our words); the pylon at the lot's street edge (cream shield,
+  "<- OPEN", the menu list on the dark panel, stone pillars in a hedge); hedges with red tips, a stone-block wall with
+  birds of paradise, backflow pipes, a transformer and LED head on the mapped pole, two fan palms; the raised centre
+  walkway on the courtyard's 3 m median between the stall fields, three blue accessible stalls with signs, PARKING FOR
+  CUSTOMERS ONLY and ACCESS signs, exit arrows; across Claudina Way the substation's block wall with 27 cypresses, the
+  yellow kerb, a hydrant, a cobra-head light and the painted median at the fork. The door, `def.parking.stalls` and
+  `site.yourStall` are unchanged (the LAST MILE contract).
+- **The patio**: u 2-27 (was u 2-24): **inside 505.5 m², patio 140 m², ratio 3.61** (sportsbar_zones.py: 139.8 m²,
+  "all pass"). Furnished from the night photos (round butcher-block tables and mesh chairs on the 24 seat slots, a
+  high-top with 2 new stools, two pyramid flame heaters on pedestals with a flicker on HD and Ultra, a mushroom heater,
+  slat planter walls with shrubs, Edison bulbs in swags, a dark ceiling on black posts, a stained floor).
+- **The walk out**: the Car button walks you to your car (a second tap skips), and on that walk the third-person camera
+  turns to follow the way you walk; the camera swaps shoulders when a wall crowds it, glides through the doorway's
+  glass frames instead of snapping, lets back out eased, and stays under the patio ceiling and the awning (player.ts);
+  the exposure eases inside 1.0 / outside 0.93 by day (1.08 at night); no fade.
+- **A lost context**: one lost/restored pair on the venue's own canvas (in the game too: the venue has its own renderer
+  and canvas, so the game's `onContextRestored` can't see its loss; this differs from the brief's wording, on purpose);
+  the restore redraws the PMREM environment, the reflection cube and the shadow maps.
+
+**Checked** (headless Chromium, SwiftShader; no real phone or GPU; numbers as printed):
+- `npx tsc --noEmit -p tsconfig.json` and `-p tsconfig.game.json`: clean.
+- `npm run build`: built; `data-build="owner-test"` once in dist/artifact.html, none in dist/top-speed-ultra.html.
+- `npx vite build --config src/onfoot/vite.sportsbar.config.ts`: built.
+- `node tests/sportsbar.mjs --only=vv` (new group): **8 of 8 pass**. No "Stoppage Time" in player-facing text (236 src
+  files scanned, comments and the old-names list aside); the title "Vega & Vinnie’s on Foot", HUD "VEGA & VINNIE’S", the
+  loading card, about sheet, canvas label and credits; an old save's "Stoppage Time" memory and highlight now read
+  "Vega & Vinnie’s" (tokens kept); "inside 505.5 m2, patio 140 m2, inside / patio 3.61"; the walk from the host stand to
+  the car door: 292 frames read back over 1752 sim steps, the state inside -> outside once (step 193), the camera's
+  largest step 0.067 m (you 0.023 m a step), mean luma never under 49, the near-black share at most 0.347 (the black
+  facade beside you), the luma spread never under 28.6, the exposure's largest step 0.012, no fade, ended at the car door;
+  the Car button: walking after one tap (2.75 m in 20 frames), at the car door (0.38 m) after the second; WEBGL_lose_context
+  lost and restored, luma 93 before and 93 after.
+- Frames: `node tests/vv-shoot.mjs` (new) at HD and Low 1280 x 720, Low on the phone (390 x 844, DPR 3) and Ultra
+  (front, pylon, walkway, patio 2): 13 views, each beside its reference photo by `python3 tests/vv-sheets.py <photos>`
+  (48 sheets in tests/out/vv/sheets/), the patio at 21:00 and everything else at 15:00 (golden hour), the front at
+  21:00 too; no console errors in any run. The Low, phone and Ultra frames were taken before the last triangle trim
+  (the shrubs' and bulbs' caps) and the pylon's BIG SCREENS line; HD's front and patio views were re-taken after it. The walk's 10 frames: tests/out/sportsbar/vv-walk-00..09.png and
+  tests/out/vv/sheets/walk-strip-hd-1280x720.jpg.
+- The suites, on this build: `sportsbar.mjs --only=data,seats,closed,honesty`: data 19 of 19, closed 2 of 2 and honesty 5 of 5 pass
+  after two fixes (the pylon's "LIVE SPORTS" became "BIG SCREENS": the honesty rule allows no "live" on a canvas; the
+  seat count 91 -> 93 and the sit-and-stand check now tries more seats of a kind, since guests take different stools
+  with two more seats; seats then 3 of 3); `--only=walks`: 3 of 3 (1000 random walks); `sportsbar-s4.mjs --only=look,locked,preset,settings,release`:
+  15 of 15; `sportsbar-s4.mjs --only=budgets --presets=low`: 9 of 9 after a triangle trim (the first run, before it,
+  had Low's door, tv-east and overhead passes 0.5k to 4.7k triangles over; now door 200.2k of 203.9k); HD and Ultra at
+  844 x 390 passed in the run before the trim (Ultra at 390 x 844 cut by the run's time limit). `sportsbar.mjs
+  --only=budgets` (S1's older "without people" rows) fails at every pose, mostly by much more than this lane adds
+  (e.g. Low door 184.6k against 101.4k, with the venue row 53.9k against 45k): not compared against the base build
+  for lack of time, so not claimed either way. `npm test -- --only=venues`: 14 of 14 (incl. the new old-name check);
+  `--only=venues-trips`: 2 of 2; `--only=boot`: 16 of 18 in a run stopped by the time limit, then the field-of-view
+  check passed alone, the Retro-Low check not finished (both are settings checks this lane doesn't touch).
+
+**Not right yet / not done:**
+- The strip-corner frame is weak (parked cars fill it; the strip is far); the lot-centre walkway runs on the
+  courtyard's mapped 3 m median between the stall fields, toward the west spine, not straight at our door as in the
+  photo (the data puts the unit's door on its east face).
+- The pylon's lower stone and the hedges are low-poly; the cypresses are cones; the shrubs are faceted cones; the
+  mesh chairs are solid.
+- The vv walk check takes about 35 minutes here (292 read-backs at 1280 x 720), over the 20-minute rule for one run.
+- In the frozen walk test the HUD's action button isn't refreshed, so its frames show "Drive" left from the start at
+  the car; the live page updates it every frame.
+- Low's inside triangle sums have about 2% headroom left.
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
