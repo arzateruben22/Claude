@@ -68,6 +68,16 @@ type HudLayout = 'pp' | 'pl' | 'desk';
 // the round map's size for each, by the Corner size setting (Small, Medium, Large)
 const MAP_PX: Record<HudLayout, number[]> = { pp: [96, 112, 128], pl: [80, 88, 104], desk: CORNER_PX };
 const HINT_RADIAL = 'tsu.hint.radial';   // the one-time "Hold Pause for the quick menu" toast on a touch screen
+// the new HUD (2026-11-23) on a phone keeps only Pause (and Auto-drive) in the top bar: a one-time hint, the first drive,
+// says where View and Go to went (the hold-Pause quick menu has Camera and Go to)
+const HINT_RETRO_TBAR = 'tsu.hint.retrotbar';
+const RETRO_HINT_MS = 4000;
+// the Ultra skin's ABS | TCS switches: one honest line the first time each is turned off (Assists.tsx)
+const HINT_ASSIST = 'tsu.hint.assist.';
+const ASSIST_LINE: Record<'abs' | 'tcs', string> = {
+  abs: 'ABS off: hard braking can lock the wheels; longer stops and less steering while they are locked.',
+  tcs: 'TCS off: the rear can spin up; easier to drift, easier to spin.',
+};
 
 export function App() {
   const host = useRef<HTMLDivElement>(null);
@@ -91,6 +101,7 @@ export function App() {
   const [navTarget, setNavTarget] = useState<string | null>(null);
   const [exitRoad, setExitRoadState] = useState<string | null>(null);    // the Start panel: which carriageway's exits are listed
   const [radioOpen, setRadioOpen] = useState(false);                  // the radio card beside the controls while driving
+  const [tbarHint, setTbarHint] = useState(false);                    // the Retro phone's one-time "Hold Pause for Camera and Go to"
   // Auto-drive (Game.setAutoDrive): offered with a route in Free Drive, and whether it drives; from the HUD's readouts,
   // set only when one of them changes
   const [autoDrive, setAutoDrive] = useState({ offer: false, on: false });
@@ -142,6 +153,14 @@ export function App() {
   const update = (patch: Partial<Settings>) => {
     const next = { ...settingsRef.current, ...patch };
     setSettings(next); saveSettings(next); game.current?.updateSettings(next);
+  };
+  // the HUD's ABS | TCS switches (Ultra skin): the setting, the car's flag (Game.updateSettings), one line the first time off
+  const setAssist = (k: 'abs' | 'tcs', on: boolean) => {
+    update(k === 'abs' ? { abs: on } : { tcs: on });
+    if (on) return;
+    let seen = true;
+    try { seen = localStorage.getItem(HINT_ASSIST + k) === '1'; if (!seen) localStorage.setItem(HINT_ASSIST + k, '1'); } catch { /* storage off: no line */ }
+    if (!seen) toast(ASSIST_LINE[k]);
   };
 
   useEffect(() => {
@@ -243,6 +262,12 @@ export function App() {
     setMode(m); setPanel(null); setResult(null); setNavTarget(null);
     setScreen('playing');
     void game.current?.start(m, settings.start);
+    // the new HUD on a phone (hud-layout.css): View and Go to left the top bar for the quick menu; say so once
+    if (layout !== 'desk') {
+      let seen = true;
+      try { seen = localStorage.getItem(HINT_RETRO_TBAR) === '1'; if (!seen) { localStorage.setItem(HINT_RETRO_TBAR, '1'); localStorage.setItem(HINT_RADIAL, '1'); } } catch { /* storage off: no hint */ }
+      if (!seen) setTimeout(() => { setTbarHint(true); setTimeout(() => setTbarHint(false), RETRO_HINT_MS); }, 2600);
+    }
     // the quick menu is the way to the radio and the garage on a phone: say once how to open it
     if (coarse) {
       let seen = true;
@@ -574,10 +599,11 @@ export function App() {
   );
 
   return (
-    <div ref={appRef} className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout}
+    <div ref={appRef} className={'app' + (idle ? ' hud-idle' : '') + (settings.hudStyle === 'minimal' ? ' hud-min' : '')} data-hud={layout} data-skin={retroOn(settings) ? 'retro' : 'ultra'}
       style={{ '--map': `${cornerPx}px`, '--vis-t': `${vis.t}px`, '--vis-r': `${vis.r}px`, '--vis-b': `${vis.b}px`, '--vis-l': `${vis.l}px` } as CSSProperties}>
       <div className="stage" ref={host} />
-      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)} />
+      <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)}
+        assists={retroOn(settings) ? null : { abs: settings.abs, tcs: settings.tcs, onChange: setAssist }} />
       {/* the corner window: the road map is a round dial (the compass is its rim, HUD.tsx); the sky camera keeps its
           square frame and says it is a live view. Tap cycles map, sky camera, off. */}
       {playing && settings.corner !== 'off' && (
@@ -594,9 +620,9 @@ export function App() {
         <div className="tbar">
           {/* the rail's grid (a desktop: labelled rows, icons in two or three columns on a short window; styles.css) */}
           <div className="tbar-in">
-          <button type="button" className="tbtn" title="View" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
+          <button type="button" className="tbtn view" title="View" onClick={() => game.current?.cycleCam()}><Ico name="camera" /><span className="tlabel">View</span></button>
           {settings.corner === 'off' && <button type="button" className="tbtn mapbtn" title="Map" onClick={() => game.current?.cycleCorner()}><Ico name="map" /><span className="tlabel">Map</span></button>}
-          <button type="button" className={'tbtn' + (navTarget ? ' on' : '')} title="Go to" onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
+          <button type="button" className={'tbtn goto' + (navTarget ? ' on' : '')} title="Go to" onClick={() => setPanel('nav')}><Ico name="nav" /><span className="tlabel">Go to</span></button>
           {/* with a route in Free Drive: Auto-drive drives it; steering or braking hands the car back (Game.setAutoDrive) */}
           {autoDrive.offer && (
             <button type="button" className={'tbtn auto' + (autoDrive.on ? ' on' : '')} aria-pressed={autoDrive.on} title="Auto-drive the route. Steer or brake to take over."
@@ -639,7 +665,7 @@ export function App() {
           <button type="button" className="btn" onClick={skipBench}>Skip</button>
         </div>
       )}
-      <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}</div>
+      <div className="toasts" aria-live="polite">{toasts.map((t) => <div key={t.id} className={'toast ' + t.kind}>{t.text}</div>)}{playing && tbarHint && <div className="toast tbar-hint">Hold Pause for Camera and Go to</div>}</div>
       {/* a venue's exit ramp: its prompt (tap to park there now); parked at the venue, Get out replaces the pedals */}
       {playing && venueUi.prompt && !venueUi.parked && (
         <button type="button" className="venue-prompt" onClick={() => game.current?.arriveVenue()} aria-label={`Park at ${venueUi.prompt}`}>
