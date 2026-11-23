@@ -853,3 +853,7 @@ If she changed anything else on her page, send its screen and I'll match it.
 3. **A hidden animation running all the time.** The glowing borders on six buttons were being recalculated 60 times a second, even for buttons far off screen. They now animate only while on screen (and at 30 frames a second on a phone), and stop completely when none is visible.
 
 I can't test on a real iPhone from here, so this is based on what is known to be slow in iPhone's Safari; if it still stutters somewhere, tell me where (which section, scrolling up or down) and I'll go after that exact spot.
+
+## Shop: steadier when you scroll down fast on a phone (Nov 23)
+
+The shop's category bar (Cleansers, Toners & mists…) was flipping between hidden and shown on every little jolt of a fast scroll, repainting a huge full-width shadow each frame, and reading the page layout on every frame; the cards below were all drawn even when far off screen. Now: it hides only after a real stretch of scrolling down and returns after a real stretch back up, its full-width band is a plain layer, it no longer reads layout per frame, and cards off screen aren't drawn until you near them.

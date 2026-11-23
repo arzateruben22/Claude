@@ -664,18 +664,21 @@
      comes back as soon as you scroll up (or tap a type and land on it). */
   var nav = shop && shop.querySelector(".sh-nav");
   if (nav) {
-    var stuckTick = false, lastY = window.scrollY;
+    var stuckTick = false, lastY = window.scrollY, run = 0;
     var phone = window.matchMedia("(max-width: 760px)");
     var checkStuck = function () {
       stuckTick = false;
-      var top = parseFloat(getComputedStyle(nav).top) || 0;
-      var stuck = nav.getBoundingClientRect().top <= top + 1 && shop.getBoundingClientRect().bottom > top + nav.offsetHeight;
-      nav.classList.toggle("is-stuck", stuck);
+      var top = parseFloat(document.documentElement.style.getPropertyValue("--nav-bottom")) || 74;   /* no style read: main.js keeps it */
+      var stuck = nav.getBoundingClientRect().top <= top + 1 && shop.getBoundingClientRect().bottom > top + 60;
+      if (stuck !== nav.classList.contains("is-stuck")) nav.classList.toggle("is-stuck", stuck);
+      /* tuck after a real stretch of scrolling down, bring back after a stretch up: a fast flick used to flip it every frame */
       var y = window.scrollY, dy = y - lastY;
-      if (!stuck || !phone.matches || Date.now() < jumping || nav.contains(document.activeElement)) nav.classList.remove("is-tucked");
-      else if (dy > 6) nav.classList.add("is-tucked");
-      else if (dy < -6) nav.classList.remove("is-tucked");
-      if (Math.abs(dy) > 6) lastY = y;
+      lastY = y;
+      run = (dy > 0) === (run > 0) ? run + dy : dy;
+      var tucked = nav.classList.contains("is-tucked");
+      if (!stuck || !phone.matches || Date.now() < jumping || nav.contains(document.activeElement)) { if (tucked) nav.classList.remove("is-tucked"); }
+      else if (run > 60 && !tucked) nav.classList.add("is-tucked");
+      else if (run < -48 && tucked) nav.classList.remove("is-tucked");
     };
     window.addEventListener("scroll", function () { if (!stuckTick) { stuckTick = true; requestAnimationFrame(checkStuck); } }, { passive: true });
     checkStuck();

@@ -6628,7 +6628,9 @@ a.book-btn { text-align: center; }
   transition: background-color 200ms ease, box-shadow 200ms ease, transform 280ms ease, opacity 220ms ease;
 }
 /* once it sticks under the header, a linen band runs the full width behind it */
-.sh-nav.is-stuck { background: var(--linen); box-shadow: 0 0 0 100vmax var(--linen); clip-path: inset(0 -100vmax); }
+.sh-nav.is-stuck { background: var(--linen); }
+/* the full-width band: a plain layer, not a 100vmax shadow (that was repainted on every scroll frame) */
+.sh-nav.is-stuck::before { content: ""; position: absolute; inset: 0 calc(50% - 50vw); background: var(--linen); z-index: -1; }
 .sh-tabs {
   position: relative; display: flex; align-items: center; gap: 1.45rem; flex: 1; min-width: 0;
   overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain;
@@ -7144,3 +7146,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
   .nav.scrolled { background: rgba(251, 250, 247, 0.96); }
   .ask-fab { background: rgba(251, 250, 247, 0.97); }
 }
+
+/* the shop's cards: off-screen ones aren't drawn, and the sticky bar moves on the compositor only */
+.sh-card { content-visibility: auto; contain-intrinsic-size: auto 26rem; }
+.sh-nav { will-change: transform; transition: background-color 200ms ease, transform 280ms ease, opacity 220ms ease; }
