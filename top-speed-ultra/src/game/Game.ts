@@ -8,7 +8,10 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor } from './settings';
+import type { Difficulty } from './settings';
+import { MinuteMeter, DriftTracker, bestOf, bestsFor, recordBest, recordDrift, driftBest, driftBests, migrateBests, shareLine, round1 } from './bests';
+import type { Board, Kind, Placed } from './bests';
 import { presetFor, retroOn, GOV_FLOOR, loadBench, saveBench, loadDisplay, saveDisplay } from './settings';
 import type { QualityPreset, Quality, Density, BenchPick } from './settings';
 import { FrameGovernor, Rung, T60, T30, STEP as GOV_STEP, capPeriod } from './render/governor';
@@ -59,8 +62,8 @@ const CAM_LABEL: Record<CamMode, string> = { cockpit: "Driver's seat", hood: 'Ho
 // a long lens. The menu's attract drive runs it, and its hero shot sits the car right of centre, clear of the rail.
 interface Shot { f: [number, number]; s: number; y: number; at: number; fov: number; len: number }
 const SHOTS: Shot[] = [
-  { f: [7.2, 5.0], s: 3.1, y: 0.75, at: 0.4, fov: 30, len: 8 },     // the hero: a low front three-quarter, pushing in
-  { f: [0.4, -0.6], s: 4.6, y: 0.95, at: 0.6, fov: 28, len: 6 },    // the profile, tracking alongside
+  { f: [-9.0, -7.0], s: 3.4, y: 1.35, at: 5, fov: 32, len: 8 },     // the hero: a rear three-quarter, the freeway running off ahead under the sky (a front view looked back at a sound wall)
+  { f: [-11, -9], s: -3.8, y: 1.9, at: 6, fov: 36, len: 6 },        // a high rear three-quarter from the right, the road ahead (a profile shot looked across at the sound wall)
   { f: [-6.4, -5.6], s: -2.7, y: 0.6, at: 1.8, fov: 38, len: 6 },   // a low rear three-quarter from the other side
   { f: [-15, -12], s: 0, y: 8.5, at: 10, fov: 44, len: 6 },         // the drone, high behind
 ];
@@ -76,6 +79,8 @@ const MISS_PR = { s: 0, d: 0 };   // missedHandOff's projection, reused
 const LANE_HINT_M = 3200;          // the lane hint shows this far before a hand-off (about 2 mi)
 const OWNER_CAR = 'tsu.ownerCar';  // owner mode's car (localStorage), never part of the profile
 const FAST = 100 / MPH;            // 100 mph: where Speed Survival starts counting
+const MANUAL_HOLD_S = 4;            // a Q/E or paddle shift holds the gear this long before automatic takes back over
+export const TUNNEL_FROM = 150 / MPH;   // Ultra Realism's tunnel vision begins here (m/s)
 export const CORNER_PX = [112, 150, 196];
 const REDUCED_MOTION = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const COARSE = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
@@ -120,6 +125,22 @@ export interface Hud {
   // the OC Hypercar: which tune runs ('' for another car), and its own systems (live only on the Unleashed tune in
   // Free Drive): the tank (0..1, the jump's gas and Ground Lock's), the fans, and the hop's state in a word or two
   tune: string; thrustLive: boolean; tank: number; groundLock: boolean; hop: string;
+  // the run's score meter (bests.ts): a difficulty run's Fastest Minute (the live 60 s average against this device's best
+  // on the board the run counts on), or Free Drive's drift readout; kind '' on the menu
+  bests: BestsHud;
+}
+export interface BestsHud {
+  kind: Kind | ''; board: Board; diff: Difficulty | '';
+  avg: number; t: number; full: boolean; runBest: number;          // Fastest Minute: the live average, seconds in the window, whether it is a full 60 s, the run's best
+  angle: number; chain: number; chainT: number; chainBest: number; // Drift: the slip angle, the running chain's points and seconds, the run's best chain
+  best: number;                                                    // this device's best on the board (before this run)
+  counts: boolean;                                                 // false once Adaptive quality eased the traffic: the run no longer counts
+}
+// what a run's end says about its score (the end-of-run card, App.tsx BestsCard)
+export interface RunBests {
+  kind: Kind; diff: Difficulty | null; board: Board; value: number;    // this run's score on its board (0: no full minute, or no chain); diff null: Free Drive's Best drift
+  counted: boolean; why: string;                                   // false: the run did not count, and why
+  placed: Placed | null;
 }
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
@@ -134,6 +155,7 @@ export interface Report {
   time: string; weather: string; ultra: boolean;
 }
 export interface Result {
+  bests?: RunBests;
   mode: Mode; score: number; distance: number; overtakes: number; top: number; reason: string; road: string; best: number; newBest: boolean; time: number;
   nearMisses: number; bestStreak: number; collisions: number; board: Leaderboard;
   // the car the run was in and, for the OC Hypercar, its tune ('Unleashed' in Free Drive, 'Race tune' in the scored
@@ -223,6 +245,12 @@ export class Game {
   // run state
   private distance = 0; private score = 0; private combo = 1; private comboT = 0; private overtakes = 0;
   private top = 0; private over = false;
+  // the run's scores (bests.ts): Fastest Minute's window, the drift chain, and the board and traffic mode the run counts on
+  private manualUntil = 0;
+  readonly bests = { minute: new MinuteMeter(), drift: new DriftTracker(), diff: null as Difficulty | null, board: 'open' as Board, stored: 0, toasted: false, eased: false, crashes: 0, forgiven: 0, forgiveUntil: 0, banked: true };
+  // the traffic a difficulty's run starts with (null: Free Drive's own, settings.density) and how fast it cruises
+  private runDiff: Difficulty | null = null;
+  private get density(): Density { return this.runDiff ? DIFFICULTY[this.runDiff].density : this.settings.density; }
   private streak = 0; private bestStreak = 0; private nearMisses = 0; private collisions = 0; private wrongWay = false;
   private scrape = 0;
   private ctxLost = false;
@@ -341,8 +369,8 @@ export class Game {
     this.applyDensity();
   }
   private applyDensity() {
-    const d = DENSITY[govDensity(this.settings.density, this.govTraffic)];
-    this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.settings.density].bold : d.bold };
+    const d = DENSITY[govDensity(this.density, this.govTraffic)];
+    this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.density].bold : d.bold, speed: this.govTraffic ? DENSITY[this.density].speed : d.speed };
   }
 
   // build everything in view before showing it (yielding now and then so the page stays alive)
@@ -395,13 +423,14 @@ export class Game {
   }
 
   private placeCar(path: Path, s: number, lane: number, speed: number) {
+    this.bests.minute.broken();                                 // a reset or a teleport breaks the 60 s stretch
     this.path = path;
     if (path.main) { this.lastMain = path; this.visited.add(path.label); }
     this.phys.placeAt(path, s, path.laneCenter(clamp(lane, 0, path.lanes - 1)), speed);
     this.phys.ext.fx = 0; this.phys.ext.fz = 0;
     this.jets?.clear();
     this.focusOnLand = false;                                   // a Focus Time queued in a hop is dropped by a reset
-    this.phys.auto = this.settings.transmission === 'auto' || this.attract;
+    this.phys.auto = true; this.manualUntil = 0;     // automatic for everyone (a shift holds the gear for a moment: actions())
     this.phys.handling = this.settings.handling;
     this.car.teleport(this.phys);
     this.recentre();
@@ -432,8 +461,13 @@ export class Game {
     this.audio.silence();
   }
 
-  async start(mode: Mode, startLabel = this.settings.start) {
+  // `diff`: one of the menu's three difficulties (a timed run, Speed Survival's rules: pass 'survival'); null is Free Drive, with the
+  // player's own traffic (settings.density). A difficulty sets its own traffic for the run, never the saved setting.
+  async start(mode: Mode, startLabel = this.settings.start, diff: Difficulty | null = null) {
     mode = modeOf(mode);               // only Free Drive and Speed Survival exist; anything older starts Free Drive
+    this.bankRun();                    // a run left by Restart keeps what it scored (Free Drive's Best drift, a timed run's Fastest Minute)
+    this.runDiff = mode === 'survival' ? (diff ?? 'medium') : null;   // a timed run always has a difficulty: Medium's normal rule when none is named
+    this.applyDensity();
     this.leaveVenue();
     this.applyCarChoice(mode);
     // the car's own ability comes with its tune (tuneFor): the hypercar's Unleashed tune in Free Drive has it, its race
@@ -458,6 +492,7 @@ export class Game {
     this.traffic.fill(this.view());
     this.distance = 0; this.score = 0; this.combo = 1; this.comboT = 0; this.overtakes = 0; this.top = 0; this.pace = 0;
     this.streak = 0; this.bestStreak = 0; this.nearMisses = 0; this.collisions = 0;
+    this.beginScores();
     this.endAbility(); this.ability.reset();
     this.input.recenter();
     await this.prebuild('Merging onto ' + m.label);
@@ -469,7 +504,7 @@ export class Game {
     this.ev.toast(exit ? `${m.label} · your exit ahead: ${exit.text.join(' / ')}` : `${m.label} · ${what}`, 'info');
   }
 
-  quitToMenu() { this.leaveVenue(); this.errand = null; this.profile.save(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
+  quitToMenu() { this.bankRun(); this.runDiff = null; this.applyDensity(); this.leaveVenue(); this.errand = null; this.profile.save(); this.radio.stop(); this.radio.station = -1; this.setPaused(false); this.startAttract(); }
   cycleRadio() { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.ev.toast(this.radio.cycle(), 'info'); }
   // tune a station directly (the radio card), -1 for off
   tuneRadio(i: number) { if (this.attract) return; this.audio.start(); this.audio.setMusicVolume(this.settings.music); this.radio.tune(i); }
@@ -510,7 +545,6 @@ export class Game {
     else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
-    if (!this.attract) this.phys.auto = s.transmission === 'auto';
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
@@ -556,9 +590,12 @@ export class Game {
   // session (attractAtmo); from then on the menu shows what they chose, so a change made on the menu is seen. The
   // car's atmosphere never reaches the saved settings: it lives only in the environment. Same env.set as always:
   // eased over a few seconds, or instant behind a loading screen (instant also re-snaps an unchanged atmosphere).
+  // the menu's theme sets the hour of its scene (owner, 2026-11-18: a night freeway behind Midnight); the car's weather stays
+  private menuTime: TimeOfDay | null = null;
+  setMenuTime(t: TimeOfDay | null) { if (this.menuTime === t) return; this.menuTime = t; if (this.attract) this.syncAtmosphere(); }
   private syncAtmosphere(instant = false) {
     const car = carById(this.driving).atmosphere, s = this.settings, fromCar = this.attract && this.attractAtmo;
-    const time = fromCar ? car.time : s.time, weather = fromCar ? car.weather : s.weather;
+    const time = fromCar ? (this.menuTime ?? car.time) : s.time, weather = fromCar ? car.weather : s.weather;
     if (!instant && this.shown && this.shown.time === time && this.shown.weather === weather) return;
     this.shown = { time, weather };
     this.env.set(time, weather, instant);
@@ -1028,8 +1065,8 @@ export class Game {
     r.push({ id: 'draw', text: `Draw distance ${Math.round(q.drawDistance * 0.8)} m`, up: `Draw distance ${q.drawDistance} m` });
     r.push({ id: 'props', text: 'Scenery -25%', up: 'Scenery full' });
     // one traffic step (Moderate and up; Light never goes to none). Never in Speed Survival: its scores stay comparable
-    const dn = govDensity(this.settings.density, 1);
-    if (dn !== this.settings.density && !(this.mode === 'survival' && !this.attract)) r.push({ id: 'traffic', text: `Traffic ${DENSITY[dn].label}`, up: `Traffic ${DENSITY[this.settings.density].label}` });
+    const dn = govDensity(this.density, 1);
+    if (dn !== this.density && !(this.mode === 'survival' && !this.attract)) r.push({ id: 'traffic', text: `Traffic ${DENSITY[dn].label}`, up: `Traffic ${DENSITY[this.density].label}` });
     const floor = GOV_FLOOR[this.settings.quality];
     for (let k = 1, n = Math.round((this.startScale - floor) / 0.05); k <= n; k++) r.push({ id: 'scale', text: `Resolution ${Math.round((this.startScale - 0.05 * k) * 100)}%`, up: `Resolution ${Math.round((this.startScale - 0.05 * (k - 1)) * 100)}%` });
     return r;
@@ -1136,7 +1173,7 @@ export class Game {
     const L = this.live;
     return { level: this.gov.level, levels: this.gov.rungs.length, rungs: this.gov.rungs.map((r) => r.text), target: this.gov.fps, last: this.gov.last, actions: this.gov.actions,
       ao: !!this.gtao?.enabled, bloom: !!this.bloom?.enabled, msaa: this.composer?.renderTarget1.samples ?? 0, shadows: L.shadows, drawDistance: L.drawDistance, props: L.props,
-      traffic: govDensity(this.settings.density, this.govTraffic), scale: this.govScale, floor: GOV_FLOOR[this.settings.quality], startScale: this.startScale, on: this.govOn(), label: this.govLabel() };
+      traffic: govDensity(this.density, this.govTraffic), scale: this.govScale, floor: GOV_FLOOR[this.settings.quality], startScale: this.startScale, on: this.govOn(), label: this.govLabel() };
   }
 
   // The first-run graphics check (SMOOTH): about 5 s on the menu, behind its card. It draws the menu's own freeway drive
@@ -1317,6 +1354,7 @@ export class Game {
 
   // ----------------------------------------------------------------------------------------- input actions
   private actions() {
+    if (!this.phys.auto && !this.attract && !this.paused && this.time >= this.manualUntil) this.phys.auto = true;   // the hold ran out
     for (const a of this.input.takeActions()) {
       if (a === 'pause') { if (!this.attract && !this.over) this.setPaused(!this.paused); continue; }
       if (this.paused || this.attract) continue;
@@ -1327,9 +1365,10 @@ export class Game {
       if (a === 'ability') this.useAbility();
       if (a === 'hop') this.thrustHop();
       if (a === 'radio') this.cycleRadio();
-      if (a === 'transmission') { this.phys.auto = !this.phys.auto; this.ev.toast(this.phys.auto ? 'Automatic' : 'Manual: − / + to shift', 'info'); }
       if (a === 'shiftUp' || a === 'shiftDown') {
-        if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual: − / + to shift', 'info'); }
+        // the gearbox is automatic (owner, 2026-11-22); a shift is a manual hold of MANUAL_HOLD_S, which every further shift
+        // renews, and then automatic takes back over
+        this.holdManual();
         const dir = a === 'shiftUp' ? 1 : -1;
         if (this.phys.shift(dir)) { this.car.flickPaddle(dir); this.audio.shift(); }
       }
@@ -1350,6 +1389,12 @@ export class Game {
     this.ev.toast(CAM_LABEL[c], 'info');
   }
   cycleCam() { this.setCam(CAMS[(CAMS.indexOf(this.cam) + 1) % CAMS.length]); }
+  // a manual hold: automatic steps aside for MANUAL_HOLD_S (every shift renews it), then takes back over (actions())
+  holdManual() {
+    if (this.attract || this.paused) return;
+    if (this.phys.auto) { this.phys.auto = false; this.ev.toast('Manual for a moment · automatic takes over', 'info'); }
+    this.manualUntil = this.time + MANUAL_HOLD_S;
+  }
   pushAction(a: Parameters<Input['push']>[0]) { this.input.push(a); }
   setMapCanvas(c: HTMLCanvasElement | null) { this.mapCanvas = c; }
 
@@ -1640,8 +1685,9 @@ export class Game {
 
   // Ultra Realism: the edges close in and the world goes quiet as the speed builds, and the car buzzes at speed
   private realism(dt: number) {
-    const on = this.ultraOn(), v = Math.abs(this.phys.vx), k = smoothstep(45, 95, v);
-    this.tunnel = damp(this.tunnel, on && this.settings.ultraTunnel ? k * 0.9 : 0, 3, dt);
+    // tunnel vision starts at 150 mph (owner, 2026-11-18; it was about 100); the muffled sound keeps its own ramp
+    const on = this.ultraOn(), v = Math.abs(this.phys.vx), k = smoothstep(45, 95, v), kt = smoothstep(TUNNEL_FROM, TUNNEL_FROM + 33, v);
+    this.tunnel = damp(this.tunnel, on && this.settings.ultraTunnel ? kt * 0.9 : 0, 3, dt);
     this.audio.setMuffle(on && this.settings.ultraMuffle ? lerp(20000, 1900, k) : 20000);
   }
 
@@ -1700,8 +1746,8 @@ export class Game {
       }
       if (im.speed > 1.2) { this.scrape = Math.min(1, this.scrape + im.speed * 0.08); this.shake = Math.max(this.shake, Math.min(1, im.speed / 14)); }
       if (im.speed > 3) this.streak = 0;
-      if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) this.collisions++; }
-      if (this.mode === 'survival' && playing && im.speed > 17) this.endRun('Hit the wall');
+      if (im.speed > 6) { this.audio.thump(im.speed); this.combo = 1; if (playing) { this.collisions++; this.crashed(); } }
+      if (this.mode === 'survival' && playing && im.speed > 17) this.crashEnd('Hit the wall');
     }
     p.impacts.length = 0;
     // traffic
@@ -1734,9 +1780,9 @@ export class Game {
       this.traffic.bump(contact.car, dvc * along, this.time);       // pushed along -n: that much faster (or slower) along its lane
       this.shake = Math.max(this.shake, Math.min(1, contact.speed / 12));
       this.combo = 1; this.comboT = 0; this.streak = 0;
-      if (contact.speed > 2 && playing) { this.collisions++; this.profile.add({ collision: 1 }); }
+      if (contact.speed > 2 && playing) { this.collisions++; this.crashed(); this.profile.add({ collision: 1 }); }
       if (contact.speed > 3) this.audio.crash(contact.speed); else this.audio.thump(contact.speed * 3);
-      if (this.mode === 'survival' && playing && contact.speed > 7) this.endRun(`Crashed into ${cl.id === 'suv' ? 'an SUV' : cl.id === 'semi' ? 'a big rig' : 'a ' + (cl.id === 'truck' ? 'box truck' : cl.id === 'sports' ? 'sports car' : cl.id)}`);
+      if (this.mode === 'survival' && playing && contact.speed > 7) this.crashEnd(`Crashed into ${cl.id === 'suv' ? 'an SUV' : cl.id === 'semi' ? 'a big rig' : 'a ' + (cl.id === 'truck' ? 'box truck' : cl.id === 'sports' ? 'sports car' : cl.id)}`);
     }
     // wrong way?
     let rel = p.psi - this.path.heading(clamp(p.s, 0, this.path.len)); rel = Math.atan2(Math.sin(rel), Math.cos(rel));
@@ -1771,6 +1817,7 @@ export class Game {
       }
     }
     this.top = Math.max(this.top, Math.abs(p.vx));
+    if (playing) this.scoreStep(dt);
     if (playing) {
       if (this.mode === 'survival') {
         if (p.vx > FAST && !this.wrongWay) { this.streak += dt; this.bestStreak = Math.max(this.bestStreak, this.streak); }
@@ -1829,13 +1876,90 @@ export class Game {
     const run: Run = { mode: this.mode, score, distance: Math.round(this.distance), top: Math.round(this.top * MPH), streak: Math.round(this.bestStreak * 10) / 10, nearMisses: this.nearMisses, overtakes: this.overtakes, collisions: this.collisions, when: Date.now(), road: this.lastMain?.label ?? '' };
     const rc = this.runCar(); if (rc.tune) run.tune = rc.tune;      // the hypercar's runs carry their tune (the board marks Unleashed)
     const board = recordRun(run);
+    const bests = this.finishScores();
     const jobs = this.settleJobs({ mode: this.mode, score, distance: this.distance, top: this.top, road: run.road, errands: this.errand?.done ? [this.errand.job.key] : [] });
     this.errand = null;
-    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, ...this.runCar() }), 1200);
+    setTimeout(() => this.ev.over({ mode: this.mode, score, distance: this.distance, overtakes: this.overtakes, top: this.top, reason, road: run.road, best: Math.max(best, score), newBest, time: this.time, nearMisses: this.nearMisses, bestStreak: this.bestStreak, collisions: this.collisions, board, jobs, bests, ...this.runCar() }), 1200);
   }
 
-  // Free Drive has no ending of its own: this one files the drive (distance, top speed) and shows the summary
-  endFreeDrive() { if (!this.attract && !this.over && this.mode === 'free') { this.setPaused(false); this.score = Math.round(this.distance); this.endRun('Parked'); } }
+  // ------------------------------------------------------------------------------------------ the run's scores (bests.ts)
+  // the board a run counts on: the OC Hypercar's Unleashed tune (Free Drive) has its own; every other run, the hypercar's
+  // race tune included, is on the open board
+  private boardNow(): Board { return this.driving === FOUNDER_CAR && this.mode === 'free' ? 'unleashed' : 'open'; }
+  // test hooks (the suite checks the scoring rules, the traffic rule and the settings migration on synthetic runs)
+  get api() { return { MinuteMeter, DriftTracker, recordBest, recordDrift, bestsFor, bestOf, driftBest, driftBests, migrateBests, shareLine, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor }; }
+  // a Free Drive run's drift and a difficulty's Fastest Minute start from nothing
+  private beginScores() {
+    const b = this.bests;
+    b.minute.reset(); b.drift.reset();
+    b.diff = this.runDiff; b.board = this.boardNow(); b.stored = b.diff ? bestOf(b.board, b.diff) : driftBest(b.board);
+    b.toasted = false; b.eased = false; b.crashes = 0; b.forgiven = 0; b.forgiveUntil = 0; b.banked = false;
+  }
+  private crashed() { this.bests.minute.broken(); this.bests.drift.crash(); this.bests.crashes++; }
+  // A real crash in a timed run ends it (Speed Survival's rule), except on Easy, which forgives the first DIFFICULTY.easy.forgive
+  // of them: the run goes on (the crash still broke the 60 s stretch, crashed()). One collision is one crash: contact held over
+  // a few frames, or a second hit within a second and a half, is not counted again.
+  private crashEnd(reason: string) {
+    const b = this.bests, allowed = this.runDiff ? DIFFICULTY[this.runDiff].forgive : 0;
+    if (this.time < b.forgiveUntil) return;
+    if (b.forgiven < allowed) {
+      b.forgiven++; b.forgiveUntil = this.time + 1.5;
+      this.ev.toast(`Crash forgiven · ${allowed - b.forgiven} left on Easy`, 'info');
+      return;
+    }
+    this.endRun(reason);
+  }
+  private scoreStep(dt: number) {
+    const b = this.bests, p = this.phys;
+    if (this.govTraffic > 0) b.eased = true;
+    let live = 0;
+    if (!b.diff) {          // Free Drive: the drift readout and Best drift
+      b.drift.step(dt, (Math.atan2(Math.abs(p.vy), Math.max(1, p.vx)) * 180) / Math.PI, Math.max(0, p.vx) * MPH);
+      live = b.drift.live;
+    } else { b.minute.push(dt, Math.max(0, p.vx) * MPH); live = b.minute.best; }
+    // a toast the first time the run beats this device's best on its board (the card has the rest)
+    if (!b.toasted && !b.eased && live > 0 && live > b.stored) {
+      b.toasted = true;
+      this.ev.toast(b.diff ? `New Fastest Minute ${round1(live).toFixed(1)} mph` : `New Best drift ${Math.round(live).toLocaleString('en-US')}`, 'good');
+    }
+  }
+  // A run's score is kept when the drive ends, and also when it is left without ending (Restart, Main menu): Free Drive's
+  // Best drift (a chain still running is banked first) and a timed run's Fastest Minute (the best full 60 s so far), unless
+  // Adaptive quality eased the traffic, the same rule the end card applies. A run that ended already banked itself (finishScores).
+  private bankRun() {
+    const b = this.bests;
+    if (b.banked || this.attract) return;
+    b.banked = true;
+    if (b.diff) {
+      const v = round1(b.minute.best);
+      if (!b.eased && v > 0) recordBest(b.board, b.diff, { v, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: this.mode });
+    } else if (this.mode === 'free') {
+      b.drift.finish();
+      const v = Math.round(b.drift.best);
+      if (v > 0) recordDrift(b.board, { v, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: 'free' });
+    }
+  }
+  private finishScores(): RunBests {
+    const b = this.bests; b.drift.finish();
+    if (!b.diff) {
+      const value = Math.round(b.drift.best), placed = value > 0 && !b.banked ? recordDrift(b.board, { v: value, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: 'free' }) : null;
+      b.banked = true;
+      return { kind: 'drift', diff: null, board: b.board, value, counted: true, why: '', placed };
+    }
+    const value = round1(b.minute.best), counted = !b.eased;
+    b.banked = true;
+    const placed = counted && value > 0 ? recordBest(b.board, b.diff, { v: value, when: Date.now(), car: this.driving, road: this.lastMain?.label ?? '', run: this.mode }) : null;
+    return { kind: 'minute', diff: b.diff, board: b.board, value, counted, why: counted ? '' : 'Adaptive quality eased the traffic to hold your frame rate, so this run does not count.', placed };
+  }
+
+  // END DRIVE (the pause screen's way out, every mode): the drive ends through endRun, so its summary and end card show and its
+  // scores are filed. Free Drive has no ending of its own, so its score is the distance; a timed run keeps the score it has.
+  endDrive() {
+    if (this.attract || this.over) return;
+    this.setPaused(false);
+    if (this.mode === 'free') { this.score = Math.round(this.distance); this.endRun('Parked'); } else this.endRun('Drive ended');
+  }
+  endFreeDrive() { this.endDrive(); }
 
   // ----------------------------------------------------------------------------------------- cameras
   private tmpQ = new THREE.Quaternion(); private tmpE = new THREE.Euler(0, 0, 0, 'YXZ'); private tmpV = new THREE.Vector3(); private wantP = new THREE.Vector3(); private wantQ = new THREE.Quaternion();
@@ -1899,7 +2023,11 @@ export class Game {
       // on the menu the hero sits right of centre, clear of the rail (a turn to the left moves the subject right)
       // and tilted down a touch so it sits above the mode cards along the bottom
       if (this.attract && !portrait && this.cineShot === 0) { this.tmpQ.setFromEuler(this.tmpE.set(-0.07, 0.16, 0)); this.wantQ.multiply(this.tmpQ); }
-      fov = (portrait ? sh.fov * 1.6 : sh.fov) + speedK * 3;
+      // on a phone's menu the car is framed wider and tipped down so it sits in the top sixth, under the bar (the front page
+      // stacks its text below it, clear of the car)
+      const menuP = this.attract && portrait;
+      fov = (portrait ? sh.fov * (menuP ? 2.4 : 1.6) : sh.fov) + speedK * 3;
+      if (menuP) { this.tmpQ.setFromEuler(this.tmpE.set(-Math.atan(0.37 * 2 * Math.tan((fov / 2) * DEG)), 0, 0)); this.wantQ.multiply(this.tmpQ); }
     } else {
       const root = this.car.root.position, psi = p.psi;
       const fwd = this.tmpV.set(Math.sin(psi), 0, Math.cos(psi));
@@ -2301,6 +2429,13 @@ export class Game {
     return this.rampSigns.get(p) ?? '';
   }
 
+  private hudBests(): BestsHud {
+    const b = this.bests, m = b.minute, d = b.drift, on = !this.attract && !this.over;
+    return {
+      kind: on ? (b.diff ? 'minute' : 'drift') : '', board: b.board, diff: b.diff ?? '', avg: m.avg, t: m.t, full: m.full, runBest: m.best,
+      angle: d.angle, chain: d.points, chainT: d.chainT, chainBest: d.best, best: b.stored, counts: !b.eased,
+    };
+  }
   private sendHud() {
     const p = this.phys;
     const [next, nextDist, turn, navAct, navTo] = this.nextManoeuvre();
@@ -2330,7 +2465,7 @@ export class Game {
       heading, tempF: this.env.tempF(), turn,
       navAct, navTo, exitText: exit?.text ?? '', exitMine: !!exit && exit.ramp === this.route[0]?.to, onSign: routed && !exit && !this.path.main ? this.rampSign(this.path) : '',
       dest: routed ? this.routeName : '', destDist, eta: routed && this.pace > 4.5 ? destDist / this.pace : -1,
-      traffic: DENSITY[this.settings.density].label,
+      traffic: DENSITY[this.density].label,
       view: this.input.c.lookBack && !this.attract ? 'back' : this.view3(), liveCluster: this.car.liveCluster,
       brake: this.input.c.brake, clock: this.env.clockText(), tempNote: 'simulated',
       autoOffer: this.autoDriveOffered, autoOn: this.autoDrive, lanes: this.laneHint(turn, nextDist),
@@ -2341,6 +2476,7 @@ export class Game {
       tune: this.driving === 'oc-hyper' && !this.attract ? (this.mode === 'free' ? 'Unleashed' : 'Race tune') : '',
       thrustLive: this.hyper.live && !this.over, tank: this.hyper.tank, groundLock: this.hyper.fan > 0.3,
       hop: this.hopState(),
+      bests: this.hudBests(),
     };
     this.ev.hud(h);
     // the car's own cluster shows the same facts (cockpit.ts / car-dash.ts): one object, filled in place
@@ -2375,7 +2511,7 @@ export class Game {
       gpu: dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : 'not reported',
       quality: presetFor(this.settings).label, adaptive: this.settings.adaptive, pixelRatio: Math.round(this.renderer.getPixelRatio() * 100) / 100,
       buffer: `${el.width}×${el.height}`, fps: this.fps, calls: info.render.calls, tris: info.render.triangles, textures: info.memory.textures,
-      mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.settings.density,
+      mode: this.mode, attract: this.attract, road: this.path?.label || 'ramp', mph: Math.round(Math.abs(this.phys.vx) * MPH), density: this.density,
       cars: this.traffic.cars.length, runSeconds: Math.round(this.time),
       time: this.settings.time, weather: this.settings.weather, ultra: this.ultraOn(),
     };
