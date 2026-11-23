@@ -59,8 +59,8 @@ export interface ShapeParams {
   noseIntake: [number, number][];        // the main front opening (x, y), convex; inside the nose face's outline
   cornerIntake: [number, number][] | null; // an opening in each front corner (|x|, y): inner-bottom, outer-bottom, outer-top, inner-top
   rearMesh: { w: number; h: number; cy: number } | null;
-  exhaust: 'twin' | 'single' | 'high' | 'none';
-  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor)
+  exhaust: 'twin' | 'single' | 'high' | 'none' | 'centre';   // centre: the OC Hypercar's twin round tips side by side on the centre line
+  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number; finTail?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor); finTail: the fins stand this far out behind the tail as tall blades
   splitter: { w: number; d: number; proud: number; canards: boolean };
   wing: { span: number; chord: number; y: number; z: number; mountX: number; plate?: [number, number] } | null;   // plate: end-plate length, height
   scoop: boolean;
@@ -287,7 +287,8 @@ const HYPER: ShapeParams = {
   tail: { R: 0.14, p: 2.7, Ry: 0.02, tuck: 0.08, tuckY: 0.5 },
   // the door's scoop: a deep, sharp-edged recess whose front and rear ends lean back down the side (the sheet's
   // fender trailing edge and the diagonal into the intake)
-  scallop: { depth: 0.16, z0: -0.84, z1: -0.6, e0: 0.16, e1: 0.4, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
+  // (2026-11-23: it runs on to the side intake's diagonal, so the intake sits in it, not across its rear ramp)
+  scallop: { depth: 0.16, z0: -0.84, z1: -0.6, e0: 0.55, e1: 0.8, yc: 0.45, h: 0.18, pow: 4.5, rake: 1.1 },
   // the windscreen runs up the canopy to z -0.10 (1.11 m), 0.2 m further than the first cut, and the side glass's
   // front-top corner moves back with it so the A-pillar keeps its width: from the driver's seat (seatFwd below) the
   // header's lip then lies about 40 degrees above the eye line, over the top of the seat camera's frame both on a
@@ -328,11 +329,14 @@ const HYPER: ShapeParams = {
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
   // (M1b: inside the fang, so its LED runs down the fang's inner edge)
   cornerIntake: [[0.58, 0.1], [0.75, 0.1], [0.77, 0.33], [0.62, 0.3]],
-  rearMesh: { w: 1.3, h: 0.15, cy: 0.47 },
-  exhaust: 'none',
+  // (2026-11-23, the owner's references: a honeycomb panel filling the tail's recess, the twin round tips side by side on
+  // the centre line in it, and the plate moved up under the tail's top edge, smaller)
+  rearMesh: { w: 1.3, h: 0.2, cy: 0.49 },
+  exhaust: 'centre',
   // the diffuser's mouth: a wide trapezoid under the plate (the sheet's REAR: its LED outline runs across at about
   // half the tail's width and angles down and out to the tail's lower corners)
-  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.6, -0.43, -0.26, -0.09, 0.09, 0.26, 0.43, 0.6], top: 0.47 },
+  // (2026-11-23: the references' five tall carbon fins standing out behind the tail, in place of eight short strakes)
+  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.5, -0.25, 0, 0.25, 0.5], top: 0.47, finTail: 0.15 },
   // (M1b: proud 0.24 -> 0.12, so the blade tucks under the nose: its leading edge 3 cm ahead of the lip's point)
   // (2026-11-23: the references' splitter stands well clear of the nose, about 0.2 m in their side view)
   splitter: { w: 1.94, d: 0.7, proud: 0.2, canards: false },
@@ -370,12 +374,13 @@ const HYPER: ShapeParams = {
   // (205,233,245)): the reference's strips sample about (122,152,190) with a (176,219,245) core. Founder Ice: reserved
   // to this car (src/game/founder.ts holds these three colours)
   led: { color: FOUNDER_ICE.core, halo: FOUNDER_ICE.halo, edge: FOUNDER_ICE.edge },
-  bar: { len: 1.66, h: 0.02 },
+  // (2026-11-23: 12 mm, so the references' ice-blue tail blades over it carry the tail; it is still the stop light)
+  bar: { len: 1.66, h: 0.012 },
   // (2026-11-23, the owner's references, outside and from the seat: a black louvred panel on each fender hump's top,
   // ahead of the wheel, from its inner slope up to the crest; and a black vented section on the sunken bonnet's centre)
   ventsQ: [[[0.46, -2.04], [0.74, -2.08], [0.8, -1.6], [0.5, -1.56]]],
   bonnetVents: { x: [0.055, 0.3], z: [-2.06, -1.58], n: 7 },
-  plate: { w: 0.52, h: 0.11, y: 0.46 },
+  plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
   // (M1b: lower, so the fangs come down silver at the nose and the haunches wrap the tail down to the valance)
@@ -388,7 +393,10 @@ const HYPER: ShapeParams = {
   // (lift), so the rear view, whose recessed tail is mostly vertical silver lit by the sky's lower half, reads lighter
   // than before M1b: rear median (135, 150, 168) against HEAD's (125, 140, 157); the front then (166, 176, 193), past the
   // sheet's (152, 163, 185))
-  paintFinish: { metal: 0.06, rough: 0.28, env: 1.35, lift: 1.2 },
+  // (2026-11-23, the owner's references: a pearl, not a chalk white: their paint shades from near white on the tops to
+  // a mid silver on the flanks, with the sky and the road clearly in it. The base coat no longer lifted (1.2 -> 0.95),
+  // a little more metal (0.2), a finer base (0.22) and the sky's reflection 1.5x)
+  paintFinish: { metal: 0.2, rough: 0.22, env: 1.5, lift: 0.95 },
   tyreTint: 0x7a818e, discTint: 0x5c6068,
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
@@ -425,6 +433,9 @@ const HYPER: ShapeParams = {
     // per side, as a side mask's range is on signed x)
     { plane: 'side', pts: [[-1.18, 0.64], [-0.1, 1.0], [-0.05, 1.3], [-1.18, 1.3]], soft: 0.005, range: [0.28, 0.62] },
     { plane: 'side', pts: [[-1.18, 0.64], [-0.1, 1.0], [-0.05, 1.3], [-1.18, 1.3]], soft: 0.005, range: [-0.62, -0.28] },
+    // (2026-11-23, the owner's references: the canopy is one black shape, so the 4 cm header between the windscreen's
+    // top and the smoked roof is gloss black too, not a silver line across it)
+    { plane: 'top', mirror: true, pts: [[-0.05, -0.17], [0.47, -0.17], [0.47, 0.0], [-0.05, 0.0]], soft: 0.005 },
     // the intake zone under the lip (front-facing faces only; the lip's own front stays silver), in three pieces
     // that follow the lip's polyline and overlap
     { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },

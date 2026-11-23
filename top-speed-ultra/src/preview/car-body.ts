@@ -1028,6 +1028,14 @@ function makeBody(P: ShapeParams) {
           kit.add(key, g);
         };
         ribbon(path, 0, 'tail', 0, 0.5);
+        // (the owner's references of 2026-11-15, ported from the unjudged G1 lane: two slim ice-blue blades along the
+        // top of the tail, from a hand's width off the centre out round each corner, 2.2 cm over the red bar; the bar
+        // stays the tail and stop light)
+        if (P.led) for (const sd of [-1, 1]) {
+          const sel = path.filter((q) => sd * q.p.x > 0.16);
+          if (sd < 0) sel.reverse();
+          if (sel.length > 1) ledStrip(sel.map((q) => q.p.clone().add(v3(0, 0.024 + Bh / 2, 0))), (i) => sel[i].n, 0.012, 0.0015);
+        }
         // the rear turn signals: the bar's outer 0.26 m each side and its wrap, amber, a hair proud (PlayerCar shows them)
         const outer = (sd: number) => path.filter((q) => (sd > 0 ? q.p.x : -q.p.x) > hw - 0.26);
         ribbon(outer(-1), 0.0012, 'sigL', 0, 0.5); ribbon(outer(1), 0.0012, 'sigR', 0, 0.5);
@@ -1086,12 +1094,15 @@ function makeBody(P: ShapeParams) {
       // exhausts: thick-walled titanium tips with a rolled lip, sooty inside
       const tips: [number, number, number, number][] = P.exhaust === 'twin' ? [[0.135, 0.54, 1, 0.058], [-0.135, 0.54, 1, 0.058]]
         : P.exhaust === 'high' ? [[0.11, P.rearMesh!.cy + 0.02, 1, 0.066], [-0.11, P.rearMesh!.cy + 0.02, 1, 0.066]]
-          : P.exhaust === 'single' ? [[0, 0.4, 1.55, 0.05]] : [];
+          : P.exhaust === 'single' ? [[0, 0.4, 1.55, 0.05]]
+            // (the OC Hypercar, the owner's references: two round tips side by side on the centre line, out of the
+            // honeycomb panel under the plate; ported from the unjudged G1 lane)
+            : P.exhaust === 'centre' ? [[0.066, 0.455, 1, 0.046], [-0.066, 0.455, 1, 0.046]] : [];
       for (const [x, y, sx, r] of tips) {
         const k = r / 0.058;
         const tip = latheGeo([[0.058 * k, ZR - 0.12], [0.064 * k, ZR - 0.02], [0.067 * k, ZR + 0.022], [0.0635 * k, ZR + 0.034], [0.0575 * k, ZR + 0.026], [0.0565 * k, ZR - 0.16]], 40, 'z', { vScale: 0.1 });
         tip.scale(sx, 1, 1); tip.translate(x, y, 0);
-        kit.add('exhaust', tip);
+        kit.add(P.exhaust === 'centre' ? 'exhaustOC' : 'exhaust', tip);
         const inner = new THREE.CircleGeometry(0.057 * k, 24); inner.scale(sx, 1, 1); inner.translate(x, y, ZR - 0.15); kit.add('dark', inner, null, 0.1);
       }
       // the lower tail: a carbon valance below the lamps' line, cut round the diffuser's mouth
@@ -1138,9 +1149,15 @@ function makeBody(P: ShapeParams) {
       const DT = D.top ?? DIFF, capY = (x: number) => Math.abs(x) <= DT ? D.h : YSILL + 0.005 + (D.h - YSILL - 0.005) * Math.max(0, (DIFF - Math.abs(x)) / (DIFF - DT));
       for (const x of D.fins) {
         const s = new THREE.Shape(), k0 = (capY(x) - YSILL - 0.005) / (D.h - YSILL - 0.005);
-        s.moveTo(D.z0, YSILL + 0.005); s.lineTo(ZR + 0.02, YSILL + 0.005);
+        // (finTail, the OC Hypercar's fins after the owner's references: tall carbon blades whose trailing edge stands
+        // D.finTail behind the tail, raked forward from the floor up to the mouth's top, 12 mm thick; ported from the
+        // unjudged G1 lane)
+        const ft = D.finTail ?? 0, th = ft ? 0.012 : 0.008;
+        s.moveTo(D.z0, YSILL + 0.005);
+        if (ft) { s.lineTo(ZR + ft, YSILL - 0.02); s.lineTo(ZR + ft * 0.55, (k0 >= 1 ? D.h : capY(x)) - 0.01); }
+        else s.lineTo(ZR + 0.02, YSILL + 0.005);
         for (let k = 8; k >= 0; k--) { const t = k / 8; s.lineTo(D.z0 + (ZR - D.z0) * t, k0 >= 1 ? yr(t) : YSILL + 0.005 + (yr(t) - YSILL - 0.005) * k0); }
-        const fin = new THREE.ExtrudeGeometry(s, { depth: 0.008, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + 0.004, 0, 0);
+        const fin = new THREE.ExtrudeGeometry(s, { depth: th, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + th / 2, 0, 0);
         kit.add(hyper ? 'carbon' : 'dark', fin, null, 1);
       }
       if (hyper) {
