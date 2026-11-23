@@ -4,6 +4,83 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22: the economy (miles open the cars, Road Points and the free OC Hypercar, cash, the venue passport, daily goals)
+
+Branch claude/economy, from 5e16ab4 (v24), not committed. The owner's economy brief (2026-11-17..22). Code:
+`src/game/progress.ts` (the logic, no run-time imports), `src/ui/progress.tsx` and `progress.css` (widgets),
+`src/ui/progressVenue.ts` (the passport card inside a venue); small edits in `Game.ts`, `profile.ts`, `cars.ts`,
+`App.tsx`, `runCard.ts`, the Store copy, and a `passport()` hook in each venue page (`src/onfoot/main.ts`,
+`src/onfoot/venues/sportsbar/main.ts`). Notes: `PROJECT_OC_MONETIZATION.md` ("Founders' Road and the economy"),
+`PROJECT_OC_TECHNICAL_NOTES.md` (`progress.ts`).
+
+**What it does.**
+- **Active miles** (per device, saved as `tsu.progress` v1, migrated): unpaused, above 40 mph, driven by you (not
+  Auto-drive or the attract drive, not the wrong way), and a control input in the last 30 s of simulation time
+  (steering, braking, handbrake, a change of throttle: a pedal held flat stops counting after 30 s).
+- **Cars open by miles:** Rossini GT from the start, Brio 50 mi, Corsa 150, Vela E 300. The garage card reads
+  "Unlocks at 150 mi · 87 / 150" with a bar; an unlock is a toast and a glowing "Just unlocked" card until the garage is
+  left. Cars are no longer bought or sold (the old credit price and level gate is gone; `buy` and `sell` only say why
+  not). A car you already owned stays owned and gets no unlock moment; earned cars take no garage slot and survive a
+  store sync. **The Vela E now shows in the garage** (locked, with its 300 mi card): it was hidden until owned (owner,
+  2026-10-16), the 2026-11-19 ladder lists it, so the hide rule was dropped. Say if you want it hidden again.
+- **Road Points** = active miles x the run's tier (owner update 2026-11-22: Free Drive 1 whatever its traffic; Speed
+  Survival Easy 1, Medium 1.25, Extreme 1.5; no Zero/Drift; until the menu's difficulties land the densities map none
+  to Free Drive, light to Easy, moderate to Medium, heavy and expert to Extreme). Extreme runs pay 1.5x cash (run pay and
+  the speed bonus; `TIER_CASH`). 500 by Dec 31, 2026 (Pacific) unlocks the
+  standard OC Hypercar for free. The paid Founder Edition keeps its plaque, Glacier Silver and Founder Ice lights.
+  The widget reads "312 / 500 to the OC Hypercar" with the days left; the result has an after-run line. Store copy
+  now says what the paid edition really adds (time saved, numbered plaque, Glacier Silver, Founder Ice lights); the menu
+  widget has no purchase line.
+- **Cash** (the credits, shown as "cash"): runs as before plus 6 cash per active mile above 150 mph and 10 more above
+  200 mph (under the Hypercar's Free Drive earnings cap). Spent on Vega & Vinnie's membership (1,200, once), Marina Teal
+  paint (800) and nothing else. Never sold.
+- **Venue passport:** stamps (first visit, spots, sat, ordered, talked), active time, ladder First visit -> Regular
+  (every spot and 1 h; badge on the profile and the run card) -> Local legend (5 h; a paint named for the venue).
+  Venue time pays 0.5 Road Point a minute up to 50 a day; at Vega & Vinnie's, members earn marketer cash (10 a minute,
+  30 while socialising, 400 a day). A passport card in the venue and a widget component.
+- **Daily goals** (three a day, an all-three bonus), a streak with one free saver a week, a weekly challenge, a break
+  reminder after an hour. The guardrail copy is checked for spending prompts, timers and chance words.
+
+**Checked (this machine, load average 20 to 36 from other lanes, so every group ran far slower than the usual
+times).**
+- `npx tsc --noEmit` on `tsconfig.json` and `tsconfig.game.json`: clean. `npm run build`: ok. `npm run store:sync` and
+  `npm run store:check`: "catalog ok: 23 skus" and "server catalog in sync".
+- `npm run test:progress` (`tests/progress.mjs`, no browser): 84 of 84. Idle, paused, slow, Auto-drive, attract and
+  wrong-way miles count nothing; a pedal held 300 s counts 30 s; the gates at 49.99 / 50 / 149.9 / 150 / 299.9 / 300;
+  the multipliers; 500 points on Dec 31 at 8 pm unlocks and on Jan 1 does not; speed cash 0 at 140 mph, 6 a mile at 180,
+  16 at 220; the venue ladder, the 50 a day and 400 a day caps, no marketer cash without a membership; goals, streak,
+  saver and weekly on a mocked clock; the copy guardrails.
+- Browser groups, one at a time (new: `economy` 13 checks, `economy-venue` 4, `economy-phone` 7). Results:
+  - `economy-venue` 4/4 (membership gate, passport stamps, the venue's pause and the 30 s idle rule) and
+    `economy-phone` 7/7, on the build before the Starter-GT slot fix.
+  - `economy` on the final build: 12 of 13; the failing check ("a held pedal" bound) was a test assertion that was too
+    tight, fixed, and that check re-run on its own passes (its Auto-drive route list was then fixed and re-run: 2/2).
+    The menu, goals and garage frames were then re-shot: 4/4 desktop, 5/5 phone.
+- Existing groups: `boot` 18/18, `modes` 10/10, `venues` 13/13 (on the build before the Starter-GT slot fix; that fix
+  only keeps the Rossini GT counted in the garage slots), `store` 18/18 (final build).
+- `progression`: the showroom, owner-mode and Founder Edition checks were rewritten for the miles gate and pass; 5 of 6
+  on the final build. "owner test build" fails the same way on the untouched base commit 5e16ab4 built on its own
+  (`no Car pick after boot`: a loading-screen overlay stays in its leaving state over the menu at a load average of
+  20 to 36), so it is the machine, not this change.
+- `phone`: the full group passed its first 10 checks (menu fits, one sheet, Profile, the Founder Edition card, Settings,
+  the driving HUD, seat view, hood, sleeves), then sat 40 minutes in "sleeves under an overpass (High)" under the load
+  and was stopped by hand. The checks that touch the menu, pause and HUD were re-run filtered on the final build: 6/6
+  (driving HUD, Go to lists, hold Pause, pause screen, HUD compass). The rest of the group (wheels, hands, THRUST,
+  sky camera) was not completed on this build.
+
+**Frames** (tests/out, git-ignored): `econ-menu-1280x720.png`, `econ-menu-390x844.png`, `econ-hypercar-*.png`,
+`econ-garage-1280x720.png`, `econ-garage-390x844.png`, `econ-unlock-1280x720.png`, `econ-unlock-390x844.png`,
+`econ-hypercar-earned-1280x720.png`, `econ-goals-390x844.png`, `econ-result-1280x720.png`, `econ-result-390x844.png`,
+`econ-membership-1280x720.png`, `econ-membership-390x844.png`, `econ-passport-1280x720.png`,
+`econ-passport-390x844.png`.
+
+**Not done or not right.** The earned (standard) OC Hypercar still shows the Founder Ice LED strips and the plaque in
+its 3D model: only the paint (Glacier Silver is never offered or worn on it) and the garage text differ; separating the
+lights and plaque needs a car-shape variant (Fable-class rendering). The "talked to someone" stamp is read from the
+venue hook but only the logic test, not a browser test, covers it. After Dec 31 nothing happens to unfinished players
+(open for the owner). Progress is on the device, not the account, so it can be edited by hand: server-checked points
+need the hosted backend. The menu lane will re-place the widget (it sits in the menu's bottom row for now).
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:

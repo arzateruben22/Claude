@@ -138,11 +138,13 @@ export function drawRunCard(r: Result, name: string, logo: HTMLImageElement | nu
   // the store's Founder '26 badge under the name, and its frame round the card (src/store: owned, never sold again)
   if (has('badge-founder-26')) founderBadge(g, W - pad, pad + 92);
   if (has('frame-founder-runcard')) founderFrame(g);
+  // a venue's Regular badge, earned on its passport (progress.ts): a line under the name
+  if (r.progress?.badges?.length) { g.textAlign = 'right'; g.fillStyle = '#8bd6ff'; g.font = `600 24px ${FONT}`; g.fillText(r.progress.badges.slice(0, 2).join(' · '), W - pad, pad + (has('badge-founder-26') ? 160 : 108)); g.textAlign = 'left'; }
   // the road
   let y = pad + 156;
   if (r.road) shield(g, r.road, pad, y, 92);
   // a run in the OC Hypercar: its name, the Founder Edition badge with the plaque's number, and its tune, on the right
-  if (r.car === FOUNDER_CAR) hyperBadge(g, W - pad, y, r.tune);
+  if (r.car === FOUNDER_CAR && r.edition !== 'standard') hyperBadge(g, W - pad, y, r.tune);
   y += 92;
   // the big number
   const big = r.mode === 'free' ? (r.distance / MI).toFixed(2) : Math.round(r.score).toLocaleString();
