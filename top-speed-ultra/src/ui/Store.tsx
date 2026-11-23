@@ -111,8 +111,8 @@ export function Store({ game, onClose }: { game: Game; onClose: () => void }) {
             ? <div className="store-mode live" role="note"><b>Secure checkout</b><span>Stripe's own page takes your card, Apple Pay or Google Pay. We never see your card.</span></div>
             : <div className="store-mode" role="note"><b>Test mode</b><span>Nothing is charged. Use 4242 4242 4242 4242.</span></div>}
           {hyperShown
-            ? <p className="store-lede">One founder car, and looks for every car once they're in the game. The looks change nothing about how any car drives or scores. The OC Hypercar Founder Edition is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}); everywhere else it runs at or under the Rossini Corsa. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>
-            : <p className="store-lede">Optional looks for every car. Nothing here changes how any car drives or scores. Every freeway, every mode and every car you can earn stays free, and credits are earned by driving only.</p>}
+            ? <p className="store-lede">One founder car, and looks for every car once they're in the game. The looks change nothing about how any car drives or scores. The OC Hypercar Founder Edition is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}); everywhere else it runs at or under the Rossini Corsa. Every freeway, every mode and every car you can earn stays free, and cash is earned by driving only. <b>Earn the OC Hypercar free by driving (Founders' Road: 500 Road Points by Dec 31, 2026), or get the Founder Edition now.</b></p>
+            : <p className="store-lede">Optional looks for every car. Nothing here changes how any car drives or scores. Every freeway, every mode and every car you can earn stays free, and cash is earned by driving only.</p>}
 
           <Account signin={signin} setSignin={setSignin} busy={busy} onRestore={() => void doRestore()} />
           {note && <p className={'store-note ' + note.kind} role="status">{note.text}</p>}
@@ -330,7 +330,7 @@ function Terms() {
       <summary>Store terms (draft)</summary>
       <ul>
         <li>You get a licence to use the items in OC Ultra, not ownership of them. A refund takes the items back, and the game can change.</li>
-        <li>Looks only: no item changes speed, grip, handling, score, credits or XP. The one exception is the OC Hypercar Founder Edition: it is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}). In Speed Survival it runs a race tune at or under the best car you can earn, with its ability off, and its Free Drive earnings are capped at that tune's top speed. Credits are never sold. No loot boxes and no premium currency.</li>
+        <li>Looks only: no item changes speed, grip, handling, score, cash or XP. The one exception is the OC Hypercar Founder Edition: it is faster than any car you can earn in Free Drive only ({FREE_DRIVE_ONLY}). In Speed Survival it runs a race tune at or under the best car you can earn, with its ability off, and its Free Drive earnings are capped at that tune's top speed. Cash is never sold. No loot boxes and no premium currency.</li>
         <li>For players 13 and over. Under 18, a parent or guardian must say yes first.</li>
         <li>Refunds: ask within 14 days if you haven't used the item in a drive. An accidental purchase, or a minor's purchase without permission, is refunded any time. Email (TODO: support email).</li>
         <li>Your items are saved to your account: sign in with the same email on any device and tap Restore purchases.</li>
