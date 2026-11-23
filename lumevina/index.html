@@ -1772,24 +1772,35 @@
       <button class="account-close" type="button" aria-label="Close account">×</button>
       <h2 class="booking-title" id="account-title">My Lumevina</h2>
 
-      <!-- signed out: magic-link sign in (js/account.js: Supabase Auth when connected, instant in the demo) -->
-      <div class="acct-out">
-        <p class="acct-intro">Sign in to see the skin plan Evelyn writes for you, your
-        upcoming appointments and your gift credit. Ask Lumevina will know your routine
-        too. Booking as a guest always stays available.<span data-feature="rewards"> Your
-        first sign-in comes with <strong>50 <svg class="ev-ico" aria-hidden="true"><use href="#ev-mark"/></svg> on the house</strong>.</span></p>
-        <div class="field">
-          <label for="acct-name">Name</label>
-          <input id="acct-name" name="name" type="text" autocomplete="name" required>
+      <!-- signed out: magic-link sign in, one question at a time on a soft gradient (after the "sign-up" component on
+           21st.dev, redone in plain CSS and JS; no passwords: a one-tap email link, js/account.js) -->
+      <div class="acct-out" data-step="email">
+        <div class="acct-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="acct-stage">
+          <div class="acct-q" data-q="email">
+            <p class="acct-h">Welcome to Lumevina</p>
+            <p class="acct-sub">Glow Points, your skin plan, your appointments and the membership, in one place.<span data-feature="rewards"> Your first sign-in comes with 50 points on the house.</span></p>
+            <label class="acct-pill">
+              <span class="acct-pill-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5"/></svg></span>
+              <span class="sr-only">Email</span>
+              <input id="acct-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Email" required>
+              <button class="acct-go" type="button" data-go="name" aria-label="Continue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            </label>
+          </div>
+          <div class="acct-q" data-q="name" hidden>
+            <p class="acct-h">What should Evelyn call you?</p>
+            <p class="acct-sub">Then check your email: one tap on the link signs you in. No password to remember.</p>
+            <label class="acct-pill">
+              <span class="acct-pill-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M4.8 20c.8-3.7 3.6-5.6 7.2-5.6s6.4 1.9 7.2 5.6"/></svg></span>
+              <span class="sr-only">Name</span>
+              <input id="acct-name" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+              <button class="acct-go acct-signin" type="button" aria-label="Send my sign-in link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            </label>
+            <button class="acct-back" type="button">&larr; Go back</button>
+          </div>
+          <p class="form-status acct-status" role="alert"></p>
+          <p class="acct-fine">Booking as a guest always stays available. Demo mode signs you in right away.</p>
         </div>
-        <div class="field">
-          <label for="acct-email">Email</label>
-          <input id="acct-email" name="email" type="email" autocomplete="email" required>
-        </div>
-        <button class="btn btn-solid acct-signin" type="button">Send my sign-in link</button>
-        <p class="acct-fine">We'll email you a one-tap sign-in link — no password to
-        remember. Demo mode signs you in right away.</p>
-        <p class="form-status acct-status" role="alert"></p>
       </div>
 
       <!-- signed in: skin plan, points, bookings, referral -->

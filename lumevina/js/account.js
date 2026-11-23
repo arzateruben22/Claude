@@ -511,6 +511,8 @@
     lastFocus = document.activeElement;
     statusEl.textContent = "";
     render();
+    if (!session && outView.getAttribute("data-step") !== "email") askStep("email");
+    if (typeof paintGo === "function") paintGo();
     modal.setAttribute("aria-hidden", "false");
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -542,12 +544,34 @@
     });
   });
 
+  /* ── Signed out: one question at a time (email, then name), then the link ── */
+  var askStep = function (which) {
+    outView.setAttribute("data-step", which);
+    outView.querySelectorAll(".acct-q").forEach(function (q) { q.hidden = q.getAttribute("data-q") !== which; });
+    statusEl.textContent = "";
+    setTimeout(function () { (which === "name" ? nameInput : emailInput).focus(); }, 60);
+  };
+  var emailOk = function () { return !!emailInput.value.trim() && emailInput.checkValidity(); };
+  var paintGo = function () { outView.classList.toggle("email-ok", emailOk()); outView.classList.toggle("name-ok", !!nameInput.value.trim()); };
+  emailInput.addEventListener("input", paintGo);
+  nameInput.addEventListener("input", paintGo);
+  var toName = function () {
+    if (!emailOk()) { statusEl.textContent = "That email doesn't look complete yet."; return; }
+    try { var known = localStorage.getItem(NAME_KEY); if (known && !nameInput.value) nameInput.value = known; } catch (e) { /* private mode */ }
+    paintGo();
+    askStep("name");
+  };
+  outView.querySelector('[data-go="name"]').addEventListener("click", toName);
+  emailInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); toName(); } });
+  nameInput.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); signinBtn.click(); } });
+  outView.querySelector(".acct-back").addEventListener("click", function () { askStep("email"); });
+
   /* ── Sign in (magic-link mock — see header note) ── */
   signinBtn.addEventListener("click", function () {
     var name = nameInput.value.trim();
     var email = emailInput.value.trim();
     if (!name || !email || !emailInput.checkValidity()) {
-      statusEl.textContent = "Please add your name and a valid email.";
+      statusEl.textContent = "Add your name, and we'll send the link.";
       return;
     }
     signinBtn.disabled = true;
