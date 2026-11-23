@@ -333,7 +333,7 @@ print(f"  Piers (every {PIER_STEP:.0f} m along a br span, the first {PIER_STEP /
       + (', '.join(f"{j} {seg_cls(d['seg'][j])}{' ' + DI['name'][d['seg'][j]['n']] if 'n' in d['seg'][j] else ''}" for j in sorted(under)) or 'none')
       + ". The estimate counts every pier.")
 poles = [Point(f[0]) for ly, i, lab, f, g, r in F if ly == 'infrastructure points' and r == 'power:power_pole']
-host = Polygon([fr(q) for q in dec(d['bld'][HOST_BLD]['p'])]); patio = box(2.0, -5.5, 24.0, 0.0)
+host = Polygon([fr(q) for q in dec(d['bld'][HOST_BLD]['p'])]); patio = box(2.0, -5.5, 27.0, 0.0)   # the patio to u 27 (2026-11-16)
 cands = [('palm', dfr(10.1, s)) for s in range(-6, 25, 6)] + [('shade tree', (u, -19.0)) for u in range(-2, 23, 6)]
 trees, dropped = [], []
 for kind, q in cands:

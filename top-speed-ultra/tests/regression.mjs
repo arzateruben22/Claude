@@ -3658,9 +3658,9 @@ await group('phone', async (use) => {
       await game(page, (v) => { const g = window.__game; g.updateSettings({ ...g.settings, handling: v }); }, HANDLING);
       await page.waitForFunction(`${shown('tcs')} === (window.__game.phys.tc ? 'on' : 'off') && ${shown('abs')} === (window.__game.phys.abs ? 'on' : 'off')`, null, { timeout: FRAMES_MS, polling: 250 });
       const assists = await game(page, `${shown('tcs')} + '/' + ${shown('abs')}`);
-      // Go To Stoppage Time: the next turn's arrow and distance and the destination, the HUD's own
-      expect(await game(page, () => window.__game.navigateTo('Stoppage Time')), `${car}: Go To Stoppage Time refused`);
-      await page.waitForFunction(`(() => { const h = window.__lastHud; return h && h.dest === 'Stoppage Time' && ${shown('dest')} === h.dest && ${shown('turn')} === h.turn && ${shown('next')} === ${fmtMi}(h.nextDist / 1609.344); })()`, null, { timeout: FRAMES_MS, polling: 250 });
+      // Go To Vega & Vinnie’s (once Stoppage Time): the next turn's arrow and distance and the destination, the HUD's own
+      expect(await game(page, () => window.__game.navigateTo('Vega & Vinnie’s')), `${car}: Go To Vega & Vinnie’s refused`);
+      await page.waitForFunction(`(() => { const h = window.__lastHud; return h && h.dest === 'Vega & Vinnie’s' && ${shown('dest')} === h.dest && ${shown('turn')} === h.turn && ${shown('next')} === ${fmtMi}(h.nextDist / 1609.344); })()`, null, { timeout: FRAMES_MS, polling: 250 });
       const nav = await game(page, `({ turn: ${shown('turn')}, next: ${shown('next')}, dest: ${shown('dest')}, hudTurn: window.__lastHud.turn, hudNext: window.__lastHud.nextDist })`);
       expect(nav.turn === 'left' || nav.turn === 'right' || nav.turn === 'ahead', `${car}: the next turn "${nav.turn}"`);
       // paused, nothing changes: no display draws again
@@ -4185,9 +4185,9 @@ await group('nav-hud', async (use) => {
     await game(p, () => { [...document.querySelectorAll('button')].find((b) => b.textContent.trim() === 'Drive').click(); });
     await p.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
     await game(p, () => { const g = window.__game, m = g.findMain('CA-22 East'); g.placeCar(m, m.len * 0.35, 1, 60); g.setCam('chase'); });
-    await game(p, goToPlace, 'Stoppage Time');
+    await game(p, goToPlace, 'Vega & Vinnie’s');
     await p.waitForFunction(() => { const e = document.querySelector('.hud-dest'), t = document.querySelector('.hud-thrustbtn');
-      return e && !e.hidden && /Stoppage Time/.test(e.textContent) && t && !t.hidden && !document.querySelector('.app.hud-min'); }, null, { timeout: 900000, polling: 500 });
+      return e && !e.hidden && /Vega & Vinnie’s/.test(e.textContent) && t && !t.hidden && !document.querySelector('.app.hud-min'); }, null, { timeout: 900000, polling: 500 });
   };
   await check('destination set in the OC Hypercar on a phone (DPR 3, touch): no HUD boxes overlap, all inside the viewport and its safe areas, at 390 × 844 and 844 × 390', async () => {
     const out = [];
@@ -5146,16 +5146,26 @@ async function backState(page, f0) {
 await group('venues', async (use) => {
   const { page } = await use({ settings: { time: 'sunset' } });
   await drive(page, 'Free Drive');
-  await check('venues: Lot 57 and Stoppage Time are places in the Go to sheet', async () => {
+  await check('venues: Lot 57 and Vega & Vinnie’s are places in the Go to sheet', async () => {
     await page.getByRole('button', { name: 'Go to', exact: true }).click();
     const places = await page.locator('.grid.places .gcell b').allTextContents();
     await page.getByRole('button', { name: 'Back', exact: true }).click();
-    expect(places.join() === 'Lot 57,Stoppage Time', places.join());
+    expect(places.join() === 'Lot 57,Vega & Vinnie’s', places.join());
     return places.join(', ');
   });
+  // the rename (2026-11-16): a save, a link or a Go To target naming the bar's old name (or the new one with a plain
+  // apostrophe) means the bar, under its new name; the game's venue id stays 'stoppage'
+  await check('venues: the old name "Stoppage Time" and "Vega & Vinnie\'s" map to Vega & Vinnie’s (id stoppage)', async () => {
+    const r = await game(page, () => { const g = window.__game, out = {};
+      for (const n of ['Stoppage Time', "Vega & Vinnie's", 'Vega & Vinnie’s']) { const ok = g.navigateTo(n); out[n] = { ok, venue: g.routeVenue?.venue?.name ?? null, id: g.routeVenue?.venue?.id ?? null }; g.navigateTo(null); }
+      return { out, venues: g.venues }; });
+    for (const [n, v] of Object.entries(r.out)) expect(v.ok && v.venue === 'Vega & Vinnie’s' && v.id === 'stoppage', `${n}: ${JSON.stringify(v)}`);
+    expect(r.venues.join() === 'Lot 57,Vega & Vinnie’s', r.venues.join());
+    return Object.entries(r.out).map(([n, v]) => `${n} -> ${v.venue} (${v.id})`).join('; ');
+  });
   const trips = [];
-  for (const [venue, rampId] of [['Lot 57', 1142], ['Stoppage Time', 124]]) {
-    const tag = venue === 'Lot 57' ? 'Lot 57' : 'Stoppage Time';
+  for (const [venue, rampId] of [['Lot 57', 1142], ['Vega & Vinnie’s', 124]]) {
+    const tag = venue === 'Lot 57' ? 'Lot 57' : 'Vega & Vinnie’s';
     let arrived = null;
     await check(`venues: ${tag}: navigateTo routes to its exit ramp, Auto-drive takes it there and the fade parks you`, async () => {
       const r = await autoDriveTo(page, venue);
