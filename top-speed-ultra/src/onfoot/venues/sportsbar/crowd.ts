@@ -194,7 +194,7 @@ export class Crowd {
       const bm = /^booth (\d) /.exec(s.id); if (bm) tid = `booth ${bm[1]}`;
       if (s.group?.startsWith('ht')) tid = `high-top ${+s.group.slice(2) + 1}`;
       if (s.group?.startsWith('pt')) tid = `patio table ${+s.group.slice(2) + 1}`;
-      const patio = s.at[1] < 0 && s.at[0] > 2 && s.at[0] < 24;
+      const patio = s.at[1] < 0 && s.at[0] > 2 && s.at[0] < 27;           // (the patio runs to u 27 since 2026-11-16)
       const fillerOk = s.kind !== 'staff' && !NO_FILLER_ZONES.has(s.zone) && !s.id.endsWith(' player') && s.id !== 'jukebox spot' && !s.id.startsWith('restroom') && s.zone !== 'front walk' && s.id !== 'shuffleboard thrower';
       const id = tid ?? `single ${s.id}`;
       let u = this.units.get(id);
