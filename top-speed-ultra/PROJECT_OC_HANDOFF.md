@@ -775,6 +775,40 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ## Opus queue (routine items waiting for a daytime session)
 
+### OC Hypercar to the owner's four references: two lanes paused 2026-11-23 (resume in a fresh chat)
+
+The owner paused all work after v27 over usage. Two hypercar lanes from session_01SwssTo7t6RP6BjTKo6BMvm stopped
+mid-run. Both are committed and backed up on origin, and both are UNJUDGED:
+- **claude/wip-hyper-refs (exterior):** round 3, plus the owner's surface complaint ("theres still pixels and color
+  mismatches"). State and open items: `control/hypercar/LANE_STATE_EXTERIOR.md` on that branch.
+- **claude/wip-hyper-int (cockpit):** matching interior.png ("the cockpit needs to match exactly"), with the exterior
+  merged in. State and gap list: `control/hypercar/LANE_STATE_COCKPIT.md` on that branch. It contains everything on
+  wip-hyper-refs except that branch's last docs commit.
+Neither contains v27 yet.
+
+Ready-to-paste prompt, under the lean rules above:
+
+> Project OC, top-speed-ultra/. Read CLAUDE.md (Lean usage first), then
+> control/hypercar/LANE_STATE_COCKPIT.md and LANE_STATE_EXTERIOR.md on origin claude/wip-hyper-int and
+> claude/wip-hyper-refs.
+> Work on claude/wip-hyper-int, which carries both lanes:
+> 1. Merge origin/local/live-preview (v27+), keeping the economy lane's edition gating: the Founder plaque, Glacier
+>    Silver and Founder Ice only on the Founder edition.
+> 2. Build. Run only the phone and render groups.
+> 3. Shoot the owner sheets:
+>    - interior.png | v27 | now, at test-car view=ref-int;
+>    - the iPhone 393x852 seat view, v27 | now;
+>    - front34, rear34 and side, reference | v27 | now.
+>    Look at them.
+> 4. One judge on the cheaper model, then at most one repair. Priorities:
+>    - the hood share from the seat;
+>    - the seat-view shards at the left A-pillar foot;
+>    - the cabin pixels at the side glass;
+>    - cockpit items left on the gap list.
+> 5. Send the owner the sheets.
+> 6. If kept: the full suite once, then fast-forward local/live-preview and publish the main link.
+> Owner decision still open: raise the bonnet (option B)?
+
 - Everything in the daytime prompt above, in order.
 - When the owner resumes pushes: merge claude/realism-2, claude/store, claude/hypercar (and claude/drift once F1
   passes) onto claude/always-on in that order, reusing the hand resolutions in local/live-preview (49a26c4), run the
