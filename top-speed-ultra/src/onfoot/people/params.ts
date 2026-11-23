@@ -28,6 +28,9 @@ export interface BodyShape {
   /** (fifth pass, 2026-11-16) a man's pectorals as plates, 0..1: less deep, set a little higher and back, so a big chest
    *  reads as muscle in profile and not as a bust. 0 or unset: as before */
   chestFlat?: number;
+  /** (hero test, 2026-11-16) a thicker neck, 0..1: up to 14 % more round the column (an athlete's neck, nearly as wide
+   *  as the jaw). 0 or unset: as before */
+  neck?: number;
 }
 
 export interface FaceShape {
@@ -60,6 +63,9 @@ export interface FaceShape {
    *  the chin's corners filled, so the face's outline from the front runs down to a low corner and across a wide chin, not
    *  in a V to a point. 0 or unset: as before */
   jawSquare?: number;
+  /** (hero test, 2026-11-16) deep-set eyes, 0..1: the brow ridge about 2 mm lower and further forward over the eye, so the
+   *  eye sits in its socket's shade. 0 or unset: as before */
+  browLow?: number;
 }
 
 export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | 'bald' | 'ponytail' | 'receding'
@@ -74,7 +80,9 @@ export type HairStyle = 'updo' | 'long' | 'bob' | 'short' | 'curly' | 'buzz' | '
   | 'longWaves'        // long, loosely waved hair from a centre parting, down the back to the shoulder blades
   // (added 2026-11-15 for the graphics pass: new values only)
   | 'wavesFlow'        // shoulder-length waves from a side parting as flowing hair (layered ends, the parting's fall over the temple)
-  | 'curlsUnderCap';   // thick curls worn under a cap: they show below the cap's band at the sides and the back
+  | 'curlsUnderCap'    // thick curls worn under a cap: they show below the cap's band at the sides and the back
+  // (added 2026-11-16 for the Chad hero test: a new value only)
+  | 'sweptWavy';       // a swept-back wavy side part: the top 6 to 8 cm, combed back and across in soft waves with volume at the front, the sides and back tapered shorter, tidy over the ears and at the nape (hairWavy.ts)
 export type FacialHair = 'none' | 'stubble' | 'beard' | 'moustache' | 'goatee'
   // (cast, 2026-11-11) a short full beard with volume: the beard's shading plus a short hair shell over it (hair.ts
   // buildBeardVolume), so it reads at a distance and on dark skin. 'beard' is unchanged
@@ -118,6 +126,14 @@ export interface Look {
    *  less red scatter where the light falls off, so the cheek's and the jaw's turn away from the light is a soft tone
    *  and not a dark red-brown patch. 0 or unset: as before */
   softShade?: number;
+  /** (hero test, 2026-11-16) the builder's best skin and eyes, 0..1: a warm terminator where the light falls off, pore and
+   *  gloss variation, stubble as a soft shaded layer, colour zones (cheeks, nose, ears, forehead), a soft shade in the eye
+   *  socket under the brow; a wetter cornea and a darker limbal ring. Its own shader programs: 0 or unset, every material
+   *  and program is exactly as before */
+  hero?: number;
+  /** (hero test, 2026-11-16) straight, level brows, 0..1: less arch, set lower over the eye, the tail dropping less. 0 or
+   *  unset: as before */
+  browFlat?: number;
 }
 
 export type Fabric = 'satin' | 'cotton' | 'denim' | 'leather' | 'knit' | 'wool' | 'linen'
@@ -210,6 +226,9 @@ export interface Accessories {
   /** our own small embroidered 'OC' mark on the cap's front (its colour); unset or null: a plain cap. No other mark is
    *  ever drawn: no side flag, no back logo */
   capMark?: number | null;
+  // (added 2026-11-16 for the Chad hero test: optional, unset builds as before)
+  /** the ear studs' size as a share of the standard stud (1.6: a stone that reads at a few metres); unset: 1 */
+  studSize?: number;
 }
 
 export interface PersonOptions {

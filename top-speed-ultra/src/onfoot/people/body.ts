@@ -200,7 +200,7 @@ export function buildRig(b: BodyShape, face: FaceShape, heel = 0, toeFlat = fals
     }
   }
   // neck
-  const neckR = (m ? 0.058 : 0.05) * ws + 0.5 * fat.neck + 0.008 * mu;
+  const neckR = ((m ? 0.058 : 0.05) * ws + 0.5 * fat.neck + 0.008 * mu) * (1 + 0.14 * (b.neck ?? 0));   // (neck, hero test: unset, as before)
   // the column sits back under the ears and is shallower than it is wide, so the throat drops from a vertex behind the
   // chin instead of flowing out of it and the collarbones stand proud of its base; blended tight so the trapezius
   // slope starts at its base rather than fairing up into the jaw

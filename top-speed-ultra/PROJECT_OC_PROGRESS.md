@@ -4,6 +4,57 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-16: Chad hero test: a swept-back wavy side part and his best close-up head (lane `claude/chad-hero`, uncommitted)
+
+The owner: "Yes and make sure the hairstyle is more accurate, I don't want it to look like strict curly hair and have
+more of a wavy texture". Built on `8a8c138` (a snapshot of the cast lane's work), nothing committed. What was built, what
+is still short and the cost are in `PROJECT_OC_CAST.md`, "Chad hero test"; this entry is how it was checked.
+
+- **Changed:** `src/onfoot/people/hairWavy.ts` (new: the strand field, the volume, the shader, the cards), and additive
+  options in `hair.ts`, `cards.ts`, `person.ts`, `params.ts`, `skin.ts`, `face.ts`, `head.ts`, `body.ts`, `acc.ts`; Chad's
+  values in `src/onfoot/cast.ts`; two camera views in `src/onfoot/test-cast.ts` (`above<deg>`, `near<deg>`); three shoot
+  scripts in `tests/` (`chad-hero-shoot.mjs`, `chad-hero-venue.mjs`, `chad-hero-picker.mjs`). Not touched:
+  `src/ui/castStage.ts`, `src/preview/hands*`, `Physics.ts`, `car-wheel.ts`, the cockpit camera, the store.
+- **Types and build:** `npx tsc --noEmit` and `npx tsc --noEmit -p tsconfig.game.json` clean; `npm run build` writes both
+  pages, `data-build="owner-test"` once in `dist/artifact.html` and not in `dist/top-speed-ultra.html`.
+- **Every other preset renders as before** (verified, pixel by pixel): the six, Chadaline and the presets `reference`,
+  `elder`, `muscular`, `stocky` at LOD 0, High, 600x600, three views each (head three-quarter, full front, head from
+  behind): 33 frames from this tree against the same 33 from a copy of `8a8c138`, all identical. After the last source
+  change (the stud's place on the lobe): the presets `tall` and `broad` (they wear studs), three views each, and Leila
+  and Chadaline, two views each: 10 frames, all identical.
+- **Suite** (the built game, headless Chromium, SwiftShader; one run at a time; the machine at a load average of 19 to 24
+  from other lanes):
+  - `npm test -- --only=boot,cast`: **18/18 passed** (boot 61 s; cast 525 s + 141 s and the phone picker).
+  - `npm test -- --only=cast-pack,cast-pack-seat-phone`: **12/12 passed**. The budget line: "chad 2170/13070/82776 tris,
+    21 calls ...; chadaline 2032/11977/76394 tris, 18 calls".
+  - `npm test -- --only=cast-pack-venues`: the first run was stopped by this session's own 10-minute limit during the
+    Stoppage Time check (Lot 57 as chad had passed; the stop closed the browser, which the log shows as a failure of that
+    check). Re-run in two parts: `--check="as chad:"` **4/4 passed** ("Lot 57 as chad ... avatar chad (#cc9c7a, sweptWavy,
+    1.88 m); 49 people, all from the six"; "Stoppage Time as chad ... 42 people, all from the six");
+    `--check="as chadaline"` (on the final build) **4/4 passed** ("avatar chadaline (#c48a63, longWaves, 1.68 m)" in both
+    venues, the crowd all from the six). Each run's count includes its "no page errors" lines.
+  - The runs above, except Chadaline's venues, were on the build before one last change (the stud moved 8.8 mm out onto the lobe's face, `acc.ts`, only with
+    `studSize` set). After it: both type checks, the build, and `--only=cast-pack --check="phone budget"` again:
+    **2/2 passed**, the same triangle counts.
+- **Frames** (`tests/out/cast/hero/`, all looked at):
+  - the head at Ultra quality, 900x900: `chad-yaw0-hero.png`, `chad-yaw-40-hero.png`, `chad-yaw-90-hero.png`,
+    `chad-yaw180-hero.png`; the hair from above and from above and behind: `chad-above0-hero.png`,
+    `chad-above180-hero.png`; portraits `chad-near0-hero.png`, `chad-near-40-hero.png`; all eight on `sheet-hero.png`;
+    beside the owner's face sheet: `compare-chad-hero-sheet.png`; the stud: `crop-ear-hero.png`;
+  - before (the curls, `8a8c138`): `before/sheet-before.png` and its eight frames;
+  - on foot in Stoppage Time, Saturday 13:00, third person, the camera 2 m from him: `venue-stoppage-chad-ultra-a.png`,
+    `-ultra-b.png` (Ultra) and `venue-stoppage-chad-hd-a.png` (High); the avatar is LOD 0, 197,519 triangles, at both.
+    (Shot before the stud's move; the stud is a few pixels at that distance.)
+  - the picker on the phone, 390x844 at DPR 3, the TEST unlock on, Chad chosen: `picker-chad-390x844-three.png` (the page)
+    and `picker-chad-390x844-three-canvas.png` (the turntable, LOD 0, 82,776 triangles).
+- **Frame cost:** see the cast file. In short: the seat view draws no people-builder mesh and Low on foot draws the avatar
+  at LOD 1 with the unchanged coarse material, so the new shaders are in neither; the timings taken here (580 to 706 ms a
+  frame in Lot 57 at Low; 2,456 ms before and 2,375 ms after for Chad's phone-quality close-up alone) were under a load
+  of 20 and cannot show a 0.5 ms difference. Not measured on a real phone.
+- **Not right yet** (the cast file has the list): still a stylised head, not the sheet's person; card segments and a
+  few stray dark card ends up close; stripes in the side hair at game distance; the forehead wave is a lobe of the
+  hairline, not a free lock; the picker's card still shows the sheet's curly portrait; the clothes were not changed.
+
 ## 2026-11-16: The cast, fifth pass: the looks of Chad, Chadaline and the six (uncommitted)
 
 The owner (7 AM PT): "Yes fix chad and the characters". The art judges' list, the pack pair first. This lane owns
