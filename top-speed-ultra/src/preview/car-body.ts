@@ -430,7 +430,7 @@ function makeBody(P: ShapeParams) {
         // the weave in plan (the roof); the two-tone's sides and ends take it in their own planes
         for (let k = 0; k < cu.count; k++) {
           if (!LOWC) { cu.setXY(k, cp.getX(k), cp.getZ(k)); continue; }
-          const sc = 1 / 0.15;   // the same weave as the splitter and the skirts
+          const sc = 1 / (P.noseStyle === 'hyper' ? 0.4 : 0.15);   // the same weave as the splitter and the skirts
           if (Math.abs(cn.getY(k)) > 0.6) cu.setXY(k, cp.getX(k) * sc, cp.getZ(k) * sc);
           else if (Math.abs(cn.getX(k)) > Math.abs(cn.getZ(k))) cu.setXY(k, cp.getZ(k) * sc, cp.getY(k) * sc);
           else cu.setXY(k, cp.getX(k) * sc, cp.getY(k) * sc);
@@ -680,6 +680,10 @@ function makeBody(P: ShapeParams) {
   function buildExtras(kit: Kit, keep: (p: V3) => boolean, intakeF: THREE.Shape, meshR: THREE.Shape | null, tailSec: V3[], high = true) {
     const HEAD = P.head;
     const hyper = P.noseStyle === 'hyper', racy = P.noseStyle === 'corsa' || hyper;   // carbon frames and trims
+    // (the hypercar's carbon, judge round 2: one weave scale on every part, box-mapped 0.4 m a UV unit, so its 5 cm map
+    // tile (car.ts) lays a 2 cm texture with a twill that reads at the owner's cameras; its parts had seven scales, from
+    // a 3 mm weave on the splitter to one in metres on the wing)
+    const CU = (s: number | 'keep'): number | 'keep' => (hyper ? 0.4 : s);
     // an LED strip (the hypercar's ice blue): a ribbon w wide centred on the path, facing nrm(i), lifted off the
     // surface; u runs along it, v across it (the LED map's core and halo). key: the turn signals' amber overlays
     // ('sigL', 'sigR') use the same ribbon under their own keys
@@ -847,7 +851,7 @@ function makeBody(P: ShapeParams) {
           // (and the nose's plan V, as the warp moves the skin round them)
           if (NV) for (let k = 0; k < gp.count; k++) gp.setZ(k, gp.getZ(k) + vShift(gp.getX(k), gp.getZ(k)));
           g.computeVertexNormals();
-          kit.add('carbon', g, null, 0.15);
+          kit.add('carbon', g, null, CU(0.15));
         }
       });
       // splitter: a carbon blade under the nose, proud of it, with a turned-up lip at each end
@@ -868,10 +872,10 @@ function makeBody(P: ShapeParams) {
       };
       const sp = vDense(roundRect(S.w, S.d, Math.min(0.2, S.d * 0.4), 0, 0)); const sg = new THREE.ExtrudeGeometry(sp, { depth: 0.016, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.003, bevelSegments: 1, curveSegments: 10 });
       sg.rotateX(Math.PI / 2); sg.translate(0, YSILL - 0.008, ZF + S.d / 2 - S.proud);
-      kit.add('carbon', sg, null, 0.15);
+      kit.add('carbon', sg, null, CU(0.15));
       if (!hyper) for (const sd of [-1, 1]) {
         const fin = new THREE.BoxGeometry(0.01, 0.06, 0.2); fin.translate(sd * (S.w / 2 - 0.07), YSILL + 0.02, ZF + 0.06 - S.proud * 0.5);
-        kit.add('carbon', fin, null, 0.15);
+        kit.add('carbon', fin, null, CU(0.15));
       }
       if (hyper) {
         // the hypercar's splitter: a second, raised tier set back from the blade (the step), tall end plates that
@@ -880,14 +884,14 @@ function makeBody(P: ShapeParams) {
         if (T) {
           const st = new THREE.ExtrudeGeometry(vDense(roundRect(T.w, T.d, Math.min(0.16, T.d * 0.4), 0, 0)), { depth: 0.012, bevelEnabled: true, bevelThickness: 0.003, bevelSize: 0.003, bevelSegments: 1, curveSegments: 8 });
           st.rotateX(Math.PI / 2); st.translate(0, YSILL - 0.008 + T.h, ZF - S.proud + 0.06 + T.d / 2);
-          kit.add('carbon', st, null, 0.15);
+          kit.add('carbon', st, null, CU(0.15));
         }
         for (const sd of [-1, 1]) {
           // (M1b: small, 0.22 m long and 0.1 m tall at the back: they no longer stand up the corners as walls)
           const ep = new THREE.Shape(); ep.moveTo(0, 0); ep.lineTo(0.22, 0); ep.lineTo(0.22, 0.1); ep.lineTo(0.07, 0.075); ep.closePath();
           const eg = new THREE.ExtrudeGeometry(ep, { depth: 0.012, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.002, bevelSegments: 1 });
           eg.rotateY(-Math.PI / 2); eg.translate(sd * (S.w / 2 - 0.03) + 0.006, YSILL - 0.01, ZF - S.proud + 0.02);
-          kit.add('carbon', eg, null, 0.06);
+          kit.add('carbon', eg, null, CU(0.06));
         }
         const rr = Math.min(0.2, S.d * 0.4), out = vDense(roundRect(S.w, S.d, rr, 0, 0)).getPoints(10), z0 = ZF + S.d / 2 - S.proud;
         const front = out.filter((q) => q.y < -S.d / 2 + rr + 0.02).map((q) => v3(q.x, YSILL - 0.016, q.y + z0)).sort((a, b) => a.x - b.x)
@@ -909,7 +913,7 @@ function makeBody(P: ShapeParams) {
         const root = v3(sd * (body.side(z, y) - 0.015), y, z);
         const m4 = new THREE.Matrix4().makeRotationY(sd > 0 ? -0.5 : Math.PI + 0.5);
         g.applyMatrix4(m4); g.translate(root.x, root.y, root.z);
-        kit.add('carbon', g, null, 0.06);
+        kit.add('carbon', g, null, CU(0.06));
       }
     }
     // corner intakes: an opening in each front corner under the lamp, with a frame that wraps the skin's cut edge,
@@ -1017,7 +1021,7 @@ function makeBody(P: ShapeParams) {
             const zb = ZR - 0.09, yb = body.top(zb, a) - ends(zb)[1] * 0 - 0.002, ye = body.top(ZR - 0.012, a);
             rowsD.push([v3(x, yb, zb), v3(x, Math.max(ye, yb - 0.02) + 0.03 * e, ZR + 0.012), v3(x, Math.max(ye, yb - 0.02) + 0.03 * e - 0.009 - 0.003 * e, ZR + 0.014), v3(x, ye - 0.006, ZR - 0.008)]);
           }
-          kit.add('carbon', gridGeo(rowsD, { closeU: true, flip: true }), null, 0.1);
+          kit.add('carbon', gridGeo(rowsD, { closeU: true, flip: true }), null, CU(0.1));
         }
       } else if (P.tailStyle === 'brio') {
         // two round lamps a side in a body-coloured tail, each in a chrome ring
@@ -1044,7 +1048,7 @@ function makeBody(P: ShapeParams) {
         // (its faces turned into the recess: at the right side's middle the normal points to -x)
         let wg = gridGeo(wall, { flip: false });
         if ((wg.attributes.normal as THREE.BufferAttribute).getX(5) > 0) wg = gridGeo(wall, { flip: true });
-        kit.add('carbon', wg, null, 0.15);
+        kit.add('carbon', wg, null, CU(0.15));
         const floor = new THREE.Shape(o1);
         const fg = new THREE.ShapeGeometry(floor, 4); fg.translate(0, 0, zb); kit.add('trim', fg, null, 0.2);
         // the hex mesh over the floor, 6 mm proud, mapped in metres
@@ -1198,7 +1202,9 @@ function makeBody(P: ShapeParams) {
         // unjudged G1 lane)
         const ft = D.finTail ?? 0, th = ft ? 0.012 : 0.008;
         s.moveTo(D.z0, YSILL + 0.005);
-        if (ft) { s.lineTo(ZR + ft, YSILL - 0.02); s.lineTo(ZR + ft * 0.55, (k0 >= 1 ? D.h : capY(x)) - 0.01); }
+        // (judge round 2: their square tops read as flat cards hung under the tail; the references' fins rake: a short
+        // upright trailing edge, then the top edge climbing forward to the mouth's top at the tail's face)
+        if (ft) { s.lineTo(ZR + ft, YSILL - 0.02); s.lineTo(ZR + ft, YSILL + 0.1); s.lineTo(ZR + 0.012, (k0 >= 1 ? D.h : capY(x)) - 0.004); }
         else s.lineTo(ZR + 0.02, YSILL + 0.005);
         for (let k = 8; k >= 0; k--) { const t = k / 8; s.lineTo(D.z0 + (ZR - D.z0) * t, k0 >= 1 ? yr(t) : YSILL + 0.005 + (yr(t) - YSILL - 0.005) * k0); }
         const fin = new THREE.ExtrudeGeometry(s, { depth: th, bevelEnabled: false }); fin.rotateY(-Math.PI / 2); fin.translate(x + th / 2, 0, 0);
@@ -1321,7 +1327,7 @@ function makeBody(P: ShapeParams) {
         for (let k = 0; k < mu.count; k++) mu.setXY(k, mp.getZ(k) * sd, mp.getY(k));
         kit.add('scoopMesh', mg);
       }
-      kit.add('carbon', gridGeo([ring(0.003, 0.02), ring(dI + 0.003, 0.006), ring(dI + 0.003, -0.006), ring(dI - 0.006, -0.008)], { closeU: true, flip: fl }), null, 0.06);
+      kit.add('carbon', gridGeo([ring(0.003, 0.02), ring(dI + 0.003, 0.006), ring(dI + 0.003, -0.006), ring(dI - 0.006, -0.008)], { closeU: true, flip: fl }), null, CU(0.06));
     }
     // engine-cover louvres between the haunches: dark well, gloss blades
     if (LOUVRE && keep(v3(0, 1.0, 1.3))) {
@@ -1356,14 +1362,14 @@ function makeBody(P: ShapeParams) {
         }
         rowsS.push(r);
       }
-      kit.add('carbon', gridGeo(rowsS, { flip: false }), null, 0.06);
+      kit.add('carbon', gridGeo(rowsS, { flip: false }), null, CU(0.06));
       // the mouth: a dark face with a mesh, framed by the shell's lip
       const r0 = rowsS[0].map((p) => p.clone()), r1 = rowsS[2].map((p) => p.clone());
       const mouth = new THREE.Shape(r1.map((p) => new THREE.Vector2(p.x * 0.88, r0[0].y + (p.y - r0[0].y) * 0.85)));
       const mg = new THREE.ShapeGeometry(mouth, 2); mg.rotateY(Math.PI); mg.translate(0, 0, zsS[2] - 0.003); mg.scale(-1, 1, 1);
       kit.add('grille', mg, null, 1);
       const lip = gridGeo([r0, r0.map((p) => v3(p.x * 0.88, r0[0].y + (p.y - r0[0].y) * 0.85, p.z + 0.03))], { flip: true });
-      kit.add('carbon', lip, null, 0.06);
+      kit.add('carbon', lip, null, CU(0.06));
     }
     // the rear wing (Corsa): an inverted, cambered main plane with a gurney flap, end plates and swan-neck mounts
     // that hang it from above (the underside, which does the work, stays clean)
@@ -1380,7 +1386,7 @@ function makeBody(P: ShapeParams) {
       };
       const xsW: number[] = []; for (let k = 0; k <= 16; k++) xsW.push(-W.span / 2 + W.span * (k / 16));
       const wingRows = xsW.map((x) => sect.map(([a, b]) => toCar(a, b, x)));
-      kit.add('carbon', gridGeo(wingRows, { flip: true }), null, 'keep');
+      kit.add('carbon', gridGeo(wingRows, { flip: true }), null, CU('keep'));
       // gurney flap along the trailing edge
       const te0 = toCar(1, 0, -W.span / 2), te1 = toCar(1, 0, W.span / 2);
       const gf = new THREE.BoxGeometry(W.span, 0.022, 0.004); gf.translate(0, (te0.y + te1.y) / 2 + 0.01, te0.z + 0.001); kit.add('trim', gf, null, 0.05);
@@ -1394,7 +1400,7 @@ function makeBody(P: ShapeParams) {
         else { ep.moveTo(zc - W.chord * 0.45, yc - 0.1); ep.lineTo(zc + W.chord * 0.85, yc - 0.12); ep.lineTo(zc + W.chord * 0.85, yc + 0.11); ep.lineTo(zc - W.chord * 0.2, yc + 0.06); ep.closePath(); }
         const eg = new THREE.ExtrudeGeometry(ep, { depth: 0.008, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.002, bevelSegments: 1 });
         eg.rotateY(-Math.PI / 2); eg.translate(sd * (W.span / 2 + 0.004) + (sd > 0 ? 0.008 : 0), 0, 0);
-        kit.add('carbon', eg, null, 0.05);
+        kit.add('carbon', eg, null, CU(0.05));
         if (PL) {
           const xo = sd * (W.span / 2 + 0.0145), a = v3(xo, yc - H * 0.58 + 0.01, x1 - 0.06 - 0.012), b = v3(xo, yc + H * 0.42 - 0.012, x1 - 0.012);
           const lp: V3[] = []; for (let k = 0; k <= 6; k++) lp.push(a.clone().lerp(b, k / 6));
@@ -1417,8 +1423,10 @@ function makeBody(P: ShapeParams) {
         pts[pts.length - 1].copy(top).setY(top.y + 0.005);
         // (the hypercar, judge round 1: slim single blades, 3.6 cm deep tapering to 2.4 cm at the wing, as the
         // references' swan necks; the Corsa keeps its 6.4 cm struts)
+        // (judge round 2: at 4.5 mm by 1.8 cm they read as wire hooks at every angle; the references' necks are broad flat
+        // blades: 7 cm of chord in the car's own plane tapering to 4 cm at the wing, 8 mm thick, a flat section)
         const sl = P.wing.plate ? 1 : 0;
-        kit.add('carbon', tubeGeo(pts, () => (sl ? 0.0045 : 0.006), 8, { rb: (i) => (sl ? 0.018 - 0.006 * (i / 14) : 0.032), up: v3(1, 0, 0) }), null, 0.05);
+        kit.add('carbon', tubeGeo(pts, () => (sl ? 0.004 : 0.006), sl ? 14 : 8, { rb: (i) => (sl ? 0.035 - 0.015 * (i / 14) : 0.032), up: v3(1, 0, 0) }), null, CU(0.05));
         const foot = new RoundedBoxGeometry(sl ? 0.026 : 0.04, 0.02, sl ? 0.07 : 0.1, 2, 0.006); foot.translate(x, yb + 0.006, zb + 0.01); kit.add('trim', foot);
       }
     }

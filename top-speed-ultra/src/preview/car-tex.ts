@@ -112,8 +112,10 @@ export interface SurfaceMaps { map?: THREE.Texture; normalMap: THREE.Texture; ro
 // rounded in section and crimp down where they dive under; filaments run along each tow. One tile = 16 tows
 // (about 64 mm at 4 mm tows). The anisotropy map turns the sheen 90 degrees between warp and weft, which is what
 // makes real carbon flicker as you move.
-export function carbonMaps(n = 512): SurfaceMaps {
-  return once('carbon' + n, () => {
+// weave (the OC Hypercar's outside carbon, judge round 2): the tows' contrast, in albedo and roughness, this many times
+// the shared weave's, so a twill reads at a distance on near-black; 1 is exactly the shared map
+export function carbonMaps(n = 512, weave = 1): SurfaceMaps {
+  return once('carbon' + n + (weave === 1 ? '' : 'w' + weave), () => {
     const T = n / 16;
     const aniso = new Uint8Array(n * n * 4);
     const m = maps(n, (x, y, o) => {
@@ -125,8 +127,8 @@ export function carbonMaps(n = 512): SurfaceMaps {
       const crimp = Math.pow(Math.max(0, Math.sin(Math.PI * along)), 0.45);
       const fib = horiz ? vnoise(x * 0.06, y * 2.2, n * 0.06, n * 2.2, 3) : vnoise(x * 2.2, y * 0.06, n * 2.2, n * 0.06, 3);
       const tone = vnoise(x * 0.02, y * 0.02, n * 0.02, n * 0.02, 5);
-      o.a = 0.022 + 0.022 * round * crimp + 0.012 * fib + (horiz ? 0.004 : 0) + 0.006 * tone;
-      o.rough = 0.32 + 0.16 * (1 - round) + 0.06 * fib;
+      o.a = 0.022 + weave * (0.022 * round * crimp + 0.012 * fib + (horiz ? 0.004 : 0)) + 0.006 * tone;
+      o.rough = 0.32 + 0.16 * weave * (1 - round) + 0.06 * fib;
       o.h = round * (0.55 + 0.45 * crimp) + fib * 0.05;
       const a = (y * n + x) * 4;
       aniso[a] = horiz ? 255 : 128; aniso[a + 1] = horiz ? 128 : 255; aniso[a + 2] = (0.25 + 0.75 * round * crimp) * 255; aniso[a + 3] = 255;

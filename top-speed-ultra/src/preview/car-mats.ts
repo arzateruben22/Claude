@@ -23,10 +23,12 @@ const S = (q: Quality, high: number, phone: number) => (q === 'high' ? high : ph
 // carbon read pale grey at night under the full sky reflection
 // o.tint (the OC Hypercar's outside carbon, M1b): a darker, less metallic weave, so it reads black, not tan, under a
 // warm sky; without any option the material is exactly the one every other car has
-export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number; tint?: number } = {}) {
-  const tint = o.tint;
-  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? '') + (tint === undefined ? '' : 't' + tint), () => {
-    const t = tiled(X.carbonMaps(S(q, 512, 256)), tile);
+// o.weave (the OC Hypercar's outside carbon, judge round 2): a twill of this many times the shared contrast
+// (car-tex carbonMaps), so the splitter, the fins and the wing read near-black with a grey weave, not as flat slabs
+export function carbon(q: Quality, tile = 0.064, o: { env?: number; cc?: number; tint?: number; weave?: number } = {}) {
+  const tint = o.tint, wv = o.weave ?? 1;
+  return once('carbon' + q + tile + (o.env ?? '') + '|' + (o.cc ?? '') + (tint === undefined ? '' : 't' + tint) + (wv === 1 ? '' : 'w' + wv), () => {
+    const t = tiled(X.carbonMaps(S(q, 512, 256), wv), tile);
     const m = new THREE.MeshPhysicalMaterial({
       color: tint === undefined ? new THREE.Color(1.9, 1.9, 2.0) : new THREE.Color(tint), map: t.map, normalMap: t.normalMap, normalScale: new THREE.Vector2(0.5, 0.5),
       roughnessMap: t.roughnessMap, roughness: 1, metalness: tint === undefined ? 0.55 : 0.25, clearcoat: tint === undefined ? 1 : 0.55, clearcoatRoughness: o.cc ?? (tint === undefined ? 0.035 : 0.09),
