@@ -94,6 +94,19 @@ setWheelAngle and doesn't mount them at seatOffset. Queued. To render the page, 
 - **launch:** 8/11 and 9/11 under a load average of 16-29. The run card is the known environment failure. The story and
   errand checks wait 10 s for the results screen, which took 16-19 s on both 37a4a731 and HEAD (timed directly, 3 runs
   each); 37a4a731's own launch run at a quieter moment was 10/11.
+## 2026-11-22: the view holds still when paused, and the speed shake is smooth
+
+The owner (v25, a pause-screen screenshot): "why does it shake like the outside of the car when paused and driving?"
+Two things picked a fresh Math.random() offset every rendered frame, and both kept running on the pause screen, where
+the game clock stops but the speed stays set: Ultra Realism's camera shake (Game.updateCamera, scaled by the speed) and
+the car body's engine/road buzz (PlayerCar.update, scaled by the rpm and speed; the cockpit camera rides on the body).
+Both are now smooth vibrations from incommensurate sines on the game clock (same strength), so they stop when the clock
+stops; the shake block and an impact's jolt also skip while paused. While driving it reads as road vibration instead of
+the whole view jittering.
+
+Checks: tsc (both configs) passes; npm run build passes with one owner-test mark; new check "Ultra Realism: the camera
+holds still on the pause screen at speed": paused at 158 mph with the shake on, the camera moved 0.00e+0 m over 12
+frames (before the fix: 1.96e-3 to 2.02e-3 m); the existing Ultra Realism check still passes.
 
 ## 2026-11-22: the left forearm no longer disappears into the hypercar's door when the wheel turns
 

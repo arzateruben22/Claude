@@ -2318,6 +2318,21 @@ await group('progression', async (use) => {
     expect(off < 0.05, `tunnel ${fmt(off)} with tunnel vision switched off`);
     return `level 1: ${locked}; level 6 at ${Math.round(v2 * MPH)} mph: ${fmt(on)}; switched off: ${fmt(off)}`;
   });
+  // the pause screen holds still (owner, 2026-11-22: "why does it shake like the outside of the car when paused"): with
+  // Ultra Realism's camera shake on, at level 6 and over 150 mph, the camera does not move across rendered frames while
+  // the game is paused (the shake ran every frame on Math.random() and the paused speed)
+  await check('Ultra Realism: the camera holds still on the pause screen at speed', async () => {
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, ultra: true, ultraShake: true, ultraTunnel: true }); g.setPaused(true); });
+    const v = await game(page, () => window.__game.phys.vx);
+    // the camera's own easing (the head's g-force sway, the chase camera's follow) settles over the first frames after
+    // the pause; what must not happen is a shake that keeps going, so measure after a settle
+    await frames(page, 90);
+    const seen = [];
+    for (let i = 0; i < 12; i++) { await frames(page, 1); seen.push(await game(page, () => window.__game.camera.position.toArray())); }
+    let max = 0; for (const q of seen) max = Math.max(max, Math.hypot(q[0] - seen[0][0], q[1] - seen[0][1], q[2] - seen[0][2]));
+    expect(v * MPH > 150 && max < 1e-6, `paused at ${Math.round(v * MPH)} mph: the camera moved ${max.toExponential(2)} m over 12 frames`);
+    return `paused at ${Math.round(v * MPH)} mph with the shake on: the camera moved ${max.toExponential(2)} m over 12 frames`;
+  });
   await check('radio cycles three stations, then off', async () => {
     const r = await game(page, () => {
       const g = window.__game, seen = [];

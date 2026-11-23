@@ -574,9 +574,15 @@ export class PlayerCar {
     s.p = clamp(s.p, -0.08, 0.08); s.r = clamp(s.r, -0.07, 0.07); s.h = clamp(s.h, -0.06, 0.06);
     const joint = Math.floor(p.s / 15);
     if (joint !== this.lastJoint) { this.lastJoint = joint; if (v > 3) { s.hv -= 0.02 + v * 0.0009; s.pv += 0.03 + v * 0.0006; } }
-    const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012;
-    this.body.position.set((Math.random() - 0.5) * buzz, s.h + (Math.random() - 0.5) * buzz * 2, 0);
-    this.body.rotation.set(s.p + (Math.random() - 0.5) * buzz * 0.6, 0, s.r);
+    // the engine and road buzz: a smooth vibration from incommensurate sines on the game clock (was fresh Math.random()
+    // every frame: the cockpit camera rides on the body, so the whole view outside jittered, and it kept going on the
+    // pause screen, where the clock stops and the speed stays set; owner, 2026-11-22)
+    const buzz = (p.rpm / 8000) * 0.00035 + v * 0.000012, tb = now;
+    const n1 = Math.sin(tb * 71.3) * 0.5 + Math.sin(tb * 109.7 + 1.1) * 0.3 + Math.sin(tb * 157.9 + 2.3) * 0.2;
+    const n2 = Math.sin(tb * 67.1 + 0.4) * 0.5 + Math.sin(tb * 113.3 + 2.9) * 0.3 + Math.sin(tb * 149.1 + 1.7) * 0.2;
+    const n3 = Math.sin(tb * 79.9 + 2.2) * 0.5 + Math.sin(tb * 101.3 + 0.6) * 0.5;
+    this.body.position.set(n1 * buzz * 0.5, s.h + n2 * buzz, 0);
+    this.body.rotation.set(s.p + n3 * buzz * 0.3, 0, s.r);
     // the physics turns a tyre of SPEC.wheelR (0.345 m); each axle's own tyre turns by SPEC.wheelR / r of that, so
     // it rolls with the road (the hypercar's staggered 0.70 / 0.74 m tyres; 1 for a 0.345 m tyre)
     for (const w of this.wheels) {
