@@ -4,6 +4,97 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-23: the OC Hypercar's cabin stays inside its paint; its seat view sideways and on a desktop shows the wheel's hub
+
+Branch fix/hyper-polish on v25 (37a4a731), published as main link v26. Commits:
+- 5300920d: the cabin under the skin;
+- ed7b2cbe: the dev page's arm room;
+- d70581f7: the landscape and desktop seat pitch;
+- 4dacd31e: the suite.
+Judged keep (one independent judge, no repair round).
+
+**The notes.** Three queued notes from the v23 and v25 judges:
+- a tan speck on the rear flank, there since v22;
+- the landscape and desktop seat views cut the wheel at the hub;
+- test-car.ts (&hands=1) built the arms with no room.
+
+**1. The cabin through the skin.** Found with an ID probe:
+- Each cabin mesh drawn in its own colour, the body as a black occluder, the glass masked.
+- A beauty frame with the cabin shown and hidden, compared outside the glass.
+- Nine outside views at Low and High.
+
+The hypercar's narrow canopy stands on wide sidepods, and parts sized for the other cars' tubs came out through its
+paint:
+- The seats' head sections. The 'tan' backrest was 2.3 cm out at (-0.398, 0.916, 0.494), on both flanks. This is the
+  speck.
+- The sill plaque. It was sized for a 35 cm cap and stood 18 cm out of the hypercar's 1 cm one: a dark slot on the
+  door top.
+- The outside-only dash box. It ran door to door over the sunken bonnet: the dark rim round the windscreen's foot.
+- The dash's ends and the door cards' lower fronts: a black wedge at the door's leading edge.
+- The carpet's edges, along the skirts.
+
+**Fix** (OC Hypercar only; other cars build as before):
+- car-body keepInside moves a point that is outside the skin to just inside it. Points already inside don't move.
+- The cockpit runs every kit vertex through it, 3 cm in; the outside-only silhouette uses 4.5 cm, the roll hoop's
+  margin.
+- The silhouette's dash box is a fine grid the windscreen's width. The carpet is a grid, and the door rows are in finer
+  steps.
+- The plaque stands on the door card's insert.
+- The v25 armrest (z -0.34 to -0.18) is unchanged.
+
+**Result.** Pixels of cabin outside the glass, before → after:
+
+| View | Low | High |
+| --- | --- | --- |
+| Side, left | 3140 → 126 | 5473 → 327 |
+| Side, right | 2800 → 120 | 5109 → 627 |
+| Flank, left | 530 → 25 | 1077 → 32 |
+| Three-quarter front | 2576 → 431 | 5685 → 731 |
+| Above | 1870 → 136 | 3442 → 570 |
+| Behind the seats, high | 846 → 138 | 1947 → 848 |
+
+The judge's own probe agrees. On Low, base → HEAD: side 3117 → 120, door top 14055 → 1814, roof 3850 → 1045. At the
+judge's pixel (CSS 841, 376) the speck is gone.
+
+**Left over:**
+- A thin dark sliver of cabin across the bonnet just ahead of the windscreen's foot, seen from above and ahead.
+- Small wedges at the foot's corners, and at the side glass's lower front corner.
+
+The owner's crop of the polish preview (2026-11-23, "theres still pixels and color mismatches") shows these, along with
+grey blotches on the white paint, jagged black edges and tone steps between panels. They go to the hyper-surface lane,
+which runs on the new exterior.
+
+**2. The seat view sideways and on a desktop.**
+- The hypercar's eye sits higher and further forward since v23, but it kept the shared -0.085 rad landscape pitch.
+- At 852 x 393 and 1280 x 720 the hub cover ran from 97 to 113 % of the height, with the horizon at 43-44 %.
+- A sweep of pitch and field of view settled on -0.24 rad, through car-shape seatPitchL, read by PlayerCar.seatPitchL.
+  It's one line in Game.updateCamera.
+- Now: hub cover 83-95 %, horizon 32 %, cluster 64-78 %, bonnet from 45 %, on Low, Retro and High. At a standstill
+  the hub reaches about 98 %.
+- The HUD and touch controls are clear.
+- Other cars are unchanged (-0.085).
+- Still open: at full lock the rim's bottom is cut, and the canopy's left frame still crosses the upper left, smaller.
+- **Portrait.** The framing is identical: pitch, eye, hub and cluster numbers on base and HEAD. The cabin at the left
+  A-pillar foot and the door top changes slightly from the seat (0.9 % of pixels): the grey door-top slab over the
+  fender is a thinner wedge, and a small dark tab beside the cluster is gone.
+
+**3. The dev page.** test-car.ts now passes the car's armRoom, as PlayerCar does. The judge found that &hands=1 still
+doesn't match the game, on v25 and HEAD alike: the arms hang on the wheel in rest pose, because the page never calls
+setWheelAngle and doesn't mount them at seatOffset. Queued. To render the page, bundle with
+`import.meta.env.VITE_SUPABASE_*` defined empty.
+
+**Checked:**
+- **render:** the OC Hypercar check now also holds every cabin vertex along the flanks inside the skin: 0 of 28,493
+  out on HEAD; 910 out on 37a4a731.
+- **phone:** new check, "the hypercar's seat view on a phone sideways and on a desktop": the hub cover inside 98 % of
+  the height, nothing over the hub or cluster, the horizon at 28-40 %, the bonnet at least 1.6 %. The suite measures it
+  at 93-141 mph. 37a4a731 fails it: hub 98-114 %, horizon 43 %.
+- tsc clean, build OK, boot 18/18, phone 29/29, render 19/19 on re-run (one load-related creep on the hypercar check's
+  low-speed turn passed alone and on re-run).
+- **launch:** 8/11 and 9/11 under a load average of 16-29. The run card is the known environment failure. The story and
+  errand checks wait 10 s for the results screen, which took 16-19 s on both 37a4a731 and HEAD (timed directly, 3 runs
+  each); 37a4a731's own launch run at a quieter moment was 10/11.
+
 ## 2026-11-22: the left forearm no longer disappears into the hypercar's door when the wheel turns
 
 Branch fix/left-arm (94384485, 1f926f60, 25767012, 4bd14a03) on v23 (ca9da809). Merged with v24 (5e16ab4) as
