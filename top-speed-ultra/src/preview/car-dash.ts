@@ -461,3 +461,107 @@ export function rossiniDash(accent: string, q: 'phone' | 'high'): RossiniDash {
     return { window: win, left, right };
   });
 }
+
+// ------------------------------------------------------------------------------------------------ the OC Hypercar's console
+// The portrait screen on the hypercar's carbon centre spine (after the owner's interior reference of 2026-11-23: a car
+// seen from above between bar graphs, a line graph under it), our own design and the game's own data only: the car
+// from above with its Thrust tank and Ground Lock (THRUST live) or its tune, the revs and the power in use as bar
+// graphs either side of it, and a line graph of the speed over the last minute; the clock, the profile and the assists
+// across the top, Go To's next turn at the foot. The canvas also carries the three climate knobs' faces (fan,
+// temperature, seat: icons only, no climate is simulated) in a strip under the screen, so the knobs cost no draw call
+// of their own.
+//   hyperConsole(q)  512 x 896 on High (the screen 512 x 768, the knobs' strip 3 x 128 under it), half on phones
+export const CONSOLE_SPLIT = 768 / 896;   // the screen's share of the canvas's height (v from 1 - split to 1)
+export function hyperConsole(q: 'phone' | 'high'): DashPainter {
+  return once('dash.hyperConsole2' + q, () => {
+    const low = q === 'phone', k = low ? 0.5 : 1, W = 512 * k, H = 896 * k;
+    const [c, g] = canvas(W, H);
+    const t = tex(c), w = watch(14);
+    const { ICE, DEEP, HOT, TXT, DIM, OFF } = HY;
+    const trace: number[] = []; let lastT = -1e9;
+    // the knobs' faces, drawn once: a dark disc, a fine ice ring (the knob's own ring is geometry), an icon
+    const knobs = () => {
+      for (let i = 0; i < 3; i++) {
+        const cx = 85 + i * 171, cy = 832, r = 56;
+        g.fillStyle = '#05070b'; g.fillRect(cx - 85, 768, 171, 128);
+        g.fillStyle = '#0b0f16'; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = ICE; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, r - 6, 0, Math.PI * 2); g.stroke();
+        g.strokeStyle = '#e8f2ff'; g.fillStyle = '#e8f2ff'; g.lineWidth = 4; g.lineCap = 'round';
+        if (i === 0) { for (let b = 0; b < 4; b++) { g.save(); g.translate(cx, cy); g.rotate(b * Math.PI / 2 + 0.4); g.beginPath(); g.ellipse(0, -14, 7, 14, 0.3, 0, Math.PI * 2); g.fill(); g.restore(); } }
+        else if (i === 1) { g.beginPath(); g.roundRect(cx - 6, cy - 26, 12, 34, 6); g.stroke(); g.beginPath(); g.arc(cx, cy + 16, 10, 0, Math.PI * 2); g.fill(); }
+        else { g.beginPath(); g.moveTo(cx - 16, cy + 22); g.lineTo(cx + 12, cy + 22); g.lineTo(cx + 2, cy - 4); g.lineTo(cx - 6, cy - 26); g.stroke();
+          for (const d of [-8, 2, 12]) { g.beginPath(); g.moveTo(cx + d + 10, cy - 24); g.quadraticCurveTo(cx + d + 16, cy - 14, cx + d + 10, cy - 4); g.stroke(); } }
+      }
+    };
+    // the car from above, centred at (x, y), l long: the canopy teardrop between the sidepods, the wing, the wheels
+    const car = (x: number, y: number, l: number, col: string) => {
+      g.save(); g.translate(x, y); g.scale(l / 200, l / 200); g.strokeStyle = col; g.lineWidth = 3; g.lineJoin = 'round';
+      g.beginPath(); g.moveTo(0, -100); g.bezierCurveTo(34, -98, 50, -70, 48, -40); g.bezierCurveTo(40, -14, 40, 18, 52, 44); g.bezierCurveTo(54, 74, 40, 96, 0, 98);
+      g.bezierCurveTo(-40, 96, -54, 74, -52, 44); g.bezierCurveTo(-40, 18, -40, -14, -48, -40); g.bezierCurveTo(-50, -70, -34, -98, 0, -100); g.stroke();
+      g.beginPath(); g.ellipse(0, -6, 17, 42, 0, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.moveTo(-50, 86); g.lineTo(50, 86); g.stroke();
+      g.fillStyle = col; for (const [wx, wy] of [[-50, -58], [50, -58], [-54, 58], [54, 58]]) g.fillRect(wx - 5, wy - 16, 10, 32);
+      g.restore();
+    };
+    const p: DashPainter = {
+      tex: t, draws: 0, shown: {},
+      update(r, lowNow) {
+        // the speed's trace, a sample a second, the last 60
+        const now = performance.now();
+        if (now - lastT >= 1000) { lastT = now; trace.push(r.mph); if (trace.length > 60) trace.shift(); }
+        const cur = w.cur;
+        cur[0] = Math.round(clamp01(r.rpmFrac) * 12); cur[1] = Math.round(clamp01(r.kw / Math.max(1, r.kwMax)) * 12); cur[2] = Math.round(clamp01(r.tank) * 50); cur[3] = ON(r.thrustLive); cur[4] = ON(r.lock);
+        cur[5] = r.tune || r.mode; cur[6] = r.profile; cur[7] = ON(r.tcs); cur[8] = ON(r.abs); cur[9] = r.clock; cur[10] = trace.length ? trace.length * 1000 + Math.round(trace[trace.length - 1]) : 0;
+        cur[11] = r.dest ? r.turn : ''; cur[12] = navQ(r); cur[13] = r.dest;
+        if (!w.changed()) return false;
+        g.save(); g.scale(k, k);
+        if (!p.draws) knobs();
+        g.fillStyle = '#02050a'; g.fillRect(0, 0, 512, 768);
+        if (!lowNow) { const gr = g.createLinearGradient(0, 0, 0, 768); gr.addColorStop(0, 'rgba(30,80,150,0.20)'); gr.addColorStop(0.5, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(30,80,150,0.14)'); g.fillStyle = gr; g.fillRect(0, 0, 512, 768); }
+        g.strokeStyle = DEEP; g.lineWidth = 3; g.beginPath(); g.roundRect(12, 12, 488, 744, 22); g.stroke();
+        // the top row: the OC mark, the clock; the profile and the assists
+        drawOcMark(g, 34, 30, 66, 22, TXT);
+        if (r.clock) text(g, r.clock, 478, 42, 24, TXT, 600, 'right', 200);
+        const prof = profileWord(r.profile);
+        text(g, prof, 34, 86, 20, ICE, 800, 'left', 140);
+        chip(g, 330, 72, 66, 28, 'TCS', r.tcs, ICE, 15, lowNow); chip(g, 408, 72, 70, 28, 'ABS', r.abs, ICE, 15, lowNow);
+        g.fillStyle = OFF; g.fillRect(34, 114, 444, 2);
+        // the car from above, between the revs (left) and the power (right) as segmented bars
+        car(256, 290, 270, ICE);
+        const bars = (x: number, f: number, label: string, hot: string) => {
+          text(g, label, x + 22, 142, 14, DIM, 700, 'center');
+          for (let s = 0; s < 12; s++) { const y = 418 - s * 22; g.fillStyle = s < Math.round(f * 12) ? (s >= 9 ? hot : ICE) : OFF; g.fillRect(x, y, 44, 14); }
+        };
+        bars(40, clamp01(r.rpmFrac), 'REV', HOT);
+        bars(428, clamp01(r.kw / Math.max(1, r.kwMax)), 'kW', HOT);
+        // under the car: THRUST live, the tank and Ground Lock; or the tune
+        const tune = (r.tune || r.mode || '').toUpperCase(), pct = Math.round(clamp01(r.tank) * 100);
+        if (r.thrustLive) {
+          text(g, `THRUST ${pct}%`, 256, 462, 24, pct < 25 ? '#ffb347' : TXT, 700, 'center', 300);
+          text(g, r.lock ? 'GROUND LOCK ON' : 'GROUND LOCK IDLE', 256, 494, 16, r.lock ? HOT : DIM, 800, 'center', 300);
+        } else text(g, tune || 'SPORT', 256, 470, 26, ICE, 700, 'center', 300);
+        g.fillStyle = OFF; g.fillRect(34, 520, 444, 2);
+        // the speed over the last minute: a line graph
+        const gx0 = 44, gx1 = 468, gy0 = 680, gy1 = 560, top = Math.max(100, ...trace) * 1.1;
+        text(g, 'SPEED · 60 s', gx0, 544, 15, DIM, 700, 'left');
+        if (trace.length) text(g, `${Math.round(trace[trace.length - 1])} mph`, gx1, 544, 17, TXT, 700, 'right');
+        g.strokeStyle = OFF; g.lineWidth = 1.5; for (let i = 0; i <= 3; i++) { const y = gy0 - (gy0 - gy1) * i / 3; g.beginPath(); g.moveTo(gx0, y); g.lineTo(gx1, y); g.stroke(); }
+        if (trace.length > 1) {
+          g.strokeStyle = HOT; g.lineWidth = 3; g.beginPath();
+          trace.forEach((v, i) => { const x = gx1 - (gx1 - gx0) * (trace.length - 1 - i) / 59, y = gy0 - (gy0 - gy1) * v / top; if (i) g.lineTo(x, y); else g.moveTo(x, y); });
+          g.stroke();
+        }
+        // Go To at the foot
+        let nav = '';
+        if (r.dest) { turnArrow(g, 60, 724, 36, r.turn, ICE); nav = miles(r.nextMi); text(g, `${nav} · ${r.dest}`, 92, 726, 20, TXT, 600, 'left', 386, 13); }
+        else text(g, 'NO ROUTE', 44, 726, 18, DIM, 600, 'left');
+        g.restore();
+        t.needsUpdate = true; p.draws++;
+        p.shown.thrust = r.thrustLive ? `${pct}%` : 'off'; p.shown.tune = tune; p.shown.next = nav; p.shown.dest = r.dest; p.shown.mph = trace.length ? String(Math.round(trace[trace.length - 1])) : '';
+        return true;
+      },
+    };
+    p.update(Object.assign(dashReadout(), { tune: 'Unleashed', tank: 1, thrustLive: true, rpmFrac: 0.55, kw: 600, kwMax: 1500 }), low);
+    return p;
+  });
+}
