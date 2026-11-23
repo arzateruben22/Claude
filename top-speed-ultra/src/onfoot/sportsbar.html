@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Stoppage Time on Foot</title>
-<meta name="description" content="Stoppage Time, our own fictional sports bar on South Claudina Way in Anaheim, to walk on foot. The crowd and the matches are simulated from the time of day and the day of the week; nothing here is live.">
+<title>Vega &amp; Vinnie’s on Foot</title>
+<meta name="description" content="Vega &amp; Vinnie’s, our own fictional sports bar on South Claudina Way in Anaheim, to walk on foot. The crowd and the matches are simulated from the time of day and the day of the week; nothing here is live.">
 <meta name="theme-color" content="#1E1B3A">
 <style>
   :root {
@@ -240,13 +240,13 @@
 </style>
 </head>
 <body>
-<noscript><div style="padding:24px;font:16px/1.5 system-ui;color:#F1EFE7;background:#1E1B3A">Stoppage Time on foot is a 3D page: it needs JavaScript and WebGL. Stoppage Time is our own fictional sports bar on South Claudina Way in Anaheim. Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</div></noscript>
-<canvas id="view" tabindex="0" aria-label="Stoppage Time, on foot. Drag left to walk, drag right to look, tap to go. Keyboard: W A S D to walk, Shift to jog outdoors, E for the action, V for the view, O for the overhead view, C for your car, Escape to pause."></canvas>
+<noscript><div style="padding:24px;font:16px/1.5 system-ui;color:#F1EFE7;background:#1E1B3A">Vega &amp; Vinnie’s on foot is a 3D page: it needs JavaScript and WebGL. Vega &amp; Vinnie’s is our own fictional sports bar on South Claudina Way in Anaheim. Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</div></noscript>
+<canvas id="view" tabindex="0" aria-label="Vega &amp; Vinnie’s, on foot. Drag left to walk, drag right to look, tap to go. Keyboard: W A S D to walk, Shift to jog outdoors, E for the action, V for the view, O for the overhead view, C for your car, Escape to pause."></canvas>
 <div id="hud" hidden>
   <div id="tl"><button id="car" class="pill" aria-label="Walk back to your car (long press to skip the walk)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 15l2-6a2 2 0 0 1 2-1.4h10A2 2 0 0 1 19 9l2 6v3h-2.5M3 15v3h2.5M3 15h18"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>Car</button><div id="queue" role="group" aria-label="Your next actions (tap one to cancel it)"></div></div>
   <div id="tc">
     <button id="needs" class="panel" aria-haspopup="dialog" aria-label="Your needs and mood (Tab)"></button>
-    <div id="place" class="panel"><b>STOPPAGE TIME</b><span class="sep"> · </span><span id="clock">—</span> · <span id="hours">—</span></div>
+    <div id="place" class="panel"><b>VEGA &amp; VINNIE’S</b><span class="sep"> · </span><span id="clock">—</span> · <span id="hours">—</span></div>
     <button id="crowd" aria-haspopup="dialog"><span class="dot" aria-hidden="true"></span><span id="crowdText">Simulated crowd</span></button>
   </div>
   <div id="tr"><div id="trRow">
@@ -267,12 +267,12 @@
   <div id="radial" role="menu" aria-label="What you can do here"></div>
   <button id="cheer" aria-label="Cheer">CHEER</button>
   <div id="sparks" aria-hidden="true"></div>
-  <div id="credit" role="button" tabindex="0" aria-expanded="true" aria-controls="creditFull"><span id="creditShort">Map data: OpenStreetMap, Overture (ODbL) · <u>credits</u></span><span id="creditFull">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0). Stoppage Time and everyone in it are fictional.</span></div>
+  <div id="credit" role="button" tabindex="0" aria-expanded="true" aria-controls="creditFull"><span id="creditShort">Map data: OpenStreetMap, Overture (ODbL) · <u>credits</u></span><span id="creditFull">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0). Vega &amp; Vinnie’s and everyone in it are fictional.</span></div>
 </div>
 <div id="about" class="sheet" role="dialog" aria-modal="true" aria-labelledby="aboutTitle">
   <div class="panel">
     <h2 id="aboutTitle">Simulated crowd</h2>
-    <p>Stoppage Time is a fictional sports bar. The crowd, the matches on the screens and the people here are simulated from the time of day and the day of the week. Nothing here is live, and nobody here is a real person or another player.</p>
+    <p>Vega &amp; Vinnie’s is a fictional sports bar. The crowd, the matches on the screens and the people here are simulated from the time of day and the day of the week. Nothing here is live, and nobody here is a real person or another player.</p>
     <p class="small">The name, the hours, the menu, the screens and the sign are ours. The streets are the real ones, as OpenStreetMap maps them.</p>
     <button class="go" data-close>Got it</button>
   </div>
@@ -297,7 +297,7 @@
     <div class="row"><span>Motion</span><div class="seg" id="segMotion"><button data-m="full">Full</button><button data-m="reduced">Reduced</button></div></div>
     <div class="panel" id="pauseCard" style="padding:10px 12px;margin:8px 0;background:rgba(241,239,231,0.06)"><p class="tokens" id="pauseTokens"></p><p class="small" id="pauseTokenNote"></p><p class="small"><b>Tonight's three</b></p><ol class="three" id="pauseThree"></ol><p class="small" id="pauseSave"></p></div>
     <button class="alt" id="peopleBtn">People here</button>
-    <p class="small">The clock is simulated: it sets the sun and Stoppage Time's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions. Every sound is made in code, and the commentary has no words.</p>
+    <p class="small">The clock is simulated: it sets the sun and the bar's fictional hours and crowd. Reduced motion turns off the head bob, the camera moves and the transitions. Every sound is made in code, and the commentary has no words.</p>
     <p class="small">Map data: Overture Maps Foundation, derived from OpenStreetMap contributors (ODbL), with a few street records from TomTom (ODbL); Microsoft ML Buildings (ODbL); heights from USGS lidar; land cover from ESA WorldCover (CC BY 4.0); one location point from Overture places (CDLA Permissive 2.0).</p>
     <button class="go" data-close>Resume</button>
   </div>
@@ -372,8 +372,8 @@
 <div id="busy" role="status" aria-live="polite"></div>
 <div id="fade" aria-hidden="true"></div>
 <div id="loading" role="status" aria-live="polite">
-  <div class="board" aria-hidden="true">+3</div>
-  <h1>STOPPAGE TIME<small>SPORTS BAR · PATIO · GAMES</small></h1>
+  <div class="board" aria-hidden="true">V&amp;V</div>
+  <h1>VEGA &amp; VINNIE’S<small>SPORTS BAR &amp; CANTINA · PATIO · GAMES</small></h1>
   <p>Our own fictional sports bar on South Claudina Way, Anaheim. Built in code at load: the bar, the screens, the patio and the lot. The crowd and the matches are simulated.</p>
   <div id="bar"><i></i></div>
   <div id="status">Loading…</div>
