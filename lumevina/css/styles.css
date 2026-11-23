@@ -7147,3 +7147,7 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 /* the shop's cards: off-screen ones aren't drawn, and the sticky bar moves on the compositor only */
 .sh-card { content-visibility: auto; contain-intrinsic-size: auto 26rem; }
 .sh-nav { will-change: transform; transition: background-color 200ms ease, transform 280ms ease, opacity 220ms ease; }
+
+/* no service photos anywhere (Nov 23): the booking picker shows the name, time and price only */
+.bkl-pick-swatch { display: none !important; }
+.bkl-pick { grid-template-columns: minmax(0, 1fr) 1rem; padding: 0.8rem 1rem; }

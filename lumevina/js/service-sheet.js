@@ -150,8 +150,7 @@
     openId = id;
     lastFocus = from || document.activeElement;
     /* its photo (js/services.js → photo), or the one on its featured card */
-    var card = document.querySelector('.product-card[data-service="' + s.id + '"] .product-visual img');
-    var photo = (S.photo && S.photo(s.id)) || (card && (card.currentSrc || card.src));
+    var photo = null;   /* no service photos (Nov 23): the details are words only, like the cards */
     $(".svc-photo").hidden = !photo;
     if (photo) $(".svc-photo img").src = photo;
     paint(s, id);
