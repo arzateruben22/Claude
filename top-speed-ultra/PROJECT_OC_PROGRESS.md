@@ -4,6 +4,58 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-22/23: Vega & Vinnie’s: the rename, the outside from the owner's 13 photos, the patio sized to the inside, the walk out to your car (claude/vv-look, base 5e16ab4, uncommitted)
+
+**The owner (2026-11-16):** the sports bar is renamed "Vega & Vinnie’s"; the outside follows the owner's 13 photos
+(the front, the pylon, the lot, the strip, the street, the patio at night); "Bar inside size should be about 3-4x as
+much as the patio"; "make sure the bar exit goes to the parking lot accurately and seamlessly".
+
+**Built** (`PROJECT_OC_SPORTS_BAR.md`'s note at the top has the details):
+- **The rename.** One constant, `BAR_NAME = 'Vega & Vinnie’s'` in `src/onfoot/venues/sportsbar/brand.ts`, read by the
+  Go To list and the HUD destination (src/game/venues.ts), the World Map's Places, the menu's venue list (App.tsx: the
+  name only), the venue's HUD title, toasts, menus, signs, the standalone page's title and copy, the loading card and
+  the credits. Ids, files and save keys stay `sportsbar` (the game's id stays `stoppage`). `venueByName` maps "Stoppage
+  Time" and the plain-apostrophe spelling to the bar; `renameSave` rewrites an old save's memories and highlights.
+- **The outside** (venue.ts, the new outside.ts, tex.ts' atlas is now 1024 x 2048 with the outside's art in its lower
+  half): the black facade, the cream script sign with SPORTS BAR & CANTINA, gooseneck lamps, a black awning with bulbs,
+  stone-veneer bases laid stone by stone, the glass door, our own wings mural ("Take Flight", no team or logo), the
+  accessible-entrance sign, the WINES COLD BEER hedge wall on a corten planter, terracotta pots, six red bollards, a
+  chalkboard A-frame; the rest of building 61 as a tan stucco strip (arched storefronts, stone piers, brown trim, wall
+  lamps, rooftop HVAC, eight generic tenant bands in our words); the pylon at the lot's street edge (cream shield,
+  "<- OPEN", the menu list on the dark panel, stone pillars in a hedge); hedges with red tips, a stone-block wall with
+  birds of paradise, backflow pipes, a transformer and LED head on the mapped pole, two fan palms; the raised centre
+  walkway on the courtyard's 3 m median between the stall fields, three blue accessible stalls with signs, PARKING FOR
+  CUSTOMERS ONLY and ACCESS signs, exit arrows; across Claudina Way the substation's block wall with 27 cypresses, the
+  yellow kerb, a hydrant, a cobra-head light and the painted median at the fork. The door, `def.parking.stalls` and
+  `site.yourStall` are unchanged (the LAST MILE contract).
+- **The patio**: u 2-27 (was u 2-24): **inside 505.5 m², patio 140 m², ratio 3.61** (sportsbar_zones.py: 139.8 m²,
+  "all pass"). Furnished from the night photos (round butcher-block tables and mesh chairs on the 24 seat slots, a
+  high-top with 2 new stools, two pyramid flame heaters on pedestals with a flicker on HD and Ultra, a mushroom heater,
+  slat planter walls with shrubs, Edison bulbs in swags, a dark ceiling on black posts, a stained floor).
+- **The walk out**: the Car button walks you to your car (a second tap skips), and on that walk the third-person camera
+  turns to follow the way you walk; the camera swaps shoulders when a wall crowds it, glides through the doorway's
+  glass frames instead of snapping, lets back out eased, and stays under the patio ceiling and the awning (player.ts);
+  the exposure eases inside 1.0 / outside 0.93 by day (1.08 at night); no fade.
+- **A lost context**: one lost/restored pair on the venue's own canvas (in the game too: the venue has its own renderer
+  and canvas, so the game's `onContextRestored` can't see its loss; this differs from the brief's wording, on purpose);
+  the restore redraws the PMREM environment, the reflection cube and the shadow maps.
+
+**Checked** (headless Chromium, SwiftShader; no real phone or GPU; numbers as printed):
+- `npx tsc --noEmit -p tsconfig.json` and `-p tsconfig.game.json`: clean.
+- `npm run build`: built; `data-build="owner-test"` once in dist/artifact.html, none in dist/top-speed-ultra.html.
+- `npx vite build --config src/onfoot/vite.sportsbar.config.ts`: built.
+- `node tests/sportsbar.mjs --only=vv` (new group): **8 of 8 pass**. No "Stoppage Time" in player-facing text (236 src
+  files scanned, comments and the old-names list aside); the title "Vega & Vinnie’s on Foot", HUD "VEGA & VINNIE’S", the
+  loading card, about sheet, canvas label and credits; an old save's "Stoppage Time" memory and highlight now read
+  "Vega & Vinnie’s" (tokens kept); "inside 505.5 m2, patio 140 m2, inside / patio 3.61"; the walk from the host stand to
+  the car door: 292 frames read back over 1752 sim steps, the state inside -> outside once (step 193), the camera's
+  largest step 0.067 m (you 0.023 m a step), mean luma never under 49, the near-black share at most 0.347 (the black
+  facade beside you), the luma spread never under 28.6, the exposure's largest step 0.012, no fade, ended at the car door;
+  the Car button: walking after one tap (2.75 m in 20 frames), at the car door (0.38 m) after the second; WEBGL_lose_context
+  lost and restored, luma 93 before and 93 after.
+- Frames (tests/out/vv/, sheets beside each reference in tests/out/vv/sheets/; the walk's 10 frames in
+  tests/out/sportsbar/vv-walk-00..09.png and tests/out/vv/sheets/walk-strip-hd-1280x720.jpg): see "CHAIN RESULTS" below.
+
 ## 2026-11-17: the OC Hypercar's seat view shows its hood on the iPhone (less sky, no A-pillar band)
 
 Branch fix/seat-pov, on v22 (6196bd6e), published as main link v23. Commits:
