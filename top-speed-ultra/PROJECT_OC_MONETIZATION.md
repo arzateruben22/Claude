@@ -97,6 +97,15 @@ The game's old rule was "no real money anywhere". The owner decided on 2026-10-1
    device only (`endFreeDrive` in `src/game/Game.ts`, the Free Drive tab of Personal bests in `src/ui/App.tsx`), and
    its run card can be shared. So the store never says "nothing is scored" there. It says: no clock and no rivals,
    your Free Drive bests stay on your device, and Unleashed runs and run cards are marked.
+   **Update (owner, 2026-11-17/18, built on `claude/menu`): Unleashed bests go to their own separate board.** Each
+   traffic mode (Zero traffic with drift, Light, Medium, Extreme) keeps two boards on the device (`src/game/bests.ts`,
+   Fastest Minute or Drift Score): **Open** (every car you can earn; the OC Hypercar only in its race tune, which a
+   Speed Survival run uses) and **Hypercar Unleashed** (only the OC Hypercar in its Unleashed tune, Free Drive). Paid
+   speed never ranks against the free cars: an Unleashed run never reaches the Open board, and the end-of-run card and
+   the Bests screen show the two boards as separate tabs. Both are labelled "Your bests on this device"; a global board
+   needs the hosted backend (not built). The Free Drive distance score and its "Unleashed" mark on the old Personal
+   bests list are unchanged. The store's copy ("its Unleashed runs ... are marked") still holds and is to be reworded to
+   "its Unleashed runs rank on their own board" when the store text is next touched (`src/store/catalog.json`, `cosmetics.json`, `Store.tsx`).
    - **In Free Drive it runs Unleashed:** the highest top speed, the quickest launch and the most grip, downforce
      and braking in the game, and its own ability (Cold Thrust, Ground Lock, Thrust Hop).
    - **In every other mode** (Speed Survival, Races, Time Trial) **it runs the race tune**, with its ability off.
@@ -125,7 +134,7 @@ The game's old rule was "no real money anywhere". The owner decided on 2026-10-1
      to the tunes, the earnings cap and the physics test.
 
    So the no-pay-to-win rule holds in Speed Survival, Races and Time Trial, and the one board an Unleashed run can reach
-   (Free Drive's, on your own device) says which runs were Unleashed. The car is sold only once both tunes, the
+   (Free Drive's, on your own device, and from 2026-11-18 the separate Hypercar Unleashed board) says which runs were Unleashed. The car is sold only once both tunes, the
    earnings cap, the marking and the physics test are in the game (`available: false` until then).
 4. **Never sell credits.** OC Credits are earned by driving only. There are no credit packs, no doublers, and no
    club bonus. This also keeps the store out of Stripe's rules on virtual currency and stored value
