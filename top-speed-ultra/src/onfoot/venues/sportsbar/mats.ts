@@ -1,4 +1,4 @@
-// Stoppage Time's materials, made once (the module map's mats.ts row: the bar never calls Lot 57's makeMats, which
+// Vega & Vinnie's materials (once Stoppage Time's), made once (the module map's mats.ts row: the bar never calls Lot 57's makeMats, which
 // would build Lot 57's sign atlas and reader board). Surfaces use Lot 57's generic code-painted textures; props are
 // vertex-coloured so a family of them is one draw call. Night light is baked per vertex (engine/geom.ts) on three
 // channels: a the venue's own lights (the pergola, the facade's halo, the blade sign), b the street and lot lights,
@@ -100,9 +100,11 @@ export function setBarNight(m: BarMats, k: number, open: boolean) {
   m.screen.color.setScalar(open ? 1 : 0.04);
   m.signsLit.emissiveIntensity = open ? 0.35 + k * 0.5 : 0.02;
   m.neon.color.setScalar(open ? 1.3 + k * 1.2 : 0.05);
-  m.wordmark.emissiveIntensity = 0.08 + k * 1.6;
+  m.wordmark.emissiveIntensity = 0.08 + k * 0.62;              // (Vega & Vinnie's cream script: brighter read lime-yellow)
   m.blade.emissiveIntensity = 0.3 + k * 1.4;
-  m.flame.emissiveIntensity = open ? k * 3.2 : 0;
+  // the patio's heaters (Vega & Vinnie's): lit while open, a low glow by day and bright after dark; the page flickers
+  // them about this base on HD and Ultra
+  m.flame.emissiveIntensity = open ? 0.7 + k * 3.0 : 0; m.flame.userData.base = m.flame.emissiveIntensity;
   m.window.emissiveIntensity = k * 0.9;
   m.glow.opacity = k * 0.55;
   m.pool.opacity = k * 0.42;
