@@ -258,3 +258,54 @@ budgets-refstip.json, budgets-after.json (and budget-base.json: 188c5136 + refer
 - The cabin's carbon is the exterior's tinted weave (was the untinted metallic weave, pale grey in the sun).
 - Still open: 2 (the hood's rise over the cluster), 4 (the hex hub's size), 10 (hump height: exterior lane), the
   picture's broad Alcantara dash-top field (ours foreshortened, v23), the gauge pod on the dash top (kept for M5).
+
+## Repair round (branch claude/cockpit-repair, 2026-11-24): what changed, what is still open
+
+One repair round against interior.png (and, for the wheel, the owner's owner-ref-2026-11-23/wheel.png), in the owner's
+priority order. OC Hypercar only: every change is behind `hyper` in cockpit.ts or an option only it passes in
+wheel-sport.ts. Shots (session scratchpad shots/): ref-int-fix.png (q=high), ref-int-fix-phone.png (q=phone),
+seat-fix.png (iPhone seat), wheel-fix.png (view=wheelck); sheet sheets/interior-fix.png (reference | before | after).
+
+Found with a picking script (test-car `&pick=1` puts three on the window; scratchpad pick.mjs and seatpick.mjs): the
+"flat light grey panels" at the matched camera's lower left were the ROAD, seen through the left door card, whose
+carbon was single-sided and faced away (culled); the "broken dark polygons" in the footwells were the front wheel
+well's liner; the seat view's saw-tooth along the hood was the windscreen's defrost strip crossing the dash top after
+the build's keepInside pass moved the dash top's front row; the torn shards at the left A-pillar's foot were the sill
+cap's carbon within a centimetre of the shoulder's paint (and culled carbon letting the fender show through).
+
+1. **Vibe / materials.** The door card's carbon is drawn on both faces and darker. The cabin carbon is a dark twill
+   (tint 0x5a6068, weave 3, satin), also both faces. The dash top, hood, lip and door tops are deep black suede
+   (0x1d1d20), and the console box is carbon. The ambient 'amb' is now additive (no opaque strip) and 1-2 cm wide, a
+   glow round a bright core: under the lip, the hood's brow, the spine's edges, the door's white edge and sweep, under
+   the dash, the console's edges, the roof. The footwell outlines are shortened (the front edge and 15 cm of the
+   sides). The footwell sides are closed in carpet up to the dash, which hides the liner.
+2. **Dashboard.** Between the white ends, the lip is suede and the fascia carbon. A suede cheek closes the cluster's
+   right end. The cluster face's reflection is calmed (it showed the sky as a grey wedge). The Founder door plaque
+   moved from z -0.3 to z 0.06, beside the seat and out of the view ahead. The console plaque and the edition gate
+   (`o.edition !== 'standard'`) are unchanged.
+3. **Centre console.** The spine is flared to 34 cm under the lip and narrows round the screen. The knobs are 1.2x and
+   15 cm apart.
+4. **Wheel (the owner's wheel.png).**
+   - The chrome three-pointed blade emblem replaces the OC mark on the hub (wheel-sport `addSportCentre({ emblem:
+     'blade' })`, `bladeShape`, `bladeMat`). The hypercar's hub has no medallion and no chevron.
+   - An ice light strip runs under the hub (its 'hubAccent', lit).
+   - The rim is carbon top and bottom with a lit tab, with black leather grips (the mesh keeps the name alcW).
+   - The right pad shows phone, mic and menu (`padMat(q, true)`). Knurled roller wheels sit outboard of the pads.
+   - The paddles are set out (x 7.5 cm) and swung up 0.36 rad.
+   - The hub's size is unchanged. The lower spoke is gloss carbon ('hubCarbon', which keeps the suite's chevron and
+     insert names).
+5. **Render check and seat view.** The white door panel is a 7-point sculpted 10 cm panel (pre-warp y 0.676-0.775)
+   that sweeps down toward the dash; the check's door box gets about 180 vertices (was 72). In the seat view the
+   hypercar has no defrost strip, the sill cap's front half is 1.4 cm lower, and the cabin carbon is drawn on both faces.
+
+Still open:
+- The dash still reads as a fairly boxy slab. The cluster hood still rises only ~3.5 cm (the bonnet-visibility limit).
+  The reference's broad sculpted suede dash-top field and its white sweep curving from the dash corner into the door
+  are not there: ours is a straight-edged white band, and the door's white panel reads mid grey in shade.
+- The gauge pod on the dash top stays (M5).
+- The paddles now show inside the rim at 10 and 2 o'clock as both references do, but in the seat view they are broad
+  light slabs over the cluster's outer corners. The speed and gear stay clear.
+- Seat view: a pink-white sliver of the fender still shows through the smoked side glass at the left A-pillar's foot,
+  with a ragged edge. The bonnet edge still shows the exterior's louvres (exterior lane).
+- The emblem is a flat bevelled extrusion with a painted chrome gradient; the reference's has sharper facets.
+- The matched camera still cannot show the seats (the camera limit, as before).
