@@ -940,19 +940,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     if (hyper) {
       // (pressed close under the glass, 1.3 cm: the canopy is only 5-7 cm over the driver's eye there, and a rail and
       // lining hung 2.4 cm under it, as the headliner is, crossed the view a few degrees over the horizon)
-      const zr = -0.195, xr = (z: number) => edgeX(z) - 0.02, ry = (z: number, x: number) => body.top(z, Math.abs(x)) - 0.011;
-      const rail: V3[] = range(-1, 1, high ? 24 : 14).map((s) => { const x = s * xr(zr); return v3(x, ry(zr, x) - 0.01, zr); });
-      kit.add('head', tubeGeo(rail, () => 0.016, high ? 10 : 6, { rb: () => 0.008, up: v3(0, 0, -1) }));
-      // the lined roof from the rail back to the headliner (its start, 2.5 cm behind the glass's top)
-      const zh = wsXZ(0, 1)[1] + 0.025, rows: V3[][] = [];
-      if (zr < zh - 0.02) {
-        for (const z of range(zr, zh, 6)) rows.push(range(-1, 1, high ? 16 : 10).map((s) => { const x = s * (xr(z) + 0.008); return v3(x, ry(z, x) - 0.002, z); }));
-        kit.add('head', gridGeo(rows, { flip: true }));
-      }
-      // the console: 9 cm wide, 2.2 cm deep, from the rail back to 10 cm behind the eye, its two ice lines along its foot
-      const cz = range(zr + 0.01, 0.0, 8), cw = 0.045;
-      kit.add('head', loftZ(cz, (z) => { const y = ry(z, 0); return [[-cw, y], [-cw + 0.006, y - 0.018], [-cw + 0.016, y - 0.022], [cw - 0.016, y - 0.022], [cw - 0.006, y - 0.018], [cw, y]]; }, false));
-      if (mats.amb) for (const sd of [-1, 1]) kit.add('amb', ambLine(cz.map((z) => v3(sd * (cw - 0.003), ry(z, 0) - 0.02, z)), v3(1, 0.4 * sd, 0).normalize(), 0.006));
+      const zr = -0.195, ry = (z: number, x: number) => body.top(z, Math.abs(x)) - 0.011;
+      // (the padded rail across the glass and the lined roof behind it were removed at the owner's call, 2026-11-24: from
+      // the iPhone's portrait seat they showed as a black band over the top of the frame; he keeps the open sky. The
+      // mirror stays: to the right, out of the portrait frame)
+      // (the roof console went with the rail, the owner's call: 5-7 cm over the eye it covered the frame's top too)
       // the frameless mirror: a slim gloss-black back with a polished edge, its glass facing the driver, on a stem
       const mb = v3(0, ry(zr + 0.04, 0) - 0.055, zr + 0.03), nrmM = eye.clone().sub(mb).normalize().add(v3(0, 0, 1)).normalize();
       const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrmM)); look.updateMatrix();
