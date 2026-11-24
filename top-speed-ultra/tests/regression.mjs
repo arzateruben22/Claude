@@ -3143,7 +3143,7 @@ await group('progression', async (use) => {
       const cast = document.querySelector('.garage-cast'), cb = cast.getBoundingClientRect(), sm = cast.querySelector('small').getBoundingClientRect(), nm = cast.querySelector('b').getBoundingClientRect();
       const tr = document.querySelector('.car-track').getBoundingClientRect(), cr = c.getBoundingClientRect();
       return { order: cards.map((x) => x.dataset.car), n: cards.length, labels: cards.map((x) => x.getAttribute('aria-label')), centred: c?.dataset.car, driving: g.carId, mid: Math.abs((cr.left + cr.right) / 2 - (tr.left + tr.right) / 2),
-        canvas: !!c.querySelector('.car-stage canvas, .fe-stage canvas'), stages: document.querySelectorAll('.car-track canvas').length, show: g.revealShow, frames: g.revealState.frames,
+        canvas: !!c.querySelector('.car-stage canvas, .fe-stage canvas'), stages: document.querySelectorAll('.car-track .car-stage:not(.car-ph) canvas, .car-track .fe-stage canvas').length, stills: document.querySelectorAll('.car-track .car-still').length, show: g.revealShow, frames: g.revealState.frames,
         locks: Object.fromEntries(cards.filter((x) => x.querySelector('.car-lock')).map((x) => [x.dataset.car, x.querySelector('.car-lock').textContent])),
         owned: [...g.profile.p.vehicles], missing: g.ownerMode ? [] : cards.filter((x) => !g.profile.p.vehicles.includes(x.dataset.car) && !x.querySelector('.car-lock')).map((x) => x.dataset.car), drive: cards.map((x) => [...x.querySelectorAll('button, em')].map((b) => b.textContent.trim()).filter((t) => /^(Drive|Driving it|Locked|Not unlocked)/.test(t)).length),
         cast: { h: cb.height, stacked: sm.bottom <= nm.top + 1, label: cast.getAttribute('aria-label') }, count: document.querySelector('.car-count').textContent, side: document.documentElement.scrollWidth > innerWidth };
@@ -3154,7 +3154,11 @@ await group('progression', async (use) => {
     await page.screenshot({ path: path.join(OUT, 'garage-carousel-1280.png') });
     expect(r0.n >= 5 && r0.labels.every((l, i) => new RegExp(`^${i + 1} of ${r0.n}: `).test(l)) && r0.centred === r0.driving && r0.mid < 2 && !r0.side, `the carousel: ${JSON.stringify(r0)}`);
     expect(r0.drive.every((k) => k === 1), `every card has its Drive (or its state): ${JSON.stringify(r0.drive)}`);
-    expect(r1.canvas && r1.stages === 1 && r1.show.car === r0.driving && r1.show.shown > 0, `the centred car's stage: ${JSON.stringify(r1)}`);
+    expect(r1.canvas && r1.stages === 1 && r1.stills === r1.n - 1 && r1.show.car === r0.driving && r1.show.shown > 0, `the centred car's stage: ${JSON.stringify(r1)}`);
+    // the neighbours: stills of their own models (owner, 2026-11-24: "make the car selection display the cars"), each drawn
+    await page.waitForFunction(() => window.__game.showroomQueue === 0 && [...document.querySelectorAll('.car-track .car-still')].every((c) => c.dataset.ready === '1'), null, { timeout: 900000, polling: 500 });
+    const lit = await game(page, () => [...document.querySelectorAll('.car-track .car-still')].map((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let m = 0; for (let i = 0; i < d.length; i += 16) m = Math.max(m, (d[i] + d[i + 1] + d[i + 2]) / 3); return Math.round(m); }));
+    expect(lit.every((m) => m > 60), `a neighbour's still is blank: brightest ${lit.join(', ')}`);
     for (const [id, t] of Object.entries(r0.locks)) expect(!r0.owned.includes(id) && (/^Opens at \d+ mi$/.test(t) || /Founders' Road/.test(t)), `${id}'s lock chip: "${t}"`);
     expect(r0.missing.length === 0 && Object.keys(r0.locks).length > 0, `lock chips: ${JSON.stringify(r0.locks)}, a locked car without one: ${r0.missing.join()}`);
     expect(r0.cast.h >= 44 && r0.cast.stacked && /^Character: /.test(r0.cast.label), `the character card: ${JSON.stringify(r0.cast)}`);
@@ -3189,7 +3193,7 @@ await group('progression', async (use) => {
     await page.waitForSelector('.overlay.menu', { timeout: 120000 });
     const closed = await game(page, () => window.__game.revealState.open);
     expect(!closed, 'the stage stayed open after the garage closed');
-    return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.show.shown} drawn), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
+    return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.show.shown} drawn), the ${r1.stills} neighbours on stills of their models (brightest ${lit.join('/')}), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
   });
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves

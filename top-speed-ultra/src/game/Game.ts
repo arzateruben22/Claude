@@ -94,6 +94,10 @@ const ARRIVE_M = 80;               // a venue's ramp: how far before the street 
 // the seat view on a portrait screen: its horizontal field of view (degrees), the cap on its vertical base (degrees,
 // before the player's setting and the speed's widening) and where the horizon sits (from the top)
 const SEAT_HFOV_P = 50, SEAT_VMAX_P = 76, SEAT_HORIZON_P = 0.31, DEG = Math.PI / 180;
+// the seat view's widening with speed: flat out it reaches the width it always had (the old +10 and its 4 degrees at
+// speed, +14), so the fixed +13 (settings.ts FOV_DEFAULT, 2026-11-24) shows more cockpit at a cruise and the same bonnet
+// flat out (the suite's iPhone hood checks are calibrated there)
+const SEAT_FOV_FLAT_OUT = 14;
 // read when it's needed (the Founder Edition's wake-up and reveal), so a change in the system setting is honoured
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -2139,7 +2143,7 @@ export class Game {
       // eyeNudge), so its landscape and desktop seat views also lose the A-pillar band and show the hood.
       // (the hypercar's a few degrees wider: car-shape seatFov)
       const vBase = (portrait ? clamp(2 * Math.atan(Math.tan((SEAT_HFOV_P / 2) * DEG) / this.camera.aspect) / DEG, 62, SEAT_VMAX_P) : 58) + this.car.seatFov[portrait ? 0 : 1];
-      fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * 4;
+      fov = vBase + (view === 'free' ? 8 : 0) + this.settings.fov + speedK * Math.max(0, Math.min(4, SEAT_FOV_FLAT_OUT - this.settings.fov));
       // the horizon sits 31% of the way down the part of the screen below the top safe area (the notch or Dynamic
       // Island when the page runs edge to edge): with a 59 px inset the HUD comes down 59 px and the windscreen with it.
       // The pitch is aimed with the field of view drawn (the setting and the speed in it), so the horizon stays put

@@ -1122,7 +1122,7 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
               : <div className="car-stage car-ph" aria-hidden="true"><ShowroomStill game={game} car={c.id} paint={paint} /></div>}
             {locked && <span className="car-lock"><Ico name="lock" />{c.founder ? "Founders' Road · free" : miles ? `Opens at ${miles} mi` : 'Locked'}</span>}
             <div className="carhead"><span className="paint" title={c.founder && !std ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
-            <small className="car-stats">{[`${f.hp} hp`, `${f.zeroSixty} s 0-60`, `${f.topMph} mph`, `${c.mass.toLocaleString()} kg`].map((x, i, a) => <span key={i}>{x}{i < a.length - 1 ? ' ·' : ''} </span>)}</small>
+            <small className="car-stats">{[`${f.hp} hp`, `${f.zeroSixty} s 0-60`, `${f.topMph} mph`, `${c.mass.toLocaleString()} kg`].map((x, i, a) => <span key={i}>{x}{i < a.length - 1 ? ' ·' : ''}</span>)}</small>
             {/* DRIVE right under the name and numbers: on a phone's first screen with the car (owner, 2026-11-24) */}
             <div className="row">
               {owner ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
