@@ -10144,3 +10144,12 @@ roof and the roof console were removed (c61d005); the mirror stays (out of the p
 Checks: the polish branch's `--only=render,phone` 54/57 (the skin-edge failure fixed in f8a55bb; the wake flake and
 the known sleeve check) and its 12/12 re-run; after the roof removal: tsc clean, build OK, every hypercar, hood and
 seat-view check in render and phone 10/10. Owed before launch: the full suite once.
+
+### 2026-11-24 (~2:50 PM PT): v32 published: the carousel never black (v31) + the Ultra warm-up
+
+claude/tender-fermat-sk9rby at 4bcde0e: claude/carousel-blackout (v31, published 1:43 PM PT) and claude/ultra-warmup
+merged (Game.ts, App.tsx and the suite auto-merged; only this log conflicted). Checks on the merged build: tsc clean,
+build OK, `--only=render,progression` 38/38, including "garage at 390 x 844: the centred car view is never black"
+(174 samples, none near black) and "Ultra: no shader program compiled after the loading screen ... or on the first
+View cycle" (programs 181 → 181 after control). The warm-up branch's own boot/render/phone run: 74/76 (its own check's
+setup bug, fixed in 669b6bd, and the known sleeve check). Owed before launch: the full suite once.

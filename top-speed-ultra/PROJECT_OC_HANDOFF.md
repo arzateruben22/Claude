@@ -7,7 +7,7 @@ model: routine work to `opus`, hard reasoning to `fable`.
 
 ## Current state and the launch prompt (2026-11-24, ~6:45 AM PT; read this first)
 
-- **Live:** v30 (hypercar polish, merged and published 2026-11-24 11:20 AM PT; supersedes the in-flight note below) at https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (owner test build, owner mode on). Work branch:
+- **Live:** v32 (2026-11-24 2:50 PM PT: v30's hypercar polish, v31's carousel never black, v32's Ultra/High warm-up behind the loading screen; supersedes the in-flight note below) at https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (owner test build, owner mode on). Work branch:
   `claude/tender-fermat-sk9rby` (v29 = v28 hypercar step + the UI batch + the hypercar shard fix; PROGRESS has both
   entries). Backups on origin: claude/cockpit-repair, claude/exterior-repair, claude/ui-batch, claude/hyper-shards.
 - **In flight when this was written:** one hypercar polish round on `claude/hyper-polish` (a worktree under
