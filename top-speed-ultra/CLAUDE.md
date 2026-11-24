@@ -73,6 +73,7 @@ The owner's weekly plan was running out in a day. These rules hold for every ses
 5. **Targeted tests** (`--only=` the groups a change touches); the full suite only before a release.
 6. **Batch the owner's requests** at the start of a task; queue mid-build additions for the next task instead of
    restarting a running build.
+7. **Times in Pacific.** Give the owner every ETA and time in Pacific time (PT), not UTC (owner, 2026-11-24).
 
 ## Model policy (owner, 2026-10-16)
 
