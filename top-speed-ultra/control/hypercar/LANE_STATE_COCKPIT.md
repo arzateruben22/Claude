@@ -337,13 +337,33 @@ Fixed:
   onto one depth (the door top's suede and the cap's carbon fought in a comb along the glass's foot).
 - The door card: a white leather panel (34 x 13 cm) behind the window switches, an ice line along its foot.
 
+Second pass (the owner's iPhone feedback on 2ad64c4: the torn edge was still there along the cowl, with a grey slab
+under it; and "fix the center wheel design to look sharper"):
+- The white saw-tooth along the cowl: the skin's windscreen opening was cut by whole quads inside the straight quad
+  between the glass's corners, but the glass's foot curves 3 cm forward at the middle (wsXZ zb + 0.03 s^2), so a
+  band of paint up to ~5 cm deep lay under the glass with a stepped edge, seen through it from the seat. The
+  hypercar's opening (car-body WS_CLIP) now follows the glass's own (s, t) and splits the quads across its foot, so
+  the paint ends in a clean line 6 mm under the glass, behind the frit's 1 cm band.
+- The grey slab: with the paint gone from under the glass, the seat's rays down through the glass's foot passed
+  between the dash's front edge (1.6 cm under the skin) and the glass into the open body: the road, and by the
+  A-pillar the front wheel well's liner. The dash top now carries a closing panel 13 cm on under the cowl, 2 cm under
+  the skin; and the dash (built at cabinW 0.8 m) is squeezed outboard of 0.38 m into the canopy (a smooth warp, the
+  flank's width tabled along z), so its white ends and caps stand in the cabin instead of pressed under the humps;
+  dash-end cheeks (dark suede) close the corner up to the side glass's foot.
+- The hub (wheel-sport facetEmblem, cockpit hyper mats): three slim faceted chrome blades (ridge-creased, flat facets,
+  per wheel.png) in place of the bevelled extrusion; a polished chrome bezel with flat chamfers and a dark gap ring;
+  a dark leather cover (0x1a1b1e). The hub's outline and size are unchanged. Crops: hub-high-before-after.png,
+  hub-retro-before-after.png (hub-before-*/hub-after-*).
+- Checked in motion at 222 mph too (seatm.mjs, not paused): after-seat-move-high.png, crop-seat-move-high-zoom.png.
+
 Proof (session scratchpad shards/): before-*/after-* seat views (393x852 @2x, Retro Low and High), crops
 crop-seat-retro.png, crop-seat-high.png (left third, before | after), crop-seat-*-zoom.png (the A-pillar foot),
 crop-wheelck.png (before | after). Picks by ray (seatpick.mjs, pick.mjs) and the suite's q-front-left ID render
 (shards/idprobe.mjs: 0 cabin px on the skin, Low and High).
 
 Budgets (budget2.mjs, iPhone 393x852 seat, the cabin's own meshes/triangles; whole-scene totals move with traffic):
-Low Retro and Low 55 meshes / 51,565 -> 55 / 52,789 triangles (+2.4 %, the door panels); High 48 / 45,531 ->
+Low Retro and Low 55 meshes / 51,565 -> 55 / 53,055 triangles (+2.9 %: the door panels, the cheeks, the closing
+panel, the faceted emblem); High 48 / 45,531 ->
 48 / 45,531. Within the 10 %.
 
 Still open:
@@ -351,6 +371,16 @@ Still open:
   car carries the GT's Rosso a80d10, so it reads as a red/pink band). It is real geometry now, cleanly drawn; hiding
   it (a frit band, or a door top up to the glass) is a design call. In the wheel frame the same hump reads as a broad
   grey field left of the wheel.
-- A small stepped silhouette where the dash top's outer end (the dash spans |x| 0.8, cabinW, wider than the 0.47 m
-  canopy) is pressed under the skin at the A-pillar's foot; the dash ends (white caps, the left slim vent) still lie
-  squashed under the humps. A real fix narrows the hypercar's dash to the canopy (with XW and the vents).
+- The corner at the left A-pillar's foot is clean of shards and of the road/well, but still reads as a cluster of
+  dark stepped shapes: the door top's suede, the sill cap's carbon and the A-pillar rail's front ends meet the dash's
+  end there (keepInside moves their front rows piecewise). Next: end the door's front rows on one shaped edge that
+  meets the dash-end cheek, and give the cheek the door top's profile.
+- The slim vents (the left at x -0.685) are not squeezed with the dash: they lie under the humps, unseen.
+- The hump through the side glass in the car's paint (above).
+
+Suite (render, phone; final build a7fb0d2): 55/56. The one failure is the known pre-existing "sleeves from the seat on a
+phone". Notes: "OC Hypercar: no cabin on its skin at the front" passed in the suite (0 px, 112,545 vertices in) but is
+state-sensitive when run alone (--check): the base v28 gives 1 px alone, this build 6 px alone, both under the sill
+at the rear quarter (tan / seatSil), not at the A-pillar. The cabin check's white-dash count now reads |x| > 0.4 (the
+squeezed dash). "recovers from a lost WebGL context" and its follow-ons timed out in two earlier runs on this machine
+under other sessions' load; they passed in the final run.
