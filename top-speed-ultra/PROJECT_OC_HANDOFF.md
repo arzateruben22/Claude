@@ -777,9 +777,13 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ### Pre-launch tweak list (owner, 2026-11-24; the owner adds to this after the menu/garage + shard update)
 
-1. **ABS | TCS off the driving HUD** (owner: "I think we should take off the abs and tcs"; agreed: off the HUD, both on
-   by default as now, kept as two toggles in Settings > Driving for drift players). Update the HUD layout and the
-   suite's ABS | TCS checks (persist, default on, Physics.tc/.abs) to read the Settings toggles.
+1. **ABS | TCS: no switches; the handling setting decides** (owner, 2026-11-24: "I think we should take off the abs and
+   tcs"; then "whatever makes the game more seamless in ur professional opinion"). Decided: remove the ABS | TCS bar
+   from the HUD (Ultra and Retro) and add no toggles anywhere. ABS always on. TCS follows the existing handling
+   setting: on for Arcade and Sport, off for Simulation (Custom: on below the Simulation point 0.9, off at it).
+   The handbrake slide breaks the rear loose on every setting, so drifting never depends on TCS. Migrate saved
+   abs/tc settings away; rewrite the suite's ABS | TCS checks (on by default, persist, Physics.tc/.abs) to the new
+   rule (Physics.abs always true; Physics.tc follows handling).
 
 ### OC Hypercar: next round's list (from the 2026-11-24 review of the repair round; the owner shipped it as a step)
 
