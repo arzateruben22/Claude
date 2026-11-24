@@ -5,6 +5,33 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
+## Current state and the launch prompt (2026-11-24, ~6:45 AM PT; read this first)
+
+- **Live:** v29 at https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (owner test build, owner mode on). Work branch:
+  `claude/tender-fermat-sk9rby` (v29 = v28 hypercar step + the UI batch + the hypercar shard fix; PROGRESS has both
+  entries). Backups on origin: claude/cockpit-repair, claude/exterior-repair, claude/ui-batch, claude/hyper-shards.
+- **In flight when this was written:** one hypercar polish round on `claude/hyper-polish` (a worktree under
+  .claude/worktrees/): the flicker/shards while driving first (in motion, Retro and High), then the A-pillar corner
+  shapes, roof rail and mirror, softer ambient strips, bonnet louvres, thicker red tail blades, and
+  tests/retrohud-frames.mjs. If that branch is on origin or in the worktree and not yet merged: check its report in
+  control/hypercar/LANE_STATE_COCKPIT.md, merge it, run `--only=render,phone`, show the owner crops, publish.
+- **Owner's goal:** launch a playable game this week, then keep updating and build a community. The owner will send a
+  final fix list before launch; batch it.
+- **Owed before launch:** the full suite once; a public build with owner mode off (and the "TEST BUILD" badge gone),
+  store in test mode (nothing sold, "coming soon"), Online labelled coming soon; the artifact's plain download link
+  (the viewer warns it can't work: wire it through the `downloads` capability or drop it); a community home (the
+  owner's pick: Discord, a feedback form...). Known failing check: "sleeves from the seat on a phone" (since v27).
+  Flaky under load: "the Founder Edition's lights wake" (re-run with the check before it).
+- **Parked:** the 30-second trailer (after launch); the Fable queue below.
+
+Ready-to-paste prompt for the next chat:
+
+> Project OC, top-speed-ultra/. Read CLAUDE.md (Lean usage; times in Pacific), then PROJECT_OC_HANDOFF.md "Current
+> state and the launch prompt" and the last two PROJECT_OC_PROGRESS.md entries, on branch claude/tender-fermat-sk9rby.
+> First: if claude/hyper-polish isn't merged, finish it (merge, `--only=render,phone`, crops to me, publish to the
+> main link). Then take my pre-launch fix list (I'll send it) as one batch, run the full suite once, and prepare the
+> public launch build. Commit to claude/ branches only, never main.
+
 ## State at the last update (2026-10-21, ~06:00 UTC)
 
 - Branch `claude/hypercar` holds everything judged: the ice reference UI, per-car and per-driver atmospheres, the
