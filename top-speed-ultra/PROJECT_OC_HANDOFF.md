@@ -798,9 +798,11 @@ The owner's four asks, built together with the View button above in one UI task 
    picked (setPaint), on phone portrait without scrolling the swatches off screen.
 5. **No separate drift button; the handbrake lives on BRAKE** (owner, 2026-11-24): "get rid of the drift button
    all entirely but find a way to incorporate it on the brake button but make the brake emblem that emblem". Remove
-   the round HANDBRAKE button (Ultra and Retro skins, both orientations). BRAKE keeps its plain press = brake; a
-   flick up off BRAKE (or a slide from BRAKE upward past ~28 px) pulls Controls.handbrake for as long as the finger
-   stays up there, so the drift starts from the brake thumb (proposed; show the owner before shipping). BRAKE's icon
+   the round HANDBRAKE button (Ultra and Retro skins, both orientations). BRAKE keeps its plain press = brake. Decided
+   (owner, 2026-11-24: "I like the flick but maybe a slide up option and it drifts as long as you hold it"): slide
+   the thumb up from BRAKE (past ~28 px; a quick flick counts too) and the handbrake stays pulled, drifting, for as
+   long as the finger is held anywhere above that line; sliding back down onto BRAKE returns to braking, and lifting
+   releases it. A brief hint shows once ("Slide up to drift"). BRAKE's icon
    becomes the owner's emblem: control/ui-refs/2026-11-24-brake-emblem.png, a red (P) inside two red arcs on a dark
    lens in a knurled chrome ring, with a short red arc on the ring that lights while the handbrake is pulled. The
    suite's handbrake checks (a 12 px swipe and a steep drag pull nothing; a slide from BRAKE into HANDBRAKE pulls it;
