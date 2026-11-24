@@ -3149,12 +3149,12 @@ await group('progression', async (use) => {
         cast: { h: cb.height, stacked: sm.bottom <= nm.top + 1, label: cast.getAttribute('aria-label') }, count: document.querySelector('.car-count').textContent, side: document.documentElement.scrollWidth > innerWidth };
     });
     const r0 = await read();
-    await page.waitForFunction(() => window.__game.revealShow && window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0, null, { timeout: 900000, polling: 500 });
     const r1 = await read();
     await page.screenshot({ path: path.join(OUT, 'garage-carousel-1280.png') });
     expect(r0.n >= 5 && r0.labels.every((l, i) => new RegExp(`^${i + 1} of ${r0.n}: `).test(l)) && r0.centred === r0.driving && r0.mid < 2 && !r0.side, `the carousel: ${JSON.stringify(r0)}`);
     expect(r0.drive.every((k) => k === 1), `every card has its Drive (or its state): ${JSON.stringify(r0.drive)}`);
-    expect(r1.canvas && r1.stages === 1 && r1.show.car === r0.driving && r1.frames > 0, `the centred car's stage: ${JSON.stringify(r1)}`);
+    expect(r1.canvas && r1.stages === 1 && r1.show.car === r0.driving && r1.show.shown > 0, `the centred car's stage: ${JSON.stringify(r1)}`);
     for (const [id, t] of Object.entries(r0.locks)) expect(!r0.owned.includes(id) && (/^Opens at \d+ mi$/.test(t) || /Founders' Road/.test(t)), `${id}'s lock chip: "${t}"`);
     expect(r0.missing.length === 0 && Object.keys(r0.locks).length > 0, `lock chips: ${JSON.stringify(r0.locks)}, a locked car without one: ${r0.missing.join()}`);
     expect(r0.cast.h >= 44 && r0.cast.stacked && /^Character: /.test(r0.cast.label), `the character card: ${JSON.stringify(r0.cast)}`);
@@ -3174,22 +3174,22 @@ await group('progression', async (use) => {
     expect(r3.centred !== r2.centred, `ArrowRight: ${r2.centred} → ${r3.centred}`);
     // the Paint tab: the car on the stage, repainted live by a swatch (the stage's paint follows the pick)
     await page.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
-    await page.waitForFunction(() => window.__game.revealShow && window.__game.revealState.frames > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
     const p0 = await game(page, () => ({ show: window.__game.revealShow, frames: window.__game.revealState.frames }));
     const free = page.locator('.paint-chip:not(.locked):not(.on)').first();
     const pickName = (await free.locator('b').textContent()) ?? '';
     await free.click();
-    await page.waitForFunction((was) => window.__game.revealShow && window.__game.revealShow.paint !== was && window.__game.revealState.frames > 0, p0.show.paint, { timeout: 900000, polling: 250 });
+    await page.waitForFunction((a) => window.__game.revealShow && window.__game.revealShow.paint !== a.paint && window.__game.revealShow.shown > a.shown, { paint: p0.show.paint, shown: p0.show.shown }, { timeout: 900000, polling: 250 });
     const p1 = await game(page, () => ({ show: window.__game.revealShow, built: window.__game.revealState.built, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints }));
     await page.screenshot({ path: path.join(OUT, 'garage-paint-1280.png') });
-    expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.built, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
+    expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.show.shown > p0.show.shown, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
     // back to the factory paint the suite expects
     await game(page, (car) => { const g = window.__game; const paints = { ...g.settings.paints }; delete paints[car]; g.updateSettings({ ...g.settings, paints }); }, r0.driving);
     await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     await page.waitForSelector('.overlay.menu', { timeout: 120000 });
     const closed = await game(page, () => window.__game.revealState.open);
     expect(!closed, 'the stage stayed open after the garage closed');
-    return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.frames} frame), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
+    return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.show.shown} drawn), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
   });
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
@@ -4164,7 +4164,7 @@ await group('phone', async (use) => {
     await centreCar(page, ids[1]);
     await page.waitForFunction((id) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car === id, ids[1], { timeout: 30000 });
     await game(page, () => document.querySelector('.car-rail').scrollIntoView({ block: 'start' }));
-    await page.waitForFunction((id) => window.__game.revealShow?.car === id && window.__game.revealState.frames > 0, ids[1], { timeout: 900000, polling: 500 });
+    await page.waitForFunction((id) => window.__game.revealShow?.car === id && window.__game.revealShow.shown > 0, ids[1], { timeout: 900000, polling: 500 });
     await page.screenshot({ path: path.join(OUT, 'phone-garage-carousel.png') });
     const r = await game(page, () => {
       const box = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width, h: b.height }; };
@@ -4183,7 +4183,7 @@ await group('phone', async (use) => {
     expect(snapped < 3, `after the swipe the centred card sits ${snapped} px off the middle`);
     // the Paint tab: the stage and the first row of swatches on screen together (the tab bar at the bottom excluded)
     await page.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
-    await page.waitForFunction(() => window.__game.revealShow && window.__game.revealState.frames > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
     await page.waitForTimeout(800);
     await page.screenshot({ path: path.join(OUT, 'phone-garage-paint.png') });
     const pv = await game(page, () => {

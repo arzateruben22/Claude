@@ -643,7 +643,7 @@ export class Game {
   // (built once, rendered once, then kept as a frame per car and paint for the session); setRevealPaint repaints it live
   // (a material swap, as PlayerCar.setPaint). The Founder Edition's own reveal is unchanged (no `show`).
   private rv: { stage: RevealStage | null; canvas: HTMLCanvasElement; t: number; kind: RevealKind; playing: boolean; dirty: boolean; hold: number | null;
-    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean; show?: { car: string; paint: number; std: boolean } } | null = null;
+    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean; show?: { car: string; paint: number; std: boolean }; shown?: number } | null = null;
   private revealStill: HTMLCanvasElement | null = null;
   private showStills = new Map<string, HTMLCanvasElement>();
   private showKey(sh: { car: string; paint: number; std: boolean }) { return `${sh.car}|${sh.paint}|${sh.std ? 's' : 'f'}|${this.settings.quality}`; }
@@ -687,7 +687,7 @@ export class Game {
     else { r.dirty = true; this.buildRevealStage(); }
   }
   /** (tests) the showroom's car and paint, null when the stage is the Founder Edition's reveal or closed */
-  get revealShow() { const r = this.rv; return r?.show ? { ...r.show, stills: this.showStills.size } : null; }
+  get revealShow() { const r = this.rv; return r?.show ? { ...r.show, stills: this.showStills.size, shown: r.shown ?? 0 } : null; }
   private revealQuality(): 'high' | 'phone' { return this.settings.quality === 'high' || this.settings.quality === 'ultra' ? 'high' : 'phone'; }
   revealHold(t: number | null) { if (this.rv) { this.rv.hold = t; this.rv.dirty = true; } }
   get revealState() {
@@ -708,6 +708,7 @@ export class Game {
     const r = this.rv, s = r?.show ? this.showStills.get(this.showKey(r.show)) : this.revealStill; if (!r || !s) return;
     const g = r.canvas.getContext('2d'); if (!g) return;
     g.drawImage(s, 0, 0, r.canvas.width, r.canvas.height);
+    r.shown = (r.shown ?? 0) + 1;
   }
   private tmpSize = new THREE.Vector2();
   private renderReveal(dt: number) {
@@ -742,6 +743,7 @@ export class Game {
       g.save(); g.globalCompositeOperation = 'lighter'; g.fillStyle = gr; g.fillRect(0, 0, cv.width, cv.height); g.restore();
     }
     r.dirty = false;
+    r.shown = (r.shown ?? 0) + 1;
     if (!r.playing && r.hold === null) {
       // the last frame, for the session (the showroom's: one per car and paint)
       const key = r.show ? this.showKey(r.show) : '';
