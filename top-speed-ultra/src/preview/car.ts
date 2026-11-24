@@ -69,6 +69,8 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   const extra: Record<string, THREE.Material> = {};
   if (P.led) {
     extra.led = std ? M.led(STANDARD_LED.color, STANDARD_LED.halo, q, STANDARD_LED.edge) : M.led(P.led.color, P.led.halo, q, P.led.edge);
+    // the tail's blades in red on both editions (the owner, 2026-11-24: "Keep the tail lights red or blue? I like the red")
+    extra.ledTail = M.led(0xff3a30, 0xd01010, q, 0x7a0606);
     // the turn signals (amber, about 1.5x the brake level of the red bar's map) and the reversing lamps (white)
     const sig = once('m.signal', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x2a1600, emissive: 0xff9326, emissiveIntensity: 3.2, roughness: 0.3 }), { name: 'signal' }));
     extra.sigL = sig; extra.sigR = sig;
@@ -79,7 +81,7 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   if (P.bar) extra.brakeGlow = once('m.brakeGlow', () => Object.assign(new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 0.07, 0.05).multiplyScalar(1.1), map: glowTex(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }), { name: 'brakeGlow' }));
   // the Founder Edition's LED wake-up (car-wake.ts): the strips, the blades and the red bar light in a sweep. The
   // 'blade' lamps and their tail material are the hypercar's own, so no other car's lights take part
-  if (oc && extra.led) { wakeable(extra.led, 'ice', B.ZF, B.ZR); wakeable(lamps.lamp, 'ice', B.ZF, B.ZR); wakeable(lamps.tail, 'bar', B.ZF, B.ZR); }
+  if (oc && extra.led) { wakeable(extra.led, 'ice', B.ZF, B.ZR); wakeable(lamps.lamp, 'ice', B.ZF, B.ZR); wakeable(lamps.tail, 'bar', B.ZF, B.ZR); if (extra.ledTail) wakeable(extra.ledTail, 'bar', B.ZF, B.ZR); }
   // the hypercar's side scoop (M1b repair): the shared dark, drawn a few depth steps nearer (polygon offset), so the
   // skin it lies 14 mm over never fights through it, however far off the camera is
   if (P.face) extra.scoop = once('m.scoop', () => { const m = withAO(new THREE.MeshStandardMaterial({ color: 0x050506, roughness: 0.75 })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; m.name = 'scoop'; return m; });
@@ -193,7 +195,7 @@ export function buildCar(o: CarOptions = {}): THREE.Group {
   const mats = carMaterials(o.paint ?? P.paint, q, o.caliper ?? P.caliper, id, o.edition);
   kit.build(mats, g, { shadow: (k) => k === 'paint' || k === 'mirrorPaint' || k === 'tyre' || k === 'rimPaint' || k === 'dark' || k === 'carbon' });
   for (const k of SWITCHED_LAMPS) { const m = g.getObjectByName(k); if (m) m.visible = false; }
-  { const m = g.getObjectByName('led'); if (m) M.ledScreen(m as THREE.Mesh); }
+  for (const k of ['led', 'ledTail']) { const m = g.getObjectByName(k); if (m) M.ledScreen(m as THREE.Mesh); }
   g.userData.thrusters = B.thrusters;
   g.userData.body = B.body;   // its section (top, canopyX): the suite checks the cabin's shapes stay under the skin
   if (o.contactShadow ?? true) g.add(contactPatch(B.ZR - B.ZF, P.WP.reduce((m, [, w]) => Math.max(m, w), 0) * 2,

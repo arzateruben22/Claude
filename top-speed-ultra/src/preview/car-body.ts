@@ -1164,7 +1164,8 @@ function makeBody(P: ShapeParams) {
         if (P.led) for (const sd of [-1, 1]) {
           const sel = path.filter((q) => sd * q.p.x > 0.11);
           if (sd < 0) sel.reverse();
-          if (sel.length > 1) ledStrip(sel.map((q) => q.p), (i) => sel[i].n, Bh, 0.0015);
+          // (red, the owner's pick over the references' ice blue, 2026-11-24: "I like the red"; car.ts ledTail)
+          if (sel.length > 1) ledStrip(sel.map((q) => q.p), (i) => sel[i].n, Bh, 0.0015, 'ledTail');
           // the rear turn signals: each blade's outer 0.26 m and its wrap turn amber, a hair proud (PlayerCar shows them)
           const outer = sel.filter((q) => Math.abs(q.p.x) > hw - 0.26 || q.p.z < ZR - 0.001);
           if (outer.length > 1) ledStrip(outer.map((q) => q.p), (i) => outer[i].n, Bh + 0.002, 0.003, sd < 0 ? 'sigL' : 'sigR');
