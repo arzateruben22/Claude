@@ -1109,7 +1109,7 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
     {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with cash are coming later. Nothing here costs real money.</p>}
     {tab === 'custom' && <p className="fine soon-note">Customize (calipers, tint, liveries in our own designs) is coming later. Nothing here costs real money.</p>}
     {/* named for its car: the menu's Drive dock stays on screen beside the garage, and is the only plain "Drive" */}
-    {tab === 'cars' && <CarCarousel cars={garageCars(owner, p.vehicles)} start={game.carId} cls={(c) => (game.carId === c.id ? ' on' : '') + (c.founder ? ' founder' : '') + (pr.glowing(c.id) ? ' unlocked-now' : '')} card={(c, centred) => {
+    {tab === 'cars' && <CarCarousel cars={garageCars(owner, p.vehicles)} start={game.carId} cls={(c) => (game.carId === c.id ? ' on' : '') + (c.founder ? ' founder' : '') + (pr.glowing(c.id) ? ' unlocked-now' : '')} card={(c, centred, near) => {
         const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, std = !!c.founder && game.hypercarEdition === 'standard', glow = pr.glowing(c.id);
         const locked = !owner && !owned, miles = (CAR_MILES as Record<string, number>)[c.id];
         // chosen: the Founder Edition's lights wake, on its stage and on the car (Game.applyCarChoice)
@@ -1119,7 +1119,7 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
             {/* the centred car on its stage (the Founder Edition's own reveal, or the showroom); a neighbour shows a still of its
                 own model in its paint (Game.showroomStill, rendered once per car and paint) */}
             {centred ? (c.founder && !std ? <FounderStage game={game} /> : <div className="car-stage"><ShowroomStage game={game} car={c.id} paint={paint} label={`The ${c.name} on the garage's showroom stage. A model built in code.`} /></div>)
-              : <div className="car-stage car-ph" aria-hidden="true"><ShowroomStill game={game} car={c.id} paint={paint} /></div>}
+              : <div className="car-stage car-ph" aria-hidden="true"><ShowroomStill game={game} car={c.id} paint={paint} urgent={near} /></div>}
             {locked && <span className="car-lock"><Ico name="lock" />{c.founder ? "Founders' Road · free" : miles ? `Opens at ${miles} mi` : 'Locked'}</span>}
             <div className="carhead"><span className="paint" title={c.founder && !std ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
             <small className="car-stats">{[`${f.hp} hp`, `${f.zeroSixty} s 0-60`, `${f.topMph} mph`, `${c.mass.toLocaleString()} kg`].map((x, i, a) => <span key={i}>{x}{i < a.length - 1 ? ' ·' : ''}</span>)}</small>
@@ -1155,10 +1155,13 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
 const REVEAL_SEEN = 'tsu.founderReveal';
 function FounderStage({ game }: { game: Game }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
+  // (a layout effect: the canvas is sized and seeded with the car's frame before the browser first paints it, never an
+  // empty box; Game.seedStage)
+  useLayoutEffect(() => {
     const cv = ref.current; if (!cv) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+    game.seedStage(cv);
     let seen = false;
     try { seen = localStorage.getItem(REVEAL_SEEN) === '1'; } catch { /* a convenience */ }
     // a moment for the panel to paint first: building the stage takes a beat
@@ -1185,10 +1188,13 @@ function ShowroomStage({ game, car, paint, label }: { game: Game; car: string; p
   const ref = useRef<HTMLCanvasElement>(null);
   const paintNow = useRef(paint);
   paintNow.current = paint;
-  useEffect(() => {
+  // (a layout effect: the new canvas is sized and shows the car's still, or the empty showroom while the car is built,
+  // before the browser first paints it; the live stage replaces it only with a real frame: Game.seedStage, renderReveal)
+  useLayoutEffect(() => {
     const cv = ref.current; if (!cv) return;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+    game.seedStage(cv, { car, paint: paintNow.current });
     const id = window.setTimeout(() => game.openReveal(cv, false, { car, paint: paintNow.current }), 220);
     return () => { window.clearTimeout(id); game.closeReveal(); };
   }, [game, car]);
@@ -1197,21 +1203,29 @@ function ShowroomStage({ game, car, paint, label }: { game: Game; car: string; p
 }
 // a neighbour in the carousel: a still of the car's own model in its paint (Game.showroomStill renders it once, on the
 // showroom stage at its hero angle, and keeps it; the live stage is the centred card's alone)
-function ShowroomStill({ game, car, paint }: { game: Game; car: string; paint: number }) {
+// (`urgent`: the card the carousel is settling on, whose still goes to the head of the queue; until a still lands the
+// canvas shows the empty showroom, never a black box: Game.seedStage)
+function ShowroomStill({ game, car, paint, urgent = false }: { game: Game; car: string; paint: number; urgent?: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const draw = () => {
-      const cv = ref.current, still = game.showroomStill(car, paint); if (!cv || !still) return false;
+  useLayoutEffect(() => {
+    const size = (cv: HTMLCanvasElement) => {
       const dpr = Math.min(2, window.devicePixelRatio || 1);
-      cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+      const w = Math.max(16, Math.round(cv.clientWidth * dpr)), h = Math.max(9, Math.round(cv.clientHeight * dpr));
+      if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
+    };
+    const draw = () => {
+      const cv = ref.current, still = game.showroomStill(car, paint, urgent); if (!cv || !still) return false;
+      size(cv);
       cv.getContext('2d')?.drawImage(still, 0, 0, cv.width, cv.height);
       cv.dataset.ready = '1';
       return true;
     };
     if (draw()) return;
+    const cv = ref.current;
+    if (cv) { size(cv); game.seedStage(cv, { car, paint }, urgent); }
     const off = game.onShowroomStill(() => { if (draw()) off(); });
     return off;
-  }, [game, car, paint]);
+  }, [game, car, paint, urgent]);
   return <canvas ref={ref} className="car-still" />;
 }
 // The Vehicles tab as a carousel (owner, 2026-11-24: "make a carousel effect for the car selection"): one card centred
@@ -1219,7 +1233,7 @@ function ShowroomStill({ game, car, paint }: { game: Game; car: string; paint: n
 // arrow keys move it. Every card stays in the page (a screen reader and the Tab key reach each, with its name and "n of
 // m"; focusing a card centres it), and each card keeps its own Drive. The garage opens on the car you drive.
 type GarageCar = ReturnType<typeof garageCars>[number];
-function CarCarousel({ cars, start, card, cls }: { cars: GarageCar[]; start: string; card: (c: GarageCar, centred: boolean) => ReactNode; cls: (c: GarageCar) => string }) {
+function CarCarousel({ cars, start, card, cls }: { cars: GarageCar[]; start: string; card: (c: GarageCar, centred: boolean, near: boolean) => ReactNode; cls: (c: GarageCar) => string }) {
   const track = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(() => Math.max(0, cars.findIndex((c) => c.id === start)));
   // the stage follows the centred card once it has settled (a fast swipe past three cars builds one stage)
@@ -1265,7 +1279,7 @@ function CarCarousel({ cars, start, card, cls }: { cars: GarageCar[]; start: str
         {cars.map((c, i) => (
           <div key={c.id} className={'gcell driver car' + cls(c) + (i === at ? ' centred' : '')} data-car={c.id} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${n}: ${c.name}`}
             tabIndex={-1} onFocus={(e) => { if (i !== at && (e.target as HTMLElement).matches(':focus-visible')) go(i); }} onClick={() => { if (i !== at) go(i); }}>
-            {card(c, i === shown && i === at)}
+            {card(c, i === shown && i === at, i === at)}
           </div>
         ))}
       </div>

@@ -3202,6 +3202,86 @@ await group('progression', async (use) => {
     expect(!closed, 'the stage stayed open after the garage closed');
     return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.show.shown} drawn), the ${r1.stills} neighbours on stills of their models (brightest ${lit.join('/')}), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
   });
+  // the centred car is never a black box (owner, 2026-11-24 from his iPhone, light theme: "fix how it blacks out still when
+  // rotating cars"; a card centred by a swipe mounted an empty canvas over the stage's near-black room until its stage was
+  // built). At 390 × 844 in the light theme: the garage opened, Next through every car and Previous back, 350 ms apart;
+  // then the dark theme, a lost and restored WebGL context, the Paint tab and back. The centred card's car view (or the
+  // Paint tab's) is read after each frame: a near-black picture (mean luminance under 8 of 255, a transparent pixel counted
+  // as the black room behind it) is never seen. (The Founder Edition's reveal is marked seen: its first play opens from
+  // the dark on purpose.)
+  await check('garage at 390 × 844: the centred car view is never black (swiping through every car and back, the theme changed, a lost context, the Paint tab and back)', async () => {
+    const ph = await open({ phone: true, settings: { theme: 'light' } });
+    const pg = ph.page;
+    try {
+      await game(pg, () => localStorage.setItem('tsu.founderReveal', '1'));
+      await game(pg, () => {
+        const S = (window.__samp = { phase: 'open', rows: [], stop: false });
+        const t = document.createElement('canvas'); t.width = 48; t.height = 27; const g = t.getContext('2d', { willReadFrequently: true });
+        let last = 0;
+        const loop = (now) => {
+          if (S.stop) return;
+          if (now - last >= 90) {
+            last = now;
+            const paint = document.querySelector('.paint-stage canvas'), cv = paint || document.querySelector('.car-track > .gcell.car.centred canvas');
+            const car = paint ? 'paint' : document.querySelector('.car-track > .gcell.car.centred')?.dataset.car;
+            if (car) {
+              let mean = 0;
+              if (cv && cv.width && cv.height) {
+                g.clearRect(0, 0, 48, 27); g.drawImage(cv, 0, 0, 48, 27);
+                const d = g.getImageData(0, 0, 48, 27).data; let s = 0;
+                for (let i = 0; i < d.length; i += 4) s += ((0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]) * d[i + 3]) / 255;
+                mean = s / (d.length / 4);
+              }
+              S.rows.push({ t: now, phase: S.phase, car, mean });
+            }
+          }
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      });
+      const phase = (p) => game(pg, (p) => { window.__samp.phase = p; }, p);
+      await pg.locator('.mp-carline').click();
+      await pg.waitForSelector('.panel.profile .car-rail .gcell.car.centred');
+      await game(pg, () => document.querySelector('.car-rail').scrollIntoView({ block: 'start' }));
+      await pg.waitForFunction(() => window.__game.revealShow?.shown > 0, null, { timeout: 900000, polling: 250 });
+      const ids = await game(pg, () => [...document.querySelectorAll('.car-track > .gcell.car')].map((x) => x.dataset.car));
+      const at0 = ids.indexOf(await game(pg, () => document.querySelector('.car-track > .gcell.car.centred').dataset.car));
+      await phase('swipe');
+      const next = pg.getByRole('button', { name: 'Next car', exact: true }), prev = pg.getByRole('button', { name: 'Previous car', exact: true });
+      for (let i = at0; i < ids.length - 1; i++) { await next.click(); await pg.waitForTimeout(350); }
+      for (let i = ids.length - 1; i > 0; i--) { await prev.click(); await pg.waitForTimeout(350); }
+      await pg.waitForTimeout(2500);
+      await phase('theme');
+      await game(pg, () => window.__updateSettings({ theme: 'dark' }));
+      await pg.waitForTimeout(1500);
+      await phase('context');
+      await game(pg, () => { window.__lc = window.__game.renderer.getContext().getExtension('WEBGL_lose_context'); window.__lc.loseContext(); });
+      await pg.waitForTimeout(1000);
+      await game(pg, () => window.__lc.restoreContext());
+      await pg.waitForFunction(() => window.__game.contextRestores > 0, null, { timeout: 60000 });
+      await pg.waitForTimeout(3000);
+      await phase('paint');
+      await pg.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
+      await pg.waitForTimeout(2000);
+      await phase('back');
+      await pg.locator('.seg[aria-label="Garage"]').getByRole('button', { name: /^Vehicles/ }).click();
+      await pg.waitForTimeout(2500);
+      const rows = await game(pg, () => { window.__samp.stop = true; return window.__samp.rows; });
+      await pg.screenshot({ path: path.join(OUT, 'phone-garage-never-black.png') });
+      const runs = {}, seen = {}, bad = [];
+      let cur = null, n = 0;
+      for (const r of rows) {
+        if (r.car !== cur) { cur = r.car; n = 0; }
+        seen[r.car] = (seen[r.car] ?? 0) + 1;
+        if (r.mean < 8) { n++; runs[r.car] = Math.max(runs[r.car] ?? 0, n); if (bad.length < 6) bad.push(`${r.phase} ${r.car} ${r.mean.toFixed(1)}`); } else n = 0;
+      }
+      const cars = ids.filter((id) => seen[id]);
+      expect(cars.length === ids.length && seen.paint > 0, `not every car view was sampled: ${JSON.stringify(seen)}`);
+      expect(Object.keys(runs).length === 0, `near-black samples (max run per car ${JSON.stringify(runs)}): ${bad.join('; ')}`);
+      expect(ph.errors.length === 0, ph.errors.slice(0, 3).join(' | '));
+      return `${rows.length} samples over ${ids.length} cars and the Paint tab (${Object.entries(seen).map(([k, v]) => `${k} ${v}`).join(', ')}), none near black; darkest ${Math.min(...rows.map((r) => r.mean)).toFixed(1)}`;
+    } finally { await ph.ctx.close(); }
+  });
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
   await check('the hypercar\'s garage card: the reveal stage plays once, keeps its last frame, Replay plays it again; choosing the car wakes its lights; reduced motion shows it still', async () => {

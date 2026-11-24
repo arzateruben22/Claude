@@ -158,6 +158,35 @@ export interface RunBests {
 export type Turn = 'left' | 'right' | 'ahead' | '';
 // signs that are no way off to a place (a weigh station, a rest area, a vista point): never a home's nearest exit
 const NOT_AN_EXIT = /weigh|inspection|rest area|vista point|scales?\b/i;
+
+// the garage's showroom: whether a stage frame really drew (the room's lit turntable and light bars are in every real
+// frame, so its brightest pixels are bright whatever the car's paint; a blank or not-yet-ready frame is near black)
+let litProbe: HTMLCanvasElement | null = null;
+function frameLit(cv: HTMLCanvasElement) {
+  const p = litProbe ??= Object.assign(document.createElement('canvas'), { width: 32, height: 18 });
+  const g = p.getContext('2d', { willReadFrequently: true }); if (!g) return true;
+  g.clearRect(0, 0, 32, 18); g.drawImage(cv, 0, 0, 32, 18);
+  const d = g.getImageData(0, 0, 32, 18).data; let sum = 0, max = 0;
+  for (let i = 0; i < d.length; i += 4) { const l = ((d[i] * 0.2126 + d[i + 1] * 0.7152 + d[i + 2] * 0.0722) * d[i + 3]) / 255; sum += l; if (l > max) max = l; }
+  return max > 60 && sum / (d.length / 4) > 8;
+}
+// the empty showroom, drawn in 2D for a car view whose car has not been rendered yet (the first open of the garage):
+// the stage's room, its lit turntable and light bars, so the card is never a black box while the stage is built
+function emptyShowroom(g: CanvasRenderingContext2D, w: number, h: number) {
+  const bg = g.createRadialGradient(w * 0.5, h * 0.72, 0, w * 0.5, h * 0.72, w * 0.62);
+  bg.addColorStop(0, '#1c2a38'); bg.addColorStop(0.55, '#0b1118'); bg.addColorStop(1, '#030507');
+  g.fillStyle = bg; g.fillRect(0, 0, w, h);
+  g.fillStyle = 'rgba(235,244,255,0.85)';
+  for (const x of [0.16, 0.38, 0.62, 0.84]) g.fillRect(w * x - w * 0.004, 0, Math.max(2, w * 0.008), h * 0.34);
+  const cx = w * 0.5, cy = h * 0.7, rx = w * 0.4, ry = h * 0.1;
+  const disc = g.createLinearGradient(0, cy - ry, 0, cy + ry);
+  disc.addColorStop(0, '#2a3d4f'); disc.addColorStop(1, '#101a24');
+  g.beginPath(); g.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); g.fillStyle = disc; g.fill();
+  g.lineWidth = Math.max(1.5, w * 0.005); g.strokeStyle = 'rgba(170,215,255,0.9)'; g.stroke();
+  const glow = g.createLinearGradient(0, cy, 0, h);
+  glow.addColorStop(0, 'rgba(120,180,235,0.35)'); glow.addColorStop(1, 'rgba(120,180,235,0)');
+  g.fillStyle = glow; g.fillRect(cx - rx, cy, rx * 2, h - cy);
+}
 // a real exit on a carriageway, for "start at your exit" (key goes into Settings.exit)
 export interface Exit { key: string; text: string; s: number; mi: number; side: 'L' | 'R' }
 // what a feedback report says about the device and this drive: nothing personal, nothing sent by the game
@@ -647,7 +676,7 @@ export class Game {
   // (built once, rendered once, then kept as a frame per car and paint for the session); setRevealPaint repaints it live
   // (a material swap, as PlayerCar.setPaint). The Founder Edition's own reveal is unchanged (no `show`).
   private rv: { stage: RevealStage | null; canvas: HTMLCanvasElement; t: number; kind: RevealKind; playing: boolean; dirty: boolean; hold: number | null;
-    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean; show?: { car: string; paint: number; std: boolean }; shown?: number } | null = null;
+    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean; show?: { car: string; paint: number; std: boolean }; shown?: number; blank: number } | null = null;
   private revealStill: HTMLCanvasElement | null = null;
   private showStills = new Map<string, HTMLCanvasElement>();
   private showKey(sh: { car: string; paint: number; std: boolean }) { return `${sh.car}|${sh.paint}|${sh.std ? 's' : 'f'}|${this.settings.quality}`; }
@@ -657,12 +686,12 @@ export class Game {
     this.closeReveal();
     if (show) {
       const sh = { car: show.car, paint: this.stagePaint(show.car, show.paint), std: show.car === FOUNDER_CAR && this.hypercarEdition === 'standard' };
-      this.rv = { stage: null, canvas, t: WAKE_ONLY_SECONDS, kind: 'wake', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false, show: sh };
+      this.rv = { stage: null, canvas, t: WAKE_ONLY_SECONDS, kind: 'wake', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false, show: sh, blank: 0 };
       if (this.showStills.has(this.showKey(sh))) { this.rv.dirty = false; this.drawStill(); return 'still'; }
       this.buildRevealStage();
       return 'still';
     }
-    this.rv = { stage: null, canvas, t: REVEAL_SECONDS, kind: 'reveal', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false };
+    this.rv = { stage: null, canvas, t: REVEAL_SECONDS, kind: 'reveal', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false, blank: 0 };
     if (this.revealStill && !autoplay) { this.rv.dirty = false; this.drawStill(); return 'still'; }
     if (autoplay && !reducedMotion()) { this.playReveal('reveal'); return 'playing'; }
     this.buildRevealStage();
@@ -725,6 +754,7 @@ export class Game {
     r.shown = (r.shown ?? 0) + 1;
   }
   private tmpSize = new THREE.Vector2();
+  private stageScratch: HTMLCanvasElement | null = null;
   // a stage's frame into a canvas: rendered into a corner of the game's own drawing buffer (just before the frame's own
   // render covers it) and copied out
   private drawStage(stage: RevealStage, t: number, kind: RevealKind, cv: HTMLCanvasElement) {
@@ -751,15 +781,37 @@ export class Game {
   // showroomStill(car, paint) gives the frame when there is one, else queues it; the queue renders one car at a time,
   // only while the live stage is idle (built, compiled, drawn), and calls the listeners as each lands.
   private stillQueue: { car: string; paint: number; std: boolean }[] = [];
-  private stillJob: { stage: RevealStage; show: { car: string; paint: number; std: boolean }; compiled: boolean } | null = null;
+  private stillJob: { stage: RevealStage; show: { car: string; paint: number; std: boolean }; compiled: boolean; blank: number } | null = null;
   private stillListeners = new Set<() => void>();
   onShowroomStill(fn: () => void) { this.stillListeners.add(fn); return () => { this.stillListeners.delete(fn); }; }
-  showroomStill(car: string, hex: number): HTMLCanvasElement | null {
+  // `urgent`: the card the carousel has centred (or is settling on) goes to the head of the queue
+  showroomStill(car: string, hex: number, urgent = false): HTMLCanvasElement | null {
     const sh = { car, paint: this.stagePaint(car, hex), std: car === FOUNDER_CAR && this.hypercarEdition === 'standard' };
     const key = this.showKey(sh), have = this.showStills.get(key);
     if (have) return have;
-    if (!this.stillQueue.some((q) => this.showKey(q) === key) && !(this.stillJob && this.showKey(this.stillJob.show) === key)) this.stillQueue.push(sh);
+    if (this.stillJob && this.showKey(this.stillJob.show) === key) return null;
+    const i = this.stillQueue.findIndex((q) => this.showKey(q) === key);
+    if (i >= 0 && urgent) this.stillQueue.splice(i, 1);
+    if (i < 0 || urgent) { if (urgent) this.stillQueue.unshift(sh); else this.stillQueue.push(sh); }
     return null;
+  }
+  // The car view is never black (owner, 2026-11-24 from his iPhone: "fix how it blacks out still when rotating cars"; a
+  // card centred by a swipe mounted a fresh, empty canvas over the stage's near-black room and kept it empty until the
+  // stage was built a beat later). A car view's canvas is seeded the moment it is mounted, before the browser paints it:
+  // with the session's still of that car in that paint, or the Founder Edition's own frame, or (nothing rendered yet,
+  // the first open) the empty showroom drawn in 2D; the stage then queues or builds that car, and the live stage
+  // replaces the picture only with a frame that has really drawn (renderReveal). Returns what it drew.
+  seedStage(cv: HTMLCanvasElement, show?: { car: string; paint: number }, urgent = true): 'still' | 'room' {
+    const g = cv.getContext('2d'); if (!g || !cv.width || !cv.height) return 'room';
+    let s: HTMLCanvasElement | null | undefined = null;
+    if (show) s = this.showroomStill(show.car, show.paint, urgent);
+    else {
+      s = this.revealStill;
+      if (!s) for (const [k, v] of this.showStills) if (k.startsWith(FOUNDER_CAR + '|') && k.endsWith('|f|' + this.settings.quality)) { s = v; break; }
+    }
+    if (s) { g.drawImage(s, 0, 0, cv.width, cv.height); return 'still'; }
+    emptyShowroom(g, cv.width, cv.height);
+    return 'room';
   }
   /** (tests) stills waiting to be rendered, and whether one is being built */
   get showroomQueue() { return this.stillQueue.length + (this.stillJob ? 1 : 0); }
@@ -771,7 +823,7 @@ export class Game {
       if (this.showStills.has(this.showKey(next))) return;
       const q = this.revealQuality();
       const stage = buildReveal(this.renderer, q, next.car as CarId, { paint: next.paint, edition: next.std ? 'standard' : 'founder', rim: wheelFor(carById(next.car), this.settings.wheels) });
-      const job = { stage, show: next, compiled: false };
+      const job = { stage, show: next, compiled: false, blank: 0 };
       this.stillJob = job;
       this.renderer.compileAsync(stage.scene, stage.camera).catch(() => undefined).then(() => { job.compiled = true; });
       return;
@@ -780,6 +832,7 @@ export class Game {
     if (!job.compiled) return;
     const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270;
     this.drawStage(job.stage, WAKE_ONLY_SECONDS, 'wake', cv);
+    if (!frameLit(cv) && ++job.blank < 20) return;   // (a blank frame is never kept as a car's still: tried again next frame)
     this.showStills.set(this.showKey(job.show), cv);
     job.stage.dispose(); this.stillJob = null;
     for (const fn of this.stillListeners) fn();
@@ -792,8 +845,17 @@ export class Game {
     if (!r.playing && !r.dirty) return;
     const cv = r.canvas, g = cv.getContext('2d');
     if (!g || !cv.width || !cv.height || !cv.isConnected) return;
-    const pose = this.drawStage(r.stage, r.hold ?? r.t, r.kind, cv);
+    // a frame is drawn off screen first and reaches the card only when it really shows the room and the car (a frame
+    // from a stage whose programs or environment are not ready yet, or from a lost context, is blank): the card keeps the
+    // still or the empty room it was seeded with until then (the Founder Edition's reveal plays from the dark on purpose,
+    // so its playing frames go straight through)
+    const off = this.stageScratch ??= document.createElement('canvas');
+    if (off.width !== cv.width || off.height !== cv.height) { off.width = cv.width; off.height = cv.height; } else off.getContext('2d')?.clearRect(0, 0, off.width, off.height);
+    const pose = this.drawStage(r.stage, r.hold ?? r.t, r.kind, off);
     r.calls = this.renderer.info.render.calls; r.tris = this.renderer.info.render.triangles; r.frames++;
+    if (!r.playing && !frameLit(off) && ++r.blank < 20) return;   // (stays dirty: the next frame tries again; 20 blank frames: a truly dark picture, shown)
+    r.blank = 0;
+    g.drawImage(off, 0, 0);
     // the light sweep's band across the card as the light passes (none with reduced motion: nothing moves then)
     if (pose.band !== null) {
       const x = (pose.band * 1.4 - 0.2) * cv.width, bw = cv.width * 0.12, a = Math.sin(Math.PI * pose.band);
@@ -1484,6 +1546,9 @@ export class Game {
     // the garage's reveal stage, if one is open: its own environment map was GPU-only too
     const r = this.rv;
     if (r?.stage) { r.stage = null; r.compiled = false; this.buildRevealStage(); r.dirty = true; }
+    // (its canvas keeps the picture it had until the rebuilt stage draws a real frame: renderReveal; the stills are 2D
+    // canvases and survive, and a still being built goes back to the head of the queue, built again)
+    if (this.stillJob) { this.stillQueue.unshift(this.stillJob.show); this.stillJob = null; }
     // the sky camera's corner: copied again on the next frame
     this.skyAt = -1e9;
   }
