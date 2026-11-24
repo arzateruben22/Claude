@@ -95,7 +95,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // and read as grey squares head on)
   // (judge round 2: head on (lowfront) the slats still read mid grey, median 124 to 152: the sky's reflection at a grazing
   // angle; a rougher, less reflective satin, so they read black at every angle)
-  if (oc) extra.slat = once('m.slatOC2', () => withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x0b0c0e, roughness: 0.6, metalness: 0.1, envMapIntensity: 0.25 }), { name: 'slat' })));
+  // (round 4: it is now also the centre vent's well, which read mid grey (80) head on in the scoop's dark: darker, rougher,
+  // a calmer sky, and drawn a few depth steps nearer like the scoop, so the skin's facets don't tear through it)
+  if (oc) extra.slat = once('m.slatOC3', () => { const m = withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x060708, roughness: 0.85, metalness: 0.0, envMapIntensity: 0.12 }), { name: 'slat' })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; return m; });
   // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
   if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
