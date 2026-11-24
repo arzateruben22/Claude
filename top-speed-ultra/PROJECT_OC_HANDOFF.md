@@ -799,6 +799,10 @@ Scores against the references: dashboard 7, wheel 6 (emblem 8), console 6, vibe 
 
 ### Next task, batched with the View button (owner, 2026-11-24 ~5:30 AM PT, from his iPhone at v27): menu and garage
 
+**Built 2026-11-24 on `claude/ui-batch` (not pushed, not published): items 1-5 below, the View button (next section) and
+the owner's item 7 (the Field of view slider removed; the cockpit FOV is the fixed `FOV_DEFAULT` in settings.ts, +13, the owner's decision; +15 failed the iPhone hood and seat-cluster checks), and item 8 (the ABS | TCS bar off the HUD: ABS always on, TCS by the handling, settings.ts `assistsFor`).
+See the progress log's entry of that date for what changed, the screenshots and the suite results.**
+
 The owner's four asks, built together with the View button above in one UI task after the hypercar round:
 1. **Free Drive traffic picker gone.** "Get rid of the traffic selection when choosing free drive and just have the
    default traffic be low." Remove the Light/Moderate/Heavy/Expert row and its "Free Drive: traffic is your own
@@ -833,6 +837,8 @@ Proof: screenshots at 390x844 and 1280x720 for each; targeted tests `--only=phon
 store or economy rule changes (cosmetics stay cash-earned, nothing sold).
 
 ### Next task (owner, 2026-11-23, from his iPhone at v27): a visible View (camera) button on phones
+
+**Built 2026-11-24 on `claude/ui-batch` with the menu and garage batch above.**
 
 "We also need to add the button to change the pov of the game unless it's there and I just can't find it?" It exists
 but is hidden on phones: `src/ui/hud-layout.css:44` hides `.tbtn.view` (and Go to) in the phone layouts (pp, pl); the

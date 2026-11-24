@@ -97,7 +97,6 @@ export function SettingsPanel({ game, settings, update, sec, setSec, onDone, onF
               <p className="help">Auto follows this device. Dark is Midnight, light is Velocity. The menu, the pause screen and Settings take it; the drive's HUD stays as it is.</p>
             </div>
             <Toggle label="Show frame rate" help="A small frame counter on the drive's HUD." value={settings.showFps} onChange={(v) => update({ showFps: v })} />
-            <Range label="Field of view" min={-10} max={15} step={1} value={settings.fov} fmt={(v) => (v > 0 ? '+' : '') + v + '°'} onChange={(v) => update({ fov: v })} help="Widens or narrows the driver's view." />
             <Disclosure label="Performance details" id="perf-details">
               <Toggle label="Show performance" help="Frame times and what Adaptive quality is doing, over the drive." value={settings.showPerf} onChange={(v) => update({ showPerf: v })} />
               <BenchHint graphics={g} />

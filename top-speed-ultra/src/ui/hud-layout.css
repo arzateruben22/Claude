@@ -7,17 +7,19 @@
 
    At 390 x 844 (an upright phone, --ctl-b 14 px):
    top     speed card x 10..202 y 10..~78; Pause 44 x 44 at x 216..260 (Auto-drive under it when offered); the round map
-           at the top right with its ring and the N tab. View and Go to left the top bar (they are in the hold-Pause quick
-           menu and on their keys; App.tsx shows a one-time hint).
-   bottom  the steering pad x 14..146 y 766..830 (64 tall); the round HANDBRAKE (a 50 px dial under its caption) between it
-           and BRAKE x 156..208; BRAKE x 218..294 (68 tall); GAS x 304..370 (96 tall); CLEAR PATH, a 62 px round key over the
-           BRAKE / GAS gap (x 238..300 y 690..752); JUMP (the hypercar) the same round key over GAS (x 306..368 y 662..724);
-           the DRIFT chip over the steering pad (x 14..146 y 718..756), clear of the wheel's rim in the seat view.
+           at the top right with its ring and the N tab. VIEW (the camera, 2026-11-24) under Pause, 44 x 44 at y 60..104;
+           Auto-drive under View when offered. Go to is in the hold-Pause quick menu. On its side (pl) the column is a row:
+           Pause next to the map, View to its left, Auto-drive left of that (the top cluster stays inside 26 % of the height).
+   bottom  the steering pad x 14..192 y 766..830 (64 tall); BRAKE x 202..290 (72 tall), carrying the owner's handbrake
+           emblem (slide up from it to drift, Touch.tsx; the round HANDBRAKE button left on 2026-11-24); GAS x 304..370 (96
+           tall); CLEAR PATH, a 62 px round key over the BRAKE / GAS gap (x 238..300 y 686..748); JUMP (the hypercar) the same
+           round key over GAS (x 306..368 y 662..724); the DRIFT chip over the steering pad (x 14..192 y 718..756), clear of
+           the wheel's rim in the seat view.
    Every target 44 px or more. */
 
 .app[data-skin] { --hud-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --nh-steer-h: 64px; --nh-hb: 52px; --nh-dial: 50px; --nh-brake-w: 76px; --nh-brake-h: 68px; --nh-gas-w: 66px; --nh-gas-h: 96px; --nh-gap: 10px; --nh-key: 62px;
-  --nh-pedals: calc(var(--nh-hb) + var(--nh-gap) + var(--nh-brake-w) + var(--nh-gap) + var(--nh-gas-w)); }
+  --nh-steer-h: 64px; --nh-brake-w: 88px; --nh-brake-h: 72px; --nh-gas-w: 66px; --nh-gas-h: 96px; --nh-gap: 10px; --nh-key: 62px;
+  --nh-pedals: calc(var(--nh-brake-w) + var(--nh-gap) + var(--nh-gas-w)); }
 
 /* ---------------------------------------------------------------- phone (upright and on its side): the top */
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-plate { top: calc(var(--sa-t) + 10px); left: calc(var(--sa-l) + 10px); gap: 5px; padding: 9px 12px 9px 14px; clip-path: none; }
@@ -39,12 +41,19 @@
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats b[data-s="Top"] + span::after { content: attr(data-n); font: 500 12.5px/18px var(--f-mono); letter-spacing: 0.04em; }
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .hud-stats div:has(b[data-s="Top"]) { gap: 6px; }
 
-/* the top bar: Pause only (Auto-drive under it when offered; Map where the map was while the window is off) */
+/* the top bar: Pause, VIEW under it (owner, 2026-11-23: "we also need to add the button to change the pov"), Auto-drive
+   under that when offered; Map where the map was while the window is off */
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar { top: calc(var(--sa-t) + 10px); right: calc(var(--sa-r) + 14px + var(--map) + 10px); flex-direction: column; gap: 8px; }
-.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar :is(.tbtn.view, .tbtn.goto) { display: none; }
-.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.menu { order: -1; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.goto { display: none; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.menu { order: -2; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.view { order: -1; }
+.app[data-skin][data-hud="pp"] .tbar { gap: 6px; }   /* (6 px: Pause, View and Auto-drive end at 154 px, inside the top 22 % of a 715 px app view) */
+.app[data-skin][data-hud="pl"] .tbar { flex-direction: row-reverse; align-items: flex-start; }
+/* VIEW stays when the Minimal HUD tucks the icons away (as Auto-drive does): the owner could not find a camera control on
+   his phone, so it is always there beside Pause */
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]).hud-idle .tbar .tbtn.view { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn::before { clip-path: none; }
-.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { position: static; order: 0; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { position: relative; left: auto; bottom: auto; order: 0; }   /* (relative, not static: its ::before face is inset 0 to it, not to the whole bar over View) */
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.mapbtn { top: calc(var(--sa-t) + 16px); right: calc(var(--sa-r) + 14px); }
 /* the round map; its ring and chips (the compass) over the map's edge, the heading's chip riding the top of the ring */
 .app[data-skin] .hud-compass { z-index: 2; }
@@ -71,19 +80,27 @@
 .app[data-skin] .pedal .ico { width: 24px; height: 24px; }
 .app[data-skin] .brake-wrap .pedal.brake, .app[data-skin] .pedal.brake { width: var(--nh-brake-w); height: var(--nh-brake-h); }
 .app[data-skin] .pedal.gas { width: var(--nh-gas-w); height: var(--nh-gas-h); }
-/* the round HANDBRAKE: the caption over a 50 px dial; the whole column is its target */
-.hb-round { --hb-hold: 220ms; position: relative; width: var(--nh-hb, 52px); display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; cursor: pointer;
-  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-.hb-cap { font: 700 8.5px/1 var(--hud-sans, sans-serif); letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; padding: 3px 4px 3px 5px; border-radius: 7px; }   /* a chip: the skins give it a dark backing (the caption sits over the open road) */
-.hb-dial { position: relative; width: var(--nh-dial, 50px); height: var(--nh-dial, 50px); border-radius: 50%; display: grid; place-items: center; }
-.hb-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
-.hb-ring circle { fill: none; stroke-width: 4; }
-/* the red arc: full while pulled (in 80 ms), draining over the touch hold (input.ts TOUCH_HB_HOLD) after the lift */
-.hb-arc { stroke-dasharray: 100 200; stroke-dashoffset: 100; stroke-linecap: butt; transition: stroke-dashoffset var(--hb-hold) linear; }
-.hb-round.pulled .hb-arc { stroke-dashoffset: 0; transition-duration: 80ms; }
-.hb-face { position: relative; width: calc(100% - 12px); height: calc(100% - 12px); border-radius: 50%; display: grid; place-items: center; }
-.hb-face .ico { width: 26px; height: 26px; }
-@media (prefers-reduced-motion: reduce) { .hb-arc { transition: none !important; } }
+/* BRAKE's emblem (owner, 2026-11-24, control/ui-refs/2026-11-24-brake-emblem.png): the red (P) in its two arcs on a dark
+   lens, in a ring (knurled chrome in Ultra, flat graphite in Retro: the skins), and a short red arc on the ring from twelve
+   o'clock that lights while the handbrake is pulled (in 80 ms) and drains over the touch hold (input.ts TOUCH_HB_HOLD) */
+.bk-emb { position: relative; width: 40px; height: 40px; flex: none; border-radius: 50%; display: block; }
+.bk-emb svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.bk-lens { fill: url(#bk-lens-g); }
+.bk-edge { fill: none; stroke-width: 1; }
+.bk-p { fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.bk-arc { fill: none; stroke-width: 3.4; stroke-dasharray: 22 100; stroke-dashoffset: 0; transform: rotate(-90deg); transform-origin: 20px 20px; opacity: 0;
+  transition: opacity var(--hb-hold, 220ms) linear; }
+.pedal.brake.pulled .bk-arc { opacity: 1; transition-duration: 80ms; }
+.app[data-skin] .pedal.brake { gap: 3px; }
+.app[data-skin] .pedal.brake > span:not(.bk-emb) { font-size: 13px; }
+/* the one-time hint, over BRAKE and the pad's corner (clear of CLEAR PATH on BRAKE's right); it goes after 4.5 s */
+.hb-hint { position: absolute; right: calc(100% - 34px); bottom: calc(100% + 8px); z-index: 3; margin: 0; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  padding: 7px 11px; border-radius: 10px; font: 700 12px/1 var(--hud-sans, sans-serif); letter-spacing: 0.06em; text-transform: uppercase; pointer-events: none;
+  color: #f2f4f7; background: rgba(10, 11, 13, 0.92); box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22), 0 6px 14px rgba(0, 0, 0, 0.45); animation: hb-hint-in 260ms ease-out; }
+.hb-hint span { color: #ff5a4a; font-size: 15px; }
+@keyframes hb-hint-in { from { transform: translateY(6px); } }   /* (no fade: a stalled frame must never leave it invisible) */
+.brake-wrap { position: relative; }
+@media (prefers-reduced-motion: reduce) { .bk-arc { transition: none !important; } .hb-hint { animation: none; } }
 
 /* the round keys: the driver's ability (CLEAR PATH, LOCKED IN, FOCUS TIME) and the hypercar's JUMP */
 .app[data-skin] :is(.hud-ability, .hud-thrustbtn) { width: var(--nh-key); height: var(--nh-key); padding: 0; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -112,7 +129,7 @@
 
 /* manual on a narrow phone: the shift buttons beside the pedals; the pedals slim and the pad shortens to fit */
 @media (max-width: 419px) {
-  .app[data-skin]:has(.touch-shift) { --nh-brake-w: 62px; --nh-gas-w: 58px; --nh-hb: 48px; --nh-dial: 46px; --nh-gap: 8px; }
+  .app[data-skin]:has(.touch-shift) { --nh-brake-w: 66px; --nh-gas-w: 58px; --nh-gap: 8px; }
   .app[data-skin] .touch:has(.touch-shift) .touch-pedals { gap: var(--nh-gap); }
   .app[data-skin] .touch:has(.touch-shift) .touch-steer, .app[data-skin]:has(.touch-shift) .hud-drift { width: calc(100vw - var(--sa-l) - var(--sa-r) - 14px - 20px - var(--nh-pedals) - 50px - 8px - 8px); }
   .app[data-skin] .touch:has(.touch-shift) :is(.pedal, .brake-wrap .pedal.brake) { width: auto; }

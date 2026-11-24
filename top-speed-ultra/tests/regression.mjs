@@ -89,7 +89,9 @@ async function open({ settings = {}, phone = false, size = [1280, 720], dpr = 2 
     : { viewport: { width: size[0], height: size[1] } });
   // standard Low, saved at this settings version (a profile saved without its version reads as one from before Retro Low
   // became the default, and moves to Retro Low; settings.ts SETTINGS_V): the suite's checks were tuned on standard Low
-  const base = { quality: 'low', style: 'standard', v: 5, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
+  // (settings version 6: Free Drive's traffic is Light with no picker; a save from before it moves to Light, so the suite
+  // saves at 6 and keeps the traffic its checks were tuned on)
+  const base = { quality: 'low', style: 'standard', v: 6, adaptive: false, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING };
   // (a check that reloads to see what the game itself saved sets tsu.test.keep first: then the reload keeps the save)
   // (2026-11-16: the flag is carried in window.name as well, which a reload keeps whatever the storage service is doing:
   // at a load average of 17 the localStorage flag itself was lost across the reload, the group's settings were written
@@ -124,6 +126,11 @@ const startLine = async (page) => ((await page.locator('.mp-loc').getAttribute('
 // the character picker from the menu (its entry is in the More overflow since the Midnight Performance menu), and that
 // entry's text (More opened and closed again)
 const openCast = async (page) => { await openMore(page); await page.locator('.mp-more .cast-pick-btn').click(); };
+// the garage's Vehicles carousel (2026-11-24): centre a car's card (a stage shows only on the centred card), as a swipe would
+const centreCar = async (page, id) => {
+  await page.evaluate((id) => document.querySelector(`.gcell.car[data-car="${id}"]`).scrollIntoView({ inline: 'center', block: 'nearest' }), id);
+  await page.waitForFunction((id) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car === id, id, { timeout: 30000, polling: 100 });
+};
 const menuCastLine = async (page) => { await openMore(page); const t = await page.locator('.mp-more .cast-pick-btn').textContent(); await openMore(page); return t ?? ''; };
 // Settings shows one category at a time: the rail's tab on a desktop, the dropdown on a phone
 const SET_KEYS = ['graphics', 'hud', 'world', 'driving', 'sound', 'testing'];
@@ -1027,7 +1034,9 @@ await group('boot', async (use) => {
   // the old default (0, before settings version 2) moves to +10 once, and the move is written back; a 0 saved since
   // (version 2: the player's own) stays 0; any other value saved before stays as it was. Each in its own page, the
   // boot group's own game held meanwhile (two software-rendered games at once take minutes a frame here).
-  await check('field of view: +10 by default; a saved 0 from before moves to +10 once; a 0 chosen since stays', async () => {
+  // the field of view is one fixed value since the slider left Settings (owner, 2026-11-24; settings.ts FOV_DEFAULT, +13):
+  // a new device and every saved value (an old 0, a +5, a 0 chosen at version 2) read as it, and Settings has no slider
+  await check('field of view: one fixed value (+13) on a new device and over any saved value; no Field of view slider in Settings', async () => {
     const boot = async (saved) => {
       const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
       try {
@@ -1048,11 +1057,18 @@ await group('boot', async (use) => {
     try {
       const base = { quality: 'low', adaptive: false, density: 'none' };
       const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
-      expect(fresh.first.fov === 10, `a new device starts at ${fresh.first.fov}`);
-      expect(old0.first.fov === 10 && old0.first.savedFov === 10 && old0.first.savedV === 5 && old0.again.fov === 10, `the old default 0 saved before: ${JSON.stringify(old0)}`);
-      expect(old5.first.fov === 5 && old5.again.fov === 5, `+5 saved before: ${JSON.stringify(old5)}`);
-      expect(mine0.first.fov === 0 && mine0.again.fov === 0 && mine0.again.savedFov === 0, `0 saved at version 2: ${JSON.stringify(mine0)}`);
-      return `new device +${fresh.first.fov}; old 0 → +${old0.first.fov} (saved ${old0.first.savedFov}, version ${old0.first.savedV}), still +${old0.again.fov} after a reload; old +5 kept; a 0 saved at version 2 kept (${mine0.again.fov})`;
+      const FOV = await game(page, () => window.__game.api.FOV_DEFAULT ?? null);
+      expect(FOV === 13, `FOV_DEFAULT is ${FOV}`);
+      expect(fresh.first.fov === FOV, `a new device starts at ${fresh.first.fov}`);
+      expect(old0.first.fov === FOV && old0.first.savedFov === FOV && old0.first.savedV === 6 && old0.again.fov === FOV, `an old 0 saved before: ${JSON.stringify(old0)}`);
+      expect(old5.first.fov === FOV && old5.again.fov === FOV, `+5 saved before: ${JSON.stringify(old5)}`);
+      expect(mine0.first.fov === FOV && mine0.again.fov === FOV, `0 saved at version 2: ${JSON.stringify(mine0)}`);
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await settingsSection(page, 'graphics');
+      const slider = await page.getByText('Field of view', { exact: true }).count();
+      await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
+      expect(slider === 0, 'the Field of view slider is still in Settings');
+      return `new device +${fresh.first.fov}; an old 0, an old +5 and a 0 chosen at version 2 all read +${FOV} (saved ${old0.first.savedFov}, version ${old0.first.savedV}) and stay after a reload; no slider in Settings > Graphics`;
     } finally { await game(page, () => window.__game.hold(false)); }
   });
   // Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): a new device boots
@@ -1089,7 +1105,7 @@ await group('boot', async (use) => {
       const oldMineLow = await boot({ ...base, quality: 'low', qualityChosen: true });            // ...standard Low, theirs
       const isRetro = (x) => x.q === 'low' && x.style === 'retro' && x.retro && x.label === 'Retro · Low';
       expect(isRetro(fresh.first) && !fresh.first.chosen && isRetro(fresh.again), `a new device: ${JSON.stringify(fresh)}`);
-      expect(isRetro(oldHigh.first) && oldHigh.first.saved?.q === 'low' && oldHigh.first.saved?.style === 'retro' && oldHigh.first.saved?.v === 5, `High saved before v3, no pick: ${JSON.stringify(oldHigh.first)}`);
+      expect(isRetro(oldHigh.first) && oldHigh.first.saved?.q === 'low' && oldHigh.first.saved?.style === 'retro' && oldHigh.first.saved?.v === 6, `High saved before v3, no pick: ${JSON.stringify(oldHigh.first)}`);
       expect(oldHigh.again.q === 'low' && oldHigh.again.style === 'standard' && !oldHigh.again.retro, `the player's change after the move: ${JSON.stringify(oldHigh.again)}`);
       // (settings version 4, 2026-11-18: Graphics is two choices, so a High pick moves to Ultra and a standard Low pick to Retro Low)
       expect(oldMine.first.q === 'ultra' && oldMine.first.style === 'standard' && oldMine.first.chosen && oldMine.again.q === 'ultra' && !oldMine.again.retro, `High picked before v3 (now Ultra): ${JSON.stringify(oldMine)}`);
@@ -1572,6 +1588,8 @@ await group('modes', async (use) => {
         drift: driftBest('open'), unlDrift: driftBest('unleashed'), oldGone: localStorage.getItem('tsu.bests.v1') === null, v2: JSON.parse(localStorage.getItem('tsu.bests.v2') || 'null')?.v, pure: Object.keys(migrateBests({ open: { zero: [e(1, 1)] } }).drift).join() };
       localStorage.setItem('tsu.settings', JSON.stringify({ v: 4, density: 'none', transmission: 'manual', quality: 'low', style: 'retro' }));
       const o = g.api.loadSettings(); out.density = o.density; out.v = o.v;
+      localStorage.setItem('tsu.settings', JSON.stringify({ v: 5, density: 'heavy', quality: 'low', style: 'retro' })); out.moved = g.api.loadSettings().density;
+      localStorage.setItem('tsu.settings', JSON.stringify({ v: 6, density: 'heavy', quality: 'low', style: 'retro' })); out.kept = g.api.loadSettings().density;
       if (v1 === null) localStorage.removeItem('tsu.bests.v1'); else localStorage.setItem('tsu.bests.v1', v1);
       if (v2 === null) localStorage.removeItem('tsu.bests.v2'); else localStorage.setItem('tsu.bests.v2', v2);
       if (orig === null) localStorage.removeItem('tsu.settings'); else localStorage.setItem('tsu.settings', orig);
@@ -1579,28 +1597,35 @@ await group('modes', async (use) => {
     });
     expect(r.easy === 150 && r.easyN === 2 && r.medium === 130 && r.extreme === 120 && r.unlEasy === 230, `Light → Easy: ${JSON.stringify(r)}`);
     expect(r.drift === 7000 && r.unlDrift === 9000 && r.oldGone && r.v2 === 2 && r.pure === 'open', `Zero traffic → Best drift: ${JSON.stringify(r)}`);
-    expect(r.density === 'light' && r.v === 5, `density none → ${r.density}, version ${r.v}`);
-    return `Light 150 → Easy 150; Medium 130 and Extreme 120 kept; Zero's 7,000 and Unleashed 9,000 → Best drift; the old key removed; density none → ${r.density}`;
+    expect(r.density === 'light' && r.v === 6, `density none → ${r.density}, version ${r.v}`);
+    expect(r.moved === 'light' && r.kept === 'heavy', `Free Drive's traffic at version 6: a v 5 Heavy reads ${r.moved}, a v 6 Heavy ${r.kept}`);
+    return `Light 150 → Easy 150; Medium 130 and Extreme 120 kept; Zero's 7,000 and Unleashed 9,000 → Best drift; the old key removed; density none → ${r.density}; a v 5 Heavy → ${r.moved} (version 6: Free Drive is Light, no picker)`;
   });
-  await check('the tiles map the difficulties: Easy light traffic (2.2) with a forgiving crash rule, Medium normal (5), Extreme heavy (9.5) and faster; Free Drive keeps your own traffic (online would start Light); a difficulty never changes the saved traffic', async () => {
+  // Free Drive has no traffic picker since 2026-11-24 (owner: "get rid of the traffic selection when choosing free drive
+  // and just have the default traffic be low"): the tile shows no Light / Moderate / Heavy / Expert row and its chip reads
+  // Light traffic; it runs settings.density (Light on a new device, and a save from before version 6 moves to Light)
+  await check('the tiles map the difficulties: Easy light traffic (2.2) with a forgiving crash rule, Medium normal (5), Extreme heavy (9.5) and faster; Free Drive has no traffic picker and runs Light (online would start Light too); a difficulty never changes the saved traffic', async () => {
     const seen = [];
+    await game(page, () => window.__updateSettings({ density: 'light' }));   // what a player has now (the suite's saves carry Moderate)
     await page.locator('.modes [role="radio"]', { hasText: 'Free Drive' }).click();
-    await page.locator('.fd-traffic').getByRole('button', { name: 'Heavy', exact: true }).click();   // Free Drive's own traffic, saved
+    const picker = await game(page, () => ({ row: document.querySelectorAll('.fd-traffic').length, line: document.querySelector('.mode-line')?.textContent ?? null, chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent),
+      buttons: [...document.querySelectorAll('.mp-home button')].map((b) => b.textContent.trim()).filter((t) => /^(Light|Moderate|Heavy|Expert)$/.test(t)) }));
+    expect(picker.row === 0 && picker.buttons.length === 0 && picker.line === null && picker.chips.includes('Light traffic'), `Free Drive's tile: ${JSON.stringify(picker)}`);
     for (const [name, per, speed, forgive] of [['Easy', 2.2, 1, 2], ['Medium', 5, 1, 0], ['Extreme', 9.5, 1.12, 0]]) {
       await page.locator('.modes [role="radio"]', { hasText: name }).click();
       await drive(page, name);
       const r = await game(page, () => { const g = window.__game; g.setPaused(true); return { mode: g.mode, per: g.traffic.level.perKmLane, speed: g.traffic.level.speed, diff: g.bests.diff, saved: JSON.parse(localStorage.getItem('tsu.settings')).density, tile: JSON.parse(localStorage.getItem('tsu.settings')).tile, forgive: g.api.DIFFICULTY[g.bests.diff]?.forgive }; });
-      expect(r.mode === 'survival' && r.per === per && r.speed === speed && r.diff === name.toLowerCase() && r.forgive === forgive && r.saved === 'heavy' && r.tile === name.toLowerCase(), `${name}: ${JSON.stringify(r)}`);
+      expect(r.mode === 'survival' && r.per === per && r.speed === speed && r.diff === name.toLowerCase() && r.forgive === forgive && r.saved === 'light' && r.tile === name.toLowerCase(), `${name}: ${JSON.stringify(r)}`);
       seen.push(`${name} → ${r.per} per km per lane${r.speed > 1 ? ' at ' + r.speed + 'x speed' : ''}, ${r.forgive} crashes forgiven`);
       await pauseToMenu(page);
     }
     await page.locator('.modes [role="radio"]', { hasText: 'Free Drive' }).click();
     await drive(page, 'Free Drive');
     const f = await game(page, () => { const g = window.__game; g.setPaused(true); const { trafficFor, FREE_DRIVE_ONLINE } = g.api; return { mode: g.mode, per: g.traffic.level.perKmLane, diff: g.bests.diff, offline: trafficFor('free', g.settings, false), online: trafficFor('free', g.settings, true), onlineAvail: FREE_DRIVE_ONLINE.available, note: FREE_DRIVE_ONLINE.note }; });
-    expect(f.mode === 'free' && f.per === 9 && f.diff === null && f.offline === 'heavy' && f.online === 'light' && !f.onlineAvail && /live servers/.test(f.note), `Free Drive: ${JSON.stringify(f)}`);
+    expect(f.mode === 'free' && f.per === 2.2 && f.diff === null && f.offline === 'light' && f.online === 'light' && !f.onlineAvail && /live servers/.test(f.note), `Free Drive: ${JSON.stringify(f)}`);
     await pauseToMenu(page);
-    await page.locator('.fd-traffic').getByRole('button', { name: 'Moderate', exact: true }).click();
-    return `${seen.join('; ')}; Free Drive keeps ${f.offline} (${f.per}), online would start ${f.online}; the saved traffic stayed heavy through the three difficulties`;
+    await game(page, () => window.__updateSettings({ density: 'moderate' }));   // back to the suite's traffic
+    return `no picker on Free Drive (chips ${picker.chips.join(' / ')}); ${seen.join('; ')}; Free Drive runs ${f.offline} (${f.per}), online would start ${f.online}; the saved traffic stayed light through the three difficulties`;
   });
   await check('Easy forgives the first two real crashes (the run goes on; a crash still breaks the 60 s), the third ends it; Medium and Extreme end on the first', async () => {
     const r = await game(page, async () => {
@@ -1673,7 +1698,7 @@ await group('modes', async (use) => {
     return `a 3 s slide read ${live.live} live, ${kept.best} kept after End drive ("${tile}" on the tile); Restart with a 12,000 chain kept ${second}; Share copied "${copied}"`;
   });
   await check('the hero copy matches the tile: Free Drive says no clock and nothing of Fastest Minute; the three difficulties give one message (Fastest Minute is your best 60 s average; Easy forgives two crashes, a crash ends Medium and Extreme) and never call the run 60 seconds long or say "stay over 100 mph"; the light theme\'s selected tile has contrast', async () => {
-    const read = () => game(page, () => ({ eyebrow: document.querySelector('.mp-eyebrow').textContent, hero: document.querySelector('.mp-hero').innerText.replace(/\s+/g, ' '), chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent), brief: document.querySelector('#run-brief').textContent, line: document.querySelector('#mode-line').innerText.replace(/\s+/g, ' ') }));
+    const read = () => game(page, () => ({ eyebrow: document.querySelector('.mp-eyebrow').textContent, hero: document.querySelector('.mp-hero').innerText.replace(/\s+/g, ' '), chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent), brief: document.querySelector('#run-brief').textContent, line: document.querySelector('#mode-line')?.innerText.replace(/\s+/g, ' ') ?? '' }));   // (Free Drive has no line under the tiles since its traffic picker left, 2026-11-24)
     const out = {};
     for (const name of ['Free Drive', 'Easy', 'Medium', 'Extreme']) { await page.locator('.modes [role="radio"]', { hasText: name }).click(); out[name] = await read(); }
     const f = out['Free Drive'];
@@ -1906,11 +1931,11 @@ await group('modes', async (use) => {
       if (orig === null) localStorage.removeItem('tsu.settings'); else localStorage.setItem('tsu.settings', orig);
       return out;
     });
-    const is = (o, q, st) => o.q === q && o.st === st && o.v === 5;
+    const is = (o, q, st) => o.q === q && o.st === st && o.v === 6;   // (settings version 6 since 2026-11-24: Free Drive Light, the fixed field of view)
     expect(is(r.medium, 'low', 'retro') && is(r.lowStd, 'low', 'retro') && r.lowStd.look === 'ultra', `Low/Medium: ${JSON.stringify([r.medium, r.lowStd])}`);
-    expect(r.manual.tr === 'auto' && r.manual.v === 5 && r.manual.look === 'hd' && r.high.look === 'hd' && r.medium.tr === 'auto', `a saved manual gearbox reads automatic, Ultra the realistic look: ${JSON.stringify([r.manual, r.high])}`);
+    expect(r.manual.tr === 'auto' && r.manual.v === 6 && r.manual.look === 'hd' && r.high.look === 'hd' && r.medium.tr === 'auto', `a saved manual gearbox reads automatic, Ultra the realistic look: ${JSON.stringify([r.manual, r.high])}`);
     expect(is(r.high, 'ultra', 'standard') && r.high.a === true && is(r.ultraOld, 'ultra', 'standard') && r.ultraOld.a === true, `High/Ultra: ${JSON.stringify([r.high, r.ultraOld])}`);
-    expect(is(r.unpicked, 'low', 'retro') && r.unpicked.written === 5, `unpicked: ${JSON.stringify(r.unpicked)}`);
+    expect(is(r.unpicked, 'low', 'retro') && r.unpicked.written === 6, `unpicked: ${JSON.stringify(r.unpicked)}`);
     expect(is(r.v4Ultra, 'ultra', 'standard') && r.v4Ultra.a === false && r.v4Ultra.theme === 'light' && r.v4Ultra.look === 'hd', `a v4 save keeps its graphics and theme (the look follows the graphics): ${JSON.stringify(r.v4Ultra)}`);
     expect(is(r.fresh, 'low', 'retro') && r.fresh.theme === 'auto', `first run: ${JSON.stringify(r.fresh)}`);
     return `Medium → ${r.medium.q}+${r.medium.st}; Low standard → ${r.lowStd.q}+${r.lowStd.st}; High → ${r.high.q}, adaptive ${r.high.a}; Ultra v2 → ${r.ultraOld.q}, adaptive ${r.ultraOld.a}; a saved manual gearbox → ${r.manual.tr}, look ${r.manual.look}; v4 untouched; first run ${r.fresh.q}+${r.fresh.st}, theme ${r.fresh.theme}`;
@@ -2933,6 +2958,7 @@ await group('progression', async (use) => {
     const off = await garage(); await done();
     await owner(true);
     const on = await garage();
+    await centreCar(page, 'vela-e');   // (DRIVE is on the centred card of the carousel)
     await page.locator('.gcell.car', { hasText: 'Vela E' }).getByRole('button', { name: 'Drive' }).click();
     await page.waitForFunction(() => window.__game.carId === 'vela-e');
     const s1 = await state();
@@ -2980,7 +3006,7 @@ await group('progression', async (use) => {
     const marked = /<div id="root" data-build="owner-test">/.test(readFileSync(ART, 'utf8')), plain = !/data-build=/.test(readFileSync(GAME, 'utf8'));
     expect(marked && plain, `artifact marked ${marked}, top-speed-ultra.html unmarked ${plain}`);
     const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
-    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 5, adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
+    await ctx.addInitScript(() => { try { localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 6, adaptive: false, density: 'moderate', owner: false })); } catch { /* about:blank */ } });
     const pg = await ctx.newPage(); pg.setDefaultTimeout(240000);
     await game(page, () => { window.__game.setPaused(true); window.__game.hold(true); });   // the group's own page stays still (its render loop held) while this one boots
     const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
@@ -2996,6 +3022,7 @@ await group('progression', async (use) => {
       });
     };
     const a = await boot('');
+    await centreCar(pg, 'oc-hyper');   // (DRIVE is on the centred card of the carousel)
     await pg.getByRole('button', { name: 'Drive the OC Hypercar' }).click();
     const picked = await pg.evaluate(() => window.__game.carId);
     const b = await boot('#owner=0');
@@ -3103,9 +3130,82 @@ await group('progression', async (use) => {
     expect(/Founders' Road or the Founder Edition/.test(r.buy) && /can't be sold/.test(r.sell) && !r.owned, `buy "${r.buy}", sell "${r.sell}", owned ${r.owned}`);
     return `"${r.plaque}" (serial ${r.serial}); ${r.paint.name} offered only on ${Object.entries(r.finishes).filter(([, n]) => n.includes('Glacier Silver')).map(([id]) => id).join(', ')}, asked for elsewhere gives the car's own paint; LED strips on ${r.ledCars.join(', ')}; buy "${r.buy}"`;
   });
+  // the garage (owner, 2026-11-24 from his iPhone): the Vehicles tab is a carousel (the car you drive centred, its car on the
+  // showroom stage, every card in the page with "n of m" for a screen reader, the arrows and the arrow keys move it, a
+  // locked car shows the miles that open it), the Paint tab shows the car on the stage and repaints it live, and the
+  // character row is a card (the label on its own line, 44 px or more)
+  await check('garage: the Vehicles carousel (centred car on the showroom stage, arrows and keys, n of m labels, locked cars show their miles), the Paint tab repaints the car live, the character card', async () => {
+    // (the GT, in its factory paint: the checks before may leave another car chosen)
+    // (through the App, whose settings are the ones a later pick saves: a game-only change would be undone by it)
+    await game(page, () => { const g = window.__game; window.__updateSettings({ owner: false, paints: {} }); g.profile.p.car = 'rossini-gt'; g.applyCarChoice(); });
+    await page.waitForFunction(() => window.__game.carId === 'rossini-gt' && !window.__game.settings.owner, null, { timeout: 30000 });
+    await page.locator('.mp-carline').click();
+    await page.waitForSelector('.panel.profile .car-rail .gcell.car');
+    const read = () => game(page, () => {
+      const g = window.__game, cards = [...document.querySelectorAll('.car-track > .gcell.car')], c = document.querySelector('.car-track > .gcell.car.centred');
+      const cast = document.querySelector('.garage-cast'), cb = cast.getBoundingClientRect(), sm = cast.querySelector('small').getBoundingClientRect(), nm = cast.querySelector('b').getBoundingClientRect();
+      const tr = document.querySelector('.car-track').getBoundingClientRect(), cr = c.getBoundingClientRect();
+      return { order: cards.map((x) => x.dataset.car), n: cards.length, labels: cards.map((x) => x.getAttribute('aria-label')), centred: c?.dataset.car, driving: g.carId, mid: Math.abs((cr.left + cr.right) / 2 - (tr.left + tr.right) / 2),
+        canvas: !!c.querySelector('.car-stage canvas, .fe-stage canvas'), stages: document.querySelectorAll('.car-track .car-stage:not(.car-ph) canvas, .car-track .fe-stage canvas').length, stills: document.querySelectorAll('.car-track .car-still').length, show: g.revealShow, frames: g.revealState.frames,
+        locks: Object.fromEntries(cards.filter((x) => x.querySelector('.car-lock')).map((x) => [x.dataset.car, x.querySelector('.car-lock').textContent])),
+        owned: [...g.profile.p.vehicles], missing: g.ownerMode ? [] : cards.filter((x) => !g.profile.p.vehicles.includes(x.dataset.car) && !x.querySelector('.car-lock')).map((x) => x.dataset.car), drive: cards.map((x) => [...x.querySelectorAll('button, em')].map((b) => b.textContent.trim()).filter((t) => /^(Drive|Driving it|Locked|Not unlocked)/.test(t)).length),
+        cast: { h: cb.height, stacked: sm.bottom <= nm.top + 1, label: cast.getAttribute('aria-label') }, count: document.querySelector('.car-count').textContent, side: document.documentElement.scrollWidth > innerWidth };
+    });
+    const r0 = await read();
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0, null, { timeout: 900000, polling: 500 });
+    const r1 = await read();
+    await page.screenshot({ path: path.join(OUT, 'garage-carousel-1280.png') });
+    expect(r0.n >= 5 && r0.labels.every((l, i) => new RegExp(`^${i + 1} of ${r0.n}: `).test(l)) && r0.centred === r0.driving && r0.mid < 2 && !r0.side, `the carousel: ${JSON.stringify(r0)}`);
+    expect(r0.drive.every((k) => k === 1), `every card has its Drive (or its state): ${JSON.stringify(r0.drive)}`);
+    expect(r1.canvas && r1.stages === 1 && r1.stills === r1.n - 1 && r1.show.car === r0.driving && r1.show.shown > 0, `the centred car's stage: ${JSON.stringify(r1)}`);
+    // the neighbours: stills of their own models (owner, 2026-11-24: "make the car selection display the cars"), each drawn
+    await page.waitForFunction(() => window.__game.showroomQueue === 0 && [...document.querySelectorAll('.car-track .car-still')].every((c) => c.dataset.ready === '1'), null, { timeout: 900000, polling: 500 });
+    const lit = await game(page, () => [...document.querySelectorAll('.car-track .car-still')].map((c) => { const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let m = 0; for (let i = 0; i < d.length; i += 16) m = Math.max(m, (d[i] + d[i + 1] + d[i + 2]) / 3); return Math.round(m); }));
+    expect(lit.every((m) => m > 60), `a neighbour's still is blank: brightest ${lit.join(', ')}`);
+    for (const [id, t] of Object.entries(r0.locks)) expect(!r0.owned.includes(id) && (/^Opens at \d+ mi$/.test(t) || /Founders' Road/.test(t)), `${id}'s lock chip: "${t}"`);
+    expect(r0.missing.length === 0 && Object.keys(r0.locks).length > 0, `lock chips: ${JSON.stringify(r0.locks)}, a locked car without one: ${r0.missing.join()}`);
+    expect(r0.cast.h >= 44 && r0.cast.stacked && /^Character: /.test(r0.cast.label), `the character card: ${JSON.stringify(r0.cast)}`);
+    // the next arrow, then the keys
+    await page.getByRole('button', { name: 'Next car', exact: true }).click();
+    await page.waitForFunction((d) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car !== d, r0.driving, { timeout: 30000 });
+    const r2 = await read();
+    await page.waitForFunction((id) => window.__game.revealShow?.car === id || (id === 'oc-hyper' && window.__game.revealState.open), r2.centred, { timeout: 900000, polling: 500 });
+    await page.screenshot({ path: path.join(OUT, 'garage-carousel-next-1280.png') });
+    await page.locator('.car-track > .gcell.car.centred').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.waitForFunction((d) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car !== d, r2.centred, { timeout: 30000 });
+    const r3 = await read();
+    await page.keyboard.press('ArrowLeft'); await page.keyboard.press('ArrowLeft');
+    await page.waitForFunction((d) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car === d, r0.driving, { timeout: 30000 });
+    expect(r2.order.indexOf(r2.centred) === r2.order.indexOf(r0.driving) + 1 && /^\d+\s*\/\s*\d+/.test(r2.count.trim()), `after Next: ${JSON.stringify({ centred: r2.centred, count: r2.count })}`);
+    expect(r3.centred !== r2.centred, `ArrowRight: ${r2.centred} → ${r3.centred}`);
+    // the Paint tab: the car on the stage, repainted live by a swatch (the stage's paint follows the pick)
+    await page.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 600000, polling: 500 })
+      .catch(async () => { throw new Error(`the Paint tab's stage: ${await game(page, () => JSON.stringify({ show: window.__game.revealShow, rv: window.__game.revealState, q: window.__game.showroomQueue, canvas: !!document.querySelector('.paint-stage canvas') }))}`); });
+    const p0 = await game(page, () => ({ show: window.__game.revealShow, frames: window.__game.revealState.frames }));
+    const free = page.locator('.paint-chip:not(.locked):not(.on)').first();
+    const pickName = (await free.locator('b').textContent()) ?? '';
+    await free.click();
+    const rs = () => game(page, () => JSON.stringify({ show: window.__game.revealShow, rv: window.__game.revealState, q: window.__game.showroomQueue, on: document.querySelector('.paint-chip.on b')?.textContent }));
+    await page.waitForFunction((was) => window.__game.revealShow && window.__game.revealShow.paint !== was, p0.show.paint, { timeout: 120000, polling: 250 }).catch(async () => { throw new Error(`the pick did not reach the stage: ${await rs()}`); });
+    // (drawn in it: the stage repainted and rendered, or the session's frame of that car in that paint drawn)
+    await page.waitForFunction((n) => { const g = window.__game, sh = g.revealShow; return sh && (sh.shown > n || (sh.shown > 0 && !g.revealState.built)); }, p0.show.shown, { timeout: 600000, polling: 250 }).catch(async () => { throw new Error(`the stage did not draw the new paint: ${await rs()}`); });
+    const p1 = await game(page, () => ({ show: window.__game.revealShow, built: window.__game.revealState.built, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints }));
+    await page.screenshot({ path: path.join(OUT, 'garage-paint-1280.png') });
+    expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.show.shown > 0, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
+    // back to the factory paint the suite expects
+    await game(page, () => window.__updateSettings({ paints: {} }));
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
+    await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    const closed = await game(page, () => window.__game.revealState.open);
+    expect(!closed, 'the stage stayed open after the garage closed');
+    return `${r0.n} cards ("${r0.labels[0]}" …), centred ${r0.centred} (${r0.mid.toFixed(1)} px off centre) on the showroom (${r1.show.shown} drawn), the ${r1.stills} neighbours on stills of their models (brightest ${lit.join('/')}), lock chips ${JSON.stringify(r0.locks)}; Next → ${r2.centred}, ArrowRight → ${r3.centred}, back with ArrowLeft; Paint: ${pickName} repaints the stage (${p0.show.paint.toString(16)} → ${p1.show.paint.toString(16)}); character card ${Math.round(r0.cast.h)} px, label over the name`;
+  });
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
   await check('the hypercar\'s garage card: the reveal stage plays once, keeps its last frame, Replay plays it again; choosing the car wakes its lights; reduced motion shows it still', async () => {
+    if (await page.locator('.panel.profile').count()) await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click().catch(() => {});   // (a garage left open by a failed check before)
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: true }); localStorage.removeItem('tsu.founderReveal'); });
     const lit = () => game(page, () => {
       const c = document.querySelector('.gcell.car.founder .fe-stage canvas'); if (!c) return null;
@@ -3113,7 +3213,7 @@ await group('progression', async (use) => {
       for (let i = 0; i < d.length; i += 16) { const l = (d[i] + d[i + 1] + d[i + 2]) / 3; sum += l; max = Math.max(max, l); if (d[i + 2] > 180 && d[i + 2] > d[i] + 40) ice++; }
       return { mean: sum / (d.length / 16), max, ice, w: c.width, h: c.height };
     });
-    const open = async () => { await page.locator('.mp-carline').click(); await page.waitForSelector('.gcell.car.founder .fe-stage canvas'); };
+    const open = async () => { await page.locator('.mp-carline').click(); await page.waitForSelector('.gcell.car.founder'); await centreCar(page, 'oc-hyper'); await page.waitForSelector('.gcell.car.founder .fe-stage canvas'); };
     const done = async () => { await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click(); await page.waitForSelector('.overlay.menu', { timeout: 120000 }); };
     await open();
     await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
@@ -3707,7 +3807,7 @@ function hudLayoutInPage() {
   const HUD_SEL = ['.hud-plate', '.hud-thr', '.hud-speed', '.hud-stats', '.hud-race', '.hud-road', '.hud-compass', '.hud-clock', '.corner', '.tbar .tbtn', '.livechip', '.hud-nav', '.hud-dest', '.hud-next', '.hud-fps', '.hud-assists'];
   // (.hud-assists is the Ultra skin's ABS | TCS bar: it counts inside the owner's 12.5% budget)
   // Auto-drive's button sits under Pause in the top cluster ('.tbar .tbtn' counts it in the cover; it stays in CONTROL_SEL for the overlap tests)
-  const CONTROL_SEL = ['.touch-steer', '.pedal', '.hb-round', '.touch-shift .tbtn', '.hud-ability', '.hud-thrustbtn', '.tbtn.honk', '.tbtn.auto'];
+  const CONTROL_SEL = ['.touch-steer', '.pedal', '.touch-shift .tbtn', '.hud-ability', '.hud-thrustbtn', '.tbtn.honk', '.tbtn.auto'];
   const shown = (e) => {
     const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     if (cs.display === 'none' || cs.visibility === 'hidden' || r.width <= 0 || r.height <= 0) return false;
@@ -3742,7 +3842,7 @@ function hudLayoutInPage() {
   const view = document.querySelector('.hud')?.dataset.view, seat = view === 'cockpit';
   const cluster = seat ? box(g.car.interior.group.getObjectByName('cluster')) : null, glass = seat ? box(g.car.interior.group.getObjectByName('windscreen')) : null;
   const car = seat ? null : box(g.car.exterior), band = { l: 0, r: W, t: 0.22 * H, b: 0.7 * H };
-  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .hud-thrustbtn, .tbtn.honk, .tbtn.auto, .touch-steer, .pedal, .hb-round, .touch-shift .tbtn, .asw')].filter(shown)
+  const taps = [...document.querySelectorAll('.tbar .tbtn, .corner, .hud-ability, .hud-thrustbtn, .tbtn.honk, .tbtn.auto, .touch-steer, .pedal, .touch-shift .tbtn, .asw')].filter(shown)
     .map((e) => { const r = e.getBoundingClientRect(); return { l: r.left, t: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height, sel: String(e.className).split(' ').slice(0, 2).join('.') }; });
   const overlaps = []; for (let i = 0; i < taps.length; i++) for (let j = i + 1; j < taps.length; j++) if (hit(taps[i], taps[j])) overlaps.push(taps[i].sel + ' / ' + taps[j].sel);
   const sp = document.querySelector('.hud-speed');
@@ -3797,38 +3897,31 @@ async function radialSlideTo(name) {
   for (let i = 0; i < 40 && !w.classList.contains('on'); i++) await new Promise((res) => setTimeout(res, 50));
   dispatchEvent(new PointerEvent('pointerup', at));
 }
-// in the page: the new HUD's control boxes (the round HANDBRAKE and its dial, BRAKE, GAS, the steering pad, CLEAR PATH,
-// JUMP, AUTO, the drift readout shown for the measuring, the ABS | TCS bar), which pairs overlap, which leave the screen,
-// which targets are under 44 px
+// in the page: the new HUD's control boxes (BRAKE with the owner's handbrake emblem inside it, GAS, the steering pad,
+// CLEAR PATH, JUMP, AUTO, the drift readout shown for the measuring, the ABS | TCS bar, and the top: Pause, VIEW, the
+// round map and the route shield), which pairs overlap, which leave the screen, which targets are under 44 px
 function newHudBoxesInPage() {
   const dr = document.querySelector('.hud-drift'), was = dr.hidden; dr.hidden = false;
-  const SEL = { hb: '.hb-round', dial: '.hb-dial', brake: '.pedal.brake', gas: '.pedal.gas', steer: '.touch-steer', clear: '.hud-ability', thrust: '.hud-thrustbtn', auto: '.tbtn.auto', drift: '.hud-drift', assists: '.hud-assists', cap: '.hb-cap' };
-  const box = {}; for (const [k, q] of Object.entries(SEL)) { const e = document.querySelector(q); if (e && !e.hidden && e.getBoundingClientRect().width) { const b = e.getBoundingClientRect(); box[k] = { l: b.left, t: b.top, r: b.right, b: b.bottom }; } }
-  const hit = (a, b) => a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5, ks = Object.keys(box).filter((k) => k !== 'dial'), overlaps = [];
-  // (the caption chip sits in the HANDBRAKE column: it is checked against everything else, but not its own column)
-  for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) if (!((ks[i] === 'cap' && ks[j] === 'hb') || (ks[j] === 'cap' && ks[i] === 'hb')) && hit(box[ks[i]], box[ks[j]])) overlaps.push(ks[i] + ' / ' + ks[j]);
+  const SEL = { emb: '.pedal.brake .bk-emb', brake: '.pedal.brake', gas: '.pedal.gas', steer: '.touch-steer', clear: '.hud-ability', thrust: '.hud-thrustbtn', auto: '.tbtn.auto', drift: '.hud-drift', assists: '.hud-assists',
+    menu: '.tbar .tbtn.menu', view: '.tbar .tbtn.view', map: '.hud-compass', road: '.hud-road' };
+  const box = {}; for (const [k, q] of Object.entries(SEL)) { const e = document.querySelector(q); if (e && !e.hidden && e.getBoundingClientRect().width && getComputedStyle(e).display !== 'none') { const b = e.getBoundingClientRect(); box[k] = { l: b.left, t: b.top, r: b.right, b: b.bottom }; } }
+  const hit = (a, b) => a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5, ks = Object.keys(box), overlaps = [];
+  // (the emblem is inside BRAKE: it is checked against everything else, but not BRAKE)
+  const own = (a, b) => (a === 'emb' && b === 'brake') || (a === 'brake' && b === 'emb');
+  for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) if (!own(ks[i], ks[j]) && hit(box[ks[i]], box[ks[j]])) overlaps.push(ks[i] + ' / ' + ks[j]);
   const W = innerWidth, H = innerHeight, outside = Object.keys(box).filter((k) => box[k].l < 0 || box[k].t < 0 || box[k].r > W || box[k].b > H);
-  const small = ['hb', 'dial', 'brake', 'gas', 'steer', 'clear', 'thrust', 'auto'].filter((k) => box[k] && (box[k].r - box[k].l < 43.5 || box[k].b - box[k].t < 43.5)).map((k) => `${k} ${Math.round(box[k].r - box[k].l)}x${Math.round(box[k].b - box[k].t)}`);
+  const small = ['brake', 'gas', 'steer', 'clear', 'thrust', 'auto', 'menu', 'view'].filter((k) => box[k] && (box[k].r - box[k].l < 43.5 || box[k].b - box[k].t < 43.5)).map((k) => `${k} ${Math.round(box[k].r - box[k].l)}x${Math.round(box[k].b - box[k].t)}`);
   for (const sw of document.querySelectorAll('.asw')) { const b = sw.getBoundingClientRect(); if (b.width < 43.5 || b.height < 43.5) small.push(`${sw.className} ${Math.round(b.width)}x${Math.round(b.height)}`); }
   dr.hidden = was;
-  return { box, overlaps, outside, small, skin: document.querySelector('.app').dataset.skin, side: document.documentElement.scrollWidth > W };
+  const old = !!document.querySelector('.hb-round, .hb-lever, .hb-cap');
+  return { box, overlaps, outside, small, old, skin: document.querySelector('.app').dataset.skin, side: document.documentElement.scrollWidth > W };
 }
-// the HANDBRAKE caption's backing, from a real screenshot (2026-11-23: the caption sat on the open road at 3.1:1 and 3.3:1):
-// two 2 px patches in the chip's own padding (clear of the letters) are averaged; the chip's backing must be dark (the
-// brightest channel 70 or less, as the CLEAR PATH face) and the caption's colour must hold 4.5:1 or better on it
-async function capContrast(page) {
-  const k = await game(page, () => { const e = document.querySelector('.hb-cap'), r = e.getBoundingClientRect(), cs = getComputedStyle(e);
-    return { l: r.left, r: r.right, cy: (r.top + r.bottom) / 2, h: r.height, color: cs.color, bg: cs.backgroundColor, size: parseFloat(cs.fontSize) }; });
-  const sample = async (x) => {
-    const png = await page.screenshot({ clip: { x, y: k.cy - 1, width: 2, height: 2 } });
-    return game(page, async (b64) => { const im = await createImageBitmap(new Blob([Uint8Array.from(atob(b64), (c) => c.charCodeAt(0))], { type: 'image/png' })); const c = new OffscreenCanvas(im.width, im.height), x = c.getContext('2d'); x.drawImage(im, 0, 0);
-      const d = x.getImageData(0, 0, im.width, im.height).data; let r = 0, g = 0, b = 0, n = 0; for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; n++; } return [r / n, g / n, b / n]; }, png.toString('base64'));
-  };
-  const px = [await sample(k.l + 1), await sample(k.r - 3)];
-  const lum = ([r, g, b]) => { const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
-  const text = k.color.match(/[\d.]+/g).slice(0, 3).map(Number);
-  const worst = px.map((p) => { const a = lum(text), b = lum(p), hi = Math.max(a, b), lo = Math.min(a, b); return (hi + 0.05) / (lo + 0.05); }).reduce((m, v) => Math.min(m, v), 99);
-  return { px: px.map((p) => p.map(Math.round)), bright: Math.max(...px.flat()), ratio: worst, text, size: k.size };
+// in the page: BRAKE's emblem as drawn: the red (P) and its arcs' stroke, the lens, whether the ring's red arc is lit
+function brakeEmblemInPage() {
+  const b = document.querySelector('.pedal.brake'), e = b?.querySelector('.bk-emb'), p = e?.querySelector('.bk-p'), arc = e?.querySelector('.bk-arc'), lens = e?.querySelector('.bk-lens');
+  if (!e) return null;
+  const r = e.getBoundingClientRect();
+  return { w: Math.round(r.width), stroke: getComputedStyle(p).stroke, paths: p.querySelectorAll('path, circle').length, lens: getComputedStyle(lens).fill, arcOn: Number(getComputedStyle(arc).opacity), pulled: b.classList.contains('pulled'), label: b.getAttribute('aria-label') };
 }
 // in the page: the top bar's buttons, by name, shown and not
 function newHudTopBarInPage() {
@@ -3843,7 +3936,7 @@ function hudBoxesInPage() {
   probe.style.cssText = 'position:fixed;left:var(--sa-l);top:var(--sa-t);right:var(--sa-r);bottom:var(--sa-b);visibility:hidden;pointer-events:none';
   app.appendChild(probe); const sa = probe.getBoundingClientRect(); probe.remove();
   const SEL = ['.hud-plate', '.hud-navs', '.hud-nav', '.hud-dest', '.hud-next', '.hud-roadname', '.hud-stats', '.hud-speed', '.hud-thr', '.hud-thrustbtn', '.hud-ability', '.hud-clock',
-    '.hud-fps', '.tbar .tbtn', '.corner', '.livechip', '.venue-prompt', '.touch-steer', '.pedal', '.hb-round', '.touch-shift .tbtn', '.tbtn.honk', '.hud-assists', '.hud-drift'];
+    '.hud-fps', '.tbar .tbtn', '.corner', '.livechip', '.venue-prompt', '.touch-steer', '.pedal', '.touch-shift .tbtn', '.tbtn.honk', '.hud-assists', '.hud-drift'];
   const shown = (e) => {
     const r = e.getBoundingClientRect();
     if (r.width <= 0 || r.height <= 0) return false;
@@ -4072,10 +4165,55 @@ await group('phone', async (use) => {
     expect(/level/i.test(text), 'no level shown');
     await page.keyboard.press('Escape');
   });
+  // the garage at 390 x 844 (owner, 2026-11-24): the character card fits (44 px or more, the label over the name, inside the
+  // panel); the carousel's centred card is centred with both neighbours peeking in from the edges (a swipe of the track
+  // snaps the next car to the middle); on the Paint tab the car's stage and the first row of swatches are on screen together
+  await check('garage at 390 × 844: the character card; the carousel centred with the neighbours peeking, a swipe snaps the next car in; the Paint tab shows the car and the swatches together', async () => {
+    await page.locator('.mp-carline').click();
+    await page.waitForSelector('.panel.profile .car-rail .gcell.car');
+    // the second car, so both neighbours are there
+    const ids = await game(page, () => [...document.querySelectorAll('.car-track > .gcell.car')].map((x) => x.dataset.car));
+    await centreCar(page, ids[1]);
+    await page.waitForFunction((id) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car === id, ids[1], { timeout: 30000 });
+    await game(page, () => document.querySelector('.car-rail').scrollIntoView({ block: 'start' }));
+    await page.waitForFunction((id) => window.__game.revealShow?.car === id && window.__game.revealShow.shown > 0, ids[1], { timeout: 900000, polling: 500 });
+    await page.screenshot({ path: path.join(OUT, 'phone-garage-carousel.png') });
+    const r = await game(page, () => {
+      const box = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, r: b.right, t: b.top, b: b.bottom, w: b.width, h: b.height }; };
+      const tr = box(document.querySelector('.car-track')), cards = [...document.querySelectorAll('.car-track > .gcell.car')], i = cards.findIndex((c) => c.classList.contains('centred'));
+      const c = box(cards[i]), prev = box(cards[i - 1]), next = box(cards[i + 1]);
+      const cast = document.querySelector('.garage-cast'), cb = box(cast), panel = box(document.querySelector('.panel.profile'));
+      return { mid: Math.abs((c.l + c.r) / 2 - innerWidth / 2), cw: c.w, peekL: Math.max(0, Math.min(prev.r, tr.r) - tr.l), peekR: Math.max(0, tr.r - Math.max(next.l, tr.l)), side: document.documentElement.scrollWidth > innerWidth,
+        cast: { h: cb.h, inside: cb.l >= panel.l - 0.5 && cb.r <= panel.r + 0.5, stacked: cast.querySelector('small').getBoundingClientRect().bottom <= cast.querySelector('b').getBoundingClientRect().top + 1, nameFits: cast.querySelector('b').scrollWidth <= cast.querySelector('b').clientWidth + 1 } };
+    });
+    expect(r.mid < 3 && r.peekL >= 12 && r.peekR >= 12 && !r.side, `the carousel at 390: ${JSON.stringify(r)}`);
+    expect(r.cast.h >= 44 && r.cast.inside && r.cast.stacked && r.cast.nameFits, `the character card: ${JSON.stringify(r.cast)}`);
+    // a swipe: the track scrolled by most of a card and let go; scroll snap puts the next car in the middle
+    await game(page, () => { const t = document.querySelector('.car-track'); t.scrollBy({ left: t.querySelector('.gcell.car').offsetWidth * 0.7, behavior: 'instant' }); });
+    await page.waitForFunction((id) => document.querySelector('.car-track > .gcell.car.centred')?.dataset.car === id, ids[2], { timeout: 30000 });
+    const snapped = await game(page, () => { const c = document.querySelector('.car-track > .gcell.car.centred').getBoundingClientRect(); return Math.abs((c.left + c.right) / 2 - innerWidth / 2); });
+    expect(snapped < 3, `after the swipe the centred card sits ${snapped} px off the middle`);
+    // the Paint tab: the stage and the first row of swatches on screen together (the tab bar at the bottom excluded)
+    await page.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(OUT, 'phone-garage-paint.png') });
+    const pv = await game(page, () => {
+      const st = document.querySelector('.paint-stage').getBoundingClientRect(), chip = document.querySelector('.paint-chip').getBoundingClientRect();
+      const dock = [...document.querySelectorAll('.mp-tabs, .dock-tabs, nav')].map((n) => n.getBoundingClientRect()).filter((b) => b.top > innerHeight / 2 && b.height > 0).reduce((m, b) => Math.min(m, b.top), innerHeight);
+      return { stage: { t: st.top, b: st.bottom }, chip: { t: chip.top, b: chip.bottom }, floor: dock };
+    });
+    expect(pv.stage.t >= 0 && pv.stage.b <= pv.floor && pv.chip.b <= pv.floor && pv.chip.t >= pv.stage.b - 0.5, `the Paint tab at 390: ${JSON.stringify(pv)}`);
+    await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
+    await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+    return `centred card ${Math.round(r.cw)} px wide, ${r.mid.toFixed(1)} px off the middle, neighbours peek ${Math.round(r.peekL)} / ${Math.round(r.peekR)} px; a swipe snapped ${ids[2]} in (${snapped.toFixed(1)} px off); character card ${Math.round(r.cast.h)} px; Paint: stage ${Math.round(pv.stage.t)}..${Math.round(pv.stage.b)}, first swatch to ${Math.round(pv.chip.b)} (floor ${Math.round(pv.floor)})`;
+  });
   // hypercar M6: the Founder Edition's garage card at phone size: its reveal stage sits inside the card at 16:9 and plays,
   // the caption and the Replay button don't collide, and nothing scrolls sideways
   await check('the Founder Edition card at 390 × 844: the reveal stage fits the card at 16:9 and plays; caption and Replay apart; no sideways scroll', async () => {
     await page.locator('.mp-carline').click();
+    await page.waitForSelector('.gcell.car.founder');
+    await centreCar(page, 'oc-hyper');
     await page.waitForSelector('.gcell.car.founder .fe-stage canvas');
     await page.waitForFunction(() => window.__game.revealState.frames > 0, null, { timeout: 900000, polling: 500 });
     await game(page, () => document.querySelector('.gcell.car.founder').scrollIntoView({ block: 'start' }));
@@ -4169,14 +4307,16 @@ await group('phone', async (use) => {
     await frames(page, 2);
     return sizes.join('; ');
   });
-  // the phone's handbrake (owner, 2026-11-17: "how do you drift on mobile device?"; the new HUD, 2026-11-23: "and the
-  // brake will slide into the red brake to drift as you stated"): a ROUND HANDBRAKE between the steering pad and BRAKE,
-  // in both looks; the old lever tab is gone. Real pointer events on the real elements (BRAKE, HANDBRAKE, the steering
-  // pad); the simulation stepped by hand through the input layer (hyperHelpers' run), the car held at 30 m/s on I-405's
-  // straight, Sport handling, the wheel dragged a third of the way right, coasting, so what differs between the runs is
-  // the one touch under test. This check runs on the suite's look (standard Low: the Ultra skin); the next one repeats
-  // the touches on Retro.
-  await check('phone handbrake: BRAKE held, a 12 px swipe and a steep drag pull nothing; a slide from BRAKE into HANDBRAKE and a press of HANDBRAKE pull Controls.handbrake and start a drift at speed on Sport; it lets go on lift after a 0.22 s flick; the lever is gone', async () => {
+  // the phone's handbrake lives on BRAKE (owner, 2026-11-24: "get rid of the drift button all entirely but find a way to
+  // incorporate it on the brake button but make the brake emblem that emblem"; the gesture he chose: "I like the flick
+  // but maybe a slide up option and it drifts as long as you hold it"): no HANDBRAKE button; BRAKE carries the emblem.
+  // Press BRAKE = brake; slide up from it past 28 px = the handbrake, held (drifting) while the thumb stays above the
+  // line; back down = braking again; lift = release; a quick flick up (no move event, the lift above the line) pulls it
+  // for the touch hold (0.22 s). Real pointer events on the real elements; the simulation stepped by hand through the
+  // input layer (hyperHelpers' run), the car held at 30 m/s on I-405's straight, Sport handling, the wheel dragged a third
+  // of the way right, coasting, so what differs between the runs is the one touch under test. The suite's look (standard
+  // Low: the Ultra skin); the Retro check repeats the touches.
+  await check('phone handbrake on BRAKE: press brakes; a 12 px slide up, a slide down and a sideways drag pull nothing; a slide up past 28 px pulls Controls.handbrake (brake off) and drifts while held, back down brakes, lift lets go after 0.22 s; a quick flick pulls for the hold; the emblem and its arc; no HANDBRAKE button; the one-time hint', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     await game(page, hyperHelpers);
     const fire = (sel, type, dx = 0, dy = 0, id = 31) => game(page, (a) => {
@@ -4199,59 +4339,86 @@ await group('phone', async (use) => {
         window.run(0.9, {}, 0, (t) => { const g = window.__game, d = g.phys.drift; maxA = Math.max(maxA, Math.abs(d.angle)); if (d.active) { on++; if (firstOn < 0) firstOn = t; } if (g.input.c.handbrake) hbSteps++; }, true);
         const g = window.__game;
         return { maxA: +maxA.toFixed(1), activeSteps: on, firstOn: +firstOn.toFixed(2), hbSteps, hb: g.input.c.handbrake, touchHb: g.input.touch.handbrake, touchBrake: g.input.touch.brake, mph: Math.round(g.phys.vx * 2.236936),
-          pulled: document.querySelector('.hb-round')?.classList.contains('pulled') ?? null, drift: { ...g.phys.drift } };
+          pulled: document.querySelector('.pedal.brake').classList.contains('pulled'), drift: { ...g.phys.drift } };
       });
       return { name, before, during };
     };
-    const dom = await game(page, () => ({ lever: !!document.querySelector('.hb-lever'), round: !!document.querySelector('.hb-round'), cap: document.querySelector('.hb-cap')?.textContent, skin: document.querySelector('.app').dataset.skin }));
-    expect(!dom.lever && dom.round && /handbrake/i.test(dom.cap ?? ''), `the controls: ${JSON.stringify(dom)}`);
-    // the touches that must not pull: BRAKE held still, a 12 px swipe from BRAKE, a mostly vertical drag from BRAKE
+    const dom = await game(page, () => ({ round: !!document.querySelector('.hb-round'), lever: !!document.querySelector('.hb-lever'), skin: document.querySelector('.app').dataset.skin }));
+    const emb = await game(page, brakeEmblemInPage);
+    expect(!dom.round && !dom.lever, `a separate handbrake control is still there: ${JSON.stringify(dom)}`);
+    expect(emb && emb.w >= 36 && emb.paths >= 3 && /rgb\(255, (75|90), (62|74)\)/.test(emb.stroke) && emb.arcOn < 0.05 && /slide up/i.test(emb.label ?? ''), `BRAKE's emblem: ${JSON.stringify(emb)}`);
+    // the touches that must not pull: BRAKE held still, a 12 px slide up, a slide down, a sideways drag
     const taps = [
-      ['BRAKE pressed and held (no slide)', 21, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 21); } }],
-      ['a 12 px swipe from BRAKE', 23, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 23); await fire('.pedal.brake', 'pointermove', -12, 0, 23); } }],
-      ['a steep 22 px drag from BRAKE (up and left)', 24, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 24); await fire('.pedal.brake', 'pointermove', -22, -30, 24); } }],
+      ['BRAKE pressed and held (no slide)', 21, 0, 0, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 21); } }],
+      ['a 12 px slide up from BRAKE', 23, 0, -12, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 23); await fire('.pedal.brake', 'pointermove', 0, -12, 23); } }],
+      ['a 40 px slide down from BRAKE', 24, 0, 40, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 24); await fire('.pedal.brake', 'pointermove', 0, 40, 24); } }],
+      ['a 60 px sideways drag from BRAKE', 25, -60, 6, { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 25); await fire('.pedal.brake', 'pointermove', -60, 6, 25); } }],
     ];
     const none = [];
-    for (const [n, id, act] of taps) {
+    for (const [n, id, dx, dy, act] of taps) {
       const r = await scenario(n, act);
-      await fire('.pedal.brake', 'pointerup', 0, 0, id);
-      expect(!r.during.touchHb && r.during.hbSteps === 0 && !r.during.pulled, `${n}: pulled the handbrake ${JSON.stringify(r.during)}`);
+      await fire('.pedal.brake', 'pointerup', dx, dy, id);
+      expect(!r.during.touchHb && r.during.hbSteps === 0 && !r.during.pulled && r.during.touchBrake, `${n}: pulled the handbrake or let the brake go ${JSON.stringify(r.during)}`);
       expect(r.during.activeSteps === 0, `${n}: a drift started without a pull: ${JSON.stringify(r.during)}`);
-      none.push(`${n}: max ${r.during.maxA}°`);
+      none.push(`${n}: brake held, max ${r.during.maxA}°`);
     }
-    // a slide from BRAKE toward the steering side, into HANDBRAKE (30 px): the brake lets go, the handbrake comes on
-    const slide = await scenario('slide', { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 26); await fire('.pedal.brake', 'pointermove', -30, 2, 26); } });
-    expect(slide.during.hb && slide.during.touchHb && !slide.during.touchBrake && slide.during.pulled, `slide: ${JSON.stringify(slide.during)}`);
+    await fire('.touch-steer', 'pointerup', 0, 0, 12);
+    // a slide up from BRAKE (40 px) held: the brake lets go, the handbrake comes on and stays while the thumb is above the line
+    const slide = await scenario('slide', { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 26); await fire('.pedal.brake', 'pointermove', 0, -40, 26); } });
+    expect(slide.during.hb && slide.during.touchHb && !slide.during.touchBrake && slide.during.pulled && slide.during.hbSteps > 50, `slide: ${JSON.stringify(slide.during)}`);
     expect(slide.during.activeSteps > 20 && slide.during.maxA > 10, `slide: no drift started at ${slide.before.mph} mph ${JSON.stringify(slide)}`);
+    await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.pedal.brake .bk-arc')).opacity) > 0.9, null, { timeout: 30000, polling: 100 }).catch(() => {}); const lit = await game(page, brakeEmblemInPage);
+    expect(lit.pulled && lit.arcOn > 0.9, `the ring's red arc while pulled: ${JSON.stringify(lit)}`);
     // the readout, with the slide held (the game is paused where it stands; the HUD reads the drift as it is)
     await frames(page, 4);
     const readout = await game(page, () => { const e = document.querySelector('.hud-drift'); return e && { hidden: e.hidden, text: e.textContent, state: e.dataset.state }; });
     await page.screenshot({ path: path.join(OUT, 'phone-handbrake-pulled.png') });
-    // lift: the arc drains, the flick holds a little longer (0.22 s), then Controls.handbrake is false
-    await fire('.pedal.brake', 'pointerup', -30, 2, 26);
+    // still above the line, wandering sideways (60 px over): still pulled; back down to 10 px: braking again; up again: pulled
+    await fire('.pedal.brake', 'pointermove', -60, -34, 26);
+    const wander = await game(page, () => ({ hb: window.__game.input.touch.handbrake, brake: window.__game.input.touch.brake }));
+    await fire('.pedal.brake', 'pointermove', 0, -10, 26);
+    const down = await game(page, () => { const g = window.__game; return { hb: g.input.touch.handbrake, brake: g.input.touch.brake, pulled: document.querySelector('.pedal.brake').classList.contains('pulled'), down: document.querySelector('.pedal.brake').classList.contains('down') }; });
+    await fire('.pedal.brake', 'pointermove', 0, -36, 26);
+    const upAgain = await game(page, () => ({ hb: window.__game.input.touch.handbrake, brake: window.__game.input.touch.brake }));
+    expect(wander.hb && !wander.brake, `wandering above the line: ${JSON.stringify(wander)}`);
+    expect(!down.hb && down.brake && !down.pulled && down.down, `back down onto BRAKE: ${JSON.stringify(down)}`);
+    expect(upAgain.hb && !upAgain.brake, `up again: ${JSON.stringify(upAgain)}`);
+    // lift: the arc drains, the hold keeps it a little longer (0.22 s), then Controls.handbrake is false and nothing brakes
+    await fire('.pedal.brake', 'pointerup', 0, -36, 26);
     const lifted = await game(page, () => {
-      const g = window.__game, out = {}; out.after = g.input.touch.handbrake; out.pulled = document.querySelector('.hb-round').classList.contains('pulled');
+      const g = window.__game, out = {}; out.after = g.input.touch.handbrake; out.brake = g.input.touch.brake; out.pulled = document.querySelector('.pedal.brake').classList.contains('pulled');
       window.run(0.1, {}, 0, null, true); out.at100ms = g.input.c.handbrake; window.run(0.3, {}, 0, null, true); out.at400ms = g.input.c.handbrake; return out;
     });
-    expect(!lifted.after && !lifted.pulled && lifted.at100ms === true && lifted.at400ms === false, `on lift: ${JSON.stringify(lifted)}`);
+    expect(!lifted.after && !lifted.brake && !lifted.pulled && lifted.at100ms === true && lifted.at400ms === false, `on lift: ${JSON.stringify(lifted)}`);
     await fire('.touch-steer', 'pointerup', 0, 0, 12);
-    // a press of HANDBRAKE itself: pulled while held
-    const press = await scenario('press', { start: async () => { await fire('.hb-round', 'pointerdown', 0, 8, 25); } });
-    expect(press.during.hb && press.during.touchHb && press.during.pulled, `press: ${JSON.stringify(press.during)}`);
-    expect(press.during.activeSteps > 20 && press.during.maxA > 10, `press: no drift started ${JSON.stringify(press)}`);
-    await fire('.hb-round', 'pointerup', 0, 8, 25);
-    const pressUp = await game(page, () => ({ touchHb: window.__game.input.touch.handbrake, pulled: document.querySelector('.hb-round').classList.contains('pulled') }));
-    expect(!pressUp.touchHb && !pressUp.pulled, `after the press: ${JSON.stringify(pressUp)}`);
+    // a quick flick: down on BRAKE and lifted 35 px higher with no move event between: the hold pulls it, then it lets go
+    const flick = await scenario('flick', { start: async () => { await fire('.pedal.brake', 'pointerdown', 0, 0, 27); await fire('.pedal.brake', 'pointerup', 0, -35, 27); } });
+    expect(flick.during.hbSteps > 0 && !flick.during.hb && !flick.during.touchHb && !flick.during.touchBrake, `flick: ${JSON.stringify(flick.during)}`);
     await fire('.touch-steer', 'pointerup', 0, 0, 12);
     expect(readout && !readout.hidden && /DRIFT\s*\d+°\s*\d+\.\d s/i.test(readout.text.replace(/\s+/g, ' ')), `the readout: ${JSON.stringify(readout)}`);
     await game(page, () => { const g = window.__game; g.input.clear(); g.phys.handling = g.settings.handling; g.setPaused(false); });
-    return `${dom.skin} skin, no lever; ${none.join('; ')}; slide from BRAKE at ${slide.before.mph} mph: brake off, handbrake on, drift up to ${slide.during.maxA}° (${slide.during.activeSteps} steps active, first at ${slide.during.firstOn} s), readout "${readout.text.replace(/\s+/g, ' ').trim()}"; on lift held at 100 ms ${lifted.at100ms}, gone at 400 ms; HANDBRAKE pressed: drift up to ${press.during.maxA}°, released on lift`;
+    // the one-time hint "Slide up to drift": shown the first time BRAKE is pressed on a device that has not seen it, gone
+    // after 4.5 s, never again
+    const hint = async (id) => {
+      await fire('.pedal.brake', 'pointerdown', 0, 0, id);
+      const h = await game(page, () => { const h = document.querySelector('.hb-hint'); return h ? { text: h.textContent, seen: localStorage.getItem('tsu.hint.hbslide') } : null; });
+      await fire('.pedal.brake', 'pointerup', 0, 0, id);
+      return h;
+    };
+    await game(page, () => localStorage.removeItem('tsu.hint.hbslide'));
+    const first = await hint(28);
+    await page.screenshot({ path: path.join(OUT, 'phone-handbrake-hint.png') });
+    await page.waitForFunction(() => !document.querySelector('.hb-hint'), null, { timeout: 60000, polling: 250 });
+    const second = await hint(29);
+    expect(first && /Slide up to drift/.test(first.text) && first.seen === '1' && second === null, `the hint: first ${JSON.stringify(first)}, then ${JSON.stringify(second)}`);
+    return `${dom.skin} skin, no HANDBRAKE button, BRAKE's emblem ${emb.w} px (stroke ${emb.stroke}); ${none.join('; ')}; a 40 px slide up at ${slide.before.mph} mph: brake off, handbrake on for ${slide.during.hbSteps} steps, drift up to ${slide.during.maxA}° (first at ${slide.during.firstOn} s), the ring's arc lit; sideways above the line still pulled; back down brakes; on lift held at 100 ms, gone at 400 ms; a flick pulled it for ${flick.during.hbSteps} steps; readout "${readout.text.replace(/\s+/g, ' ').trim()}"; hint "${first.text}" once`;
   });
   // the controls' boxes (the new HUD): at 390 x 844 and on its side (844 x 390 with the notch's insets), with the OC
-  // Hypercar's JUMP up, the round HANDBRAKE, BRAKE, GAS, the steering pad, CLEAR PATH, JUMP, AUTO, the drift readout and
-  // (Ultra) the ABS | TCS bar overlap nothing and stay on screen; every target 44 px or more (HANDBRAKE's dial too);
-  // HANDBRAKE sits between the steering pad and BRAKE
-  await check('new HUD controls: HANDBRAKE between the steering pad and BRAKE; no overlap among the pedals, the pad, CLEAR PATH, JUMP, the drift readout and ABS | TCS at 390 x 844 and 844 x 390; 44 px or more', async () => {
+  // Hypercar's JUMP up: BRAKE (its emblem inside), GAS, the steering pad, CLEAR PATH, JUMP, AUTO, the drift readout,
+  // (Ultra) the ABS | TCS bar, and at the top Pause, VIEW, the round map and the route shield overlap nothing and stay on
+  // screen; every target 44 px or more; no HANDBRAKE button (2026-11-24): BRAKE sits between the pad and GAS, VIEW under
+  // Pause upright and beside it on its side
+  await check('new HUD controls: no HANDBRAKE button and no ABS | TCS bar, BRAKE (with its emblem) between the steering pad and GAS; VIEW by Pause; no overlap among the pedals, the pad, CLEAR PATH, JUMP, the drift readout, Pause, VIEW, the map and the route shield at 390 x 844 and 844 x 390; 44 px or more', async () => {
     // (a drive first when run alone: the menu's demo drive shows no controls)
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     await game(page, hyperHelpers);
@@ -4270,12 +4437,14 @@ await group('phone', async (use) => {
         await frames(page, 3);
         const r = await game(page, newHudBoxesInPage);
         const b = r.box;
-        expect(b.hb && b.dial && b.brake && b.gas && b.steer && b.clear && b.thrust && b.drift, `${label}: missing ${JSON.stringify(Object.keys(b))}`);
+        expect(b.emb && b.brake && b.gas && b.steer && b.clear && b.thrust && b.drift && b.menu && b.view && b.map, `${label}: missing ${JSON.stringify(Object.keys(b))}`);
+        expect(!r.old && !b.assists, `${label}: a HANDBRAKE button, its caption or the ABS | TCS bar is still there`);
         expect(r.overlaps.length === 0, `${label}: overlapping ${r.overlaps.join(', ')} ${JSON.stringify(b)}`);
         expect(r.outside.length === 0 && !r.side, `${label}: outside the screen ${r.outside.join(', ')}`);
         expect(r.small.length === 0, `${label}: under 44 px: ${r.small.join(', ')}`);
-        expect(b.steer.r <= b.hb.l && b.hb.r <= b.brake.l, `${label}: HANDBRAKE is not between the pad and BRAKE ${JSON.stringify({ steer: b.steer, hb: b.hb, brake: b.brake })}`);
-        out.push(`${label} (${r.skin}): HANDBRAKE ${Math.round(b.hb.l)}..${Math.round(b.hb.r)} (dial ${Math.round(b.dial.r - b.dial.l)} px), steer to ${Math.round(b.steer.r)}, BRAKE from ${Math.round(b.brake.l)}, CLEAR PATH ${Math.round(b.clear.l)}..${Math.round(b.clear.r)} x ${Math.round(b.clear.t)}..${Math.round(b.clear.b)}, JUMP ${Math.round(b.thrust.l)}..${Math.round(b.thrust.r)} x ${Math.round(b.thrust.t)}..${Math.round(b.thrust.b)}, no overlaps among ${Object.keys(b).join('/')}`);
+        expect(b.steer.r <= b.brake.l && b.brake.r <= b.gas.l && b.emb.l >= b.brake.l && b.emb.r <= b.brake.r && b.emb.t >= b.brake.t && b.emb.b <= b.brake.b, `${label}: BRAKE and its emblem ${JSON.stringify({ steer: b.steer, brake: b.brake, emb: b.emb, gas: b.gas })}`);
+        expect(h > w ? b.view.t >= b.menu.b - 0.5 && Math.abs(b.view.l - b.menu.l) < 1 : b.view.r <= b.menu.l + 0.5 && Math.abs(b.view.t - b.menu.t) < 1, `${label}: VIEW is not by Pause ${JSON.stringify({ menu: b.menu, view: b.view })}`);
+        out.push(`${label} (${r.skin}): steer to ${Math.round(b.steer.r)}, BRAKE ${Math.round(b.brake.l)}..${Math.round(b.brake.r)} (emblem ${Math.round(b.emb.r - b.emb.l)} px), GAS from ${Math.round(b.gas.l)}, CLEAR PATH ${Math.round(b.clear.l)}..${Math.round(b.clear.r)} x ${Math.round(b.clear.t)}..${Math.round(b.clear.b)}, JUMP ${Math.round(b.thrust.l)}..${Math.round(b.thrust.r)} x ${Math.round(b.thrust.t)}..${Math.round(b.thrust.b)}, VIEW ${Math.round(b.view.l)},${Math.round(b.view.t)}, no overlaps among ${Object.keys(b).join('/')}`);
         // the Ultra round keys' face must be opaque black glass in a chrome bezel with the tick marks: one invalid layer in
         // the `background` list made the browser drop the whole declaration (2026-11-23) and the key went see-through, so
         // the computed ::before background is read (the conic chrome and ticks, five layers) and a pixel inside each face
@@ -4292,10 +4461,6 @@ await group('phone', async (use) => {
             out.push(`${q} face: ${k.layers} layers, ${k.conics} conic, inside pixel ${px.toFixed(0)}/255`);
           }
         }
-        // the HANDBRAKE caption: a dark chip, 4.5:1 or better on it, whatever road is behind
-        const cap = await capContrast(page);
-        expect(cap.bright <= 70 && cap.ratio >= 4.5, `${label}: the HANDBRAKE caption's backing is not dark (${JSON.stringify(cap)})`);
-        out.push(`${label} HANDBRAKE caption: backing ${JSON.stringify(cap.px)}, ${cap.ratio.toFixed(1)}:1`);
         await page.screenshot({ path: path.join(OUT, `phone-newhud-layout-${label}.png`) });
       }
     } finally {
@@ -4305,16 +4470,31 @@ await group('phone', async (use) => {
     }
     return out.join('; ');
   });
-  // the new HUD's top bar (both looks) and the ABS | TCS switches (Ultra): on a phone the top bar shows Pause (and
-  // Auto-drive when offered) but not View or Go to; the hold-Pause quick menu still offers Camera and Go to. ABS and TCS
-  // start on (the physics' flags, the switches, the car's display), a click on TCS turns the physics' traction control
-  // off, saves it and the seat display reads it, and the one honest line shows the first time
-  await check('new HUD top bar: Pause (and Auto-drive) only, the quick menu has Camera and Go to; ABS | TCS: on by default, TCS off sets Physics.tc, saves it, the display follows, one line of help', async () => {
+  // the new HUD's top bar (both looks): on a phone the top bar shows Pause, VIEW (owner, 2026-11-23: "we also need to add
+  // the button to change the pov of the game") and Auto-drive when offered, not Go to; a tap on VIEW cycles the camera as
+  // on a desktop; the hold-Pause quick menu still offers Camera and Go to. ABS and TCS (owner, 2026-11-24: the ABS | TCS
+  // bar left the HUD, no toggles anywhere): no bar and no switch; Physics.abs is always on; Physics.tc follows the
+  // handling, on for Arcade, Sport and a Custom value under the Simulation point, off at Simulation; the seat display follows
+  await check('new HUD top bar: Pause, VIEW (a tap changes the camera) and Auto-drive, the quick menu has Camera and Go to; no ABS | TCS bar or switch: Physics.abs always on, Physics.tc follows the handling (off at Simulation), the display follows', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     await game(page, () => { const g = window.__game; g.setPaused(false); g.navigateTo('Stoppage Time'); });
     await page.waitForFunction(() => document.querySelector('.tbar .tbtn.auto'), null, { timeout: 60000, polling: 250 });
     const bar = await game(page, newHudTopBarInPage);
-    expect(bar.visible.join() === 'Pause,Auto-drive' && bar.hidden.includes('View') && bar.hidden.includes('Go to'), `the top bar: ${JSON.stringify(bar)}`);
+    expect(bar.visible.join() === 'Pause,View,Auto-drive' && bar.hidden.includes('Go to'), `the top bar: ${JSON.stringify(bar)}`);
+    // VIEW: inside the frame, over nothing else (the map, the route shield, the drift card, the speed card, ABS | TCS), and a tap cycles the camera
+    const vb = await game(page, () => {
+      const box = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; }, v = box(document.querySelector('.tbar .tbtn.view'));
+      const hit = (a, b) => a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5;
+      const others = [...document.querySelectorAll('.hud-compass, .hud-road, .hud-drift, .hud-plate, .hud-assists, .tbar .tbtn:not(.view), .hud-ability, .hud-thrustbtn')].filter((e) => !e.hidden && e.getClientRects().length && getComputedStyle(e).display !== 'none');
+      return { v, inside: v.l >= 0 && v.t >= 0 && v.r <= innerWidth && v.b <= innerHeight, hits: others.filter((e) => hit(box(e), v)).map((e) => String(e.className).split(' ')[0]), cam: window.__game.cam };
+    });
+    await page.locator('.tbar .tbtn.view').click();
+    const cam2 = await game(page, () => window.__game.cam);
+    await page.locator('.tbar .tbtn.view').click();
+    const cam3 = await game(page, () => window.__game.cam);
+    expect(vb.inside && vb.hits.length === 0 && vb.v.r - vb.v.l >= 44 && vb.v.b - vb.v.t >= 44, `VIEW's box: ${JSON.stringify(vb)}`);
+    expect(cam2 !== vb.cam && cam3 !== cam2, `VIEW taps: ${vb.cam} → ${cam2} → ${cam3}`);
+    await game(page, (c) => window.__game.setCam(c), vb.cam);
     const pause = page.locator('.tbar .tbtn.menu');
     await pause.dispatchEvent('pointerdown', { pointerType: 'touch', isPrimary: true });
     await page.waitForSelector('.radial', { state: 'attached', timeout: 30000 });
@@ -4323,91 +4503,61 @@ await group('phone', async (use) => {
     await page.waitForSelector('.radial', { state: 'detached', timeout: 30000 });
     expect(wedges.includes('Camera') && wedges.includes('Go to'), `the quick menu: ${wedges.join(', ')}`);
     await game(page, () => window.__game.navigateTo(null));
-    // ABS | TCS (this group's look is standard Low: the Ultra skin)
+    // ABS and TCS: no bar, no switch; the physics' flags and the seat display follow the handling (this group's look is
+    // standard Low: the Ultra skin, where the bar was)
     const shown = (k) => `(() => { const d = window.__game.car.interior.group.userData.dash; const p = d.main ?? (['profile', 'tcs', 'abs'].includes(${JSON.stringify(k)}) ? d.left : d.right); return p.shown[${JSON.stringify(k)}]; })()`;
-    await game(page, () => { localStorage.removeItem('tsu.hint.assist.tcs'); localStorage.removeItem('tsu.hint.assist.abs'); window.__game.setCam('cockpit'); });
-    const read = () => game(page, `(() => { const g = window.__game, sw = (k) => document.querySelector('.asw.' + k)?.getAttribute('aria-checked'); return { skin: document.querySelector('.app').dataset.skin, abs: g.phys.abs, tc: g.phys.tc, sAbs: g.settings.abs, sTcs: g.settings.tcs, swAbs: sw('abs'), swTcs: sw('tcs'), saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs, savedAbs: JSON.parse(localStorage.getItem('tsu.settings') || '{}').abs, dashTcs: ${shown('tcs')}, dashAbs: ${shown('abs')}, toasts: [...document.querySelectorAll('.toast')].map((t) => t.textContent) }; })()`);
-    await page.waitForFunction(`${shown('tcs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const on = await read();
-    expect(on.skin === 'ultra' && on.abs && on.tc && on.sAbs && on.sTcs && on.swAbs === 'true' && on.swTcs === 'true' && on.dashTcs === 'on' && on.dashAbs === 'on', `default: ${JSON.stringify(on)}`);
-    await page.locator('.asw.tcs').click();
-    // the help line (a toast, 4.5 s): caught as it shows, before the display's wait
-    const line = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).find((t) => /^TCS off/.test(t)), null, { timeout: 30000, polling: 100 }).then((h) => h.jsonValue()).catch(() => null);
-    await page.waitForFunction(`${shown('tcs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const off = { ...(await read()), toasts: line ? [line] : [] };
-    await page.screenshot({ path: path.join(OUT, 'phone-assists-tcs-off.png') });
-    expect(!off.tc && off.abs && off.sTcs === false && off.saved === false && off.swTcs === 'false' && off.dashTcs === 'off' && off.dashAbs === 'on', `TCS off: ${JSON.stringify(off)}`);
-    expect(off.toasts.some((t) => /^TCS off: the rear can spin up; easier to drift, easier to spin\.$/.test(t)), `the help line: ${JSON.stringify(off.toasts)}`);
-    // a car placed again keeps it (Game.placeCar copies the setting), and the switch puts it back
+    await game(page, () => window.__game.setCam('cockpit'));
+    const read = () => game(page, `(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); return { skin: document.querySelector('.app').dataset.skin, bar: !!document.querySelector('.hud-assists, .asw'), abs: g.phys.abs, tc: g.phys.tc, handling: g.settings.handling, savedKeys: ['abs', 'tcs'].filter((k) => k in s), dashTcs: ${shown('tcs')}, dashAbs: ${shown('abs')} }; })()`);
+    const at = async (h) => {
+      await game(page, (h) => window.__updateSettings({ handling: h }), h);
+      await page.waitForFunction(`${shown('tcs')} === (window.__game.phys.tc ? 'on' : 'off')`, null, { timeout: FRAMES_MS, polling: 250 });
+      return read();
+    };
+    const suite = await read();
+    const arcade = await at(0.15), sport = await at(0.5), custom = await at(0.85), sim = await at(0.9);
+    // a car placed again keeps the rule (Game.placeCar sets the flags from the handling)
     await game(page, () => { const g = window.__game; g.placeCar(g.path, g.phys.s, g.path.laneOf(g.phys.d), 25); });
-    const placed = await game(page, () => window.__game.phys.tc);
-    await page.locator('.asw.tcs').click();
-    await page.waitForFunction(`${shown('tcs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const back = await read();
-    expect(placed === false && back.tc && back.saved === true, `placed again ${placed}, back on ${JSON.stringify(back)}`);
-    // ABS the same way: off sets Physics.abs, saves `abs: false`, the display's ABS reads off (TCS stays on), the "ABS off:" line
-    // shows the first time only, a placed car keeps it, and the switch puts it back
-    expect(back.savedAbs === true && back.dashAbs === 'on', `ABS before: ${JSON.stringify(back)}`);
-    await page.locator('.asw.abs').click();
-    const lineAbs = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).find((t) => /^ABS off/.test(t)), null, { timeout: 30000, polling: 100 }).then((h) => h.jsonValue()).catch(() => null);
-    await page.waitForFunction(`${shown('abs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const offAbs = { ...(await read()), toasts: lineAbs ? [lineAbs] : [] };
-    expect(!offAbs.abs && offAbs.tc && offAbs.sAbs === false && offAbs.savedAbs === false && offAbs.swAbs === 'false' && offAbs.swTcs === 'true' && offAbs.dashAbs === 'off' && offAbs.dashTcs === 'on', `ABS off: ${JSON.stringify(offAbs)}`);
-    expect(offAbs.toasts.some((t) => /^ABS off: /.test(t)), `the ABS help line: ${JSON.stringify(offAbs.toasts)}`);
-    await game(page, () => { const g = window.__game; g.placeCar(g.path, g.phys.s, g.path.laneOf(g.phys.d), 25); });
-    const placedAbs = await game(page, () => window.__game.phys.abs);
-    // on again, off again: no second line (once)
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    await page.waitForFunction(() => ![...document.querySelectorAll('.toast')].some((t) => /^ABS off/.test(t.textContent)), null, { timeout: 30000, polling: 100 });
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const second = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].some((t) => /^ABS off/.test(t.textContent)), null, { timeout: 2500, polling: 100 }).then(() => true).catch(() => false);
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const backAbs = await read();
-    expect(placedAbs === false && !second && backAbs.abs && backAbs.tc && backAbs.savedAbs === true && backAbs.swAbs === 'true' && backAbs.dashAbs === 'on', `ABS: placed again ${placedAbs}, a second line ${second}, back on ${JSON.stringify(backAbs)}`);
+    const placed = await read();
+    const back = await at(HANDLING);
+    await page.screenshot({ path: path.join(OUT, 'phone-assists-by-handling.png') });
     await game(page, () => window.__game.setCam('chase'));
-    return `top bar ${bar.visible.join(' + ')} (hidden: ${bar.hidden.join(', ')}); quick menu ${wedges.join(', ')}; ABS/TCS default ${on.swAbs}/${on.swTcs}, physics ${on.abs}/${on.tc}, display ${on.dashAbs}/${on.dashTcs}; TCS off: physics ${off.tc}, saved ${off.saved}, display ${off.dashTcs}, "${off.toasts.find((t) => /TCS/.test(t))}"; kept on a re-place; back on; ABS off: physics ${offAbs.abs}, saved abs ${offAbs.savedAbs}, display ${offAbs.dashAbs}, "${offAbs.toasts.find((t) => /ABS/.test(t))}", the line once (a second off: ${second ? 'shown again' : 'no line'}), kept on a re-place, back on`;
+    expect(suite.skin === 'ultra' && !suite.bar && suite.savedKeys.length === 0, `the bar or a saved switch is still there: ${JSON.stringify(suite)}`);
+    expect([arcade, sport, custom, sim, placed, back].every((x) => x.abs === true && x.dashAbs === 'on'), `ABS is not always on: ${JSON.stringify({ arcade, sport, custom, sim })}`);
+    expect(arcade.tc && sport.tc && custom.tc && !sim.tc && !placed.tc && back.tc, `TCS by the handling: ${JSON.stringify({ arcade: arcade.tc, sport: sport.tc, custom: custom.tc, sim: sim.tc, placed: placed.tc, back: back.tc })}`);
+    expect(arcade.dashTcs === 'on' && sim.dashTcs === 'off' && back.dashTcs === 'on', `the display's TCS: ${JSON.stringify([arcade.dashTcs, sim.dashTcs, back.dashTcs])}`);
+    return `top bar ${bar.visible.join(' + ')} (hidden: ${bar.hidden.join(', ')}); VIEW at ${Math.round(vb.v.l)},${Math.round(vb.v.t)} over nothing, taps ${vb.cam} → ${cam2} → ${cam3}; quick menu ${wedges.join(', ')}; no ABS | TCS bar; ABS on at every handling; TCS Arcade ${arcade.tc}, Sport ${sport.tc}, Custom 0.85 ${custom.tc}, Simulation ${sim.tc} (kept on a re-place), back at ${HANDLING} ${back.tc}; the display follows`;
   });
-  // ABS | TCS across a reload: a profile saved before the switches existed (no abs / tcs keys) starts with both on; TCS
-  // turned off on the HUD is still off after a reload (the setting, the switch, and Physics.tc once the car is placed).
-  // Its own phone context, seeded once (a reload keeps what the game saved); the group's game held meanwhile
-  await check('ABS | TCS persist: on by default for an older profile; TCS and ABS off survive a reload (setting, switch, Physics.tc and .abs); back on restores both', async () => {
+  // ABS | TCS across a reload (2026-11-24: the switches are gone): a profile saved with the switches off (abs: false,
+  // tcs: false) loads with ABS on and TCS by its handling, drops the two keys from the save, and keeps that after a
+  // reload; Simulation saved: TCS off. Its own phone context, seeded once; the group's game held meanwhile
+  await check('ABS | TCS from a saved profile: saved switches off are dropped; ABS on, TCS by the handling (Sport on, Simulation off), across a reload', async () => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
     await game(page, () => window.__game.hold(true));
     try {
-      await ctx.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html') && !sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.hint.retrotbar', '1'); localStorage.setItem('tsu.hint.radial', '1'); } },
-        // (an older profile: saved at settings version 4, before the switches, with no abs or tcs key. Not version 3: since
-        // the Midnight menu's version 4 migration a pre-4 Low save moves to Retro Low, whose HUD has no ABS | TCS bar)
-        { quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'none', hudStyle: 'modern' });
-      const p = await ctx.newPage(); p.setDefaultTimeout(240000);
-      const read = () => p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'), sw = (k) => document.querySelector('.asw.' + k)?.getAttribute('aria-checked');
-        return { abs: g.phys.abs, tc: g.phys.tc, sAbs: g.settings.abs, sTcs: g.settings.tcs, savedTcs: s.tcs ?? null, savedAbs: s.abs ?? null, swAbs: sw('abs'), swTcs: sw('tcs') }; });
-      const run = async () => { await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS }); await drive(p, 'Free Drive'); await p.waitForSelector('.asw.tcs', { timeout: 120000 }); return read(); };
-      await firstGoto(p, pathToFileURL(GAME).href);
-      const first = await run();
-      await p.locator('.asw.tcs').click();
-      const off = await read();
-      await p.locator('.asw.abs').click();
-      const offBoth = await read();
-      await p.reload();
-      const again = await run();
-      expect(first.abs && first.tc && first.sAbs && first.sTcs && first.swAbs === 'true' && first.swTcs === 'true', `an older profile: ${JSON.stringify(first)}`);
-      expect(!off.tc && off.savedTcs === false, `TCS off: ${JSON.stringify(off)}`);
-      expect(!offBoth.abs && !offBoth.tc && offBoth.savedAbs === false && offBoth.savedTcs === false, `ABS off too: ${JSON.stringify(offBoth)}`);
-      expect(!again.abs && !again.tc && again.sAbs === false && again.sTcs === false && again.swTcs === 'false' && again.swAbs === 'false' && again.savedAbs === false, `after the reload (both off): ${JSON.stringify(again)}`);
-      // and back on: both switches and both flags return, and are saved
-      await p.locator('.asw.abs').click(); await p.locator('.asw.tcs').click();
-      const restored = await read();
-      expect(restored.abs && restored.tc && restored.sAbs && restored.sTcs && restored.swAbs === 'true' && restored.swTcs === 'true' && restored.savedAbs === true && restored.savedTcs === true, `both back on: ${JSON.stringify(restored)}`);
-      return `older profile ABS/TCS ${first.swAbs}/${first.swTcs} (physics ${first.abs}/${first.tc}); TCS off, saved ${off.savedTcs}; ABS off too, saved ${offBoth.savedAbs}; after a reload: settings abs ${again.sAbs} / tcs ${again.sTcs}, switches ${again.swAbs}/${again.swTcs}, Physics ${again.abs}/${again.tc}; both back on: Physics ${restored.abs}/${restored.tc}, saved ${restored.savedAbs}/${restored.savedTcs}`;
+      const out = {};
+      for (const [name, h] of [['sport', 0.5], ['sim', 0.9]]) {
+        const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+        await p.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html') && !sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.hint.retrotbar', '1'); localStorage.setItem('tsu.hint.radial', '1'); } },
+          { quality: 'low', style: 'standard', v: 5, adaptive: false, density: 'none', hudStyle: 'modern', handling: h, abs: false, tcs: false });
+        const read = () => p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); return { abs: g.phys.abs, tc: g.phys.tc, keys: ['abs', 'tcs'].filter((k) => k in s), bar: !!document.querySelector('.hud-assists, .asw'), handling: g.settings.handling }; });
+        const run = async () => { await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS }); await drive(p, 'Free Drive'); return read(); };
+        await firstGoto(p, pathToFileURL(GAME).href);
+        const first = await run();
+        await p.reload();
+        out[name] = { first, again: await run() };
+        await p.close();
+      }
+      const ok = (x, tc) => x.abs === true && x.tc === tc && x.keys.length === 0 && !x.bar;
+      expect(ok(out.sport.first, true) && ok(out.sport.again, true), `Sport, saved with both switches off: ${JSON.stringify(out.sport)}`);
+      expect(ok(out.sim.first, false) && ok(out.sim.again, false), `Simulation, saved with both switches off: ${JSON.stringify(out.sim)}`);
+      return `saved abs/tcs false: Sport → ABS ${out.sport.first.abs}, TCS ${out.sport.first.tc}; Simulation → ABS ${out.sim.first.abs}, TCS ${out.sim.first.tc}; the keys dropped from the save; the same after a reload; no bar`;
     } finally { await ctx.close(); await game(page, () => window.__game.hold(false)).catch(() => {}); }
   });
-  // the Retro look (Settings > Graphics > Retro Low, as a player turns it on): the same round HANDBRAKE (a slide
-  // from BRAKE and a press pull it, a plain BRAKE tap does not), no lever, the same top bar, no ABS | TCS bar (the Retro
-  // design has none), and the controls' boxes clear of each other; then back to the suite's look
-  await check('Retro look: the round HANDBRAKE pulls on a slide from BRAKE and on a press, not on a BRAKE tap; no lever, no ABS | TCS bar; top bar Pause only; no overlaps', async () => {
+  // the Retro look (Settings > Graphics > Retro Low, as a player turns it on): the same handbrake on BRAKE (a slide up
+  // pulls it, a plain BRAKE tap does not), BRAKE's emblem in its flat version, no HANDBRAKE button, the same top bar
+  // (Pause and VIEW), no ABS | TCS bar (the Retro design has none), and the controls' boxes clear of each other; then
+  // back to the suite's look
+  await check('Retro look: a slide up from BRAKE pulls the handbrake, a BRAKE tap does not; the flat emblem; no HANDBRAKE button, no ABS | TCS bar; top bar Pause and VIEW; no overlaps', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     const style = async (on) => {
       await game(page, () => window.__game.setPaused(true));
@@ -4424,38 +4574,32 @@ await group('phone', async (use) => {
       await frames(page, 3);
     };
     try {
-      // TCS turned off on the Ultra bar: Retro has no switch to turn it back on, so Retro runs with ABS and TCS on, and
-      // the saved choice (off) is back when the Ultra look is
-      await page.locator('.asw.tcs[aria-checked="true"]').click();
-      const ultraOff = await game(page, () => ({ tc: window.__game.phys.tc, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs }));
+      // ABS and TCS on Retro follow the same rule as on Ultra (ABS on; TCS by the handling: the suite's Custom 0.35, on)
       await style(true);
-      const retroAssists = await game(page, () => ({ abs: window.__game.phys.abs, tc: window.__game.phys.tc, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs }));
-      expect(ultraOff.tc === false && ultraOff.saved === false && retroAssists.abs === true && retroAssists.tc === true && retroAssists.saved === false, `TCS off on Ultra, then Retro: ${JSON.stringify({ ultraOff, retroAssists })}`);
+      const retroAssists = await game(page, () => ({ abs: window.__game.phys.abs, tc: window.__game.phys.tc, handling: window.__game.settings.handling }));
+      expect(retroAssists.abs === true && retroAssists.tc === (retroAssists.handling < 0.9), `Retro's ABS and TCS: ${JSON.stringify(retroAssists)}`);
       const fire = (sel, type, dx = 0, dy = 0, id = 31) => game(page, (a) => {
         const e = document.querySelector(a.sel), r = e.getBoundingClientRect();
         e.dispatchEvent(new PointerEvent(a.type, { clientX: r.left + r.width / 2 + a.dx, clientY: r.top + r.height / 2 + a.dy, bubbles: true, pointerId: a.id, pointerType: 'touch', isPrimary: true }));
       }, { sel, type, dx, dy, id });
-      const hb = () => game(page, () => ({ touch: window.__game.input.touch.handbrake, pulled: document.querySelector('.hb-round').classList.contains('pulled'), brake: window.__game.input.touch.brake }));
+      const hb = () => game(page, () => ({ touch: window.__game.input.touch.handbrake, pulled: document.querySelector('.pedal.brake').classList.contains('pulled'), brake: window.__game.input.touch.brake }));
       await fire('.pedal.brake', 'pointerdown', 0, 0, 41); const tap = await hb(); await fire('.pedal.brake', 'pointerup', 0, 0, 41);
-      await fire('.pedal.brake', 'pointerdown', 0, 0, 42); await fire('.pedal.brake', 'pointermove', -30, 2, 42); const slide = await hb(); await fire('.pedal.brake', 'pointerup', -30, 2, 42); const slideUp = await hb();
-      await fire('.hb-round', 'pointerdown', 0, 8, 43); const press = await hb(); await fire('.hb-round', 'pointerup', 0, 8, 43); const pressUp = await hb();
-      const dom = await game(page, () => ({ lever: !!document.querySelector('.hb-lever'), assists: !!document.querySelector('.hud-assists') }));
+      await fire('.pedal.brake', 'pointerdown', 0, 0, 42); await fire('.pedal.brake', 'pointermove', 0, -40, 42); const slide = await hb(); await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.pedal.brake .bk-arc')).opacity) > 0.9, null, { timeout: 30000, polling: 100 }).catch(() => {}); const emb = await game(page, brakeEmblemInPage);
+      await page.screenshot({ path: path.join(OUT, 'phone-retro-handbrake-pulled.png') });
+      await fire('.pedal.brake', 'pointerup', 0, -40, 42); const slideUp = await hb();
+      const dom = await game(page, () => ({ round: !!document.querySelector('.hb-round, .hb-lever'), assists: !!document.querySelector('.hud-assists, .asw') }));
       const bar = await game(page, newHudTopBarInPage);
       const r = await game(page, newHudBoxesInPage);
-      const cap = await capContrast(page);   // the HANDBRAKE caption's dark chip (graphite, with its hairline), sampled from a real screenshot
       await page.screenshot({ path: path.join(OUT, 'phone-retro-hud.png') });
-      expect(cap.bright <= 70 && cap.ratio >= 4.5, `Retro: the HANDBRAKE caption's backing is not dark (${JSON.stringify(cap)})`);
       expect(tap.brake && !tap.touch && !tap.pulled, `a BRAKE tap: ${JSON.stringify(tap)}`);
       expect(slide.touch && slide.pulled && !slide.brake && !slideUp.touch && !slideUp.pulled, `the slide: ${JSON.stringify({ slide, slideUp })}`);
-      expect(press.touch && press.pulled && !pressUp.touch && !pressUp.pulled, `the press: ${JSON.stringify({ press, pressUp })}`);
-      expect(!dom.lever && !dom.assists, `on Retro: ${JSON.stringify(dom)}`);
-      expect(bar.visible.join() === 'Pause' && bar.hidden.includes('View') && bar.hidden.includes('Go to'), `the top bar: ${JSON.stringify(bar)}`);
-      expect(r.skin === 'retro' && r.overlaps.length === 0 && r.outside.length === 0 && r.small.length === 0 && r.box.steer.r <= r.box.hb.l && r.box.hb.r <= r.box.brake.l, `the boxes: ${JSON.stringify(r)}`);
-      return `Retro: BRAKE tap brakes only; the slide pulls (brake off), lift lets go; the press pulls, lift lets go; no lever, no ABS | TCS bar; a saved TCS off runs on in Retro (physics ${retroAssists.abs}/${retroAssists.tc}, saved ${retroAssists.saved}); top bar ${bar.visible.join()}; HANDBRAKE caption backing ${JSON.stringify(cap.px)} at ${cap.ratio.toFixed(1)}:1; boxes clear (${Object.keys(r.box).join('/')})`;
+      expect(emb && emb.paths >= 3 && emb.arcOn > 0.9 && /rgb\(255, 90, 74\)/.test(emb.stroke), `Retro's emblem while pulled: ${JSON.stringify(emb)}`);
+      expect(!dom.round && !dom.assists, `on Retro: ${JSON.stringify(dom)}`);
+      expect(bar.visible.join() === 'Pause,View' && bar.hidden.includes('Go to'), `the top bar: ${JSON.stringify(bar)}`);
+      expect(r.skin === 'retro' && r.overlaps.length === 0 && r.outside.length === 0 && r.small.length === 0 && r.box.steer.r <= r.box.brake.l && r.box.brake.r <= r.box.gas.l, `the boxes: ${JSON.stringify(r)}`);
+      return `Retro: BRAKE tap brakes only; the slide up pulls (brake off, the flat emblem's arc lit), lift lets go; no HANDBRAKE button, no ABS | TCS bar; ABS/TCS ${retroAssists.abs}/${retroAssists.tc} at handling ${retroAssists.handling}; top bar ${bar.visible.join()}; boxes clear (${Object.keys(r.box).join('/')})`;
     } finally {
       await style(false).catch(() => {});
-      const sw = page.locator('.asw.tcs[aria-checked="false"]');
-      if (await sw.count()) await sw.click().catch(() => {});   // the suite's look keeps TCS on
     }
   });
   // the seat view (HUD_POV_SPEC 5.2): the horizon at 29-33% at 60 mph on I-405 North (35-40% until 2026-11-16, when the
@@ -5075,9 +5219,10 @@ await group('phone', async (use) => {
           if (h > w) expect(m.band.length === 0 && m.ctlTop >= 0.7, `${label}: in the open view: ${m.band.join(', ')}; controls from ${pct(m.ctlTop)}`);
           // on its side the route's plate already runs past the no-route 26% (28.5% at 844 x 390): no further
           else expect(m.top <= Math.max(0.26, was.top + 0.005), `${label}: the top cluster runs to ${pct(m.top)}, from ${pct(was.top)}`);
-          // the new HUD: Auto-drive under Pause in the top bar (upright, a column; on its side, beside it)
+          // the new HUD: Auto-drive in the top bar with Pause and View (upright, a column under them; on its side, the row
+          // Pause, View, Auto-drive from the map leftwards, 2026-11-24)
           const ap = await game(page, () => { const r = (q) => { const b = document.querySelector(q).getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; }; return { a: r('.tbtn.auto'), p: r('.tbar .tbtn.menu') }; });
-          expect(h > w ? ap.a.t >= ap.p.b - 0.5 && Math.abs(ap.a.l - ap.p.l) < 1 : ap.a.t >= ap.p.b - 0.5 || ap.a.l >= ap.p.r - 0.5, `${label}: Auto-drive ${JSON.stringify(ap.a)} is not by Pause ${JSON.stringify(ap.p)}`);
+          expect(h > w ? ap.a.t >= ap.p.b - 0.5 && Math.abs(ap.a.l - ap.p.l) < 1 : Math.abs(ap.a.t - ap.p.t) < 1 && ap.a.r <= ap.p.l + 0.5, `${label}: Auto-drive ${JSON.stringify(ap.a)} is not by Pause ${JSON.stringify(ap.p)}`);
           sizes.push(`${label} ${pct(was.area)} → ${pct(m.area)}${h > w ? `, controls from ${pct(m.ctlTop)}` : `, cluster to ${pct(was.top)} → ${pct(m.top)}`}`);
         }
       } finally {
@@ -6271,7 +6416,7 @@ await group('store-live', async () => {
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const SITE = `http://127.0.0.1:${server.address().port}/index.html`;
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 5, adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
+  await ctx.addInitScript(() => localStorage.setItem('tsu.settings', JSON.stringify({ quality: 'low', style: 'standard', v: 6, adaptive: false, density: 'moderate', time: 'day', weather: 'clear' })));
   const errors = [], calls = [];
   const cat = JSON.parse(readFileSync(path.join(ROOT, 'src/store/catalog.json'), 'utf8'));
   // the one item on sale since the owner's trim (2026-11-16): the OC Hypercar Founder Edition
@@ -6850,14 +6995,16 @@ await group('economy-garage', async (use) => {
     expect(r.hyChip === "Earned · Founders' Road" && !r.fe && /Drive|Driving it/.test(r.hyBtn), JSON.stringify(r));
     // the earned car shows none of the paid edition's extras on its garage card
     const fx = await game(page, () => { const hy = document.querySelector('.gcell[data-car="oc-hyper"]'), sw = hy.querySelector('.carhead .paint');
-      return { stage: !!hy.querySelector('.fe-stage, .fe-cap, .fe-replay, canvas'), replay: /Replay reveal/.test(hy.textContent), label: /FOUNDER EDITION|Founder Edition|No\. 0000/i.test(hy.textContent), text: hy.textContent.replace(/\s+/g, ' ').slice(0, 260), swatch: sw.style.background, title: sw.getAttribute('title') }; });
+      return { stage: !!hy.querySelector('.fe-stage, .fe-cap, .fe-replay') || /Founder/i.test(hy.querySelector('canvas')?.getAttribute('aria-label') ?? ''), replay: /Replay reveal/.test(hy.textContent), label: /FOUNDER EDITION|Founder Edition|No\. 0000/i.test(hy.textContent), text: hy.textContent.replace(/\s+/g, ' ').slice(0, 260), swatch: sw.style.background, title: sw.getAttribute('title') }; });
     expect(!fx.stage && !fx.replay && !fx.label && !/ice/i.test(fx.title ?? ''), `the earned card carries the Founder Edition's extras: ${JSON.stringify(fx)}`);
     const sw = (fx.swatch.match(/\d+/g) ?? []).map(Number);
     expect(sw[0] === 0xe6 && sw[1] === 0xe8 && sw[2] === 0xea, `the header swatch is not the standard paint (Platinum): ${fx.swatch}`);
     // choosing it plays no Founder Ice reveal
+    await centreCar(page, 'oc-hyper');   // (DRIVE is on the centred card of the carousel)
     const pick = page.locator('.gcell[data-car="oc-hyper"]').getByRole('button', { name: /Drive the OC Hypercar/ }); expect(await pick.count() === 1, 'no Drive button on the earned card'); await pick.click();
-    const rv = await game(page, () => window.__game.revealState);
-    expect(!rv.open, `choosing the earned car opened a reveal: ${JSON.stringify(rv)}`);
+    // (the showroom may show the earned car on its stage once its card is centred: the earned paint, no reveal, no wake)
+    const rv = await game(page, () => ({ ...window.__game.revealState, show: window.__game.revealShow }));
+    expect(!rv.open || (rv.show && rv.show.std && rv.kind === 'wake' && !rv.playing), `choosing the earned car opened a reveal: ${JSON.stringify(rv)}`);
     await page.evaluate(() => document.querySelector('.gcell[data-car="oc-hyper"]').scrollIntoView({ block: 'center' }));
     await ECON_VIEW(page, 'econ-hypercar-earned-1280x720.png');
     // the paint tab: Glacier Silver is not offered on the standard car; Marina Teal costs cash, the venue paints need their rung
@@ -7369,7 +7516,7 @@ await group('perf', async (use) => {
   // real frames: Low at 1280 × 720 with ?perf, driving, and the artificial frame cost hook
   if (wants('perf: ?perf shows the overlay; real frames', 'perf: the overlay at 1280', 'perf: Adaptive quality off', 'perf: Retro keeps')) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 5, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 6, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
     await p.goto(pathToFileURL(GAME).href + '?perf');
@@ -7413,7 +7560,7 @@ await group('perf', async (use) => {
   // the phone: 390 × 844 at DPR 3, ?perf, driving
   if (wants('perf: the overlay on a 390')) {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
-    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 5, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
+    await ctx.addInitScript((s) => localStorage.setItem('tsu.settings', JSON.stringify(s)), { quality: 'low', style: 'standard', v: 6, adaptive: true, density: 'moderate', time: 'day', weather: 'clear', handling: HANDLING, hudStyle: 'modern' });
     const p = await ctx.newPage(); p.setDefaultTimeout(240000);
     await p.goto(pathToFileURL(GAME).href + '?perf');
     await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });

@@ -18,6 +18,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { buildCar } from './car';
+import type { CarOptions } from './car';
 import { wakeAt } from './car-wake';
 import { FOUNDER_ICE, FOUNDER_CAR } from '../game/founder';
 import type { CarId } from './car-shape';
@@ -71,7 +72,8 @@ function lightsGeometry() {
   return mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)))!;
 }
 
-export function buildReveal(renderer: THREE.WebGLRenderer, quality: 'phone' | 'high', car: CarId = FOUNDER_CAR as CarId): RevealStage {
+// `look` (the garage's showroom for every car, 2026-11-24): the paint, edition and rims to build the car in (its own if unset)
+export function buildReveal(renderer: THREE.WebGLRenderer, quality: 'phone' | 'high', car: CarId = FOUNDER_CAR as CarId, look: Pick<CarOptions, 'paint' | 'edition' | 'rim'> = {}): RevealStage {
   const t0 = performance.now();
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x020305);
@@ -98,7 +100,7 @@ export function buildReveal(renderer: THREE.WebGLRenderer, quality: 'phone' | 'h
   const glowMat = keep(new THREE.MeshBasicMaterial({ map: glowMap, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   const glow = new THREE.Mesh(keep(new THREE.PlaneGeometry(6.6, 6.6)), glowMat);
   glow.rotation.x = -Math.PI / 2; glow.position.y = 0.004; table.add(glow);
-  const model = buildCar({ car, quality, cabin: 'full' });
+  const model = buildCar({ car, quality, cabin: 'full', ...look });
   model.position.y = 0.06; table.add(model);
 
   // the room's lights, seen behind the car and in the floor
