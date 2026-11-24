@@ -19,6 +19,39 @@ luminance < 8): the longest near-black run per car, light theme, before → afte
 Corsa 3 → 0, Vela E 2 → 0, OC Hypercar 5 → 0 (1.45 s), Paint tab 3 → 0; dark theme 4/2/3/2/5/3 → all 0. Suite:
 progression's new check "garage at 390 × 844: the centred car view is never black" passes on this build and fails on
 v30; `--only=progression,phone` 51/52, the one failure the known "sleeves from the seat on a phone".
+## 2026-11-24: Ultra warms up behind the loading screen (no stutter once you drive)
+
+Branch `claude/ultra-warmup` on v30 (45ee8a2), not pushed, not published. The owner: "make sure it doesn't lag when
+choosing ultra for graphics? Like have everything set and working smoothly before the game starts playing ultra".
+Opus-class (no budget or LOD change was needed; nothing queued for Fable).
+- **Measured first** (SwiftShader, 640x360 desktop, ~30 frames after control, per-frame GL counts; logs and the table in
+  the session scratchpad `ultra/`, summary.md). The stalls on v30 were not shader compiles in the main view (the menu's
+  Ultra drive had compiled those) and not chunk building (the prebuild builds everything within the draw distance), but:
+  the live door mirror's first draw on the first driven frame (its target, ~0.5 MB of buffers for what's behind the
+  car, the GPU pipelines: a 4.1-4.5 s frame here, 1 stall in 30 frames); the environment map's first rebuild 2-3 s in
+  (two programs compiled on every sky change, every preset); a pause-screen switch to Ultra freezing the pause screen
+  (~95 programs and the 4K shadow map on one paused frame, ~20 s here, no feedback); and a graphics check running when
+  a run starts (its round's preset stays in force behind the loading screen).
+- **Built:** `Game.warmUp` (technical notes, "The warm-up"): on High and Ultra the run's environment map, every texture,
+  every program (for the composer's target) and one hidden, GPU-finished frame from each of the five View cameras,
+  before control; the same for a mid-drive switch (a "Preparing Ultra" sheet), the boot, a menu switch (quietly) and
+  each graphics-check round. Starting a run or picking a preset stops a running check first. One PMREM generator for the
+  session. The loading bar shows real progress. Low, Medium and Retro skip the warm-up.
+- **After** (same scenarios): stalls (frames over 3x the median) 1 → 0 and programs linked after control 2 → 0 for
+  start on Ultra with the OC Hypercar; 0 → 0 stalls and 2 → 0 programs with the Rossini GT; 1 → 0 and 2 → 0 on a View
+  cycle through all five cameras; 1 → 0 for Ultra picked on the menu and started at once; 1 → 0 for Start during the
+  check's "High at 75%" (loading 56 → 18 s here). The pause switch: the same work now under the sheet, 0 programs after
+  Resume either way. Loading here (Start to control): Ultra 27.7 → 36.0 s (Hypercar), 29.3 → 34.2 s (GT); High 16.1
+  → 20.3 s; Low 5.7 → 5.6 s, Retro 5.1 → 5.0 s (unchanged). SwiftShader times, not a phone's.
+- **Suite:** render group's new check "Ultra: no shader program compiled after the loading screen, in the first seconds
+  of a drive or on the first View cycle" (linkProgram counted from control on, 8 frames then two per View step).
+  `npm test -- --only=boot,render,phone` on 5cbd612: 74/76; the two failures were the known "sleeves from the seat on a
+  phone" and the new check itself (it set Ultra on the game only, and the menu's Start passes the App's settings, so the
+  run started on Low; fixed to set it as Settings does). Re-run `--only=render --check="Founder Edition's lights
+  wake|Ultra: no shader"`: 3/3 (the new check: warm-up 7.4 s, programs 156 → 156, 0 programs in 32 frames after control
+  to 52 mph and through hood, chase, free, cinematic, cockpit). An earlier run under extra load (measurement browsers
+  alongside) also failed "the Founder Edition's lights wake" (known flake) and "sleeves under an overpass (High)"; the
+  latter passed alone on this build and on v30, and in the clean run.
 
 ## 2026-11-24: the owner's UI batch (menu, garage, View on phones, the handbrake on BRAKE, a fixed field of view, no ABS | TCS bar)
 

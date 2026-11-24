@@ -321,10 +321,29 @@ export class Environment {
     this.renderer.toneMappingExposure = lerp(1.25, 0.92, day) * (1 + 0.2 * overcast * c.sky);
   }
 
+  // One generator for the session (2026-11-24, the Ultra warm-up's measurements): a new generator each rebuild compiled
+  // its blur program again, and the background box material fromScene makes and disposes on every call took its
+  // program with it, so every sky change (and the first one after a run starts) compiled two programs on a driven
+  // frame (PMREM.Background and SphericalGaussianBlur, on every preset). The generator keeps its blur material, and
+  // `pmKeep` holds a twin of the box's material (a back-sided MeshBasicMaterial drawn into a linear half-float target:
+  // the same program) so three's program cache keeps that program. The output target is still new each time (the old
+  // map is in use until the swap).
+  private pm: THREE.PMREMGenerator | null = null;
+  private pmKeep: THREE.MeshBasicMaterial | null = null;
+  // the environment map now if the sky has moved since it was made (the warm-up: behind the loading screen, not on
+  // the run's first seconds)
+  flushEnv() { if (this.envDirty || !this.envTex) { this.envDirty = false; this.envT = 4; this.rebuildEnv(); } }
   private rebuildEnv() {
-    const pm = new THREE.PMREMGenerator(this.renderer);
-    const rt = pm.fromScene(this.envScene, 0.02);
-    pm.dispose();
+    const r = this.renderer;
+    if (!this.pmKeep) {
+      this.pmKeep = new THREE.MeshBasicMaterial({ name: 'PMREM.Background', side: THREE.BackSide, depthWrite: false, depthTest: false });
+      const box = new THREE.Mesh(new THREE.BoxGeometry(), this.pmKeep), t = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: false });
+      const prev = r.getRenderTarget();
+      r.setRenderTarget(t); r.compile(box, new THREE.PerspectiveCamera()); r.setRenderTarget(prev);
+      t.dispose(); box.geometry.dispose();
+    }
+    this.pm ??= new THREE.PMREMGenerator(r);
+    const rt = this.pm.fromScene(this.envScene, 0.02);
     this.scene.environment = rt.texture;
     this.envRT?.dispose();                 // the target with its texture (the texture alone left the framebuffer behind)
     this.envRT = rt;
@@ -341,6 +360,7 @@ export class Environment {
     const from = this.envTex;
     this.envDirty = false; this.envT = 4;
     this.envRT = null; this.envTex = null;
+    this.pm = null; this.pmKeep = null;    // (their GPU side went with the old context: made again on the new one)
     this.rebuildEnv();
     return { from, to: this.envTex! };
   }

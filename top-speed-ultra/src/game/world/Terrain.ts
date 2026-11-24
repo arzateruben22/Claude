@@ -33,6 +33,7 @@ export class Terrain {
   }
 
   get count() { return this.tiles.size; }
+  left = 0;                          // tiles still wanted after the last update (the loading bar's progress)
 
   update(x: number, z: number, budget = 1) {
     const R = this.q.drawDistance + 300;
@@ -59,6 +60,7 @@ export class Terrain {
       this.tiles.set(tKey(tx, tz), this.build(tx, tz, lod));
       n++;
     }
+    this.left = want.length - n;
     this.sea.position.x = Math.round((x - ORIGIN.x) / 100) * 100; this.sea.position.z = Math.round((z - ORIGIN.z) / 100) * 100;
     return n;
   }
