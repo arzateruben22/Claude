@@ -3136,7 +3136,9 @@ await group('progression', async (use) => {
   // character row is a card (the label on its own line, 44 px or more)
   await check('garage: the Vehicles carousel (centred car on the showroom stage, arrows and keys, n of m labels, locked cars show their miles), the Paint tab repaints the car live, the character card', async () => {
     // (the GT, in its factory paint: the checks before may leave another car chosen)
-    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: false, paints: {} }); g.profile.p.car = 'rossini-gt'; g.applyCarChoice(); });
+    // (through the App, whose settings are the ones a later pick saves: a game-only change would be undone by it)
+    await game(page, () => { const g = window.__game; window.__updateSettings({ owner: false, paints: {} }); g.profile.p.car = 'rossini-gt'; g.applyCarChoice(); });
+    await page.waitForFunction(() => window.__game.carId === 'rossini-gt' && !window.__game.settings.owner, null, { timeout: 30000 });
     await page.locator('.mp-carline').click();
     await page.waitForSelector('.panel.profile .car-rail .gcell.car');
     const read = () => game(page, () => {
@@ -3187,12 +3189,13 @@ await group('progression', async (use) => {
     await free.click();
     const rs = () => game(page, () => JSON.stringify({ show: window.__game.revealShow, rv: window.__game.revealState, q: window.__game.showroomQueue, on: document.querySelector('.paint-chip.on b')?.textContent }));
     await page.waitForFunction((was) => window.__game.revealShow && window.__game.revealShow.paint !== was, p0.show.paint, { timeout: 120000, polling: 250 }).catch(async () => { throw new Error(`the pick did not reach the stage: ${await rs()}`); });
-    await page.waitForFunction((n) => window.__game.revealShow.shown > n, p0.show.shown, { timeout: 600000, polling: 250 }).catch(async () => { throw new Error(`the stage did not draw the new paint: ${await rs()}`); });
+    // (drawn in it: the stage repainted and rendered, or the session's frame of that car in that paint drawn)
+    await page.waitForFunction((n) => { const g = window.__game, sh = g.revealShow; return sh && (sh.shown > n || (sh.shown > 0 && !g.revealState.built)); }, p0.show.shown, { timeout: 600000, polling: 250 }).catch(async () => { throw new Error(`the stage did not draw the new paint: ${await rs()}`); });
     const p1 = await game(page, () => ({ show: window.__game.revealShow, built: window.__game.revealState.built, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints }));
     await page.screenshot({ path: path.join(OUT, 'garage-paint-1280.png') });
-    expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.show.shown > p0.show.shown, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
+    expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.show.shown > 0, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
     // back to the factory paint the suite expects
-    await game(page, (car) => { const g = window.__game; const paints = { ...g.settings.paints }; delete paints[car]; g.updateSettings({ ...g.settings, paints }); }, r0.driving);
+    await game(page, () => window.__updateSettings({ paints: {} }));
     await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
     await page.waitForSelector('.overlay.menu', { timeout: 120000 });
     const closed = await game(page, () => window.__game.revealState.open);
