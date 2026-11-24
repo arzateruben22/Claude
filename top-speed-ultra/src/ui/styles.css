@@ -1969,7 +1969,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .gcell.garage-cast:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
 
 /* the Vehicles carousel: the centred card large, the neighbours peeking and dimmed; snap; the head's count and arrows */
-.car-rail { container-type: inline-size; --card: min(76cqw, 440px); display: grid; gap: 8px; min-width: 0; width: 100%; justify-self: stretch; }
+.car-rail { container-type: inline-size; --card: min(70cqw, 440px); display: grid; gap: 8px; min-width: 0; width: 100%; justify-self: stretch; }
 .car-rail-head { display: flex; align-items: center; gap: 8px; width: 100%; }
 .car-rail-head .car-count { margin: 0 auto 0 0; display: flex; align-items: baseline; gap: 6px; min-width: 0; font: 500 12px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
 .car-count b { font: 800 22px/1 var(--f-display); letter-spacing: 0.04em; color: var(--ink); }
