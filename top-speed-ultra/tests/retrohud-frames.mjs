@@ -1,7 +1,7 @@
 // The new HUD's frames (claude/retro-hud, owner 2026-11-23: one layout, the Retro skin and the Ultra skin): at 390 x 844
 // on a 3x touch phone the drift moment the owner's mockups redraw (I-405 North's straight, 30 m/s, Sport handling, the
-// wheel a third right, then the handbrake pulled by sliding from BRAKE into the round HANDBRAKE), chase and seat; the
-// handbrake idle and pressed directly; CLEAR PATH charging and ready; on Ultra ABS on + TCS off (the real switch, clicked);
+// wheel a third right, then the handbrake pulled by sliding the thumb up from BRAKE: the owner's gesture since the round
+// HANDBRAKE went, 2026-11-24, Touch.tsx), chase and seat; the handbrake idle and held (slid up and kept there); CLEAR PATH charging and ready; on Ultra ABS on + TCS off (the real switch, clicked);
 // the OC Hypercar with JUMP; 844 x 390 with a notch's insets; 1280 x 720 on a desktop. Real pointer events on the real
 // elements; the simulation stepped by hand through the input layer (the game's own loop paused, as drift-frames.mjs).
 //   node tests/retrohud-frames.mjs [--skin=retro|ultra|both] [--only=phone,land,hyper,desk] [--out=tests/out/retrohud]
@@ -59,7 +59,7 @@ async function boot(skin, opts) {
     else await page.evaluate(() => window.run(0.8, () => { window.__game.input.c.steer = 0.36; }));
   };
   const state = () => page.evaluate(() => {
-    const g = window.__game, d = g.phys.drift, hb = document.querySelector('.hb-round');
+    const g = window.__game, d = g.phys.drift, hb = document.querySelector('.pedal.brake');
     return { mph: Math.round(Math.abs(g.phys.vx) * 2.236936), gear: g.phys.gear, angle: +d.angle.toFixed(1), driftT: +d.time.toFixed(2), touchHb: g.input.touch.handbrake, hb: g.input.c.handbrake,
       pulled: hb?.classList.contains('pulled') ?? null, readout: document.querySelector('.hud-drift')?.textContent.replace(/\s+/g, ' ').trim(), plate: document.querySelector('.hud-plate')?.innerText.replace(/\s+/g, ' ').trim(),
       skin: document.querySelector('.app').dataset.skin, abs: g.phys.abs, tc: g.phys.tc, lever: !!document.querySelector('.hb-lever') };
@@ -68,7 +68,7 @@ async function boot(skin, opts) {
 }
 
 const boxes = (page, sels) => page.evaluate((S) => Object.fromEntries(Object.entries(S).map(([k, q]) => { const e = document.querySelector(q); if (!e || e.hidden) return [k, null]; const b = e.getBoundingClientRect(); return [k, b.width ? [b.left, b.top, b.right, b.bottom].map(Math.round) : null]; })), sels);
-const SEL = { cap: '.hb-cap', card: '.hud-card', plate: '.hud-plate', pause: '.tbtn.menu', map: '.corner', assists: '.hud-assists', drift: '.hud-drift', steer: '.touch-steer', hb: '.hb-round', brake: '.pedal.brake', gas: '.pedal.gas', clear: '.hud-ability', jump: '.hud-thrustbtn' };
+const SEL = { card: '.hud-card', plate: '.hud-plate', pause: '.tbtn.menu', map: '.corner', assists: '.hud-assists', drift: '.hud-drift', steer: '.touch-steer', brake: '.pedal.brake', gas: '.pedal.gas', clear: '.hud-ability', jump: '.hud-thrustbtn' };
 
 for (const skin of SKINS) {
   const L = log[skin] = {};
@@ -82,28 +82,28 @@ for (const skin of SKINS) {
       L.idle = await state(); L.boxes = await boxes(page, SEL);
       L.gauge = await page.evaluate(() => { const k = document.querySelector('.hud-ability'), b = getComputedStyle(k, '::before').backgroundImage, r = k.getBoundingClientRect();
         return { conic: /conic-gradient/.test(b), layers: (b.match(/gradient\(/g) || []).length, bg: b.slice(0, 60), rect: [r.left, r.top, r.width, r.height].map(Math.round), p: k.style.getPropertyValue('--p') }; });
-      // the drift moment: BRAKE held, slid 30 px toward the steering side (into HANDBRAKE)
-      await fire('.pedal.brake', 'pointerdown', 0, 0, 26); await fire('.pedal.brake', 'pointermove', -30, 2, 26);
+      // the drift moment: BRAKE pressed and the thumb slid 40 px up (past Touch.tsx PULL_PX, 28), held there
+      await fire('.pedal.brake', 'pointerdown', 0, 0, 26); await fire('.pedal.brake', 'pointermove', 0, -40, 26);
       await page.evaluate(() => window.run(0.55));
       await shot(`${skin}-drift-chase-390x844.png`);
       L.driftChase = await state();
-      await fire('.pedal.brake', 'pointerup', -30, 2, 26);
+      await fire('.pedal.brake', 'pointerup', 0, -40, 26);
       L.afterLift = await state();
       await fire('.touch-steer', 'pointerup', 0, 0, 12);
       // the seat view, the same moment
       await settle('cockpit');
-      await fire('.pedal.brake', 'pointerdown', 0, 0, 27); await fire('.pedal.brake', 'pointermove', -30, 2, 27);
+      await fire('.pedal.brake', 'pointerdown', 0, 0, 27); await fire('.pedal.brake', 'pointermove', 0, -40, 27);
       await page.evaluate(() => window.run(0.55));
       await shot(`${skin}-drift-seat-390x844.png`);
       L.driftSeat = await state();
-      await fire('.pedal.brake', 'pointerup', -30, 2, 27); await fire('.touch-steer', 'pointerup', 0, 0, 12);
-      // the handbrake pressed directly (held)
+      await fire('.pedal.brake', 'pointerup', 0, -40, 27); await fire('.touch-steer', 'pointerup', 0, 0, 12);
+      // the handbrake held: BRAKE pressed, slid up 40 px and kept there (no separate button since 2026-11-24)
       await settle('chase');
-      await fire('.hb-round', 'pointerdown', 0, 10, 28);
+      await fire('.pedal.brake', 'pointerdown', 0, 0, 28); await fire('.pedal.brake', 'pointermove', 0, -40, 28);
       await page.evaluate(() => window.run(0.4));
       await shot(`${skin}-hb-pressed-390x844.png`);
       L.pressed = await state();
-      await fire('.hb-round', 'pointerup', 0, 10, 28); await fire('.touch-steer', 'pointerup', 0, 0, 12);
+      await fire('.pedal.brake', 'pointerup', 0, -40, 28); await fire('.touch-steer', 'pointerup', 0, 0, 12);
       // CLEAR PATH: used, run out, recharging (a third of the way back)
       await settle('chase');
       // (the ability's own trigger: with no traffic set, the button says "No traffic to clear" and keeps the charge)
@@ -129,11 +129,11 @@ for (const skin of SKINS) {
       await page.evaluate(() => { const a = document.querySelector('.app'); a.style.setProperty('--sa-l', '47px'); a.style.setProperty('--sa-r', '47px'); a.style.setProperty('--sa-b', '0px'); });
       await frames(3);
       await settle('chase');
-      await fire('.pedal.brake', 'pointerdown', 0, 0, 29); await fire('.pedal.brake', 'pointermove', -30, 2, 29);
+      await fire('.pedal.brake', 'pointerdown', 0, 0, 29); await fire('.pedal.brake', 'pointermove', 0, -40, 29);
       await page.evaluate(() => window.run(0.55));
       await shot(`${skin}-drift-chase-844x390.png`);
       L.land = await state(); L.landBoxes = await boxes(page, SEL);
-      await fire('.pedal.brake', 'pointerup', -30, 2, 29); await fire('.touch-steer', 'pointerup', 0, 0, 12);
+      await fire('.pedal.brake', 'pointerup', 0, -40, 29); await fire('.touch-steer', 'pointerup', 0, 0, 12);
       await page.evaluate(() => { const a = document.querySelector('.app'); for (const k of ['--sa-l', '--sa-r', '--sa-b']) a.style.removeProperty(k); });
       await page.setViewportSize({ width: 390, height: 844 });
       await frames(3);
