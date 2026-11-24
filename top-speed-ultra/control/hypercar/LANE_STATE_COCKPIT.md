@@ -384,3 +384,87 @@ state-sensitive when run alone (--check): the base v28 gives 1 px alone, this bu
 at the rear quarter (tan / seatSil), not at the A-pillar. The cabin check's white-dash count now reads |x| > 0.4 (the
 squeezed dash). "recovers from a lost WebGL context" and its follow-ons timed out in two earlier runs on this machine
 under other sessions' load; they passed in the final run.
+
+## Polish round (branch claude/hyper-polish from v29 74412a3, 2026-11-24, ~7:20 AM-10:30 AM PT): flicker at the source
+
+From the owner's v29 iPhone frame (owner-shots/2026-11-24-v29-retro-seat.png, Retro, 128 mph) and "there still seems to
+be a flicker of shards etc, when playing". Proof in the session scratchpad polish/ (paths in the report).
+
+Root cause of the flicker and shards. Three things, found with a ray probe from the seat camera (polish/gap.mjs: for
+every sample, the first drawn opaque surface and any other drawn surface within a few mm behind it; idimg.py maps the
+first-hit mesh) and by hiding meshes one at a time:
+1. keepInside's step: a cabin vertex just outside the skin went to 3 cm under it, its neighbour just inside to 1.2 cm,
+   so one face jumped 1.8 cm between two vertices. Along the cowl and the A-pillar's foot (the dash top's end, the door
+   top, the white panel, the sill cap) that made stair-stepped silhouettes that crawl as the head moves, and Retro's
+   ink outlines every step.
+2. Coplanar pressing: every key pressed by that pass landed on the same offset surface under the skin, so neighbouring
+   keys met coplanar there (dash top vs the lower dash's carbon, dash top vs the white end and the cheek, door top vs
+   white panel) and interleaved.
+3. The bonnet's centre vent and the hump louvres: the wells carry a polygon offset (-1/-4, slope-scaled), and from the
+   seat (a few degrees of grazing) it carried them through the blades and frames, which had no offset or the same one.
+   The vent read as a black/carbon speckle along the hood's edge, flipping as the angle changed.
+   The dash-end cheeks (shards round) also stood 4-5 cm up between the dash top and the side glass's foot, a flat black
+   "bracket" at the pillar's foot. The Retro ink pass itself is not the cause (its threshold, 4 % of 1/z, is far
+   above a 1-3 mm fight). It only inks the real stair-steps, which are now gone, so the pass is unchanged (it is
+   shared by every car).
+
+Fixed (OC Hypercar only):
+- car-body keepInside `ramp` (used only by the cockpit's pass): an outside point goes in by c + (m - c) * (how far
+  out / ramp), continuous across the skin. cockpit.ts: each key has its own depth, 2.5 mm apart (STAG; the sill cap's
+  carbon nearest under the glass, the door's layers behind it, amb just in front of what it lies on).
+- The corner shroud (cockpit 'cornerShroud', the dash top's suede, built after keepInside): from the dash top (found by
+  raycasting the built dash), up to the windscreen's foot, the pillar's foot and the side glass's foot (1.5 mm under
+  its lower edge, behind the frit), back as a 2.5 cm tongue over the door top to z -0.62, with a 6 mm skirt into the
+  dash. The dash-end cheeks are retired.
+- car.ts `louvre` (graphite satin, polygon offset -2/-10) and `louvreFrame` (the carbon, -2/-10): the centre vent's and
+  the hump louvres' blades and frames now draw a clear step nearer than their wells. The centre vent's blades rise
+  toward the rear (2 to 8.5 mm over the well) so they read as horizontal louvres from the seat and the front.
+
+Measured (paused, the cowl band CSS y 330-470, 2 px grid; fights.py, decal pairs excluded): samples with another
+drawn surface within 3 mm behind, Retro Low 63 -> 6, High 63 -> 10; the rest are offset-separated (louvreFrame over
+the well) or the shroud's edge against the transparent glass/dust. Camera-jitter test (paused, +-1 mm / +-0.05 deg, 16
+renders; jitan.py): pixels flipping inside flat regions 110 -> 65 (Retro Low). Real motion (burst.mjs: auto-drive at
+112 mph, unpaused, 24 consecutive captures of the left third; flick.py over the A-pillar foot / dash top): High,
+back-and-forth flips 1.88 % -> 0.36 % of the rectangle, pixels flipping in 4+ pairs 4,459 -> 2,328; Retro Low 0.46 % ->
+0.38 %, 2,791 -> 2,641. In Retro both runs are dominated by real motion at that cadence (a capture is ~9 game frames
+apart), so the Retro proof is the probe and the images.
+
+The rest of the list:
+- Roof: a padded rail close under the canopy at z -0.195 (about 9 cm ahead of the eye; from the iPhone's portrait seat
+  20-23 degrees up, so the roof fills the frame's top above the sky, clear of the road), the roof lined behind it to
+  the headliner, a slim roof console (9 cm, two ice lines) down the middle, and a frameless mirror (22 x 5.8 cm, a
+  gloss back, the dimmed environment, no live render) hung from the rail at the car's middle on a short stem: about
+  70 degrees right of the eye, out of the windscreen's sight line and of the portrait frame. The canopy is only 5-7
+  cm over the eye there: a rail hung 2.4 cm under the glass (as the headliner is) at z -0.27 crossed the view a few
+  degrees over the horizon (tried and dropped).
+- Ambient strips: 0.8-1 cm (were 1.2-2), emissive 0.9/1.25 (was 1.0/1.4). The dash lip's line is now built under the
+  dash's squeeze (its ends had run out to x 0.79 under the humps and been bent into hooks by keepInside) and dips 1.5 cm
+  at its ends. The footwell outlines are one rounded U each (7 cm corners), not three straight bars.
+- Tail blades: 38 mm (were 26, car-shape bar.h), the ledTail red hotter (core ff7058, glow ff2414, edge b80c08); the
+  wrap stands 4.5 mm proud of the skin (the taller strip's foot met its facets).
+- tests/retrohud-frames.mjs: the drift moments and the "held" frame slide 40 px up from BRAKE (past PULL_PX 28) and
+  hold; 'pulled' is read on BRAKE; the .hb-round and .hb-cap selectors are gone; its boot clicks 'Start run' (the
+  menu's 'Drive' button is gone since the UI batch). Run (--skin=retro --only=phone): drift chase and seat pulled true,
+  -23.2 degrees; the held frame pulled true; lifting releases it; no page errors.
+
+Suite (--only=render,phone, 9:31-10:14 AM PT on 14dd652's build): 54/57. Failures: "OC Hypercar: no cabin on its skin at
+the front" (12 of 114341 vertices out, the worst cornerShroud at [-0.443,0.749,-1.027]: the shroud's outer edge stood
+4 mm over the valley between canopy and hump ahead of the side glass; fixed by keeping the shroud's points 6-8 mm under
+the skin), "the Founder Edition's lights wake" (sweep frames 9, 9, 9: the known timing flake under load) and the known
+pre-existing "sleeves from the seat on a phone". Re-run on the final build (every OC Hypercar / hypercar check, the
+hood from the seat, Retro style, the Founder wake with the check before it): 12/12, the skin check 0 of 114341 out and
+0 px on the skin at q-front-left, the hood 2.2 % of the frame (floor 1.4 %), sideways/desktop bonnet 1.9 %.
+
+Budgets (polish/budget.mjs, iPhone 393x852 @2x seat; whole-scene totals move with traffic): Retro Low scene calls 407 ->
+421 (+3.4 %), triangles 635,854 -> 638,182 (+0.4 %); the player car's own meshes 117 -> 120 (the shroud, louvre,
+louvreFrame), triangles 159,024 -> 160,246 (+0.8 %); cabin 55 -> 56 meshes, 53,055 -> 54,277 triangles. High scene
+calls 614 -> 625 (+1.8 %), triangles +0.2 %.
+
+Still open:
+- The cowl's line right of the pillar's foot still shows small white slivers of the hump's paint with stepped edges
+  between the louvre vent and the glass's foot (skin quads, exterior lane; not a fight: the probe finds no near-coplanar
+  pairs there).
+- A small notch remains where the shroud's top meets the A-pillar's foot (the pillar's own front end).
+- The shroud is plain suede: the reference's sculpted dash field and the white sweep into the door are still not there.
+- The mirror is never in the portrait frame; check it on landscape/desktop with the owner.
+- Retro's ink still draws the louvre slats as fine lines at distance (as designed for convex edges).

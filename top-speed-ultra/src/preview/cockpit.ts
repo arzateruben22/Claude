@@ -47,7 +47,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between } from './car-kit';
+import { Kit, V3, v3, gridGeo, sweepGeo, tubeGeo, latheGeo, extrude, roundRect, mat, clamp, sstep, lerp, between, boxUV, bakeAO } from './car-kit';
 import * as M from './car-mats';
 import { bodyFor } from './car-body';
 import { carMaterials, aoFor } from './car';
@@ -304,7 +304,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
-  if (hyper && P.led) { const led = o.edition === 'standard' ? STANDARD_LED : P.led; mats.amb = once('m.amb' + q + (o.edition === 'standard' ? '-std' : ''), () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide;
+  if (hyper && P.led) { const led = o.edition === 'standard' ? STANDARD_LED : P.led; mats.amb = once('m.amb' + q + (o.edition === 'standard' ? '-std' : ''), () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.25 : 0.9; m.side = THREE.DoubleSide;   // (a touch softer since the polish round)
     // (the cockpit repair, 2026-11-23: added light, not an opaque strip, so a strip 1.5-3 cm wide reads as a soft glow on
     // the suede and carbon round a bright core, the owner's reference's ambient light, not a 4 mm wire; the texture's
     // black edges add nothing)
@@ -380,11 +380,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const kwDash = kit.warp, SQ0 = 0.38, SQZ0 = -1.5, SQN = 130, sqT: number[] = [];
   if (hyper) for (let i = 0; i <= SQN; i++) { const f = body.flankX(SQZ0 + i * 0.01, 0.74); sqT.push(Math.min(f < 0.3 ? 1 : f - 0.012, WS.xb - 0.002)); }   // (over the sunken bonnet, where no flank stands at 0.74 m, the windscreen's)
   const sqW = (z: number) => { const f = clamp((z - SQZ0) / 0.01, 0, SQN - 1e-6), i = Math.floor(f); return sqT[i] + (sqT[i + 1] - sqT[i]) * (f - i); };
-  if (hyper) kit.warp = (p) => {
+  const dashSq = (p: V3) => {
     const a = Math.abs(p.x); if (a <= SQ0) return false;
     const W = sqW(p.z); if (W <= SQ0 + 0.01) return false;
     p.x = Math.sign(p.x) * (SQ0 + (Math.min(a, D) - SQ0) * (W - SQ0) / (D - SQ0)); return true;
   };
+  if (hyper) kit.warp = dashSq;
   const top = loftX(xs, dashTop, true);
   kit.add('dashTop', top); ghost.push(top);
   // (the hypercar, after the owner's interior reference: the lip and fascia white leather at each end, where the dash
@@ -434,18 +435,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     });
   }
   kit.warp = kwDash;
-  // the hypercar's dash-end cheeks (2026-11-24): a dark suede panel each side at the squeezed dash's end, from under
-  // the dash top up to the side glass's foot (or the skin, ahead of it), from the windscreen's foot back to the door,
-  // closing the corner by the A-pillar's foot where the door top, the dash end, the pillar and the carpet's edges met
-  // over the open body and the wheel well showed between them in stepped dark shapes, from the iPhone seat
-  if (hyper) for (const sd of [-1, 1]) {
-    const rows: V3[][] = [];
-    for (const z of range(glassBase(sd * 0.46)[0] + 0.01, -0.74, 18)) {
-      const x = sqW(z), yTop = Math.min(lerp(SG.fb[1], SG.rb[1], clamp((z - SG.fb[0]) / (SG.rb[0] - SG.fb[0]), 0, 1)) + 0.002, body.top(z, x) - 0.012);
-      rows.push([v3(sd * x, 0.66, z), v3(sd * x, Math.max(0.67, yTop), z)]);
-    }
-    kit.add('alc', gridGeo(rows, { flip: sd > 0 }));
-  }
+  // (the hypercar's dash-end cheeks, a dark suede panel each side at the squeezed dash's end up to the side glass's
+  // foot, added 2026-11-24, were retired in the polish round the same day: the corner shroud built after keepInside,
+  // below, closes that corner from the dash top up to the glass's foot, and the cheeks' tops stood 4-5 cm up through
+  // its inner edge as a black bar)
   // round vents: brushed bezel, dark throat, five vanes, a knob (and the centre stack under them)
   moved(0, sY, sZ, () => {
   // (the hypercar, after the owner's interior reference: a slim horizontal slot left of the cluster and one at the
@@ -489,7 +482,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   };
   if (hyper && mats.amb) {
     const [lz, ly] = LIP[LIP.length - 1];
-    kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.008, lz + 0.0035)), v3(0, 1, 0), 0.018));
+    // (the polish round, 2026-11-24, the owner: "softer, thinner, curved" strips: 1 cm, not 1.8; squeezed with the dash,
+    // whose ends it had run past under the humps, where the build's last step bent its ends into angular hooks; and its
+    // ends sweep down 1.5 cm toward the doors, as the reference's line curves into the door's)
+    { const w = kit.warp; kit.warp = dashSq;
+      kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 48).map((x) => v3(x, ly - 0.008 - 0.015 * Math.pow(Math.abs(x) / D, 3), lz + 0.0035)), v3(0, 1, 0), 0.01));
+      kit.warp = w; }
     // (x 0.16: clear of the live driver display's right end, which reaches x 0.01 now that it is centred on the driver)
     const gm = mat(0.16, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
     kit.add('alu', latheGeo([[r - 0.002, 0.004], [r + 0.003, 0.009], [r + 0.008, 0.006], [r + 0.009, -0.03]], high ? 48 : 28, 'z', { flip: true, vScale: 0.05 }), gm);
@@ -529,7 +527,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     for (const sd of [-1, 1]) {
       // the side walls down to the floor, and the ice line along each edge
       kit.add('carbon', gridGeo(ts.map((t) => { const c = sp(t), w = hw(t); return [v3(sd * w, c.y - 0.03, c.z), v3(sd * w, floor0, c.z)]; }), { flip: sd < 0 }), null, 0.1);
-      if (mats.amb) kit.add('amb', ambLine(ts.map((t) => sp(t).addScaledVector(nrm(t), -0.004).setX(sd * (hw(t) + 0.0015))), v3(0, 0, 0).set(0, 1, 0), 0.012));
+      if (mats.amb) kit.add('amb', ambLine(ts.map((t) => sp(t).addScaledVector(nrm(t), -0.004).setX(sd * (hw(t) + 0.0015))), v3(0, 0, 0).set(0, 1, 0), 0.008));
     }
     // a frame on the spine at t: x across, y up the spine (against its tangent), z out of its face
     const onSpine = (t: number, lift: number, x = 0) => { const n = nrm(t), d = tan(t).negate(); return new THREE.Matrix4().makeBasis(v3(1, 0, 0), d, n).setPosition(sp(t).setX(x).addScaledVector(n, lift)); };
@@ -930,6 +928,38 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       rail.push(v3(sd * (edgeX(zBack) - 0.018), body.top(zBack, edgeX(zBack)) - 0.05, zBack));
       kit.add('head', tubeGeo(rail, () => 0.017, high ? 10 : 6));
     }
+    // the hypercar's roof rail, roof console and rear-view mirror (the polish round, 2026-11-24, the owner: "no roof rail
+    // or mirror", the open-top look; his interior.png has a dark roof with a slim lit console and a frameless mirror under
+    // it). Its canopy's glass runs on over the driver's head, so from the seat the sky filled the frame's top. A padded
+    // rail crosses under the glass 9 cm ahead of the eye (from the iPhone's portrait seat it shows across the frame's top,
+    // about 20-23 degrees up, in the sky, clear of the road), the roof behind it lined; a slim console runs back from it
+    // down the middle with two ice lines, and the frameless mirror hangs from its front on a short stem, at the car's
+    // middle: from the seat that is about 70 degrees right of the eye, out of the windscreen's sight line (and of the
+    // portrait frame). No live reflection (the environment's, dimmed, as the other cars' without one): it costs no
+    // extra scene render
+    if (hyper) {
+      // (pressed close under the glass, 1.3 cm: the canopy is only 5-7 cm over the driver's eye there, and a rail and
+      // lining hung 2.4 cm under it, as the headliner is, crossed the view a few degrees over the horizon)
+      const zr = -0.195, xr = (z: number) => edgeX(z) - 0.02, ry = (z: number, x: number) => body.top(z, Math.abs(x)) - 0.011;
+      const rail: V3[] = range(-1, 1, high ? 24 : 14).map((s) => { const x = s * xr(zr); return v3(x, ry(zr, x) - 0.01, zr); });
+      kit.add('head', tubeGeo(rail, () => 0.016, high ? 10 : 6, { rb: () => 0.008, up: v3(0, 0, -1) }));
+      // the lined roof from the rail back to the headliner (its start, 2.5 cm behind the glass's top)
+      const zh = wsXZ(0, 1)[1] + 0.025, rows: V3[][] = [];
+      if (zr < zh - 0.02) {
+        for (const z of range(zr, zh, 6)) rows.push(range(-1, 1, high ? 16 : 10).map((s) => { const x = s * (xr(z) + 0.008); return v3(x, ry(z, x) - 0.002, z); }));
+        kit.add('head', gridGeo(rows, { flip: true }));
+      }
+      // the console: 9 cm wide, 2.2 cm deep, from the rail back to 10 cm behind the eye, its two ice lines along its foot
+      const cz = range(zr + 0.01, 0.0, 8), cw = 0.045;
+      kit.add('head', loftZ(cz, (z) => { const y = ry(z, 0); return [[-cw, y], [-cw + 0.006, y - 0.018], [-cw + 0.016, y - 0.022], [cw - 0.016, y - 0.022], [cw - 0.006, y - 0.018], [cw, y]]; }, false));
+      if (mats.amb) for (const sd of [-1, 1]) kit.add('amb', ambLine(cz.map((z) => v3(sd * (cw - 0.003), ry(z, 0) - 0.02, z)), v3(1, 0.4 * sd, 0).normalize(), 0.006));
+      // the frameless mirror: a slim gloss-black back with a polished edge, its glass facing the driver, on a stem
+      const mb = v3(0, ry(zr + 0.04, 0) - 0.055, zr + 0.03), nrmM = eye.clone().sub(mb).normalize().add(v3(0, 0, 1)).normalize();
+      const look = new THREE.Object3D(); look.position.copy(mb); look.lookAt(mb.clone().add(nrmM)); look.updateMatrix();
+      const back = extrude(roundRect(0.22, 0.058, 0.026), 0.012, 0.003, 8); back.translate(0, 0, -0.013); back.applyMatrix4(look.matrix); kit.add('gloss', back, null, 0.05);
+      const gl = new THREE.ShapeGeometry(roundRect(0.214, 0.052, 0.023), 6); gl.translate(0, 0, 0.0005); gl.applyMatrix4(look.matrix); kit.add('mirrorDim', gl, null, 0.2);
+      const stem = new THREE.CylinderGeometry(0.006, 0.007, 1, 10); stem.applyMatrix4(between(v3(0, ry(zr + 0.04, 0) - 0.02, zr + 0.04), mb.clone().addScaledVector(nrmM, -0.012))); kit.add('gloss', stem, null, 0.02);
+    }
   }
   // ---------------------------------------------------------------- side glass (inside) with frit
   // (the frit is the grid's first column, last column and next-to-top row; the hypercar's long, raked front edge
@@ -991,17 +1021,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the hypercar's ambient lines (after the owner's interior reference): one along the white panel's lower edge, and
     // one sweeping down the carbon card from its front top to its rear foot, under the armrest
     if (hyper && mats.amb) {
-      kit.add('amb', ambLine(zs.map((z) => v3(X(Math.min(xW(z) - 0.0015, 0.856 - 0.03 * arm(z) - 0.002)), yL(z) - 0.004, z)), v3(0, 1, 0), 0.018));
+      kit.add('amb', ambLine(zs.map((z) => v3(X(Math.min(xW(z) - 0.0015, 0.856 - 0.03 * arm(z) - 0.002)), yL(z) - 0.004, z)), v3(0, 1, 0), 0.01));
       const faceX = (y: number) => y < 0.36 ? lerp(0.866, 0.862, (y - 0.2) / 0.16) : lerp(0.862, 0.858, clamp((y - 0.36) / 0.14, 0, 1));
       const sw = range(-0.92, 0.3, 40).map((z) => { const t = (z + 0.92) / 1.22, y = 0.6 - 0.36 * (1 - (1 - t) ** 2); return v3(X(faceX(y) - 0.0016), y, z); });
-      kit.add('amb', ambLine(sw, v3(0, 0.8, 0.6).normalize(), 0.016));
+      kit.add('amb', ambLine(sw, v3(0, 0.8, 0.6).normalize(), 0.009));
       // the window switches: a gloss pad on the card's face ahead of the armrest, four brushed rockers on it (nearly
       // flush, 6 mm proud at most: the left forearm passes over them to the rim)
       const pad = new RoundedBoxGeometry(0.006, 0.05, 0.085, 2, 0.0025); pad.translate(X(0.8525), 0.53, -0.43); kit.add('gloss', pad, null, 0.05);
       // (2026-11-24: the pad floated on the bare black card: a white leather door-card panel behind it, the reference's
       // white flowing down the door, with an ice line along its foot)
       const back = new RoundedBoxGeometry(0.005, 0.13, 0.34, 3, 0.0024); back.translate(X(0.8558), 0.525, -0.4); kit.add('white', back, null, 0.08);
-      if (mats.amb) kit.add('amb', ambLine(range(-0.565, -0.235, 12).map((z) => v3(X(0.8528), 0.459, z)), v3(0, 1, 0), 0.012));
+      if (mats.amb) kit.add('amb', ambLine(range(-0.565, -0.235, 12).map((z) => v3(X(0.8528), 0.459, z)), v3(0, 1, 0), 0.008));
       for (const [dz, dy] of [[-0.02, 0.011], [0.02, 0.011], [-0.02, -0.011], [0.02, -0.011]]) {
         const r = new RoundedBoxGeometry(0.006, 0.014, 0.026, 2, 0.002); r.translate(X(0.849), 0.53 + dy, -0.43 + dz); kit.add('alu', r, null, 0.02);
       }
@@ -1152,16 +1182,26 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // each footwell's mat outlined at its front: its front edge across and the first 15 cm of its sides (35 cm until the
       // cockpit repair: the long side lines crossed the floor as wires)
       const fy = 0.122 + floorY;
+      // (the polish round, 2026-11-24: one soft rounded U each, 1.2 cm, its corners 7 cm round, in place of three
+      // 2 cm straight bars meeting at square corners, which read from the seat as big angular outlines)
       for (const [x0, x1] of [[-0.42, -0.125], [0.125, 0.42]]) {
-        kit.add('amb', ambLine(range(-0.95, -0.8, 4).map((z) => v3(x0, fy, z)), v3(1, 0, 0), 0.02));
-        kit.add('amb', ambLine(range(-0.95, -0.8, 4).map((z) => v3(x1, fy, z)), v3(1, 0, 0), 0.02));
-        kit.add('amb', ambLine(range(x0, x1, 8).map((x) => v3(x, fy, -0.95)), v3(0, 0, 1), 0.02));
+        const R = 0.07, zf = -0.95, zb = -0.8, path: V3[] = [];
+        for (const z of range(zb, zf + R, 3)) path.push(v3(x0, fy, z));
+        for (let k = 1; k < 8; k++) { const a = Math.PI / 2 * (k / 8); path.push(v3(x0 + R - R * Math.cos(a), fy, zf + R - R * Math.sin(a))); }
+        for (const x of range(x0 + R, x1 - R, 6)) path.push(v3(x, fy, zf));
+        for (let k = 1; k < 8; k++) { const a = Math.PI / 2 * (k / 8); path.push(v3(x1 - R + R * Math.sin(a), fy, zf + R - R * Math.cos(a))); }
+        for (const z of range(zf + R, zb, 3)) path.push(v3(x1, fy, z));
+        // (across: the path's own normal in the floor's plane, so the strip keeps its width round the corners)
+        const g = ambLine(path, v3(0, 0, 0), 0), pos = g.attributes.position as THREE.BufferAttribute;
+        path.forEach((p, i) => { const a = path[Math.max(0, i - 1)], b = path[Math.min(path.length - 1, i + 1)], t = b.clone().sub(a).normalize(), n = v3(-t.z, 0, t.x).multiplyScalar(0.006);
+          pos.setXYZ(i * 2, p.x - n.x, p.y, p.z - n.z); pos.setXYZ(i * 2 + 1, p.x + n.x, p.y, p.z + n.z); });
+        g.computeVertexNormals(); kit.add('amb', g);
       }
       // under the dash's lower edge, each side of the spine
       const [lz, ly] = LOWER[LOWER.length - 1];
-      for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.014));
+      for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.009));
       // the console's top edges, from the spine's foot back past the armrest
-      for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.012));
+      for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.008));
     }
     // the front wheels' wells in the footwells (the wheels sit back under the footwells' sides, car-body ARCHES): a
     // carpeted arch each side, its face 3.5 mm inboard of the well's liner (|x| 0.44 m after the build's keepInside), so
@@ -1288,9 +1328,16 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // never pressed onto the same depth: by the A-pillar's foot the door top's suede and the cap's carbon were both moved
     // to 1.2 cm under it and fought in a jagged comb along the glass's foot, seen from the seat and the wheel frame)
     const UNDER = new Set(['alc', 'white', 'tan', 'doorLow', 'amb', 'stitchDark', 'gloss', 'alu']);
+    // (the polish round, 2026-11-24: and no two keys are pressed onto one depth at all. Every key pressed to the same
+    // offset surface under the skin met its neighbour there coplanar: the dash top and the lower dash's carbon, the
+    // door top's suede and the white panel, which from the iPhone seat interleaved in a flickering comb along the cowl
+    // and the A-pillar's foot. Each key now has its own depth, 2.5 mm apart, the sill cap's carbon nearest under
+    // the glass and the door's layers further in behind it, an applied strip (amb) just in front of what it lies on;
+    // and a point outside goes in on a ramp (body.keepInside ramp), so a face across the skin is never torn in a step)
+    const STAG: Record<string, number> = { head: 0, dashTop: 1, carbon: 2, nappa: 3, plastic: 4, carpet: 5, liner: 6, band: 7, amb: 0, alc: 1, white: 2, tan: 3, doorLow: 4, stitchDark: 5, gloss: 6, alu: 7 };
     for (const [k, m] of Object.entries(built)) {
       if (/glass|frit|dust/i.test(k)) continue;
-      const under = UNDER.has(k), mm = under ? 0.04 : 0.03, cl = under ? 0.022 : 0.012;
+      const under = UNDER.has(k), st = 0.0025 * (STAG[k] ?? 8), mm = (under ? 0.04 : 0.03) + st, cl = (under ? 0.022 : 0.012) + st;
       const pa = m.geometry.attributes.position as THREE.BufferAttribute; let moved = false;
       for (let i = 0; i < pa.count; i++) {
         q.fromBufferAttribute(pa, i);
@@ -1300,9 +1347,70 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
         // (and out of the front wheels' wells, which the wheels' move back brought under the footwells' nappa; and a
         // point inside but within 1.2 cm of the skin goes 1.2 cm in, as a face between two such points crossed the
         // skin's flat facets: the dash's carbon and the headliner's edges along the shoulder and the pillars' feet)
-        if (body.keepInside(q, mm, { wells: true, clear: cl })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
+        if (body.keepInside(q, mm, { wells: true, clear: cl, ramp: 0.02 })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
       }
       if (moved) { pa.needsUpdate = true; m.geometry.computeBoundingSphere(); }
+    }
+    // the corner shroud (the polish round, 2026-11-24, the owner's v29 iPhone frame): at the A-pillar's foot the dash's
+    // end, its cheek, the door's front ends (the door top's suede, the white panel, the sill cap's carbon) and the
+    // pillar's foot all met within a few centimetres of the skin, each cut off on its own line, and from the seat they
+    // read as a cluster of dark stepped shapes against the hump's white seen through the side glass, crawling as the
+    // head moved. One shaped panel in the dash top's suede now closes the corner over them: it stands on the dash top
+    // (found by casting down onto the built dash), rolls up to the windscreen's foot, the pillar's foot and the side
+    // glass's foot, and tapers out along the door top, so the driver sees one clean edge where the glass meets the cabin.
+    if (built.dashTop) {
+      const rc = new THREE.Raycaster(), dn = v3(0, -1, 0);
+      built.dashTop.updateMatrixWorld(true);
+      const inv = built.dashTop.matrixWorld.clone().invert();
+      const dashY = (x: number, z: number, fall: number) => {
+        rc.set(v3(x, 1.2, z).applyMatrix4(built.dashTop.matrixWorld), dn.clone().transformDirection(built.dashTop.matrixWorld));
+        const h = rc.intersectObject(built.dashTop, false)[0];
+        return h ? h.point.applyMatrix4(inv).y : fall;
+      };
+      const parts: THREE.BufferGeometry[] = [];
+      const NV = high ? 18 : 12, NU = high ? 8 : 6, ZR = -0.62;
+      const sgY = (z: number) => lerp(SG.fb[1], SG.rb[1], clamp((z - SG.fb[0]) / (SG.rb[0] - SG.fb[0]), 0, 1));
+      for (const sd of [-1, 1] as const) {
+        const cw = wsPoint(sd, 0), cs = sgPoint(0, 0, sd), zc = cw.z + 0.012, xIn0 = 0.3, zIn0 = glassBase(sd * xIn0)[0] + 0.008;
+        // the outer edge: up the pillar's foot from the windscreen's corner to the side glass's front-bottom corner, then
+        // along the side glass's foot, 8 mm inside the flank and 1.5 mm under the glass's lower edge (behind its frit)
+        const outer = (v: number) => {
+          const z = lerp(zc, ZR, v);
+          if (z < cs.z) { const t = (z - zc) / (cs.z - zc); return v3(lerp(Math.abs(cw.x) - 0.014, Math.abs(cs.x) - 0.01, t), lerp(cw.y - 0.006, sgY(cs.z) - 0.0015, t), z); }
+          return v3(body.flankX(z, sgY(z) - 0.0015) - 0.01, sgY(z) - 0.0015, z);
+        };
+        // the inner edge: on the dash top, 37 cm out at the windscreen's foot, swinging out to meet the outer edge as a
+        // 2.5 cm tongue over the door top at the rear
+        const inner = (v: number) => {
+          const o = outer(v), z = lerp(zIn0, ZR, v), w = lerp(Math.abs(o.x) - xIn0, 0.025, sstep(0.45, 1, v));
+          return [Math.abs(o.x) - w, z] as [number, number];
+        };
+        const rows: V3[][] = [];
+        for (let i = 0; i <= NV; i++) {
+          const v = i / NV, o = outer(v), [xi, zi] = inner(v);
+          const yi = dashY(sd * xi, zi, o.y - 0.02);
+          const r: V3[] = [];
+          // a skirt 6 mm down into the dash, then the panel 5 mm proud of it rolling up to the glass's foot
+          r.push(v3(sd * xi, yi - 0.006, zi));
+          for (let j = 0; j <= NU; j++) {
+            const u = j / NU, s = sstep(0, 1, u);
+            const x = lerp(xi, Math.abs(o.x), u), z = lerp(zi, o.z, u);
+            const y = lerp(yi + 0.005, o.y, Math.pow(s, 1.5));
+            r.push(v3(sd * x, y, z));
+          }
+          rows.push(r);
+        }
+        // (kept 6-8 mm under the skin like the rest of the cabin: ahead of the side glass its outer edge, set by the
+        // glass's foot, stood 4 mm over the valley between the canopy and the hump, on the suite's front-left skin check)
+        for (const r of rows) for (const p of r) body.keepInside(p, 0.008, { clear: 0.006, ramp: 0.02, wells: true });
+        parts.push(gridGeo(rows, { flip: sd < 0 }));
+      }
+      const g = mergeGeometries(parts, false);
+      if (g) {
+        g.computeVertexNormals(); boxUV(g, 0.1); bakeAO(g, kit.ao);
+        const sm = new THREE.Mesh(g, mats.dashTop); sm.name = 'cornerShroud'; sm.castShadow = false; sm.receiveShadow = true;
+        group.add(sm); built.cornerShroud = sm;
+      }
     }
   }
   // (the luxury wheel's rim carbon: the same weave with a calmer reflection, so its top and bottom stay dark at night)

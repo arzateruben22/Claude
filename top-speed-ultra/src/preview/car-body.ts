@@ -176,17 +176,22 @@ function makeBody(P: ShapeParams) {
     // in flat facets that cut inside its curve and a face between two points just inside it can cross them; wells: a
     // point in a wheel's well (outboard of its liner, inside its arch's circle, or anywhere in its span below the axle,
     // where the liner stops at the sill) goes inboard of the liner)
-    keepInside(p: THREE.Vector3, m: number, o: { clear?: boolean | number; wells?: boolean } = {}) {
+    // ramp (the cockpit's pass, 2026-11-24 polish round): a point outside goes in by c plus (m - c) times how far out it
+    // was over ramp metres, so the depth it lands at is continuous across the skin. Without it a point just outside went
+    // to m and its neighbour just inside to c, a step of m - c between two vertices of one face: from the iPhone seat the
+    // dash's and the door's edges by the A-pillar's foot read as stair-stepped shards that crawled as the head moved.
+    keepInside(p: THREE.Vector3, m: number, o: { clear?: boolean | number; wells?: boolean; ramp?: number } = {}) {
       let moved = false;
       const s = Math.sign(p.x) || 1, z = p.z, Ys = shoulderY(z), c = o.clear === true ? m : o.clear || 0;
+      const outK = (out: number) => o.ramp ? c + (m - c) * clamp(out / o.ramp, 0, 1) : m;
       if (o.wells) for (const A of ARCHES) {
         const d = Math.hypot(z - A.z, p.y - A.yc), inWell = d < A.R + m || (p.y < A.yc && Math.abs(z - A.z) < A.R + m);
         if (Math.abs(p.x) > 0.47 - m && inWell) { p.x = s * (0.47 - m); moved = true; }
       }
-      if (p.y < Ys) { const w = body.side(z, p.y), a = Math.abs(p.x); if (a > w - c) { p.x = s * Math.max(0, w - (a > w ? m : c)); moved = true; } }
+      if (p.y < Ys) { const w = body.side(z, p.y), a = Math.abs(p.x); if (a > w - c) { p.x = s * Math.max(0, w - (a > w ? outK(a - w) : c)); moved = true; } }
       const a = Math.abs(p.x), t = body.top(z, a);
       if (p.y <= t - c) return moved;
-      const k = p.y > t ? m : c, n = body.topNormal(p.x, z);
+      const k = p.y > t ? outK(p.y - t) : c, n = body.topNormal(p.x, z);
       if (Math.abs(n.x) > n.y && p.y >= Ys) p.x = s * Math.max(0, body.flankX(z, p.y) - k);
       else p.y = t - k;
       return true;
@@ -721,19 +726,22 @@ function makeBody(P: ShapeParams) {
       for (let j = 0; j < k; j++) r.push(P2(a0, b1 - (b1 - b0) * j / k));
       return r;
     };
-    kit.add(frameKey, gridGeo([ring(0.016, 0.0015), ring(0.006, 0.0045), ring(0, 0.0045), ring(0, 0.002)], { closeU: true, flip: true }), null, 0.06);
+    // (the hypercar's frame in 'louvreFrame', its blades and rib in 'louvre': both a step nearer than the well, car.ts)
+    kit.add(sk ? 'louvreFrame' : frameKey, gridGeo([ring(0.016, 0.0015), ring(0.006, 0.0045), ring(0, 0.0045), ring(0, 0.002)], { closeU: true, flip: true }), null, 0.06);
     // blades across x, leaning back, their tops just under the frame's lip
+    // (the hypercar's, the polish round: horizontal louvres that rise toward the rear, front edge 2 mm and rear edge
+    // 8 mm over the well, so their faces turn up toward the driver and the front and read as bars, not edge-on dots)
     const nb = tf === 1 ? 8 : 16;
     for (let b = 0; b < n; b++) {
       const z = z0 + (z1 - z0) * ((b + 0.5) / n), r0: V3[] = [], r1: V3[] = [];
-      for (let j = 0; j <= nb; j++) { const x = X(x0 + 0.004 + (x1 - x0 - 0.008) * (j / nb), z); r0.push(v3(x, Y(x, z) + 0.004, z - 0.012)); r1.push(v3(x, Y(x, z) + 0.002, z + 0.016)); }
-      kit.add(sk ? 'carbon' : slatKey, gridGeo([r0, r1], { flip: false }), null, sk ? 0.4 : 0.2);
+      for (let j = 0; j <= nb; j++) { const x = X(x0 + 0.004 + (x1 - x0 - 0.008) * (j / nb), z); r0.push(v3(x, Y(x, z) + (sk ? 0.003 : 0.004), z - (sk ? 0.018 : 0.012))); r1.push(v3(x, Y(x, z) + (sk ? 0.0085 : 0.002), z + (sk ? 0.02 : 0.016))); }
+      kit.add(sk ? 'louvre' : slatKey, gridGeo([r0, r1], { flip: false }), null, sk ? 0.4 : 0.2);
     }
     if (sk) {
       // the centre rib, front to back over the slats
       const r0: V3[] = [], r1: V3[] = [];
-      for (let i = 0; i <= 8; i++) { const z = z0 + (z1 - z0) * (i / 8); r0.push(v3(xm - 0.008, Y(xm, z) + 0.0045, z)); r1.push(v3(xm + 0.008, Y(xm, z) + 0.0045, z)); }
-      kit.add('carbon', gridGeo([r0, r1], { flip: true }), null, 0.4);
+      for (let i = 0; i <= 8; i++) { const z = z0 + (z1 - z0) * (i / 8); r0.push(v3(xm - 0.008, Y(xm, z) + 0.009, z)); r1.push(v3(xm + 0.008, Y(xm, z) + 0.009, z)); }
+      kit.add('louvreFrame', gridGeo([r0, r1], { flip: true }), null, 0.4);
     }
   }
 
@@ -762,12 +770,15 @@ function makeBody(P: ShapeParams) {
       for (let j = 0; j < kv; j++) r.push(at(a0, b1 - (b1 - b0) * (j / kv), lift));
       return r;
     };
-    kit.add(frameKey, gridGeo([ring(0.025, 0.002), ring(0.012, 0.0055), ring(0, 0.0055), ring(0, 0.003)], { closeU: true, flip: !fl }), null, 0.06);
+    const sk = slatKey === 'slat';
+    kit.add(sk ? 'louvreFrame' : frameKey, gridGeo([ring(0.025, 0.002), ring(0.012, 0.0055), ring(0, 0.0055), ring(0, 0.003)], { closeU: true, flip: !fl }), null, 0.06);
     // blades across the vent, leaning back
+    // (the hypercar's in 'louvre', a step nearer than the well: they had the well's own offset, 0.5-2.5 mm over it,
+    // and from the seat the two interleaved)
     for (let b = 0; b < n; b++) {
       const v = (b + 0.5) / n, r0: V3[] = [], r1: V3[] = [];
-      for (let j = 0; j <= 6; j++) { const u = 0.04 + 0.92 * (j / 6); r0.push(at(u, v - 0.018, 0.0055)); r1.push(at(u, v + 0.03, 0.0035)); }
-      kit.add(slatKey, gridGeo([r0, r1], { flip: fl }), null, 0.2);
+      for (let j = 0; j <= 6; j++) { const u = 0.04 + 0.92 * (j / 6); r0.push(at(u, v - 0.018, 0.0055)); r1.push(at(u, v + 0.03, sk ? 0.0045 : 0.0035)); }
+      kit.add(sk ? 'louvre' : slatKey, gridGeo([r0, r1], { flip: fl }), null, 0.2);
     }
   }
 
@@ -1217,7 +1228,7 @@ function makeBody(P: ShapeParams) {
         const wrapPt = (sd: number, k: number) => {
           const t = k / nw, y = ye - kick * Math.pow(t, 1.4), z = ZR - wrap * Math.pow(t, 2.2), x = body.side(z, y), e = 0.0005;
           const dz = (body.side(z + e, y) - body.side(z - e, y)) / (2 * e);
-          return { p: v3(sd * (x + 0.0025), y, z), n: v3(sd, 0, -dz).normalize() };
+          return { p: v3(sd * (x + 0.0045), y, z), n: v3(sd, 0, -dz).normalize() };   // (4.5 mm proud since the blades grew to 38 mm: the taller strip's foot met the skin's facets in a ragged edge)
         };
         for (let k = nw; k >= 0; k--) path.push(wrapPt(-1, k));
         for (let k = 0; k <= 32; k++) { const x = -hw + 2 * hw * (k / 32); path.push({ p: v3(x, barY(x) - 0.008 * sstep(hw - 0.06, hw, Math.abs(x)), ZR + 0.005), n: v3(0, 0, 1) }); }
