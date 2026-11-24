@@ -10065,3 +10065,21 @@ left of the wheel (both present since v27); the owner shipped it as a step; the 
 Sheets (reference | v27 | before | after) were sent to the owner. Publish note: the artifact viewer warns the page
 offers a file through a plain download link that viewers can't use (pre-existing; check the share card's save
 before launch).
+
+### 2026-11-24 (~5:45 AM PT): v29 published to the main link: the owner's UI batch and the hypercar shard fix
+
+Branch claude/tender-fermat-sk9rby at dfb2d40 = v28 + claude/ui-batch (Free Drive traffic picker removed, Light
+default; the garage character card; the Vehicles carousel with live and cached renders of the real cars; the Paint
+tab's live car; the handbrake on BRAKE with the owner's emblem, slide up and hold to drift; View on phones; the FOV
+slider removed, a fixed +13 with the speed widening capped at the old +10 flat out; ABS | TCS off the HUD, ABS always
+on, TCS following handling) + claude/hyper-shards (root cause: canopyX found the fender humps; new body.flankX; the
+windscreen opening cut on the glass's curved foot; the dash squeezed into the canopy; the sharper faceted hub emblem
+and chrome bezel). Their own reports are in the handoff and LANE_STATE_COCKPIT.md.
+Checks on the merged build: tsc clean, build OK; `--only=render,phone`: 55/57. Failures: "sleeves from the seat on a
+phone" (pre-existing since v27); "the Founder Edition's lights wake on the start line" (9, 9, 9: the sweep finished
+inside one slow frame on a loaded machine); re-run with the check before it: PASS (dark for 3 frames, then 0.06 to
+1.07 over 12 frames), and an in-game probe showed the sweep rising frame by frame. The UI branch's own runs: the
+phone checks it touched 7/7, progression 15/15, economy groups pass; two modes end-card checks time out the same way
+on the v28 base in this environment. Full suite still owed before launch.
+Left (pre-launch list): small dark stepped shapes at the left A-pillar corner; roof rail and mirror; softer ambient
+strips; bonnet louvres; thicker tail blades; tests/retrohud-frames.mjs still targets the removed .hb-round.
