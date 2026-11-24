@@ -3135,7 +3135,8 @@ await group('progression', async (use) => {
   // locked car shows the miles that open it), the Paint tab shows the car on the stage and repaints it live, and the
   // character row is a card (the label on its own line, 44 px or more)
   await check('garage: the Vehicles carousel (centred car on the showroom stage, arrows and keys, n of m labels, locked cars show their miles), the Paint tab repaints the car live, the character card', async () => {
-    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: false }); });
+    // (the GT, in its factory paint: the checks before may leave another car chosen)
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: false, paints: {} }); g.profile.p.car = 'rossini-gt'; g.applyCarChoice(); });
     await page.locator('.mp-carline').click();
     await page.waitForSelector('.panel.profile .car-rail .gcell.car');
     const read = () => game(page, () => {
@@ -3178,12 +3179,15 @@ await group('progression', async (use) => {
     expect(r3.centred !== r2.centred, `ArrowRight: ${r2.centred} → ${r3.centred}`);
     // the Paint tab: the car on the stage, repainted live by a swatch (the stage's paint follows the pick)
     await page.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
-    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 500 });
+    await page.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 600000, polling: 500 })
+      .catch(async () => { throw new Error(`the Paint tab's stage: ${await game(page, () => JSON.stringify({ show: window.__game.revealShow, rv: window.__game.revealState, q: window.__game.showroomQueue, canvas: !!document.querySelector('.paint-stage canvas') }))}`); });
     const p0 = await game(page, () => ({ show: window.__game.revealShow, frames: window.__game.revealState.frames }));
     const free = page.locator('.paint-chip:not(.locked):not(.on)').first();
     const pickName = (await free.locator('b').textContent()) ?? '';
     await free.click();
-    await page.waitForFunction((a) => window.__game.revealShow && window.__game.revealShow.paint !== a.paint && window.__game.revealShow.shown > a.shown, { paint: p0.show.paint, shown: p0.show.shown }, { timeout: 900000, polling: 250 });
+    const rs = () => game(page, () => JSON.stringify({ show: window.__game.revealShow, rv: window.__game.revealState, q: window.__game.showroomQueue, on: document.querySelector('.paint-chip.on b')?.textContent }));
+    await page.waitForFunction((was) => window.__game.revealShow && window.__game.revealShow.paint !== was, p0.show.paint, { timeout: 120000, polling: 250 }).catch(async () => { throw new Error(`the pick did not reach the stage: ${await rs()}`); });
+    await page.waitForFunction((n) => window.__game.revealShow.shown > n, p0.show.shown, { timeout: 600000, polling: 250 }).catch(async () => { throw new Error(`the stage did not draw the new paint: ${await rs()}`); });
     const p1 = await game(page, () => ({ show: window.__game.revealShow, built: window.__game.revealState.built, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').paints }));
     await page.screenshot({ path: path.join(OUT, 'garage-paint-1280.png') });
     expect(p0.show.car === r0.driving && p1.show.car === r0.driving && p1.show.paint !== p0.show.paint && p1.show.shown > p0.show.shown, `the Paint tab's stage: ${JSON.stringify({ p0, p1 })}`);
@@ -3198,6 +3202,7 @@ await group('progression', async (use) => {
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
   await check('the hypercar\'s garage card: the reveal stage plays once, keeps its last frame, Replay plays it again; choosing the car wakes its lights; reduced motion shows it still', async () => {
+    if (await page.locator('.panel.profile').count()) await page.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click().catch(() => {});   // (a garage left open by a failed check before)
     await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, owner: true }); localStorage.removeItem('tsu.founderReveal'); });
     const lit = () => game(page, () => {
       const c = document.querySelector('.gcell.car.founder .fe-stage canvas'); if (!c) return null;
