@@ -956,6 +956,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // the window switches: a gloss pad on the card's face ahead of the armrest, four brushed rockers on it (nearly
       // flush, 6 mm proud at most: the left forearm passes over them to the rim)
       const pad = new RoundedBoxGeometry(0.006, 0.05, 0.085, 2, 0.0025); pad.translate(X(0.8525), 0.53, -0.43); kit.add('gloss', pad, null, 0.05);
+      // (2026-11-24: the pad floated on the bare black card: a white leather door-card panel behind it, the reference's
+      // white flowing down the door, with an ice line along its foot)
+      const back = new RoundedBoxGeometry(0.005, 0.13, 0.34, 3, 0.0024); back.translate(X(0.8558), 0.525, -0.4); kit.add('white', back, null, 0.08);
+      if (mats.amb) kit.add('amb', ambLine(range(-0.565, -0.235, 12).map((z) => v3(X(0.8528), 0.459, z)), v3(0, 1, 0), 0.012));
       for (const [dz, dy] of [[-0.02, 0.011], [0.02, 0.011], [-0.02, -0.011], [0.02, -0.011]]) {
         const r = new RoundedBoxGeometry(0.006, 0.014, 0.026, 2, 0.002); r.translate(X(0.849), 0.53 + dy, -0.43 + dz); kit.add('alu', r, null, 0.02);
       }
@@ -1238,8 +1242,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // sees inside the cabin moves. (The glass and frit lie on the skin itself; the plaque is placed on the door above)
   if (hyper) {
     const q = new THREE.Vector3();
+    // (2026-11-24: the door's layers under the sill cap go further in than the cap, so two layers near the skin are
+    // never pressed onto the same depth: by the A-pillar's foot the door top's suede and the cap's carbon were both moved
+    // to 1.2 cm under it and fought in a jagged comb along the glass's foot, seen from the seat and the wheel frame)
+    const UNDER = new Set(['alc', 'white', 'tan', 'doorLow', 'amb', 'stitchDark', 'gloss', 'alu']);
     for (const [k, m] of Object.entries(built)) {
       if (/glass|frit|dust/i.test(k)) continue;
+      const under = UNDER.has(k), mm = under ? 0.04 : 0.03, cl = under ? 0.022 : 0.012;
       const pa = m.geometry.attributes.position as THREE.BufferAttribute; let moved = false;
       for (let i = 0; i < pa.count; i++) {
         q.fromBufferAttribute(pa, i);
@@ -1249,7 +1258,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
         // (and out of the front wheels' wells, which the wheels' move back brought under the footwells' nappa; and a
         // point inside but within 1.2 cm of the skin goes 1.2 cm in, as a face between two such points crossed the
         // skin's flat facets: the dash's carbon and the headliner's edges along the shoulder and the pillars' feet)
-        if (body.keepInside(q, 0.03, { wells: true, clear: 0.012 })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
+        if (body.keepInside(q, mm, { wells: true, clear: cl })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
       }
       if (moved) { pa.needsUpdate = true; m.geometry.computeBoundingSphere(); }
     }

@@ -112,6 +112,7 @@ function makeBody(P: ShapeParams) {
     return base + h * Math.sqrt(1 - Math.pow(a / gb, P.P));
   };
 
+  const HUMPED = P.interior === 'hyper';
   const body = {
     // the shoulder: where the side meets the top (half-width and height, before the end drop)
     shoulder(z: number) { const Ys = shoulderY(z); return { Ws: sideRaw(z, Ys, Ys), Ys }; },
@@ -129,7 +130,24 @@ function makeBody(P: ShapeParams) {
       return y;
     },
     // half-width of the canopy flank at height y (for side glass), by bisection
+    // (the hypercar's, 2026-11-24: its fender humps rise again outboard of the canopy's foot (the top 0.75 m at |x| 0.5,
+    // 0.82 m at 0.75 by the A-pillar), so the top is not falling all the way out and a plain bisection could land on the
+    // hump's outer slope: the side glass's front-bottom corner, the A-pillar's foot, the door cards' fronts and the sill
+    // cap were set 0.3 m out on the humps, under the paint, and from the seat they fought it through the glass in black
+    // and white shards. Its canopy is the first crossing going outward, or, where the top never falls to y, the valley
+    // between the canopy and the hump)
     canopyX(z: number, y: number) {
+      // (only where the canopy stands over y at the middle: ahead of the glass, over the sunken bonnet, as before)
+      if (HUMPED && body.top(z, 0) > y) {
+        const Ws = body.shoulder(z).Ws, N = 64; let a0 = 0, t0 = body.top(z, 0);
+        for (let i = 1; i <= N; i++) {
+          const a1 = (Ws * i) / N, t1 = body.top(z, a1);
+          if (t1 <= y) { let lo = a0, hi = a1; for (let k = 0; k < 24; k++) { const m = (lo + hi) / 2; if (body.top(z, m) > y) lo = m; else hi = m; } return (lo + hi) / 2; }
+          if (t1 > t0 && a1 > 0.2) return a0;
+          a0 = a1; t0 = t1;
+        }
+        return Ws;
+      }
       let lo = 0, hi = body.shoulder(z).Ws;
       for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (body.top(z, m) > y) lo = m; else hi = m; }
       return (lo + hi) / 2;
