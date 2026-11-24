@@ -5,7 +5,11 @@ import { tfbm, tnoise, rng, clamp, smoothstep } from './util';
 
 let SIZE = 1024;
 let ANISO = 8;
+let LEAN = false;
 export function configureTextures(size: number, maxAniso: number) { SIZE = size; ANISO = Math.min(16, maxAniso); }
+// a phone (render/budget.ts): the building atlases without their normal and roughness maps (the facade keeps its
+// roughness, for its glass). Set once, before any atlas is painted.
+export function leanTextures(on: boolean) { LEAN = on; }
 
 type Ctx = CanvasRenderingContext2D;
 function mk(w: number, h: number): [HTMLCanvasElement, Ctx] {
@@ -437,7 +441,7 @@ const hashT = (a: number, b: number, s: number) => {
 // bird-stop ends at the eave, laminated composite in 0.14 m courses with random tab widths and shadow bands, and
 // shakes of random widths in 0.25 m courses with grain and gaps.
 export function stucco(detail: boolean): Atlas {
-  return once('stucco' + (detail ? 1 : 0), () => {
+  return once('stucco' + (detail ? 1 : 0) + (LEAN ? 'l' : ''), () => {
     const n = Math.min(SIZE, 1024), H = n * 2, k = n / 1024, S = STUCCO, ppm = 1024 / S.wallM;
     const [cs, L] = layers(n, H);
     // per pixel: the stucco everywhere, then the three roof rows over it
@@ -613,7 +617,7 @@ export function stucco(detail: boolean): Atlas {
     // the plain strip: stucco with the slab at the bottom (side walls, gables, soffits)
     { const [t, f] = S.plain; eave(t); base(f); }
     gutters(cs, n, k, [[S.win[1], S.up[0]], [S.up[1], S.front[0]], [S.front[1], S.plain[0]], [S.plain[1], S.roof0], ...[1, 2].map((i): [number, number] => [S.roof0 + i * S.roofPitch - 8, S.roof0 + i * S.roofPitch])]);
-    return finish(cs, n, H, 1.6, detail, detail);
+    return finish(cs, n, H, 1.6, detail && !LEAN, detail && !LEAN);
   });
 }
 
@@ -623,7 +627,7 @@ export function stucco(detail: boolean): Atlas {
 // 2 m, style 2 a Costa Mesa precast block with ribbon windows. The glass is the tinted part (alpha 255), so each
 // building's colour picks its glass (blue, green, silver, bronze); concrete and metal keep their own colour.
 export function facade(detail: boolean): Atlas {
-  return once('facade' + (detail ? 1 : 0), () => {
+  return once('facade' + (detail ? 1 : 0) + (LEAN ? 'l' : ''), () => {
     const n = Math.min(SIZE, 1024), H = n * 2, k = n / 1024, F = FACADE, ppm = 1024 / F.wallM;
     const [cs, L] = layers(n, H);
     // per pixel: warm precast concrete everywhere (the precast style and the coping keep it), roofing grit below
@@ -704,7 +708,7 @@ export function facade(detail: boolean): Atlas {
       lay(L, 0, a, 1024, 10, '#dfe1df'); lay(L, 0, a + 10, 1024, 3, 'rgba(0,0,0,0.3)');
     }
     gutters(cs, n, k, [[F.parapet + F.storey, F.pitch], [F.pitch + F.parapet + F.storey, 2 * F.pitch], [2 * F.pitch + F.parapet + F.storey, F.roof[0]], [F.roof[1], F.mech[0]], [F.mech[1], F.penthouse[0]]]);
-    return finish(cs, n, H, 1.2, detail, true);
+    return finish(cs, n, H, 1.2, detail && !LEAN, true);
   });
 }
 

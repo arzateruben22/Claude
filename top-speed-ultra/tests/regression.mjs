@@ -27,6 +27,7 @@ import { createServer } from 'node:http';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
 import { loadavg } from 'node:os';
+import { gpuMemInit } from './gpu-mem.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const GAME = process.env.GAME_HTML ? path.resolve(process.env.GAME_HTML) : path.join(ROOT, 'dist', 'top-speed-ultra.html');   // GAME_HTML: test another build
@@ -5739,6 +5740,53 @@ await group('phone', async (use) => {
     // the new HUD (2026-11-23): as upright, THRUST over GAS and the ability over the BRAKE / GAS gap
     expect(b.btn.b <= b.gas.t && b.abil.b <= b.brake.t && (b.abil.l + b.abil.r) / 2 >= (b.brake.l + b.brake.r) / 2 && (b.abil.l + b.abil.r) / 2 <= b.gas.l && Math.abs((b.btn.l + b.btn.r) / 2 - (b.gas.l + b.gas.r) / 2) < 8, `THRUST ${JSON.stringify(b.btn)} over GAS ${JSON.stringify(b.gas)}, the ability ${JSON.stringify(b.abil)} over the BRAKE ${JSON.stringify(b.brake)} / GAS gap`);
     return `${r.w} × ${r.h}: THRUST ${b.btn.l}-${b.btn.r} × ${b.btn.t}-${b.btn.b} over GAS (${b.gas.l}-${b.gas.r}), the ability ${b.abil.l}-${b.abil.r} × ${b.abil.t}-${b.abil.b} over the BRAKE / GAS gap; the strip in the plate at ${b.strip.t}-${b.strip.b}; the corner map ${b.corner.l}-${b.corner.r} × ${b.corner.t}-${b.corner.b}; no overlaps${r.overlaps.length ? ` (elsewhere: ${r.overlaps.join(', ')})` : ''}`;
+  });
+  // The owner's iPhone (v32, 2026-11-24): a switch to Ultra mid-drive killed the page ("keeps loading and refreshing"):
+  // iOS's per-page memory limit. The GPU memory a page asks for is counted from its WebGL calls (tests/gpu-mem.mjs: every
+  // texture level, renderbuffer times its samples, buffer, and the drawing buffer) on an iPhone-sized page, 393 x 852 at
+  // DPR 3: Retro Low, drive, pause, Ultra (as Settings sets it, behind the Preparing Ultra sheet), drive, pause, Retro
+  // Low, twice. The switch's peak must stay under PHONE_GPU_MB (render/budget.ts: about 300-400 MB of GPU memory is the
+  // heuristic ceiling on a 6 GB iPhone; v32 asked for 616 MB here, then 681 MB on the second switch) and Retro Low must
+  // come back to its first figure (v32 kept 206 MB more after each round trip: the post passes' targets and the
+  // textures only Ultra used). A model, not the phone's own number: the real check is the owner's iPhone.
+  await check('phone 393 × 852 @3: a mid-drive switch to Ultra stays under the GPU memory budget, and Retro Low returns to baseline', async () => {
+    const PHONE_GPU_MB = 350, BACK_MB = 12;
+    const ctx = await browser.newContext({ viewport: { width: 393, height: 852 }, isMobile: true, hasTouch: true, deviceScaleFactor: 3 });
+    await ctx.addInitScript(gpuMemInit);
+    const base = { quality: 'low', style: 'retro', qualityChosen: true, look: 'ultra', v: 6, adaptive: false, density: 'light', time: 'day', weather: 'clear', handling: HANDLING };
+    await ctx.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html')) { localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.bench', JSON.stringify({ v: 1, quality: 'low', scale: 1, target: 60, skipped: true, at: '2026-11-24', rounds: [] })); } }, base);
+    const pg = await ctx.newPage();
+    pg.setDefaultTimeout(600000);
+    const errs = []; let loads = 0;
+    pg.on('pageerror', (e) => errs.push(String(e)));
+    try {
+      await firstGoto(pg, pathToFileURL(GAME).href);
+      await pg.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS });
+      pg.on('load', () => loads++);                                // (a reload from here on would be the page dying)
+      await pg.getByRole('button', { name: 'Start run', exact: true }).click();
+      const idle = () => pg.waitForFunction(() => !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
+      await pg.waitForFunction(() => !window.__game.inAttract, null, { timeout: 900000 }); await idle();
+      await frames(pg, 3, 600000);
+      const snap = () => game(pg, () => ({ ...window.__gpuMem.snap(), pr: window.__game.renderer.getPixelRatio(), q: window.__game.settings.quality }));
+      const baseline = await snap(), rounds = [];
+      for (let k = 0; k < 2; k++) {
+        await game(pg, () => { window.__game.setPaused(true); window.__gpuMem.resetPeak(); window.__updateSettings({ quality: 'ultra', style: 'standard', adaptive: true, qualityChosen: true, look: 'hd' }); });
+        await pg.waitForSelector('.loadbar', { timeout: 30000 }).catch(() => {});
+        await idle();
+        await game(pg, () => { const g = window.__game; g.setPaused(false); g.fastForward(5, { throttle: 1 }); });
+        await frames(pg, 3, 600000);
+        const ultra = await snap();
+        await game(pg, () => { window.__game.setPaused(true); window.__updateSettings({ quality: 'low', style: 'retro', qualityChosen: true, look: 'ultra' }); });
+        await idle(); await game(pg, () => window.__game.setPaused(false)); await frames(pg, 3, 600000);
+        rounds.push({ ultra, back: await snap() });
+      }
+      const line = `Retro Low ${baseline.total} MB (pixel ratio ${baseline.pr}); ` + rounds.map((r, i) => `round ${i + 1}: switch peak ${r.ultra.peak} MB, Ultra ${r.ultra.total} MB at pixel ratio ${r.ultra.pr}, back on Retro Low ${r.back.total} MB`).join('; ') + `; budget ${PHONE_GPU_MB} MB`;
+      expect(errs.length === 0 && loads === 0, `page errors or reloads (${loads} reloads): ${errs.slice(0, 2).join(' | ')}`);
+      expect(rounds.every((r) => r.ultra.q === 'ultra' && r.back.q === 'low'), `presets: ${JSON.stringify(rounds.map((r) => [r.ultra.q, r.back.q]))}`);
+      expect(rounds.every((r) => r.ultra.peak <= PHONE_GPU_MB), `over the budget: ${line}`);
+      expect(rounds.every((r) => r.back.total <= baseline.total + BACK_MB), `Retro Low did not come back to baseline (+${BACK_MB} MB allowed): ${line}`);
+      return line;
+    } finally { await ctx.close(); }
   });
 });
 

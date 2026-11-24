@@ -438,6 +438,43 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   mid-drive (`prepareSwitch`: a "Preparing Ultra" sheet over the pause screen until it's ready), a preset switch on
   the menu (quietly), and each graphics-check round before it is measured (so the check measures frames, not
   compiles). `Game.warmLog` holds the last one (why, ms, programs before and after, textures, views).
+- **The phone's graphics-memory budget** (`render/budget.ts`, 2026-11-24; the owner's iPhone died on a mid-drive switch
+  to Ultra on v32: the page's process was killed, the Claude viewer showed "Something went wrong" and reloaded it).
+  iOS kills a page that crosses its memory limit with no event; the limit isn't published. The working heuristic: stay
+  well under about 1 GB for the whole page, so GPU allocations under about 300-400 MB on a 6 GB iPhone. What a page
+  asks of the GPU is counted by `tests/gpu-mem.mjs` (an init script that wraps the WebGL calls: texture levels, a whole
+  mip chain at generateMipmap, renderbuffers times their samples, buffers, deletes; plus the drawing buffer at the
+  canvas's size: colour + depth, x4 samples and a resolve when antialiased, and the compositor's copy). It is a model:
+  drivers round up and keep caches, and iOS also counts the canvases the textures were painted from.
+  - Measured at 393x852 CSS px, DPR 3 (SwiftShader, the model's MB), Retro Low -> drive -> Ultra mid-drive: v31 604 MB
+    peak, v32 616 MB (then 681 and 741 on the 2nd and 3rd round trips; Retro Low after each 353, 415, 474 MB from 146);
+    start on Ultra 644 MB. Where it went: the composer's two 4x MSAA half-float targets with depth (112 bytes a pixel at
+    786x1704: 150 MB), the 4096 shadow map (RGBA8 + depth: 128 MB), the canvas's own 4x MSAA buffer (51 MB, never seen
+    on High, Ultra or Retro), about 240 MB of textures, and Retro's targets still alive under Ultra's. The leaks:
+    `EffectComposer.dispose` frees only its two buffers (the bloom chain and GTAO's targets stayed), and every texture
+    only Ultra used stayed uploaded.
+  - What the game does now. `applyQuality` frees first (`disposeComposer`: every pass's own targets too; the Retro
+    pass's target when Retro goes), then builds; three allocates the new targets and textures at their first use, so
+    the two presets are never on the GPU together. After the rebuild it disposes every texture the old scene held (and
+    the last warm-up uploaded) that the new scene, as it will be drawn (after the style is attached), doesn't hold. The
+    composer's second buffer has no MSAA and no depth (`draw` swaps the buffers back after each frame so the scene is
+    always drawn into the first); GTAO's AO/denoise targets and the bloom chain have no depth buffers (desktop too).
+  - Phone caps (`deviceClass`: iOS, or a coarse pointer on a screen under 600 px; `?device=phone|desktop` forces it;
+    `capPreset` applies them to High and Ultra only, through `Game.preset()`): pixel ratio 2 -> 1.5; shadow map 4096 ->
+    2048; procedural textures at most 1024; the building atlases without normal and roughness maps (`leanTextures`);
+    and the canvas made without its own MSAA (`antialias: false`; standard Low and Medium, internal presets now, lose
+    their edge smoothing). Bloom isn't capped (UnrealBloomPass already works at half resolution). Settings' Ultra line
+    says so on a phone. After: Ultra mid-drive 299 MB peak (286 on later rounds), Retro Low back to 111-117 MB from 111;
+    start on Ultra 334 MB peak. The phone group's check holds the peak under 350 MB and the return within 12 MB.
+  - The phone's warm-up is staged: its yields wait for a display frame, textures go up four at a time, and only those of
+    visible parts (a View's hidden frame uploads what that View shows).
+  - The crash-loop breaker: on a phone a High or Ultra warm-up saves a mark (`tsu.gpuRisk`), cleared after 30 frames
+    over 15 s of drawing (`Game.riskTick`) or when the preset leaves for one without post. A page that boots and finds a
+    mark under 30 minutes old with High or Ultra saved starts on Retro Low (saved) and says why (App).
+  - A lost context is never answered with a reload. On a phone on High or Ultra (page visible: a background loss is the
+    app going away, not memory), or anywhere during a warm-up, `onContextLost` switches to Retro Low as Settings does
+    (`GameEvents.settings`), so the restore makes Retro's resources only; the "Graphics reset" panel (now on top of the
+    pause screen and the Preparing sheet) says why and stays until Resume.
 - **The loading bar is real progress now** (`GameEvents.loading(on, text, progress)`; App `.loadbar.det`): the prebuild
   counts chunks and tiles built against what is still wanted (`Roads.pending`, `Terrain.left`), the warm-up its
   textures, compile and views. Without a progress value the bar runs on its own as before.
