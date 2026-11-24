@@ -58,7 +58,7 @@ import * as DS from './car-dash';
 import { windscreenDust, badgeTex, plaqueTex, once } from './car-tex';
 import { plaqueNumber } from '../game/founder';
 import { CarMirror } from './car-mirror';
-import { sportRimAt, hyperRimAt, roundRimAt, addSportHub, addSportCentre, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
+import { sportRimAt, hyperRimAt, roundRimAt, addSportHub, addSportCentre, bladeMat, addSimpleCentre, addSportSpokes, addDefaultSpokes, addThumbPads, paddleTip, wheelDials, knurlMat, padMat, WheelDials } from './wheel-sport';
 
 export interface CockpitOptions { car?: CarId; paint?: number; quality?: 'phone' | 'high'; mirrors?: 'live' | 'env'; body?: boolean; stitch?: number; plaque?: string; edition?: Edition }
 // each car's trim: seat colour and kind, thread, the dash top's material, the fascia band, the wheel, the binnacle
@@ -219,7 +219,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     screenV: once('m.scrV2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.velaDash(q).tex, emissiveIntensity: 0.95, roughness: 0.12 })),
     // (the hypercar's portrait console screen and its climate knobs' faces: car-dash hyperConsole)
     consoleScreen: once('m.scrC2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.hyperConsole(q).tex, emissiveIntensity: 0.95, roughness: 0.12 })),
-    screenH: once('m.scrH2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.hyperDash(q).tex, emissiveIntensity: 1.0, roughness: 0.12 })),
+    screenH: once('m.scrH2' + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.hyperDash(q).tex, emissiveIntensity: 1.0, roughness: 0.3, envMapIntensity: 0.12 })),   // (a calm reflection: sunk under its hood, the sky's mirror image lit its face as a grey wedge)
     tach: once('m.tach' + q + P.brand, () => new THREE.MeshStandardMaterial({ map: tachT.map, emissiveMap: tachT.emissiveMap, emissive: 0xffffff, emissiveIntensity: 0.85, roughness: 0.55 })),
     screenL: once('m.scrL2' + T.disp + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.rossiniDash(T.disp, q).left.tex, emissiveIntensity: 0.9, roughness: 0.18 })),
     screenR: once('m.scrR2' + T.disp + q, () => new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: DS.rossiniDash(T.disp, q).right.tex, emissiveIntensity: 0.9, roughness: 0.18 })),
@@ -250,16 +250,26 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // a third of the sky's reflection, under a rougher coat, so it stays dark)
   if (hyper) {
     mats.white = M.leather(q, 0xd4d7dc, { tile: 0.12, sheen: 0.45 }); (mats.white as THREE.Material).side = THREE.DoubleSide;
-    mats.doorLow = M.carbon(q, 0.05, { tint: 0x80868f, env: 0.3, cc: 0.14 });
-    // the cabin's carbon (the spine, the lower dash, the sill caps, the plinth) the exterior's darker tinted weave: the
-    // untinted, fully metallic one lit pale grey in the sun, where the reference's carbon stays a dark grey weave
-    mats.carbon = ext.carbon; mats.band = ext.carbon;
+    // (the cockpit repair, 2026-11-23: the door card's carbon darker and both faces drawn: from the matched camera the
+    // left card's lower part faced away and was culled, and the road showed through it as a pale grey wedge)
+    mats.doorLow = M.carbon(q, 0.045, { tint: 0x4a4f56, env: 0.16, cc: 0.3, weave: 3 }); (mats.doorLow as THREE.Material).side = THREE.DoubleSide;
+    // the cabin's carbon (the spine, the lower dash, the sill caps, the plinth, the console): a dark twill, its weave
+    // reading in the light, a calm satin coat (the exterior's tinted weave read mid grey inside, where the reference's
+    // carbon stays a dark grey twill)
+    mats.carbon = M.carbon(q, 0.04, { tint: 0x5a6068, env: 0.22, cc: 0.22, weave: 3 }); mats.band = mats.carbon;
+    // (both faces: from the iPhone seat the sill cap's and the dash end's carbon at the left A-pillar's foot faced away
+    // and was culled, and the fender's paint behind showed through as torn pink and white shards)
+    (mats.carbon as THREE.Material).side = THREE.DoubleSide;
+    // the cabin's suede: a deep black Alcantara (the dash top and its hood, the door tops, the lip, the armrest)
+    mats.alc = M.alcantara(q, 0x1d1d20); (mats.alc as THREE.Material).side = THREE.DoubleSide; mats.dashTop = mats.alc;
   }
   // the sport wheels' Alcantara grips (a shade lighter than the dash's, so the grips and their stitching still read on
   // a phone at night)
   mats.alcW = M.alcantara(q, 0x353539, 0.05);
+  // (the hypercar's grips black leather since the owner's wheel.png, 2026-11-23: the mesh keeps its name 'alcW')
+  if (hyper) mats.alcW = M.leather(q, 0x262629, { tile: 0.07, worn: true, sheen: 0.4 });
   // the steering wheel's knurled rotary rings and its thumb pads (wheel-sport.ts); the dials' displays are added with the wheel
-  mats.swKnurl = knurlMat(q); mats.swPad = padMat(q);
+  mats.swKnurl = knurlMat(q); mats.swPad = padMat(q, hyper);
   // the wheel's centre (wheel-sport addSportCentre / addSimpleCentre): the cover in the trim (the GT soft-touch Nappa,
   // the Corsa and the Hypercar Alcantara), the machined bezel and cup, the gloss-carbon chevron, the accent (a ring
   // round the badge and the chevron's line: GT cognac, Corsa yellow, Hypercar ice blue, Brio its pale blue, Vela E its
@@ -269,6 +279,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.hubCarbon = M.carbon(q, 0.026, { env: 0.8, cc: 1 });
   mats.hubAccent = once('m.hubAccent' + T.accent, () => new THREE.MeshPhysicalMaterial({ color: T.accent, metalness: 0.55, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05, emissive: T.accent, emissiveIntensity: 0.16, name: 'hub-accent' }));
   mats.hubInsert = mats.hubBezel;
+  // the hypercar's hub: the owner's chrome blade emblem in place of the OC mark (owner, 2026-11-23: wheel.png, "use that
+  // as the new logo for the center of the wheel"), and its accent the lit ice strip under the hub
+  if (hyper) { mats.badgeHub = bladeMat(q); mats.hubAccent = once('m.hubAccentH', () => new THREE.MeshPhysicalMaterial({ color: T.accent, metalness: 0.2, roughness: 0.3, clearcoat: 1, emissive: T.accent, emissiveIntensity: 1.6, name: 'hub-accent' })); }
   // a dark machined ring between the badge's chrome bead and the accent ring, so the accent stands apart from a bright
   // badge (the Rossinis' yellow R: the review of 2026-11-12)
   mats.hubGap = once('m.hubGap', () => new THREE.MeshPhysicalMaterial({ color: 0x141518, metalness: 0.85, roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.1, name: 'hub-gap' }));
@@ -288,7 +301,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // the headliner, pillars and visors: one Alcantara per car (dark grey, grey, black, ivory)
   mats.head = M.alcantara(q, T.head, 0.08); (mats.head as THREE.Material).side = THREE.DoubleSide;
   // the hypercar's ambient line: its LED, dimmed to a cabin accent
-  if (hyper && P.led) { const led = o.edition === 'standard' ? STANDARD_LED : P.led; mats.amb = once('m.amb' + q + (o.edition === 'standard' ? '-std' : ''), () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide; return m; }); }
+  if (hyper && P.led) { const led = o.edition === 'standard' ? STANDARD_LED : P.led; mats.amb = once('m.amb' + q + (o.edition === 'standard' ? '-std' : ''), () => { const m = M.led(led.color, led.halo, q, led.edge).clone(); m.emissiveIntensity = q === 'high' ? 1.4 : 1.0; m.side = THREE.DoubleSide;
+    // (the cockpit repair, 2026-11-23: added light, not an opaque strip, so a strip 1.5-3 cm wide reads as a soft glow on
+    // the suede and carbon round a bright core, the owner's reference's ambient light, not a 4 mm wire; the texture's
+    // black edges add nothing)
+    m.color.set(0x000000); m.transparent = true; m.blending = THREE.AdditiveBlending; m.depthWrite = false; m.fog = false; m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -2;
+    return m; }); }
 
   // ambient occlusion inside: dark low down and under the dash, the headliner lit only by bounce
   const aoIn = (p: V3, n: V3) => {
@@ -354,9 +372,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     [[XW[0], ...xs.filter((x) => x > XW[0] && x < XW[1]), XW[1]], 'nappa'],
     [[XW[1], ...xs.filter((x) => x > XW[1])], 'white'],
   ] : [[xs, 'nappa']];
+  // (the cockpit repair: between the white ends the hypercar's lip is the dash top's suede rolling over, and its fascia
+  // under the ice line dark carbon twill, as the reference's)
   for (const [xx, k] of xsSeg) {
-    kit.add(k, loftX(xx, () => LIP, true));
-    kit.add(k, loftX(xx, () => FASCIA, true));
+    kit.add(hyper && k === 'nappa' ? 'alc' : k, loftX(xx, () => LIP, true));
+    kit.add(hyper && k === 'nappa' ? 'carbon' : k, loftX(xx, () => FASCIA, true));
   }
   kit.add(hyper ? 'carbon' : 'plastic', loftX(xs, () => LOWER, true));
   // dash ends against the doors
@@ -370,7 +390,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   {
     const rows: V3[][] = [];
     for (const x of range(-0.62, 0.62, 24)) { const [zb, yb] = glassBase(x); rows.push([v3(x, yb + 0.0025, zb + 0.03), v3(x, yb + 0.0035, zb + 0.048)]); }
-    kit.add('gloss', gridGeo(rows, { flip: true }), null, 0.1);
+    // (not the hypercar's, since the cockpit repair: its dash top's front row goes under the skin at the build's last
+    // step, the slot's strip did not follow it, and from the iPhone seat the two crossed in a black saw-tooth along the
+    // hood's edge)
+    if (!hyper) kit.add('gloss', gridGeo(rows, { flip: true }), null, 0.1);
     moved(0, sY, sZ, () => {
     for (const off of [-0.0035, 0.0035]) {
       const path = xs.map((x) => v3(x, 0.847 + off * 0.55, -0.69 - off * 0.83));
@@ -430,7 +453,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   };
   if (hyper && mats.amb) {
     const [lz, ly] = LIP[LIP.length - 1];
-    kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.004, lz + 0.0035)), v3(0, 1, 0), 0.005));
+    kit.add('amb', ambLine(range(-(D - 0.012), D - 0.012, 40).map((x) => v3(x, ly - 0.008, lz + 0.0035)), v3(0, 1, 0), 0.018));
     // (x 0.16: clear of the live driver display's right end, which reaches x 0.01 now that it is centred on the driver)
     const gm = mat(0.16, 0.87 + sY, -0.74 + sZ, -0.62), r = 0.046;
     kit.add('alu', latheGeo([[r - 0.002, 0.004], [r + 0.003, 0.009], [r + 0.008, 0.006], [r + 0.009, -0.03]], high ? 48 : 28, 'z', { flip: true, vScale: 0.05 }), gm);
@@ -457,7 +480,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     };
     const tan = (t: number) => sp(Math.min(1, t + 0.01)).sub(sp(Math.max(0, t - 0.01))).normalize();
     const nrm = (t: number) => { const d = tan(t); return v3(0, -d.z, d.y).multiplyScalar(d.y < 0 ? -1 : 1); };   // toward the driver and up
-    const hw = (t: number) => lerp(0.115, 0.082, sstep(0, 1, t));
+    // (the cockpit repair: flared at its top, 34 cm across under the lip, narrowing round the screen to the tunnel, as the
+    // reference's spine flows up into the dash)
+    const hw = (t: number) => lerp(0.17, 0.084, sstep(0, 0.62, t));
     const ts = range(0, 1, high ? 28 : 14), floor0 = 0.12 + floorY;
     // the face: a slight crown across, its edges rolling down into the side walls, which drop to the floor
     kit.add('carbon', gridGeo(ts.map((t) => {
@@ -468,14 +493,15 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     for (const sd of [-1, 1]) {
       // the side walls down to the floor, and the ice line along each edge
       kit.add('carbon', gridGeo(ts.map((t) => { const c = sp(t), w = hw(t); return [v3(sd * w, c.y - 0.03, c.z), v3(sd * w, floor0, c.z)]; }), { flip: sd < 0 }), null, 0.1);
-      if (mats.amb) kit.add('amb', ambLine(ts.map((t) => sp(t).addScaledVector(nrm(t), -0.004).setX(sd * (hw(t) + 0.0015))), v3(0, 0, 0).set(0, 1, 0), 0.004));
+      if (mats.amb) kit.add('amb', ambLine(ts.map((t) => sp(t).addScaledVector(nrm(t), -0.004).setX(sd * (hw(t) + 0.0015))), v3(0, 0, 0).set(0, 1, 0), 0.012));
     }
     // a frame on the spine at t: x across, y up the spine (against its tangent), z out of its face
     const onSpine = (t: number, lift: number, x = 0) => { const n = nrm(t), d = tan(t).negate(); return new THREE.Matrix4().makeBasis(v3(1, 0, 0), d, n).setPosition(sp(t).setX(x).addScaledVector(n, lift)); };
     // the three knobs (their faces in the console canvas's strip, CONSOLE_SPLIT below the screen)
     const KS = DS.CONSOLE_SPLIT;
-    [-0.065, 0, 0.065].forEach((x, i) => {
-      const m = onSpine(0.12, 0.006, x);
+    // (the cockpit repair: a fifth larger and further apart, chrome-rimmed, in a row across the spine's flared top)
+    [-0.076, 0, 0.076].forEach((x, i) => {
+      const m = onSpine(0.12, 0.006, x); m.multiply(new THREE.Matrix4().makeScale(1.2, 1.2, 1.2));
       kit.add('alu', latheGeo([[0.0255, -0.004], [0.0265, 0.0], [0.0265, 0.017], [0.0245, 0.02], [0.021, 0.02]], high ? 40 : 20, 'z', { flip: true, uRepeat: 36, vScale: 0.004 }), m);
       const f = new THREE.CircleGeometry(0.021, high ? 32 : 16), fu = f.attributes.uv as THREE.BufferAttribute;
       for (let k = 0; k < fu.count; k++) fu.setXY(k, (i + 0.5 + (fu.getX(k) - 0.5) * 128 / 171) / 3, (1 - KS) * fu.getY(k));
@@ -550,13 +576,16 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const ss = range(-1.12, 2.45, high ? 64 : 32);
       const hood = gridGeo(ss.map((s) => sec(s).map(([y, z]) => v3(s * w / 2, y, z))), { flip: true });
       kit.add('dashTop', hood, vM); ghost.push(hood.clone().applyMatrix4(vM));
+      // (the cockpit repair: a suede cheek closing the screen's right end, under the hood's sweep, so the cluster sits
+      // sunk in the hood at both ends, not a gloss slab's corner standing out over the dash)
+      const cheek = new RoundedBoxGeometry(0.016, h + 0.022, 0.06, 2, 0.006); cheek.translate(w / 2 + 0.01, 0.008, 0.012 + BEND * 1.1); kit.add('dashTop', cheek, vM);
       // stitching along the brow, and the ice line under its lip, across the screen
       const sb = range(-1.0, 1.0, high ? 40 : 20);
       for (const off of [-0.0035, 0.0035]) {
         const path = sb.map((s) => { const q = sec(s); return v3(s * w / 2, q[2][0] * 0.5 + q[3][0] * 0.5 + 0.0012, q[2][1] * 0.5 + q[3][1] * 0.5 + off); });
         kit.add('stitch', stitchRow(path, path.map(() => v3(0, 0, 1)), path.map(() => v3(0, 1, 0))), vM);
       }
-      if (mats.amb) kit.add('amb', ambLine(sb.map((s) => { const q = sec(s); return v3(s * w / 2, q[4][0] - 0.0005, q[4][1] - 0.006); }), v3(0, 0, 1), 0.004), vM);
+      if (mats.amb) kit.add('amb', ambLine(sb.map((s) => { const q = sec(s); return v3(s * w / 2, q[4][0] - 0.0005, q[4][1] - 0.008); }), v3(0, 0, 1), 0.01), vM);
     } else {
     const bez = extrude(roundRect(0.64 * ds, 0.168 * ds, 0.018), 0.014, 0.003); bez.translate(0, 0, -0.0165); kit.add('gloss', bez, vM, 0.05);
     const scr = new THREE.PlaneGeometry(0.62 * ds, 0.15 * ds); const su = scr.attributes.uv as THREE.BufferAttribute;
@@ -652,8 +681,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       wk.add(key, sweepGeo(f.path, f.N, f.B, (i) => rimA(f.as[i]) * gr(i), (i) => rimB(f.as[i]) * gr(i), segs, { around: 0.13, flip: true }));
       return f;
     };
-    // (the hypercar's rim is Alcantara all round, as the owner's interior reference: its carbon is the lower spoke)
-    const rimTop = lux ? (hyper ? 'alcW' : 'carbon') : 'wheelNappa';
+    // (the hypercar's rim: carbon across the top and the bottom again, black leather grips with ice stitching, after the
+    // owner's wheel reference of 2026-11-23, owner-ref-2026-11-23/wheel.png, which replaces interior.png's suede rim)
+    const rimTop = lux ? 'carbon' : 'wheelNappa';
     const gripK = lux ? 'alcW' : sport ? (ws === 'gt' ? 'nappaPerf' : 'alcW') : ws === 'vela' ? 'wheelNappa' : 'nappaPerf';
     const spokeK = 'alu';
     // The grips run from 46 degrees below to 52 above each side, so a hand at spec GRIP (32 and 148 degrees, about
@@ -689,11 +719,17 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       led.rotateZ(hyper ? Math.atan2(at(a + 0.002).y - at(a - 0.002).y, at(a + 0.002).x - at(a - 0.002).x) - Math.PI : a - Math.PI / 2); led.translate(p.x - Math.cos(a) * 0.004, p.y - Math.sin(a) * 0.004, rimB(a) + 0.0006);
       wk.add(i < 4 ? 'led' : i < 7 ? 'ledA' : 'ledR', led, null, 0.02);
     }
+    // the hypercar's lit tab at the bottom of the rim, in a gloss bezel on the carbon's face (owner's wheel.png)
+    if (hyper && mats.amb) {
+      const a = -Math.PI / 2, p = at(a), z = rimB(a);
+      const bz = new RoundedBoxGeometry(0.046, 0.011, 0.004, 2, 0.0018); bz.translate(0, p.y + 0.003, z - 0.0012); wk.add('gloss', bz, null, 0.02);
+      const tab = new RoundedBoxGeometry(0.038, 0.0055, 0.002, 1, 0.0009); tab.translate(0, p.y + 0.003, z + 0.0008); wk.add('amb', tab, null, 0.02);
+    }
     // hub: the luxury wheel's slim sculpted hub (wheel-sport addSportHub) with its premium centre (addSportCentre: a
     // pillowed cover in the trim, a machined bezel, stitching, a carbon chevron, the badge in a raised machined cup with
     // a ring in the car's accent), the others' Nappa airbag cover with a simpler centre (addSimpleCentre; the default
     // sport wheel's a slimmer cover than the Brio's, with its brushed bars). The badge: R, V or the OC mark
-    if (lux) { addSportHub(wk, { high }); addSportCentre(wk, { high }); }
+    if (lux) { addSportHub(wk, { high }); addSportCentre(wk, { high, emblem: hyper ? 'blade' : undefined }); }
     else if (sport) {
       const hub = extrude(roundRect(0.154, 0.104, 0.034, 0, -0.004), 0.034, 0.012); hub.translate(0, 0, -0.036);
       wk.add('wheelNappa', hub);
@@ -712,6 +748,12 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // the luxury wheel's spokes, legs, widget sets and chin, its thumb pads, and its two live displays
       addSportSpokes(wk, { high, lower: hyper ? 'carbon' : undefined });
       addThumbPads(wk, 0.113, -0.006, -0.0012);
+      // (the cockpit repair, 2026-11-23: the hypercar's thumb pads each with a knurled roller wheel outboard, in a gloss
+      // slot, as the reference's button pads; no new material: the dials' knurl and the gloss)
+      if (hyper) for (const sd of [-1, 1]) {
+        const slot = new RoundedBoxGeometry(0.017, 0.02, 0.005, 2, 0.002); slot.translate(sd * 0.1505, -0.006, -0.0035); wk.add('gloss', slot, null, 0.05);
+        const roll = new THREE.CylinderGeometry(0.0062, 0.0062, 0.011, high ? 24 : 12); roll.rotateZ(Math.PI / 2); roll.translate(sd * 0.1505, -0.006, -0.0012); wk.add('swKnurl', roll, null, 0.05);
+      }
       dials = wheelDials(hyper ? 'hyper' : 'std', hyper ? 0x5eb8ff : T.accent, q);
       mats.swDialL = dials.left; mats.swDialR = dials.right;
     } else if (sport) {
@@ -756,18 +798,20 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       const p = extrude(s, 0.006, 0.0018, 16);
       // (the hypercar's a lighter silver and 38 % slimmer, as the owner's interior reference's: the full blades covered
       // the cluster's lower corners through the rim)
-      const PK = 1, PY = 0.028, PH = hyper ? 0.62 : 1;
+      // (the cockpit repair, 2026-11-23: the hypercar's set further out and swung up toward half past two and half past nine, so the brushed
+      // blades show inside the rim beside the cluster as the reference's, not hidden behind the spokes)
+      const PK = hyper ? 0.86 : 1, PY = hyper ? 0.02 : 0.028, PH = hyper ? 0.52 : 1, PX = hyper ? 0.075 : 0.045;
       p.applyMatrix4(new THREE.Matrix4().makeScale(sd < 0 ? -PK : PK, PK * PH, 1));
-      p.translate(sd * 0.045, PY, -0.052);
+      p.translate(sd * PX, PY, -0.052);
       const bu = p.attributes.uv as THREE.BufferAttribute, bp = p.attributes.position; for (let i = 0; i < bu.count; i++) bu.setXY(i, bp.getX(i) / 0.12, bp.getY(i) / 0.12);
-      const pm = wheelM.clone().multiply(mat(0, 0, 0, 0, 0, sd * 0.1));
+      const pm = wheelM.clone().multiply(mat(0, 0, 0, 0, 0, sd * (hyper ? 0.36 : 0.1)));
       // the sport wheel's: the whole blade brushed metal in a mid tone with a calm reflection (a bright, fully
       // reflective blade was the brightest thing inside the rim, seen through the wheel), and a brighter brushed pull
       // face at its outer end, toward the driver; the others' stay dark anodised
       // (the default sport wheel's: the same brushed blade, without the bright pull face)
       const sportP = T.wheelTier !== 'own';
       kit.add(sportP ? 'paddleW' : 'anod', p, pm);
-      if (T.wheelTier === 'luxury') { const tip = paddleTip(sd); tip.applyMatrix4(new THREE.Matrix4().makeScale(PK, PK * PH, 1)); tip.translate(sd * 0.045, PY, -0.052); kit.add('alu', tip, pm, 0.02); }
+      if (T.wheelTier === 'luxury') { const tip = paddleTip(sd); tip.applyMatrix4(new THREE.Matrix4().makeScale(PK, PK * PH, 1)); tip.translate(sd * PX, PY, -0.052); kit.add('alu', tip, pm, 0.02); }
     }
   }
 
@@ -887,7 +931,14 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     kit.add('tan', loftZ(zs, (z) => { const a = arm(z); return [[X(0.85 - 0.055 * a), 0.585], [X(0.85 - 0.068 * a), 0.618], [X(0.85 - 0.06 * a), 0.646], [X(0.856 - 0.03 * a), 0.664], [X(0.858), 0.676]]; }, flip));
     // (the hypercar's: a band of white leather, flowing back from the dash's white ends, over a carbon card, under a
     // dark Alcantara top: the owner's interior reference)
-    if (hyper) { kit.add('white', loftZ(zs, () => [[X(0.858), 0.676], [X(0.8595), 0.71], [X(0.86), 0.74]], flip)); kit.add('alc', loftZ(zs, () => [[X(0.86), 0.74], [X(0.858), 0.81]], flip)); }
+    // (the cockpit repair, 2026-11-23: the white is the door's upper panel, 10 cm tall and sculpted, 6 mm
+    // proud at its crown; toward the dash it sweeps down over the card, standing just proud of it, as the reference's
+    // white flows from the dash's end down into the door)
+    const yL = (z: number) => 0.676 - 0.1 * (1 - sstep(-0.9, -0.42, z)), xW = (z: number) => 0.858 - 0.013 * (1 - sstep(-0.9, -0.42, z));
+    if (hyper) {
+      kit.add('white', loftZ(zs, (z) => range(0, 1, 7).map((u) => [X(xW(z) * (1 - u) + 0.86 * u - 0.006 * Math.sin(Math.PI * u)), lerp(yL(z), 0.775, u)] as [number, number]), flip));
+      kit.add('alc', loftZ(zs, () => [[X(0.86), 0.775], [X(0.858), 0.81]], flip));
+    }
     else kit.add('alc', loftZ(zs, () => [[X(0.858), 0.676], [X(0.86), 0.74], [X(0.858), 0.81]], flip));
     if (!hyper) kit.add('nappa', loftZ(zs, (z) => { const ys = sill(z), gx = body.canopyX(z, ys + 0.012) - 0.008; return [[X(0.858), 0.81], [X(0.856), ys - 0.05], [X(0.845), ys - 0.012], [X(Math.min(0.84, gx + 0.006)), ys + 0.002], [X(gx - 0.002), ys + 0.006]]; }, flip));
     // stitches along the armrest's top edge
@@ -898,10 +949,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // the hypercar's ambient lines (after the owner's interior reference): one along the white panel's lower edge, and
     // one sweeping down the carbon card from its front top to its rear foot, under the armrest
     if (hyper && mats.amb) {
-      kit.add('amb', ambLine(zs.map((z) => v3(X(0.8565), 0.68, z)), v3(0, 1, 0), 0.005));
+      kit.add('amb', ambLine(zs.map((z) => v3(X(Math.min(xW(z) - 0.0015, 0.856 - 0.03 * arm(z) - 0.002)), yL(z) - 0.004, z)), v3(0, 1, 0), 0.018));
       const faceX = (y: number) => y < 0.36 ? lerp(0.866, 0.862, (y - 0.2) / 0.16) : lerp(0.862, 0.858, clamp((y - 0.36) / 0.14, 0, 1));
       const sw = range(-0.92, 0.3, 40).map((z) => { const t = (z + 0.92) / 1.22, y = 0.6 - 0.36 * (1 - (1 - t) ** 2); return v3(X(faceX(y) - 0.0016), y, z); });
-      kit.add('amb', ambLine(sw, v3(0, 0.8, 0.6).normalize(), 0.005));
+      kit.add('amb', ambLine(sw, v3(0, 0.8, 0.6).normalize(), 0.016));
       // the window switches: a gloss pad on the card's face ahead of the armrest, four brushed rockers on it (nearly
       // flush, 6 mm proud at most: the left forearm passes over them to the rim)
       const pad = new RoundedBoxGeometry(0.006, 0.05, 0.085, 2, 0.0025); pad.translate(X(0.8525), 0.53, -0.43); kit.add('gloss', pad, null, 0.05);
@@ -913,7 +964,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     if (!hyper) { const strip = new RoundedBoxGeometry(0.012, 0.022, 1.36, 2, 0.004); strip.translate(X(0.853), 0.8, -0.22); kit.add('carbon', strip); }
     // the pull strap: a loop of cognac leather, flat in section, its ends in small aluminium clamps
     // (the hypercar's lies a third as proud: at 5 cm off its card it hung inside the rim beside the left hand)
-    const pr = (x: number) => hyper ? 0.866 - (0.866 - x) * 0.35 : x;
+    const pr = (x: number) => hyper ? 0.862 - (0.866 - x) * 0.35 : x;   // (4 mm further in since the cockpit repair: over the white panel's crown)
     const sp = [v3(X(pr(0.852)), 0.71, -0.66), v3(X(pr(0.83)), 0.707, -0.635), v3(X(pr(0.818)), 0.703, -0.58), v3(X(pr(0.82)), 0.699, -0.5), v3(X(pr(0.85)), 0.695, -0.45)];
     kit.add('tan', tubeGeo(sp, () => 0.012, 8, { rb: () => 0.0028, up: v3(0, 1, 0) }));
     for (const e of [sp[0], sp[sp.length - 1]]) { const c = new RoundedBoxGeometry(0.014, 0.03, 0.022, 2, 0.004); c.translate(e.x - sd * 0.004, e.y, e.z); kit.add('alu', c); }
@@ -922,8 +973,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     spk.applyMatrix4(mat(X(0.858), 0.43, -0.7, 0, -sd * Math.PI / 2)); kit.add('alu', spk);
     kit.warp = kw;
     // the hypercar's sill cap: carbon, from the wall's top to the glass
+    // (its front half 1.4 cm lower since the cockpit repair: by the A-pillar's foot the cap lay within a centimetre of the
+    // shoulder's paint and the two fought through the side glass in torn shards; lower, it tucks under the shoulder)
     if (hyper) kit.add('carbon', loftZ(zs, (z) => {
-      const ys = sill(z), w = wallX(z), gx = body.canopyX(z, ys + 0.012) - 0.008;
+      const ys = sill(z) - 0.014 * (1 - sstep(-0.62, -0.4, z)), w = wallX(z), gx = body.canopyX(z, ys + 0.012) - 0.008;
       return [[X(w - 0.002), ys - 0.014], [X(w + 0.002), ys - 0.009], [X(lerp(w, gx, 0.5)), ys - 0.003], [X(gx + 0.002), ys + 0.002], [X(gx - 0.002), ys + 0.006]];
     }, flip), null, 0.1);
   }
@@ -1015,7 +1068,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // (the hypercar's console: narrower between its closer seats, and lower with them)
     const cw = hyper ? 0.7 : 1, w = kit.warp;
     if (hyper) kit.warp = (p) => { p.x *= cw; p.y += seatY; p.z += sZ; return true; };
-    const con = new RoundedBoxGeometry(0.24, 0.36, 1.0, 3, 0.03); con.translate(0, 0.27, -0.13); kit.add('nappa', con);
+    const con = new RoundedBoxGeometry(0.24, 0.36, 1.0, 3, 0.03); con.translate(0, 0.27, -0.13); kit.add(hyper ? 'carbon' : 'nappa', con);   // (the hypercar's carbon, the cockpit repair)
     const lid = new RoundedBoxGeometry(0.21, 0.014, 0.94, 2, 0.005); lid.translate(0, 0.452, -0.13); kit.add('carbon', lid);
     // (not the hypercar's: its carbon centre spine comes down onto the console there)
     const bridge = new RoundedBoxGeometry(0.08, 0.04, 0.3, 4, 0.016); bridge.translate(0, 0.475, -0.38); if (!hyper) kit.add('alu', bridge);
@@ -1050,18 +1103,19 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const arm = new THREE.CylinderGeometry(0.007, 0.009, 1, 8); arm.applyMatrix4(between(v3(0, 0, -0.01).applyMatrix4(bm), v3(xD - 0.04, 0.29 + floorY, -1.03))); kit.add('gloss', arm, null, 0.05);
     const hinge = new RoundedBoxGeometry(0.05, 0.016, 0.03, 2, 0.005); hinge.translate(xD + 0.1, 0.13 + floorY, -0.905); kit.add('gloss', hinge, null, 0.05);
     if (mats.amb) {
-      // each footwell's mat outlined at its front: its front edge across and the first 35 cm of its sides
+      // each footwell's mat outlined at its front: its front edge across and the first 15 cm of its sides (35 cm until the
+      // cockpit repair: the long side lines crossed the floor as wires)
       const fy = 0.122 + floorY;
       for (const [x0, x1] of [[-0.42, -0.125], [0.125, 0.42]]) {
-        kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x0, fy, z)), v3(1, 0, 0), 0.004));
-        kit.add('amb', ambLine(range(-0.95, -0.6, 6).map((z) => v3(x1, fy, z)), v3(1, 0, 0), 0.004));
-        kit.add('amb', ambLine(range(x0, x1, 8).map((x) => v3(x, fy, -0.95)), v3(0, 0, 1), 0.004));
+        kit.add('amb', ambLine(range(-0.95, -0.8, 4).map((z) => v3(x0, fy, z)), v3(1, 0, 0), 0.02));
+        kit.add('amb', ambLine(range(-0.95, -0.8, 4).map((z) => v3(x1, fy, z)), v3(1, 0, 0), 0.02));
+        kit.add('amb', ambLine(range(x0, x1, 8).map((x) => v3(x, fy, -0.95)), v3(0, 0, 1), 0.02));
       }
       // under the dash's lower edge, each side of the spine
       const [lz, ly] = LOWER[LOWER.length - 1];
-      for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.004));
+      for (const [x0, x1] of [[-(D - 0.03), -0.13], [0.13, D - 0.03]]) kit.add('amb', ambLine(range(x0, x1, 16).map((x) => v3(x, ly - 0.003, lz + 0.004)), v3(0, 0, 1), 0.014));
       // the console's top edges, from the spine's foot back past the armrest
-      for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.004));
+      for (const sd of [-1, 1]) kit.add('amb', ambLine(range(-0.4, 0.22, 12).map((z) => v3(sd * 0.0858, 0.318 + seatY + 0.12, z)), v3(0, 1, 0), 0.012));
     }
     // the front wheels' wells in the footwells (the wheels sit back under the footwells' sides, car-body ARCHES): a
     // carpeted arch each side, its face 3.5 mm inboard of the well's liner (|x| 0.44 m after the build's keepInside), so
@@ -1074,6 +1128,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       for (const sd of [-1, 1]) {
         const g = new THREE.ShapeGeometry(new THREE.Shape(pts.map(([z, y]) => new THREE.Vector2(z, y))), 1);
         g.rotateY(-Math.PI / 2); g.translate(sd * 0.4365, 0, 0); kit.add('carpet', g, null, 0.05);
+        // (the cockpit repair, 2026-11-23: each footwell's side closed in carpet up to the dash's lower edge, from the
+        // toe board back to 64 cm ahead of the axle line, and a panel across from there to the door card: the wheel
+        // well's grey liner showed through between the arch and the door as broken dark polygons)
+        const ZB = -0.64, yT = 0.47 + floorY, side = new THREE.PlaneGeometry(ZB - zt, yT - y0);
+        side.rotateY(-sd * Math.PI / 2); side.translate(sd * 0.4362, (y0 + yT) / 2, (zt + ZB) / 2); kit.add('carpet', side, null, 0.05);
+        const xo = wallX(ZB) + 0.01, cap = new THREE.PlaneGeometry(xo - 0.4362, yT - y0);
+        cap.translate(sd * (0.4362 + xo) / 2, (y0 + yT) / 2, ZB); kit.add('carpet', cap, null, 0.05);
       }
     }
     // the roof console: a slim panel in the headliner's Alcantara behind the header, a gloss-black lens in its middle,
@@ -1081,7 +1142,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const zc = wsXZ(0, 1)[1] + 0.11, yc = body.top(zc, 0) - 0.024 - 0.006;
     const pod = new RoundedBoxGeometry(0.12, 0.012, 0.17, 2, 0.005); pod.translate(0, yc, zc); kit.add('head', pod, null, 0.05);
     const lens = new RoundedBoxGeometry(0.06, 0.004, 0.09, 2, 0.0018); lens.translate(0, yc - 0.006, zc + 0.01); kit.add('gloss', lens, null, 0.05);
-    if (mats.amb) for (const sd of [-1, 1]) kit.add('amb', ambLine(range(0, 1, 6).map((t) => v3(sd * lerp(0.034, 0.054, t), yc - 0.0064, zc - 0.07 + 0.14 * t)), v3(1, 0, 0), 0.004));
+    if (mats.amb) for (const sd of [-1, 1]) kit.add('amb', ambLine(range(0, 1, 6).map((t) => v3(sd * lerp(0.034, 0.054, t), yc - 0.0064, zc - 0.07 + 0.14 * t)), v3(1, 0, 0), 0.01));
     // the mirror: frameless, its glass edge to edge on a gloss back, on a short stem from the console's front
     const mb = v3(0.02, yc - 0.055, zc - 0.1);
     const nrm = eye.clone().sub(mb).normalize().add(v3(0, 0.75, 2.3).sub(mb).normalize()).normalize();
@@ -1110,7 +1171,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const cy = hyper ? seatY : 0, cz = hyper ? sZ : 0;
     put(hyper ? 0.13 : 0.18, mat(0, 0.467 + cy, -0.1 + cz, -Math.PI / 2 + 0.3));
     // the sill cap at z -0.3: across the cap, laid on it and tilted 0.25 rad inboard; the lettering runs forward, its top outboard
-    const zs = -0.3, ys = sill(zs), gx = body.canopyX(zs, ys + 0.012) - 0.008, xm = (0.845 + gx) / 2;
+    // (the hypercar's since the cockpit repair, 2026-11-23: 36 cm further back, beside the seat's cushion, where it no
+    // longer sits in the view ahead over the dash's left end (owner: the plaque must not compete with the dashboard))
+    const zs = hyper ? 0.06 : -0.3, ys = sill(zs), gx = body.canopyX(zs, ys + 0.012) - 0.008, xm = (0.845 + gx) / 2;
     // (the hypercar's sill cap is a strip a centimetre wide between its door card and its glass, and the plate laid
     // across the others' 35 cm cap stood 18 cm out through its door top, a dark slot on the paint (2026-11-22): it
     // stands on the door card's Alcantara insert instead, just under the cap, facing the driver, the lettering running

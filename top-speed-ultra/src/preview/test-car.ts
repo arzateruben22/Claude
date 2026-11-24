@@ -71,6 +71,8 @@ else {
   env.set(day ? 'day' : 'sunset', 'clear', true);
 }
 const log: Record<string, unknown> = { view, car, quality };
+// &pick=1: three on the window, for a picking script (which mesh is under a pixel)
+if (q.get('pick') === '1') (window as unknown as { __THREE: typeof THREE }).__THREE = THREE;
 
 // where: on I-405 North (lane 1), or at the origin on a plain ground for the debug views
 let frame: THREE.Object3D;

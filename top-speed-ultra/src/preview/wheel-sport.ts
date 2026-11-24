@@ -75,8 +75,9 @@ export function knurlMat(q: Quality) {
 // the thumb pads: one atlas, the left pad's face on the left half, the right pad's on the right (each half 3:2, the
 // pad's own shape near enough: 45 x 29 mm). Bright icons on gloss black, lit a little at night (128 px on phones too:
 // the icons must read at phone size)
-export function padMat(q: Quality) {
-  return once('m.swPad2' + q, () => {
+// (hyper: the OC Hypercar's right pad after the owner's wheel.png, 2026-11-23: phone, microphone and menu in a row)
+export function padMat(q: Quality, hyper = false) {
+  return once('m.swPad2' + q + (hyper ? 'h' : ''), () => {
     const h = q === 'high' ? 160 : 128, w = h * 3, [c, g] = canvas(w, h), s = h / 128;
     g.fillStyle = '#0a0b0e'; g.fillRect(0, 0, w, h);
     const icon = 'rgba(236,241,248,0.96)', faint = 'rgba(170,180,194,0.75)';
@@ -85,7 +86,7 @@ export function padMat(q: Quality) {
       g.save(); g.translate(half * 1.5 * h + 0.25 * h, 0); g.scale(s, s);
       // a soft sheen across the top of the pad
       const gr = g.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, 'rgba(255,255,255,0.10)'); gr.addColorStop(0.45, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(-32, 0, 192, 128);
-      g.strokeStyle = faint; g.lineWidth = 4; g.beginPath(); g.arc(64, 64, 36, 0, Math.PI * 2); g.stroke();
+      if (!(hyper && half)) { g.strokeStyle = faint; g.lineWidth = 4; g.beginPath(); g.arc(64, 64, 36, 0, Math.PI * 2); g.stroke(); }
       g.strokeStyle = icon; g.fillStyle = icon; g.lineWidth = 7;
       if (!half) {
         // left: the menu pad, four chevrons round a centre dot
@@ -93,6 +94,16 @@ export function padMat(q: Quality) {
           g.save(); g.translate(64, 64); g.rotate((k * Math.PI) / 2); g.beginPath(); g.moveTo(-10, -44); g.lineTo(0, -54); g.lineTo(10, -44); g.stroke(); g.restore();
         }
         g.beginPath(); g.arc(64, 64, 9, 0, Math.PI * 2); g.fill();
+      } else if (hyper) {
+        // right (the hypercar's): three keys in a row, divided by fine lines: phone, microphone, menu
+        g.strokeStyle = faint; g.lineWidth = 3; for (const x of [21, 107]) { g.beginPath(); g.moveTo(x, 34); g.lineTo(x, 94); g.stroke(); }
+        g.strokeStyle = icon; g.lineWidth = 7;
+        g.beginPath(); g.moveTo(-16, 46); g.quadraticCurveTo(-18, 84, 10, 86); g.stroke();
+        g.fillRect(-22, 40, 12, 12); g.fillRect(4, 80, 12, 12);
+        g.beginPath(); g.moveTo(56, 50); g.lineTo(56, 66); g.stroke(); g.beginPath(); g.moveTo(72, 50); g.lineTo(72, 66); g.stroke();
+        g.beginPath(); g.arc(64, 50, 8, Math.PI, 0); g.stroke(); g.beginPath(); g.arc(64, 66, 8, 0, Math.PI); g.stroke();
+        g.lineWidth = 5; g.beginPath(); g.arc(64, 64, 16, 0.15 * Math.PI, 0.85 * Math.PI); g.moveTo(64, 80); g.lineTo(64, 90); g.stroke();
+        g.lineWidth = 7; for (const y of [50, 64, 78]) { g.beginPath(); g.moveTo(124, y); g.lineTo(152, y); g.stroke(); }
       } else {
         // right: the audio pad, plus over minus and a three-bar level between
         g.beginPath(); g.moveTo(64, 8); g.lineTo(64, 32); g.moveTo(52, 20); g.lineTo(76, 20); g.stroke();
@@ -270,8 +281,50 @@ function medallion(wk: Kit, y: number, z: number, segs: number, r = 1) {
   const bead = new THREE.TorusGeometry(0.0229 * r, 0.0007, segs > 30 ? 6 : 4, segs); bead.translate(0, y, z - 0.0007); wk.add('chrome', bead, null, 0.02);
   const badge = new THREE.CircleGeometry(0.0222 * r, segs); badge.translate(0, y, z - 0.0004); wk.add('badgeHub', badge);
 }
-export function addSportCentre(wk: Kit, o: { high: boolean }) {
+// The OC Hypercar's hub emblem (owner, 2026-11-23, control/hypercar/owner-ref-2026-11-23/wheel.png: "use that as the new
+// logo for the center of the wheel"; the owner's own mark): a chrome three-pointed blade, a tall centre spike over a
+// longer lower point, and two side blades sweeping out and up from its waist, like a stylised arrowhead. Half its outline
+// (right side, x >= 0, top to bottom), in metres on the hub (63 mm tall, 52 mm across)
+const BLADE: [number, number][] = [[0, 0.033], [0.0028, 0.012], [0.0044, 0.0005], [0.011, 0.0052], [0.0195, 0.0128], [0.0262, 0.0205], [0.0218, 0.0082], [0.0135, -0.0045], [0.0062, -0.0135], [0.0022, -0.0205], [0, -0.03]];
+export function bladeShape(k = 1, dy = 0) {
+  const pts = [...BLADE, ...BLADE.slice(1, -1).reverse().map(([x, y]) => [-x, y] as [number, number])];
+  return new THREE.Shape(pts.map(([x, y]) => new THREE.Vector2(x * k, y * k + dy)));
+}
+// the emblem's chrome: a polished blade whose picture shades each facet, bright along its ridges and dark in its flanks
+// (a map, so the suite's "the badge has a picture" holds), metal, with a touch of its own light so it reads at night
+export function bladeMat(q: Quality) {
+  return once('m.blade' + q, () => {
+    const n = q === 'high' ? 256 : 128, [c, g] = canvas(n, n);
+    const gr = g.createLinearGradient(0, 0, n, 0);
+    gr.addColorStop(0, '#5d636c'); gr.addColorStop(0.38, '#e9eef4'); gr.addColorStop(0.5, '#ffffff'); gr.addColorStop(0.53, '#6f7680'); gr.addColorStop(0.75, '#cfd5dc'); gr.addColorStop(1, '#4c525a');
+    g.fillStyle = gr; g.fillRect(0, 0, n, n);
+    const t = canvasTex(c, true);
+    return new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: t, metalness: 0.9, roughness: 0.14, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.12, name: 'blade' });
+  });
+}
+export function addSportCentre(wk: Kit, o: { high: boolean; emblem?: 'blade' }) {
   const cs = o.high ? 8 : 4, segs = o.high ? 48 : 24, sc = (k: number) => HUB.map(([x, y]) => [x * k, y * k + 0.002 * (1 - k)] as [number, number]);
+  if (o.emblem === 'blade') {
+    // the hypercar's: the bezel, the pillowed leather cover and its stitching as the others', then the chrome blade on
+    // the cover (a bevelled extrusion, its map spread over the blade's width), a dark recess outline round it, and an
+    // ice-blue light along the hub's lower edge (the reference's glow under the hub); no medallion and no chevron
+    const bz = roundPoly(sc(0.93), 0.0145); bz.holes.push(roundPoly(sc(0.86), 0.0125));
+    const bg = shell(bz, 0.0018, 0.0007, 0.0004, o.high ? 2 : 1, cs); bg.translate(0, 0, -0.0038); wk.add('hubBezel', bg);
+    const cv = shell(roundPoly(sc(0.83), 0.0115), 0.0012, 0.0028, 0.0024, o.high ? 3 : 1, cs); cv.translate(0, 0, -0.0034); wk.add('hubCover', cv);
+    wk.add('hubStitch', ribbon(roundPoly(sc(0.785), 0.0105).getPoints(cs), 0.00075, 0.0013));
+    const dy = 0.004;
+    const rec = new THREE.ShapeGeometry(bladeShape(1.1, dy - 0.0004), 1); rec.translate(0, 0, 0.0009); wk.add('hubGap', rec, null, 0.02);
+    const bl = new THREE.ExtrudeGeometry(bladeShape(1, dy), { depth: 0.0012, bevelEnabled: true, bevelThickness: 0.0011, bevelSize: 0.0009, bevelSegments: o.high ? 2 : 1, curveSegments: 1 });
+    const bu = bl.attributes.uv as THREE.BufferAttribute, bp = bl.attributes.position;
+    for (let i = 0; i < bu.count; i++) bu.setXY(i, 0.5 + bp.getX(i) / 0.056, 0.5 + (bp.getY(i) - dy) / 0.066);
+    bl.translate(0, 0, 0.0011); wk.add('badgeHub', bl);
+    // the light under the hub: a strip along the outline's lower edges, between the lower spoke and the side spokes
+    const lo = sc(0.97), path: THREE.Vector2[] = [];
+    for (const [a, b] of [[5, 0], [0, 1], [1, 2]] as [number, number][]) for (let k = a === 5 ? 0 : 1; k <= 6; k++) { const t = k / 6; path.push(new THREE.Vector2(lo[a][0] + (lo[b][0] - lo[a][0]) * t, lo[a][1] + (lo[b][1] - lo[a][1]) * t)); }
+    const strip = ribbon(path, 0.0014, 0.0034); const ix = strip.index!.array as ArrayLike<number>;
+    strip.setIndex(Array.from(ix).slice(0, ix.length - 6)); wk.add('hubAccent', strip, null, 0.02);
+    return;
+  }
   // the bezel: a brushed frame from 86 % to 93 % of the outline, 3.2 mm tall with chamfered edges, its face at -1.3 mm
   const bz = roundPoly(sc(0.93), 0.0145); bz.holes.push(roundPoly(sc(0.86), 0.0125));
   const bg = shell(bz, 0.0018, 0.0007, 0.0004, o.high ? 2 : 1, cs); bg.translate(0, 0, -0.0038); wk.add('hubBezel', bg);
@@ -329,7 +382,7 @@ export function addSportSpokes(wk: Kit, o: { high: boolean; lower?: 'carbon' }) 
   }
   if (o.lower === 'carbon') {
     const lo = extrude(roundPoly([[-0.04, -0.044], [0.04, -0.044], [0.072, -0.129], [-0.072, -0.129]], 0.008), 0.013, 0.003, cs);
-    lo.translate(0, 0, -0.017); wk.add('carbon', lo);
+    lo.translate(0, 0, -0.017); wk.add('hubCarbon', lo);   // (gloss carbon, the hub's: the rim's top and bottom are the rim carbon since wheel.png)
     for (const sd of [-1, 1]) wk.add('alu', leg([sd * 0.05, -0.118], [sd * 0.006, -0.06], 0.0028, 0.002, -0.0034), null, 0.02);
     return;
   }
