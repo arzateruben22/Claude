@@ -3282,6 +3282,77 @@ await group('progression', async (use) => {
       return `${rows.length} samples over ${ids.length} cars and the Paint tab (${Object.entries(seen).map(([k, v]) => `${k} ${v}`).join(', ')}), none near black; darkest ${Math.min(...rows.map((r) => r.mean)).toFixed(1)}`;
     } finally { await ph.ctx.close(); }
   });
+  // the Paint tab's stage shows the paint picked (owner, 2026-11-24 from his iPhone, light theme: Obsidian picked on the
+  // hypercar and the stage showed it silver: its paint writes the bloom's share into the frame's alpha, and the stage's
+  // frames were copied out at alpha 0.3 over the previous picture). At 390 × 844, light theme, on the hypercar and the GT:
+  // a light and a dark paint picked; the car's body is the pixels that differ between the two settled frames (the room,
+  // the table and the trim do not); then light and dark picked again, the body's mean read every frame: it must cross to
+  // the new paint within FRAMES frames of the tap (the tap's own handling included) and settle there (no stale still of the
+  // other colour, no black frame). The dark body must read under 0.35 of the light one (before the fix: 0.72, over 82 px).
+  await check('garage at 390 × 844: the Paint tab\'s stage shows the paint picked (a dark and a light paint on the hypercar and the GT change the car\'s body within a few frames)', async () => {
+    const FRAMES = 20;
+    const ph = await open({ phone: true, settings: { theme: 'light', owner: true } });
+    const pg = ph.page, out = [];
+    try {
+      await game(pg, () => localStorage.setItem('tsu.founderReveal', '1'));
+      for (const [car, dark, light] of [['oc-hyper', 'Obsidian', 'Platinum'], ['rossini-gt', 'Nero', 'Bianco']]) {
+        await game(pg, (id) => { const g = window.__game; g.chooseOwnerCar(id); g.applyCarChoice(); }, car);
+        await pg.waitForFunction((id) => window.__game.carId === id, car, { timeout: 30000 });
+        await pg.locator('.mp-carline').click();
+        await pg.waitForSelector('.panel.profile');
+        await pg.locator('.seg[aria-label="Garage"]').getByRole('button', { name: 'Paint', exact: true }).click();
+        await pg.waitForFunction(() => window.__game.revealShow?.shown > 0 && document.querySelector('.paint-stage canvas'), null, { timeout: 900000, polling: 250 });
+        // a pick, settled: the stage in that paint, drawn, nothing left to draw; the stage's picture at 96 px across
+        const settle = async (name) => {
+          await pg.locator('.paint-chip', { hasText: name }).click();
+          await pg.waitForFunction((n) => document.querySelector('.paint-chip.on b')?.textContent === n, name, { timeout: 30000 });
+          await pg.waitForFunction(() => { const g = window.__game, s = g.revealShow; return s && s.shown > 0 && g.revealState.built && g.revealState.compiled && !g.rv?.dirty; }, null, { timeout: 900000, polling: 250 });
+          await pg.waitForTimeout(400);
+          return game(pg, () => { const c = document.querySelector('.paint-stage canvas'), t = document.createElement('canvas'); t.width = 96; t.height = Math.round(96 * c.height / c.width); const g = t.getContext('2d'); g.drawImage(c, 0, 0, t.width, t.height); return Array.from(g.getImageData(0, 0, t.width, t.height).data); });
+        };
+        const A = await settle(light), B = await settle(dark);
+        const Lf = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+        const mask = []; for (let i = 0; i < A.length; i += 4) if (Lf(A, i) - Lf(B, i) > 60) mask.push(i);
+        const mean = (d) => mask.reduce((s, i) => s + Lf(d, i), 0) / Math.max(1, mask.length);
+        const body = { light: mean(A), dark: mean(B), px: mask.length };
+        // every frame from the tap: the body's mean over the mask
+        await game(pg, (mask) => {
+          const L = (d, i) => 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
+          const S = (window.__pp = { rows: [], stop: false });
+          const t = document.createElement('canvas'), g = t.getContext('2d', { willReadFrequently: true });
+          const loop = () => {
+            if (S.stop) return;
+            const c = document.querySelector('.paint-stage canvas');
+            if (c) { t.width = 96; t.height = Math.round(96 * c.height / c.width); g.drawImage(c, 0, 0, t.width, t.height); const d = g.getImageData(0, 0, t.width, t.height).data; let s = 0; for (const i of mask) s += L(d, i); S.rows.push(s / Math.max(1, mask.length)); }
+            requestAnimationFrame(loop);
+          };
+          requestAnimationFrame(loop);
+        }, mask);
+        const mid = (body.light + body.dark) / 2, frames = {};
+        for (const [name, up] of [[light, true], [dark, false], [light, true]]) {
+          await game(pg, () => { window.__pp.rows = []; });
+          await pg.locator('.paint-chip', { hasText: name }).click();
+          await pg.waitForTimeout(2500);
+          const rows = await game(pg, () => window.__pp.rows.slice());
+          const k = rows.findIndex((m) => (up ? m > mid : m < mid));
+          const after = k < 0 ? [] : rows.slice(k);
+          frames[name + (frames[name] !== undefined ? ' again' : '')] = { k, n: rows.length, end: Math.round(rows.at(-1) ?? -1), back: after.some((m) => (up ? m < mid : m > mid)), black: rows.some((m) => m < 2) };
+        }
+        await game(pg, () => { window.__pp.stop = true; });
+        await pg.locator('.paint-stage').screenshot({ path: path.join(OUT, `phone-paint-stage-${car}.png`) });
+        out.push({ car, body: { light: Math.round(body.light), dark: Math.round(body.dark), px: body.px }, frames });
+        await game(pg, () => window.__updateSettings({ paints: {} }));
+        await pg.locator('.panel').getByRole('button', { name: 'Done', exact: true }).click();
+        await pg.waitForSelector('.overlay.menu', { timeout: 120000 });
+      }
+      for (const o of out) {
+        expect(o.body.px >= 150 && o.body.dark < 0.35 * o.body.light, `${o.car}: the body in the dark paint is not dark beside the light one (mean luminance over ${o.body.px} body pixels): ${JSON.stringify(o)}`);
+        for (const [n, f] of Object.entries(o.frames)) expect(f.k >= 0 && f.k <= FRAMES && !f.back && !f.black, `${o.car}: ${n} did not reach the stage within ${FRAMES} frames, or went back: ${JSON.stringify(o)}`);
+      }
+      expect(ph.errors.length === 0, ph.errors.slice(0, 3).join(' | '));
+      return out.map((o) => `${o.car}: body ${o.body.dark} dark / ${o.body.light} light over ${o.body.px} px; ${Object.entries(o.frames).map(([n, f]) => `${n} in ${f.k} frames`).join(', ')}`).join('; ');
+    } finally { await ph.ctx.close(); }
+  });
   // its garage card: the reveal stage plays by itself once on this device, keeps its last frame for the session, plays
   // again on demand; choosing the car wakes its lights on the stage and on the car; reduced motion: nothing moves
   await check('the hypercar\'s garage card: the reveal stage plays once, keeps its last frame, Replay plays it again; choosing the car wakes its lights; reduced motion shows it still', async () => {

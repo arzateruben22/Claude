@@ -902,6 +902,16 @@ export class Game {
     this.renderer.setScissorTest(true);
     this.renderer.setScissor(0, 0, w / pr, h / pr); this.renderer.setViewport(0, 0, w / pr, h / pr);
     this.renderer.render(stage.scene, stage.camera);
+    // The frame made opaque before it is copied (owner, 2026-11-24 from his iPhone: Obsidian picked, the stage showed the
+    // hypercar silver). The hypercar's paint writes the bloom's share (0.3) into the frame's ALPHA (car.ts carPaint
+    // `bloom`, car-mats paint), which the game's bloom pass reads; the stage has no such pass, so its body pixels were
+    // copied out at alpha 0.3 and drawn OVER the card's last picture: 70 % of the previous frame, or of the seeded still
+    // in the car's factory silver, showed through every new paint, dark ones most. The alpha is set to 1 in the
+    // scissored corner only (colour untouched), and three's cached colour-buffer state is reset after the raw calls.
+    const gl = this.renderer.getContext();
+    gl.colorMask(false, false, false, true); gl.clearColor(0, 0, 0, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.colorMask(true, true, true, true);
+    this.renderer.state.buffers.color.reset();
     this.renderer.setScissorTest(false);
     const size = this.renderer.getSize(this.tmpSize);
     this.renderer.setViewport(0, 0, size.x, size.y);
