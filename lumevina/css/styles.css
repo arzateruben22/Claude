@@ -7150,6 +7150,18 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 
 /* the shop's cards: off-screen ones aren't drawn, and the sticky bar moves on the compositor only */
 .sh-card { content-visibility: auto; contain-intrinsic-size: auto 26rem; }
+/* smaller and more condensed: a narrower card, a shorter picture, tighter text, price and stock on one line */
+.hero-shelf-list > li { flex-basis: 8.4rem; }
+.hero-shelf-list .sh-card--compact .sh-label { aspect-ratio: 1 / 1; }
+.hero-shelf-list .sh-card--compact .sh-brand { top: 0.5rem; left: 0.55rem; padding: 0.18rem 0.45rem; font-size: 0.56rem; }
+.hero-shelf-list .sh-card--compact .sh-body { padding: 0.5rem 0.6rem 0.6rem; gap: 0.15rem; }
+.hero-shelf-list .sh-card--compact.sh-card--photo .sh-name { font-size: 0.8rem; min-height: 0; line-height: 1.25; }
+.hero-shelf-list .sh-card--compact.sh-card--photo .sh-meta { font-size: 0.68rem; }
+.hero-shelf-list .sh-card--compact .sh-foot { flex-wrap: wrap; gap: 0 0.4rem; padding-top: 0.1rem; }
+.hero-shelf-list .sh-card--compact .sh-price { font-size: 0.9rem; }
+.hero-shelf-list .sh-card--compact .sh-stock { font-size: 0.68rem; }
+.hero-shelf-list .sh-card--compact .btn { margin-top: 0.3rem; padding: 0.38rem 0.6rem; font-size: 0.8rem; }
+@media (max-width: 600px) { .hero-shelf-list > li { flex-basis: 8.4rem; } }
 /* the homepage strip is only eight cards: no reserved height, so they're as tall as what's in them */
 .hero-shelf-list .sh-card { content-visibility: visible; contain-intrinsic-size: none; }
 .sh-nav { will-change: transform; transition: background-color 200ms ease, transform 280ms ease, opacity 220ms ease; }
