@@ -775,6 +775,30 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ## Opus queue (routine items waiting for a daytime session)
 
+### Next task, batched with the View button (owner, 2026-11-24 ~5:30 AM PT, from his iPhone at v27): menu and garage
+
+The owner's four asks, built together with the View button above in one UI task after the hypercar round:
+1. **Free Drive traffic picker gone.** "Get rid of the traffic selection when choosing free drive and just have the
+   default traffic be low." Remove the Light/Moderate/Heavy/Expert row and its "Free Drive: traffic is your own
+   choice, simulated." line from the Race screen (src/ui/App.tsx ~584, `.fd-traffic`); Free Drive runs at `light`
+   by default (settings.density; migrate a saved non-light value to light for Free Drive). Keep whatever the timed
+   modes use. Update the suite's checks that click those buttons.
+2. **The character row in the garage.** "fix the character selection display as it looks off and not correctly
+   formatted to fit the aesthetic": now a plain grey pill reading "CharacterChoose a character ›" (the small label
+   runs into the name; App.tsx ~1046). Restyle it in the garage's Ultra and Retro skins: a card like the vehicle
+   cards (the label on its own line in the small spaced caps, the name in the display face, a portrait or the
+   cast's thumbnail if one exists, a chevron), 44 px+ tall, at 390x844 and on desktop.
+3. **A carousel for the cars.** "make a carousel effect for the car selection when choosing the car": the Vehicles
+   tab's long vertical list becomes a horizontal swipe carousel, one car centred and large with its rendered car
+   (the garage stage) and its stats, the neighbours peeking at the edges, swipe/arrow keys/buttons, snap, the
+   locked cars showing their unlock miles; DRIVE on the centred card. Keep every car reachable and labelled for
+   screen readers.
+4. **The car shown while painting.** "when changing the paint have the car be displayed as well too": the Paint tab
+   shows the selected car rendered (the garage stage or reveal stage) and updates its paint live as a swatch is
+   picked (setPaint), on phone portrait without scrolling the swatches off screen.
+Proof: screenshots at 390x844 and 1280x720 for each; targeted tests `--only=phone` plus the menu/garage group; no
+store or economy rule changes (cosmetics stay cash-earned, nothing sold).
+
 ### Next task (owner, 2026-11-23, from his iPhone at v27): a visible View (camera) button on phones
 
 "We also need to add the button to change the pov of the game unless it's there and I just can't find it?" It exists
