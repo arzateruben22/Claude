@@ -10153,3 +10153,11 @@ build OK, `--only=render,progression` 38/38, including "garage at 390 x 844: the
 (174 samples, none near black) and "Ultra: no shader program compiled after the loading screen ... or on the first
 View cycle" (programs 181 → 181 after control). The warm-up branch's own boot/render/phone run: 74/76 (its own check's
 setup bug, fixed in 669b6bd, and the known sleeve check). Owed before launch: the full suite once.
+
+### 2026-11-24 (~2:56 PM PT): rollback: the main link back to v31 (published as version 33)
+
+The owner's iPhone: switching to Ultra mid-drive on v32 kept loading and the Claude viewer showed "Something went
+wrong" (the page died, most likely iOS's GPU/memory limit during the new warm-up). The main link was republished from
+812ecfb (v31: the carousel fix, no warm-up). The warm-up stays on claude/tender-fermat-sk9rby; two fix branches are
+in progress: claude/ultra-ios-crash (memory accounting, caps, no reload on context loss) and claude/paint-preview (the
+Paint tab showed the hypercar silver with Obsidian selected).
