@@ -99,6 +99,10 @@ type HudLayout = 'pp' | 'pl' | 'desk';
 const MAP_PX: Record<HudLayout, number[]> = { pp: [96, 112, 128], pl: [80, 88, 104], desk: CORNER_PX };
 // the Ultra skin on an upright phone: the mockup's map (about 88 px), so its chrome bezel and the ABS | TCS bar fit the HUD's 12.5 % cover budget
 const ULTRA_PP_MAP = [76, 88, 104];
+// and on a short upright phone (under 760 px: the claude.ai app's 715 px view), a little smaller, so the HUD's cover stays
+// inside the owner's 12.5 % budget with the View button under Pause (2026-11-24; at 88 px it read 12.8 %)
+const ULTRA_PP_MAP_SHORT = [68, 76, 92];
+const SHORT_PP = 760;
 const HINT_RADIAL = 'tsu.hint.radial';   // the one-time "Hold Pause for the quick menu" toast on a touch screen
 // the new HUD (2026-11-23) on a phone keeps Pause, View (since 2026-11-24) and Auto-drive in the top bar: a one-time hint, the first drive,
 // says where Go to went and what else the hold-Pause quick menu holds (Camera, Go to, Radio, Garage); it is
@@ -363,7 +367,8 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
   // the adaptive HUD (U1): in Minimal, true once a drive has gone IDLE_MS without a tap, mouse move, key or pad button
   const idle = useIdle(playing && settings.hudStyle === 'minimal', () => game.current?.input.padAt ?? 0);
   const layout = useHudLayout();
-  const mapPx = layout === 'pp' && !retroOn(settings) ? ULTRA_PP_MAP : MAP_PX[layout];
+  const short = useShortView();
+  const mapPx = layout === 'pp' && !retroOn(settings) ? (short ? ULTRA_PP_MAP_SHORT : ULTRA_PP_MAP) : MAP_PX[layout];
   const cornerPx = mapPx[settings.cornerSize] ?? mapPx[1];
   const appRef = useRef<HTMLDivElement>(null);
   const vis = useVisibleInsets(appRef);
@@ -916,6 +921,18 @@ function hudLayout(): HudLayout {
   if (matchMedia('(pointer: coarse)').matches) return w < h ? 'pp' : 'pl';
   return w <= 560 ? 'pp' : 'desk';
 }
+// whether the view is shorter than SHORT_PP (the Ultra map's size on an upright phone follows it)
+function useShortView(): boolean {
+  const [v, setV] = useState(() => typeof innerHeight === 'number' && innerHeight < SHORT_PP);
+  useEffect(() => {
+    let t: ReturnType<typeof setTimeout> | undefined;
+    const f = () => { setV(innerHeight < SHORT_PP); clearTimeout(t); t = setTimeout(() => setV(innerHeight < SHORT_PP), 350); };
+    const vv = typeof visualViewport === 'object' ? visualViewport : null;
+    addEventListener('resize', f); vv?.addEventListener('resize', f);
+    return () => { removeEventListener('resize', f); vv?.removeEventListener('resize', f); clearTimeout(t); };
+  }, []);
+  return v;
+}
 function useHudLayout(): HudLayout {
   const [l, setL] = useState<HudLayout>(hudLayout);
   useEffect(() => {
@@ -1032,7 +1049,7 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
   // a car that just opened glows while the garage shows it; leaving the garage settles it
   useEffect(() => () => { for (const id of Object.keys(CAR_MILES).concat('oc-hyper')) pr.clearGlow(id); }, [pr]);
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
-  // the Paint tab on a phone: the car and the swatches in view together (the stage then stays at the top as they scroll)
+  // the Paint tab on a phone: the car and the swatches scrolled into view together
   useEffect(() => {
     if (tab !== 'paint') return;
     const el = document.querySelector<HTMLElement>('.paints'); if (!el) return;
@@ -1065,7 +1082,7 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
       return (
         <div className="paints">
           {/* (owner, 2026-11-24: "when changing the paint have the car be displayed as well") the car on the showroom stage,
-              repainted live as a swatch is picked; it stays at the top while the swatches scroll under it on a phone */}
+              repainted live as a swatch is picked; on a phone the tab scrolls it and the swatches into view together */}
           <div className="paint-stage car-stage"><ShowroomStage game={game} car={car.id} paint={now} label={`The ${car.name} in ${list.find((x) => x.hex === now)?.name ?? 'its own paint'}, on the garage's showroom stage`} /></div>
           <p className="fine">{car.name}: {list.find((x) => x.hex === now)?.name ?? 'its own paint'}. The car behind this panel takes it now.</p>
           {/* a store paint you put on wins over the garage's (Game.configureCar): say so, or a pick here would seem to do nothing */}

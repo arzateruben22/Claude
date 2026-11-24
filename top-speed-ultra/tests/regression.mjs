@@ -1034,9 +1034,9 @@ await group('boot', async (use) => {
   // the old default (0, before settings version 2) moves to +10 once, and the move is written back; a 0 saved since
   // (version 2: the player's own) stays 0; any other value saved before stays as it was. Each in its own page, the
   // boot group's own game held meanwhile (two software-rendered games at once take minutes a frame here).
-  // the field of view is one fixed value since the slider left Settings (owner, 2026-11-24; settings.ts FOV_DEFAULT, +15):
+  // the field of view is one fixed value since the slider left Settings (owner, 2026-11-24; settings.ts FOV_DEFAULT, +12):
   // a new device and every saved value (an old 0, a +5, a 0 chosen at version 2) read as it, and Settings has no slider
-  await check('field of view: one fixed value (+15) on a new device and over any saved value; no Field of view slider in Settings', async () => {
+  await check('field of view: one fixed value (+12) on a new device and over any saved value; no Field of view slider in Settings', async () => {
     const boot = async (saved) => {
       const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
       try {
@@ -1058,7 +1058,7 @@ await group('boot', async (use) => {
       const base = { quality: 'low', adaptive: false, density: 'none' };
       const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
       const FOV = await game(page, () => window.__game.api.FOV_DEFAULT ?? null);
-      expect(FOV === 15, `FOV_DEFAULT is ${FOV}`);
+      expect(FOV === 12, `FOV_DEFAULT is ${FOV}`);
       expect(fresh.first.fov === FOV, `a new device starts at ${fresh.first.fov}`);
       expect(old0.first.fov === FOV && old0.first.savedFov === FOV && old0.first.savedV === 6 && old0.again.fov === FOV, `an old 0 saved before: ${JSON.stringify(old0)}`);
       expect(old5.first.fov === FOV && old5.again.fov === FOV, `+5 saved before: ${JSON.stringify(old5)}`);
@@ -1698,7 +1698,7 @@ await group('modes', async (use) => {
     return `a 3 s slide read ${live.live} live, ${kept.best} kept after End drive ("${tile}" on the tile); Restart with a 12,000 chain kept ${second}; Share copied "${copied}"`;
   });
   await check('the hero copy matches the tile: Free Drive says no clock and nothing of Fastest Minute; the three difficulties give one message (Fastest Minute is your best 60 s average; Easy forgives two crashes, a crash ends Medium and Extreme) and never call the run 60 seconds long or say "stay over 100 mph"; the light theme\'s selected tile has contrast', async () => {
-    const read = () => game(page, () => ({ eyebrow: document.querySelector('.mp-eyebrow').textContent, hero: document.querySelector('.mp-hero').innerText.replace(/\s+/g, ' '), chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent), brief: document.querySelector('#run-brief').textContent, line: document.querySelector('#mode-line').innerText.replace(/\s+/g, ' ') }));
+    const read = () => game(page, () => ({ eyebrow: document.querySelector('.mp-eyebrow').textContent, hero: document.querySelector('.mp-hero').innerText.replace(/\s+/g, ' '), chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent), brief: document.querySelector('#run-brief').textContent, line: document.querySelector('#mode-line')?.innerText.replace(/\s+/g, ' ') ?? '' }));   // (Free Drive has no line under the tiles since its traffic picker left, 2026-11-24)
     const out = {};
     for (const name of ['Free Drive', 'Easy', 'Medium', 'Extreme']) { await page.locator('.modes [role="radio"]', { hasText: name }).click(); out[name] = await read(); }
     const f = out['Free Drive'];
@@ -5243,9 +5243,10 @@ await group('phone', async (use) => {
           if (h > w) expect(m.band.length === 0 && m.ctlTop >= 0.7, `${label}: in the open view: ${m.band.join(', ')}; controls from ${pct(m.ctlTop)}`);
           // on its side the route's plate already runs past the no-route 26% (28.5% at 844 x 390): no further
           else expect(m.top <= Math.max(0.26, was.top + 0.005), `${label}: the top cluster runs to ${pct(m.top)}, from ${pct(was.top)}`);
-          // the new HUD: Auto-drive under Pause in the top bar (upright, a column; on its side, beside it)
+          // the new HUD: Auto-drive in the top bar with Pause and View (upright, a column under them; on its side, the row
+          // Pause, View, Auto-drive from the map leftwards, 2026-11-24)
           const ap = await game(page, () => { const r = (q) => { const b = document.querySelector(q).getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; }; return { a: r('.tbtn.auto'), p: r('.tbar .tbtn.menu') }; });
-          expect(h > w ? ap.a.t >= ap.p.b - 0.5 && Math.abs(ap.a.l - ap.p.l) < 1 : ap.a.t >= ap.p.b - 0.5 || ap.a.l >= ap.p.r - 0.5, `${label}: Auto-drive ${JSON.stringify(ap.a)} is not by Pause ${JSON.stringify(ap.p)}`);
+          expect(h > w ? ap.a.t >= ap.p.b - 0.5 && Math.abs(ap.a.l - ap.p.l) < 1 : Math.abs(ap.a.t - ap.p.t) < 1 && ap.a.r <= ap.p.l + 0.5, `${label}: Auto-drive ${JSON.stringify(ap.a)} is not by Pause ${JSON.stringify(ap.p)}`);
           sizes.push(`${label} ${pct(was.area)} → ${pct(m.area)}${h > w ? `, controls from ${pct(m.ctlTop)}` : `, cluster to ${pct(was.top)} → ${pct(m.top)}`}`);
         }
       } finally {

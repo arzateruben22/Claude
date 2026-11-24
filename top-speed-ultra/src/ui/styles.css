@@ -2001,8 +2001,8 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .car-dots i.on { width: 18px; border-radius: 3px; background: var(--ice); }
 @media (prefers-reduced-motion: reduce) { .car-track > .gcell.car, .car-dots i { transition: none; } .car-track > .gcell.car:not(.centred) { transform: none; } }
 
-/* the Paint tab's car: the showroom stage on top, kept in view while the swatches scroll under it; compact swatches on a phone */
-.paint-stage.car-stage { position: sticky; top: 0; z-index: 2; margin: 0 0 4px; }
+/* the Paint tab's car: the showroom stage over the swatches (2:1 on a phone, so both fit on screen); compact swatches on a phone */
+.paint-stage.car-stage { margin: 0 0 4px; }   /* (on a phone the tab scrolls the car and the swatches into view together, App.tsx) */
 @media (max-width: 640px) { .paint-stage.car-stage { aspect-ratio: 2 / 1; } }
 @media (max-width: 640px) {
   .paints .paint-grid:not(.wheel-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
@@ -2010,3 +2010,5 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .paints .paint-grid:not(.wheel-grid) .paint-chip b { font-size: 12px; }
   .paints .paint-grid:not(.wheel-grid) .paint-chip .pg-lock { font-size: 10px; }
 }
+/* the Founder Edition's stage in the carousel's narrower card: Replay at the top right, clear of the caption at the bottom left */
+.car-track .fe-replay.btn { top: 8px; bottom: auto; }

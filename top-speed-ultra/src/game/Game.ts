@@ -671,7 +671,14 @@ export class Game {
     r.kind = kind; r.dirty = true;
     if (reducedMotion()) { r.t = kind === 'wake' ? WAKE_ONLY_SECONDS : REVEAL_SECONDS; r.playing = false; } else { r.t = 0; r.playing = true; }
   }
-  closeReveal() { if (this.rv?.stage) this.rv.stage.dispose(); this.rv = null; }
+  // (a stage still compiling is disposed once its compile settles: three's compileAsync polls the programs it started,
+  // and a carousel swiped past a car closes its stage within moments)
+  closeReveal() {
+    const r = this.rv;
+    if (r?.stage) { if (r.compiled) r.stage.dispose(); else this.revealDead.add(r.stage); }
+    this.rv = null;
+  }
+  private revealDead = new Set<RevealStage>();
   // the showroom's car in another garage paint, live (from the session's frame when it was shown in it before)
   setRevealPaint(hex: number) {
     const r = this.rv; if (!r?.show) return;
@@ -702,7 +709,10 @@ export class Game {
     r.buildMs = r.stage.buildMs;
     // its shaders compile off the main thread where the browser can; until then it waits (the card shows its dark stage)
     const st = r.stage;
-    this.renderer.compileAsync(st.scene, st.camera).catch(() => undefined).then(() => { if (this.rv?.stage === st) { this.rv.compiled = true; this.rv.dirty = true; } });
+    this.renderer.compileAsync(st.scene, st.camera).catch(() => undefined).then(() => {
+      if (this.revealDead.delete(st)) { st.dispose(); return; }
+      if (this.rv?.stage === st) { this.rv.compiled = true; this.rv.dirty = true; }
+    });
   }
   private drawStill() {
     const r = this.rv, s = r?.show ? this.showStills.get(this.showKey(r.show)) : this.revealStill; if (!r || !s) return;

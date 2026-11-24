@@ -82,7 +82,10 @@ export interface Settings {
 // The cockpit's field of view, added to its base (owner, 2026-11-16: "make the standard pov set at +10"; 2026-11-24: the
 // "Field of view" slider left Settings to declutter, and the view is this one fixed value, "to display the cockpit as much
 // as we could"). Change it here: readSettings puts every saved value on it, so `settings.fov` stays readable everywhere.
-export const FOV_DEFAULT = 15;
+// +12, not the +15 the owner proposed: at +15 the iPhone seat view fails the suite's hood check (the bonnet 1.3 % of the
+// frame, floor 1.4 %) and puts the Rossini GT's cluster above its line (52.4 %, floor 53 %); +12 passes both (1.6 %, 53.4 %)
+// and still shows more of the cockpit than the old +10. The renders: scratchpad fov-*-10/15 of 2026-11-24.
+export const FOV_DEFAULT = 12;
 // 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
 // 3: Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): settings saved before
 // it by a player who never picked the Graphics preset themselves (qualityChosen false) move to Low + Retro once; a
