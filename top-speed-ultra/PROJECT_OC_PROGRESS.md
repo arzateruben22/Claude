@@ -30,6 +30,13 @@ Opus-class (no budget or LOD change was needed; nothing queued for Fable).
   → 20.3 s; Low 5.7 → 5.6 s, Retro 5.1 → 5.0 s (unchanged). SwiftShader times, not a phone's.
 - **Suite:** render group's new check "Ultra: no shader program compiled after the loading screen, in the first seconds
   of a drive or on the first View cycle" (linkProgram counted from control on, 8 frames then two per View step).
+  `npm test -- --only=boot,render,phone` on 5cbd612: 74/76; the two failures were the known "sleeves from the seat on a
+  phone" and the new check itself (it set Ultra on the game only, and the menu's Start passes the App's settings, so the
+  run started on Low; fixed to set it as Settings does). Re-run `--only=render --check="Founder Edition's lights
+  wake|Ultra: no shader"`: 3/3 (the new check: warm-up 7.4 s, programs 156 → 156, 0 programs in 32 frames after control
+  to 52 mph and through hood, chase, free, cinematic, cockpit). An earlier run under extra load (measurement browsers
+  alongside) also failed "the Founder Edition's lights wake" (known flake) and "sleeves under an overpass (High)"; the
+  latter passed alone on this build and on v30, and in the clean run.
 
 ## 2026-11-24: the owner's UI batch (menu, garage, View on phones, the handbrake on BRAKE, a fixed field of view, no ABS | TCS bar)
 

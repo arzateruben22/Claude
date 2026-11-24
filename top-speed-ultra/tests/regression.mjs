@@ -3811,7 +3811,7 @@ await group('render', async (use) => {
       window.__links = [];
       gl.linkProgram = function (p) { window.__links.push({ f: g.frames, cam: g.cam, loading: !!document.querySelector('.loadbar') }); return lp.call(this, p); };
       const s = { quality: g.settings.quality, density: g.settings.density };
-      g.updateSettings({ ...g.settings, quality: 'ultra', density: 'moderate' });
+      window.__updateSettings({ quality: 'ultra', density: 'moderate' });   // as Settings does (the menu's Start passes the App's settings)
       return s;
     });
     await game(page, () => window.__game.warmIdle());       // the menu's own quiet warm-up for Ultra (minutes on SwiftShader)
@@ -3830,7 +3830,7 @@ await group('render', async (use) => {
       g.setPaused(true);
       delete gl.linkProgram;                                   // the context's own again
       const r = { n: window.__links.length, after: window.__links.filter((l) => !l.loading).slice(-6), f: g.frames, mph: Math.round(g.phys.vx * 2.237) };
-      g.updateSettings({ ...g.settings, ...w });
+      window.__updateSettings(w);
       return r;
     }, was);
     await pauseToMenu(page).catch(() => game(page, () => window.__game.quitToMenu()));
