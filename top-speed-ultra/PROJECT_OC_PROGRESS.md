@@ -4,6 +4,22 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-24: the garage's centred car is never a black box (owner, iPhone, v30: "fix how it blacks out still when rotating cars")
+
+Branch `claude/carousel-blackout` on v30 (45ee8a2), not pushed, not published. Cause: a card centred by a swipe mounted a
+fresh, empty canvas over the stage's near-black room, and nothing drew into it until `openReveal` ran 220 ms later (then
+the build and shader compile when the car had no still yet); the Founder Edition's stage and the Paint tab's did the
+same. Fix: every car view's canvas is sized and seeded in a layout effect before it is first painted (`Game.seedStage`:
+the session's still of that car and paint, else the empty showroom drawn in 2D); the card being settled on asks for its
+still first; the live stage draws off screen and reaches the card only with a frame that really drew (`frameLit`); a
+blank still is never kept; a still job is rebuilt after a lost context.
+
+Verified at 390 × 844 (scratchpad probe, the centred card's canvas sampled after frames every ~100 ms, near-black = mean
+luminance < 8): the longest near-black run per car, light theme, before → after: Rossini GT 4 → 0 (1.36 s), Brio 3 → 0,
+Corsa 3 → 0, Vela E 2 → 0, OC Hypercar 5 → 0 (1.45 s), Paint tab 3 → 0; dark theme 4/2/3/2/5/3 → all 0. Suite:
+progression's new check "garage at 390 × 844: the centred car view is never black" passes on this build and fails on
+v30; `--only=progression,phone` 51/52, the one failure the known "sleeves from the seat on a phone".
+
 ## 2026-11-24: the owner's UI batch (menu, garage, View on phones, the handbrake on BRAKE, a fixed field of view, no ABS | TCS bar)
 
 Branch `claude/ui-batch` on v28 (7b6dfc7), not pushed, not published. The handoff's two queued sections (menu and garage
