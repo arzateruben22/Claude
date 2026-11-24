@@ -775,6 +775,18 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ## Opus queue (routine items waiting for a daytime session)
 
+### OC Hypercar: next round's list (from the 2026-11-24 review of the repair round; the owner shipped it as a step)
+
+The judge (one reviewer) said HOLD narrowly; the owner chose to publish the step. Fix first, severity 4:
+1. The seat view's torn left A-pillar foot and windscreen base: black jagged shards, a pink paint band, white shard
+   fans (shots/seat-fix.png; present since v27).
+2. Torn geometry left of the wheel in the close wheel frame (test-car view=wheelck): black/white wedges, a jagged comb,
+   a shredded windscreen header, a flat grey door/sill slab.
+Then (severity 3-2): an empty black left door with a floating switch pad (add the carbon/white door card); no roof
+rail or mirror (open-top look); the wheel's spokes and hub bezel (chrome edges, hex bezel, a glowing top slit); the
+ambient strips as softer curves, thinner; bonnet vent louvres; thicker, brighter red tail blades; rounder canopy.
+Scores against the references: dashboard 7, wheel 6 (emblem 8), console 6, vibe 5, grille 8 (five blades), rear 7.
+
 ### Next task, batched with the View button (owner, 2026-11-24 ~5:30 AM PT, from his iPhone at v27): menu and garage
 
 The owner's four asks, built together with the View button above in one UI task after the hypercar round:
