@@ -3496,6 +3496,8 @@ await group('render', async (use) => {
   // none of it in the other cars (their cabins build as before: no white panels, no ambient line, no pedals, no mirror
   // on the hypercar's own terms). Counted in the car's frame from each cockpit's meshes by material key, the outside
   // body left out. (The base, 997fa15b, has no white leather, no pedals, no mirror and no footwell or roof light.)
+  // (2026-11-24: the hypercar's dash is squeezed into its 0.47-0.5 m canopy, so its white ends lie outboard of 0.4 m,
+  // not 0.55)
   await check('the OC Hypercar\'s cabin after the owner\'s interior reference: white dash ends, door panels and bolsters, carbon door cards, pedals, the mirror and roof console, ambient light all round; none of it in the other cars', async () => {
     const res = {};
     for (const car of ['oc-hyper', 'rossini-gt', 'rossini-corsa', 'rossini-brio', 'vela-e']) {
@@ -3508,7 +3510,7 @@ await group('render', async (use) => {
           if (!o.isMesh || !o.geometry || inBody(o)) return;
           const p = o.geometry.attributes.position, m = inv.clone().multiply(o.matrixWorld), v = o.position.clone();
           const each = (fn) => { for (let i = 0; i < p.count; i++) fn(v.fromBufferAttribute(p, i).applyMatrix4(m)); };
-          if (o.name === 'white') { out.white.lum = o.material.color.getHSL({}).l; each((q) => { const a = Math.abs(q.x); if (q.z < -0.6 && a > 0.55) out.white.dash++; else if (a > 0.4 && q.z > -0.6 && q.z < -0.35 && q.y > 0.5) out.white.door++; else if (a < 0.6 && q.z > -0.45 && q.y < 0.75) out.white.seat++; }); }
+          if (o.name === 'white') { out.white.lum = o.material.color.getHSL({}).l; each((q) => { const a = Math.abs(q.x); if (q.z < -0.6 && a > 0.4) out.white.dash++; else if (a > 0.4 && q.z > -0.6 && q.z < -0.35 && q.y > 0.5) out.white.door++; else if (a < 0.6 && q.z > -0.45 && q.y < 0.75) out.white.seat++; }); }
           if (o.name === 'amb') each((q) => { const a = Math.abs(q.x); if (q.y > 1.0) out.amb.roof++; else if (q.y < 0.15) out.amb.foot++; else if (a > 0.4 && q.z > -0.6) out.amb.door++; else if (a < 0.1 && q.z > -0.45 && q.y < 0.4) out.amb.console++; else if (q.z < -0.6 && q.y > 0.55) out.amb.lip++; });
           if (o.name === 'alu') each((q) => { if (q.y < 0.3 && q.z < -0.82 && q.x < -0.05 && q.x > -0.55) out.pedal++; });
           if (o.name === 'mirrorDim') each((q) => { if (q.y > 0.95 && Math.abs(q.x) < 0.2) out.mirror++; });

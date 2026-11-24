@@ -181,7 +181,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // file what kit.add takes inside fn moved by (dx, dy, dz)
   const moved = (dx: number, dy: number, dz: number, fn: () => void) => {
     if (!dx && !dy && !dz) { fn(); return; }
-    const w = kit.warp; kit.warp = (p) => { p.x += dx; p.y += dy; p.z += dz; return true; };
+    // (an outer warp, the hypercar's dash squeeze below, applies after the move)
+    const w = kit.warp; kit.warp = (p) => { p.x += dx; p.y += dy; p.z += dz; if (w) w(p); return true; };
     try { fn(); } finally { kit.warp = w; }
   };
   const { body, wsPoint, wsXZ, WS, sgPoint, SG, MIRROR, mirrorParts, mirrorGlassPlacement } = B;
@@ -281,6 +282,8 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   mats.hubInsert = mats.hubBezel;
   // the hypercar's hub: the owner's chrome blade emblem in place of the OC mark (owner, 2026-11-23: wheel.png, "use that
   // as the new logo for the center of the wheel"), and its accent the lit ice strip under the hub
+  // (2026-11-24, "look sharper": a polished chrome bezel round a dark leather cover, as wheel.png's)
+  if (hyper) { mats.hubBezel = M.chrome(0.06, 0xdfe3e8); mats.hubCover = M.leather(q, 0x1a1b1e, { tile: 0.06, sheen: 0.45 }); }
   if (hyper) { mats.badgeHub = bladeMat(q); mats.hubAccent = once('m.hubAccentH', () => new THREE.MeshPhysicalMaterial({ color: T.accent, metalness: 0.2, roughness: 0.3, clearcoat: 1, emissive: T.accent, emissiveIntensity: 1.6, name: 'hub-accent' })); }
   // a dark machined ring between the badge's chrome bead and the accent ring, so the accent stands apart from a bright
   // badge (the Rossinis' yellow R: the review of 2026-11-12)
@@ -352,16 +355,36 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   };
   // (the dash's own profile moves with the driver's frame; its front edge stays on the glass)
   const sh = (pts: [number, number][]): [number, number][] => pts.map(([z, y]) => [z + sZ, y + sY]);
-  const dashTop = (x: number): [number, number][] => {
+  const dashTop = (x: number, close = true): [number, number][] => {
     const [zb, yb] = glassBase(x);
     // (the hypercar's falls from its crest straight to the glass: from its seat the others' shelf stood over the cowl
     // and hid the bonnet's rear half)
-    if (hyper) return [[zb, yb], [zb + 0.06, Math.min(yb + 0.004, 0.85 + sY)], ...sh([[-0.78, 0.861], [-0.73, 0.858], [-0.69, 0.847]])];
+    // (and, 2026-11-24, a closing panel 13 cm on, 2 cm under the cowl's skin and following it over the humps: between
+    // the dash's front edge, 1.6 cm under the skin, and the glass, 0.6 cm under it, the iPhone seat's rays down through
+    // the glass's foot passed into the body and showed the road under it, a grey slab along the cowl, and by the
+    // A-pillar's foot the front wheel well's dark liner)
+    if (hyper) { const ax = Math.abs(x), z1 = zb - 0.13, z2 = zb - 0.07; return [...(close ? [[z1, body.top(z1, ax) - 0.02], [z2, body.top(z2, ax) - 0.02]] as [number, number][] : []), [zb, yb], [zb + 0.06, Math.min(yb + 0.004, 0.85 + sY)], ...sh([[-0.78, 0.861], [-0.73, 0.858], [-0.69, 0.847]])]; }
     return [[zb, yb], [zb + 0.06, Math.min(yb + 0.006, 0.85 + sY)], ...sh([[-0.93, 0.855], [-0.81, 0.861], [-0.73, 0.858], [-0.69, 0.847]])];
   };
   const LIP = sh([[-0.69, 0.847], [-0.674, 0.836], [-0.664, 0.818], [-0.665, 0.795]]);
   const FASCIA = sh([[-0.665, 0.795], [-0.659, 0.75], [-0.646, 0.69], [-0.628, 0.62]]);
   const LOWER = sh([[-0.628, 0.62], [-0.632, 0.555], [-0.67, 0.495], [-0.78, 0.445], [-0.96, 0.41]]);
+  // (the hypercar's dash, 2026-11-24: built door to door at cabinW 0.8 m, but its canopy is 0.47-0.5 m wide at the dash,
+  // so the outer 0.3 m each side lay pressed under the fender humps by the build's last step and showed through the
+  // side glass at the A-pillar's foot as stepped dark and white shards. Outboard of 0.38 m the dash, its ends, lip,
+  // fascia, stitching and band are squeezed in to 1.2 cm inside the canopy's flank (ahead of it, to the windscreen's
+  // foot's half-width, so the cowl's closing panel reaches under the glass's corners, clear of the wheel wells), so the white ends and the end
+  // caps stand inside the cabin)
+  // (the flank's half-width at the dash's height, 0.74 m, tabled along z every centimetre and read linearly, so the
+  // warp is smooth for the normals' finite differences)
+  const kwDash = kit.warp, SQ0 = 0.38, SQZ0 = -1.5, SQN = 130, sqT: number[] = [];
+  if (hyper) for (let i = 0; i <= SQN; i++) { const f = body.flankX(SQZ0 + i * 0.01, 0.74); sqT.push(Math.min(f < 0.3 ? 1 : f - 0.012, WS.xb - 0.002)); }   // (over the sunken bonnet, where no flank stands at 0.74 m, the windscreen's)
+  const sqW = (z: number) => { const f = clamp((z - SQZ0) / 0.01, 0, SQN - 1e-6), i = Math.floor(f); return sqT[i] + (sqT[i + 1] - sqT[i]) * (f - i); };
+  if (hyper) kit.warp = (p) => {
+    const a = Math.abs(p.x); if (a <= SQ0) return false;
+    const W = sqW(p.z); if (W <= SQ0 + 0.01) return false;
+    p.x = Math.sign(p.x) * (SQ0 + (Math.min(a, D) - SQ0) * (W - SQ0) / (D - SQ0)); return true;
+  };
   const top = loftX(xs, dashTop, true);
   kit.add('dashTop', top); ghost.push(top);
   // (the hypercar, after the owner's interior reference: the lip and fascia white leather at each end, where the dash
@@ -381,7 +404,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   kit.add(hyper ? 'carbon' : 'plastic', loftX(xs, () => LOWER, true));
   // dash ends against the doors
   for (const sd of [-1, 1]) {
-    const x = sd * (D - 0.001), pts = [...dashTop(x), ...LIP.slice(1), ...FASCIA.slice(1), ...LOWER.slice(1)];
+    const x = sd * (D - 0.001), pts = [...dashTop(x, false), ...LIP.slice(1), ...FASCIA.slice(1), ...LOWER.slice(1)];
     const sh = new THREE.Shape(pts.map(([z, y]) => new THREE.Vector2(z, y)));
     const cap = new THREE.ShapeGeometry(sh, 1); cap.rotateY(-Math.PI / 2); cap.translate(x, 0, 0);
     kit.add(hyper ? 'white' : 'nappa', cap, null, 0.1);
@@ -409,6 +432,19 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     if (!hyper) band(-(D - 0.006), -0.64);
     band(T.binnacle === 'screen' ? 0.06 : -0.1, hyper ? XW[1] : D - 0.006);
     });
+  }
+  kit.warp = kwDash;
+  // the hypercar's dash-end cheeks (2026-11-24): a dark suede panel each side at the squeezed dash's end, from under
+  // the dash top up to the side glass's foot (or the skin, ahead of it), from the windscreen's foot back to the door,
+  // closing the corner by the A-pillar's foot where the door top, the dash end, the pillar and the carpet's edges met
+  // over the open body and the wheel well showed between them in stepped dark shapes, from the iPhone seat
+  if (hyper) for (const sd of [-1, 1]) {
+    const rows: V3[][] = [];
+    for (const z of range(glassBase(sd * 0.46)[0] + 0.01, -0.74, 18)) {
+      const x = sqW(z), yTop = Math.min(lerp(SG.fb[1], SG.rb[1], clamp((z - SG.fb[0]) / (SG.rb[0] - SG.fb[0]), 0, 1)) + 0.002, body.top(z, x) - 0.012);
+      rows.push([v3(sd * x, 0.66, z), v3(sd * x, Math.max(0.67, yTop), z)]);
+    }
+    kit.add('alc', gridGeo(rows, { flip: sd > 0 }));
   }
   // round vents: brushed bezel, dark throat, five vanes, a knob (and the centre stack under them)
   moved(0, sY, sZ, () => {
@@ -848,7 +884,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const zBack = 0.565, NZ = high ? 16 : 8, NX = high ? 24 : 12;
     const edgeX = (z: number) => {
       if (z <= SG.ft[0]) return Math.abs(sgPoint(0, 1, 1).x);
-      if (z >= SG.rt[0]) return body.canopyX(z, SG.rt[1] - (z - SG.rt[0]) * 0.25) - 0.01;
+      if (z >= SG.rt[0]) return body.flankX(z, SG.rt[1] - (z - SG.rt[0]) * 0.25) - 0.01;
       return Math.abs(sgPoint((z - SG.ft[0]) / (SG.rt[0] - SG.ft[0]), 1, 1).x);
     };
     const rows: V3[][] = [];
@@ -910,7 +946,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   const sill = (z: number) => lerp(SG.fb[1], SG.rb[1], clamp((z - SG.fb[0]) / (SG.rb[0] - SG.fb[0]), 0, 1)) - 0.004;
   // the cabin's side wall: the door cards' face at 0.866 m; in the hypercar's narrow canopy, 15 mm inside its flank
   // just under the glass (0.39 to 0.49 m), so nothing of the tub stands out over the sidepods
-  const wallX = (z: number) => hyper ? body.canopyX(z, sill(z) - 0.02) - 0.015 : 0.866;
+  // (cached by z: the door's warp asks it for every vertex, and the loft's rows share their z)
+  const wallC = new Map<number, number>();
+  const wallX = (z: number) => {
+    if (!hyper) return 0.866;
+    let w = wallC.get(z); if (w === undefined) { w = body.flankX(z, sill(z) - 0.02) - 0.015; wallC.set(z, w); }
+    return w;
+  };
   for (const sd of [-1, 1] as const) {
     // (the hypercar's in finer steps: its canopy's foot turns in sharply by the windscreen, and the door's front rows,
     // 10 cm apart, cut across the skin there; the build's last step keeps the finer rows inside it)
@@ -956,6 +998,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
       // the window switches: a gloss pad on the card's face ahead of the armrest, four brushed rockers on it (nearly
       // flush, 6 mm proud at most: the left forearm passes over them to the rim)
       const pad = new RoundedBoxGeometry(0.006, 0.05, 0.085, 2, 0.0025); pad.translate(X(0.8525), 0.53, -0.43); kit.add('gloss', pad, null, 0.05);
+      // (2026-11-24: the pad floated on the bare black card: a white leather door-card panel behind it, the reference's
+      // white flowing down the door, with an ice line along its foot)
+      const back = new RoundedBoxGeometry(0.005, 0.13, 0.34, 3, 0.0024); back.translate(X(0.8558), 0.525, -0.4); kit.add('white', back, null, 0.08);
+      if (mats.amb) kit.add('amb', ambLine(range(-0.565, -0.235, 12).map((z) => v3(X(0.8528), 0.459, z)), v3(0, 1, 0), 0.012));
       for (const [dz, dy] of [[-0.02, 0.011], [0.02, 0.011], [-0.02, -0.011], [0.02, -0.011]]) {
         const r = new RoundedBoxGeometry(0.006, 0.014, 0.026, 2, 0.002); r.translate(X(0.849), 0.53 + dy, -0.43 + dz); kit.add('alu', r, null, 0.02);
       }
@@ -976,7 +1022,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     // (its front half 1.4 cm lower since the cockpit repair: by the A-pillar's foot the cap lay within a centimetre of the
     // shoulder's paint and the two fought through the side glass in torn shards; lower, it tucks under the shoulder)
     if (hyper) kit.add('carbon', loftZ(zs, (z) => {
-      const ys = sill(z) - 0.014 * (1 - sstep(-0.62, -0.4, z)), w = wallX(z), gx = body.canopyX(z, ys + 0.012) - 0.008;
+      const ys = sill(z) - 0.014 * (1 - sstep(-0.62, -0.4, z)), w = wallX(z), gx = body.flankX(z, ys + 0.012) - 0.008;
       return [[X(w - 0.002), ys - 0.014], [X(w + 0.002), ys - 0.009], [X(lerp(w, gx, 0.5)), ys - 0.003], [X(gx + 0.002), ys + 0.002], [X(gx - 0.002), ys + 0.006]];
     }, flip), null, 0.1);
   }
@@ -1238,8 +1284,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // sees inside the cabin moves. (The glass and frit lie on the skin itself; the plaque is placed on the door above)
   if (hyper) {
     const q = new THREE.Vector3();
+    // (2026-11-24: the door's layers under the sill cap go further in than the cap, so two layers near the skin are
+    // never pressed onto the same depth: by the A-pillar's foot the door top's suede and the cap's carbon were both moved
+    // to 1.2 cm under it and fought in a jagged comb along the glass's foot, seen from the seat and the wheel frame)
+    const UNDER = new Set(['alc', 'white', 'tan', 'doorLow', 'amb', 'stitchDark', 'gloss', 'alu']);
     for (const [k, m] of Object.entries(built)) {
       if (/glass|frit|dust/i.test(k)) continue;
+      const under = UNDER.has(k), mm = under ? 0.04 : 0.03, cl = under ? 0.022 : 0.012;
       const pa = m.geometry.attributes.position as THREE.BufferAttribute; let moved = false;
       for (let i = 0; i < pa.count; i++) {
         q.fromBufferAttribute(pa, i);
@@ -1249,7 +1300,7 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
         // (and out of the front wheels' wells, which the wheels' move back brought under the footwells' nappa; and a
         // point inside but within 1.2 cm of the skin goes 1.2 cm in, as a face between two such points crossed the
         // skin's flat facets: the dash's carbon and the headliner's edges along the shoulder and the pillars' feet)
-        if (body.keepInside(q, 0.03, { wells: true, clear: 0.012 })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
+        if (body.keepInside(q, mm, { wells: true, clear: cl })) { pa.setXYZ(i, q.x, q.y, q.z); moved = true; }
       }
       if (moved) { pa.needsUpdate = true; m.geometry.computeBoundingSphere(); }
     }
