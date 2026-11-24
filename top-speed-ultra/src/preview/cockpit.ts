@@ -359,11 +359,11 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     const [zb, yb] = glassBase(x);
     // (the hypercar's falls from its crest straight to the glass: from its seat the others' shelf stood over the cowl
     // and hid the bonnet's rear half)
-    // (and, 2026-11-24, a closing panel 18 cm on, 2 cm under the cowl's skin and following it over the humps: between
+    // (and, 2026-11-24, a closing panel 13 cm on, 2 cm under the cowl's skin and following it over the humps: between
     // the dash's front edge, 1.6 cm under the skin, and the glass, 0.6 cm under it, the iPhone seat's rays down through
     // the glass's foot passed into the body and showed the road under it, a grey slab along the cowl, and by the
     // A-pillar's foot the front wheel well's dark liner)
-    if (hyper) { const ax = Math.abs(x), z1 = zb - 0.18, z2 = zb - 0.08; return [...(close ? [[z1, body.top(z1, ax) - 0.02], [z2, body.top(z2, ax) - 0.02]] as [number, number][] : []), [zb, yb], [zb + 0.06, Math.min(yb + 0.004, 0.85 + sY)], ...sh([[-0.78, 0.861], [-0.73, 0.858], [-0.69, 0.847]])]; }
+    if (hyper) { const ax = Math.abs(x), z1 = zb - 0.13, z2 = zb - 0.07; return [...(close ? [[z1, body.top(z1, ax) - 0.02], [z2, body.top(z2, ax) - 0.02]] as [number, number][] : []), [zb, yb], [zb + 0.06, Math.min(yb + 0.004, 0.85 + sY)], ...sh([[-0.78, 0.861], [-0.73, 0.858], [-0.69, 0.847]])]; }
     return [[zb, yb], [zb + 0.06, Math.min(yb + 0.006, 0.85 + sY)], ...sh([[-0.93, 0.855], [-0.81, 0.861], [-0.73, 0.858], [-0.69, 0.847]])];
   };
   const LIP = sh([[-0.69, 0.847], [-0.674, 0.836], [-0.664, 0.818], [-0.665, 0.795]]);
@@ -372,13 +372,13 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
   // (the hypercar's dash, 2026-11-24: built door to door at cabinW 0.8 m, but its canopy is 0.47-0.5 m wide at the dash,
   // so the outer 0.3 m each side lay pressed under the fender humps by the build's last step and showed through the
   // side glass at the A-pillar's foot as stepped dark and white shards. Outboard of 0.38 m the dash, its ends, lip,
-  // fascia, stitching and band are squeezed in to 1.2 cm inside the canopy's flank (ahead of it, to 1.5 cm past the
-  // windscreen's foot, so the cowl's closing panel reaches under the glass's corners), so the white ends and the end
+  // fascia, stitching and band are squeezed in to 1.2 cm inside the canopy's flank (ahead of it, to the windscreen's
+  // foot's half-width, so the cowl's closing panel reaches under the glass's corners, clear of the wheel wells), so the white ends and the end
   // caps stand inside the cabin)
   // (the flank's half-width at the dash's height, 0.74 m, tabled along z every centimetre and read linearly, so the
   // warp is smooth for the normals' finite differences)
   const kwDash = kit.warp, SQ0 = 0.38, SQZ0 = -1.5, SQN = 130, sqT: number[] = [];
-  if (hyper) for (let i = 0; i <= SQN; i++) sqT.push(Math.min(body.flankX(SQZ0 + i * 0.01, 0.74) - 0.012, WS.xb + 0.015));
+  if (hyper) for (let i = 0; i <= SQN; i++) { const f = body.flankX(SQZ0 + i * 0.01, 0.74); sqT.push(Math.min(f < 0.3 ? 1 : f - 0.012, WS.xb - 0.002)); }   // (over the sunken bonnet, where no flank stands at 0.74 m, the windscreen's)
   const sqW = (z: number) => { const f = clamp((z - SQZ0) / 0.01, 0, SQN - 1e-6), i = Math.floor(f); return sqT[i] + (sqT[i + 1] - sqT[i]) * (f - i); };
   if (hyper) kit.warp = (p) => {
     const a = Math.abs(p.x); if (a <= SQ0) return false;
