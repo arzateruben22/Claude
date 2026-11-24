@@ -36,7 +36,8 @@ async function boot(skin, opts) {
   await page.goto(pathToFileURL(WARM).href); await page.goto(pathToFileURL(GAME).href);
   await page.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: 400000 });
   await page.getByRole('radio', { name: /Free Drive/ }).click();
-  await page.getByRole('button', { name: 'Drive', exact: true }).click();
+  // (the menu's start button is 'Start run' since the UI batch, 2026-11-24)
+  await page.getByRole('button', { name: 'Start run', exact: true }).click();
   await page.waitForFunction(() => !window.__game.inAttract && !document.querySelector('.loadbar'), null, { timeout: 900000, polling: 500 });
   await page.evaluate(() => {
     const g = window.__game;

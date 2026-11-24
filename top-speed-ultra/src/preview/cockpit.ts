@@ -1400,6 +1400,9 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
           }
           rows.push(r);
         }
+        // (kept 6-8 mm under the skin like the rest of the cabin: ahead of the side glass its outer edge, set by the
+        // glass's foot, stood 4 mm over the valley between the canopy and the hump, on the suite's front-left skin check)
+        for (const r of rows) for (const p of r) body.keepInside(p, 0.008, { clear: 0.006, ramp: 0.02, wells: true });
         parts.push(gridGeo(rows, { flip: sd < 0 }));
       }
       const g = mergeGeometries(parts, false);
