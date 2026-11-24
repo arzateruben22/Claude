@@ -10161,3 +10161,23 @@ wrong" (the page died, most likely iOS's GPU/memory limit during the new warm-up
 812ecfb (v31: the carousel fix, no warm-up). The warm-up stays on claude/tender-fermat-sk9rby; two fix branches are
 in progress: claude/ultra-ios-crash (memory accounting, caps, no reload on context loss) and claude/paint-preview (the
 Paint tab showed the hypercar silver with Obsidian selected).
+
+### 2026-11-24 (~4:00 PM PT): the Paint tab shows the paint picked (claude/paint-preview, not published)
+
+The owner's iPhone (light theme): OC Hypercar, Obsidian selected, the stage showed the car silver. Root cause: the
+hypercar's paint writes the bloom's share (0.3) into the frame's alpha (car-mats paint `bloom`, read by the game's
+bloom pass); the garage stage renders straight into a corner of the game's canvas with no such pass, so the body's
+pixels were copied out at alpha 0.3 and drawn over the card's previous picture: 70 % of the last frame (or of the
+seeded factory-silver still) showed through every new paint. Only the hypercar writes that alpha, so the other four
+cars were unaffected. Fix: Game.drawStage sets the alpha to 1 in its scissored corner before the copy (colour
+untouched; three's colour-buffer cache reset). The carousel's stills and the Founder reveal go through it too.
+Proof (390 x 844, light theme, every car x every swatch, 45 picks; body = pixels that differ between the car's
+lightest and darkest pick): before, 6 of the hypercar's 9 picks failed (Obsidian body luminance 0.56 of Platinum's,
+swatch 0.07; Midnight 0.74 vs 0.10; Titanium 0.99 vs 0.51); after, all 45 pass (Obsidian 0.10), and each pick showed
+at the first sample after the tap. The other cars' numbers are identical before and after. New progression check
+"the Paint tab's stage shows the paint picked": hypercar body 28 dark / 155 light, GT 10 / 121, each pick on the stage
+in 8–9 frames (limit 20); against the pre-fix build it fails (the hypercar's dark/light 170/237).
+Checks: tsc clean, build OK, `--only=progression,phone` 51/53: the known sleeve check, and "Go to: navigation line"
+(the line read "430 ft CONTINUE I-405 NORTH"; run alone it times out on a click on both the pre-fix and the fixed
+build; the change runs only while a garage stage renders). Open question: on Low/Medium (no post chain) the main
+frame may also carry the hypercar's alpha 0.3 to the page; not checked here (render targets are another branch's).
