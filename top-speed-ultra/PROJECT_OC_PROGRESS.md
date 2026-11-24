@@ -10083,3 +10083,15 @@ phone checks it touched 7/7, progression 15/15, economy groups pass; two modes e
 on the v28 base in this environment. Full suite still owed before launch.
 Left (pre-launch list): small dark stepped shapes at the left A-pillar corner; roof rail and mirror; softer ambient
 strips; bonnet louvres; thicker tail blades; tests/retrohud-frames.mjs still targets the removed .hb-round.
+
+### 2026-11-24 (~11:20 AM PT): v30 published to the main link: the OC Hypercar polish round
+
+claude/hyper-polish merged into claude/tender-fermat-sk9rby (root cause of the seat-view flicker: keepInside's
+stepped depths and coplanar pressing of the cabin layers, plus the vents' slope-scaled offset; fixed with a depth
+ramp, a 2.5 mm depth per part type, a suede A-pillar corner shroud and offset louvre materials; also bonnet louvres,
+thinner curved ambient strips, 38 mm red tail blades, tests/retrohud-frames.mjs on BRAKE's slide-up; details in
+LANE_STATE_COCKPIT.md). The owner then chose option B: no roof band over the seat view, so the roof rail, the lined
+roof and the roof console were removed (c61d005); the mirror stays (out of the portrait frame).
+Checks: the polish branch's `--only=render,phone` 54/57 (the skin-edge failure fixed in f8a55bb; the wake flake and
+the known sleeve check) and its 12/12 re-run; after the roof removal: tsc clean, build OK, every hypercar, hood and
+seat-view check in render and phone 10/10. Owed before launch: the full suite once.
