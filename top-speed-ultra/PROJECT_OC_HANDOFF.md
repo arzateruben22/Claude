@@ -777,7 +777,7 @@ person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_O
 
 ### Pre-launch tweak list (owner, 2026-11-24; the owner adds to this after the menu/garage + shard update)
 
-1. **ABS | TCS: no switches; the handling setting decides** (owner, 2026-11-24: "I think we should take off the abs and
+1. **(Moved into the UI batch, claude/ui-batch, at the owner's request 2026-11-24 ~10:50 PM PT.) ABS | TCS: no switches; the handling setting decides** (owner, 2026-11-24: "I think we should take off the abs and
    tcs"; then "whatever makes the game more seamless in ur professional opinion"). Decided: remove the ABS | TCS bar
    from the HUD (Ultra and Retro) and add no toggles anywhere. ABS always on. TCS follows the existing handling
    setting: on for Arcade and Sport, off for Simulation (Custom: on below the Simulation point 0.9, off at it).
