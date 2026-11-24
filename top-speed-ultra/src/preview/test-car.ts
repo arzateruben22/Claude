@@ -161,11 +161,18 @@ if (interior) {
   if (q.get('head') === 'night') { const m = c.userData.materials as Record<string, THREE.MeshStandardMaterial>; if (m.lamp) m.lamp.emissiveIntensity = 5.4; log.head = 'night'; }
   log.buildMs = Math.round(performance.now() - t0);
   if (view === 'side') look(L(-14, 0.62, 0), L(0, 0.62, 0));
+  // (the hypercar, the owner's 2026-11-23 side.png and rear34.png: their cameras, roughly: the side from about roof height
+  // and closer, the car across ~90 % of the frame; the rear three-quarter closer and more from the side)
+  const refCam = car === 'oc-hyper' && !q.get('cy');
+  if (view === 'side' && refCam) look(L(-11.6, 1.3, 0.1), L(0, 0.55, 0.1));
   if (view === 'top') look(L(0, 16, 0.01), L(0, 0, 0));
   if (view === 'top-full') look(L(0, 21, 0.01), L(0, 0, 0));   // the whole car, splitter to wing
   // &cy= raises the front and back cameras (the reference sheet's FRONT and REAR panels look down a little)
   const cy = Number(q.get('cy') ?? 0.75);
   if (view === 'front') look(L(0, cy, -14), L(0, 0.62 - (cy - 0.75) * 0.3, 0));
+  // (the hypercar, the owner's 2026-11-23 front.png: closer and a little above the bonnet, the car about two thirds of
+  // the frame's width, so the five blades and the lamps compare at their scale; &cy= still gives the old camera)
+  if (view === 'front' && car === 'oc-hyper' && !q.get('cy')) look(L(0, 1.0, -7.2), L(0, 0.52, 0));
   if (view === 'beauty') look(L(-3.9, 1.0, -4.6), L(0.1, 0.5, 0.2));
   if (view === 'rear') look(L(-3.4, 1.05, 5.0), L(0.15, 0.55, 0.1));
   // the reference sheet's hero: low and wide from the front left, a long lens; rear34 the same from behind
@@ -173,7 +180,7 @@ if (interior) {
   // (solved from six landmarks on the sheet's hero, 13 px rms on its 1774 x 460 panel: 0.53 m up, 3.2 m out and 4.4 m
   // ahead of the car's middle, a 58 degree horizontal lens; the panel is this frame scaled 1.848x, rows 246 to 706)
   if (view === 'hero-sheet') look(L(-3.23, 0.53, -4.43), L(0.03, 0.45, -0.55));
-  if (view === 'rear34') look(L(-5.4, 1.1, 7.6), L(0.1, 0.5, -0.1));
+  if (view === 'rear34') { if (refCam) look(L(-4.3, 0.95, 5.3), L(0.3, 0.52, 0.35)); else look(L(-5.4, 1.1, 7.6), L(0.1, 0.5, -0.1)); }
   // the wing up close from behind and above the left end plate: the carbon, a swan neck, the plates and their LEDs
   if (view === 'wing') look(L(-1.75, 1.62, 3.55), L(-0.3, 0.98, 1.95));
   if (view === 'back-ortho') look(L(0, cy, 14), L(0, 0.62 - (cy - 0.75) * 0.3, 0));
@@ -190,7 +197,7 @@ if (interior) {
     if (view === 'sky-zoom') { camera.position.copy(L(0, 150, 0)); camera.lookAt(L(0, 0, 0.001)); }
   }
 }
-if (debug && !view.startsWith('lineup')) camera.fov = view === 'wheel-side' ? 5.2 : 16;
+if (debug && !view.startsWith('lineup')) camera.fov = view === 'wheel-side' ? 5.2 : view === 'front' && car === 'oc-hyper' && !q.get('cy') ? 22 : 16;
 if (view === 'garage' && CAR_IDS.length > 4) camera.fov = CAR_IDS.includes((q.get('focus') ?? '') as CarId) ? 34 : 40;
 // &cam=x,y,z&at=x,y,z[&fov=deg]: any camera in the car's frame (a close look at one detail); overrides the view's
 if (q.get('cam') && q.get('at')) {

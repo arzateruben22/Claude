@@ -60,7 +60,7 @@ export interface ShapeParams {
   cornerIntake: [number, number][] | null; // an opening in each front corner (|x|, y): inner-bottom, outer-bottom, outer-top, inner-top
   rearMesh: { w: number; h: number; cy: number } | null;
   exhaust: 'twin' | 'single' | 'high' | 'none' | 'centre';   // centre: the OC Hypercar's twin round tips side by side on the centre line
-  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number; finTail?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor); finTail: the fins stand this far out behind the tail as tall blades
+  diffuser: { half: number; h: number; z0: number; fins: number[]; top?: number; finTail?: number; finW?: number };   // top: the mouth's half-width at its top edge (a trapezoid whose sides lean out to half at the floor); finTail: the fins stand this far out behind the tail as tall blades
   splitter: { w: number; d: number; proud: number; canards: boolean };
   wing: { span: number; chord: number; y: number; z: number; mountX: number; plate?: [number, number] } | null;   // plate: end-plate length, height
   scoop: boolean;
@@ -108,7 +108,7 @@ export interface ShapeParams {
   // M1b, the hypercar's face: below a lip line (|x|, y; a polyline from the centre out) the nose is set back `recess`
   // metres inside the fangs (|x| < xf), so a crisp silver lip overhangs a dark intake zone; fins: vertical carbon
   // fins standing in it (x, and how far the top leans in), from the splitter up under the lip
-  face?: { lip: [number, number][]; xf: number; recess: number; fins: [number, number][] };
+  face?: { lip: [number, number][]; xf: number; recess: number; fins: [number, number][]; v?: [number, number, number] };   // v: the fang's inner edge as a V in the front view, [the vertex's height, how far in it comes, the edge's top height]; fins: [x, lean] (x 0 one centre fin, else a pair)
   finFwd?: number;                       // the face's fins stand this far ahead of the recessed face at their foot, on the splitter
   // M1b, the hypercar's tail: the face between the valance (y0) and the bar (y1) is a recess `depth` deep, inset
   // `inset` from the tail's sides, so the silver haunches wrap round it; the red bar runs along its top edge and
@@ -341,15 +341,17 @@ const HYPER: ShapeParams = {
   noseIntake: [[-0.48, 0.09], [0.48, 0.09], [0.43, 0.26], [-0.43, 0.26]],
   // the 'fang': a tall corner intake under the blade's outer half, an LED down its outer edge into the splitter
   // (M1b: inside the fang, so its LED runs down the fang's inner edge)
-  cornerIntake: [[0.58, 0.1], [0.75, 0.1], [0.77, 0.33], [0.62, 0.3]],
+  cornerIntake: [[0.56, 0.1], [0.75, 0.1], [0.69, 0.3], [0.58, 0.3]],   // (round 4: its outer edge inside the fang's V)
   // (2026-11-23, the owner's references: a honeycomb panel filling the tail's recess, the twin round tips side by side on
   // the centre line in it, and the plate moved up under the tail's top edge, smaller)
   rearMesh: { w: 1.3, h: 0.2, cy: 0.49 },
-  exhaust: 'centre',
+  exhaust: 'centre',   // (round 4, rear34.png: three rounded-square outlets side by side, car-body)
   // the diffuser's mouth: a wide trapezoid under the plate (the sheet's REAR: its LED outline runs across at about
   // half the tail's width and angles down and out to the tail's lower corners)
   // (2026-11-23: the references' five tall carbon fins standing out behind the tail, in place of eight short strakes)
-  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.5, -0.25, 0, 0.25, 0.5], top: 0.47, finTail: 0.15 },
+  // (round 4, the owner's 2026-11-23 rear34.png: fewer, larger fins: four 6 cm carbon blocks, evenly spaced, standing
+  // further out, each edged ice blue along its top and trailing edge)
+  diffuser: { half: 0.67, h: 0.36, z0: 1.75, fins: [-0.39, -0.13, 0.13, 0.39], top: 0.47, finTail: 0.19, finW: 0.06 },
   // (M1b: proud 0.24 -> 0.12, so the blade tucks under the nose: its leading edge 3 cm ahead of the lip's point)
   // (2026-11-23: the references' splitter stands well clear of the nose, about 0.2 m in their side view)
   splitter: { w: 1.94, d: 0.7, proud: 0.2, canards: false },
@@ -416,7 +418,7 @@ const HYPER: ShapeParams = {
   ventsQ: [[[0.36, -1.6], [0.5, -1.62], [0.6, -1.2], [0.46, -1.18]]],
   // (judge round 2: the centre vent set back toward the cowl, z -1.95 to -1.35, so a pearl nose runs ahead of it, as
   // in the references, where it started 0.3 m behind the nose by the badge)
-  bonnetVents: { x: [0, 0.3], z: [-1.95, -1.35], n: 10, taper: 0.6 },
+  bonnetVents: { x: [0, 0.3], z: [-1.95, -1.35], n: 5, taper: 0.6 },   // (round 4: five bold slats and a centre rib, front.png)
   plate: { w: 0.36, h: 0.076, y: 0.59 },
   splitterStep: { w: 1.6, d: 0.5, h: 0.035 },
   thrusters: { x: 0.2, y: 0.26, r: 0.03 },
@@ -455,9 +457,12 @@ const HYPER: ShapeParams = {
   // M1b, the face (the sheet's FRONT and hero): the lip runs from 0.33 m at the centre (the nose's blunt point at the
   // badge) up to the blades' inner tips and on under each blade to the fang; below it, inside the fangs, the nose
   // is set back 0.10 m into a dark intake zone with a central divider and angular fins
-  face: { lip: [[0, 0.33], [0.45, 0.372], [0.585, 0.402], [0.675, 0.437], [0.72, 0.458], [0.81, 0.49]], xf: 0.8, recess: 0.1, fins: [[0.1, 0], [0.25, 0.01], [0.4, 0.025], [0.55, 0.04], [0.69, 0.055]] },
+  face: { lip: [[0, 0.33], [0.45, 0.372], [0.585, 0.402], [0.675, 0.437], [0.72, 0.458], [0.81, 0.49]], xf: 0.8, recess: 0.1, fins: [[0, 0], [0.27, 0.012], [0.52, 0.03]], v: [0.3, 0.085, 0.49] },
   // (2026-11-23, the owner's references: ten tall carbon blades across the face, five a side, standing forward on the
   // splitter (finFwd) from its front third up under the lip, over a honeycomb mesh)
+  // (round 4, the owner's 2026-11-23 front.png: "the front grill has way too many skirts ... these provided images only
+  // have 5": FIVE blades, evenly spaced (a centre one and pairs at 0.27 and 0.52 m), under a carbon cross bar, between
+  // the fangs' V-shaped inner edges (face.v), each lit ice blue)
   finFwd: 0.14,
   // M1b, the tail: recessed 0.10 m from the valance's top up to 7.5 cm under the tail's upper edge, inset 6 cm from
   // its sides, the haunches wrapping round it
@@ -494,7 +499,10 @@ const HYPER: ShapeParams = {
     // that follow the lip's polyline and overlap
     { plane: 'front', mirror: true, side: -1, pts: [[-0.05, 0.0], [0.46, 0.0], [0.46, 0.366], [-0.05, 0.322]], soft: 0.004, range: [-3, -1.9] },
     { plane: 'front', mirror: true, side: -1, pts: [[0.44, 0.0], [0.69, 0.0], [0.69, 0.437], [0.44, 0.364]], soft: 0.004, range: [-3, -1.9] },
-    { plane: 'front', mirror: true, side: -1, pts: [[0.67, 0.0], [0.805, 0.0], [0.805, 0.484], [0.67, 0.425]], soft: 0.004, range: [-3, -1.9] },
+    // (round 4: the outer piece in two, so the dark zone's outer edge is the fang's V (face.v): out at the splitter, in to
+    // 0.72 m at 0.30 m, out to the blade's end under the lip)
+    { plane: 'front', mirror: true, side: -1, pts: [[0.6, 0.0], [0.81, 0.0], [0.72, 0.3], [0.6, 0.3]], soft: 0.004, range: [-3, -1.9] },
+    { plane: 'front', mirror: true, side: -1, pts: [[0.6, 0.29], [0.724, 0.29], [0.808, 0.488], [0.6, 0.408]], soft: 0.004, range: [-3, -1.9] },
     // the nose's dark fin zone from the side (in place of noseCarbon's quads): a wedge from the nose back to the
     // fender's front edge, its top 0.24 m at the nose rising to 0.40 m, its rear edge raked back; side-facing faces only,
     // so the fangs' forward faces stay pearl; one per side (a side mask's range is on signed x)
