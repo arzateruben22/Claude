@@ -867,3 +867,6 @@ The member curve keeps the same weekly pace as before, only three weeks sooner (
 ## Nov 23, 2026: booking and sign-in get the soft-gradient look
 - Signing in now asks one thing at a time (email, then name) on a soft taupe-and-blush background, with a round arrow to continue. Still a one-tap email link, no passwords.
 - Booking uses the same look: a serif headline for each step, glass cards and option rows, dark pill buttons with an arrow, and each step fading in as you move between services, the day and your details. How booking works hasn't changed.
+
+## Nov 24, 2026: product names on the homepage shelf
+The "On the shelf now" cards on the homepage showed only a photo, price and Add: the name and size were hidden, and the cards had a blank gap. Each card now says what it is (name, two lines at most, and its size).

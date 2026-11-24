@@ -6267,9 +6267,13 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 .sh-card--compact .sh-brand { top: 0.7rem; left: 0.85rem; }
 .sh-card--compact .sh-big { font-size: 1.9rem; }
 .sh-card--compact .sh-label-name { font-size: 0.95rem; }
-.sh-card--compact .sh-name, .sh-card--compact .sh-meta {
+.sh-card--compact:not(.sh-card--photo) .sh-name, .sh-card--compact:not(.sh-card--photo) .sh-meta {
   position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
+/* a photo doesn't spell the name out, so a photo card says what it is: the name (two lines at most) and its size */
+.sh-card--compact.sh-card--photo .sh-name { font-size: 0.9rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.sh-card--compact.sh-card--photo .sh-meta { font-size: 0.78rem; }
+.sh-card--compact.sh-card--photo .sh-foot { padding-top: 0.2rem; }
 .sh-card--compact .sh-body { padding: 0.6rem 0.85rem 0.8rem; }
 .sh-card--compact .sh-foot { padding-top: 0; }
 .sh-card--compact .btn { padding: 0.5rem 0.8rem; font-size: 0.86rem; }
@@ -7146,6 +7150,8 @@ html.in-app .nc { scroll-margin-top: 8.5rem; }
 
 /* the shop's cards: off-screen ones aren't drawn, and the sticky bar moves on the compositor only */
 .sh-card { content-visibility: auto; contain-intrinsic-size: auto 26rem; }
+/* the homepage strip is only eight cards: no reserved height, so they're as tall as what's in them */
+.hero-shelf-list .sh-card { content-visibility: visible; contain-intrinsic-size: none; }
 .sh-nav { will-change: transform; transition: background-color 200ms ease, transform 280ms ease, opacity 220ms ease; }
 
 /* no service photos anywhere (Nov 23): the booking picker shows the name, time and price only */
