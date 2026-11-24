@@ -876,6 +876,16 @@ Ready-to-paste prompt, under the lean rules above:
   camera's hovering rear wheels; teeth, mouth corners, brows and beards on the people.
 - Merge note (store lane ST1, 2026-10-21): claude/modes had no Ultra entitlement yet, so `claude/store` defines it in `src/store/entitlements.ts` (`ULTRA_ENTITLEMENT = 'graphics-ultra'`, `ultraUnlocked({ owner })`; no sku or price): RS2 should read that flag, not define its own.
 
+### Later side project: a 30-second cinematic trailer (owner, 2026-11-24; after the launch tweaks)
+
+The owner's goal: launch a playable game this week, keep updating, unlock features over time and build a community; the
+trailer is a side project after a few more short tweaks. Plan (Opus-class): real in-engine footage only (honest
+claims: no concept art or AI video presented as the game). A one-page storyboard of 8-12 frames for the owner to
+approve first (drone over the 405, the hypercar reveal and LED wake, cockpit at speed (after the seat-view shard
+fix), chase through traffic, a drift, red tail lights at dusk, Retro Low vs Ultra, the menu); then a deterministic
+frame-by-frame capture at 1080p30 with the game's cinematic and dev-page cameras, cut with OC Ultra title cards and an
+end logo. Music: original or licensed only (ask the owner for a track, or deliver a silent cut with timing marks).
+
 ## For Lot 57's owners (from the sports bar's S1, 2026-11-02; `PROJECT_OC_SPORTS_BAR.md` open item O28)
 
 Two shadow flaws in Lot 57's page (`src/onfoot/main.ts` at `claude/onfoot` ab9fbe1), found by reading three.js 0.160.1
