@@ -3765,6 +3765,7 @@ await group('render', async (use) => {
       if (slow && q !== 'low') await shot(`quality-${q}`);
       out.push(`${q}: ${s.roads} chunks, ${s.tiles} tiles, post ${s.post ? 'on' : 'off'}, mirrors ${s.live ? 'live' : 'env'}, palm crowns ${s.crown} triangles, ${s.plans} house plans${slow || q === 'low' ? `, 3 frames in ${((Date.now() - t0) / 1000).toFixed(0)} s` : ''}`);
     }
+    await game(page, () => window.__game.warmIdle());       // a switch's warm-up (Game.prepareSwitch) done before the next check
     return out.join('; ');
   });
   // hypercar M6: the Founder Edition's lights wake on the start line (a run's start; Races were removed): dark, then
@@ -3813,6 +3814,7 @@ await group('render', async (use) => {
       g.updateSettings({ ...g.settings, quality: 'ultra', density: 'moderate' });
       return s;
     });
+    await game(page, () => window.__game.warmIdle());       // the menu's own quiet warm-up for Ultra (minutes on SwiftShader)
     const t0 = Date.now();
     await drive(page, 'Free Drive');
     const loadS = (Date.now() - t0) / 1000;

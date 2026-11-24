@@ -4,6 +4,33 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-24: Ultra warms up behind the loading screen (no stutter once you drive)
+
+Branch `claude/ultra-warmup` on v30 (45ee8a2), not pushed, not published. The owner: "make sure it doesn't lag when
+choosing ultra for graphics? Like have everything set and working smoothly before the game starts playing ultra".
+Opus-class (no budget or LOD change was needed; nothing queued for Fable).
+- **Measured first** (SwiftShader, 640x360 desktop, ~30 frames after control, per-frame GL counts; logs and the table in
+  the session scratchpad `ultra/`, summary.md). The stalls on v30 were not shader compiles in the main view (the menu's
+  Ultra drive had compiled those) and not chunk building (the prebuild builds everything within the draw distance), but:
+  the live door mirror's first draw on the first driven frame (its target, ~0.5 MB of buffers for what's behind the
+  car, the GPU pipelines: a 4.1-4.5 s frame here, 1 stall in 30 frames); the environment map's first rebuild 2-3 s in
+  (two programs compiled on every sky change, every preset); a pause-screen switch to Ultra freezing the pause screen
+  (~95 programs and the 4K shadow map on one paused frame, ~20 s here, no feedback); and a graphics check running when
+  a run starts (its round's preset stays in force behind the loading screen).
+- **Built:** `Game.warmUp` (technical notes, "The warm-up"): on High and Ultra the run's environment map, every texture,
+  every program (for the composer's target) and one hidden, GPU-finished frame from each of the five View cameras,
+  before control; the same for a mid-drive switch (a "Preparing Ultra" sheet), the boot, a menu switch (quietly) and
+  each graphics-check round. Starting a run or picking a preset stops a running check first. One PMREM generator for the
+  session. The loading bar shows real progress. Low, Medium and Retro skip the warm-up.
+- **After** (same scenarios): stalls (frames over 3x the median) 1 → 0 and programs linked after control 2 → 0 for
+  start on Ultra with the OC Hypercar; 0 → 0 stalls and 2 → 0 programs with the Rossini GT; 1 → 0 and 2 → 0 on a View
+  cycle through all five cameras; 1 → 0 for Ultra picked on the menu and started at once; 1 → 0 for Start during the
+  check's "High at 75%" (loading 56 → 18 s here). The pause switch: the same work now under the sheet, 0 programs after
+  Resume either way. Loading here (Start to control): Ultra 27.7 → 36.0 s (Hypercar), 29.3 → 34.2 s (GT); High 16.1
+  → 20.3 s; Low 5.7 → 5.6 s, Retro 5.1 → 5.0 s (unchanged). SwiftShader times, not a phone's.
+- **Suite:** render group's new check "Ultra: no shader program compiled after the loading screen, in the first seconds
+  of a drive or on the first View cycle" (linkProgram counted from control on, 8 frames then two per View step).
+
 ## 2026-11-24: the owner's UI batch (menu, garage, View on phones, the handbrake on BRAKE, a fixed field of view, no ABS | TCS bar)
 
 Branch `claude/ui-batch` on v28 (7b6dfc7), not pushed, not published. The handoff's two queued sections (menu and garage

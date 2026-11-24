@@ -448,6 +448,8 @@ export class Game {
   /** the last warm-up (tests): why, how long, programs before and after, textures, the views drawn */
   warmLog: { why: string; ms: number; programs: [number, number]; textures: number; views: string[] } | null = null;
   warmNeeded() { const q = this.preset(); return q.post && !this.style; }
+  /** (tests) resolves once every warm-up asked for so far is done */
+  warmIdle(): Promise<void> { return this.warmChain; }
   private warmUp(text: string | null, from = 0, to = 1, views: CamMode[] = CAMS): Promise<void> {
     const job = this.warmChain.then(() => this.warmJob(text, from, to, views)).catch((e) => console.warn('warm-up', e));
     this.warmChain = job;
@@ -501,9 +503,11 @@ export class Game {
       const list: CamMode[] = this.attract ? ['cinematic'] : views;
       const keep = { cam: this.cam, blend: this.camBlend, free: this.input.freeLook, p: this.camera.position.clone(), q: this.camera.quaternion.clone(), fov: this.camera.fov,
         near: this.camera.near, chase: this.chasePos.clone(), fwd: this.chaseFwd.clone(), cineT: this.cineT, cineShot: this.cineShot, dip: this.dip.t };
+      let mine: CamMode | null = null;                           // the camera this warm-up put in (a View press meanwhile wins)
       try {
         for (let k = 0; k < list.length; k++) {
-          this.cam = list[k]; this.camBlend = 1; this.input.freeLook = list[k] === 'free';
+          if (mine !== null && this.cam !== mine) break;           // the camera was changed while this one yielded
+          this.cam = mine = list[k]; this.camBlend = 1; this.input.freeLook = list[k] === 'free';
           this.updateCamera(1);                                  // (a whole second: the chase and film cameras settle where they'd be)
           this.draw(performance.now(), 0);
           finish();
@@ -512,7 +516,7 @@ export class Game {
           if (this.ctxLost) return;
         }
       } finally {
-        this.cam = keep.cam; this.camBlend = keep.blend; this.input.freeLook = keep.free;
+        if (mine === null || this.cam === mine) { this.cam = keep.cam; this.camBlend = keep.blend; this.input.freeLook = keep.free; }
         this.camera.position.copy(keep.p); this.camera.quaternion.copy(keep.q); this.camera.fov = keep.fov; this.camera.near = keep.near; this.camera.updateProjectionMatrix();
         this.chasePos.copy(keep.chase); this.chaseFwd.copy(keep.fwd); this.cineT = keep.cineT; this.cineShot = keep.cineShot; this.dip.t = keep.dip;
         const v = this.view3(); this.car.setOutsideView(!(v === 'cockpit' || v === 'free'));
