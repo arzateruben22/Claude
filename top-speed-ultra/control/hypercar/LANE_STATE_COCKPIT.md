@@ -309,3 +309,48 @@ Still open:
   with a ragged edge. The bonnet edge still shows the exterior's louvres (exterior lane).
 - The emblem is a flat bevelled extrusion with a painted chrome gradient; the reference's has sharper facets.
 - The matched camera still cannot show the seats (the camera limit, as before).
+
+## Shards round (branch claude/hyper-shards from v28 7b6dfc7, 2026-11-24): the torn A-pillar foot and wheel frame
+
+Root cause (both severity-4 defects): `body.canopyX` (car-body.ts) bisected the top surface as if it fell all the way
+out from the middle. The hypercar's fender humps rise again outboard of the canopy's foot (the top is 0.75 m at |x|
+0.5 and 0.82 m at 0.75 by the A-pillar), so for heights near the glass's foot (z -0.95..-0.75) the bisection landed
+on the hump's OUTER slope, 0.3 m out: canopyX(-0.88, 0.765) gave 0.855 against the true flank's 0.47. Everything
+placed by it went out onto the humps: the side glass's front-bottom corner and its frit, the door cards' fronts
+(cockpit wallX), the sill cap and the door top. keepInside then pressed those parts 1.2-3 cm under the hump's
+paint, where (seen through the side glass from the seat, and in the wheel frame) they fought it in the black and
+white shards, the jagged comb and the wedges. Not a near-plane artefact: the game's cockpit near is 0.05 m and the
+nearest torn pixel is 0.47 m away (picks by ray). The "canopy behind the driver" position-pass reading was the
+paint's own inner faces behind the side glass (culled).
+
+Fixed:
+- car-body.ts: a new `body.flankX(z, y)`, the canopy's own flank: for the hypercar (`HUMPED`, P.interior 'hyper')
+  the first crossing going outward, or the valley between canopy and hump where the top never falls to y (and
+  canopyX ahead of the canopy, where the top at the middle is under y); for the other cars it is canopyX. canopyX
+  itself is unchanged (the body's extent at that height: the suite's skin checks read it). flankX now places the
+  side glass (sgPoint: its front-bottom corner 0.47 m out, was 0.86), the skin's side-glass opening is cut only on
+  the flank (ax < flankX + 3 cm; it had cut the humps' outer faces too once the glass moved in), and keepInside's
+  flank push goes to flankX (it had pushed cabin points outward onto the hump). In cockpit.ts the door wall
+  (wallX), the sill cap and the headliner's edge use flankX.
+- cockpit.ts keepInside pass: the door's layers under the sill cap (alc, white, tan, doorLow, amb, stitchDark,
+  gloss, alu) are kept 2.2 cm in (4 cm when pushed) against the cap's 1.2 (3) cm, so two layers are never pressed
+  onto one depth (the door top's suede and the cap's carbon fought in a comb along the glass's foot).
+- The door card: a white leather panel (34 x 13 cm) behind the window switches, an ice line along its foot.
+
+Proof (session scratchpad shards/): before-*/after-* seat views (393x852 @2x, Retro Low and High), crops
+crop-seat-retro.png, crop-seat-high.png (left third, before | after), crop-seat-*-zoom.png (the A-pillar foot),
+crop-wheelck.png (before | after). Picks by ray (seatpick.mjs, pick.mjs) and the suite's q-front-left ID render
+(shards/idprobe.mjs: 0 cabin px on the skin, Low and High).
+
+Budgets (budget2.mjs, iPhone 393x852 seat, the cabin's own meshes/triangles; whole-scene totals move with traffic):
+Low Retro and Low 55 meshes / 51,565 -> 55 / 52,789 triangles (+2.4 %, the door panels); High 48 / 45,531 ->
+48 / 45,531. Within the 10 %.
+
+Still open:
+- Through the side glass's lower front corner the driver sees the hump's top in the car's paint (the seat script's
+  car carries the GT's Rosso a80d10, so it reads as a red/pink band). It is real geometry now, cleanly drawn; hiding
+  it (a frit band, or a door top up to the glass) is a design call. In the wheel frame the same hump reads as a broad
+  grey field left of the wheel.
+- A small stepped silhouette where the dash top's outer end (the dash spans |x| 0.8, cabinW, wider than the 0.47 m
+  canopy) is pressed under the skin at the A-pillar's foot; the dash ends (white caps, the left slim vent) still lie
+  squashed under the humps. A real fix narrows the hypercar's dash to the canopy (with XW and the vents).

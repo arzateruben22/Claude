@@ -129,28 +129,31 @@ function makeBody(P: ShapeParams) {
       for (const A of ARCHES) { const dz = Math.abs(z - A.z); if (dz < A.cut) y = Math.max(y, A.yc + Math.sqrt(Math.max(0, A.R * A.R - dz * dz))); }
       return y;
     },
-    // half-width of the canopy flank at height y (for side glass), by bisection
-    // (the hypercar's, 2026-11-24: its fender humps rise again outboard of the canopy's foot (the top 0.75 m at |x| 0.5,
-    // 0.82 m at 0.75 by the A-pillar), so the top is not falling all the way out and a plain bisection could land on the
-    // hump's outer slope: the side glass's front-bottom corner, the A-pillar's foot, the door cards' fronts and the sill
-    // cap were set 0.3 m out on the humps, under the paint, and from the seat they fought it through the glass in black
-    // and white shards. Its canopy is the first crossing going outward, or, where the top never falls to y, the valley
-    // between the canopy and the hump)
+    // half-width of the canopy flank at height y, by bisection (the outermost crossing where the top rises again: the
+    // body's extent at that height, as keepInside and the suite's skin checks read it)
     canopyX(z: number, y: number) {
-      // (only where the canopy stands over y at the middle: ahead of the glass, over the sunken bonnet, as before)
-      if (HUMPED && body.top(z, 0) > y) {
-        const Ws = body.shoulder(z).Ws, N = 64; let a0 = 0, t0 = body.top(z, 0);
-        for (let i = 1; i <= N; i++) {
-          const a1 = (Ws * i) / N, t1 = body.top(z, a1);
-          if (t1 <= y) { let lo = a0, hi = a1; for (let k = 0; k < 24; k++) { const m = (lo + hi) / 2; if (body.top(z, m) > y) lo = m; else hi = m; } return (lo + hi) / 2; }
-          if (t1 > t0 && a1 > 0.2) return a0;
-          a0 = a1; t0 = t1;
-        }
-        return Ws;
-      }
       let lo = 0, hi = body.shoulder(z).Ws;
       for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (body.top(z, m) > y) lo = m; else hi = m; }
       return (lo + hi) / 2;
+    },
+    // the canopy's own flank at height y, for what stands on it (the side glass, the door cards, the sill cap)
+    // (the hypercar's, 2026-11-24: its fender humps rise again outboard of the canopy's foot (the top 0.75 m at |x| 0.5,
+    // 0.82 m at 0.75 by the A-pillar), so canopyX's bisection lands on the hump's outer slope there: the side glass's
+    // front-bottom corner, the A-pillar's foot, the door cards' fronts and the sill cap were set 0.3 m out on the humps,
+    // under the paint, and from the seat they fought it through the glass in black and white shards. Its flank is the
+    // first crossing going outward, or, where the top never falls to y, the valley between the canopy and the hump.
+    // The other cars: canopyX)
+    flankX(z: number, y: number) {
+      // (only where the canopy stands over y at the middle: ahead of the glass, over the sunken bonnet, as canopyX)
+      if (!HUMPED || body.top(z, 0) <= y) return body.canopyX(z, y);
+      const Ws = body.shoulder(z).Ws, N = 64; let a0 = 0, t0 = body.top(z, 0);
+      for (let i = 1; i <= N; i++) {
+        const a1 = (Ws * i) / N, t1 = body.top(z, a1);
+        if (t1 <= y) { let lo = a0, hi = a1; for (let k = 0; k < 24; k++) { const m = (lo + hi) / 2; if (body.top(z, m) > y) lo = m; else hi = m; } return (lo + hi) / 2; }
+        if (t1 > t0 && a1 > 0.2) return a0;
+        a0 = a1; t0 = t1;
+      }
+      return Ws;
     },
     // the top surface's outward normal at (x, z)
     topNormal(x: number, z: number, out = new THREE.Vector3()) {
@@ -184,7 +187,7 @@ function makeBody(P: ShapeParams) {
       const a = Math.abs(p.x), t = body.top(z, a);
       if (p.y <= t - c) return moved;
       const k = p.y > t ? m : c, n = body.topNormal(p.x, z);
-      if (Math.abs(n.x) > n.y && p.y >= Ys) p.x = s * Math.max(0, body.canopyX(z, p.y) - k);
+      if (Math.abs(n.x) > n.y && p.y >= Ys) p.x = s * Math.max(0, body.flankX(z, p.y) - k);
       else p.y = t - k;
       return true;
     },
@@ -271,7 +274,7 @@ function makeBody(P: ShapeParams) {
   };
   const sgPoint = (u: number, v: number, side: 1 | -1, out = new THREE.Vector3()) => {
     const [z, y] = sgZY(u, v);
-    return out.set(side * body.canopyX(z, y), y, z);
+    return out.set(side * body.flankX(z, y), y, z);
   };
   // rear screen, in top view
   const RG = P.RG;
@@ -409,6 +412,32 @@ function makeBody(P: ShapeParams) {
     }
     const idx: number[] = [], cIdx: number[] = [], c = new THREE.Vector3(), e1 = new THREE.Vector3(), e2 = new THREE.Vector3(), n = new THREE.Vector3();
     const glass = o.glass ?? true;
+    // the hypercar's windscreen foot cut (below): its (s, t) on the glass's grid for a point (x, z), and the triangles
+    // split on t = WS_TM, their new points (on the edges, between grid points) appended after the grid's
+    const WS_CLIP = HUMPED && glass, WS_LEN = wsPoint(0, 0).distanceTo(wsPoint(0, 1)), WS_TM = 0.006 / WS_LEN, WS_TM2 = 0.022 / WS_LEN;
+    const wsST = (x: number, z: number): [number, number] => {
+      let t = (z - WS.zb) / (WS.zt - WS.zb), s2 = 0;
+      for (let k = 0; k < 5; k++) { s2 = x / (WS.xb + (WS.xt - WS.xb) * clamp(t, 0, 1)); const zb = WS.zb + 0.03 * s2 * s2, zt = WS.zt + 0.025 * s2 * s2; t = (z - zb) / (zt - zb); }
+      return [s2, t];
+    };
+    const xPos: number[] = [], xUv: number[] = [], NG = ni * nj;
+    const P3 = (k: number) => k < NG ? [pos[k * 3], pos[k * 3 + 1], pos[k * 3 + 2], uv[k * 2], uv[k * 2 + 1]] : [xPos[(k - NG) * 3], xPos[(k - NG) * 3 + 1], xPos[(k - NG) * 3 + 2], xUv[(k - NG) * 2], xUv[(k - NG) * 2 + 1]];
+    const mid = (ka: number, kb: number, fa: number, fb: number) => {
+      const A = P3(ka), Bv = P3(kb), u = fa / (fa - fb);
+      for (let m = 0; m < 3; m++) xPos.push(A[m] + (Bv[m] - A[m]) * u);
+      for (let m = 3; m < 5; m++) xUv.push(A[m] + (Bv[m] - A[m]) * u);
+      return NG + xPos.length / 3 - 1;
+    };
+    // keep the part of triangle t (its indices, their f) where f < 0, in t's winding
+    const clipTri = (t: number[], f: number[], out: number[]) => {
+      const poly: number[] = [];
+      for (let m = 0; m < 3; m++) {
+        const a0 = t[m], a1 = t[(m + 1) % 3], f0 = f[m], f1 = f[(m + 1) % 3];
+        if (f0 < 0) poly.push(a0);
+        if ((f0 < 0) !== (f1 < 0)) poly.push(mid(a0, a1, f0, f1));
+      }
+      for (let m = 1; m + 1 < poly.length; m++) out.push(poly[0], poly[m], poly[m + 1]);
+    };
     for (let i = 0; i < ni - 1; i++) for (let j = 0; j < nj - 1; j++) {
       const a = rows[i][j], b = rows[i][j + 1], cc = rows[i + 1][j], d = rows[i + 1][j + 1];
       c.copy(a).add(b).add(cc).add(d).multiplyScalar(0.25);
@@ -416,10 +445,22 @@ function makeBody(P: ShapeParams) {
       if (o.clip && !o.clip(c)) continue;
       // openings
       const ax = Math.abs(c.x);
-      if (n.y > 0.25 && inQuad([c.x, c.z], WS_Q, 0.022)) continue;
+      if (WS_CLIP && n.y > 0.25) {
+        // (the hypercar's windscreen opening, 2026-11-24: cut along the glass's own curved foot, not the straight quad
+        // between its corners, which left a band of paint up to 5 cm deep under the glass's middle whose stepped edge
+        // showed through the glass from the seat as a white saw-tooth along the cowl. The quads across the foot are
+        // split on it, so the paint ends in a clean line 6 mm under the glass, behind the frit's 1 cm band)
+        const [sc0, tc] = wsST(c.x, c.z), hwc = WS.xb + (WS.xt - WS.xb) * clamp(tc, 0, 1);
+        if (Math.abs(sc0) < 1 - 0.022 / hwc && tc < 1 - WS_TM2 && tc > -0.2) {
+          const q = [i * nj + j, i * nj + j + 1, (i + 1) * nj + j, (i + 1) * nj + j + 1], f = q.map((k) => wsST(pos[k * 3], pos[k * 3 + 2])[1] - WS_TM);
+          if (f.every((v) => v >= 0)) continue;
+          if (f.some((v) => v > 0)) { for (const [x0, x1, x2] of [[0, 1, 2], [1, 3, 2]]) clipTri([q[x0], q[x1], q[x2]], [f[x0], f[x1], f[x2]], idx); continue; }
+        }
+      } else if (n.y > 0.25 && inQuad([c.x, c.z], WS_Q, 0.022)) continue;
       if (n.y > 0.25 && inQuad([c.x, c.z], RG_Q, 0.022)) continue;
       if (RF_Q && n.y > 0.25 && inQuad([c.x, c.z], RF_Q, 0.035)) continue;
-      if (Math.abs(n.x) > 0.2 && ax > 0.3 && inQuad([c.z, c.y], SG_Q, 0.022)) continue;
+      // (the hypercar's: only on the canopy's flank, where its glass stands (flankX), not on the fender humps beside it)
+      if (Math.abs(n.x) > 0.2 && ax > 0.3 && inQuad([c.z, c.y], SG_Q, 0.022) && (!HUMPED || ax < body.flankX(c.z, c.y) + 0.03)) continue;
       if (INTAKE && Math.abs(n.x) > 0.3 && c.z > INTAKE.z0 + 0.012 && c.z < INTAKE.z1 - 0.012 && c.y > INTAKE.y0 + 0.012 && c.y < INTAKE.y1 - 0.012) continue;
       if (CORNER_Q && n.z < -0.15 && c.z < ZF + 0.7 && inQuad([ax, c.y], CORNER_Q, 0.008)) continue;
       if (LOUVRE && n.y > 0.3 && ax < LOUVRE.x - 0.012 && c.z > LOUVRE.z0 + 0.012 && c.z < LOUVRE.z1 - 0.012) continue;
@@ -445,8 +486,10 @@ function makeBody(P: ShapeParams) {
     }
     const mkSkin = (ix: number[]) => {
       const skin = new THREE.BufferGeometry();
-      skin.setAttribute('position', new THREE.BufferAttribute(pos.slice(), 3));
-      skin.setAttribute('uv', new THREE.BufferAttribute(uv.slice(), 2));
+      const pAll = new Float32Array(pos.length + xPos.length); pAll.set(pos); pAll.set(xPos, pos.length);
+      const uAll = new Float32Array(uv.length + xUv.length); uAll.set(uv); uAll.set(xUv, uv.length);
+      skin.setAttribute('position', new THREE.BufferAttribute(pAll, 3));
+      skin.setAttribute('uv', new THREE.BufferAttribute(uAll, 2));
       skin.setIndex(ix); skin.computeVertexNormals();
       return skin;
     };

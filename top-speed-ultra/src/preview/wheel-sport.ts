@@ -296,11 +296,59 @@ export function bladeMat(q: Quality) {
   return once('m.blade' + q, () => {
     const n = q === 'high' ? 256 : 128, [c, g] = canvas(n, n);
     const gr = g.createLinearGradient(0, 0, n, 0);
-    gr.addColorStop(0, '#5d636c'); gr.addColorStop(0.38, '#e9eef4'); gr.addColorStop(0.5, '#ffffff'); gr.addColorStop(0.53, '#6f7680'); gr.addColorStop(0.75, '#cfd5dc'); gr.addColorStop(1, '#4c525a');
+    // (since the faceted blades, 2026-11-24: the facets' own light draws the crease, so the picture is a calm bright
+    // sheen, darker toward the side blades' tips)
+    gr.addColorStop(0, '#8a9099'); gr.addColorStop(0.35, '#e4e9ef'); gr.addColorStop(0.5, '#ffffff'); gr.addColorStop(0.65, '#e4e9ef'); gr.addColorStop(1, '#8a9099');
     g.fillStyle = gr; g.fillRect(0, 0, n, n);
     const t = canvasTex(c, true);
     return new THREE.MeshPhysicalMaterial({ color: 0xffffff, map: t, metalness: 0.9, roughness: 0.14, clearcoat: 1, clearcoatRoughness: 0.03, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.12, name: 'blade' });
   });
+}
+// (2026-11-24, the owner from his iPhone: "fix the center wheel design to look sharper": the bevelled extrusion read as a
+// soft, broad bird. Now three slim faceted blades as wheel.png's: a tall centre spike, longer below, and two side blades
+// sweeping out and up from its lower half, each a ridge raised along its middle with flat facets either side, so the
+// light splits it bright and dark along a crisp crease)
+// a blade along the ridge pts (x, y), w its half-width at each point, h its ridge's height over z0 at each point; flat
+// facets between the ridge and each edge (non-indexed, so each facet keeps its own normal)
+function facetBlade(pts: [number, number][], w: number[], h: number[], z0: number) {
+  const pos: number[] = [];
+  const P = pts.map(([x, y], i) => {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)], tx = b[0] - a[0], ty = b[1] - a[1], l = Math.hypot(tx, ty) || 1;
+    const nx = -ty / l, ny = tx / l;
+    return { r: [x, y, z0 + h[i]], L: [x + nx * w[i], y + ny * w[i], z0], R: [x - nx * w[i], y - ny * w[i], z0] };
+  });
+  const tri = (a: number[], b: number[], c: number[]) => pos.push(...a, ...b, ...c);
+  for (let i = 0; i < P.length - 1; i++) {
+    const p = P[i], q = P[i + 1];
+    tri(p.L, q.r, q.L); tri(p.L, p.r, q.r);   // left facet (counter-clockwise seen from +z)
+    tri(p.R, q.r, p.r); tri(p.R, q.R, q.r);   // right facet
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.computeVertexNormals();
+  const uv: number[] = []; for (let i = 0; i < pos.length; i += 3) uv.push(0.5 + pos[i] / 0.056, 0.5 + pos[i + 1] / 0.066);
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  return g;
+}
+export function facetEmblem(dy: number, z0: number) {
+  const gs: THREE.BufferGeometry[] = [];
+  // the centre spike: 64 mm tall, widest (4.4 mm each side) a little below its waist
+  const ys = [0.034, 0.024, 0.014, 0.006, 0.0, -0.008, -0.018, -0.026, -0.031];
+  const cw = [0, 0.0011, 0.0021, 0.0032, 0.0044, 0.0036, 0.0022, 0.001, 0];
+  gs.push(facetBlade(ys.map((y) => [0, y + dy]), cw, cw.map((w) => w * 0.55), z0));
+  // the side blades: from the spike's flank below the waist, curving out and up to a point at 26 mm across
+  for (const sd of [-1, 1]) {
+    const n = 7, pts: [number, number][] = [], w: number[] = [];
+    for (let k = 0; k <= n; k++) {
+      const t = k / n, u = 1 - t;
+      // a quadratic curve: root (3.5 mm, -7 mm), control (15 mm, 0), tip (27 mm, 21 mm)
+      pts.push([sd * (u * u * 0.0035 + 2 * u * t * 0.015 + t * t * 0.027), u * u * -0.007 + 2 * u * t * 0.0 + t * t * 0.021 + dy]);
+      w.push(0.0038 * Math.sin(Math.PI * Math.min(1, 0.35 + t * 0.65)) * (1 - 0.25 * t));
+    }
+    if (sd < 0) pts.reverse(), w.reverse();
+    gs.push(facetBlade(pts, w, w.map((x) => x * 0.5), z0 + 0.0002));
+  }
+  return gs;
 }
 export function addSportCentre(wk: Kit, o: { high: boolean; emblem?: 'blade' }) {
   const cs = o.high ? 8 : 4, segs = o.high ? 48 : 24, sc = (k: number) => HUB.map(([x, y]) => [x * k, y * k + 0.002 * (1 - k)] as [number, number]);
@@ -308,16 +356,16 @@ export function addSportCentre(wk: Kit, o: { high: boolean; emblem?: 'blade' }) 
     // the hypercar's: the bezel, the pillowed leather cover and its stitching as the others', then the chrome blade on
     // the cover (a bevelled extrusion, its map spread over the blade's width), a dark recess outline round it, and an
     // ice-blue light along the hub's lower edge (the reference's glow under the hub); no medallion and no chevron
+    // (the bezel's edges one flat chamfer each, so the light draws a crisp bright line round the hex; a dark gap ring
+    // inside it parts it from the cover)
     const bz = roundPoly(sc(0.93), 0.0145); bz.holes.push(roundPoly(sc(0.86), 0.0125));
-    const bg = shell(bz, 0.0018, 0.0007, 0.0004, o.high ? 2 : 1, cs); bg.translate(0, 0, -0.0038); wk.add('hubBezel', bg);
+    const bg = shell(bz, 0.0022, 0.0009, 0.0006, 1, cs); bg.translate(0, 0, -0.0038); wk.add('hubBezel', bg);
+    const gr = roundPoly(sc(0.865), 0.0126); gr.holes.push(roundPoly(sc(0.835), 0.0116));
+    const gg = new THREE.ShapeGeometry(gr, cs); gg.translate(0, 0, -0.0012); wk.add('hubGap', gg, null, 0.02);
     const cv = shell(roundPoly(sc(0.83), 0.0115), 0.0012, 0.0028, 0.0024, o.high ? 3 : 1, cs); cv.translate(0, 0, -0.0034); wk.add('hubCover', cv);
     wk.add('hubStitch', ribbon(roundPoly(sc(0.785), 0.0105).getPoints(cs), 0.00075, 0.0013));
     const dy = 0.004;
-    const rec = new THREE.ShapeGeometry(bladeShape(1.1, dy - 0.0004), 1); rec.translate(0, 0, 0.0009); wk.add('hubGap', rec, null, 0.02);
-    const bl = new THREE.ExtrudeGeometry(bladeShape(1, dy), { depth: 0.0012, bevelEnabled: true, bevelThickness: 0.0011, bevelSize: 0.0009, bevelSegments: o.high ? 2 : 1, curveSegments: 1 });
-    const bu = bl.attributes.uv as THREE.BufferAttribute, bp = bl.attributes.position;
-    for (let i = 0; i < bu.count; i++) bu.setXY(i, 0.5 + bp.getX(i) / 0.056, 0.5 + (bp.getY(i) - dy) / 0.066);
-    bl.translate(0, 0, 0.0011); wk.add('badgeHub', bl);
+    for (const g of facetEmblem(dy, 0.0014)) wk.add('badgeHub', g);
     // the light under the hub: a strip along the outline's lower edges, between the lower spoke and the side spokes
     const lo = sc(0.97), path: THREE.Vector2[] = [];
     for (const [a, b] of [[5, 0], [0, 1], [1, 2]] as [number, number][]) for (let k = a === 5 ? 0 : 1; k <= 6; k++) { const t = k / 6; path.push(new THREE.Vector2(lo[a][0] + (lo[b][0] - lo[a][0]) * t, lo[a][1] + (lo[b][1] - lo[a][1]) * t)); }
