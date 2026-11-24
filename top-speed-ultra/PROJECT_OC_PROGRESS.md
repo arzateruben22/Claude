@@ -9980,3 +9980,20 @@ side against the straight tangent at the split, and the 5 curves there. It now p
   the ABS | TCS persist seed moved to settings v4 (a v3 Low save now migrates to Retro Low, which has no switch bar).
 - After: store 18/18, progression 14/14, launch 9/11 whole then the 2 (story wording, errand knock-on) 5/5 filtered;
   phone `driving HUD|new HUD|persist` 5/5.
+
+### 2026-11-24: v28, the OC Hypercar step after the owner's references (published to the main link)
+
+Branch claude/tender-fermat-sk9rby: v27 merged into the cockpit lane (wip-hyper-int, both hypercar lanes), keeping
+the Founder-only gating; one cockpit repair round (claude/cockpit-repair: dark suede and carbon cabin, glowing ice
+ambient strips, sunk cluster, flared centre spine, the owner's wheel.png and its chrome blade hub emblem, the Founder
+plaque off the dash top, white door panels) and one exterior round against the owner's 2026-11-23 references
+(claude/exterior-repair: five front intake blades, rear wing, diffuser fins, tail); the tail blades red (owner's pick).
+Checks: tsc clean; build OK; `--only=render,phone` on the merged build: 55 pass, 1 fail, "sleeves from the seat on a
+phone" (full lock R: spread 28 < 30, detail 2.52 < 2.6), which v27 also fails (26, 2.32), so not a regression;
+`--only=render` re-run after the red tail change: the hypercar checks pass (15 of 15 at publish time; the context-loss
+check still running). Full suite not run (the owner chose to publish on the targeted groups; run it before the next
+release). One judge (cheaper model): HOLD narrowly for the seat view's torn left A-pillar foot and the torn geometry
+left of the wheel (both present since v27); the owner shipped it as a step; the findings are queued in the handoff.
+Sheets (reference | v27 | before | after) were sent to the owner. Publish note: the artifact viewer warns the page
+offers a file through a plain download link that viewers can't use (pre-existing; check the share card's save
+before launch).
