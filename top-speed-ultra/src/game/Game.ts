@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor, FOV_DEFAULT } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor, FOV_DEFAULT, assistsFor } from './settings';
 import type { Difficulty } from './settings';
 import { MinuteMeter, DriftTracker, bestOf, bestsFor, recordBest, recordDrift, driftBest, driftBests, migrateBests, shareLine, round1 } from './bests';
 import type { Board, Kind, Placed } from './bests';
@@ -451,7 +451,7 @@ export class Game {
     this.focusOnLand = false;                                   // a Focus Time queued in a hop is dropped by a reset
     this.phys.auto = true; this.manualUntil = 0;     // automatic for everyone (a shift holds the gear for a moment: actions())
     this.phys.handling = this.settings.handling;
-    this.phys.abs = this.settings.abs || retroOn(this.settings); this.phys.tc = this.settings.tcs || retroOn(this.settings);   // the Ultra HUD's ABS | TCS switches (settings.ts); Retro has none, so it keeps both on
+    { const a = assistsFor(this.settings); this.phys.abs = a.abs; this.phys.tc = a.tc; }   // ABS always, TCS by the handling (settings.ts assistsFor)
     this.car.teleport(this.phys);
     this.recentre();
   }
@@ -566,7 +566,7 @@ export class Game {
     else if (repaint) this.configureCar();   // the garage's Paint and Wheels tabs: the car changes live
     if (owner && this.attract) this.applyCarChoice();   // on the menu; a run keeps its car until the next start
     this.phys.handling = s.handling;
-    this.phys.abs = s.abs || retroOn(s); this.phys.tc = s.tcs || retroOn(s);   // Retro has no switches: both on there (the saved choice comes back on Ultra)
+    { const a = assistsFor(s); this.phys.abs = a.abs; this.phys.tc = a.tc; }   // ABS always, TCS by the handling (settings.ts assistsFor)
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
@@ -721,6 +721,65 @@ export class Game {
     r.shown = (r.shown ?? 0) + 1;
   }
   private tmpSize = new THREE.Vector2();
+  // a stage's frame into a canvas: rendered into a corner of the game's own drawing buffer (just before the frame's own
+  // render covers it) and copied out
+  private drawStage(stage: RevealStage, t: number, kind: RevealKind, cv: HTMLCanvasElement) {
+    const g = cv.getContext('2d')!;
+    const buf = this.renderer.getDrawingBufferSize(this.tmpSize), k = Math.min(1, buf.x / cv.width, buf.y / cv.height);
+    const w = Math.max(1, Math.floor(cv.width * k)), h = Math.max(1, Math.floor(cv.height * k)), bh = buf.y;
+    const pose = stage.pose(t, kind);
+    const wake = WAKE.value, exposure = this.renderer.toneMappingExposure, pr = this.renderer.getPixelRatio();
+    WAKE.value = pose.wake; this.renderer.toneMappingExposure = pose.exposure;
+    stage.camera.aspect = w / h; stage.camera.updateProjectionMatrix();
+    this.renderer.setScissorTest(true);
+    this.renderer.setScissor(0, 0, w / pr, h / pr); this.renderer.setViewport(0, 0, w / pr, h / pr);
+    this.renderer.render(stage.scene, stage.camera);
+    this.renderer.setScissorTest(false);
+    const size = this.renderer.getSize(this.tmpSize);
+    this.renderer.setViewport(0, 0, size.x, size.y);
+    WAKE.value = wake; this.renderer.toneMappingExposure = exposure;
+    g.drawImage(this.renderer.domElement, 0, bh - h, w, h, 0, 0, cv.width, cv.height);
+    return pose;
+  }
+
+  // The showroom's STILLS (owner, 2026-11-24: "make the car selection display the cars"): the carousel's neighbours show
+  // each car's own model, rendered once on the stage at its hero angle in its paint and rims, and kept for the session.
+  // showroomStill(car, paint) gives the frame when there is one, else queues it; the queue renders one car at a time,
+  // only while the live stage is idle (built, compiled, drawn), and calls the listeners as each lands.
+  private stillQueue: { car: string; paint: number; std: boolean }[] = [];
+  private stillJob: { stage: RevealStage; show: { car: string; paint: number; std: boolean }; compiled: boolean } | null = null;
+  private stillListeners = new Set<() => void>();
+  onShowroomStill(fn: () => void) { this.stillListeners.add(fn); return () => { this.stillListeners.delete(fn); }; }
+  showroomStill(car: string, hex: number): HTMLCanvasElement | null {
+    const sh = { car, paint: this.stagePaint(car, hex), std: car === FOUNDER_CAR && this.hypercarEdition === 'standard' };
+    const key = this.showKey(sh), have = this.showStills.get(key);
+    if (have) return have;
+    if (!this.stillQueue.some((q) => this.showKey(q) === key) && !(this.stillJob && this.showKey(this.stillJob.show) === key)) this.stillQueue.push(sh);
+    return null;
+  }
+  /** (tests) stills waiting to be rendered, and whether one is being built */
+  get showroomQueue() { return this.stillQueue.length + (this.stillJob ? 1 : 0); }
+  private renderStills() {
+    const r = this.rv;
+    if (r && (!r.stage ? !!r.show && !this.showStills.has(this.showKey(r.show)) : !r.compiled || r.dirty || r.playing)) return;   // the live stage first
+    if (!this.stillJob) {
+      const next = this.stillQueue.shift(); if (!next) return;
+      if (this.showStills.has(this.showKey(next))) return;
+      const q = this.revealQuality();
+      const stage = buildReveal(this.renderer, q, next.car as CarId, { paint: next.paint, edition: next.std ? 'standard' : 'founder', rim: wheelFor(carById(next.car), this.settings.wheels) });
+      const job = { stage, show: next, compiled: false };
+      this.stillJob = job;
+      this.renderer.compileAsync(stage.scene, stage.camera).catch(() => undefined).then(() => { job.compiled = true; });
+      return;
+    }
+    const job = this.stillJob;
+    if (!job.compiled) return;
+    const cv = document.createElement('canvas'); cv.width = 480; cv.height = 270;
+    this.drawStage(job.stage, WAKE_ONLY_SECONDS, 'wake', cv);
+    this.showStills.set(this.showKey(job.show), cv);
+    job.stage.dispose(); this.stillJob = null;
+    for (const fn of this.stillListeners) fn();
+  }
   private renderReveal(dt: number) {
     const r = this.rv;
     if (!r || !r.stage || !r.compiled) return;
@@ -729,21 +788,8 @@ export class Game {
     if (!r.playing && !r.dirty) return;
     const cv = r.canvas, g = cv.getContext('2d');
     if (!g || !cv.width || !cv.height || !cv.isConnected) return;
-    const buf = this.renderer.getDrawingBufferSize(this.tmpSize), k = Math.min(1, buf.x / cv.width, buf.y / cv.height);
-    const w = Math.max(1, Math.floor(cv.width * k)), h = Math.max(1, Math.floor(cv.height * k)), bh = buf.y;
-    const pose = r.stage.pose(r.hold ?? r.t, r.kind);
-    const wake = WAKE.value, exposure = this.renderer.toneMappingExposure, pr = this.renderer.getPixelRatio();
-    WAKE.value = pose.wake; this.renderer.toneMappingExposure = pose.exposure;
-    r.stage.camera.aspect = w / h; r.stage.camera.updateProjectionMatrix();
-    this.renderer.setScissorTest(true);
-    this.renderer.setScissor(0, 0, w / pr, h / pr); this.renderer.setViewport(0, 0, w / pr, h / pr);
-    this.renderer.render(r.stage.scene, r.stage.camera);
+    const pose = this.drawStage(r.stage, r.hold ?? r.t, r.kind, cv);
     r.calls = this.renderer.info.render.calls; r.tris = this.renderer.info.render.triangles; r.frames++;
-    this.renderer.setScissorTest(false);
-    const size = this.renderer.getSize(this.tmpSize);
-    this.renderer.setViewport(0, 0, size.x, size.y);
-    WAKE.value = wake; this.renderer.toneMappingExposure = exposure;
-    g.drawImage(this.renderer.domElement, 0, bh - h, w, h, 0, 0, cv.width, cv.height);
     // the light sweep's band across the card as the light passes (none with reduced motion: nothing moves then)
     if (pose.band !== null) {
       const x = (pose.band * 1.4 - 0.2) * cv.width, bw = cv.width * 0.12, a = Math.sin(Math.PI * pose.band);
@@ -759,7 +805,7 @@ export class Game {
       const key = r.show ? this.showKey(r.show) : '';
       const s = (r.show ? this.showStills.get(key) : this.revealStill) ?? document.createElement('canvas');
       s.width = cv.width; s.height = cv.height; s.getContext('2d')?.drawImage(cv, 0, 0);
-      if (r.show) { this.showStills.set(key, s); if (this.showStills.size > 24) this.showStills.delete(this.showStills.keys().next().value!); }
+      if (r.show) { this.showStills.set(key, s); if (this.showStills.size > 24) this.showStills.delete(this.showStills.keys().next().value!); for (const fn of this.stillListeners) fn(); }
       else this.revealStill = s;
     }
   }
@@ -1759,6 +1805,7 @@ export class Game {
     if (this.outputSat) this.outputSat.value = this.env.saturation;
     if (this.grade) this.grade.uniforms.time.value = (now / 1000) % 1000;   // the grain moves every frame, paused or not
     this.renderReveal(dt);                              // the garage's reveal stage, under this frame's own render
+    this.renderStills();                                // and the showroom's stills for the carousel's neighbours
     // the frame's draw calls and triangles for the overlay: every pass of the main view counted together
     const info = this.renderer.info, auto = info.autoReset;
     info.reset(); info.autoReset = false;

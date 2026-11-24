@@ -53,7 +53,7 @@
    his phone, so it is always there beside Pause */
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]).hud-idle .tbar .tbtn.view { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn::before { clip-path: none; }
-.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { position: static; order: 0; }
+.app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.auto { position: relative; left: auto; bottom: auto; order: 0; }   /* (relative, not static: its ::before face is inset 0 to it, not to the whole bar over View) */
 .app[data-skin]:is([data-hud="pp"], [data-hud="pl"]) .tbar .tbtn.mapbtn { top: calc(var(--sa-t) + 16px); right: calc(var(--sa-r) + 14px); }
 /* the round map; its ring and chips (the compass) over the map's edge, the heading's chip riding the top of the ring */
 .app[data-skin] .hud-compass { z-index: 2; }

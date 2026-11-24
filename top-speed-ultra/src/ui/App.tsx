@@ -109,12 +109,6 @@ const HINT_RADIAL = 'tsu.hint.radial';   // the one-time "Hold Pause for the qui
 // also the old "Hold Pause for the quick menu" hint, so that one is marked seen with it
 const HINT_RETRO_TBAR = 'tsu.hint.retrotbar';
 const RETRO_HINT_MS = 4000;
-// the Ultra skin's ABS | TCS switches: one honest line the first time each is turned off (Assists.tsx)
-const HINT_ASSIST = 'tsu.hint.assist.';
-const ASSIST_LINE: Record<'abs' | 'tcs', string> = {
-  abs: 'ABS off: hard braking can lock the wheels; longer stops and less steering while they are locked.',
-  tcs: 'TCS off: the rear can spin up; easier to drift, easier to spin.',
-};
 
 export function App({ slots }: { slots?: AppSlots } = {}) {
   const host = useRef<HTMLDivElement>(null);
@@ -196,14 +190,7 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
     const next = { ...settingsRef.current, ...patch };
     setSettings(next); saveSettings(next); game.current?.updateSettings(next);
   };
-  // the HUD's ABS | TCS switches (Ultra skin): the setting, the car's flag (Game.updateSettings), one line the first time off
-  const setAssist = (k: 'abs' | 'tcs', on: boolean) => {
-    update(k === 'abs' ? { abs: on } : { tcs: on });
-    if (on) return;
-    let seen = true;
-    try { seen = localStorage.getItem(HINT_ASSIST + k) === '1'; if (!seen) localStorage.setItem(HINT_ASSIST + k, '1'); } catch { /* storage off: no line */ }
-    if (!seen) toast(ASSIST_LINE[k]);
-  };
+  // (the HUD's ABS | TCS switches left on 2026-11-24: ABS is always on, TCS follows the handling, settings.ts assistsFor)
 
   useEffect(() => {
     if (!host.current || game.current) return;
@@ -622,7 +609,7 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
       style={{ '--map': `${cornerPx}px`, '--vis-t': `${vis.t}px`, '--vis-r': `${vis.r}px`, '--vis-b': `${vis.b}px`, '--vis-l': `${vis.l}px` } as CSSProperties}>
       <div className="stage" ref={host} />
       <HUD ref={hud} showFps={settings.showFps} visible={playing && hudOn} chips={chips} onAbility={() => game.current?.useAbility()} onThrust={(on) => game.current?.input.setThrust('touch', on)}
-        assists={retroOn(settings) ? null : { abs: settings.abs, tcs: settings.tcs, onChange: setAssist }} onGear={() => game.current?.holdManual()} />
+        assists={null} onGear={() => game.current?.holdManual()} />
       {/* the corner window: the road map is a round dial (the compass is its rim, HUD.tsx); the sky camera keeps its
           square frame and says it is a live view. Tap cycles map, sky camera, off. */}
       {playing && settings.corner !== 'off' && (
@@ -1058,8 +1045,6 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
   }, [tab]);
   return <>
     <h2>Garage{owner && <span className="chip">{TEST_BUILD ? 'Owner mode · test build' : 'Owner mode'}</span>}</h2>
-    <p className="fine" data-garage-cash>{Math.floor(p.credits).toLocaleString()} cash · {pr.s.miles.toFixed(1)} active miles. Cars open by miles driven; cash is earned by driving and spent on looks and Vega &amp; Vinnie's. Nothing here costs real money.</p>
-    {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     {/* (cast, 2026-11-11) who drives: the character picker from the garage too */}
     {/* (owner, 2026-11-24: "fix the character selection display ... to fit the aesthetic") a card like the car cards: the
@@ -1131,12 +1116,20 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
         const chosen = () => { if (c.founder && !std) game.playReveal('wake'); };
         const paint = paintForEdition(c, settings.paints, game.hypercarEdition);
         return (<>
-            {/* the centred car on its stage (the Founder Edition's own reveal, or the showroom); a neighbour shows its outline */}
+            {/* the centred car on its stage (the Founder Edition's own reveal, or the showroom); a neighbour shows a still of its
+                own model in its paint (Game.showroomStill, rendered once per car and paint) */}
             {centred ? (c.founder && !std ? <FounderStage game={game} /> : <div className="car-stage"><ShowroomStage game={game} car={c.id} paint={paint} label={`The ${c.name} on the garage's showroom stage. A model built in code.`} /></div>)
-              : <div className="car-stage car-ph" aria-hidden="true"><CarOutline hex={paint} /></div>}
+              : <div className="car-stage car-ph" aria-hidden="true"><ShowroomStill game={game} car={c.id} paint={paint} /></div>}
             {locked && <span className="car-lock"><Ico name="lock" />{c.founder ? "Founders' Road · free" : miles ? `Opens at ${miles} mi` : 'Locked'}</span>}
             <div className="carhead"><span className="paint" title={c.founder && !std ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
-            <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
+            <small className="car-stats">{[`${f.hp} hp`, `${f.zeroSixty} s 0-60`, `${f.topMph} mph`, `${c.mass.toLocaleString()} kg`].map((x, i) => <span key={i}>{i ? '· ' : ''}{x} </span>)}</small>
+            {/* DRIVE right under the name and numbers: on a phone's first screen with the car (owner, 2026-11-24) */}
+            <div className="row">
+              {owner ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
+                : owned ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
+                : c.founder ? <em>Not unlocked yet: earn it free on Founders' Road</em>
+                : <em>Locked: opens by miles driven</em>}
+            </div>
             <span>{blurbFor(c, game.hypercarEdition)}</span>
             {/* the economy lane's slot: "Unlocks at 150 mi · 87/150" bars (progress.tsx CarGate), and Founders' Road for the hypercar */}
             <div className="car-slot" data-slot="unlock" data-car={c.id}>{ui?.carUnlock?.(c.id) ?? (!owner && (c.founder ? (!owned && <HypercarProgress game={game} compact />) : (!owned || glow) && <CarGate game={game} id={c.id} />))}</div>
@@ -1146,14 +1139,11 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
               <li>Its lights wake in a sweep when you choose it and on the start line</li>
               <li>{founderWindowText()} (Pacific)</li>
             </ul>}
-            <div className="row">
-              {owner ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
-                : owned ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
-                : c.founder ? <em>Not unlocked yet: earn it free on Founders' Road</em>
-                : <em>Locked: opens by miles driven</em>}
-            </div>
         </>);
       }} />}
+    {/* (the fine print under the tabs since 2026-11-24, so the carousel's centred car and its DRIVE are on a phone's first screen) */}
+    <p className="fine" data-garage-cash>{Math.floor(p.credits).toLocaleString()} cash · {pr.s.miles.toFixed(1)} active miles. Cars open by miles driven; cash is earned by driving and spent on looks and Vega &amp; Vinnie's. Nothing here costs real money.</p>
+    {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
     <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
   </>;
@@ -1205,17 +1195,24 @@ function ShowroomStage({ game, car, paint, label }: { game: Game; car: string; p
   useEffect(() => { game.setRevealPaint(paint); }, [game, paint]);
   return <canvas ref={ref} role="img" aria-label={label} />;
 }
-// a neighbour in the carousel: the car's outline in its paint (its stage is built only once it is centred)
-function CarOutline({ hex }: { hex: number }) {
-  const c = '#' + hex.toString(16).padStart(6, '0');
-  return (
-    <svg className="car-outline" viewBox="0 0 160 60" preserveAspectRatio="xMidYMid meet">
-      <ellipse cx="80" cy="52" rx="66" ry="4" fill="rgba(0,0,0,0.55)" />
-      <path d="M12 44c0-6 3-10 10-12l22-6c8-8 20-13 36-13 14 0 24 4 33 12l20 4c8 2 14 6 15 15v4H12z" fill={c} stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
-      <path d="M50 26c7-6 16-9 29-9 11 0 19 3 26 9z" fill="rgba(10,14,20,0.75)" />
-      <circle cx="40" cy="46" r="8" fill="#0c0d10" stroke="#8c939c" strokeWidth="2" /><circle cx="122" cy="46" r="8" fill="#0c0d10" stroke="#8c939c" strokeWidth="2" />
-    </svg>
-  );
+// a neighbour in the carousel: a still of the car's own model in its paint (Game.showroomStill renders it once, on the
+// showroom stage at its hero angle, and keeps it; the live stage is the centred card's alone)
+function ShowroomStill({ game, car, paint }: { game: Game; car: string; paint: number }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const draw = () => {
+      const cv = ref.current, still = game.showroomStill(car, paint); if (!cv || !still) return false;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+      cv.getContext('2d')?.drawImage(still, 0, 0, cv.width, cv.height);
+      cv.dataset.ready = '1';
+      return true;
+    };
+    if (draw()) return;
+    const off = game.onShowroomStill(() => { if (draw()) off(); });
+    return off;
+  }, [game, car, paint]);
+  return <canvas ref={ref} className="car-still" />;
 }
 // The Vehicles tab as a carousel (owner, 2026-11-24: "make a carousel effect for the car selection"): one card centred
 // and large with its car on the stage, the neighbours peeking at the edges; a swipe (scroll-snap), the arrows, or the

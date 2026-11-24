@@ -1034,9 +1034,9 @@ await group('boot', async (use) => {
   // the old default (0, before settings version 2) moves to +10 once, and the move is written back; a 0 saved since
   // (version 2: the player's own) stays 0; any other value saved before stays as it was. Each in its own page, the
   // boot group's own game held meanwhile (two software-rendered games at once take minutes a frame here).
-  // the field of view is one fixed value since the slider left Settings (owner, 2026-11-24; settings.ts FOV_DEFAULT, +12):
+  // the field of view is one fixed value since the slider left Settings (owner, 2026-11-24; settings.ts FOV_DEFAULT, +13):
   // a new device and every saved value (an old 0, a +5, a 0 chosen at version 2) read as it, and Settings has no slider
-  await check('field of view: one fixed value (+12) on a new device and over any saved value; no Field of view slider in Settings', async () => {
+  await check('field of view: one fixed value (+13) on a new device and over any saved value; no Field of view slider in Settings', async () => {
     const boot = async (saved) => {
       const ctx = await browser.newContext({ viewport: { width: 640, height: 360 } });
       try {
@@ -1058,7 +1058,7 @@ await group('boot', async (use) => {
       const base = { quality: 'low', adaptive: false, density: 'none' };
       const fresh = await boot(null), old0 = await boot({ ...base, fov: 0 }), old5 = await boot({ ...base, fov: 5 }), mine0 = await boot({ ...base, fov: 0, v: 2 });
       const FOV = await game(page, () => window.__game.api.FOV_DEFAULT ?? null);
-      expect(FOV === 12, `FOV_DEFAULT is ${FOV}`);
+      expect(FOV === 13, `FOV_DEFAULT is ${FOV}`);
       expect(fresh.first.fov === FOV, `a new device starts at ${fresh.first.fov}`);
       expect(old0.first.fov === FOV && old0.first.savedFov === FOV && old0.first.savedV === 6 && old0.again.fov === FOV, `an old 0 saved before: ${JSON.stringify(old0)}`);
       expect(old5.first.fov === FOV && old5.again.fov === FOV, `+5 saved before: ${JSON.stringify(old5)}`);
@@ -1105,7 +1105,7 @@ await group('boot', async (use) => {
       const oldMineLow = await boot({ ...base, quality: 'low', qualityChosen: true });            // ...standard Low, theirs
       const isRetro = (x) => x.q === 'low' && x.style === 'retro' && x.retro && x.label === 'Retro · Low';
       expect(isRetro(fresh.first) && !fresh.first.chosen && isRetro(fresh.again), `a new device: ${JSON.stringify(fresh)}`);
-      expect(isRetro(oldHigh.first) && oldHigh.first.saved?.q === 'low' && oldHigh.first.saved?.style === 'retro' && oldHigh.first.saved?.v === 5, `High saved before v3, no pick: ${JSON.stringify(oldHigh.first)}`);
+      expect(isRetro(oldHigh.first) && oldHigh.first.saved?.q === 'low' && oldHigh.first.saved?.style === 'retro' && oldHigh.first.saved?.v === 6, `High saved before v3, no pick: ${JSON.stringify(oldHigh.first)}`);
       expect(oldHigh.again.q === 'low' && oldHigh.again.style === 'standard' && !oldHigh.again.retro, `the player's change after the move: ${JSON.stringify(oldHigh.again)}`);
       // (settings version 4, 2026-11-18: Graphics is two choices, so a High pick moves to Ultra and a standard Low pick to Retro Low)
       expect(oldMine.first.q === 'ultra' && oldMine.first.style === 'standard' && oldMine.first.chosen && oldMine.again.q === 'ultra' && !oldMine.again.retro, `High picked before v3 (now Ultra): ${JSON.stringify(oldMine)}`);
@@ -1606,11 +1606,11 @@ await group('modes', async (use) => {
   // Light traffic; it runs settings.density (Light on a new device, and a save from before version 6 moves to Light)
   await check('the tiles map the difficulties: Easy light traffic (2.2) with a forgiving crash rule, Medium normal (5), Extreme heavy (9.5) and faster; Free Drive has no traffic picker and runs Light (online would start Light too); a difficulty never changes the saved traffic', async () => {
     const seen = [];
+    await game(page, () => window.__updateSettings({ density: 'light' }));   // what a player has now (the suite's saves carry Moderate)
     await page.locator('.modes [role="radio"]', { hasText: 'Free Drive' }).click();
     const picker = await game(page, () => ({ row: document.querySelectorAll('.fd-traffic').length, line: document.querySelector('.mode-line')?.textContent ?? null, chips: [...document.querySelectorAll('.mp-chips span')].map((c) => c.textContent),
       buttons: [...document.querySelectorAll('.mp-home button')].map((b) => b.textContent.trim()).filter((t) => /^(Light|Moderate|Heavy|Expert)$/.test(t)) }));
     expect(picker.row === 0 && picker.buttons.length === 0 && picker.line === null && picker.chips.includes('Light traffic'), `Free Drive's tile: ${JSON.stringify(picker)}`);
-    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'light' }); });   // what a player has now (the suite's saves carry Moderate)
     for (const [name, per, speed, forgive] of [['Easy', 2.2, 1, 2], ['Medium', 5, 1, 0], ['Extreme', 9.5, 1.12, 0]]) {
       await page.locator('.modes [role="radio"]', { hasText: name }).click();
       await drive(page, name);
@@ -1624,7 +1624,7 @@ await group('modes', async (use) => {
     const f = await game(page, () => { const g = window.__game; g.setPaused(true); const { trafficFor, FREE_DRIVE_ONLINE } = g.api; return { mode: g.mode, per: g.traffic.level.perKmLane, diff: g.bests.diff, offline: trafficFor('free', g.settings, false), online: trafficFor('free', g.settings, true), onlineAvail: FREE_DRIVE_ONLINE.available, note: FREE_DRIVE_ONLINE.note }; });
     expect(f.mode === 'free' && f.per === 2.2 && f.diff === null && f.offline === 'light' && f.online === 'light' && !f.onlineAvail && /live servers/.test(f.note), `Free Drive: ${JSON.stringify(f)}`);
     await pauseToMenu(page);
-    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, density: 'moderate' }); });   // back to the suite's traffic
+    await game(page, () => window.__updateSettings({ density: 'moderate' }));   // back to the suite's traffic
     return `no picker on Free Drive (chips ${picker.chips.join(' / ')}); ${seen.join('; ')}; Free Drive runs ${f.offline} (${f.per}), online would start ${f.online}; the saved traffic stayed light through the three difficulties`;
   });
   await check('Easy forgives the first two real crashes (the run goes on; a crash still breaks the 60 s), the third ends it; Medium and Extreme end on the first', async () => {
@@ -1931,11 +1931,11 @@ await group('modes', async (use) => {
       if (orig === null) localStorage.removeItem('tsu.settings'); else localStorage.setItem('tsu.settings', orig);
       return out;
     });
-    const is = (o, q, st) => o.q === q && o.st === st && o.v === 5;
+    const is = (o, q, st) => o.q === q && o.st === st && o.v === 6;   // (settings version 6 since 2026-11-24: Free Drive Light, the fixed field of view)
     expect(is(r.medium, 'low', 'retro') && is(r.lowStd, 'low', 'retro') && r.lowStd.look === 'ultra', `Low/Medium: ${JSON.stringify([r.medium, r.lowStd])}`);
-    expect(r.manual.tr === 'auto' && r.manual.v === 5 && r.manual.look === 'hd' && r.high.look === 'hd' && r.medium.tr === 'auto', `a saved manual gearbox reads automatic, Ultra the realistic look: ${JSON.stringify([r.manual, r.high])}`);
+    expect(r.manual.tr === 'auto' && r.manual.v === 6 && r.manual.look === 'hd' && r.high.look === 'hd' && r.medium.tr === 'auto', `a saved manual gearbox reads automatic, Ultra the realistic look: ${JSON.stringify([r.manual, r.high])}`);
     expect(is(r.high, 'ultra', 'standard') && r.high.a === true && is(r.ultraOld, 'ultra', 'standard') && r.ultraOld.a === true, `High/Ultra: ${JSON.stringify([r.high, r.ultraOld])}`);
-    expect(is(r.unpicked, 'low', 'retro') && r.unpicked.written === 5, `unpicked: ${JSON.stringify(r.unpicked)}`);
+    expect(is(r.unpicked, 'low', 'retro') && r.unpicked.written === 6, `unpicked: ${JSON.stringify(r.unpicked)}`);
     expect(is(r.v4Ultra, 'ultra', 'standard') && r.v4Ultra.a === false && r.v4Ultra.theme === 'light' && r.v4Ultra.look === 'hd', `a v4 save keeps its graphics and theme (the look follows the graphics): ${JSON.stringify(r.v4Ultra)}`);
     expect(is(r.fresh, 'low', 'retro') && r.fresh.theme === 'auto', `first run: ${JSON.stringify(r.fresh)}`);
     return `Medium → ${r.medium.q}+${r.medium.st}; Low standard → ${r.lowStd.q}+${r.lowStd.st}; High → ${r.high.q}, adaptive ${r.high.a}; Ultra v2 → ${r.ultraOld.q}, adaptive ${r.ultraOld.a}; a saved manual gearbox → ${r.manual.tr}, look ${r.manual.look}; v4 untouched; first run ${r.fresh.q}+${r.fresh.st}, theme ${r.fresh.theme}`;
@@ -4406,7 +4406,7 @@ await group('phone', async (use) => {
   // (Ultra) the ABS | TCS bar, and at the top Pause, VIEW, the round map and the route shield overlap nothing and stay on
   // screen; every target 44 px or more; no HANDBRAKE button (2026-11-24): BRAKE sits between the pad and GAS, VIEW under
   // Pause upright and beside it on its side
-  await check('new HUD controls: no HANDBRAKE button, BRAKE (with its emblem) between the steering pad and GAS; VIEW by Pause; no overlap among the pedals, the pad, CLEAR PATH, JUMP, the drift readout, ABS | TCS, Pause, VIEW, the map and the route shield at 390 x 844 and 844 x 390; 44 px or more', async () => {
+  await check('new HUD controls: no HANDBRAKE button and no ABS | TCS bar, BRAKE (with its emblem) between the steering pad and GAS; VIEW by Pause; no overlap among the pedals, the pad, CLEAR PATH, JUMP, the drift readout, Pause, VIEW, the map and the route shield at 390 x 844 and 844 x 390; 44 px or more', async () => {
     // (a drive first when run alone: the menu's demo drive shows no controls)
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     await game(page, hyperHelpers);
@@ -4426,7 +4426,7 @@ await group('phone', async (use) => {
         const r = await game(page, newHudBoxesInPage);
         const b = r.box;
         expect(b.emb && b.brake && b.gas && b.steer && b.clear && b.thrust && b.drift && b.menu && b.view && b.map, `${label}: missing ${JSON.stringify(Object.keys(b))}`);
-        expect(!r.old, `${label}: a HANDBRAKE button or its caption is still there`);
+        expect(!r.old && !b.assists, `${label}: a HANDBRAKE button, its caption or the ABS | TCS bar is still there`);
         expect(r.overlaps.length === 0, `${label}: overlapping ${r.overlaps.join(', ')} ${JSON.stringify(b)}`);
         expect(r.outside.length === 0 && !r.side, `${label}: outside the screen ${r.outside.join(', ')}`);
         expect(r.small.length === 0, `${label}: under 44 px: ${r.small.join(', ')}`);
@@ -4458,12 +4458,12 @@ await group('phone', async (use) => {
     }
     return out.join('; ');
   });
-  // the new HUD's top bar (both looks) and the ABS | TCS switches (Ultra): on a phone the top bar shows Pause, VIEW (owner,
-  // 2026-11-23: "we also need to add the button to change the pov of the game") and Auto-drive when offered, not Go to;
-  // a tap on VIEW cycles the camera as on a desktop; the hold-Pause quick menu still offers Camera and Go to. ABS and TCS
-  // start on (the physics' flags, the switches, the car's display), a click on TCS turns the physics' traction control
-  // off, saves it and the seat display reads it, and the one honest line shows the first time
-  await check('new HUD top bar: Pause, VIEW (a tap changes the camera) and Auto-drive, the quick menu has Camera and Go to; ABS | TCS: on by default, TCS off sets Physics.tc, saves it, the display follows, one line of help', async () => {
+  // the new HUD's top bar (both looks): on a phone the top bar shows Pause, VIEW (owner, 2026-11-23: "we also need to add
+  // the button to change the pov of the game") and Auto-drive when offered, not Go to; a tap on VIEW cycles the camera as
+  // on a desktop; the hold-Pause quick menu still offers Camera and Go to. ABS and TCS (owner, 2026-11-24: the ABS | TCS
+  // bar left the HUD, no toggles anywhere): no bar and no switch; Physics.abs is always on; Physics.tc follows the
+  // handling, on for Arcade, Sport and a Custom value under the Simulation point, off at Simulation; the seat display follows
+  await check('new HUD top bar: Pause, VIEW (a tap changes the camera) and Auto-drive, the quick menu has Camera and Go to; no ABS | TCS bar or switch: Physics.abs always on, Physics.tc follows the handling (off at Simulation), the display follows', async () => {
     if (await game(page, () => window.__game.inAttract)) await drive(page, 'Free Drive');
     await game(page, () => { const g = window.__game; g.setPaused(false); g.navigateTo('Stoppage Time'); });
     await page.waitForFunction(() => document.querySelector('.tbar .tbtn.auto'), null, { timeout: 60000, polling: 250 });
@@ -4491,85 +4491,54 @@ await group('phone', async (use) => {
     await page.waitForSelector('.radial', { state: 'detached', timeout: 30000 });
     expect(wedges.includes('Camera') && wedges.includes('Go to'), `the quick menu: ${wedges.join(', ')}`);
     await game(page, () => window.__game.navigateTo(null));
-    // ABS | TCS (this group's look is standard Low: the Ultra skin)
+    // ABS and TCS: no bar, no switch; the physics' flags and the seat display follow the handling (this group's look is
+    // standard Low: the Ultra skin, where the bar was)
     const shown = (k) => `(() => { const d = window.__game.car.interior.group.userData.dash; const p = d.main ?? (['profile', 'tcs', 'abs'].includes(${JSON.stringify(k)}) ? d.left : d.right); return p.shown[${JSON.stringify(k)}]; })()`;
-    await game(page, () => { localStorage.removeItem('tsu.hint.assist.tcs'); localStorage.removeItem('tsu.hint.assist.abs'); window.__game.setCam('cockpit'); });
-    const read = () => game(page, `(() => { const g = window.__game, sw = (k) => document.querySelector('.asw.' + k)?.getAttribute('aria-checked'); return { skin: document.querySelector('.app').dataset.skin, abs: g.phys.abs, tc: g.phys.tc, sAbs: g.settings.abs, sTcs: g.settings.tcs, swAbs: sw('abs'), swTcs: sw('tcs'), saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs, savedAbs: JSON.parse(localStorage.getItem('tsu.settings') || '{}').abs, dashTcs: ${shown('tcs')}, dashAbs: ${shown('abs')}, toasts: [...document.querySelectorAll('.toast')].map((t) => t.textContent) }; })()`);
-    await page.waitForFunction(`${shown('tcs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const on = await read();
-    expect(on.skin === 'ultra' && on.abs && on.tc && on.sAbs && on.sTcs && on.swAbs === 'true' && on.swTcs === 'true' && on.dashTcs === 'on' && on.dashAbs === 'on', `default: ${JSON.stringify(on)}`);
-    await page.locator('.asw.tcs').click();
-    // the help line (a toast, 4.5 s): caught as it shows, before the display's wait
-    const line = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).find((t) => /^TCS off/.test(t)), null, { timeout: 30000, polling: 100 }).then((h) => h.jsonValue()).catch(() => null);
-    await page.waitForFunction(`${shown('tcs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const off = { ...(await read()), toasts: line ? [line] : [] };
-    await page.screenshot({ path: path.join(OUT, 'phone-assists-tcs-off.png') });
-    expect(!off.tc && off.abs && off.sTcs === false && off.saved === false && off.swTcs === 'false' && off.dashTcs === 'off' && off.dashAbs === 'on', `TCS off: ${JSON.stringify(off)}`);
-    expect(off.toasts.some((t) => /^TCS off: the rear can spin up; easier to drift, easier to spin\.$/.test(t)), `the help line: ${JSON.stringify(off.toasts)}`);
-    // a car placed again keeps it (Game.placeCar copies the setting), and the switch puts it back
+    await game(page, () => window.__game.setCam('cockpit'));
+    const read = () => game(page, `(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); return { skin: document.querySelector('.app').dataset.skin, bar: !!document.querySelector('.hud-assists, .asw'), abs: g.phys.abs, tc: g.phys.tc, handling: g.settings.handling, savedKeys: ['abs', 'tcs'].filter((k) => k in s), dashTcs: ${shown('tcs')}, dashAbs: ${shown('abs')} }; })()`);
+    const at = async (h) => {
+      await game(page, (h) => window.__updateSettings({ handling: h }), h);
+      await page.waitForFunction(`${shown('tcs')} === (window.__game.phys.tc ? 'on' : 'off')`, null, { timeout: FRAMES_MS, polling: 250 });
+      return read();
+    };
+    const suite = await read();
+    const arcade = await at(0.15), sport = await at(0.5), custom = await at(0.85), sim = await at(0.9);
+    // a car placed again keeps the rule (Game.placeCar sets the flags from the handling)
     await game(page, () => { const g = window.__game; g.placeCar(g.path, g.phys.s, g.path.laneOf(g.phys.d), 25); });
-    const placed = await game(page, () => window.__game.phys.tc);
-    await page.locator('.asw.tcs').click();
-    await page.waitForFunction(`${shown('tcs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const back = await read();
-    expect(placed === false && back.tc && back.saved === true, `placed again ${placed}, back on ${JSON.stringify(back)}`);
-    // ABS the same way: off sets Physics.abs, saves `abs: false`, the display's ABS reads off (TCS stays on), the "ABS off:" line
-    // shows the first time only, a placed car keeps it, and the switch puts it back
-    expect(back.savedAbs === true && back.dashAbs === 'on', `ABS before: ${JSON.stringify(back)}`);
-    await page.locator('.asw.abs').click();
-    const lineAbs = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].map((t) => t.textContent).find((t) => /^ABS off/.test(t)), null, { timeout: 30000, polling: 100 }).then((h) => h.jsonValue()).catch(() => null);
-    await page.waitForFunction(`${shown('abs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const offAbs = { ...(await read()), toasts: lineAbs ? [lineAbs] : [] };
-    expect(!offAbs.abs && offAbs.tc && offAbs.sAbs === false && offAbs.savedAbs === false && offAbs.swAbs === 'false' && offAbs.swTcs === 'true' && offAbs.dashAbs === 'off' && offAbs.dashTcs === 'on', `ABS off: ${JSON.stringify(offAbs)}`);
-    expect(offAbs.toasts.some((t) => /^ABS off: /.test(t)), `the ABS help line: ${JSON.stringify(offAbs.toasts)}`);
-    await game(page, () => { const g = window.__game; g.placeCar(g.path, g.phys.s, g.path.laneOf(g.phys.d), 25); });
-    const placedAbs = await game(page, () => window.__game.phys.abs);
-    // on again, off again: no second line (once)
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    await page.waitForFunction(() => ![...document.querySelectorAll('.toast')].some((t) => /^ABS off/.test(t.textContent)), null, { timeout: 30000, polling: 100 });
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'off'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const second = await page.waitForFunction(() => [...document.querySelectorAll('.toast')].some((t) => /^ABS off/.test(t.textContent)), null, { timeout: 2500, polling: 100 }).then(() => true).catch(() => false);
-    await page.locator('.asw.abs').click();
-    await page.waitForFunction(`${shown('abs')} === 'on'`, null, { timeout: FRAMES_MS, polling: 250 });
-    const backAbs = await read();
-    expect(placedAbs === false && !second && backAbs.abs && backAbs.tc && backAbs.savedAbs === true && backAbs.swAbs === 'true' && backAbs.dashAbs === 'on', `ABS: placed again ${placedAbs}, a second line ${second}, back on ${JSON.stringify(backAbs)}`);
+    const placed = await read();
+    const back = await at(HANDLING);
+    await page.screenshot({ path: path.join(OUT, 'phone-assists-by-handling.png') });
     await game(page, () => window.__game.setCam('chase'));
-    return `top bar ${bar.visible.join(' + ')} (hidden: ${bar.hidden.join(', ')}); VIEW at ${Math.round(vb.v.l)},${Math.round(vb.v.t)} over nothing, taps ${vb.cam} → ${cam2} → ${cam3}; quick menu ${wedges.join(', ')}; ABS/TCS default ${on.swAbs}/${on.swTcs}, physics ${on.abs}/${on.tc}, display ${on.dashAbs}/${on.dashTcs}; TCS off: physics ${off.tc}, saved ${off.saved}, display ${off.dashTcs}, "${off.toasts.find((t) => /TCS/.test(t))}"; kept on a re-place; back on; ABS off: physics ${offAbs.abs}, saved abs ${offAbs.savedAbs}, display ${offAbs.dashAbs}, "${offAbs.toasts.find((t) => /ABS/.test(t))}", the line once (a second off: ${second ? 'shown again' : 'no line'}), kept on a re-place, back on`;
+    expect(suite.skin === 'ultra' && !suite.bar && suite.savedKeys.length === 0, `the bar or a saved switch is still there: ${JSON.stringify(suite)}`);
+    expect([arcade, sport, custom, sim, placed, back].every((x) => x.abs === true && x.dashAbs === 'on'), `ABS is not always on: ${JSON.stringify({ arcade, sport, custom, sim })}`);
+    expect(arcade.tc && sport.tc && custom.tc && !sim.tc && !placed.tc && back.tc, `TCS by the handling: ${JSON.stringify({ arcade: arcade.tc, sport: sport.tc, custom: custom.tc, sim: sim.tc, placed: placed.tc, back: back.tc })}`);
+    expect(arcade.dashTcs === 'on' && sim.dashTcs === 'off' && back.dashTcs === 'on', `the display's TCS: ${JSON.stringify([arcade.dashTcs, sim.dashTcs, back.dashTcs])}`);
+    return `top bar ${bar.visible.join(' + ')} (hidden: ${bar.hidden.join(', ')}); VIEW at ${Math.round(vb.v.l)},${Math.round(vb.v.t)} over nothing, taps ${vb.cam} → ${cam2} → ${cam3}; quick menu ${wedges.join(', ')}; no ABS | TCS bar; ABS on at every handling; TCS Arcade ${arcade.tc}, Sport ${sport.tc}, Custom 0.85 ${custom.tc}, Simulation ${sim.tc} (kept on a re-place), back at ${HANDLING} ${back.tc}; the display follows`;
   });
-  // ABS | TCS across a reload: a profile saved before the switches existed (no abs / tcs keys) starts with both on; TCS
-  // turned off on the HUD is still off after a reload (the setting, the switch, and Physics.tc once the car is placed).
-  // Its own phone context, seeded once (a reload keeps what the game saved); the group's game held meanwhile
-  await check('ABS | TCS persist: on by default for an older profile; TCS and ABS off survive a reload (setting, switch, Physics.tc and .abs); back on restores both', async () => {
+  // ABS | TCS across a reload (2026-11-24: the switches are gone): a profile saved with the switches off (abs: false,
+  // tcs: false) loads with ABS on and TCS by its handling, drops the two keys from the save, and keeps that after a
+  // reload; Simulation saved: TCS off. Its own phone context, seeded once; the group's game held meanwhile
+  await check('ABS | TCS from a saved profile: saved switches off are dropped; ABS on, TCS by the handling (Sport on, Simulation off), across a reload', async () => {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
     await game(page, () => window.__game.hold(true));
     try {
-      await ctx.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html') && !sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.hint.retrotbar', '1'); localStorage.setItem('tsu.hint.radial', '1'); } },
-        // (an older profile: saved at settings version 4, before the switches, with no abs or tcs key. Not version 3: since
-        // the Midnight menu's version 4 migration a pre-4 Low save moves to Retro Low, whose HUD has no ABS | TCS bar)
-        { quality: 'low', style: 'standard', v: 4, adaptive: false, density: 'none', hudStyle: 'modern' });
-      const p = await ctx.newPage(); p.setDefaultTimeout(240000);
-      const read = () => p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'), sw = (k) => document.querySelector('.asw.' + k)?.getAttribute('aria-checked');
-        return { abs: g.phys.abs, tc: g.phys.tc, sAbs: g.settings.abs, sTcs: g.settings.tcs, savedTcs: s.tcs ?? null, savedAbs: s.abs ?? null, swAbs: sw('abs'), swTcs: sw('tcs') }; });
-      const run = async () => { await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS }); await drive(p, 'Free Drive'); await p.waitForSelector('.asw.tcs', { timeout: 120000 }); return read(); };
-      await firstGoto(p, pathToFileURL(GAME).href);
-      const first = await run();
-      await p.locator('.asw.tcs').click();
-      const off = await read();
-      await p.locator('.asw.abs').click();
-      const offBoth = await read();
-      await p.reload();
-      const again = await run();
-      expect(first.abs && first.tc && first.sAbs && first.sTcs && first.swAbs === 'true' && first.swTcs === 'true', `an older profile: ${JSON.stringify(first)}`);
-      expect(!off.tc && off.savedTcs === false, `TCS off: ${JSON.stringify(off)}`);
-      expect(!offBoth.abs && !offBoth.tc && offBoth.savedAbs === false && offBoth.savedTcs === false, `ABS off too: ${JSON.stringify(offBoth)}`);
-      expect(!again.abs && !again.tc && again.sAbs === false && again.sTcs === false && again.swTcs === 'false' && again.swAbs === 'false' && again.savedAbs === false, `after the reload (both off): ${JSON.stringify(again)}`);
-      // and back on: both switches and both flags return, and are saved
-      await p.locator('.asw.abs').click(); await p.locator('.asw.tcs').click();
-      const restored = await read();
-      expect(restored.abs && restored.tc && restored.sAbs && restored.sTcs && restored.swAbs === 'true' && restored.swTcs === 'true' && restored.savedAbs === true && restored.savedTcs === true, `both back on: ${JSON.stringify(restored)}`);
-      return `older profile ABS/TCS ${first.swAbs}/${first.swTcs} (physics ${first.abs}/${first.tc}); TCS off, saved ${off.savedTcs}; ABS off too, saved ${offBoth.savedAbs}; after a reload: settings abs ${again.sAbs} / tcs ${again.sTcs}, switches ${again.swAbs}/${again.swTcs}, Physics ${again.abs}/${again.tc}; both back on: Physics ${restored.abs}/${restored.tc}, saved ${restored.savedAbs}/${restored.savedTcs}`;
+      const out = {};
+      for (const [name, h] of [['sport', 0.5], ['sim', 0.9]]) {
+        const p = await ctx.newPage(); p.setDefaultTimeout(240000);
+        await p.addInitScript((s) => { if (!location.pathname.endsWith('/warm.html') && !sessionStorage.getItem('seeded')) { sessionStorage.setItem('seeded', '1'); localStorage.setItem('tsu.settings', JSON.stringify(s)); localStorage.setItem('tsu.hint.retrotbar', '1'); localStorage.setItem('tsu.hint.radial', '1'); } },
+          { quality: 'low', style: 'standard', v: 5, adaptive: false, density: 'none', hudStyle: 'modern', handling: h, abs: false, tcs: false });
+        const read = () => p.evaluate(() => { const g = window.__game, s = JSON.parse(localStorage.getItem('tsu.settings') || '{}'); return { abs: g.phys.abs, tc: g.phys.tc, keys: ['abs', 'tcs'].filter((k) => k in s), bar: !!document.querySelector('.hud-assists, .asw'), handling: g.settings.handling }; });
+        const run = async () => { await p.waitForFunction(() => window.__game?.net && document.querySelector('.overlay.menu'), null, { timeout: BOOT_MS }); await drive(p, 'Free Drive'); return read(); };
+        await firstGoto(p, pathToFileURL(GAME).href);
+        const first = await run();
+        await p.reload();
+        out[name] = { first, again: await run() };
+        await p.close();
+      }
+      const ok = (x, tc) => x.abs === true && x.tc === tc && x.keys.length === 0 && !x.bar;
+      expect(ok(out.sport.first, true) && ok(out.sport.again, true), `Sport, saved with both switches off: ${JSON.stringify(out.sport)}`);
+      expect(ok(out.sim.first, false) && ok(out.sim.again, false), `Simulation, saved with both switches off: ${JSON.stringify(out.sim)}`);
+      return `saved abs/tcs false: Sport → ABS ${out.sport.first.abs}, TCS ${out.sport.first.tc}; Simulation → ABS ${out.sim.first.abs}, TCS ${out.sim.first.tc}; the keys dropped from the save; the same after a reload; no bar`;
     } finally { await ctx.close(); await game(page, () => window.__game.hold(false)).catch(() => {}); }
   });
   // the Retro look (Settings > Graphics > Retro Low, as a player turns it on): the same handbrake on BRAKE (a slide up
@@ -4593,13 +4562,10 @@ await group('phone', async (use) => {
       await frames(page, 3);
     };
     try {
-      // TCS turned off on the Ultra bar: Retro has no switch to turn it back on, so Retro runs with ABS and TCS on, and
-      // the saved choice (off) is back when the Ultra look is
-      await page.locator('.asw.tcs[aria-checked="true"]').click();
-      const ultraOff = await game(page, () => ({ tc: window.__game.phys.tc, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs }));
+      // ABS and TCS on Retro follow the same rule as on Ultra (ABS on; TCS by the handling: the suite's Custom 0.35, on)
       await style(true);
-      const retroAssists = await game(page, () => ({ abs: window.__game.phys.abs, tc: window.__game.phys.tc, saved: JSON.parse(localStorage.getItem('tsu.settings') || '{}').tcs }));
-      expect(ultraOff.tc === false && ultraOff.saved === false && retroAssists.abs === true && retroAssists.tc === true && retroAssists.saved === false, `TCS off on Ultra, then Retro: ${JSON.stringify({ ultraOff, retroAssists })}`);
+      const retroAssists = await game(page, () => ({ abs: window.__game.phys.abs, tc: window.__game.phys.tc, handling: window.__game.settings.handling }));
+      expect(retroAssists.abs === true && retroAssists.tc === (retroAssists.handling < 0.9), `Retro's ABS and TCS: ${JSON.stringify(retroAssists)}`);
       const fire = (sel, type, dx = 0, dy = 0, id = 31) => game(page, (a) => {
         const e = document.querySelector(a.sel), r = e.getBoundingClientRect();
         e.dispatchEvent(new PointerEvent(a.type, { clientX: r.left + r.width / 2 + a.dx, clientY: r.top + r.height / 2 + a.dy, bubbles: true, pointerId: a.id, pointerType: 'touch', isPrimary: true }));
@@ -4609,7 +4575,7 @@ await group('phone', async (use) => {
       await fire('.pedal.brake', 'pointerdown', 0, 0, 42); await fire('.pedal.brake', 'pointermove', 0, -40, 42); const slide = await hb(); await page.waitForFunction(() => Number(getComputedStyle(document.querySelector('.pedal.brake .bk-arc')).opacity) > 0.9, null, { timeout: 30000, polling: 100 }).catch(() => {}); const emb = await game(page, brakeEmblemInPage);
       await page.screenshot({ path: path.join(OUT, 'phone-retro-handbrake-pulled.png') });
       await fire('.pedal.brake', 'pointerup', 0, -40, 42); const slideUp = await hb();
-      const dom = await game(page, () => ({ round: !!document.querySelector('.hb-round, .hb-lever'), assists: !!document.querySelector('.hud-assists') }));
+      const dom = await game(page, () => ({ round: !!document.querySelector('.hb-round, .hb-lever'), assists: !!document.querySelector('.hud-assists, .asw') }));
       const bar = await game(page, newHudTopBarInPage);
       const r = await game(page, newHudBoxesInPage);
       await page.screenshot({ path: path.join(OUT, 'phone-retro-hud.png') });
@@ -4619,11 +4585,9 @@ await group('phone', async (use) => {
       expect(!dom.round && !dom.assists, `on Retro: ${JSON.stringify(dom)}`);
       expect(bar.visible.join() === 'Pause,View' && bar.hidden.includes('Go to'), `the top bar: ${JSON.stringify(bar)}`);
       expect(r.skin === 'retro' && r.overlaps.length === 0 && r.outside.length === 0 && r.small.length === 0 && r.box.steer.r <= r.box.brake.l && r.box.brake.r <= r.box.gas.l, `the boxes: ${JSON.stringify(r)}`);
-      return `Retro: BRAKE tap brakes only; the slide up pulls (brake off, the flat emblem's arc lit), lift lets go; no HANDBRAKE button, no ABS | TCS bar; a saved TCS off runs on in Retro (physics ${retroAssists.abs}/${retroAssists.tc}, saved ${retroAssists.saved}); top bar ${bar.visible.join()}; boxes clear (${Object.keys(r.box).join('/')})`;
+      return `Retro: BRAKE tap brakes only; the slide up pulls (brake off, the flat emblem's arc lit), lift lets go; no HANDBRAKE button, no ABS | TCS bar; ABS/TCS ${retroAssists.abs}/${retroAssists.tc} at handling ${retroAssists.handling}; top bar ${bar.visible.join()}; boxes clear (${Object.keys(r.box).join('/')})`;
     } finally {
       await style(false).catch(() => {});
-      const sw = page.locator('.asw.tcs[aria-checked="false"]');
-      if (await sw.count()) await sw.click().catch(() => {});   // the suite's look keeps TCS on
     }
   });
   // the seat view (HUD_POV_SPEC 5.2): the horizon at 29-33% at 60 mph on I-405 North (35-40% until 2026-11-16, when the

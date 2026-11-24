@@ -72,20 +72,16 @@ export interface Settings {
   paints: Record<string, number>;   // the garage's paint per car id (cars.ts PAINTS); a car not listed wears its own
   wheels: Record<string, string>;   // the garage's rim style per car id (cars.ts WHEELS); likewise
   radioFavs: string[];      // starred stations on the radio card (station ids)
-  // the car's ABS and traction control (the Ultra HUD's ABS | TCS switches, 2026-11-23): Game sets Physics.abs / .tc
-  // from these at every placement and settings change; both on by default
-  abs: boolean;
-  tcs: boolean;
+  // (the ABS | TCS switches and their `abs` / `tcs` settings left on 2026-11-24: assistsFor below decides both)
   v: number;                // the settings' version (SETTINGS_V): which defaults a saved value was made under
 }
 
 // The cockpit's field of view, added to its base (owner, 2026-11-16: "make the standard pov set at +10"; 2026-11-24: the
 // "Field of view" slider left Settings to declutter, and the view is this one fixed value, "to display the cockpit as much
 // as we could"). Change it here: readSettings puts every saved value on it, so `settings.fov` stays readable everywhere.
-// +12, not the +15 the owner proposed: at +15 the iPhone seat view fails the suite's hood check (the bonnet 1.3 % of the
-// frame, floor 1.4 %) and puts the Rossini GT's cluster above its line (52.4 %, floor 53 %); +12 passes both (1.6 %, 53.4 %)
-// and still shows more of the cockpit than the old +10. The renders: scratchpad fov-*-10/15 of 2026-11-24.
-export const FOV_DEFAULT = 12;
+// +13, the owner's decision (2026-11-24) after the renders: he proposed +15, which failed the suite's iPhone hood check
+// (the bonnet 1.3 % of the frame, floor 1.4 %) and the Rossini GT's cluster check (centre 52.4 %, floor 53 %).
+export const FOV_DEFAULT = 13;
 // 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
 // 3: Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): settings saved before
 // it by a player who never picked the Graphics preset themselves (qualityChosen false) move to Low + Retro once; a
@@ -99,6 +95,7 @@ export const FOV_DEFAULT = 12;
 // 6 (owner, 2026-11-24: "get rid of the traffic selection when choosing free drive and just have the default traffic be
 // low"): Free Drive's traffic picker is gone and Free Drive runs Light; a density saved before it (Moderate, Heavy, Expert)
 // moves to Light, once. The timed runs keep their own traffic (DIFFICULTY). The field of view is fixed (FOV_DEFAULT).
+// The saved ABS | TCS choices are dropped (assistsFor).
 export const SETTINGS_V = 6;
 
 export interface QualityPreset {
@@ -138,6 +135,12 @@ export const PROFILES: Record<Profile, { label: string; h: number; line: string 
   sim: { label: 'Simulation', h: 0.9, line: 'Stability control only in a real slide, 16% less grip; the tyres let go past the limit.' },
 };
 export const PROFILE_IDS = Object.keys(PROFILES) as Profile[];
+// the car's ABS and traction control (owner, 2026-11-24: the ABS | TCS bar left the HUD, no toggles anywhere): ABS is
+// always on; TCS follows the handling setting, on for Arcade and Sport (and a Custom value below the Simulation point),
+// off at Simulation. Game sets Physics.abs / .tc from it at every placement and settings change.
+export function assistsFor(s: Pick<Settings, 'handling'>): { abs: boolean; tc: boolean } {
+  return { abs: true, tc: s.handling < PROFILES.sim.h - 1e-6 };
+}
 // the named profile a handling value is, or 'custom' (the slider moves in 0.05 steps, so the match is exact in practice)
 export function profileOf(h: number): Profile | 'custom' {
   for (const id of PROFILE_IDS) if (Math.abs(h - PROFILES[id].h) < 0.004) return id;
@@ -285,7 +288,7 @@ export function defaults(): Settings {
   return {
     quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'light', tile: 'free', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, character: '', packTest: false, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
-    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', theme: 'auto', paints: {}, wheels: {}, radioFavs: [], abs: true, tcs: true, v: SETTINGS_V,
+    hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', theme: 'auto', paints: {}, wheels: {}, radioFavs: [], v: SETTINGS_V,
   };
 }
 
@@ -331,6 +334,8 @@ function readSettings(): { s: Settings; migrated: boolean } {
     const v = JSON.parse(raw) as Partial<Settings>;
     // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
     const old = v as Record<string, unknown>; delete old.course; delete old.mode;
+    // the ABS | TCS switches' saved choices (2026-11-23 to 11-24): gone, assistsFor decides both now
+    delete old.abs; delete old.tcs;
     const from = typeof v.v === 'number' && Number.isFinite(v.v) ? v.v : 1;
     // the field of view is one fixed value since the slider left Settings (2026-11-24): whatever was saved reads as it
     const fov = FOV_DEFAULT;
@@ -378,8 +383,6 @@ function readSettings(): { s: Settings; migrated: boolean } {
       paints: v.paints && typeof v.paints === 'object' ? Object.fromEntries(Object.entries(v.paints).filter(([k, x]) => typeof k === 'string' && Number.isInteger(x) && (x as number) >= 0 && (x as number) <= 0xffffff)) as Record<string, number> : {},
       wheels: v.wheels && typeof v.wheels === 'object' ? Object.fromEntries(Object.entries(v.wheels).filter(([k, x]) => typeof k === 'string' && typeof x === 'string' && /^[a-z0-9]{2,8}$/.test(x))) as Record<string, string> : {},
       radioFavs: Array.isArray(v.radioFavs) ? v.radioFavs.filter((x) => typeof x === 'string').slice(0, 8) : [],
-      abs: v.abs !== false,
-      tcs: v.tcs !== false,
     };
     return { s, migrated: from < SETTINGS_V };
   } catch { return { s: d, migrated: false }; }

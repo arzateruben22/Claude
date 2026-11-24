@@ -2012,3 +2012,9 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 }
 /* the Founder Edition's stage in the carousel's narrower card: Replay at the top right, clear of the caption at the bottom left */
 .car-track .fe-replay.btn { top: 8px; bottom: auto; }
+
+/* the carousel's numbers wrap between items, never inside one ("1019 / MPH" was split at the card's edge) */
+.gcell.car small.car-stats { letter-spacing: 0.1em; }
+.gcell.car small.car-stats span { display: inline-block; white-space: nowrap; font: inherit; color: inherit; letter-spacing: inherit; line-height: inherit; }
+.car-ph .car-still { display: block; width: 100%; height: 100%; }
+.gcell.car .row { margin-top: 4px; }
