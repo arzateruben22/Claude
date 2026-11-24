@@ -790,7 +790,7 @@ Scores against the references: dashboard 7, wheel 6 (emblem 8), console 6, vibe 
 ### Next task, batched with the View button (owner, 2026-11-24 ~5:30 AM PT, from his iPhone at v27): menu and garage
 
 **Built 2026-11-24 on `claude/ui-batch` (not pushed, not published): items 1-5 below, the View button (next section) and
-the owner's item 7 (the Field of view slider removed; the cockpit FOV is the fixed `FOV_DEFAULT` in settings.ts, +13, the owner's decision; +15 failed the iPhone hood and seat-cluster checks).
+the owner's item 7 (the Field of view slider removed; the cockpit FOV is the fixed `FOV_DEFAULT` in settings.ts, +13, the owner's decision; +15 failed the iPhone hood and seat-cluster checks), and item 8 (the ABS | TCS bar off the HUD: ABS always on, TCS by the handling, settings.ts `assistsFor`).
 See the progress log's entry of that date for what changed, the screenshots and the suite results.**
 
 The owner's four asks, built together with the View button above in one UI task after the hypercar round:

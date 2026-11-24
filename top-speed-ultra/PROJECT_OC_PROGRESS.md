@@ -4,6 +4,74 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-24: the owner's UI batch (menu, garage, View on phones, the handbrake on BRAKE, a fixed field of view, no ABS | TCS bar)
+
+Branch `claude/ui-batch` on v28 (7b6dfc7), not pushed, not published. The handoff's two queued sections (menu and garage
+items 1-5; the View button) and the owner's items 7 (the Field of view slider) and 8 (the ABS | TCS bar), built together:
+1. **Free Drive's traffic picker is gone** (App.tsx): no Light/Moderate/Heavy/Expert row and no "traffic is your own
+   choice" line; the hero's chip reads "Light traffic". settings.ts SETTINGS_V 6: a new device starts Light and a density
+   saved before v6 moves to Light once; the timed runs keep DIFFICULTY's traffic.
+2. **The garage's character row is a card** (App.tsx GaragePanel, styles.css `.garage-cast`): the portrait (or the skin
+   swatch with a driver icon) in a frame, CHARACTER in the spaced mono caps on its own line, the name in the display
+   face, a chevron; 64-74 px tall, in the menu's tokens (Midnight and Velocity themes).
+3. **The Vehicles tab is a carousel** (App.tsx CarCarousel): scroll-snap track, the car you drive centred on open, the
+   neighbours peeking (dimmed, scaled 0.94, each showing a still of its own model in its paint and rims, its lock chip,
+   name and numbers: Game.showroomStill renders each car once on the stage while the live stage is idle and keeps it for
+   the session; owner, 2026-11-24, on the first preview's flat silhouettes: "make the car selection display the cars"),
+   the ‹ › buttons, the
+   arrow keys, a count ("02 / 05 ROSSINI BRIO") read out politely, dots; every card stays in the page as a group
+   "n of m: name"; DRIVE (right under the name and numbers, so it is on a 390 x 844 phone's first screen with the car;
+   the garage's fine print moved under the tabs), the blurb, the unlock bar and the Founder list on the centred card;
+   the numbers wrap between items, never inside one; a locked car shows
+   "Opens at N mi" (Founders' Road for the hypercar). The centred car is on the **showroom**: the Founder reveal stage
+   (preview/reveal.ts, now taking a car's paint, edition and rims) with any car still at its hero angle
+   (Game.openReveal(canvas, false, {car, paint}), one stage at a time, built 0.26 s after a card settles, a frame kept
+   per car and paint for the session; a stage still compiling is disposed once its compile settles).
+4. **The Paint tab shows the car** on the same stage (2:1 on a phone) and repaints it live as a swatch is picked
+   (Game.setRevealPaint: a material swap, as PlayerCar.setPaint); on a phone the tab scrolls the stage and the
+   swatches (three across) into view together.
+5. **No HANDBRAKE button; the handbrake lives on BRAKE** (Touch.tsx, input.ts, hud-*.css): press = brake; slide up past
+   28 px = handbrake held, drifting while the thumb stays above the line (sideways anywhere); back under 20 px = braking
+   again; lift = release (the 0.22 s touch hold stays); a quick flick (no move event, the lift above the line) pulls it
+   for the hold (Input.flickHandbrake). BRAKE carries the owner's emblem (control/ui-refs/2026-11-24-brake-emblem.png):
+   a red (P) in two red arcs on a dark lens, a knurled chrome ring in Ultra and a flat graphite ring in Retro, and a
+   short red arc on the ring that lights while the handbrake is pulled and drains over the hold. "Slide up to drift"
+   shows once, the first time BRAKE is pressed on the device (tsu.hint.hbslide). Keyboard Space is unchanged.
+6. **VIEW on phones** (hud-layout.css): under Pause upright (44 x 44 at y 60..104 on 390 x 844), Auto-drive under it;
+   on its side a row from the map leftwards (Pause, View, Auto-drive); it stays when the Minimal HUD tucks the icons
+   away. On a short upright phone (under 760 px, the claude.ai app's 715) the Ultra map is 76 px instead of 88 so the
+   HUD's cover stays inside the 12.5 % budget with the extra button.
+7. **The Field of view slider left Settings**; the cockpit's FOV is the one constant `FOV_DEFAULT` in settings.ts,
+   **+13** (the owner's decision after the renders fov-*-10/15/13): at +15 the iPhone seat view failed the suite's hood check
+   (bonnet 1.3 % of the frame, floor 1.4 %) and the Rossini GT's cluster check (centre 52.4 %, floor 53 %); +12 passed
+   both (1.6 %, 53.4 %). At +13 the hood checks failed only flat out (166-188 mph, where the view widens with speed), so the
+   seat view's speed widening now stops at the width it always had flat out (+14, Game.ts SEAT_FOV_FLAT_OUT): +13 at a
+   cruise, the old bonnet flat out. Every saved value reads as the constant (SETTINGS_V 6).
+8. **No ABS | TCS bar** (owner, 2026-11-24, no toggles anywhere): settings.ts `assistsFor`: ABS always on; TCS on for
+   Arcade, Sport and a Custom handling under the Simulation point (0.9), off at Simulation; Game sets Physics.abs / .tc
+   from it at every placement and settings change; the saved `abs` / `tcs` keys are dropped on load. The HUD passes no
+   assists, so the bar is gone in Ultra and Retro, upright and on its side (the speed card was already at the top; the bar
+   sat under it). The Auto-drive button's face, inset to the whole top bar while the button was `position: static`,
+   covered View; it is `relative` now.
+
+Proof (headless Chromium, SwiftShader; four suites and render jobs sharing four cores, so check times are long):
+`npx tsc --noEmit -p .` clean; `npm run build` ok. Screenshots in the session scratchpad (`ui/`).
+Suite (`--only=` groups; the last build, 2f624a6, unless named):
+- phone (full, build 1e04b7e, before the flat-out cap): 33/36; then on 2f624a6 the six checks this batch moves
+  (`--check=` the iPhone hood, the hypercar's seat view sideways, seat view, forearms, garage at 390, driving HUD): 7/7
+  (the hood 1.5 % over the 1.4 % floor; the GT's cluster 53.4 %; the cover 8.9 % / 10.1 % at 715 / 10.0 % on its side).
+  Still failing: "sleeves from the seat on a phone" (known, pre-existing).
+- modes (`--check=` the tiles, hero copy, Settings, Graphics, migration, themes, economy slots, saved bests): 9/9.
+  "Speed Survival starts ... one real crash ends it" and "a real drive on Easy ..." also fail on v28 itself (7b6dfc7,
+  built in a scratch copy and run the same way: the end card never shows here), and the full group cascades after them.
+- boot (`--check=field of view`): 2/2. progression + economy-garage + economy-phone (build 1e04b7e): 25/27, the two
+  failures the carousel check's own count (it counted the new stills as stages; fixed) and the founder check after it.
+- progression on the last build (f50cd6d, the carousel check setting owner mode off through the App): 15/15, the
+  carousel check reading "5 cards, centred rossini-gt on the showroom, the 4 neighbours on stills of their models
+  (brightest 254/254/254/255), lock chips Opens at 50/150/300 mi and Founders' Road; Next → Brio, ArrowRight → Corsa;
+  Paint: Sunset Orange repaints the stage; character card 74 px".
+- tests/retrohud-frames.mjs (a proof script, not in the suite) still presses the removed `.hb-round`; not updated.
+
 ## 2026-11-23: claude/final-live merges the Midnight Performance menu (claude/menu) over v26 + the lanes
 
 Merge of origin/claude/menu into claude/final-live (v26, pause-shake, economy, drift, retro-hud, cast). Both intents kept:
