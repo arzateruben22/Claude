@@ -427,7 +427,7 @@
         gcOut.textContent = c.code + " has " + dollars(c.balance) + " left" +
           (Number(c.balance) < Number(c.amount) ? " of " + dollars(c.amount) : "") +
           ". Show it at your visit and Evelyn takes it off the bill; you pay only what's over.";
-      }, function () { gcOut.textContent = "We couldn't check right now. Please try again in a moment."; });
+      }, function (err) { gcOut.textContent = err && err.reason === "slow_down" ? "That's a lot of tries in a row. Give it a few minutes and try again." : "We couldn't check right now. Please try again in a moment."; });
     });
   }
 

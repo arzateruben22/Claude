@@ -131,3 +131,13 @@ Prices in v3: Glow **$185**, Ageless **$235** a month; the first 25 members keep
 4. **Ads, when she's ready:** a Meta ad account and a Google Ads account in her name, her card; the Meta pixel and Google conversion tags on the site (Ruben); then the campaigns in `marketing/campaigns.md`, starting at $10/day each, 20 miles around Woodland Hills. Creatives: `node marketing/ads/build-ads.mjs` → `marketing/ads/out/`.
 5. **Every Monday** Claude drafts the week's posts and ad variants into `marketing/weekly/`; she posts what she likes.
 6. **Search and shares, already on the page:** `robots.txt` keeps the dashboard and the working folders out of search; `js/seo.js` writes the studio (hours, Woodland Hills, Instagram) and the whole shelf (price, stock, photo, the product's own link) as structured data for Google; the share tags in `index.html` give iMessage, Instagram DMs and the TikTok bio a title and the pore clip's poster. Once the domain exists: make the `og:image` address absolute (`https://<her domain>/img/school/video/8-2.jpg`), add `Sitemap: https://<her domain>/sitemap.xml` to `robots.txt` with a three-line sitemap (the home page, `docs/school/school.html`, `privacy.html`), and submit it in Google Search Console.
+
+## Pre-launch check, Nov 24, 2026
+
+Done in the repo: privacy policy (with a line on browser storage), 404 page, page descriptions on every public page, `noindex` on the receipt and shipping-kit pages, favicons on every page, alt text on every image, Content-Security-Policy and the other security headers (`_headers`; tested against the home page, booking, account, chat and each other page with no blocked requests), rate limits on booking, checkout, the assistant, the calendar feed and the gift-certificate balance check, the Mixi label colour (contrast), and no keys or secrets in the code.
+
+Needs the live address: `sitemap.xml`, the full web address on the sharing-preview tags (`og:image`, `og:url`, canonical), confirming HTTPS and the headers on the host, a PageSpeed run.
+
+Needs a decision: terms of service (drafted from the FAQ's deposit, cancellation and returns rules, for Evelyn to approve), which analytics (a cookieless one keeps the site free of a cookie banner), error monitoring, and whether the database plan includes backups (check in the Supabase dashboard).
+
+When an outside service is added (analytics, say), add its address to the Content-Security-Policy in `_headers`, or the browser will block it.

@@ -6219,7 +6219,7 @@ html:not(.has-app) [data-feature~="app"] { display: none !important; }
 .sh-card:hover { border-color: var(--panel-edge); box-shadow: 0 14px 34px -22px rgba(var(--shadow-rgb), 0.45); }
 .sh-fr { --brand-wash: rgba(var(--accent-rgb), 0.1); --brand-ink: var(--rose); }
 .sh-gm { --brand-wash: rgba(var(--sage-rgb), 0.12); --brand-ink: var(--sage); }
-.sh-mx { --brand-wash: rgba(var(--gold-rgb), 0.15); --brand-ink: var(--sand); }
+.sh-mx { --brand-wash: rgba(var(--gold-rgb), 0.15); --brand-ink: var(--cocoa); }   /* cocoa, not sand: sand on the card was 3.0:1, under the 4.5:1 for small text */
 .sh-ci { --brand-wash: rgba(var(--line-rgb), 0.07); --brand-ink: var(--ink-60); }
 .sh-label {
   position: relative; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.25rem;

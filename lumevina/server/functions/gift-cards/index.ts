@@ -29,6 +29,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { issueGift, publicCard } from "../_shared/gifts.ts";
 import { studioOk } from "../_shared/studio.ts";
+import { tooMany } from "../_shared/guard.ts";
 
 const CODE = /^LUM-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 const REASONS = new Set(["not_found", "void", "empty", "nothing_due"]);
@@ -49,6 +50,8 @@ Deno.serve(async (req) => {
 
   switch (body.action) {
     case "check": {
+      // anyone with a code can look it up, so a script can't try codes all day: 20 looks in 10 minutes per caller
+      if (await tooMany(db, req, "gift-check", 20, 10)) return json({ reason: "slow_down" }, 429);
       if (!CODE.test(code)) return json({ reason: "not_found" }, 404);
       const { data } = await db.from("gift_cards").select("*").eq("code", code).maybeSingle();
       if (!data) return json({ reason: "not_found" }, 404);
