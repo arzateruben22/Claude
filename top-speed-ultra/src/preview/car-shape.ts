@@ -406,7 +406,8 @@ const HYPER: ShapeParams = {
   // (2026-11-23: 12 mm, so the references' ice-blue tail blades over it carry the tail; it is still the stop light)
   // (judge round 1: no red bar in sight; h is the blades' height, 26 mm, and the stop lamp is hidden in the fascia,
   // car-body's recessed tail)
-  bar: { len: 1.66, h: 0.026 },
+  // (the polish round, 2026-11-24, the owner: "thicker, brighter red tail blades": 38 mm, was 26)
+  bar: { len: 1.66, h: 0.038 },
   // (2026-11-23, the owner's references, outside and from the seat: a black louvred panel on each fender hump's top,
   // ahead of the wheel, from its inner slope up to the crest; and a black vented section on the sunken bonnet's centre)
   // (judge round 1: the hump louvres move back over the wheel onto the humps' inner slopes and tops, where the

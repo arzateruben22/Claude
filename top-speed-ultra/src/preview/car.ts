@@ -70,7 +70,9 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   if (P.led) {
     extra.led = std ? M.led(STANDARD_LED.color, STANDARD_LED.halo, q, STANDARD_LED.edge) : M.led(P.led.color, P.led.halo, q, P.led.edge);
     // the tail's blades in red on both editions (the owner, 2026-11-24: "Keep the tail lights red or blue? I like the red")
-    extra.ledTail = M.led(0xff3a30, 0xd01010, q, 0x7a0606);
+    // (brighter since the polish round, 2026-11-24, the owner: "thicker, brighter red tail blades": a hotter core and a
+    // redder glow, not the darker 0xd01010 halo that the tone map took toward maroon at the chase camera)
+    extra.ledTail = M.led(0xff7058, 0xff2414, q, 0xb80c08);
     // the turn signals (amber, about 1.5x the brake level of the red bar's map) and the reversing lamps (white)
     const sig = once('m.signal', () => Object.assign(new THREE.MeshStandardMaterial({ color: 0x2a1600, emissive: 0xff9326, emissiveIntensity: 3.2, roughness: 0.3 }), { name: 'signal' }));
     extra.sigL = sig; extra.sigR = sig;
@@ -100,6 +102,16 @@ export function carMaterials(paint: number, q: Quality, caliper = 0xe0a800, id: 
   // (round 4: it is now also the centre vent's well, which read mid grey (80) head on in the scoop's dark: darker, rougher,
   // a calmer sky, and drawn a few depth steps nearer like the scoop, so the skin's facets don't tear through it)
   if (oc) extra.slat = once('m.slatOC3', () => { const m = withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x060708, roughness: 0.85, metalness: 0.0, envMapIntensity: 0.12 }), { name: 'slat' })); m.polygonOffset = true; m.polygonOffsetFactor = -1; m.polygonOffsetUnits = -4; return m; });
+  // (the polish round, 2026-11-24, the owner's v29 frame: from the seat the bonnet's centre vent and the humps' louvres
+  // are seen at a few degrees, where the wells' polygon offset (slope-scaled) carried them through the blades and
+  // frames, which had none or the same: the vent read as a speckle of black and carbon along the hood's edge that
+  // flickered in motion. The blades and the frames now draw a clear step nearer than the wells, so the order of the
+  // three layers never changes with the angle; the blades a satin graphite with a sheen, so the louvres read as bold
+  // horizontal bars over the black, as the owner's references show)
+  if (oc) {
+    extra.louvre = once('m.louvreOC', () => { const m = withAO(Object.assign(new THREE.MeshStandardMaterial({ color: 0x2b2e33, roughness: 0.42, metalness: 0.2, envMapIntensity: 0.55 }), { name: 'louvre' })); m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -10; return m; });
+    extra.louvreFrame = once('m.louvreFrameOC' + q, () => { const c = P.carbonTint === undefined ? M.carbon(q) : M.carbon(q, 0.05, { tint: q === 'high' ? 0xb4bac4 : 0xa0a6b0, cc: 0.12, env: 0.35, weave: 3.5 }); const m = withAO(c.clone()); m.polygonOffset = true; m.polygonOffsetFactor = -2; m.polygonOffsetUnits = -10; m.name = 'louvreFrame'; return m; });
+  }
   // (the references' tips: dark burnt titanium with a bright rolled lip, not the Rossinis' rainbow titanium)
   if (P.exhaust === 'centre') extra.exhaustOC = once('m.exhaustOC', () => new THREE.MeshPhysicalMaterial({ color: 0x4a4d53, metalness: 1, roughness: 0.22, side: THREE.DoubleSide }));
   if (P.plate) extra.plate = once('m.plateOC', () => new THREE.MeshPhysicalMaterial({ map: plateTex(), roughness: 0.38, metalness: 0.3, clearcoat: 1, clearcoatRoughness: 0.05 }));
