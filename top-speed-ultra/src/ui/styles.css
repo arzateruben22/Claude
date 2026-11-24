@@ -570,10 +570,6 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .net button:focus-visible { outline: 2px solid var(--ice); outline-offset: -2px; }
 .net small { grid-column: 1 / -1; margin-top: 4px; color: var(--dim); font: 500 10.5px/1.25 var(--f-mono); letter-spacing: 0.04em; text-align: center; }
 /* Free Drive's own traffic choice, under the tiles while Free Drive is the pick */
-.fd-traffic { display: inline-flex; margin-left: 6px; vertical-align: middle; box-shadow: inset 0 0 0 1px var(--line-2); }
-.fd-traffic button { min-height: 30px; padding: 0 12px; border: 0; cursor: pointer; background: none; color: var(--dim); font: 600 11px/1 var(--f-ui); letter-spacing: 0.12em; text-transform: uppercase; }
-.fd-traffic button[aria-pressed="true"] { color: var(--ink); background: var(--cyan-wash); box-shadow: inset 0 -2px 0 var(--cyan); }
-.fd-traffic button:focus-visible { outline: 2px solid var(--ice); outline-offset: -2px; }
 .tile-ico { color: var(--dim); }
 .mode-text { display: grid; gap: 3px; justify-items: center; }
 .mode-text i { font: 500 10px/1 var(--f-mono); font-style: normal; letter-spacing: 0.2em; color: var(--faint); }
@@ -770,7 +766,7 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
   .mode { min-height: 76px; gap: 2px; padding: 6px 6px; }
   .net { padding: 0 8px 8px; } .net small { font-size: 9px; }
   .mp-modes .mp-brief.mode-line { display: block; font-size: 11.5px; }
-  .mp-modes .mp-brief.mode-line > .fd-traffic { display: flex; width: 100%; margin: 4px 0 0; } .fd-traffic button { flex: 1; min-height: 40px; padding: 0 4px; }
+
   .tile-ico { width: 44px; height: 26px; }
   .mode-text b { font-size: 18px; }
   .mode-text > span { font-size: 9.5px; }
@@ -1955,3 +1951,62 @@ input[type="range"]::-moz-range-thumb { width: 14px; height: 26px; border: 0; bo
 .msg-job .btn { justify-self: start; min-height: 40px; padding: 0 16px; font-size: 11.5px; }
 /* a tap on the speed readout's gear starts a manual hold (Game.holdManual): the touch paddles then show for a moment */
 @media (pointer: coarse) { .hud-gear { pointer-events: auto; cursor: pointer; } }
+
+/* ------------------------------------------------------------------ the garage, 2026-11-24 (owner, from his iPhone at v27) */
+/* the character: a card like the car cards (it was a grey pill, "CharacterChoose a character ›"): the portrait in a frame,
+   the label on its own line in the spaced mono caps, the name in the display face, a chevron; 64 px tall */
+.gcell.garage-cast { width: 100%; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: 14px; min-height: 64px; padding: 8px 14px 8px 8px; margin: 2px 0 6px; font: inherit; }
+.garage-cast .gc-face { width: 44px; height: 55px; display: grid; place-items: center; overflow: hidden; background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2); clip-path: var(--chamfer, none); }
+.garage-cast .gc-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.garage-cast .gc-face .swatch { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: rgba(0, 0, 0, 0.55); box-shadow: inset 0 -5px 8px rgba(0, 0, 0, 0.3); }
+.garage-cast .gc-face .swatch .ico { width: 20px; height: 20px; }
+.garage-cast .gc-text { display: grid; gap: 3px; min-width: 0; }
+.gcell.garage-cast .gc-text small { font: 500 10.5px/1.2 var(--f-mono); letter-spacing: 0.22em; text-transform: uppercase; color: var(--ice-text); }
+.gcell.garage-cast .gc-text b { font: 800 24px/0.95 var(--f-display); letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gcell.garage-cast .gc-text span { font-size: 12.5px; line-height: 1.3; color: var(--dim); }
+.garage-cast .gc-chev { font: 400 30px/1 var(--f-ui); font-style: normal; color: var(--ice-text); padding-left: 4px; }
+@media (hover: hover) { .gcell.garage-cast:hover { box-shadow: inset 0 0 0 1px var(--line-3); } }
+.gcell.garage-cast:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+/* the Vehicles carousel: the centred card large, the neighbours peeking and dimmed; snap; the head's count and arrows */
+.car-rail { container-type: inline-size; --card: min(76cqw, 440px); display: grid; gap: 8px; min-width: 0; width: 100%; justify-self: stretch; }
+.car-rail-head { display: flex; align-items: center; gap: 8px; width: 100%; }
+.car-rail-head .car-count { margin: 0 auto 0 0; display: flex; align-items: baseline; gap: 6px; min-width: 0; font: 500 12px/1 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim); }
+.car-count b { font: 800 22px/1 var(--f-display); letter-spacing: 0.04em; color: var(--ink); }
+.car-count em { font-style: normal; margin-left: 8px; color: var(--ice-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.car-arrow { width: 44px; height: 44px; flex: none; display: grid; place-items: center; border: 0; cursor: pointer; color: var(--ink); background: var(--cell); box-shadow: inset 0 0 0 1px var(--line-2); font: 400 28px/1 var(--f-ui); }
+.car-arrow:disabled { opacity: 0.35; cursor: default; }
+.car-arrow:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+@media (hover: hover) { .car-arrow:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--cyan-line); } }
+.drivers.car-track { display: flex; gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  align-items: flex-start; padding: 7px 0 9px; padding-inline: calc((100cqw - var(--card)) / 2); }
+.car-track::-webkit-scrollbar { display: none; }
+.car-track > .gcell.car { flex: 0 0 var(--card); min-width: 0; scroll-snap-align: center; scroll-snap-stop: always; transition: opacity 220ms ease, transform 220ms ease; }
+.car-track > .gcell.car:not(.centred) { opacity: 0.55; transform: scale(0.94); cursor: pointer; }
+/* a neighbour shows its car, its lock and its name and numbers; the blurb, the unlock bar, the list and DRIVE are the
+   centred card's (owner, 2026-11-24: "DRIVE on the centred card"), so the row stays as tall as the centred card */
+.car-track > .gcell.car:not(.centred) > :is(span:not(.car-lock), .car-slot, .fe-list, .row) { display: none; }
+.car-track > .gcell.car:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+/* the showroom's stage (Game.openReveal with a car): the reveal stage's dark room, 16:9 */
+.car-stage { position: relative; justify-self: stretch; aspect-ratio: 16 / 9; margin: -2px 0 8px; overflow: hidden;
+  background: radial-gradient(60% 55% at 50% 70%, #151a21 0%, #050608 70%, #020305 100%); box-shadow: inset 0 0 0 1px var(--line-2); }
+.car-stage canvas { display: block; width: 100%; height: 100%; }
+.car-ph { display: grid; place-items: center; }
+.car-ph .car-outline { width: 78%; height: auto; opacity: 0.9; }
+.gcell.car .car-lock { justify-self: start; display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; margin: -2px 0 4px; font: 600 11px/1.2 var(--f-mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); background: var(--glass-2); box-shadow: inset 0 0 0 1px var(--line-2); }
+.gcell.car .car-lock .ico { width: 14px; height: 14px; }
+.gcell.car .row .btn.drive-car { min-width: 140px; }
+.car-dots { display: flex; justify-content: center; gap: 6px; }
+.car-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--line-2); transition: width 200ms ease; }
+.car-dots i.on { width: 18px; border-radius: 3px; background: var(--ice); }
+@media (prefers-reduced-motion: reduce) { .car-track > .gcell.car, .car-dots i { transition: none; } .car-track > .gcell.car:not(.centred) { transform: none; } }
+
+/* the Paint tab's car: the showroom stage on top, kept in view while the swatches scroll under it; compact swatches on a phone */
+.paint-stage.car-stage { position: sticky; top: 0; z-index: 2; margin: 0 0 4px; }
+@media (max-width: 640px) { .paint-stage.car-stage { aspect-ratio: 2 / 1; } }
+@media (max-width: 640px) {
+  .paints .paint-grid:not(.wheel-grid) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .paints .paint-grid:not(.wheel-grid) .paint-chip { flex-direction: column; justify-content: center; gap: 5px; min-height: 76px; padding: 8px 4px; text-align: center; }
+  .paints .paint-grid:not(.wheel-grid) .paint-chip b { font-size: 12px; }
+  .paints .paint-grid:not(.wheel-grid) .paint-chip .pg-lock { font-size: 10px; }
+}

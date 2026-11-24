@@ -4,7 +4,7 @@
    - a polished chrome RIM on every panel and button (light-dark-light banding, a bright top edge, a dark inner groove),
      around a FACE of glossy black glass with a soft reflection sweep across its top;
    - KNURLING (a fine diamond: two crossed hairline patterns over a turned-steel shading) on the steering roller, the
-     handbrake's ring and the switches' knobs;
+     brake emblem's ring and the switches' knobs;
    - RIBBED rubber on BRAKE and GAS (horizontal grooves), GAS with an amber glowing inner rim;
    - fine TICK marks round the map's bezel and CLEAR PATH's gauge; amber for what charges and what is on, red only for
      the handbrake.
@@ -131,18 +131,14 @@
     var(--ul-knurl), linear-gradient(90deg, #3b4047 0%, #9aa0a8 18%, #f3f5f7 42%, #c4c9cf 62%, #6b7179 84%, #2c3036 100%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8), 0 3px 6px rgba(0, 0, 0, 0.7), 0 0 6px rgba(255, 170, 40, 0.25); }
 
-/* HANDBRAKE: a knurled steel ring round a black glass button, the circled P glowing red, the red arc on the ring */
-.app[data-skin="ultra"] .hb-cap { color: var(--ul-dim); background: linear-gradient(#1b1e23, #08090b 70%); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9), 0 0 0 1.5px rgba(200, 205, 212, 0.55), 0 3px 8px rgba(0, 0, 0, 0.45); }   /* dark glass with a thin chrome edge: #d9dde2 on it is 13:1 or better over any scene */
-.app[data-skin="ultra"] .hb-dial { background: var(--ul-knurl), var(--ul-turned); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8), 0 6px 12px rgba(0, 0, 0, 0.5); }
-.app[data-skin="ultra"] .hb-track { stroke: transparent; }
-/* the red arc is a BAND on the knurled ring (about a fifth of it, from twelve o'clock, as in the parts sheet): the knurl stays
-   readable while the handbrake is pulled; it slides in on the pull and out over the hold */
-.app[data-skin="ultra"] .hb-arc { stroke: var(--ul-red); stroke-width: 5; stroke-dasharray: 20 180; stroke-dashoffset: 20; filter: drop-shadow(0 0 3px var(--ul-red-glow)); }
-.app[data-skin="ultra"] .hb-round.pulled .hb-arc { stroke-dashoffset: 0; }
-.app[data-skin="ultra"] .hb-face { width: calc(100% - 14px); height: calc(100% - 14px); background: radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.16), transparent 52%), radial-gradient(circle, #15171a, #050506);
-  box-shadow: 0 0 0 1.5px #c9cdd3, 0 0 0 2.5px rgba(0, 0, 0, 0.85), inset 0 2px 5px rgba(0, 0, 0, 0.8); }
-.app[data-skin="ultra"] .hb-face .ico { color: var(--ul-red); filter: drop-shadow(0 0 3px var(--ul-red-glow)); }
-.app[data-skin="ultra"] .hb-round.pulled .hb-face { background: radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.16), transparent 52%), radial-gradient(circle, #3a0c08, #0b0302); }
+/* BRAKE's emblem: the knurled steel ring round a black glass lens, the circled P in its arcs glowing red, the short red
+   arc on the ring while the handbrake is pulled */
+.app[data-skin="ultra"] .bk-emb { background: var(--ul-knurl), var(--ul-turned); box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.85), 0 3px 6px rgba(0, 0, 0, 0.6); }
+.app[data-skin="ultra"] .bk-edge { stroke: #c9cdd3; }
+.app[data-skin="ultra"] .bk-p { stroke: var(--ul-red); filter: drop-shadow(0 0 2px var(--ul-red-glow)); }
+.app[data-skin="ultra"] .bk-arc { stroke: var(--ul-red); filter: drop-shadow(0 0 3px var(--ul-red-glow)); }
+.app[data-skin="ultra"] .pedal.brake.pulled .bk-lens { fill: #2a0806; }
+.app[data-skin="ultra"] .pedal.brake.pulled { color: #fff; }
 
 /* BRAKE and GAS: chrome-rimmed square pads with a ribbed black rubber face; GAS with an amber glowing inner rim */
 .app[data-skin="ultra"] .pedal { font: 700 14.5px/1 var(--hud-sans); letter-spacing: 0.08em; color: var(--ul-dim); text-shadow: 0 -1px 0 #000, 0 1px 0 rgba(255, 255, 255, 0.1); }

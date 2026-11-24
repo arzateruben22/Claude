@@ -12,7 +12,7 @@ import type { Hud as HudData } from '../game/Game';
 import { shareRunCard } from './runCard';
 import { formatReport, copyText } from './feedback';
 import { Settings, loadSettings, saveSettings, isFirstRun, loadBench, presetFor, ownerFromHash, ownerTestBuild, QUALITY, MODES, STARTS, Mode, PROFILES, profileOf, DIFFICULTY, TILE_IDS, FREE_DRIVE_ONLINE, DENSITY, graphicsOf, graphicsPatch, retroOn } from '../game/settings';
-import type { Tile, Difficulty, Density } from '../game/settings';
+import type { Tile, Difficulty } from '../game/settings';
 import { bestOf, driftBest } from '../game/bests';
 import { board } from '../game/records';
 import { AVATARS, ACHIEVEMENTS, ROUTES_ALL, levelOf, xpFor, PROFILE_VERSION } from '../game/profile';
@@ -100,8 +100,8 @@ const MAP_PX: Record<HudLayout, number[]> = { pp: [96, 112, 128], pl: [80, 88, 1
 // the Ultra skin on an upright phone: the mockup's map (about 88 px), so its chrome bezel and the ABS | TCS bar fit the HUD's 12.5 % cover budget
 const ULTRA_PP_MAP = [76, 88, 104];
 const HINT_RADIAL = 'tsu.hint.radial';   // the one-time "Hold Pause for the quick menu" toast on a touch screen
-// the new HUD (2026-11-23) on a phone keeps only Pause (and Auto-drive) in the top bar: a one-time hint, the first drive,
-// says where View and Go to went and what else the hold-Pause quick menu holds (Camera, Go to, Radio, Garage); it is
+// the new HUD (2026-11-23) on a phone keeps Pause, View (since 2026-11-24) and Auto-drive in the top bar: a one-time hint, the first drive,
+// says where Go to went and what else the hold-Pause quick menu holds (Camera, Go to, Radio, Garage); it is
 // also the old "Hold Pause for the quick menu" hint, so that one is marked seen with it
 const HINT_RETRO_TBAR = 'tsu.hint.retrotbar';
 const RETRO_HINT_MS = 4000;
@@ -562,7 +562,7 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
         <div className="modes" role="radiogroup" aria-label="Mode" onKeyDown={tileKeys}>
           {TILE_IDS.map((t, i) => (
             <div key={t} className={'mode-cell' + (tile === t ? ' on' : '') + (t === 'free' ? ' free' : '')} data-tile={t}>
-              <button type="button" className="mode" role="radio" aria-checked={tile === t} tabIndex={tile === t ? 0 : -1} aria-describedby="mode-line"
+              <button type="button" className="mode" role="radio" aria-checked={tile === t} tabIndex={tile === t ? 0 : -1} aria-describedby={tile === 'free' ? 'run-brief' : 'mode-line'}
                 onClick={() => update({ tile: t })}>
                 <TileIcon id={t} />
                 <span className="mode-text"><i>{String(i + 1).padStart(2, '0')}</i><b>{t === 'free' ? 'Free Drive' : DIFFICULTY[t].label}</b>
@@ -579,11 +579,9 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
             </div>
           ))}
         </div>
-        <div className="mp-brief mode-line" id="mode-line">
-          {tile === 'free'
-            ? <>Free Drive: traffic is your own choice, simulated. <span className="fd-traffic" role="group" aria-label="Free Drive traffic">{(['light', 'moderate', 'heavy', 'expert'] as Density[]).map((d) => <button key={d} type="button" aria-pressed={settings.density === d} onClick={() => update({ density: d })}>{DENSITY[d].label}</button>)}</span></>
-            : DIFFICULTY[tile as Difficulty].line}
-        </div>
+        {/* Free Drive runs light traffic with no picker (owner, 2026-11-24; its "Light traffic" chip in the hero says so);
+            the timed runs say what theirs is */}
+        {tile !== 'free' && <div className="mp-brief mode-line" id="mode-line">{DIFFICULTY[tile as Difficulty].line}</div>}
       </section>
       <div className="mp-go">
         <button type="button" className="mp-loc" onClick={() => { setExitRoadState(null); roadNow.current = null; setPanel('start'); }} aria-label={`Start on ${myExit ? exitRoadOf + ' ' + myExit.text : start.label}. Change`}>
@@ -630,8 +628,8 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
           {settings.corner === 'sky' && <span className="corner-tag">Sky cam</span>}
         </button>
       )}
-      {/* the controls: on a phone (the new HUD, hud-layout.css) Pause only, Auto-drive under it when offered (Map stands
-          where the map was while the window is off; View and Go to are in the hold-Pause quick menu), each named by its
+      {/* the controls: on a phone (the new HUD, hud-layout.css) Pause, View under it (2026-11-24), Auto-drive under that when offered (Map stands
+          where the map was while the window is off; Go to is in the hold-Pause quick menu), each named by its
           hidden label; on a desktop a labelled rail with View, Go to and Radio too */}
       {playing && (
         <div className="tbar">
@@ -1034,16 +1032,26 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
   // a car that just opened glows while the garage shows it; leaving the garage settles it
   useEffect(() => () => { for (const id of Object.keys(CAR_MILES).concat('oc-hyper')) pr.clearGlow(id); }, [pr]);
   const act = (fn: () => string | null, ok: string) => { const e = fn(); setMsg(e ?? ok); game.applyCarChoice(); bump((n) => n + 1); onPick(); };
+  // the Paint tab on a phone: the car and the swatches in view together (the stage then stays at the top as they scroll)
+  useEffect(() => {
+    if (tab !== 'paint') return;
+    const el = document.querySelector<HTMLElement>('.paints'); if (!el) return;
+    const r = el.getBoundingClientRect();
+    if (r.bottom > innerHeight - 80) el.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+  }, [tab]);
   return <>
     <h2>Garage{owner && <span className="chip">{TEST_BUILD ? 'Owner mode · test build' : 'Owner mode'}</span>}</h2>
     <p className="fine" data-garage-cash>{Math.floor(p.credits).toLocaleString()} cash · {pr.s.miles.toFixed(1)} active miles. Cars open by miles driven; cash is earned by driving and spent on looks and Vega &amp; Vinnie's. Nothing here costs real money.</p>
     {owner && <p className="fine">Owner mode: every car is unlocked to drive (test builds only){TEST_BUILD ? ', and this test build turns it on' : ''}. Your saved garage doesn't change; turn it off in Settings.</p>}
     {msg && <p className="good" role="status">{msg}</p>}
     {/* (cast, 2026-11-11) who drives: the character picker from the garage too */}
+    {/* (owner, 2026-11-24: "fix the character selection display ... to fit the aesthetic") a card like the car cards: the
+        portrait in a frame, the label on its own line in the small spaced caps, the name in the display face, a chevron */}
     {(() => { const ch = playableCharacter(settings); return (
-      <button type="button" className="pick cast-row garage-cast" onClick={onCharacter}>
-        {ch ? <img src={PORTRAITS[ch.id]} alt="" width={40} height={50} /> : <span className="swatch" style={{ background: '#' + SKINS[Math.max(0, Math.min(SKINS.length - 1, settings.skin))].toString(16).padStart(6, '0') }} aria-hidden="true" />}
-        <small>Character</small><b>{ch ? ch.name : 'Choose a character'}</b><i aria-hidden="true">›</i>
+      <button type="button" className="gcell garage-cast" onClick={onCharacter} aria-label={`Character: ${ch ? ch.name : 'none chosen'}. Choose a character`}>
+        <span className="gc-face" aria-hidden="true">{ch ? <img src={PORTRAITS[ch.id]} alt="" width={44} height={55} /> : <span className="swatch" style={{ background: '#' + SKINS[Math.max(0, Math.min(SKINS.length - 1, settings.skin))].toString(16).padStart(6, '0') }}><Ico name="driver" /></span>}</span>
+        <span className="gc-text"><small>Character</small><b>{ch ? ch.name : 'Choose a character'}</b>{!ch && <span>Who drives: pick one of the cast</span>}</span>
+        <i className="gc-chev" aria-hidden="true">›</i>
       </button>
     ); })()}
     <Seg label="Garage" value={tab} options={['cars', 'paint', 'wheels', 'upgrades', 'custom']} labels={(t) => ({ cars: 'Vehicles', paint: 'Paint', wheels: 'Wheels', upgrades: 'Upgrades', custom: 'Customize' })[t]} onChange={setTab} />
@@ -1056,6 +1064,9 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
       const gate = (x: (typeof list)[number]) => owner || (!x.cash && !x.legend) ? null : x.cash ? (pr.ownsCosmetic(cosmeticId(car.id, x.hex)) ? null : `${x.cash.toLocaleString()} cash`) : (pr.rungOf(x.legend!) >= 3 ? null : `Local legend at ${x.legend === 'stoppage' ? "Vega & Vinnie's" : 'Lot 57'}`);
       return (
         <div className="paints">
+          {/* (owner, 2026-11-24: "when changing the paint have the car be displayed as well") the car on the showroom stage,
+              repainted live as a swatch is picked; it stays at the top while the swatches scroll under it on a phone */}
+          <div className="paint-stage car-stage"><ShowroomStage game={game} car={car.id} paint={now} label={`The ${car.name} in ${list.find((x) => x.hex === now)?.name ?? 'its own paint'}, on the garage's showroom stage`} /></div>
           <p className="fine">{car.name}: {list.find((x) => x.hex === now)?.name ?? 'its own paint'}. The car behind this panel takes it now.</p>
           {/* a store paint you put on wins over the garage's (Game.configureCar): say so, or a pick here would seem to do nothing */}
           {(() => { const st = equippedPaint(car.id); return st ? <p className="fine">The store's {st.name} is on this car and shows instead; take it off in the Store to wear the one picked here.</p> : null; })()}
@@ -1096,15 +1107,18 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
     {tab === 'upgrades' && <p className="fine soon-note">Upgrades (engine, tyres, aero) bought with cash are coming later. Nothing here costs real money.</p>}
     {tab === 'custom' && <p className="fine soon-note">Customize (calipers, tint, liveries in our own designs) is coming later. Nothing here costs real money.</p>}
     {/* named for its car: the menu's Drive dock stays on screen beside the garage, and is the only plain "Drive" */}
-    {tab === 'cars' && <div className="drivers">
-      {garageCars(owner, p.vehicles).map((c) => {
+    {tab === 'cars' && <CarCarousel cars={garageCars(owner, p.vehicles)} start={game.carId} cls={(c) => (game.carId === c.id ? ' on' : '') + (c.founder ? ' founder' : '') + (pr.glowing(c.id) ? ' unlocked-now' : '')} card={(c, centred) => {
         const f = figures(c), owned = p.vehicles.includes(c.id), driving = game.carId === c.id, std = !!c.founder && game.hypercarEdition === 'standard', glow = pr.glowing(c.id);
+        const locked = !owner && !owned, miles = (CAR_MILES as Record<string, number>)[c.id];
         // chosen: the Founder Edition's lights wake, on its stage and on the car (Game.applyCarChoice)
         const chosen = () => { if (c.founder && !std) game.playReveal('wake'); };
-        return (
-          <div key={c.id} className={'gcell driver car' + (driving ? ' on' : '') + (c.founder ? ' founder' : '') + (glow ? ' unlocked-now' : '')} data-car={c.id}>
-            {c.founder && !std && <FounderStage game={game} />}
-            <div className="carhead"><span className="paint" title={c.founder && !std ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paintForEdition(c, settings.paints, game.hypercarEdition).toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
+        const paint = paintForEdition(c, settings.paints, game.hypercarEdition);
+        return (<>
+            {/* the centred car on its stage (the Founder Edition's own reveal, or the showroom); a neighbour shows its outline */}
+            {centred ? (c.founder && !std ? <FounderStage game={game} /> : <div className="car-stage"><ShowroomStage game={game} car={c.id} paint={paint} label={`The ${c.name} on the garage's showroom stage. A model built in code.`} /></div>)
+              : <div className="car-stage car-ph" aria-hidden="true"><CarOutline hex={paint} /></div>}
+            {locked && <span className="car-lock"><Ico name="lock" />{c.founder ? "Founders' Road · free" : miles ? `Opens at ${miles} mi` : 'Locked'}</span>}
+            <div className="carhead"><span className="paint" title={c.founder && !std ? GLACIER_SILVER.name : undefined} style={{ background: '#' + paint.toString(16).padStart(6, '0') }} /><b>{c.name}</b>{c.founder && (std ? <span className="chip ice">Earned · Founders' Road</span> : <span className="chip ice">Founder Edition</span>)}</div>
             <small>{f.hp} hp · {f.zeroSixty} s 0-60 · {f.topMph} mph · {c.mass.toLocaleString()} kg</small>
             <span>{blurbFor(c, game.hypercarEdition)}</span>
             {/* the economy lane's slot: "Unlocks at 150 mi · 87/150" bars (progress.tsx CarGate), and Founders' Road for the hypercar */}
@@ -1116,15 +1130,13 @@ function GaragePanel({ game, settings, update, ui, onClose, onPick, onCharacter 
               <li>{founderWindowText()} (Pacific)</li>
             </ul>}
             <div className="row">
-              {owner ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
-                : owned ? (driving ? <em>Driving it</em> : <button className="btn" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
+              {owner ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { game.chooseOwnerCar(c.id); return null; }, `${c.name} selected (owner mode)`); chosen(); }}>Drive</button>)
+                : owned ? (driving ? <em>Driving it</em> : <button className="btn primary drive-car" aria-label={`Drive the ${c.name}`} onClick={() => { act(() => { book.choose(c.id); return null; }, `${c.name} selected`); chosen(); }}>Drive</button>)
                 : c.founder ? <em>Not unlocked yet: earn it free on Founders' Road</em>
                 : <em>Locked: opens by miles driven</em>}
             </div>
-          </div>
-        );
-      })}
-    </div>}
+        </>);
+      }} />}
     <p className="fine">The makes are our own. Each has its own body and interior, and its own numbers underneath.</p>
     <div className="row"><button className="btn primary" onClick={onClose}>Done</button></div>
   </>;
@@ -1155,6 +1167,96 @@ function FounderStage({ game }: { game: Game }) {
       <p className="fe-cap" aria-hidden="true"><b>Founder Edition</b><span>{plaqueNumber()}</span></p>
       <button className="btn fe-replay" onClick={() => game.playReveal('reveal')}>Replay reveal</button>
     </div>
+  );
+}
+
+// The garage's showroom (owner, 2026-11-24): any car on the reveal stage's turntable, still at its hero angle, in the
+// paint asked for; a new paint repaints it live (Game.openReveal with a car, Game.setRevealPaint). One stage at a time:
+// the Vehicles carousel's centred card or the Paint tab's car. The stage is built a beat after it is asked for, so
+// swiping past a car builds nothing.
+function ShowroomStage({ game, car, paint, label }: { game: Game; car: string; paint: number; label: string }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const paintNow = useRef(paint);
+  paintNow.current = paint;
+  useEffect(() => {
+    const cv = ref.current; if (!cv) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.max(16, Math.round(cv.clientWidth * dpr)); cv.height = Math.max(9, Math.round(cv.clientHeight * dpr));
+    const id = window.setTimeout(() => game.openReveal(cv, false, { car, paint: paintNow.current }), 220);
+    return () => { window.clearTimeout(id); game.closeReveal(); };
+  }, [game, car]);
+  useEffect(() => { game.setRevealPaint(paint); }, [game, paint]);
+  return <canvas ref={ref} role="img" aria-label={label} />;
+}
+// a neighbour in the carousel: the car's outline in its paint (its stage is built only once it is centred)
+function CarOutline({ hex }: { hex: number }) {
+  const c = '#' + hex.toString(16).padStart(6, '0');
+  return (
+    <svg className="car-outline" viewBox="0 0 160 60" preserveAspectRatio="xMidYMid meet">
+      <ellipse cx="80" cy="52" rx="66" ry="4" fill="rgba(0,0,0,0.55)" />
+      <path d="M12 44c0-6 3-10 10-12l22-6c8-8 20-13 36-13 14 0 24 4 33 12l20 4c8 2 14 6 15 15v4H12z" fill={c} stroke="rgba(255,255,255,0.35)" strokeWidth="1" />
+      <path d="M50 26c7-6 16-9 29-9 11 0 19 3 26 9z" fill="rgba(10,14,20,0.75)" />
+      <circle cx="40" cy="46" r="8" fill="#0c0d10" stroke="#8c939c" strokeWidth="2" /><circle cx="122" cy="46" r="8" fill="#0c0d10" stroke="#8c939c" strokeWidth="2" />
+    </svg>
+  );
+}
+// The Vehicles tab as a carousel (owner, 2026-11-24: "make a carousel effect for the car selection"): one card centred
+// and large with its car on the stage, the neighbours peeking at the edges; a swipe (scroll-snap), the arrows, or the
+// arrow keys move it. Every card stays in the page (a screen reader and the Tab key reach each, with its name and "n of
+// m"; focusing a card centres it), and each card keeps its own Drive. The garage opens on the car you drive.
+type GarageCar = ReturnType<typeof garageCars>[number];
+function CarCarousel({ cars, start, card, cls }: { cars: GarageCar[]; start: string; card: (c: GarageCar, centred: boolean) => ReactNode; cls: (c: GarageCar) => string }) {
+  const track = useRef<HTMLDivElement>(null);
+  const [at, setAt] = useState(() => Math.max(0, cars.findIndex((c) => c.id === start)));
+  // the stage follows the centred card once it has settled (a fast swipe past three cars builds one stage)
+  const [shown, setShown] = useState(at);
+  useEffect(() => { const t = window.setTimeout(() => setShown(at), 260); return () => window.clearTimeout(t); }, [at]);
+  const n = cars.length;
+  const cardEl = (i: number) => track.current?.children[i] as HTMLElement | undefined;
+  const go = (i: number, smooth = true) => {
+    const k = Math.max(0, Math.min(n - 1, i)), el = cardEl(k), tr = track.current; if (!el || !tr) return;
+    tr.scrollTo({ left: el.offsetLeft - (tr.clientWidth - el.offsetWidth) / 2, behavior: smooth && !reducedMotion() ? 'smooth' : 'auto' });
+    setAt(k);
+  };
+  useLayoutEffect(() => { go(at, false); }, []);   // eslint-disable-line react-hooks/exhaustive-deps
+  const raf = useRef(0);
+  const onScroll = () => {
+    cancelAnimationFrame(raf.current);
+    raf.current = requestAnimationFrame(() => {
+      const tr = track.current; if (!tr) return;
+      const mid = tr.scrollLeft + tr.clientWidth / 2;
+      let best = 0, bd = 1e9;
+      for (let i = 0; i < n; i++) { const el = cardEl(i); if (!el) continue; const d = Math.abs(el.offsetLeft + el.offsetWidth / 2 - mid); if (d < bd) { bd = d; best = i; } }
+      setAt(best);
+    });
+  };
+  const keys = (e: ReactKeyboardEvent<HTMLElement>) => {
+    const t = e.target as HTMLElement;
+    if (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA') return;
+    const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    go(at + step);
+    cardEl(Math.max(0, Math.min(n - 1, at + step)))?.focus({ preventScroll: true });
+  };
+  const cur = cars[at];
+  return (
+    <section className="car-rail" aria-roledescription="carousel" aria-label="Vehicles" onKeyDown={keys}>
+      <div className="car-rail-head">
+        <p className="car-count" aria-live="polite"><b>{String(at + 1).padStart(2, '0')}</b><span>/ {String(n).padStart(2, '0')}</span><em>{cur?.name}</em></p>
+        <button type="button" className="car-arrow prev" aria-label="Previous car" disabled={at === 0} onClick={() => go(at - 1)}><span aria-hidden="true">‹</span></button>
+        <button type="button" className="car-arrow next" aria-label="Next car" disabled={at === n - 1} onClick={() => go(at + 1)}><span aria-hidden="true">›</span></button>
+      </div>
+      <div className="drivers car-track" ref={track} onScroll={onScroll}>
+        {cars.map((c, i) => (
+          <div key={c.id} className={'gcell driver car' + cls(c) + (i === at ? ' centred' : '')} data-car={c.id} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${n}: ${c.name}`}
+            tabIndex={-1} onFocus={(e) => { if (i !== at && (e.target as HTMLElement).matches(':focus-visible')) go(i); }} onClick={() => { if (i !== at) go(i); }}>
+            {card(c, i === shown && i === at)}
+          </div>
+        ))}
+      </div>
+      <div className="car-dots" aria-hidden="true">{cars.map((c, i) => <i key={c.id} className={i === at ? 'on' : ''} />)}</div>
+    </section>
   );
 }
 

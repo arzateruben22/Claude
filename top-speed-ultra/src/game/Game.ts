@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
-import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor } from './settings';
+import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, loadBest, saveBest, VERSION, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor, FOV_DEFAULT } from './settings';
 import type { Difficulty } from './settings';
 import { MinuteMeter, DriftTracker, bestOf, bestsFor, recordBest, recordDrift, driftBest, driftBests, migrateBests, shareLine, round1 } from './bests';
 import type { Board, Kind, Placed } from './bests';
@@ -30,6 +30,7 @@ import { CAR_IDS, shapeFor } from '../preview/car-shape';
 import type { CarId } from '../preview/car-shape';
 import { buildReveal, RevealStage, RevealKind, REVEAL_SECONDS, WAKE_ONLY_SECONDS } from '../preview/reveal';
 import { WAKE } from '../preview/car-wake';
+import { carPaint } from '../preview/car';
 import { FOUNDER_CAR, FOUNDER_UNTIL, GLACIER_SILVER, FOUNDER_ICE, founderSerial, setFounderSerial, plaqueLine, plaqueNumber, finishesFor, paintFor as founderPaint } from './founder';
 import { Traffic, PlayerView } from './traffic/Traffic';
 import { Environment } from './env/Environment';
@@ -636,11 +637,27 @@ export class Game {
   // card's canvas; it renders only while it moves (then the card keeps the last frame, and so does the session, so
   // opening the garage again shows it without building anything). openReveal plays it once if asked (the first time
   // on this device); reduced motion shows the last frame, still. Test hooks: revealState, revealHold.
+  //
+  // The garage's SHOWROOM (owner, 2026-11-24: the Vehicles carousel's centred car and the Paint tab's car) is the same stage
+  // with another car on the turntable: openReveal(canvas, false, { car, paint }) shows that car still at its hero angle
+  // (built once, rendered once, then kept as a frame per car and paint for the session); setRevealPaint repaints it live
+  // (a material swap, as PlayerCar.setPaint). The Founder Edition's own reveal is unchanged (no `show`).
   private rv: { stage: RevealStage | null; canvas: HTMLCanvasElement; t: number; kind: RevealKind; playing: boolean; dirty: boolean; hold: number | null;
-    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean } | null = null;
+    calls: number; tris: number; frames: number; buildMs: number; compiled: boolean; show?: { car: string; paint: number; std: boolean } } | null = null;
   private revealStill: HTMLCanvasElement | null = null;
-  openReveal(canvas: HTMLCanvasElement, autoplay: boolean): 'playing' | 'still' {
+  private showStills = new Map<string, HTMLCanvasElement>();
+  private showKey(sh: { car: string; paint: number; std: boolean }) { return `${sh.car}|${sh.paint}|${sh.std ? 's' : 'f'}|${this.settings.quality}`; }
+  // the paint a car shows in the garage for a garage paint pick (as configureCar paints the player's car)
+  stagePaint(carId: string, hex: number) { return founderPaint(carId, hex, shapeFor(carId as CarId).paint); }
+  openReveal(canvas: HTMLCanvasElement, autoplay: boolean, show?: { car: string; paint: number }): 'playing' | 'still' {
     this.closeReveal();
+    if (show) {
+      const sh = { car: show.car, paint: this.stagePaint(show.car, show.paint), std: show.car === FOUNDER_CAR && this.hypercarEdition === 'standard' };
+      this.rv = { stage: null, canvas, t: WAKE_ONLY_SECONDS, kind: 'wake', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false, show: sh };
+      if (this.showStills.has(this.showKey(sh))) { this.rv.dirty = false; this.drawStill(); return 'still'; }
+      this.buildRevealStage();
+      return 'still';
+    }
     this.rv = { stage: null, canvas, t: REVEAL_SECONDS, kind: 'reveal', playing: false, dirty: true, hold: null, calls: 0, tris: 0, frames: 0, buildMs: 0, compiled: false };
     if (this.revealStill && !autoplay) { this.rv.dirty = false; this.drawStill(); return 'still'; }
     if (autoplay && !reducedMotion()) { this.playReveal('reveal'); return 'playing'; }
@@ -655,6 +672,23 @@ export class Game {
     if (reducedMotion()) { r.t = kind === 'wake' ? WAKE_ONLY_SECONDS : REVEAL_SECONDS; r.playing = false; } else { r.t = 0; r.playing = true; }
   }
   closeReveal() { if (this.rv?.stage) this.rv.stage.dispose(); this.rv = null; }
+  // the showroom's car in another garage paint, live (from the session's frame when it was shown in it before)
+  setRevealPaint(hex: number) {
+    const r = this.rv; if (!r?.show) return;
+    const paint = this.stagePaint(r.show.car, hex);
+    if (paint === r.show.paint) return;
+    const was = r.show.paint, q = this.revealQuality(), id = r.show.car as CarId;
+    r.show = { ...r.show, paint };
+    if (r.stage) {
+      const swap = [[carPaint(was, q, id), carPaint(paint, q, id)], [carPaint(was, q, id, null, true), carPaint(paint, q, id, null, true)]];
+      r.stage.car.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; for (const [a, b] of swap) if (m.material === a) { m.material = b; break; } });
+      r.dirty = true;
+    } else if (this.showStills.has(this.showKey(r.show))) this.drawStill();
+    else { r.dirty = true; this.buildRevealStage(); }
+  }
+  /** (tests) the showroom's car and paint, null when the stage is the Founder Edition's reveal or closed */
+  get revealShow() { const r = this.rv; return r?.show ? { ...r.show, stills: this.showStills.size } : null; }
+  private revealQuality(): 'high' | 'phone' { return this.settings.quality === 'high' || this.settings.quality === 'ultra' ? 'high' : 'phone'; }
   revealHold(t: number | null) { if (this.rv) { this.rv.hold = t; this.rv.dirty = true; } }
   get revealState() {
     const r = this.rv;
@@ -663,15 +697,15 @@ export class Game {
   }
   private buildRevealStage() {
     const r = this.rv; if (!r || r.stage) return;
-    const q = this.settings.quality === 'high' || this.settings.quality === 'ultra' ? 'high' : 'phone';
-    r.stage = buildReveal(this.renderer, q);
+    const q = this.revealQuality(), sh = r.show;
+    r.stage = sh ? buildReveal(this.renderer, q, sh.car as CarId, { paint: sh.paint, edition: sh.std ? 'standard' : 'founder', rim: wheelFor(carById(sh.car), this.settings.wheels) }) : buildReveal(this.renderer, q);
     r.buildMs = r.stage.buildMs;
     // its shaders compile off the main thread where the browser can; until then it waits (the card shows its dark stage)
     const st = r.stage;
     this.renderer.compileAsync(st.scene, st.camera).catch(() => undefined).then(() => { if (this.rv?.stage === st) { this.rv.compiled = true; this.rv.dirty = true; } });
   }
   private drawStill() {
-    const r = this.rv, s = this.revealStill; if (!r || !s) return;
+    const r = this.rv, s = r?.show ? this.showStills.get(this.showKey(r.show)) : this.revealStill; if (!r || !s) return;
     const g = r.canvas.getContext('2d'); if (!g) return;
     g.drawImage(s, 0, 0, r.canvas.width, r.canvas.height);
   }
@@ -709,10 +743,12 @@ export class Game {
     }
     r.dirty = false;
     if (!r.playing && r.hold === null) {
-      // the last frame, for the session
-      const s = this.revealStill ?? document.createElement('canvas');
+      // the last frame, for the session (the showroom's: one per car and paint)
+      const key = r.show ? this.showKey(r.show) : '';
+      const s = (r.show ? this.showStills.get(key) : this.revealStill) ?? document.createElement('canvas');
       s.width = cv.width; s.height = cv.height; s.getContext('2d')?.drawImage(cv, 0, 0);
-      this.revealStill = s;
+      if (r.show) { this.showStills.set(key, s); if (this.showStills.size > 24) this.showStills.delete(this.showStills.keys().next().value!); }
+      else this.revealStill = s;
     }
   }
   // the Founder Edition's rules as the game holds them (for the suite): the plaque, the reserved paint and LEDs
@@ -1935,7 +1971,7 @@ export class Game {
   // race tune included, is on the open board
   private boardNow(): Board { return this.driving === FOUNDER_CAR && this.mode === 'free' ? 'unleashed' : 'open'; }
   // test hooks (the suite checks the scoring rules, the traffic rule and the settings migration on synthetic runs)
-  get api() { return { MinuteMeter, DriftTracker, recordBest, recordDrift, bestsFor, bestOf, driftBest, driftBests, migrateBests, shareLine, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor }; }
+  get api() { return { MinuteMeter, DriftTracker, recordBest, recordDrift, bestsFor, bestOf, driftBest, driftBests, migrateBests, shareLine, loadSettings, DIFFICULTY, FREE_DRIVE_ONLINE, trafficFor, FOV_DEFAULT }; }
   // a Free Drive run's drift and a difficulty's Fastest Minute start from nothing
   private beginScores() {
     const b = this.bests;

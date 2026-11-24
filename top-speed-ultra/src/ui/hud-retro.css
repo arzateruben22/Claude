@@ -56,19 +56,19 @@
   linear-gradient(90deg, #b9bdc3, #ffffff 30%, #f3f4f6 70%, #a9adb3); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(0, 0, 0, 0.25); }
 
 /* HANDBRAKE: a round graphite button, the caption over it, a red circled P, a red arc that fills while pulled */
-.app[data-skin="retro"] .hb-cap { color: var(--rt-ink); background: rgba(22, 24, 27, 0.94); box-shadow: inset 0 0 0 1px var(--rt-line), 0 3px 8px rgba(0, 0, 0, 0.3); }   /* the graphite panel with its hairline: white on it is 14:1 even over a white sky */
-.app[data-skin="retro"] .hb-dial { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
-.app[data-skin="retro"] .hb-track { stroke: rgba(255, 255, 255, 0.12); }
-.app[data-skin="retro"] .hb-arc { stroke: var(--rt-red); }
-.app[data-skin="retro"] .hb-face { background: #1b1c1f; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08); }
-.app[data-skin="retro"] .hb-face .ico { color: var(--rt-red); }
-.app[data-skin="retro"] .hb-round.pulled .hb-face { background: #2a1513; box-shadow: inset 0 0 0 1px rgba(255, 90, 74, 0.5), 0 0 12px rgba(255, 90, 74, 0.35); }
 
 /* BRAKE and GAS: rounded graphite slabs, the icons over the words in white; GAS taller with a thick amber outline */
 .app[data-skin="retro"] .pedal { font: 700 15px/1 var(--hud-sans); letter-spacing: 0.08em; color: var(--rt-ink); }
 .app[data-skin="retro"] .pedal::before { background: var(--rt-panel); box-shadow: inset 0 0 0 1px var(--rt-line), var(--rt-shadow); }
 .app[data-skin="retro"] .pedal.gas::before { box-shadow: inset 0 0 0 3px var(--rt-amber), var(--rt-shadow); }
 .app[data-skin="retro"] .pedal.brake { color: var(--rt-ink); }
+/* BRAKE's emblem, flat: a graphite ring with its hairline, a near-black lens, the red (P) in its arcs, the red arc while pulled */
+.app[data-skin="retro"] .bk-emb { background: #2b2d31; box-shadow: inset 0 0 0 1px var(--rt-line-2); }
+.app[data-skin="retro"] .bk-lens { fill: #111214; }
+.app[data-skin="retro"] .bk-edge { stroke: rgba(255, 255, 255, 0.18); }
+.app[data-skin="retro"] .bk-p, .app[data-skin="retro"] .bk-arc { stroke: var(--rt-red); }
+.app[data-skin="retro"] .pedal.brake.pulled::before { box-shadow: inset 0 0 0 1.5px rgba(255, 90, 74, 0.7), var(--rt-shadow); }
+.app[data-skin="retro"] .pedal.brake.down .bk-lens { fill: #1b1c1f; }
 .app[data-skin="retro"] .pedal .ico { color: var(--rt-ink); }
 .app[data-skin="retro"] .pedal.down { color: #111; }
 .app[data-skin="retro"] .pedal.down .ico { color: #111; }

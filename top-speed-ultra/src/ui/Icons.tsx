@@ -29,6 +29,7 @@ const P: Record<string, JSX.Element> = {
   disc: <><circle cx="12" cy="12" r="8.5" /><circle cx="12" cy="12" r="2.6" /><circle cx="12" cy="6.4" r=".7" /><circle cx="17.6" cy="12" r=".7" /><circle cx="12" cy="17.6" r=".7" /><circle cx="6.4" cy="12" r=".7" /><circle cx="16" cy="8" r=".7" /><circle cx="16" cy="16" r=".7" /><circle cx="8" cy="16" r=".7" /><circle cx="8" cy="8" r=".7" /></>,
   speed: <><path d="M9.5 4 5 20M14.5 4 10 20M19.5 4 15 20" /></>,
   park: <><circle cx="12" cy="12" r="9" /><path d="M9.8 16.8V7.2h3.1a2.8 2.8 0 0 1 0 5.6H9.8" /></>,
+  lock: <><rect x="5" y="10.5" width="14" height="10" rx="2" /><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3M12 14.5v2.5" /></>,
 };
 export function Ico({ name }: { name: keyof typeof P }) {
   return <svg className="ico" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{P[name]}</svg>;

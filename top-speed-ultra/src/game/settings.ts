@@ -79,9 +79,10 @@ export interface Settings {
   v: number;                // the settings' version (SETTINGS_V): which defaults a saved value was made under
 }
 
-// The field of view's default (owner, 2026-11-16: "make the standard pov set at +10"): Settings' "Field of view" slider
-// (-10..+15) starts at +10. It was 0; readSettings moves a saved 0 made under the old default to +10, once (SETTINGS_V).
-export const FOV_DEFAULT = 10;
+// The cockpit's field of view, added to its base (owner, 2026-11-16: "make the standard pov set at +10"; 2026-11-24: the
+// "Field of view" slider left Settings to declutter, and the view is this one fixed value, "to display the cockpit as much
+// as we could"). Change it here: readSettings puts every saved value on it, so `settings.fov` stays readable everywhere.
+export const FOV_DEFAULT = 15;
 // 2: the field of view's default went from 0 to +10. Settings saved before it carry no `v`.
 // 3: Retro Low is the default (owner, 2026-11-16: "make the style retro low as the new default"): settings saved before
 // it by a player who never picked the Graphics preset themselves (qualityChosen false) move to Low + Retro once; a
@@ -92,7 +93,10 @@ export const FOV_DEFAULT = 10;
 // 5 (owner, 2026-11-22): the gearbox is automatic for everyone (a saved 'manual' becomes 'auto'); Appearance
 // (Futuristic / Realistic) folds into the two graphics choices (Ultra = the realistic 'hd' look, Retro Low = the retro
 // look), so the saved look follows the saved graphics; a saved density 'none' (Zero traffic) reads as Light.
-export const SETTINGS_V = 5;
+// 6 (owner, 2026-11-24: "get rid of the traffic selection when choosing free drive and just have the default traffic be
+// low"): Free Drive's traffic picker is gone and Free Drive runs Light; a density saved before it (Moderate, Heavy, Expert)
+// moves to Light, once. The timed runs keep their own traffic (DIFFICULTY). The field of view is fixed (FOV_DEFAULT).
+export const SETTINGS_V = 6;
 
 export interface QualityPreset {
   label: string;
@@ -234,7 +238,7 @@ export const TILE_IDS: Tile[] = ['free', ...DIFFICULTY_IDS];
 export const tileOf = (v: unknown): Tile => (v === 'easy' || v === 'medium' || v === 'extreme' ? v : 'free');
 // Free Drive's Offline / Online switch (owner, 2026-11-22): Online is the live-servers work, not built: it is labelled so and
 // the game stays offline. When it exists, Free Drive Online starts with light traffic (owner, 2026-11-22 4:50 PM: "online
-// servers default to low traffic"); offline Free Drive keeps the player's own traffic choice (settings.density).
+// servers default to low traffic"); offline Free Drive runs settings.density, Light since SETTINGS_V 6 (no picker).
 export const FREE_DRIVE_ONLINE = { available: false, label: 'Online', note: 'coming soon: live servers', density: 'light' as Density };
 // the traffic a tile's run starts with
 export function trafficFor(tile: Tile, s: Pick<Settings, 'density'>, online = false): Density {
@@ -276,7 +280,7 @@ export const DEFAULT_STYLE: Style = 'retro';
 
 export function defaults(): Settings {
   return {
-    quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'moderate', tile: 'free', handling: PROFILES.arcade.h, transmission: 'auto',
+    quality: DEFAULT_QUALITY, adaptive: true, qualityChosen: false, showPerf: false, density: 'light', tile: 'free', handling: PROFILES.arcade.h, transmission: 'auto',
     master: 0.8, engine: 0.9, ambient: 0.7, fov: FOV_DEFAULT, showFps: false, corner: 'map', cornerSize: 1, start: 'I-405 North', exit: '', showTouch: false, time: 'day', weather: 'clear', driver: 'closer', presentation: 'm', skin: 1, character: '', packTest: false, music: 0.6, ultra: false, ultraTunnel: true, ultraShake: true, ultraMuffle: true,
     hudStyle: firstHud(), owner: false, style: DEFAULT_STYLE, look: 'ultra', theme: 'auto', paints: {}, wheels: {}, radioFavs: [], abs: true, tcs: true, v: SETTINGS_V,
   };
@@ -325,10 +329,8 @@ function readSettings(): { s: Settings; migrated: boolean } {
     // keys an older version saved for the removed Races (the course picked) and any mode: not settings any more
     const old = v as Record<string, unknown>; delete old.course; delete old.mode;
     const from = typeof v.v === 'number' && Number.isFinite(v.v) ? v.v : 1;
-    let fov = typeof v.fov === 'number' && Number.isFinite(v.fov) ? Math.max(-10, Math.min(15, Math.round(v.fov))) : d.fov;
-    // the old default, never moved: saved before SETTINGS_V 2 at exactly 0, it takes the new default (+10). Once saved
-    // at v 2, a 0 is the player's own choice and stays.
-    if (from < 2 && fov === 0) fov = FOV_DEFAULT;
+    // the field of view is one fixed value since the slider left Settings (2026-11-24): whatever was saved reads as it
+    const fov = FOV_DEFAULT;
     // Retro Low became the default at SETTINGS_V 3: saved before it without the player's own pick, the preset moves to
     // Low + Retro, once (written back at this version, so a later change of theirs stays). Saved before it with their
     // own pick (qualityChosen): their quality and style as they were (a style never saved reads as the old 'standard')
@@ -346,7 +348,8 @@ function readSettings(): { s: Settings; migrated: boolean } {
       fov, v: SETTINGS_V,
       quality,
       // (a saved 'none', Zero traffic's empty freeway, reads as Light: the nearest traffic there still is)
-      density: v.density === 'none' ? 'light' : v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
+      // (and since SETTINGS_V 6 a density saved before it reads as Light too: Free Drive's traffic is Light, no picker)
+      density: from < 6 || v.density === 'none' ? 'light' : v.density && v.density in DENSITY ? v.density : (v.density as string) === 'medium' ? 'moderate' : d.density,
       tile: tileOf(v.tile),
       corner: v.corner === 'sky' || v.corner === 'off' ? v.corner : 'map',
       start: STARTS.some((x) => x.label === v.start) ? v.start! : d.start,

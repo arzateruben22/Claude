@@ -41,7 +41,7 @@ export class Input {
   private idleLook = 0;
   freeLook = false;                     // free-look camera: the view stays where you leave it
   // touch inputs written by the on-screen controls
-  // (`handbrake`: the lever on the BRAKE pedal's inner edge, or a swipe from BRAKE toward the steering pad, is held pulled)
+  // (`handbrake`: a thumb slid up from BRAKE and held above the line, Touch.tsx)
   readonly touch = { steer: 0, gas: false, brake: false, handbrake: false, active: false };
   // a touch pull of the handbrake holds at least this long after the thumb lets go: on a phone the same thumb is back on
   // GAS at once, and a flick is how the slide is started, so a quick flick must last long enough for the rear to let go
@@ -123,6 +123,8 @@ export class Input {
     this.idleLook = 0;
   };
   private onUp = (e: PointerEvent) => { if (this.drag && e.pointerId === this.drag.id) this.drag = null; };
+  // a quick flick up from BRAKE that lifted before any move crossed the line (Touch.tsx): the touch hold alone pulls it
+  flickHandbrake() { this.hbHold = TOUCH_HB_HOLD; }
   recenter() { this.lookTarget.yaw = 0; this.lookTarget.pitch = 0; }
 
   takeActions(): Action[] { const a = this.queue; this.queue = []; return a; }
