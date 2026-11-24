@@ -121,6 +121,8 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
   const [mapHome, setMapHome] = useState<string | undefined>(undefined);   // the World Map opened from Lifestyle, on a home
   const [busy, setBusy] = useState(true);
   const [loadingText, setLoadingText] = useState('Starting the engine');
+  // the loading bar's share done (0..1) while the game measures its work (the build, the warm-up); null: it runs on its own
+  const [loadProgress, setLoadProgress] = useState<number | null>(null);
   const [settings, setSettings] = useState<Settings>(loadSettings);
   // the menu's tile: Free Drive, or Easy / Medium / Extreme (timed runs, Speed Survival's rules); saved with the settings
   const tile: Tile = settings.tile;
@@ -202,7 +204,7 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
         toast: (text, kind) => toast(text, kind),
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
-        loading: (on, text) => { if (text) setLoadingText(text); setBusy(on); },
+        loading: (on, text, progress) => { if (text) setLoadingText(text); setLoadProgress((was) => (!on ? was : progress !== undefined ? Math.max(0, Math.min(1, progress)) : null)); setBusy(on); },
         context: (l) => setLost(l),
         hudToggle: (on) => setHudOn(on),
         corner: (c) => update({ corner: c }),
@@ -826,7 +828,9 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
       {/* last, so it lies over the menu while it fades into it; it lets taps through as it goes */}
       {(loadingOn || loadShown) && !error && (
         <div className={'overlay center loading-screen' + (loadingOn ? '' : ' leaving')} aria-hidden={loadingOn ? undefined : true}>
-          <OcWatermark /><div className="loading"><Brand /><p>{loadingText}…</p><div className="loadbar"><i /></div></div>
+          <OcWatermark /><div className="loading"><Brand /><p>{loadingText}…</p>
+            {loadProgress === null ? <div className="loadbar"><i /></div>
+              : <div className="loadbar det" role="progressbar" aria-label={loadingText} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(loadProgress * 100)}><i style={{ width: `${Math.round(loadProgress * 100)}%` }} /></div>}</div>
         </div>
       )}
     </div>

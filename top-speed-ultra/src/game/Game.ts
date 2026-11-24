@@ -183,7 +183,8 @@ export interface GameEvents {
   toast: (text: string, kind?: 'good' | 'bad' | 'info') => void;
   over: (r: Result) => void;
   pause: (on: boolean) => void;
-  loading: (on: boolean, text?: string) => void;
+  /** the loading screen on or off; `progress` (0..1) when the work is measured, else the bar runs on its own */
+  loading: (on: boolean, text?: string, progress?: number) => void;
   context: (lost: boolean) => void;
   hudToggle: (show: boolean) => void;
   corner: (mode: Settings['corner']) => void;
@@ -373,7 +374,9 @@ export class Game {
     this.onResize();
     this.input.attach();
     this.startAttract();
-    await this.prebuild('Building the freeway');
+    const warm = this.warmNeeded();
+    await this.prebuild('Building the freeway', 0, warm ? 0.6 : 1);
+    await this.warmUp('Building the freeway', 0.6, 1);           // High and Ultra: the menu's drive ready before it shows
     this.ev.loading(false);
     this.last = performance.now();
     this.raf = requestAnimationFrame(this.frame);
@@ -396,14 +399,129 @@ export class Game {
     this.traffic.level = { perKmLane: d.perKmLane, bold: this.govTraffic ? DENSITY[this.density].bold : d.bold, speed: this.govTraffic ? DENSITY[this.density].speed : d.speed };
   }
 
-  // build everything in view before showing it (yielding now and then so the page stays alive)
-  private async prebuild(text: string) {
-    this.ev.loading(true, text);
+  // build everything in view before showing it (yielding now and then so the page stays alive). The loading bar runs
+  // from..to as the chunks and tiles in reach are built (what is left is counted at each yield: Roads.pending, Terrain.left)
+  private async prebuild(text: string, from = 0, to = 1) {
+    this.ev.loading(true, text, from);
     const p = this.phys, h = p.psi;
+    let done = 0;
     for (let i = 0; i < 600; i++) {
       const a = this.roads.update(p.x, p.z, Math.sin(h), Math.cos(h), 6), b = this.terrain.update(p.x, p.z, 3);
       if (a === 0 && b === 0) break;
-      if (i % 4 === 3) await new Promise((r) => setTimeout(r, 0));
+      done += a + b;
+      if (i % 4 === 3) {
+        const left = this.roads.pending(p.x, p.z) + this.terrain.left;
+        this.ev.loading(true, text, from + (to - from) * (done / Math.max(1, done + left)));
+        await new Promise((r) => setTimeout(r, 0));
+      }
+    }
+    this.ev.loading(true, text, to);
+  }
+
+  // ----------------------------------------------------------------------------------------- the warm-up
+  // (owner, 2026-11-24: "make sure it doesn't lag when choosing ultra ... have everything set and working smoothly before
+  // the game starts playing ultra"). Measured on SwiftShader (PROJECT_OC_TECHNICAL_NOTES, "The warm-up"): what landed
+  // on the first driven frames of an Ultra run was not chunk building (the prebuild already builds everything within
+  // the draw distance) but first-use work on the GPU: the cockpit's and the mirrors' first draws, the post passes' and
+  // mirrors' render targets, the geometry buffers three uploads at a first draw, and the GPU's own pipeline for each
+  // new draw state, which a browser builds at the first draw, not at the shader compile. So on the presets with post
+  // (High and Ultra) that work is done behind the loading screen, in order: every texture the scene's materials hold
+  // is uploaded (initTexture, the hidden parts too); every material's program is compiled (compileAsync, in parallel
+  // where the browser can) for the render target the main view draws into (three keys a program on its output's tone
+  // mapping and colour space: the composer's linear target, not the screen); then one hidden frame from every camera
+  // View cycles to (the shadow map and its depth materials, the mirrors, the post passes and their targets at the final
+  // size, the GPU's pipelines), each finished on the GPU (a one-pixel read) before the bar moves on. The frame loop
+  // draws nothing meanwhile (`warming`), and the governor doesn't see the gap. Low, Medium and Retro skip it (no post:
+  // their start is unchanged). Warm-ups run one at a time (warmChain).
+  private warming = 0;
+  private starts = 0;                // runs started (a switch's sheet doesn't take down a newer run's loading screen)
+  // a new preset mid-drive: the drive stays as it is (paused under Settings) behind a "Preparing Ultra" sheet until the
+  // warm-up is done; the frame loop draws nothing meanwhile
+  private async prepareSwitch() {
+    if (!this.warmNeeded()) return;
+    const text = `Preparing ${presetFor(this.settings).label}`, run = this.starts;
+    this.ev.loading(true, text, 0);
+    await this.warmUp(text, 0, 1);
+    if (run === this.starts) this.ev.loading(false);
+  }
+  private warmChain: Promise<void> = Promise.resolve();
+  /** the last warm-up (tests): why, how long, programs before and after, textures, the views drawn */
+  warmLog: { why: string; ms: number; programs: [number, number]; textures: number; views: string[] } | null = null;
+  warmNeeded() { const q = this.preset(); return q.post && !this.style; }
+  private warmUp(text: string | null, from = 0, to = 1, views: CamMode[] = CAMS): Promise<void> {
+    const job = this.warmChain.then(() => this.warmJob(text, from, to, views)).catch((e) => console.warn('warm-up', e));
+    this.warmChain = job;
+    return job;
+  }
+  private async warmJob(text: string | null, from: number, to: number, views: CamMode[]) {
+    if (!this.warmNeeded() || this.ctxLost || !this.net || !this.roads) return;
+    const r = this.renderer, gl = r.getContext(), t0 = performance.now(), p0 = r.info.programs?.length ?? 0;
+    const say = (k: number) => { if (text) this.ev.loading(true, text, from + (to - from) * k); };
+    const breathe = () => new Promise<void>((res) => setTimeout(res, 0));
+    const px = new Uint8Array(4);
+    const finish = () => { try { r.setRenderTarget(null); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); } catch { /* a lost context */ } };
+    this.warming++;
+    try {
+      // the scene as the first frame will have it: the lamps and beams for this hour and weather, and the environment
+      // map for this sky (a run's start sets its atmosphere: the map would otherwise be made on its first seconds)
+      this.weatherTick(0);
+      this.env.flushEnv();
+      // 1. textures (a traffic class not on the road yet, the cockpit while the view is outside: hidden, still uploaded)
+      const tex = new Set<THREE.Texture>();
+      const add = (v: unknown) => {
+        const t = v as (THREE.Texture & { isRenderTargetTexture?: boolean }) | null;
+        if (t && t.isTexture && !t.isRenderTargetTexture && t.image) tex.add(t);
+      };
+      this.scene.traverse((o) => {
+        const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+        if (!m) return;
+        for (const mm of Array.isArray(m) ? m : [m]) {
+          const rec = mm as unknown as Record<string, unknown>;
+          for (const k in rec) add(rec[k]);
+          const u = (mm as THREE.ShaderMaterial).uniforms;
+          if (u) for (const k in u) add(u[k]?.value);
+        }
+      });
+      add(this.scene.environment); add(this.scene.background);
+      let i = 0;
+      for (const t of tex) {
+        r.initTexture(t);
+        if (++i % 12 === 0) { say((0.25 * i) / tex.size); await breathe(); if (this.ctxLost) return; }
+      }
+      say(0.25); await breathe();
+      // 2. programs, for the target the main view draws into (the composer's; the live mirrors draw into the same kind)
+      const prev = r.getRenderTarget();
+      r.setRenderTarget(this.composer ? this.composer.renderTarget1 : null);
+      let compiled: Promise<unknown>;
+      try { compiled = r.compileAsync(this.scene, this.camera); } finally { r.setRenderTarget(prev); }
+      await compiled;
+      if (this.ctxLost) return;
+      say(0.55); await breathe();
+      // 3. a hidden frame from each camera (on the menu its own film camera only), finished on the GPU
+      const list: CamMode[] = this.attract ? ['cinematic'] : views;
+      const keep = { cam: this.cam, blend: this.camBlend, free: this.input.freeLook, p: this.camera.position.clone(), q: this.camera.quaternion.clone(), fov: this.camera.fov,
+        near: this.camera.near, chase: this.chasePos.clone(), fwd: this.chaseFwd.clone(), cineT: this.cineT, cineShot: this.cineShot, dip: this.dip.t };
+      try {
+        for (let k = 0; k < list.length; k++) {
+          this.cam = list[k]; this.camBlend = 1; this.input.freeLook = list[k] === 'free';
+          this.updateCamera(1);                                  // (a whole second: the chase and film cameras settle where they'd be)
+          this.draw(performance.now(), 0);
+          finish();
+          say(0.55 + (0.45 * (k + 1)) / list.length);
+          await breathe();
+          if (this.ctxLost) return;
+        }
+      } finally {
+        this.cam = keep.cam; this.camBlend = keep.blend; this.input.freeLook = keep.free;
+        this.camera.position.copy(keep.p); this.camera.quaternion.copy(keep.q); this.camera.fov = keep.fov; this.camera.near = keep.near; this.camera.updateProjectionMatrix();
+        this.chasePos.copy(keep.chase); this.chaseFwd.copy(keep.fwd); this.cineT = keep.cineT; this.cineShot = keep.cineShot; this.dip.t = keep.dip;
+        const v = this.view3(); this.car.setOutsideView(!(v === 'cockpit' || v === 'free'));
+      }
+      this.warmLog = { why: text ?? 'quiet', ms: Math.round(performance.now() - t0), programs: [p0, r.info.programs?.length ?? 0], textures: tex.size, views: list };
+    } finally {
+      this.warming--;
+      this.lastDrawn = 0;                                        // the next frame's interval isn't the loading screen's
+      this.last = performance.now();
     }
   }
 
@@ -489,6 +607,10 @@ export class Game {
   // player's own traffic (settings.density). A difficulty sets its own traffic for the run, never the saved setting.
   async start(mode: Mode, startLabel = this.settings.start, diff: Difficulty | null = null) {
     mode = modeOf(mode);               // only Free Drive and Speed Survival exist; anything older starts Free Drive
+    this.starts++;
+    // a graphics check still running on the menu ends here, and the player's preset is back before the warm-up prepares
+    // it (the check would otherwise put it back mid-drive, a new composer and its targets on a driven frame)
+    if (this.stopBench()) this.applyQuality();
     this.bankRun();                    // a run left by Restart keeps what it scored (Free Drive's Best drift, a timed run's Fastest Minute)
     this.runDiff = mode === 'survival' ? (diff ?? 'medium') : null;   // a timed run always has a difficulty: Medium's normal rule when none is named
     this.applyDensity();
@@ -520,7 +642,9 @@ export class Game {
     this.beginScores();
     this.endAbility(); this.ability.reset();
     this.input.recenter();
-    await this.prebuild('Merging onto ' + m.label);
+    const warm = this.warmNeeded();
+    await this.prebuild('Merging onto ' + m.label, 0, warm ? 0.5 : 1);
+    await this.warmUp(`Preparing ${presetFor(this.settings).label}`, 0.5, 1);   // High and Ultra: every camera ready before you drive
     this.setPaused(false);
     this.ev.loading(false);
     if (this.driving === FOUNDER_CAR) this.wakeFounder();          // the Founder Edition's lights wake on the line
@@ -574,7 +698,13 @@ export class Game {
     this.audio.vol = { master: s.master, engine: s.engine, ambient: s.ambient }; this.audio.applyVolumes();
     this.audio.setMusicVolume(s.music);
     if (d && this.traffic) this.applyDensity();
-    if (q) { configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true); }
+    if (q) {
+      this.stopBench();                    // a graphics check running on the menu is moot once the player picks a preset
+      configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true);
+      // the new preset prepared before it is driven: mid-drive (the pause screen's Settings) behind a short "Preparing
+      // Ultra" sheet; on the menu quietly, for its film camera (the run's warm-up does the rest at its start)
+      if (this.attract) void this.warmUp(null); else void this.prepareSwitch();
+    }
     else if (st) this.applyQuality();
     else if (ad || d) { if (ad) this.startScale = this.pickStart(); this.govLadder(!ad); }   // Adaptive quality switched (from the top of the ladder, at its start scale), or a traffic step came or went
     this.onResize();
@@ -1319,30 +1449,46 @@ export class Game {
   // draw distance and scenery are the menu's). It saves the pick on this device (settings.ts saveBench) and returns it;
   // the caller applies it unless the player chose a preset themselves. null: cancelled, or the tab went to the back.
   benchRunning() { return !!this.benchQ; }
+  private benchCancel: { cancelled: boolean } | null = null;
+  // end a running check now (the player picked a preset, or a run starts): its rounds stop, the player's preset is in
+  // force from the next line on (the caller applies it). True if one was running
+  private stopBench() {
+    if (!this.benchQ) return false;
+    if (this.benchCancel) this.benchCancel.cancelled = true;
+    this.bench.on = false; this.benchQ = null; this.benchScale = 1;
+    return true;
+  }
   async benchmark(onStep?: (i: number, n: number, label: string) => void, cancel?: { cancelled: boolean }): Promise<BenchPick | null> {
     if (this.benchQ || !this.attract || this.ctxLost) return null;
     const rounds: [Quality, number][] = [['ultra', 1], ['ultra', 0.75], ['high', 1], ['high', 0.75], ['medium', 1], ['low', 1]];
     const out: BenchPick['rounds'] = [];
     const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    let pick: [Quality, number, 60 | 30] | null = null, aborted = false;
+    let pick: [Quality, number, 60 | 30] | null = null, aborted = false, stopped = false;
+    const token = cancel ?? { cancelled: false };
+    this.benchCancel = token;
     try {
       for (let i = 0; i < rounds.length; i++) {
         const [q, sc] = rounds[i];
         onStep?.(i, rounds.length, QUALITY[q].label + (sc < 1 ? ` at ${Math.round(sc * 100)}%` : ''));
         this.benchQ = q; this.benchScale = sc; this.applyQuality();
-        await wait(250);                                     // its passes compile, its buffers settle
+        await this.warmUp(null);                             // its programs and targets ready: the round measures frames, not compiles
+        if (this.benchQ !== q) { aborted = stopped = true; break; }   // ended from outside (stopBench): the player's preset is back
+        await wait(250);                                     // its buffers settle
         const b = this.bench; b.n = 0; b.sum = 0; b.slow = 0; b.work = 0; b.on = true;
         await wait(650);
         b.on = false;
-        if (cancel?.cancelled || document.hidden || !this.attract) { aborted = true; break; }
+        if (this.benchQ !== q) { aborted = stopped = true; break; }
+        if (token.cancelled || document.hidden || !this.attract) { aborted = true; break; }
         const ms = b.n ? b.sum / b.n : 999;
         out.push({ quality: q, scale: sc, ms: Math.round(ms * 10) / 10, work: b.n ? Math.round((b.work / b.n) * 10) / 10 : 0, slow: b.n ? Math.round((b.slow / b.n) * 100) / 100 : 1 });
         if (b.n >= 3 && ms <= T60 * GOV_STEP.over && b.slow / b.n <= 0.1) { pick = [q, sc, 60]; break; }
       }
     } finally {
       this.bench.on = false; this.benchQ = null; this.benchScale = 1;
+      if (this.benchCancel === token) this.benchCancel = null;
     }
-    if (aborted) { this.applyQuality(); return null; }
+    if (stopped) return null;                                // whoever stopped it has the player's preset in force
+    if (aborted) { this.applyQuality(); if (this.attract) void this.warmUp(null); return null; }
     this.seedDisplay();                                      // a round faster than a cap's interval rules that cap out
     // every round at a display/browser cap (30, 40 or 50 fps) with light work: the cap, not the device, set the
     // frames, so the check can't tell. Inconclusive: the player's preset stays, no start scale, never a 30 lock
@@ -1350,6 +1496,7 @@ export class Game {
       const res: BenchPick = { v: 1, quality: this.settings.quality, scale: 1, target: 60, inconclusive: true, cap: Math.round(1000 / capPeriod(out[0].ms)), at: new Date().toISOString(), rounds: out };
       saveBench(res); this.benchPick = res;
       this.applyQuality();
+      void this.warmUp(null);
       return res;
     }
     if (!pick) {
@@ -1359,6 +1506,7 @@ export class Game {
     const res: BenchPick = { v: 1, quality: pick[0], scale: pick[1], target: pick[2], at: new Date().toISOString(), rounds: out };
     saveBench(res); this.benchPick = res;
     this.applyQuality();                                     // the player's preset back, with the pick's start if it is this one
+    void this.warmUp(null);                                  // and ready before a run starts on it
     return res;
   }
   // the player skipped the check: it doesn't ask again on this device (Settings runs it)
@@ -1739,6 +1887,7 @@ export class Game {
   // ----------------------------------------------------------------------------------------- the loop
   private frame = (now: number) => {
     this.raf = requestAnimationFrame(this.frame);
+    if (this.warming > 0) return;                                  // the warm-up draws its own hidden frames behind the loading screen
     // a steady 30 where the governor aims at it: every other display frame at 60 Hz (rendering only ever on rAF)
     if (this.gov.target === T30 && this.govOn() && now - this.lastDrawn < T30 - 4) return;
     const t0 = performance.now();

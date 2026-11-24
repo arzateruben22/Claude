@@ -3798,6 +3798,45 @@ await group('render', async (use) => {
     const dark = wk.findIndex((v) => v > 0), last = wk.length - 2;
     return `GT tail shader without the wake; the hypercar's LEDs, blades and red bar with it; over ${wk.length} frames: dark for ${dark}, then ${fmt(wk[dark])} → ${fmt(wk[Math.floor((dark + last) / 2)])} → ${fmt(wk[last])} (${mid.length} frames mid-sweep), then steady (${wk[wk.length - 1]}); reduced motion: steady at once`;
   });
+  // The owner (2026-11-24): "make sure it doesn't lag when choosing ultra ... have everything set and working smoothly
+  // before the game starts playing ultra". A run started on Ultra prepares everything behind its loading screen (Game
+  // warmUp: textures, programs, a hidden frame from every camera). Once control is handed over no shader program may be
+  // compiled: not in the drive's first frames (about 10 s here) and not on the first View cycle through every camera.
+  // Programs are counted at the GL call (linkProgram), so one made and dropped within a frame (the environment map's
+  // used to be) counts too. (The OC Hypercar from the check above, on a desktop: its live mirror; Moderate traffic.)
+  await check('Ultra: no shader program compiled after the loading screen, in the first seconds of a drive or on the first View cycle', async () => {
+    const was = await game(page, () => {
+      const g = window.__game, gl = g.renderer.getContext(), lp = gl.linkProgram;
+      window.__links = [];
+      gl.linkProgram = function (p) { window.__links.push({ f: g.frames, cam: g.cam, loading: !!document.querySelector('.loadbar') }); return lp.call(this, p); };
+      const s = { quality: g.settings.quality, density: g.settings.density };
+      g.updateSettings({ ...g.settings, quality: 'ultra', density: 'moderate' });
+      return s;
+    });
+    const t0 = Date.now();
+    await drive(page, 'Free Drive');
+    const loadS = (Date.now() - t0) / 1000;
+    const at = await game(page, () => ({ n: window.__links.length, warm: window.__game.warmLog, f: window.__game.frames }));
+    await page.keyboard.down('ArrowUp');
+    await frames(page, 8, 600000);
+    const drove = await game(page, () => window.__links.length);
+    const cams = [];
+    for (let i = 0; i < 5; i++) { cams.push(await game(page, () => { const g = window.__game; g.cycleCam(); return g.cam; })); await frames(page, 2, 600000); }
+    await page.keyboard.up('ArrowUp');
+    const end = await game(page, (w) => {
+      const g = window.__game, gl = g.renderer.getContext();
+      g.setPaused(true);
+      delete gl.linkProgram;                                   // the context's own again
+      const r = { n: window.__links.length, after: window.__links.filter((l) => !l.loading).slice(-6), f: g.frames, mph: Math.round(g.phys.vx * 2.237) };
+      g.updateSettings({ ...g.settings, ...w });
+      return r;
+    }, was);
+    await pauseToMenu(page).catch(() => game(page, () => window.__game.quitToMenu()));
+    expect(at.warm && at.warm.views.length === 5, `the warm-up: ${JSON.stringify(at.warm)}`);
+    expect(drove === at.n, `${drove - at.n} programs compiled in the drive's first 8 frames: ${JSON.stringify(end.after)}`);
+    expect(end.n === drove, `${end.n - drove} programs compiled on the View cycle (${cams.join(', ')}): ${JSON.stringify(end.after)}`);
+    return `loading ${fmt(loadS)} s (warm-up ${at.warm.ms} ms: ${at.warm.textures} textures, programs ${at.warm.programs.join(' → ')}, views ${at.warm.views.join(', ')}); ${at.n} programs before control, 0 in ${end.f - at.f} frames after it (to ${end.mph} mph, View: ${cams.join(', ')})`;
+  });
 });
 
 // The condensed HUD (HUD_POV_SPEC 5): what the driving HUD covers and where, in the page. HUD_SEL are the readouts and

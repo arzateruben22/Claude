@@ -421,6 +421,35 @@ For the first 100 to 300 m a ramp's centreline runs inside the freeway's pavemen
   runs). Every drawn frame feeds its ring (`gov.record`), governor on or off, so it shows real fps with Adaptive off,
   on Retro and during the check. It reads `Game.perf` four times a second; it never takes a tap; it is a plain
   `role="group"` (not a live region, so screen readers aren't sent its updates). Top right on a desktop, at 38 % down on an upright phone.
+- **The warm-up** (`Game.warmUp`, 2026-11-24; owner: "have everything set and working smoothly before the game starts
+  playing ultra"). On the presets with post (High and Ultra; Low, Medium and Retro skip it, so their start is
+  unchanged) everything the first seconds draw is prepared behind the loading screen before control is handed over:
+  the environment map for the run's sky (`Environment.flushEnv`); every texture the scene's materials hold
+  (`renderer.initTexture`, hidden parts too: the cockpit from outside, a traffic class not on the road yet); every
+  material's program (`compileAsync`, parallel where the browser has KHR_parallel_shader_compile) compiled for the
+  composer's linear half-float target (three keys a program on its output's tone mapping and colour space, so a compile
+  for the screen would be the wrong variant); then one hidden frame from every camera View cycles to (cockpit, hood,
+  chase, free, cinematic; the menu only its film camera), each finished on the GPU with a one-pixel read. That last
+  step is the one that matters most: the measured stall was not a shader compile but the first draws (a live mirror's
+  render target and the buffers for everything behind the car that the forward view never drew, and the GPU's
+  pipeline for each new draw state, which browsers build at the first draw). The frame loop draws nothing during a
+  warm-up (`warming`), the governor doesn't see the gap (`lastDrawn = 0`), and warm-ups run one at a time
+  (`warmChain`). Where it runs: the boot (into the menu), every run's start (after the prebuild), a preset switch
+  mid-drive (`prepareSwitch`: a "Preparing Ultra" sheet over the pause screen until it's ready), a preset switch on
+  the menu (quietly), and each graphics-check round before it is measured (so the check measures frames, not
+  compiles). `Game.warmLog` holds the last one (why, ms, programs before and after, textures, views).
+- **The loading bar is real progress now** (`GameEvents.loading(on, text, progress)`; App `.loadbar.det`): the prebuild
+  counts chunks and tiles built against what is still wanted (`Roads.pending`, `Terrain.left`), the warm-up its
+  textures, compile and views. Without a progress value the bar runs on its own as before.
+- **The graphics check and a chosen preset.** Picking a preset while the first-run check runs stops the check
+  (`stopBench`; its pick would not apply anyway), and starting a run stops it before the prebuild, with the player's
+  preset back in force, so the warm-up prepares the right one (before, the check's round, "Trying High at 75%", stayed
+  in force behind the loading screen and the check put Ultra back on the run's first frames: a new composer and its
+  targets mid-drive).
+- **The environment map keeps one PMREM generator** (`Environment.rebuildEnv`): a new generator per rebuild, and the
+  background-box material three makes and disposes in each `fromScene`, compiled two programs (SphericalGaussianBlur,
+  PMREM.Background) on a driven frame at every sky change, on every preset. The generator keeps its blur material and
+  `pmKeep` (a twin of the box's material, same program key) keeps the other program cached.
 - **Frame pacing basics, checked:** one requestAnimationFrame loop (the venues stop it); the simulation runs on the
   fixed 1/120 s step with render interpolation (`acc / DT` into car.update and traffic.render), as before.
 
