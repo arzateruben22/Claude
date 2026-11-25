@@ -5,36 +5,44 @@ session starts cold, so this file holds the current state and a ready-to-paste p
 The session that ends updates it. Inside a session, workflow scripts route agents by task, not by the session's
 model: routine work to `opus`, hard reasoning to `fable`.
 
-## Current state and the launch prompt (2026-11-24, ~6:45 AM PT; read this first)
+## Current state and the launch prompt (updated 2026-11-24 ~5:00 PM PT; read this first)
 
-- **Live:** v32 (2026-11-24 2:50 PM PT: v30's hypercar polish, v31's carousel never black, v32's Ultra/High warm-up behind the loading screen; supersedes the in-flight note below) at https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV (owner test build, owner mode on). Work branch:
-  `claude/tender-fermat-sk9rby` (v29 = v28 hypercar step + the UI batch + the hypercar shard fix; PROGRESS has both
-  entries). Backups on origin: claude/cockpit-repair, claude/exterior-repair, claude/ui-batch, claude/hyper-shards.
-- **In flight when this was written:** one hypercar polish round on `claude/hyper-polish` (a worktree under
-  .claude/worktrees/): the flicker/shards while driving first (in motion, Retro and High), then the A-pillar corner
-  shapes, roof rail and mirror, softer ambient strips, bonnet louvres, thicker red tail blades, and
-  tests/retrohud-frames.mjs. If that branch is on origin or in the worktree and not yet merged: check its report in
-  control/hypercar/LANE_STATE_COCKPIT.md, merge it, run `--only=render,phone`, show the owner crops, publish.
-- **Owner's goal:** launch a playable game this week, then keep updating and build a community. The owner will send a
-  final fix list before launch; batch it.
-- **Owed before launch:** the full suite once; a public build with owner mode off (and the "TEST BUILD" badge gone),
-  store in test mode (nothing sold, "coming soon"), Online labelled coming soon; the artifact's plain download link
-  (the viewer warns it can't work: wire it through the `downloads` capability or drop it); a community home (the
-  owner's pick: Discord, a feedback form...). Known failing check: "sleeves from the seat on a phone" (since v27).
-  Flaky under load: "the Founder Edition's lights wake" (re-run with the check before it).
-- **Parked:** the 30-second trailer (after launch); the Fable queue below.
-- **iOS Ultra crash (2026-11-24, evening PT):** v32's mid-drive switch to Ultra killed the page on the owner's iPhone;
-  the live link went back to v31 (which measures nearly the same, about 604 MB, so it would very likely crash too). The
-  fix is on branch `claude/ultra-ios-crash` (not pushed, not published); PROGRESS has the tables. It needs the owner's
-  iPhone run before it is published. The Fable queue has the follow-up memory-budget design.
+- **Main link:** https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV is **v34 = v31 + the Paint tab fix** (build from
+  edf91e0, a cherry-pick onto 812ecfb). It still lacks the iPhone Ultra memory fix: a mid-drive switch to Ultra can
+  kill the page on a phone.
+- **Test link:** https://claude.ai/artifact/AgVrdTVe99i5Gy9dn6W1Xv (version 3) = bbf4137 (the Ultra warm-up + the
+  iPhone memory fix + the paint fix). The owner tested it on his iPhone: it works (only the lag below).
+- **Work branch:** `claude/tender-fermat-sk9rby` (HEAD ac9b349 = bbf4137 + the Rossini Corsa without its rear wing).
+  Do not publish it until the regression below is fixed: two checks time out waiting for a menu element
+  (`--only=progression '--check=garage: the Vehicles carousel'` waits for `.mp-carline`; `--only=render '--check=Ultra:
+  no shader'` waits in drive('Free Drive')). They pass on v31 + paint, fail on the combined build; a plain boot shows
+  the menu fine, so it's tied to the suite's boot/settings/localStorage or a real "menu missing after a settings
+  change" bug. Being fixed on `claude/ultra-ios-crash`.
+- **Also in flight:** `claude/retro-speed`: Retro Low flicker in the four Rossini/Vela cabins (the hypercar's fix
+  pattern: keepInside ramp, per-part depth offsets) and the lag near 200 mph (per-frame build budget; any LOD/streaming
+  budget change goes to the Fable queue as a prompt).
+- Those two branches live in worktrees of the session that started them; that session pushes them to origin when done.
+  If they are on origin and not merged into claude/tender-fermat-sk9rby: merge both, run
+  `--only=boot,render,progression,phone` (background, long timeout; known failure "sleeves from the seat on a phone";
+  "the Founder Edition's lights wake" can flake under load: re-run it with the check before it), show the owner
+  screenshots, publish dist/artifact.html to the main link.
+- **Owner's goal:** launch a playable game this week, then keep updating and build a community.
+- **Owed before launch:** the full suite once; "Go to: navigation line ... Clear route hides them" times out the same
+  way before and after recent changes (check it); a public build with owner mode off and no "TEST BUILD" badge; the
+  store in test mode ("coming soon", nothing sold); Online labelled coming soon; the artifact's plain download link
+  (the viewer warns it can't work: route it through the `downloads` capability or drop it); a community home (the
+  owner picks).
+- **Parked:** the 30-second trailer (its own section below and its own chat); the Fable queue.
 
-Ready-to-paste prompt for the next chat:
+Ready-to-paste prompt for the next chat (continuing this work):
 
 > Project OC, top-speed-ultra/. Read CLAUDE.md (Lean usage; times in Pacific), then PROJECT_OC_HANDOFF.md "Current
-> state and the launch prompt" and the last two PROJECT_OC_PROGRESS.md entries, on branch claude/tender-fermat-sk9rby.
-> First: if claude/hyper-polish isn't merged, finish it (merge, `--only=render,phone`, crops to me, publish to the
-> main link). Then take my pre-launch fix list (I'll send it) as one batch, run the full suite once, and prepare the
-> public launch build. Commit to claude/ branches only, never main.
+> state and the launch prompt" and the last three PROJECT_OC_PROGRESS.md entries, on branch claude/tender-fermat-sk9rby.
+> First: check origin for claude/ultra-ios-crash and claude/retro-speed; merge what's finished into
+> claude/tender-fermat-sk9rby, run the targeted groups named there, show me phone screenshots, then publish to the main
+> link. Then take my pre-launch fix list as one batch, run the full suite once, and prepare the public launch build.
+> One or two features in flight at a time; one reviewer and at most one repair per feature; commit to claude/ branches
+> only, never main.
 
 ## State at the last update (2026-10-21, ~06:00 UTC)
 
@@ -958,6 +966,20 @@ approve first (drone over the 405, the hypercar reveal and LED wake, cockpit at 
 fix), chase through traffic, a drift, red tail lights at dusk, Retro Low vs Ultra, the menu); then a deterministic
 frame-by-frame capture at 1080p30 with the game's cinematic and dev-page cameras, cut with OC Ultra title cards and an
 end logo. Music: original or licensed only (ask the owner for a track, or deliver a silent cut with timing marks).
+
+Ready-to-paste prompt for the trailer chat:
+
+> Project OC, top-speed-ultra/. Read CLAUDE.md (Lean usage; times in Pacific; honest claims) and PROJECT_OC_HANDOFF.md
+> "Later side project: a 30-second cinematic trailer", on branch claude/tender-fermat-sk9rby (use the build that's on
+> the main link; check PROGRESS for which commit). Make a 30-second trailer from real in-game footage only.
+> Step 1 (stop for my approval): control/trailer/TRAILER_PLAN.md with 8 shots (seconds each, which in-game camera or
+> dev-page preset, the move, time of day, car and paint), title-card copy, pacing to ~124 BPM, plus one reference
+> frame per shot on a single contact sheet sent to me. Step 2 after I approve: a deterministic capture script
+> (fixed seeds and times, fastForward, setPaused, the dev page's cameras) rendering 1920x1080 at 30 fps, one shot at a
+> time, frames in the scratchpad; show me a contact sheet per shot; at most one re-shoot round. Step 3: cut with
+> /usr/bin/ffmpeg into an H.264 MP4 with OC Ultra title cards and an end logo; music only if I provide a track I own
+> or have licensed, otherwise a silent cut with timing marks. Commit the plan and capture scripts (not the frames) on a
+> new claude/trailer branch; send me the MP4. Keep usage lean: no extra reviewers, no re-shoots beyond one round.
 
 ## For Lot 57's owners (from the sports bar's S1, 2026-11-02; `PROJECT_OC_SPORTS_BAR.md` open item O28)
 
