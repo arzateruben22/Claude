@@ -3,7 +3,7 @@
 //
 //   rossini-gt     the base: a balanced mid-engine coupe, red. 4.60 x 1.97 m, 2.65 m wheelbase.
 //   rossini-brio   smaller and lighter: shorter overhangs, narrower, a softer round nose, blue. 4.22 x 1.88 m.
-//   rossini-corsa  the track car: lower, wider, a big wing on swan-neck mounts, splitter and canards, bigger
+//   rossini-corsa  the track car: lower, wider, no rear wing (owner, 2026-11-24), splitter and canards, bigger
 //                  intakes, a roof scoop, a carbon roof, centre-lock wheels, yellow. 4.78 x 2.03 m (splitter to wing).
 //   vela-e         electric (our other brand): a smooth closed nose with a light bar, flush door handles, a glass
 //                  roof, a fastback, aero wheels, no exhausts, white. 4.76 x 1.99 m, 2.80 m wheelbase.
@@ -217,7 +217,8 @@ const CORSA: ShapeParams = {
   exhaust: 'high',
   diffuser: { half: 0.72, h: 0.42, z0: 1.6, fins: [-0.72, -0.48, -0.24, 0, 0.24, 0.48, 0.72] },
   splitter: { w: 1.8, d: 0.55, proud: 0.11, canards: true },
-  wing: { span: 1.78, chord: 0.31, y: 1.24, z: 2.12, mountX: 0.36 },
+  // (no rear wing: the owner's call, 2026-11-24; the Corsa's downforce stays in its handling numbers)
+  wing: null,
   scoop: true, bonnetVent: true, fenderVents: true,
   mirrorAt: [1.04, 0.97, -0.7], cabinW: 0.87,
   wheel: 'cl10', rimColor: 0x16171a, caliper: 0xc0161c, interior: 'corsa',
