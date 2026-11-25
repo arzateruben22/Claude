@@ -7,17 +7,10 @@ model: routine work to `opus`, hard reasoning to `fable`.
 
 ## Current state and the launch prompt (updated 2026-11-24 ~5:00 PM PT; read this first)
 
-- **Main link:** https://claude.ai/artifact/3RkEetQBRvcm3dpNeVwMgV is **v34 = v31 + the Paint tab fix** (build from
-  edf91e0, a cherry-pick onto 812ecfb). It still lacks the iPhone Ultra memory fix: a mid-drive switch to Ultra can
-  kill the page on a phone.
-- **Test link:** https://claude.ai/artifact/AgVrdTVe99i5Gy9dn6W1Xv (version 3) = bbf4137 (the Ultra warm-up + the
-  iPhone memory fix + the paint fix). The owner tested it on his iPhone: it works (only the lag below).
-- **Work branch:** `claude/tender-fermat-sk9rby` (HEAD ac9b349 = bbf4137 + the Rossini Corsa without its rear wing).
-  Do not publish it until the regression below is fixed: two checks time out waiting for a menu element
-  (`--only=progression '--check=garage: the Vehicles carousel'` waits for `.mp-carline`; `--only=render '--check=Ultra:
-  no shader'` waits in drive('Free Drive')). They pass on v31 + paint, fail on the combined build; a plain boot shows
-  the menu fine, so it's tied to the suite's boot/settings/localStorage or a real "menu missing after a settings
-  change" bug. Being fixed on `claude/ultra-ios-crash`.
+- **Main link:** v35 (2026-11-24 5:30 PM PT) = claude/tender-fermat-sk9rby at 4dc66e5: the Ultra warm-up, the iPhone
+  Ultra memory fix (owner-tested on his iPhone), the Paint tab fix, the Rossini Corsa without its wing.
+  `--only=progression,render,phone` 75/76 (the known sleeve check). The suite's run-alone checks now start from the menu
+  (ensureMenu).
 - **Also in flight:** `claude/retro-speed`: Retro Low flicker in the four Rossini/Vela cabins (the hypercar's fix
   pattern: keepInside ramp, per-part depth offsets) and the lag near 200 mph (per-frame build budget; any LOD/streaming
   budget change goes to the Fable queue as a prompt).

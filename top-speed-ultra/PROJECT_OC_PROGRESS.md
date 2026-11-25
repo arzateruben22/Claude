@@ -10244,3 +10244,11 @@ owner's iPhone test. Promote it to the main link only after his phone test and t
 own mid-drive Ultra switch measures ~604 MB in the phone memory model, so the main link may still crash on that
 switch until the combined build is promoted. Also seen: "Go to: navigation line ... Clear route hides them" fails the
 same way before and after the paint fix (a locator timeout): check it in the pre-launch full suite.
+
+### 2026-11-24 (~5:30 PM PT): v35 published to the main link: the iPhone Ultra memory fix, the warm-up, the paint fix, the Corsa without its wing
+
+claude/tender-fermat-sk9rby at 4dc66e5. The "two checks time out" scare was the suite's run-alone path (the groups'
+paused opening drive; fixed with ensureMenu), not the game; my earlier "passes on v31 + paint" comparison included an
+earlier check that went back to the menu. On ac9b349's build: `--only=progression,render,phone` 75/76 (the known
+sleeve check); the owner's iPhone test of the same code (test link, version 3) worked. Still in flight:
+claude/retro-speed (Retro Low cabin flicker for the four other cars; the lag near 200 mph).
