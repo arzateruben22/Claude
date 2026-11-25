@@ -114,7 +114,7 @@ the cinematic shots ~70 mph).
 
 ## Results (Steps 2 and 3, 2026-11-25 PT)
 
-- **Capture:** 8 shots, 841 frames (S7 twice), 1920x1080, 30 fps, every expected frame present, no page errors.
+- **Capture:** 8 shots, 783 frames (S7 twice), 1920x1080, 30 fps, every expected frame present, no page errors.
   Speeds at the end of each shot: S1 70, S3 101, S4 89, S5 44 (after the drift), S6 70, S7 69 and 69, S8 69 mph.
   First pass ~15 min for all eight in two lanes (~3.5 s a frame plus ~3 min of load per shot).
 - **The one re-shoot round** went to S1, S4 and S7. The first pass showed the Ultra picture settling over its first
