@@ -10227,3 +10227,14 @@ Checks: tsc clean, build OK, `--only=progression,phone` 51/53: the known sleeve 
 (the line read "430 ft CONTINUE I-405 NORTH"; run alone it times out on a click on both the pre-fix and the fixed
 build; the change runs only while a garage stage renders). Open question: on Low/Medium (no post chain) the main
 frame may also carry the hypercar's alpha 0.3 to the page; not checked here (render targets are another branch's).
+
+### 2026-11-24 (~4:10 PM PT): main link v34 = v31 + the Paint tab fix; the combined iOS fix on the test link
+
+The main link now carries 812ecfb + the paint fix (edf91e0, a cherry-pick of 4897550 onto v31; `--only=progression`
+garage checks 6/6 on that build). claude/tender-fermat-sk9rby (bbf4137) = v32's warm-up + claude/paint-preview +
+claude/ultra-ios-crash (phone memory caps, frees before allocating, leak fixes, crash-loop breaker, no reload on
+context loss); its build is on the test link https://claude.ai/artifact/AgVrdTVe99i5Gy9dn6W1Xv (version 3) for the
+owner's iPhone test. Promote it to the main link only after his phone test and the targeted checks pass. Note: v31's
+own mid-drive Ultra switch measures ~604 MB in the phone memory model, so the main link may still crash on that
+switch until the combined build is promoted. Also seen: "Go to: navigation line ... Clear route hides them" fails the
+same way before and after the paint fix (a locator timeout): check it in the pre-launch full suite.
