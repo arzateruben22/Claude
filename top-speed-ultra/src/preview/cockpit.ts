@@ -727,8 +727,10 @@ export function buildCockpit(o: CockpitOptions = {}): Cockpit {
     zone(G0, G1, rimTop, high ? 56 : 30);
     zone(B0, B1, rimTop, high ? 52 : 28);
     const grips = [zone(B1 - Math.PI * 2, G0, gripK, high ? 64 : 34), zone(G1, B0, gripK, high ? 64 : 34)];
-    // the perforation stops short of the edges: a plain Nappa band where each grip meets the top and bottom
-    if (gripK === 'nappaPerf') for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8);
+    // the perforation stops short of the edges: a plain Nappa band where each grip meets the top and bottom (1.5 %
+    // proud of the grip it lies on, about 0.3 mm: at the same size its 8 segments and the grip's 34 crossed each other
+    // along the band, a depth fight the seat's ray probe found in the GT and the Brio)
+    if (gripK === 'nappaPerf') for (const [a0, a1] of [[G0 - 0.09, G0], [B1 - Math.PI * 2, B1 - Math.PI * 2 + 0.09], [G1, G1 + 0.09], [B0 - 0.09, B0]]) zone(a0 - 0.002, a1 + 0.002, 'wheelNappa', 8, 1.015);
     // the centre marker: a 25 mm Alcantara band at the top in the trim colour, a hair proud, its edges rolled down
     // toward the rim over 3 mm (a sleeve of trim, not a painted band)
     if (sport) zone(Math.PI / 2 - 0.07, Math.PI / 2 + 0.07, 'stripeW', 12, (t) => { const e = Math.min(1, Math.min(t, 1 - t) / 0.13); return 1.006 + 0.022 * e * (2 - e); });

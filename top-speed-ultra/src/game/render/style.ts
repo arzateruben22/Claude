@@ -283,7 +283,10 @@ export class Stylizer {
   style(root: THREE.Object3D, lines = false) {
     root.traverse((o) => {
       const mesh = o as THREE.Mesh;
-      if (!mesh.isMesh || mesh.userData.retroSkip) return;
+      if (!mesh.isMesh) return;
+      // a part marked retroNoCast (the player's cabin and arms: PlayerCar) casts no hard shadow while the style is on
+      if (mesh.userData.retroNoCast && mesh.castShadow) { mesh.castShadow = false; mesh.userData.retroCast = true; }
+      if (mesh.userData.retroSkip) return;
       const mat = mesh.material;
       if (Array.isArray(mat)) {
         if (mat.some((m) => this.mine.has(m))) return;
@@ -327,6 +330,7 @@ export class Stylizer {
   unstyle(root: THREE.Object3D) {
     root.traverse((o) => {
       const mesh = o as THREE.Mesh, orig = mesh.userData?.retroOrig as THREE.Material | THREE.Material[] | undefined;
+      if (mesh.userData?.retroCast) { mesh.castShadow = true; delete mesh.userData.retroCast; }
       if (!orig) return;
       const cur = mesh.material, ours = Array.isArray(cur) ? cur.some((m) => this.mine.has(m)) : this.mine.has(cur);
       if (ours) mesh.material = orig;
@@ -399,6 +403,12 @@ export class Stylizer {
     // lane markings: the road's paint (vertex coloured, pulled toward the camera over the road, no map)
     const mark = m.userData.retroMark === true || (!!s.isMeshStandardMaterial && m.vertexColors && m.polygonOffset && !s.map);
     if (mark) defines.RETRO_MARK = '';
+    // (and the road surface's own slope-scaled offset on them here, not more: the paint's -3 x the depth slope against
+    // the surface's -1 pulled a far dot, where the road is seen at a grazing angle, tens of metres toward the camera
+    // in the depth buffer, and the ink pass read that jump as a silhouette: the far dashes were drawn as black specks
+    // that came and went from frame to frame. With the surface's -1 (Roads asphalt/pcc/shoulder) the 2 cm the dots
+    // stand on the road and the paint's larger constant units keep them over it at any distance)
+    if (mark && t.polygonOffset) t.polygonOffsetFactor = Math.max(t.polygonOffsetFactor, -1);
     t.defines = defines;
     const own = hooked ? m.onBeforeCompile.bind(m) : null, ownKey = hooked ? m.customProgramCacheKey() : '';
     t.onBeforeCompile = (sh, r) => {

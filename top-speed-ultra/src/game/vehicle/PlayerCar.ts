@@ -78,6 +78,14 @@ export interface SunDecks {
   pavedAt(x: number, z: number, y0: number, y1: number, self: null, margin: number): unknown;
 }
 
+// The Retro style's hard shadows (one 1024 map over 44 m: 4.3 cm texels, cut at one half) drew the cabin's own parts
+// (the wheel, the binnacle's lip, the dash, the arms; and the body's low trims, below) onto the cabin as toothed black shapes 20-30 pixels a step from
+// the seat, and they crawled and flipped every frame as the car moved across the map's texels (the owner's iPhone,
+// 2026-11-24, "flickers or pixels" on Retro Low). The cabin and the arms are marked here and cast nothing while the
+// Retro style is on (render/style.ts Stylizer); the body's shell (roof, pillars, doors) and the world still shade the
+// cabin, and the arms keep their own sun test (updateSunShade).
+function noRetroCast(root: THREE.Object3D) { root.traverse((o) => { if ((o as THREE.Mesh).isMesh) o.userData.retroNoCast = true; }); }
+
 export class PlayerCar {
   readonly root = new THREE.Group();          // position, heading, the road's grade
   readonly body = new THREE.Group();          // sprung: pitch, roll, heave, vibration
@@ -197,12 +205,16 @@ export class PlayerCar {
     const ext = buildCar({ car: c.car, paint: c.paint, quality: c.quality, cabin: 'full', wheels: false, edition: c.edition });
     this.stats.carMs = Math.round(performance.now() - t);
     this.exterior = ext; this.body.add(ext);
+    // (and the body's low trims, wholly under the cabin's floor: the Brio's carbon sills and splitter drew leaf-shaped
+    // blobs into its footwell that changed every frame; the car's shadow on the road is the shell's and the wheels')
+    ext.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh || !m.castShadow) return; m.geometry.computeBoundingBox(); if (m.geometry.boundingBox!.max.y < 0.5) m.userData.retroNoCast = true; });
     this.mats = ext.userData.materials as Record<string, THREE.Material>;
     this.outsideParts = OUTSIDE_ONLY.map((k) => ext.getObjectByName(k)).filter((x): x is THREE.Object3D => !!x);
     t = performance.now();
     const ck = buildCockpit({ car: c.car, paint: c.paint, quality: c.quality, mirrors: c.mirrors, body: false, edition: c.edition });
     this.stats.cockpitMs = Math.round(performance.now() - t);
     this.interior = ck; this.body.add(ck.group);
+    noRetroCast(ck.group);
     ck.wheel.rotation.z = this.wheelAngle;
     const B = bodyFor(c.car), P = shapeFor(c.car);
     this.buildSunOccluder(B, ck);
@@ -334,6 +346,7 @@ export class PlayerCar {
     this.arms.setTone(c.look.skin); this.armsTone = c.look.skin;
     this.stats.handsMs = Math.round(performance.now() - t);
     this.body.add(this.arms.group);
+    noRetroCast(this.arms.group);
     this.arms.group.position.copy(this.armsAt);
     this.arms.setWheelAngle(this.wheelAngle);
   }

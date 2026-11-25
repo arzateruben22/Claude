@@ -3891,6 +3891,80 @@ await group('render', async (use) => {
     expect(on.films > 0 && off.films === 0 && before.films === 0, `glass films put away: ${before.films} before, ${on.films} on, ${off.films} back`);
     return `on: ${on.toon} toon materials on meshes (${extra.materials} made: ${extra.flat} flat, ${extra.poster} posterized maps), ${on.lit} left lit, one-step shadows, pass ${extra.target}, ${pc(share)} on the palette, ${on.retroProgs} programs, ${on.marks} marking meshes, ${on.films} films put away; after a lost context ${pc(shareBack)}; back: ${off.lit} lit, 0 toon, ${off.retroProgs} programs; ${pc(shareBefore)} on the palette before`;
   });
+  // The owner's Retro Low frames (2026-11-24, iPhone, Rossini Corsa at 111 mph: "flickers or pixels"): toothed black
+  // shapes on the binnacle, the dash and the footwells that changed every frame. Root cause: the cabin's own parts and
+  // the arms cast Retro's hard one-step shadows (a 1024 map over 44 m, 4.3 cm texels, 20-30 px a step from the seat)
+  // onto the cabin, and the map's grid was snapped on the world's x and z, not the light's axes, so it slid under them
+  // every frame. Retro: the cabin and the arms cast nothing (PlayerCar noRetroCast, style.ts Stylizer), the shadow box is
+  // snapped in the light's own frame (Environment.follow). And the seat's ray probe (from the seat camera, 60 x 110 rays
+  // over the car's opaque parts): no two parallel, front-facing layers of the cabin or body within 0.1 mm of each other
+  // without a polygon offset between them over 3 or more rays, in any car (the GT's and the Brio's plain Nappa bands lay on the perforated
+  // grips at the same size: 0 mm; now 1.5 % proud). Layers 0.15 mm and more apart are far above the depth buffer's
+  // step at the cabin's 0.3-1 m (under a micron with the seat's 0.05 m near plane).
+  await check('Retro seat view, every car: the cabin and arms cast no hard shadow (back on standard); the shadow box on the light\'s texel grid; no near-coplanar cabin layers within 0.1 mm (ray probe)', async () => {
+    const CARS5 = ['rossini-gt', 'rossini-brio', 'rossini-corsa', 'vela-e', 'oc-hyper'], MM = 0.1;
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, quality: 'low', style: 'retro' }); g.setCam('cockpit'); });
+    await frames(page, 2, 400000);
+    const out = [], bad = [];
+    for (const car of CARS5) {
+      const r = await game(page, ({ car, mm }) => {
+        const g = window.__game, c = g.car, st = g.style;
+        st?.unstyle(c.root); c.configure({ ...c.config, car }); st?.restyle(c.root);
+        g.camBlend = 1; g.updateCamera?.(0); c.root.updateMatrixWorld(true); g.camera.updateMatrixWorld(true);
+        // casters inside the cabin and the arms
+        let cast = 0, cabin = 0;
+        for (const root of [c.interior.group, c.arms?.group].filter(Boolean)) root.traverse((o) => { if (o.isMesh) { cabin++; if (o.castShadow) cast++; } });
+        const RC = g.env.flareRay.constructor, V3 = g.camera.position.constructor, rc = new RC(); rc.near = 0; rc.far = 6;
+        const solid = (m) => m && m.visible && !m.transparent && m.depthWrite && m.colorWrite;
+        const meshes = [];
+        for (const root of [c.exterior, c.interior.group]) root.traverse((o) => {
+          if (!o.isMesh) return;
+          for (let a = o; a; a = a.parent) if (!a.visible) return;
+          if ([].concat(o.material).some(solid)) meshes.push(o);
+        });
+        const matOf = (h) => [].concat(h.object.material)[Array.isArray(h.object.material) ? h.face.materialIndex : 0];
+        const off = (m) => (m.polygonOffset ? `${m.polygonOffsetFactor}/${m.polygonOffsetUnits}` : '0');
+        const n = new V3(), n0 = new V3(), pairs = {};
+        let rays = 0, fights = 0;
+        for (let j = 0; j < 110; j++) for (let i = 0; i < 60; i++) {
+          rc.setFromCamera({ x: ((i + 0.5) / 60) * 2 - 1, y: 1 - ((j + 0.5) / 110) * 2 }, g.camera);
+          const hs = rc.intersectObjects(meshes, false).filter((h) => solid(matOf(h)));
+          if (!hs.length) continue;
+          rays++;
+          const h0 = hs[0];
+          n0.copy(h0.face.normal).transformDirection(h0.object.matrixWorld);
+          for (let k = 1; k < hs.length && (hs[k].distance - h0.distance) * 1000 <= mm; k++) {
+            const h = hs[k];
+            if (h.object === h0.object) continue;
+            n.copy(h.face.normal).transformDirection(h.object.matrixWorld);
+            if (n.dot(rc.ray.direction) >= 0 || n.dot(n0) < 0.97 || off(matOf(h)) !== off(matOf(h0))) continue;
+            fights++; const key = [h0.object.name || h0.object.parent?.name, h.object.name || h.object.parent?.name].sort().join('|'); pairs[key] = (pairs[key] ?? 0) + 1; break;
+          }
+        }
+        // (a pair seen by one or two rays is a seam where two parallel faces meet edge to edge, an inset flush with its
+        // surround: one at 0 mm in 3,600 rays in the hypercar. A layer lying on another is hit along its whole area:
+        // the GT's Nappa bands on the grips were 41 rays)
+        const layers = Object.entries(pairs).filter(([, k]) => k >= 3);
+        return { cast, cabin, rays, fights, layers, seams: Object.keys(pairs).length - layers.length };
+      }, { car, mm: MM });
+      if (r.cast || r.layers.length || r.rays < 2000) bad.push(`${car}: ${JSON.stringify(r)}`);
+      out.push(`${car} ${r.cabin} cabin meshes, ${r.cast} casting, ${r.layers.length} coplanar layers (${r.seams} seam${r.seams === 1 ? '' : 's'}) in ${r.rays} rays`);
+    }
+    // the sun's shadow box: its centre on whole texels along the light's own right and up axes
+    const grid = await game(page, () => {
+      const s = window.__game.env.sun, cam = s.shadow.camera, texel = (cam.right - cam.left) / s.shadow.mapSize.x;
+      const d = s.position.clone().sub(s.target.position).normalize(), ax = s.position.clone().set(0, 1, 0).cross(d).normalize(), ay = d.clone().cross(ax);
+      const f = (v) => { const q = v / texel; return Math.abs(q - Math.round(q)); };
+      return { x: f(s.target.position.dot(ax)), y: f(s.target.position.dot(ay)), texel };
+    });
+    await game(page, () => { const g = window.__game; g.updateSettings({ ...g.settings, style: 'standard' }); });
+    await frames(page, 2, 400000);
+    const back = await game(page, () => { const g = window.__game, c = g.car; let cast = 0, n = 0; c.interior.group.traverse((o) => { if (o.isMesh) { n++; if (o.castShadow) cast++; } }); c.configure({ ...c.config, car: 'rossini-gt' }); g.setCam('chase'); return { cast, n }; });
+    expect(bad.length === 0, `Retro seat view: ${bad.join('; ')}`);
+    expect(grid.x < 0.02 && grid.y < 0.02, `the shadow box off the light's texel grid: ${JSON.stringify(grid)}`);
+    expect(back.cast > back.n * 0.8, `back on standard the cabin casts again: ${back.cast} of ${back.n}`);
+    return `${out.join('; ')}; shadow box on the light's grid (${fmt(grid.x)}, ${fmt(grid.y)} of a ${fmt(grid.texel * 100)} cm texel); standard: ${back.cast} of ${back.n} cabin meshes cast`;
+  });
   // last, because the first frames after a switch compile new shaders and take minutes here
   await check(`High and Ultra presets rebuild mid-drive${slow ? ' and render' : ' (rebuild only; --slow renders them)'}`, async () => {
     const out = [];
@@ -3990,6 +4064,38 @@ await group('render', async (use) => {
     expect(drove === at.n, `${drove - at.n} programs compiled in the drive's first 8 frames: ${JSON.stringify(end.after)}`);
     expect(end.n === drove, `${end.n - drove} programs compiled on the View cycle (${cams.join(', ')}): ${JSON.stringify(end.after)}`);
     return `loading ${fmt(loadS)} s (warm-up ${at.warm.ms} ms: ${at.warm.textures} textures, programs ${at.warm.programs.join(' → ')}, views ${at.warm.views.join(', ')}); ${at.n} programs before control, 0 in ${end.f - at.f} frames after it (to ${end.mph} mph, View: ${cams.join(', ')})`;
+  });
+  // Streaming at the top of the speed range (the owner's iPhone, 2026-11-24: "a little laggy maybe around 200mph"): a road
+  // chunk (2-28 ms of the CPU here) and a terrain tile (2-10 ms) were built on the same frame whenever both were due,
+  // and at 200 mph and more both are due every few tenths of a second. Game.stream now builds one of them a frame (the
+  // tile on the next frame, ahead of the roads). The OC Hypercar on Auto-drive at 230 mph for 120 drawn frames (12 s of
+  // the road here, where each frame is the loop's 0.1 s cap): no frame builds more than one road chunk, none builds a chunk
+  // and a tile together, and something was built (the check exercised the streaming).
+  // (last in the group: it starts the hypercar's Unleashed Free Drive in owner mode)
+  await check('streaming at 230 mph: at most one road chunk a frame, never a chunk and a terrain tile on the same frame', async () => {
+    await hyperIn(page, 'free');
+    await game(page, () => {
+      const g = window.__game, L = window.__sb = { f: -1, cur: null, rows: [] };
+      g.setCam('chase');
+      const m = g.findMain('I-405 North'); g.placeCar(m, m.len * 0.2, 1, 102.8); g.autoDrive = true; g.autoCruise = 102.8;
+      const p = g.phys; for (let i = 0; i < 400 && g.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + g.terrain.update(p.x, p.z, 3) > 0; i++) { /* caught up */ }
+      const row = () => { if (L.f !== g.frames) { L.f = g.frames; L.cur = { chunks: 0, tiles: 0 }; L.rows.push(L.cur); } return L.cur; };
+      const wrap = (o, k, key) => { const f = o[k]; L[k] = [o, f]; o[k] = function (...a) { row()[key]++; return f.apply(this, a); }; };
+      wrap(g.roads, 'buildChunk', 'chunks'); wrap(g.roads, 'buildOverpass', 'chunks'); wrap(g.terrain, 'build', 'tiles');
+      g.setPaused(false);
+    });
+    await frames(page, 120, 900000);
+    const r = await game(page, () => {
+      const g = window.__game, L = window.__sb;
+      for (const k of ['buildChunk', 'buildOverpass', 'build']) { const [o, f] = L[k]; o[k] = f; }
+      g.autoDrive = false; g.setPaused(true);
+      const rows = L.rows.filter((x) => x.chunks || x.tiles);
+      return { mph: Math.round(g.phys.vx * 2.236936), frames: L.rows.length, chunks: rows.reduce((a, x) => a + x.chunks, 0), tiles: rows.reduce((a, x) => a + x.tiles, 0), most: Math.max(0, ...rows.map((x) => x.chunks)), both: rows.filter((x) => x.chunks && x.tiles).length };
+    });
+    const line = `${r.chunks} chunks and ${r.tiles} tiles built over ${r.frames} frame${r.frames === 1 ? '' : 's'} at ${r.mph} mph; at most ${r.most} chunk a frame; ${r.both} frames with both`;
+    expect(r.mph >= 220 && r.chunks + r.tiles >= 4, `too little streamed to judge: ${line}`);
+    expect(r.most <= 1 && r.both === 0, line);
+    return line;
   });
 });
 

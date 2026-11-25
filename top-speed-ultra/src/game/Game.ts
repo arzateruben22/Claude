@@ -2182,10 +2182,23 @@ export class Game {
     if (!this.attract) this.audio.setRain(e.wet > 0.5 && e.visibility > 0.3 ? e.wet : 0);
   }
 
+  // One build a frame between the two: a road chunk (2-28 ms of the CPU here, a sign gantry's lettering the dearest)
+  // and a terrain tile (2-10 ms) used to land on the same frame, and at 200 mph and more, where a chunk or a tile is
+  // wanted every few tenths of a second, those stacked frames were the hitches (the owner's iPhone, 2026-11-24: "a
+  // little laggy maybe around 200mph"). The roads go first; a tile wanted on a frame a chunk was built goes on the next
+  // frame, ahead of the roads, so neither starves the other. (Distances, levels and the budget itself are unchanged.)
+  private tileOwed = false;
   private stream(budget: number) {
-    const p = this.phys, h = p.psi;
-    this.roads.update(p.x, p.z, Math.sin(h), Math.cos(h), budget);
-    this.terrain.update(p.x, p.z, budget);
+    const p = this.phys, h = p.psi, sx = Math.sin(h), cz = Math.cos(h);
+    if (this.tileOwed) {
+      const t = this.terrain.update(p.x, p.z, budget);
+      this.roads.update(p.x, p.z, sx, cz, t > 0 ? 0 : budget);
+      this.tileOwed = false;
+    } else {
+      const r = this.roads.update(p.x, p.z, sx, cz, budget);
+      this.terrain.update(p.x, p.z, r > 0 ? 0 : budget);
+      this.tileOwed = r > 0 && this.terrain.left > 0;
+    }
     if (Math.abs(p.x - ORIGIN.x) > 1500 || Math.abs(p.z - ORIGIN.z) > 1500) this.recentre();
   }
 

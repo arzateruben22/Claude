@@ -80,6 +80,8 @@ export class Environment {
   private rain: THREE.LineSegments | null = null;
   private drops = new Float32Array(0);
   private shadowSize = 0;
+  private snapX = new THREE.Vector3();
+  private snapY = new THREE.Vector3();
   private farPlane = 2000;
   private renderer: THREE.WebGLRenderer;
   private envSky: Sky;
@@ -402,9 +404,17 @@ export class Environment {
     const s = this.sun;
     const cam = s.shadow.camera as THREE.OrthographicCamera;
     const texel = (cam.right - cam.left) / Math.max(1, s.shadow.mapSize.x);
-    const snap = (v: number) => Math.round(v / texel) * texel;
-    s.target.position.set(snap(target.x), target.y, snap(target.z));
-    s.position.copy(s.target.position).addScaledVector(this.sunDir, 120);
+    // snapped to whole texels in the shadow camera's own frame (its right and up axes: the camera looks along -sunDir
+    // with the world's up), so the map's texel grid stays put on the world as the car moves. Snapping the world's x
+    // and z did not: the light's axes are turned from them, so every frame moved the grid by a fraction of a texel and
+    // every hard shadow edge crawled (Retro's one-step shadows most of all)
+    const ax = this.snapX.set(0, 1, 0).cross(this.sunDir);
+    if (ax.lengthSq() < 1e-8) ax.set(1, 0, 0); else ax.normalize();
+    const ay = this.snapY.copy(this.sunDir).cross(ax);
+    const t = s.target.position.copy(target);
+    const px = t.dot(ax), py = t.dot(ay);
+    t.addScaledVector(ax, Math.round(px / texel) * texel - px).addScaledVector(ay, Math.round(py / texel) * texel - py);
+    s.position.copy(t).addScaledVector(this.sunDir, 120);
     s.target.updateMatrixWorld();
     const cp = camera.position;
     this.sky.position.set(cp.x, 0, cp.z);

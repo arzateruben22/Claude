@@ -751,7 +751,7 @@ export class Roads {
         poles.push(new THREE.Matrix4().compose(new THREE.Vector3(a.x - ox, a.y + 0.6, a.z - oz), new THREE.Quaternion().setFromAxisAngle(UP, a.h), ONE3));
       }
       if (poles.length) {
-        const im = new THREE.InstancedMesh(P.lightPoleSingle(), P.mats.metal(), poles.length);
+        const im = new THREE.InstancedMesh(P.lightPoleSingle(), P.mats.poleMetal(), poles.length);
         poles.forEach((m, i) => im.setMatrixAt(i, m)); im.castShadow = true; im.computeBoundingSphere(); group.add(im);
         const hd = new THREE.InstancedMesh(P.lampHeadSingle(), P.mats.lampHead(), poles.length);
         poles.forEach((m, i) => hd.setMatrixAt(i, m)); hd.computeBoundingSphere(); group.add(hd);

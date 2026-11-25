@@ -54,6 +54,9 @@ export class Traffic {
     const trimM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.55, metalness: 0.25 });
     const glassM = new THREE.MeshStandardMaterial({ color: 0x0c1016, metalness: 0.85, roughness: 0.06, envMapIntensity: 1.4 });
     const lightM = new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: false });
+    // (the headlamps their own copy: the tail lights carry an instance colour and the heads don't, so one material
+    // shared by both had three look its program up again at every draw, 12 a frame with the seven classes)
+    const headM = lightM.clone();
     const wheelM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.6, metalness: 0.3 });
     const blinkM = new THREE.MeshBasicMaterial({ color: new THREE.Color(2.4, 1.1, 0.1), toneMapped: false });
     for (const c of this.classes) {
@@ -64,17 +67,29 @@ export class Traffic {
       };
       const body = mk(c.body, bodyM, cap); body.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3);
       const tail = mk(c.tail, lightM, cap, false); tail.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(cap * 3), 3);
-      this.meshes.push({ body, glass: mk(c.glass, glassM, cap), tail, head: mk(c.head, lightM, cap, false), wheels: mk(wheel, wheelM, cap * c.wheels.length), blink: mk(blinkGeo, blinkM, cap * 2, false), trim: c.trim ? mk(c.trim, trimM, cap) : null });
+      this.meshes.push({ body, glass: mk(c.glass, glassM, cap), tail, head: mk(c.head, headM, cap, false), wheels: mk(wheel, wheelM, cap * c.wheels.length), blink: mk(blinkGeo, blinkM, cap * 2, false), trim: c.trim ? mk(c.trim, trimM, cap) : null });
     }
     this.group.name = 'traffic';
   }
 
-  reseed(seed: number) { this.r = rng(seed); this.nextId = 1; this.cars = []; }
+  reseed(seed: number) { this.r = rng(seed); this.nextId = 1; this.cars = []; this.win = null; }
   clear() { this.cars = []; }
   private heavy(c: CarClass) { return c.id === 'truck' || c.id === 'semi'; }
 
-  // the freeway carriageways in view, with the stretch of each that's within reach
+  // the freeway carriageways in view, with the stretch of each that's within reach. Kept until the player has moved
+  // 20 m (or the reach changed): the search covers the whole view (some 1.7 km square of the network's grid, every
+  // path through it projected) and ran at every simulation step, 120 times a second, a few ms a frame and the largest
+  // share of the frame's garbage after three's own; the top-up spawns at random inside these stretches, so 20 m of
+  // staleness changes nothing it decides
+  private win: Map<Path, [number, number]> | null = null;
+  private winAt = { x: 0, z: 0, r: 0 };
   private windows(px: number, pz: number) {
+    const w = this.winAt;
+    if (this.win && w.r === this.viewAhead && Math.abs(px - w.x) < 20 && Math.abs(pz - w.z) < 20) return this.win;
+    w.x = px; w.z = pz; w.r = this.viewAhead;
+    return (this.win = this.search(px, pz));
+  }
+  private search(px: number, pz: number) {
     const R = this.viewAhead, out = new Map<Path, [number, number]>();
     for (const h of this.net.near(px, pz, R)) {
       if (!h.path.main) continue;
@@ -87,7 +102,7 @@ export class Traffic {
   }
 
   fill(player: PlayerView) {
-    this.cars = [];
+    this.cars = []; this.win = null;
     for (let k = 0; k < 4; k++) this.topUp(player, true);
   }
 

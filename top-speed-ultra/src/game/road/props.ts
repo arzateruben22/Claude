@@ -31,6 +31,9 @@ export const mats = {
   concrete: () => once('m.concrete', () => { const t = T.concrete(); return new THREE.MeshStandardMaterial({ map: t.map, normalMap: t.normalMap, roughness: 0.92, color: 0xd8d4cc }); }),
   darkConcrete: () => once('m.dconcrete', () => { const t = T.concrete(); return new THREE.MeshStandardMaterial({ map: t.map, normalMap: t.normalMap, roughness: 0.95, color: 0x8f8a82 }); }),
   metal: () => once('m.metal', () => new THREE.MeshStandardMaterial({ color: 0x9aa0a6, metalness: 0.85, roughness: 0.42 })),
+  // the same metal for the instanced light standards: shared with the gantries' plain meshes, the instancing flag
+  // differed at every other draw and three looked the program up again each time
+  poleMetal: () => once('m.metalPole', () => new THREE.MeshStandardMaterial({ color: 0x9aa0a6, metalness: 0.85, roughness: 0.42 })),
   darkMetal: () => once('m.dmetal', () => new THREE.MeshStandardMaterial({ color: 0x55595f, metalness: 0.7, roughness: 0.5 })),
   wood: () => once('m.wood', () => new THREE.MeshStandardMaterial({ color: 0x5e4a38, roughness: 0.95 })),
   foliage: () => once('m.foliage', () => new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.35 })),
