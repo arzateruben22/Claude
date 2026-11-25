@@ -31,15 +31,18 @@ for (let i = 0; i < (SCAN ? 0 : COUNT); i++) cands.push({
   hold: pick([0.9, 1.2, 1.5, 1.8]), angle: pick([18, 25, 32, 40]), counter: pick([0.1, 0.25, 0.4, 0.6]), k: pick([0, 0.8, 1.6]), thr: pick([0.5, 0.75, 1]),
   // (--wide, second pass: the first pass's clean drifts topped out at 16 deg, and wider flicks spun past 55 deg into the
   // wall: the middle ground, a shorter flick and a strong angle-holding gain)
-  ...(WIDE ? { steer: pick([0.55, 0.7, 0.85]), flick: pick([0.2, 0.28, 0.36, 0.44]), thrFlick: pick([0.3, 0.6, 0.9]), hold: pick([1.0, 1.3, 1.6]),
-    angle: pick([22, 26, 30, 34]), counter: pick([0, 0.15, 0.3]), k: pick([2.5, 4, 6, 9]), thr: pick([0.55, 0.7, 0.85]), cruise: pick([28, 31, 34]) } : {}),
+  // (--wide: Handling at Simulation, traction control off; a short flick, then opposite lock and the throttle lifting
+  // past the target angle)
+  ...(WIDE ? { steer: pick([0.5, 0.7, 0.9]), flick: pick([0.1, 0.15, 0.2, 0.28]), thrFlick: pick([0, 0.3, 0.6]), hold: pick([1.0, 1.3, 1.6]),
+    angle: pick([18, 24, 30, 36]), counter: pick([0.2, 0.45, 0.7]), k: pick([3, 6, 10, 15]), thr: pick([0.35, 0.55, 0.75, 0.95]), lift: pick([6, 12, 20]),
+    cruise: pick([24, 28, 32]) } : {}),
   ...FIX,
 });
 
 const browser = await chromium.launch({ executablePath: process.env.TRAILER_CHROME || '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 const ctx = await browser.newContext({ viewport: { width: 480, height: 270 } });
 await ctx.addInitScript(({ s }) => {
-  localStorage.setItem('tsu.settings', JSON.stringify({ quality: s.quality, qualityChosen: true, adaptive: false, density: s.density, owner: true, look: 'ultra', theme: 'dark', time: s.time, weather: s.weather, start: s.start, exit: '', style: 'standard', master: 0, music: 0 }));
+  localStorage.setItem('tsu.settings', JSON.stringify({ quality: s.quality, qualityChosen: true, adaptive: false, density: s.density, owner: true, look: 'ultra', theme: 'dark', time: s.time, ...(s.handling != null ? { handling: s.handling } : {}), weather: s.weather, start: s.start, exit: '', style: 'standard', master: 0, music: 0 }));
   localStorage.setItem('tsu.ownerCar', s.car);
   let a = 1; Math.random = () => { a |= 0; a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   window.__reseed = (n) => { a = n >>> 0; };
@@ -101,6 +104,7 @@ for (const [i, P] of cands.entries()) {
   if (i % 10 === 9) console.error(`${i + 1}/${cands.length}, ${((Date.now() - t0) / (i + 1) / 1000).toFixed(1)} s each, ok so far ${results.filter((x) => !x.bad).length}`);
 }
 await browser.close();
+if (process.argv.includes('--trace')) for (const x of results) console.log(JSON.stringify(x.P), x.bad || 'ok', '\n  a:', x.log.filter((_, k) => k % 3 === 0).map((l) => l.a).join(' '), '\n  v:', x.log.filter((_, k) => k % 9 === 0).map((l) => l.v).join(' '), '\n  wall:', x.log.filter((_, k) => k % 9 === 0).map((l) => l.wall).join(' '));
 if (SCAN) { console.log(JSON.stringify(results.map((x) => ({ seed: x.P.seed, warm: x.P.warm, near: Math.min(...x.log.map((l) => l.near)), wall: x.minWall, bad: x.bad })).sort((a, b) => b.near - a.near).slice(0, 12))); process.exit(0); }
 const ok = results.filter((x) => !x.bad).sort((a, b) => b.score - a.score);
 const why = {}; for (const x of results.filter((x) => x.bad)) { const k = x.bad.split(' ')[0]; why[k] = (why[k] ?? 0) + 1; }

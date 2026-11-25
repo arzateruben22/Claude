@@ -14,7 +14,7 @@ export const SHOTS = [
     start: 'I-405 North', warm: 25, cruise: 45, cam: 'cockpit', hud: false, note: "driver's seat at ~100 mph, auto-drive" },
   { id: 's4-chase', bars: 1.5, seed: 104, car: 'vela-e', paint: HEX.electricBlue, time: 'day', weather: 'clear', density: 'heavy', quality: 'ultra',
     start: 'I-405 North', warm: 25, settle: 51, cruise: 40, cam: 'chase', hud: true, note: 'chase cam threading traffic, HUD on' },
-  { id: 's5-drift', bars: 1.5, seed: 105, car: 'rossini-corsa', paint: HEX.trackYellow, time: 'sunset', weather: 'clear', density: 'light', quality: 'ultra',
+  { id: 's5-drift', bars: 1.5, seed: 105, car: 'rossini-corsa', paint: HEX.trackYellow, time: 'sunset', handling: 1, weather: 'clear', density: 'light', quality: 'ultra',
     start: 'I-405 North', warm: 12, cruise: 30, cam: 'cinematic', cine: 2, drift: { at: 0.3, steer: -0.55, hand: 0.3, counter: 0.5, hold: 1.2 }, hud: false,
     note: 'low rear three-quarter (cinematic shot 2); handbrake flick to the right, opposite lock for 1.2 s, then the autopilot' },
   { id: 's6-night', bars: 2, seed: 106, car: 'rossini-gt', paint: HEX.rossiniRed, time: 'night', weather: 'clear', density: 'heavy', quality: 'ultra',

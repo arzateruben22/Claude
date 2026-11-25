@@ -15,7 +15,11 @@ export const DRIFT_SRC = `(t, g, c, P) => {
     // so a slide toward dir reads -dir x angle, and more steer toward dir makes the angle more negative. (The first
     // version assumed the opposite: its hold steered into the spin, and every bold drift spun past 55 deg.)
     const SGN = -1, err = SGN * P.dir * P.angle - a;           // + : the angle must rise (toward +)
-    c.handbrake = false; c.brake = 0; c.throttle = P.thr;
+    // throttle holds the slide (with traction control off it is what keeps a rear-drive car rotating): lifted as the
+    // angle passes its target, so the slide settles instead of spinning (Handling at Simulation, 2026-11-25: at a
+    // steady 0.7 the Corsa rotated on past 80 deg whatever the lock)
+    const over = Math.abs(a) - P.angle;
+    c.handbrake = false; c.brake = 0; c.throttle = cl(P.thr * (1 - over / (P.lift ?? 12)), 0, 1);
     c.steer = cl(-P.dir * P.counter + SGN * P.k * err / 30, -1, 1);
     return true;
   }

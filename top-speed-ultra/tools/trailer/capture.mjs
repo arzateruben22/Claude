@@ -39,6 +39,7 @@ async function run(variant, dir) {
     const settings = { quality: s.quality, qualityChosen: true, adaptive: false, density: s.density ?? 'moderate', owner: true, look: 'ultra',
       theme: 'dark', time: s.time, weather: s.weather ?? 'clear', start: s.start ?? 'I-405 North', exit: '', style: s.style ?? 'standard',
       showFps: false, showPerf: false, showTouch: false, master: 0, music: 0 };
+    if (s.handling != null) settings.handling = s.handling;   // (S5: the Simulation end of Handling, traction control off, as a player drifting picks)
     if (s.paint != null) settings.paints = { [s.car]: s.paint };
     localStorage.setItem('tsu.settings', JSON.stringify(settings));
     localStorage.setItem('tsu.ownerCar', s.car);
