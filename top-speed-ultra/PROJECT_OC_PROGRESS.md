@@ -10247,3 +10247,10 @@ cameras and the garage reveal stage; cut.mjs: cards in the game's page, ffmpeg).
 (812ecfb + 4897550). Eight shots, 1920x1080 at 30 fps, no page errors; one re-shoot round (S1, S4, S7: a longer
 settle). Output: a silent 30.000 s H.264 cut with beat marks at 124 BPM, plus a clean copy; sent to the owner. Known
 and accepted: S7's two presets show different traffic, a one-frame sky shift in S4, the sun's flare ring in S5.
+
+### 2026-11-25 (~9:00 PM PT): the trailer's drift (S5) redone, found before it was filmed
+
+The owner: the yellow drift bumped toward the freeway's edge. It is now searched in simulation first
+(tools/trailer/drift.mjs, drift-search.mjs; Handling at Simulation, traction control off) and filmed on open road:
+peak 34 deg, 0 collisions, at least 4.7 m from any wall, traffic at least 29 m away, 67 mph at the end (the capture's
+per-frame log). The trailer was re-cut (30.000 s, 900 frames) and sent. Details: control/trailer/TRAILER_PLAN.md.

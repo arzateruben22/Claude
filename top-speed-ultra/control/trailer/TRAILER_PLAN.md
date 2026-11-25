@@ -65,7 +65,7 @@ Drive starting on **I-405 North**, owner mode (any car). Seed = Math.random rese
 | S2 | Garage Founder reveal stage (`openReveal`, `revealHold`) | The stage's own reveal timeline from 1.6 s to its end (6.2 s), stretched over 2 bars: LED wake, the light sweep across the car | The stage's own lighting | none | OC Hypercar, Glacier Silver, ice LEDs | 102 | off |
 | S3 | Driver's seat (`cockpit`) | Locked seat view, hands on the wheel, cluster live, the freeway coming at you at ~100 mph | Day, clear | Moderate | Rossini GT, Rossini Red | 103, 25 s at 45 m/s | off (the car's cluster shows speed) |
 | S4 | Chase | Behind the car as the autopilot weaves through heavy traffic | Day, clear | Heavy | Vela E, Electric Blue | 104, 25 s at 40 m/s | **on** |
-| S5 | Cinematic, shot 2 (low rear three-quarter) | At 0.3 s a 0.3 s handbrake flick to the right, then half opposite lock for 1.2 s: the car slides sideways and gathers itself, then the autopilot drives on | Sunset, clear | Light | Rossini Corsa, Track Yellow | 105, 12 s at 30 m/s | off |
+| S5 | Cinematic, shot 0 (the hero rear three-quarter) | **Redone 2026-11-25 (owner: "make the yellow drift better and not bump into the freeway")**: from the left lane, a 0.28 s handbrake flick, then a 34 deg slide out across the open lanes, a flick back and a catch at 67 mph, under the I-405 North / Jeffrey Rd gantry. Handling at Simulation (traction control off). | Sunset, clear | Light | Rossini Corsa, Track Yellow | 305, 16 s at 32 m/s | off |
 | S6 | Cinematic, shot 0 ("the hero" rear three-quarter) | Long-lens tracking alongside, the tail lights glowing red, traffic ahead | Night, clear | Heavy | Rossini GT, Rossini Red | 106, 30 s at 31 m/s | off |
 | S7 | Chase | The same road, car and moment rendered twice, Retro Low (Low + Retro style) and Ultra (traffic differs between the presets: see results); the edit wipes left to right from Retro Low to Ultra across the bar | Day, clear | Moderate | Rossini Brio, Coast Blue | 107, 20 s at 31 m/s | off |
 | S8 | Cinematic shot 0 under the menu (the attract drive) | The main menu as a player first sees it, the hypercar driving behind it | Night, clear | Moderate | OC Hypercar, Glacier Silver | 108, 6 s attract | **on** (it is the menu) |
@@ -133,3 +133,19 @@ the cinematic shots ~70 mph).
   game's own page with its OC lockup and type.
 - **Frames** stay in the session scratchpad (not committed). To rebuild: the main-link build (812ecfb + cherry-pick
   4897550, `npm run build`), then `capture.mjs --shot=<id>` per shot and `cut.mjs`.
+
+## S5 redone (2026-11-25, ~9:00 PM PT)
+
+The owner: "make the yellow drift better and not bump into the freeway". The first S5 was scripted blind (fixed
+inputs, nothing checked) and slid the Corsa nearly into the barrier. The new one was found before it was filmed:
+- **Controller** (`tools/trailer/drift.mjs`): a handbrake flick, then the slide held at a target angle with opposite
+  lock and the throttle lifted past it. The slip angle's sign was measured, not assumed. The first version had it
+  backwards and steered into every spin.
+- **Search** (`tools/trailer/drift-search.mjs`): simulation only, stepping exactly as the capture does. It first scanned
+  10 traffic seeds x 6 start points for the emptiest stretch (seed 305, 16 s: no car within 63 m). It then tried 70
+  drifts at a time and rejected any with a collision, the car's middle within 2.2 m of a wall, traffic within 4 m,
+  under 15 m/s at the end, or still sliding.
+- **Handling: Simulation.** At the game's default handling, traction control held the car to about 4 deg. At
+  Simulation (traction control off, the in-game setting a player drifts with) it slides.
+- **The take** (`capture.mjs` logs every frame): peak 34 deg, no collisions, never nearer a wall than the 4.7 m it
+  starts at in the left lane, traffic at least 29 m away, 67 mph at the end. This matches the search.
