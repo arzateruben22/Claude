@@ -29,8 +29,10 @@ for (let i = 0; i < (SCAN ? 0 : COUNT); i++) cands.push({
   seed: pick([105, 205, 305, 405, 505, 605, 705, 805]), warm: pick([8, 12, 16, 20, 24]), dir: pick([1, -1]), lane: pick(['near', 'mid', 'far']), cruise: pick([27, 30, 33, 36]), at: pick([0.25, 0.4, 0.55]),
   steer: pick([0.45, 0.6, 0.8, 1]), flick: pick([0.15, 0.25, 0.35, 0.45]), thrFlick: pick([0, 0.4, 0.8]),
   hold: pick([0.9, 1.2, 1.5, 1.8]), angle: pick([18, 25, 32, 40]), counter: pick([0.1, 0.25, 0.4, 0.6]), k: pick([0, 0.8, 1.6]), thr: pick([0.5, 0.75, 1]),
-  ...(WIDE ? { steer: pick([0.7, 0.85, 1]), flick: pick([0.3, 0.45, 0.6, 0.75]), thrFlick: pick([0.4, 0.7, 1]), hold: pick([1.2, 1.5, 1.8, 2.1]),
-    angle: pick([25, 30, 35, 40]), counter: pick([0, 0.1, 0.2, 0.3]), k: pick([1.5, 2.5, 4, 6]), thr: pick([0.7, 0.85, 1]), cruise: pick([27, 30, 33]) } : {}),
+  // (--wide, second pass: the first pass's clean drifts topped out at 16 deg, and wider flicks spun past 55 deg into the
+  // wall: the middle ground, a shorter flick and a strong angle-holding gain)
+  ...(WIDE ? { steer: pick([0.55, 0.7, 0.85]), flick: pick([0.2, 0.28, 0.36, 0.44]), thrFlick: pick([0.3, 0.6, 0.9]), hold: pick([1.0, 1.3, 1.6]),
+    angle: pick([22, 26, 30, 34]), counter: pick([0, 0.15, 0.3]), k: pick([2.5, 4, 6, 9]), thr: pick([0.55, 0.7, 0.85]), cruise: pick([28, 31, 34]) } : {}),
   ...FIX,
 });
 
@@ -84,7 +86,7 @@ for (const [i, P] of cands.entries()) {
       const wall = Math.min(p.d - q.wallL, q.wallR - p.d), pave = Math.min(p.d - q.paveL, q.paveR - p.d);
       let near = 1e9; for (const tc of g.traffic.cars) { const dx = tc.x - p.x, dz = tc.z - p.z; near = Math.min(near, Math.hypot(dx, dz)); }
       log.push({ a: +p.drift.angle.toFixed(1), on: p.drift.active, wall: +wall.toFixed(2), pave: +pave.toFixed(2), near: +near.toFixed(1), v: +p.vx.toFixed(1) });
-      if (g.collisions > c0) bad ||= `collision f${f}`;
+      if (g.collisions > c0) bad ||= `collision f${f} near ${near.toFixed(1)} v ${p.vx.toFixed(1)} a ${p.drift.angle.toFixed(0)} wall ${wall.toFixed(1)} imp ${(p.impacts || []).length}`;
       if (wall < 2.2) bad ||= `wall ${wall.toFixed(2)} f${f}`;
       if (pave < 0.6) bad ||= `off paving f${f}`;
       if (near < 4) bad ||= `traffic ${near.toFixed(1)} m f${f}`;
