@@ -19,11 +19,16 @@ const GAME = path.join(path.resolve(opt('build', 'dist')), 'top-speed-ultra.html
 const S = SHOTS.find((s) => s.id === 's5-drift'), N = Math.round(S.bars * BAR * 30), COUNT = Number(opt('n', '80'));
 let r = 12345; const rnd = () => ((r = (r * 1103515245 + 12345) % 2147483648) / 2147483648);
 const pick = (a) => a[Math.floor(rnd() * a.length)];
+// --fix='{"seed":205,...}' pins fields (a focused second pass round a clear stretch); --wide widens the drift ranges
+const FIX = JSON.parse(opt('fix', '{}')), WIDE = process.argv.includes('--wide');
 const cands = [];
 for (let i = 0; i < COUNT; i++) cands.push({
   seed: pick([105, 205, 305, 405, 505, 605, 705, 805]), warm: pick([8, 12, 16, 20, 24]), dir: pick([1, -1]), lane: pick(['near', 'mid', 'far']), cruise: pick([27, 30, 33, 36]), at: pick([0.25, 0.4, 0.55]),
   steer: pick([0.45, 0.6, 0.8, 1]), flick: pick([0.15, 0.25, 0.35, 0.45]), thrFlick: pick([0, 0.4, 0.8]),
   hold: pick([0.9, 1.2, 1.5, 1.8]), angle: pick([18, 25, 32, 40]), counter: pick([0.1, 0.25, 0.4, 0.6]), k: pick([0, 0.8, 1.6]), thr: pick([0.5, 0.75, 1]),
+  ...(WIDE ? { steer: pick([0.7, 0.85, 1]), flick: pick([0.3, 0.45, 0.6, 0.75]), thrFlick: pick([0.4, 0.7, 1]), hold: pick([1.2, 1.5, 1.8, 2.1]),
+    angle: pick([25, 30, 35, 40]), counter: pick([0, 0.1, 0.2, 0.3]), k: pick([1.5, 2.5, 4, 6]), thr: pick([0.7, 0.85, 1]), cruise: pick([27, 30, 33]) } : {}),
+  ...FIX,
 });
 
 const browser = await chromium.launch({ executablePath: process.env.TRAILER_CHROME || '/opt/pw-browsers/chromium', args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -85,7 +90,7 @@ for (const [i, P] of cands.entries()) {
     if (end.v < 15) bad ||= `slow ${end.v}`;
     if (Math.abs(end.a) > 6) bad ||= `still sliding ${end.a}`;
     const peak = Math.max(...log.map((l) => Math.abs(l.a))), driftT = log.filter((l) => l.on).length / 30, minWall = Math.min(...log.map((l) => l.wall));
-    return { bad, peak, driftT, minWall, endV: end.v, road: g.path.label, lanes: lanes(), score: Math.min(peak, 45) + 12 * driftT + Math.min(minWall, 4), log };
+    return { bad, peak, driftT, minWall, endV: end.v, road: g.path.label, lanes: lanes(), score: Math.min(peak, 45) + 20 * driftT + Math.min(minWall, 4), log };
   }, { s: S, P, N, src: DRIFT_SRC, seed: P.seed });
   results.push({ i, P, ...res });
   if (i % 10 === 9) console.error(`${i + 1}/${cands.length}, ${((Date.now() - t0) / (i + 1) / 1000).toFixed(1)} s each, ok so far ${results.filter((x) => !x.bad).length}`);
