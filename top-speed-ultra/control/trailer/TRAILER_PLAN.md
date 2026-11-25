@@ -1,6 +1,15 @@
 # Top Speed OC: Ultra: 30-second trailer plan (Step 1, for the owner's approval)
 
-Status: **plan only, waiting for approval** (2026-11-25 PT). Nothing has been captured at full length yet. The
+Status: **approved 2026-11-25 PT**, with the owner's answers below; Step 2 (capture) under way.
+
+## Owner's answers (2026-11-25)
+
+- S1 and S6: "use your best cinematic production decision". Decided: S1 moves from Sunrise to **Day** (a bright opening
+  that shows the world; sunrise read dim and flat from the drone), S6 moves from Sunset to **Night** (the red tail
+  lights glow against the dark, and no sun lens-flare ring). The light now runs day, day, day, sunset (drift), night,
+  day (the Retro/Ultra comparison), night (the menu).
+- End card's last line: **"COMING SOON TO GOOGLE PLAY AND THE APP STORE"** (text only; no store badges or logos).
+- Music: **a silent cut with beat ticks**. Nothing has been captured at full length yet. The
 reference frames on the contact sheet are single 1920x1080 frames from the real game, rendered by the same capture
 script that Step 2 will use (`tools/trailer/capture.mjs --ref`).
 
@@ -30,14 +39,14 @@ bigger moves land on a bar line. Frame counts at 30 fps.
 
 | # | In (s) | Out (s) | Bars | Frames | What |
 |---|---|---|---|---|---|
-| S1 | 0.000 | 3.871 | 2 | 116 | Drone over the 405 at sunrise |
+| S1 | 0.000 | 3.871 | 2 | 116 | Drone over the 405 by day |
 | C1 | 3.871 | 5.806 | 1 | 58 | Title card 1 |
 | S2 | 5.806 | 9.677 | 2 | 116 | OC Hypercar reveal and LED wake |
 | S3 | 9.677 | 12.581 | 1.5 | 87 | Cockpit at speed |
 | S4 | 12.581 | 15.484 | 1.5 | 87 | Chase through traffic |
 | C2 | 15.484 | 17.419 | 1 | 58 | Title card 2 |
 | S5 | 17.419 | 20.323 | 1.5 | 87 | A drift at sunset |
-| S6 | 20.323 | 24.194 | 2 | 116 | Red tail lights at dusk |
+| S6 | 20.323 | 24.194 | 2 | 116 | Red tail lights at night |
 | S7 | 24.194 | 26.129 | 1 | 58 | Retro Low vs Ultra |
 | S8 | 26.129 | 28.065 | 1 | 58 | The menu |
 | C3 | 28.065 | 30.000 | 1 | 58 | End logo |
@@ -52,16 +61,15 @@ Drive starting on **I-405 North**, owner mode (any car). Seed = Math.random rese
 
 | # | Camera (in-game) | The move | Time / weather | Traffic | Car and paint | Seed, warm-up | HUD |
 |---|---|---|---|---|---|---|---|
-| S1 | Cinematic, shot 3 ("the drone, high behind") | Drone 8.5 m up, pulling in from 15 to 12 m behind while the car cruises; the freeway runs off ahead | Sunrise, clear | Moderate | OC Hypercar, Glacier Silver (Founder) | 101, 20 s at 31 m/s | off |
+| S1 | Cinematic, shot 3 ("the drone, high behind") | Drone 8.5 m up, pulling in from 15 to 12 m behind while the car cruises; the freeway runs off ahead | Day, clear | Moderate | OC Hypercar, Glacier Silver (Founder) | 101, 20 s at 31 m/s | off |
 | S2 | Garage Founder reveal stage (`openReveal`, `revealHold`) | The stage's own reveal timeline from 1.6 s to its end (6.2 s), stretched over 2 bars: LED wake, the light sweep across the car | The stage's own lighting | none | OC Hypercar, Glacier Silver, ice LEDs | 102 | off |
 | S3 | Driver's seat (`cockpit`) | Locked seat view, hands on the wheel, cluster live, the freeway coming at you at ~100 mph | Day, clear | Moderate | Rossini GT, Rossini Red | 103, 25 s at 45 m/s | off (the car's cluster shows speed) |
 | S4 | Chase | Behind the car as the autopilot weaves through heavy traffic | Day, clear | Heavy | Vela E, Electric Blue | 104, 25 s at 40 m/s | **on** |
 | S5 | Cinematic, shot 2 (low rear three-quarter) | At 0.3 s a 0.3 s handbrake flick to the right, then half opposite lock for 1.2 s: the car slides sideways and gathers itself, then the autopilot drives on | Sunset, clear | Light | Rossini Corsa, Track Yellow | 105, 12 s at 30 m/s | off |
-| S6 | Cinematic, shot 0 ("the hero" rear three-quarter) | Long-lens tracking alongside, the tail lights glowing red, traffic ahead | Sunset, clear | Heavy | Rossini GT, Rossini Red | 106, 30 s at 31 m/s | off |
+| S6 | Cinematic, shot 0 ("the hero" rear three-quarter) | Long-lens tracking alongside, the tail lights glowing red, traffic ahead | Night, clear | Heavy | Rossini GT, Rossini Red | 106, 30 s at 31 m/s | off |
 | S7 | Chase | The same seeded drive rendered twice, Retro Low (Low + Retro style) and Ultra; the edit wipes left to right from Retro Low to Ultra across the bar | Day, clear | Moderate | Rossini Brio, Coast Blue | 107, 20 s at 31 m/s | off |
 | S8 | Cinematic shot 0 under the menu (the attract drive) | The main menu as a player first sees it, the hypercar driving behind it | Night, clear | Moderate | OC Hypercar, Glacier Silver | 108, 6 s attract | **on** (it is the menu) |
 
-Night appears only in S8; if you want more night, S6 can move from Sunset to Night with no other change.
 
 ## Title cards (OC Ultra style)
 
@@ -71,8 +79,8 @@ next bar.
 
 - **C1:** "THE REAL 405" / small line: "Orange County's freeways, built from open map data"
 - **C2:** "SUNRISE TO MIDNIGHT" / small line: "Five cars. One coast. Your pace."
-- **C3 (end logo):** the OC mark, "TOP SPEED OC: ULTRA", and "PLAY FREE IN YOUR BROWSER" (owner to confirm the
-  last line, or swap in a date or link)
+- **C3 (end logo):** the OC mark, "TOP SPEED OC: ULTRA", and "COMING SOON TO GOOGLE PLAY AND THE APP STORE" (the
+  owner's line; text only)
 
 The S7 wipe carries two small labels, "RETRO LOW" (left) and "ULTRA" (right).
 
