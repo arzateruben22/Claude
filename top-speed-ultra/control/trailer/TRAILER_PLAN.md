@@ -56,7 +56,7 @@ Drive starting on **I-405 North**, owner mode (any car). Seed = Math.random rese
 | S2 | Garage Founder reveal stage (`openReveal`, `revealHold`) | The stage's own reveal timeline from 1.6 s to its end (6.2 s), stretched over 2 bars: LED wake, the light sweep across the car | The stage's own lighting | none | OC Hypercar, Glacier Silver, ice LEDs | 102 | off |
 | S3 | Driver's seat (`cockpit`) | Locked seat view, hands on the wheel, cluster live, the freeway coming at you at ~100 mph | Day, clear | Moderate | Rossini GT, Rossini Red | 103, 25 s at 45 m/s | off (the car's cluster shows speed) |
 | S4 | Chase | Behind the car as the autopilot weaves through heavy traffic | Day, clear | Heavy | Vela E, Electric Blue | 104, 25 s at 40 m/s | **on** |
-| S5 | Cinematic, shot 2 (low rear three-quarter) | At 0.3 s a handbrake flick (0.5 s) with full steer and throttle: the tail steps out | Sunset, clear | Light | Rossini Corsa, Track Yellow | 105, 12 s at 30 m/s | off |
+| S5 | Cinematic, shot 2 (low rear three-quarter) | At 0.3 s a 0.3 s handbrake flick to the right, then half opposite lock for 1.2 s: the car slides sideways and gathers itself, then the autopilot drives on | Sunset, clear | Light | Rossini Corsa, Track Yellow | 105, 12 s at 30 m/s | off |
 | S6 | Cinematic, shot 0 ("the hero" rear three-quarter) | Long-lens tracking alongside, the tail lights glowing red, traffic ahead | Sunset, clear | Heavy | Rossini GT, Rossini Red | 106, 30 s at 31 m/s | off |
 | S7 | Chase | The same seeded drive rendered twice, Retro Low (Low + Retro style) and Ultra; the edit wipes left to right from Retro Low to Ultra across the bar | Day, clear | Moderate | Rossini Brio, Coast Blue | 107, 20 s at 31 m/s | off |
 | S8 | Cinematic shot 0 under the menu (the attract drive) | The main menu as a player first sees it, the hypercar driving behind it | Night, clear | Moderate | OC Hypercar, Glacier Silver | 108, 6 s attract | **on** (it is the menu) |
@@ -89,5 +89,17 @@ second, clean silent version without ticks is cheap to add if you want one).
   one re-shoot round.
 - `tools/trailer/cut.mjs` (to write) renders the cards with the game's fonts and the OC mark, and cuts with
   /usr/bin/ffmpeg to H.264 (yuv420p, CRF 18, 30 fps, faststart).
-- Measured cost: one reference frame took ~4 min end to end (most of it the page load in software rendering); full
-  shots are estimated in the next update once the first one has run.
+- Measured cost: one reference frame takes ~4 min end to end, most of it the page load in software rendering. A full
+  shot's per-frame time is measured on the first one; the estimate for the whole capture goes to the owner then, in PT.
+
+## What the reference frames showed (2026-11-25)
+
+All nine frames (S7 twice) rendered with no page errors, on I-405 North, at the expected speeds (S3 101 mph, S4 90 mph,
+the cinematic shots ~70 mph).
+- **S5's first try failed.** Full lock held for the whole shot spun the Corsa into the sound wall. With the flick and
+  opposite lock above, the car slides sideways (frames 30–60) and recovers.
+- **A faint ring** shows near the car when the sun is in frame (S6, and late in S5). It is in the 3D render, not page
+  UI, most likely the game's sun lens-flare ghost. It is left as the game draws it; S6 can be re-framed or moved to
+  Night if you'd rather not have it.
+- **S1 at sunrise** reads a little flat and dim from the drone height. Day would be brighter if you prefer.
+- **S8:** the menu honours the Night setting (lamps lit, the hypercar's lights on).

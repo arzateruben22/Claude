@@ -1,6 +1,6 @@
 // The trailer's deterministic capture: real in-game footage, frame by frame (control/trailer/TRAILER_PLAN.md).
 //   node tools/trailer/capture.mjs --build=<dir with top-speed-ultra.html> --shot=s3-cockpit --out=<dir> [--ref] [--size=1920x1080]
-// --ref records one reference frame (the shot's middle) instead of every frame. Shots are in shots.mjs.
+// --ref records one reference frame (the shot's middle) instead of every frame; --at=10,40,80 records those frames. Shots are in shots.mjs.
 //
 // How it stays deterministic:
 // - Math.random is a seeded generator (mulberry32), reseeded with the shot's seed just before the warm-up drive, so
@@ -88,17 +88,21 @@ async function run(variant, dir) {
         t += dt;
         g.autopilot(inp.c, cruise);
         const d = s.drift;
-        if (d && t >= d.at) { inp.c.steer = d.steer; inp.c.throttle = 1; inp.c.brake = 0; inp.c.handbrake = t < d.at + d.hand; }
+        // the drift: a handbrake flick into the turn, then opposite lock to hold the slide, then the autopilot again
+        if (d && t >= d.at && t < d.at + d.hand + d.hold) {
+          const flick = t < d.at + d.hand;
+          inp.c.steer = flick ? d.steer : -d.steer * d.counter; inp.c.throttle = flick ? 0.6 : 1; inp.c.brake = 0; inp.c.handbrake = flick;
+        }
       };
       g.setPaused(false);
     }, { s });
   }
-  if (!s.hud) await page.addStyleTag({ content: '.hud, .tbar, .hud-assists, .toast, .toasts, [class*="toast"], .corner, .touch { display: none !important; }' });
+  if (!s.hud) await page.addStyleTag({ content: '.hud, .tbar, .hud-assists, .toast, .toasts, [class*="toast"], .corner, .touch, .touch-hint, .touch-knob, .touch-rod, .touch-pedals, .asw-knob, .asw-track { display: none !important; }' });
   await page.evaluate(() => window.__det());
   // preroll: a few frames so programs compile and streamed tiles land before the first recorded frame (the sim
   // still advances; the warm-up already accounts for it)
   for (let i = 0; i < 6; i++) { await page.evaluate((ms) => window.__tick(ms), MS); await page.waitForTimeout(300); }
-  const list = REF ? [Math.floor(frames / 2)] : [...Array(frames).keys()];
+  const list = opt('at', '') ? opt('at', '').split(',').map(Number) : REF ? [Math.floor(frames / 2)] : [...Array(frames).keys()];
   let done = 0; const t0 = Date.now();
   for (let f = 0; f <= list[list.length - 1]; f++) {
     await page.evaluate(({ ms, f, s, n }) => {
