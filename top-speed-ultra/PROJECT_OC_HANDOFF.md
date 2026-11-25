@@ -11,14 +11,15 @@ model: routine work to `opus`, hard reasoning to `fable`.
   Ultra memory fix (owner-tested on his iPhone), the Paint tab fix, the Rossini Corsa without its wing.
   `--only=progression,render,phone` 75/76 (the known sleeve check). The suite's run-alone checks now start from the menu
   (ensureMenu).
-- **Also in flight:** `claude/retro-speed`: Retro Low flicker in the four Rossini/Vela cabins (the hypercar's fix
-  pattern: keepInside ramp, per-part depth offsets) and the lag near 200 mph (per-frame build budget; any LOD/streaming
-  budget change goes to the Fable queue as a prompt).
-- Those two branches live in worktrees of the session that started them; that session pushes them to origin when done.
-  If they are on origin and not merged into claude/tender-fermat-sk9rby: merge both, run
-  `--only=boot,render,progression,phone` (background, long timeout; known failure "sleeves from the seat on a phone";
-  "the Founder Edition's lights wake" can flake under load: re-run it with the check before it), show the owner
-  screenshots, publish dist/artifact.html to the main link.
+- **Next, unverified:** `claude/retro-speed` on origin (eb27fee, one commit off 1a6b267, before v35): Retro Low flicker at
+  the source (cabin and low trims cast no hard shadow, the shadow box snapped to the light's texel grid, far lane dots
+  without the slope offset, Nappa bands proud), streaming one chunk build a frame (the lag near 200 mph), traffic/pole
+  material and window fixes, new suite checks. Its job was stopped by a container restart before its after-captures,
+  perf runs and suite finished, so: merge it into claude/tender-fermat-sk9rby (resolve against v35), then verify it:
+  before/after Retro Low flicker captures for the GT, Brio, Corsa, Vela E and hypercar seat views in motion (the
+  owner's frames: control/owner-shots/2026-11-24-retro-*.png), frame time vs speed at 100/150/200/230 mph on Retro Low
+  and High at 393x852@3 (hitches > 50 ms), then `--only=boot,render,progression,phone`; one repair round at most; show
+  the owner phone screenshots; publish to the main link.
 - **Owner's goal:** launch a playable game this week, then keep updating and build a community.
 - **Owed before launch:** the full suite once; "Go to: navigation line ... Clear route hides them" times out the same
   way before and after recent changes (check it); a public build with owner mode off and no "TEST BUILD" badge; the
