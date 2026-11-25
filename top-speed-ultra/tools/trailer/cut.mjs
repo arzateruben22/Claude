@@ -76,10 +76,10 @@ const shotSeg = (s, extra = '') => {
   ff(['-framerate', String(FPS), '-i', path.join(FR, s.id, 'f%04d.jpg'), '-frames:v', String(N), '-vf', `scale=${W}:${H},setsar=1${extra}`, ...X264, out]);
   order.push(out);
 };
-const cardSeg = (id, bars) => {
-  const out = path.join(OUT, 'segments', `${id}.mp4`), d = bars * BAR;
+const cardSeg = (id, bars, pad = 0) => {
+  const out = path.join(OUT, 'segments', `${id}.mp4`), d = bars * BAR + pad / FPS;
   // in on its downbeat (a quarter of a beat), out in the last few frames before the next bar's cut
-  ff(['-loop', '1', '-framerate', String(FPS), '-i', path.join(OUT, 'cards', `${id}.png`), '-frames:v', String(n(bars)),
+  ff(['-loop', '1', '-framerate', String(FPS), '-i', path.join(OUT, 'cards', `${id}.png`), '-frames:v', String(n(bars) + pad),
     '-vf', `scale=${W}:${H},setsar=1,fade=t=in:st=0:d=${(BEAT / 4).toFixed(3)},fade=t=out:st=${(d - 0.12).toFixed(3)}:d=0.12`, ...X264, out]);
   order.push(out);
 };
@@ -100,7 +100,7 @@ shotSeg(by.s5); shotSeg(by.s6);
   order.push(out);
 }
 shotSeg(by.s8);
-cardSeg('c3', 1);
+cardSeg('c3', 1, 1);   // (the segments' rounded frame counts add up to 899: the end card holds the 900th, 30.000 s)
 
 // ---------------------------------------------------------------- the cut, clean and with beat marks
 const list = path.join(OUT, 'segments', 'list.txt');
@@ -111,8 +111,8 @@ const font = '/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf';
 const b = BEAT.toFixed(6), br = BAR.toFixed(6);
 const marks = [
   // a tick on every beat (3 frames), a bigger one on each bar's downbeat
-  `drawbox=x=W-150:y=40:w=26:h=26:color=white@0.9:t=fill:enable='lt(mod(t+0.0001\\,${b})\\,0.1)'`,
-  `drawbox=x=W-158:y=32:w=42:h=42:color=0x408cff@0.95:t=4:enable='lt(mod(t+0.0001\\,${br})\\,0.1)'`,
+  `drawbox=x=iw-150:y=40:w=26:h=26:color=white@0.9:t=fill:enable='lt(mod(t+0.0001\\,${b})\\,0.1)'`,
+  `drawbox=x=iw-158:y=32:w=42:h=42:color=0x408cff@0.95:t=4:enable='lt(mod(t+0.0001\\,${br})\\,0.1)'`,
   `drawtext=fontfile=${font}:fontsize=26:fontcolor=white@0.9:box=1:boxcolor=black@0.45:boxborderw=8:x=W-108:y=40:text='%{eif\\:floor((t+0.0001)/${br})+1\\:d}.%{eif\\:mod(floor((t+0.0001)/${b})\\,4)+1\\:d}'`,
   `drawtext=fontfile=${font}:fontsize=22:fontcolor=white@0.8:box=1:boxcolor=black@0.45:boxborderw=6:x=40:y=H-60:text='124 BPM  %{pts\\:hms}'`,
 ];

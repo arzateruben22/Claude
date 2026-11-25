@@ -1,6 +1,6 @@
 # Top Speed OC: Ultra: 30-second trailer plan (Step 1, for the owner's approval)
 
-Status: **approved 2026-11-25 PT**, with the owner's answers below; Step 2 (capture) under way.
+Status: **approved 2026-11-25 PT; captured and cut the same evening** (results at the end).
 
 ## Owner's answers (2026-11-25)
 
@@ -67,7 +67,7 @@ Drive starting on **I-405 North**, owner mode (any car). Seed = Math.random rese
 | S4 | Chase | Behind the car as the autopilot weaves through heavy traffic | Day, clear | Heavy | Vela E, Electric Blue | 104, 25 s at 40 m/s | **on** |
 | S5 | Cinematic, shot 2 (low rear three-quarter) | At 0.3 s a 0.3 s handbrake flick to the right, then half opposite lock for 1.2 s: the car slides sideways and gathers itself, then the autopilot drives on | Sunset, clear | Light | Rossini Corsa, Track Yellow | 105, 12 s at 30 m/s | off |
 | S6 | Cinematic, shot 0 ("the hero" rear three-quarter) | Long-lens tracking alongside, the tail lights glowing red, traffic ahead | Night, clear | Heavy | Rossini GT, Rossini Red | 106, 30 s at 31 m/s | off |
-| S7 | Chase | The same seeded drive rendered twice, Retro Low (Low + Retro style) and Ultra; the edit wipes left to right from Retro Low to Ultra across the bar | Day, clear | Moderate | Rossini Brio, Coast Blue | 107, 20 s at 31 m/s | off |
+| S7 | Chase | The same road, car and moment rendered twice, Retro Low (Low + Retro style) and Ultra (traffic differs between the presets: see results); the edit wipes left to right from Retro Low to Ultra across the bar | Day, clear | Moderate | Rossini Brio, Coast Blue | 107, 20 s at 31 m/s | off |
 | S8 | Cinematic shot 0 under the menu (the attract drive) | The main menu as a player first sees it, the hypercar driving behind it | Night, clear | Moderate | OC Hypercar, Glacier Silver | 108, 6 s attract | **on** (it is the menu) |
 
 
@@ -111,3 +111,25 @@ the cinematic shots ~70 mph).
   Night if you'd rather not have it.
 - **S1 at sunrise** reads a little flat and dim from the drone height. Day would be brighter if you prefer.
 - **S8:** the menu honours the Night setting (lamps lit, the hypercar's lights on).
+
+## Results (Steps 2 and 3, 2026-11-25 PT)
+
+- **Capture:** 8 shots, 841 frames (S7 twice), 1920x1080, 30 fps, every expected frame present, no page errors.
+  Speeds at the end of each shot: S1 70, S3 101, S4 89, S5 44 (after the drift), S6 70, S7 69 and 69, S8 69 mph.
+  First pass ~15 min for all eight in two lanes (~3.5 s a frame plus ~3 min of load per shot).
+- **The one re-shoot round** went to S1, S4 and S7. The first pass showed the Ultra picture settling over its first
+  ~0.8 s (a warm, dim look that then switched), S4 opening on empty road while the chase camera caught up, and S7's
+  two halves with different traffic. The fix: a 51-frame settle before recording on those three (`settle` in
+  shots.mjs). S1 and S4 came out clean; S7 too, except the traffic.
+- **Accepted, not fixed (no rounds left):**
+  - **S7 traffic:** Density "none" still spawns some traffic, and the two presets draw different traffic, so Retro
+    Low has a truck where Ultra has none. The wipe covers it.
+  - **Sky shift:** the sky darkens once for a moment, at S4 frame ~56 and in S7 Ultra's last 3 frames (after the
+    wipe). This is the game's own lighting.
+  - **Sun ring:** the faint lens-flare ring is in S5's first and last frames.
+- **Cut** (`tools/trailer/cut.mjs`, /usr/bin/ffmpeg 6.1.1): `trailer-beats.mp4` (the deliverable: silent, a tick on every
+  beat, a ring on every downbeat, a bar.beat counter and a timecode) and `trailer-clean.mp4` (no marks). Both H.264
+  High, yuv420p, 1920x1080, 30 fps, 900 frames, 30.000 s, faststart, no audio track. The cards are rendered in the
+  game's own page with its OC lockup and type.
+- **Frames** stay in the session scratchpad (not committed). To rebuild: the main-link build (812ecfb + cherry-pick
+  4897550, `npm run build`), then `capture.mjs --shot=<id>` per shot and `cut.mjs`.

@@ -10238,3 +10238,12 @@ owner's iPhone test. Promote it to the main link only after his phone test and t
 own mid-drive Ultra switch measures ~604 MB in the phone memory model, so the main link may still crash on that
 switch until the combined build is promoted. Also seen: "Go to: navigation line ... Clear route hides them" fails the
 same way before and after the paint fix (a locator timeout): check it in the pre-launch full suite.
+
+### 2026-11-25 (~6:50 PM PT): the 30-second trailer, real in-game footage (claude/trailer)
+
+Plan, capture and cut in `control/trailer/TRAILER_PLAN.md`; scripts in `tools/trailer/` (capture.mjs: seeded
+Math.random, a virtual clock driving the game's rAF at exactly 1/30 s a frame, fastForward warm-ups, the game's own
+cameras and the garage reveal stage; cut.mjs: cards in the game's page, ffmpeg). Source: the main-link build v34
+(812ecfb + 4897550). Eight shots, 1920x1080 at 30 fps, no page errors; one re-shoot round (S1, S4, S7: a longer
+settle). Output: a silent 30.000 s H.264 cut with beat marks at 124 BPM, plus a clean copy; sent to the owner. Known
+and accepted: S7's two presets show different traffic, a one-frame sky shift in S4, the sun's flare ring in S5.
