@@ -11,9 +11,12 @@ export const DRIFT_SRC = `(t, g, c, P) => {
   const u = t - P.at;
   if (u < P.flick) { c.steer = P.dir * P.steer; c.handbrake = true; c.throttle = P.thrFlick; c.brake = 0; return true; }
   if (u < P.flick + P.hold) {
-    const err = P.dir * P.angle - a;                       // + : the slide wants more angle toward dir
+    // the slip angle's sign, measured (drift-search, 2026-11-25): a flick to the left (steer +) gives a negative angle,
+    // so a slide toward dir reads -dir x angle, and more steer toward dir makes the angle more negative. (The first
+    // version assumed the opposite: its hold steered into the spin, and every bold drift spun past 55 deg.)
+    const SGN = -1, err = SGN * P.dir * P.angle - a;           // + : the angle must rise (toward +)
     c.handbrake = false; c.brake = 0; c.throttle = P.thr;
-    c.steer = cl(-P.dir * P.counter + P.k * err / 30, -1, 1);
+    c.steer = cl(-P.dir * P.counter + SGN * P.k * err / 30, -1, 1);
     return true;
   }
   c.handbrake = false;
