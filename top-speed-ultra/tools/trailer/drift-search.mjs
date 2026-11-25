@@ -98,7 +98,7 @@ for (const [i, P] of cands.entries()) {
     if (end.v < 15) bad ||= `slow ${end.v}`;
     if (Math.abs(end.a) > 6) bad ||= `still sliding ${end.a}`;
     const peak = Math.max(...log.map((l) => Math.abs(l.a))), driftT = log.filter((l) => l.on).length / 30, minWall = Math.min(...log.map((l) => l.wall));
-    return { bad, peak, driftT, minWall, endV: end.v, road: g.path.label, lanes: lanes(), score: Math.min(peak, 45) + 20 * driftT + Math.min(minWall, 4), log };
+    return { bad, peak, driftT, minWall, endV: end.v, road: g.path.label, lanes: lanes(), score: Math.min(peak, 45) + 20 * driftT + 4 * Math.min(minWall, 9), log };
   }, { s: S, P, N, src: DRIFT_SRC, seed: P.seed });
   results.push({ i, P, ...res });
   if (i % 10 === 9) console.error(`${i + 1}/${cands.length}, ${((Date.now() - t0) / (i + 1) / 1000).toFixed(1)} s each, ok so far ${results.filter((x) => !x.bad).length}`);
