@@ -101,7 +101,11 @@ async function run(variant, dir) {
   await page.evaluate(() => window.__det());
   // preroll: a few frames so programs compile and streamed tiles land before the first recorded frame (the sim
   // still advances; the warm-up already accounts for it)
-  for (let i = 0; i < 6; i++) { await page.evaluate((ms) => window.__tick(ms), MS); await page.waitForTimeout(300); }
+  // (S1, S4 and S7's first pass showed the Ultra picture settling in its first ~0.8 s and the chase camera catching up:
+  // those shots take a longer preroll, `settle` frames; the cinematic camera's move restarts once it is over)
+  const pre = s.settle ?? 6;
+  for (let i = 0; i < pre; i++) { await page.evaluate((ms) => window.__tick(ms), MS); if (i < 6) await page.waitForTimeout(300); }
+  if (s.cam === 'cinematic' || s.menu) await page.evaluate(({ s }) => { const g = window.__game; g.cineShot = s.cine; g.cineT = 0; }, { s });
   const list = opt('at', '') ? opt('at', '').split(',').map(Number) : REF ? [Math.floor(frames / 2)] : [...Array(frames).keys()];
   let done = 0; const t0 = Date.now();
   for (let f = 0; f <= list[list.length - 1]; f++) {
