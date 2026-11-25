@@ -246,6 +246,14 @@ async function pauseToMenu(page) {
   } else await p.getByRole('button', { name: 'Main menu', exact: true }).click();
   await page.waitForSelector('.overlay.menu', { timeout: 120000 });
 }
+// a check that starts on the menu, run alone (--check=): its group opens in a drive and the checks before it go back to the
+// menu, so when they are skipped the page is still in that (paused) drive. Back to the menu the way a player goes.
+async function ensureMenu(page) {
+  if (await game(page, () => window.__game.inAttract && !!document.querySelector('.overlay.menu'))) return;
+  await game(page, () => window.__game.setPaused(true));
+  await pauseToMenu(page).catch(() => game(page, () => window.__game.quitToMenu()));
+  await page.waitForSelector('.overlay.menu', { timeout: 120000 });
+}
 // the end card's payoff (Share, the value, the rank / gap line) must be inside the window and clear of the sticky button row, unscrolled
 const endCardGeometry = (page) => game(page, () => {
   const R = (s) => { const e = document.querySelector(s); if (!e) return null; const b = e.getBoundingClientRect(); return { top: Math.round(b.top), bottom: Math.round(b.bottom), left: Math.round(b.left), right: Math.round(b.right) }; };
@@ -3138,6 +3146,7 @@ await group('progression', async (use) => {
   await check('garage: the Vehicles carousel (centred car on the showroom stage, arrows and keys, n of m labels, locked cars show their miles), the Paint tab repaints the car live, the character card', async () => {
     // (the GT, in its factory paint: the checks before may leave another car chosen)
     // (through the App, whose settings are the ones a later pick saves: a game-only change would be undone by it)
+    await ensureMenu(page);
     await game(page, () => { const g = window.__game; window.__updateSettings({ owner: false, paints: {} }); g.profile.p.car = 'rossini-gt'; g.applyCarChoice(); });
     await page.waitForFunction(() => window.__game.carId === 'rossini-gt' && !window.__game.settings.owner, null, { timeout: 30000 });
     await page.locator('.mp-carline').click();
@@ -3958,6 +3967,7 @@ await group('render', async (use) => {
   // Programs are counted at the GL call (linkProgram), so one made and dropped within a frame (the environment map's
   // used to be) counts too. (The OC Hypercar from the check above, on a desktop: its live mirror; Moderate traffic.)
   await check('Ultra: no shader program compiled after the loading screen, in the first seconds of a drive or on the first View cycle', async () => {
+    await ensureMenu(page);
     const was = await game(page, () => {
       const g = window.__game, gl = g.renderer.getContext(), lp = gl.linkProgram;
       window.__links = [];

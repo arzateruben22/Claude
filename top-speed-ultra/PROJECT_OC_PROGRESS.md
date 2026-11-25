@@ -50,6 +50,12 @@ The main canvas is created with three's default `alpha: false`, so the OC Hyperc
 never reaches the page on Low, Medium or Retro (the paint session's lead, checked in the renderer's options). Not
 measured: a real iPhone. The final proof is the owner's phone.
 
+Follow-up after the merge into the work branch (ac9b349): "garage: the Vehicles carousel" and "Ultra: no shader..." timed
+out waiting for the menu when run alone (`--check=`). Not a game bug: both groups open in a paused drive and the checks
+before them go back to the menu, so run alone the page was still in that drive (the same failure on edf91e0's build with
+the same suite). The suite's `ensureMenu` now takes the page back as a player would (End drive, Main menu). Both pass
+alone; `--only=progression,render,phone` 75/76, the one failure the known "sleeves from the seat on a phone".
+
 ## 2026-11-24: the garage's centred car is never a black box (owner, iPhone, v30: "fix how it blacks out still when rotating cars")
 
 Branch `claude/carousel-blackout` on v30 (45ee8a2), not pushed, not published. Cause: a card centred by a swipe mounted a
