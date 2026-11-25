@@ -4,6 +4,52 @@ Newest first. Every claim names how it was checked. "Verified" means it was run 
 software rendering) through Playwright, using the game's `window.__game` test hooks. No real phone or GPU was
 available, so frame rates on real hardware are **not** measured.
 
+## 2026-11-24: Ultra fits a phone's graphics memory (owner, iPhone, v32: a mid-drive switch to Ultra "just keeps loading and refreshing")
+
+Branch `claude/ultra-ios-crash` on v32 (5df1a74), not pushed, not published (the live link is on v31 meanwhile). Cause, as
+far as a desktop can tell: iOS's per-page memory limit. The page asked for about 616 MB of GPU memory at the switch (the
+composer's two 4x MSAA half-float targets with depth, a 4096 shadow map, the canvas's own unused 4x MSAA buffer, ~240 MB of
+textures, and Retro Low's targets still alive under Ultra's) on top of a 110-220 MB JS heap and the texture canvases; iOS
+killed the page and the viewer reloaded it with Ultra saved, so it died again (the loop). v31 measures the same (604 MB), so
+it would very likely have crashed too: the warm-up moved the work under the sheet, it did not cause it. Fix (technical
+notes, "The phone's graphics-memory budget"): the old preset freed first, the leaks closed (post passes' targets, textures
+only the old preset used), a leaner composer, phone caps on High and Ultra (pixel ratio 1.5, 2K shadows, textures <= 1024,
+lean building atlases, no canvas MSAA), a staged phone warm-up, a crash-loop breaker (boots on Retro Low after a death on
+Ultra, with a notice), and a lost context on a phone on Ultra comes back on Retro Low with a note (never a reload).
+
+Measured (SwiftShader, Playwright, 393x852 CSS px at DPR 3, isMobile; the GPU memory a page asks for, counted from its
+WebGL calls by `tests/gpu-mem.mjs`: a model, not the phone's own number; scratchpad `ioscrash/` has the logs):
+
+| MB (GPU model) | v31 | v32 | this branch |
+|---|---|---|---|
+| menu, Retro Low | 119.8 | 125.8 | 90.0 |
+| driving Retro Low (baseline) | 140.4 | 146.4 | 110.7 |
+| mid-drive switch to Ultra, peak | 604.3 | 615.8 | 298.8 |
+| Ultra after 10 s of driving | 593.5 | 619.7 | 302.8 |
+| back on Retro Low (round 1) | 327.5 | 352.6 | 116.5 |
+| round 2: switch peak / back on Retro Low | | 681.1 / 414.8 | 286.2 / 116.8 |
+| round 3: switch peak / back on Retro Low | | 740.8 / 473.8 | 286.6 / 111.2 |
+| start on Ultra: menu / run start peak / back on Retro Low | | 630.4 / 644.4 / 376.6 | 320.5 / 334.4 / 123.9 |
+
+Ultra's pixel ratio 2 → 1.5 (drawing buffer 786x1704 → 589x1278); JS heap 109-223 MB in both (unchanged). Where v32's Ultra
+went: MSAA colour 81.7 + MSAA depth 40.9, shadow 64 + 64, five full-size half-float textures 51.1, four depth buffers 20.4,
+canvas 51.1, textures ~190, buffers 23. This branch's Ultra: MSAA 23 + 11.5, shadow 16 + 16, full-screen textures 28.7,
+canvas 8.6, textures ~160, buffers 24. A context lost mid-switch (WEBGL_lose_context 1.5 s into the Preparing Ultra sheet):
+the panel says why, the restore comes back on Retro Low at 105 MB, paused, one page load (no reload). A boot with a fresh
+`tsu.gpuRisk` mark and Ultra saved starts on Retro Low (saved) with a "Started on Retro Low" notice. Screenshots:
+`ioscrash/newlose-preparing-ultra.png`, `newlose-context-lost.png`, `newlose-context-restored.png`, `breaker-boot.png`,
+`new-ultra-driving.png`.
+
+Suite: `npx tsc --noEmit -p .` clean, `npm run build` clean; `npm test -- --only=boot,render,phone` 76/77, the one failure
+the known "sleeves from the seat on a phone" (full lock R: luminance spread 25, detail 2.25). Passing among them: "Ultra:
+no shader program compiled after the loading screen..." (0 programs in 188 frames after control), both lost-context
+checks, and the new phone check "phone 393 x 852 @3: a mid-drive switch to Ultra stays under the GPU memory budget, and
+Retro Low returns to baseline" (Retro Low 110.4 MB; switch peaks 301.8 and 302.5 MB, budget 350; back 117.9 and 116.4 MB,
+allowance +12). (That run's build predates only the boot notice's panel, which `breaker.mjs` checked on its own build.)
+The main canvas is created with three's default `alpha: false`, so the OC Hypercar paint's 0.3 alpha (its bloom share)
+never reaches the page on Low, Medium or Retro (the paint session's lead, checked in the renderer's options). Not
+measured: a real iPhone. The final proof is the owner's phone.
+
 ## 2026-11-24: the garage's centred car is never a black box (owner, iPhone, v30: "fix how it blacks out still when rotating cars")
 
 Branch `claude/carousel-blackout` on v30 (45ee8a2), not pushed, not published. Cause: a card centred by a swipe mounted a

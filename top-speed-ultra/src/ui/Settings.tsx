@@ -90,7 +90,7 @@ export function SettingsPanel({ game, settings, update, sec, setSec, onDone, onF
             <div className="field"><label>Graphics</label>
               <Seg label="Graphics" value={g} options={['retro', 'ultra'] as Graphics[]} labels={(v) => GRAPHICS[v].label} onChange={(v) => update(graphicsPatch(v))} />
               {/* one line of help: what the choice is and, on Ultra, that Adaptive quality runs behind it, with where it stands now */}
-              <p className="help" id="adaptive-note">{GRAPHICS[g].blurb}{g === 'ultra' && <> Adaptive quality stays on behind it: it turns effects down one at a time when frames run long, and back up when there is room.{' '}<GovNow game={game} /></>}</p>
+              <p className="help" id="adaptive-note">{GRAPHICS[g].blurb}{g === 'ultra' && game?.dev.phone && <> On a phone it keeps inside the phone's graphics memory: a 2K shadow map and up to 1.5x resolution.</>}{g === 'ultra' && <> Adaptive quality stays on behind it: it turns effects down one at a time when frames run long, and back up when there is room.{' '}<GovNow game={game} /></>}</p>
             </div>
             <div className="field"><label>Menu theme</label>
               <Seg label="Menu theme" value={settings.theme} options={['auto', 'light', 'dark'] as Theme[]} labels={(v) => ({ auto: 'Auto', light: 'Light', dark: 'Dark' })[v]} onChange={(v) => update({ theme: v })} />

@@ -34,6 +34,7 @@ import { equippedPaint } from '../store/locker';
 import { OcLockup, OcWatermark } from './Mark';
 import { Ico } from './Icons';
 import { Homes } from './Homes';
+import { takeGpuRisk } from '../game/render/budget';
 import type { Job } from '../game/story';
 import { WorldMap } from './WorldMap';
 import { RadioCard } from './RadioCard';
@@ -123,7 +124,18 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
   const [loadingText, setLoadingText] = useState('Starting the engine');
   // the loading bar's share done (0..1) while the game measures its work (the build, the warm-up); null: it runs on its own
   const [loadProgress, setLoadProgress] = useState<number | null>(null);
-  const [settings, setSettings] = useState<Settings>(loadSettings);
+  // the crash-loop breaker (render/budget.ts): a phone whose last page died on High or Ultra (no event; the viewer
+  // reloaded it) starts on Retro Low, saved, and is told why once the menu is up
+  const bootNote = useRef('');
+  const [bootShown, setBootShown] = useState('');
+  const [settings, setSettings] = useState<Settings>(() => {
+    const s = loadSettings(), risk = takeGpuRisk();
+    if (!risk || !(s.quality === 'high' || s.quality === 'ultra')) return s;
+    const next = { ...s, ...graphicsPatch('retro') };
+    saveSettings(next);
+    bootNote.current = `The game closed on ${risk.quality === 'ultra' ? 'Ultra' : 'High'} last time (this phone ran short of graphics memory), so it started on Retro Low. You can pick Ultra again in Settings.`;
+    return next;
+  });
   // the menu's tile: Free Drive, or Easy / Medium / Extreme (timed runs, Speed Survival's rules); saved with the settings
   const tile: Tile = settings.tile;
   const mode: Mode = tile === 'free' ? 'free' : 'survival';
@@ -131,6 +143,8 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
   const [toasts, setToasts] = useState<{ id: number; text: string; kind: string }[]>([]);
   const [hudOn, setHudOn] = useState(true);
   const [lost, setLost] = useState(false);
+  const [lostNote, setLostNote] = useState('');                       // what the game did about a lost context (a step down)
+  const [lostBack, setLostBack] = useState(false);                    // back, with a note: the panel stays until Resume
   const [error, setError] = useState('');
   const [boardMode, setBoardMode] = useState<Mode>('survival');
   const [moreOpen, setMoreOpen] = useState(false);                    // the menu's overflow: the screens that are not on the front page
@@ -205,7 +219,8 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
         over: (r) => { setResult(r); setScreen('over'); },
         pause: (on) => setScreen((s) => (on ? (s === 'playing' ? 'paused' : s) : s === 'paused' ? 'playing' : s)),
         loading: (on, text, progress) => { if (text) setLoadingText(text); setLoadProgress((was) => (!on ? was : progress !== undefined ? Math.max(0, Math.min(1, progress)) : null)); setBusy(on); },
-        context: (l) => setLost(l),
+        context: (l, note) => { setLostNote(note ?? ''); setLostBack(!l); setLost(l || !!note); },
+        settings: (p) => update(p),
         hudToggle: (on) => setHudOn(on),
         corner: (c) => update({ corner: c }),
         foot: (on) => { setRadial(null); setRadioOpen(false); setPanel(null); setScreen(on ? 'foot' : 'playing'); },
@@ -222,7 +237,7 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
     (window as unknown as { __updateSettings: (p: Partial<Settings>) => void }).__updateSettings = (p) => update(p);
     (window as unknown as { __castBudget: () => Promise<unknown> }).__castBudget = (pack?: boolean) => import('./castStage').then((m) => m.castBudget([2, 1, 0], pack === true));
     (window as unknown as { __castInfo: () => Promise<unknown> }).__castInfo = () => import('./castStage').then((m) => { let s = {}; try { s = JSON.parse(localStorage.getItem('tsu.settings') ?? '{}') ?? {}; } catch { /* no save */ } return m.castInfo(s); });
-    g.init().then(() => setScreen('menu'), (e) => setError(String(e)));
+    g.init().then(() => { setScreen('menu'); if (bootNote.current) setBootShown(bootNote.current); }, (e) => setError(String(e)));
     return () => { g.dispose(); game.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -694,7 +709,6 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
       )}
 
       {error && <div className="overlay center"><div className="panel narrow"><Brand /><p>{error}</p></div></div>}
-      {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>The browser dropped the 3D context for a moment. It's coming back on its own; press Resume when it does.</p><button className="btn primary" onClick={resume}>Resume</button></div></div>}
 
       {inMenu && (
         <div className="overlay menu themed" data-panel={panel ?? 'home'}>
@@ -833,6 +847,9 @@ export function App({ slots }: { slots?: AppSlots } = {}) {
               : <div className="loadbar det" role="progressbar" aria-label={loadingText} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(loadProgress * 100)}><i style={{ width: `${Math.round(loadProgress * 100)}%` }} /></div>}</div>
         </div>
       )}
+      {bootShown && !lost && <div className="overlay center"><div className="panel narrow" role="alertdialog" aria-label="Started on Retro Low"><h2>Started on Retro Low</h2><p>{bootShown}</p><button className="btn primary" onClick={() => setBootShown('')}>OK</button></div></div>}
+      {/* (over everything, the pause screen and a "Preparing Ultra" sheet too: a loss mid-switch must be seen) */}
+      {lost && <div className="overlay center"><div className="panel narrow"><h2>Graphics reset</h2><p>{lostBack ? 'The 3D context is back.' : 'The browser dropped the 3D context for a moment. It\'s coming back on its own; press Resume when it does.'}</p>{lostNote && <p>{lostNote}</p>}<button className="btn primary" onClick={() => { if (lostBack) { setLost(false); setLostNote(''); setLostBack(false); } resume(); }}>Resume</button></div></div>}
     </div>
   );
 }

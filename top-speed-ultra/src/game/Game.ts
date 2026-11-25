@@ -12,12 +12,14 @@ import { Settings, QUALITY, DENSITY, Mode, modeOf, STARTS, TimeOfDay, Weather, l
 import type { Difficulty } from './settings';
 import { MinuteMeter, DriftTracker, bestOf, bestsFor, recordBest, recordDrift, driftBest, driftBests, migrateBests, shareLine, round1 } from './bests';
 import type { Board, Kind, Placed } from './bests';
-import { presetFor, retroOn, GOV_FLOOR, loadBench, saveBench, loadDisplay, saveDisplay } from './settings';
+import { presetFor, retroOn, graphicsPatch, GOV_FLOOR, loadBench, saveBench, loadDisplay, saveDisplay } from './settings';
 import type { QualityPreset, Quality, Density, BenchPick } from './settings';
 import { FrameGovernor, Rung, T60, T30, STEP as GOV_STEP, capPeriod } from './render/governor';
 import { RetroStyle } from './render/style';
 import { Input, Controls } from './input';
-import { configureTextures } from './textures';
+import { configureTextures, leanTextures } from './textures';
+import { deviceClass, capPreset, armGpuRisk, clearGpuRisk } from './render/budget';
+import type { DeviceClass } from './render/budget';
 import { Network, Hit, Sign, Overpass, GANTRY_AHEAD, GANTRY_MIN_S } from './world/Network';
 import { Path, Junction, ORIGIN, STEP } from './world/Path';
 import { Roads } from './world/Roads';
@@ -214,7 +216,10 @@ export interface GameEvents {
   pause: (on: boolean) => void;
   /** the loading screen on or off; `progress` (0..1) when the work is measured, else the bar runs on its own */
   loading: (on: boolean, text?: string, progress?: number) => void;
-  context: (lost: boolean) => void;
+  /** the 3D context lost (true) or back; `note` says what the game did about it (a step down to Retro Low) */
+  context: (lost: boolean, note?: string) => void;
+  /** the game changes a setting the way Settings does (the App's state and the save): a lost context's step down */
+  settings?: (patch: Partial<Settings>) => void;
   hudToggle: (show: boolean) => void;
   corner: (mode: Settings['corner']) => void;
   /** on foot at a venue (the game's UI hides; the venue's page is up) or back in the car */
@@ -223,6 +228,8 @@ export interface GameEvents {
 
 export class Game {
   readonly renderer: THREE.WebGLRenderer;
+  /** a phone or a desktop (render/budget.ts): a phone takes the memory caps on High and Ultra */
+  readonly dev: DeviceClass;
   readonly scene = new THREE.Scene();
   readonly camera: THREE.PerspectiveCamera;
   readonly skyCam = new THREE.PerspectiveCamera(50, 1, 5, 2500);
@@ -351,12 +358,15 @@ export class Game {
     canvas.className = 'game-canvas';
     canvas.setAttribute('aria-label', 'The view from the driver\'s seat on an Orange County freeway');
     host.appendChild(canvas);
-    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', stencil: false });
+    // (a phone: no MSAA on the canvas itself; render/budget.ts says why)
+    this.dev = deviceClass();
+    leanTextures(this.dev.phone);
+    this.renderer = new THREE.WebGLRenderer({ canvas, antialias: !this.dev.phone, powerPreference: 'high-performance', stencil: false });
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 0.92;
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    configureTextures(QUALITY[settings.quality].texture, this.renderer.capabilities.getMaxAnisotropy());
+    configureTextures(capPreset(QUALITY[settings.quality], this.dev).texture, this.renderer.capabilities.getMaxAnisotropy());
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.05, 2000);
     this.scene.add(this.camera);
     this.env = new Environment(this.scene, this.renderer);
@@ -474,6 +484,17 @@ export class Game {
     if (run === this.starts) this.ev.loading(false);
   }
   private warmChain: Promise<void> = Promise.resolve();
+  // the crash-loop breaker (render/budget.ts): when the last phone warm-up finished (0: none pending), frames since
+  private riskArmed = false;
+  private riskAt = 0;
+  private riskFrames = 0;
+  // the mark goes once the preset has drawn 30 frames over 15 s after its warm-up: it held. (A phone that dies before
+  // that boots on Retro Low next time; a preset left for Retro or Medium clears it at once.)
+  private riskTick() {
+    if (!this.riskArmed) return;
+    if (!this.preset().post) { this.riskArmed = false; this.riskAt = 0; clearGpuRisk(); return; }
+    if (this.riskAt && this.warming === 0 && ++this.riskFrames >= 30 && performance.now() - this.riskAt > 15000) { this.riskArmed = false; this.riskAt = 0; clearGpuRisk(); }
+  }
   /** the last warm-up (tests): why, how long, programs before and after, textures, the views drawn */
   warmLog: { why: string; ms: number; programs: [number, number]; textures: number; views: string[] } | null = null;
   warmNeeded() { const q = this.preset(); return q.post && !this.style; }
@@ -488,7 +509,14 @@ export class Game {
     if (!this.warmNeeded() || this.ctxLost || !this.net || !this.roads) return;
     const r = this.renderer, gl = r.getContext(), t0 = performance.now(), p0 = r.info.programs?.length ?? 0;
     const say = (k: number) => { if (text) this.ev.loading(true, text, from + (to - from) * k); };
-    const breathe = () => new Promise<void>((res) => setTimeout(res, 0));
+    // on a phone (2026-11-24, the iPhone crash) the work is staged: the yields wait for a display frame (the browser
+    // composites, and frees what was let go, between the steps), textures go up four at a time, and only those of parts
+    // that can show: a part hidden now that a camera View shows (the cockpit from outside) is uploaded by that View's
+    // hidden frame below, one View per frame
+    const phone = this.dev.phone;
+    const breathe = () => new Promise<void>((res) => { if (phone && typeof requestAnimationFrame === 'function') requestAnimationFrame(() => setTimeout(res, 0)); else setTimeout(res, 0); });
+    // the crash-loop breaker (render/budget.ts): marked before a phone's High or Ultra warm-up, cleared once it has drawn
+    if (phone) { armGpuRisk(this.settings.quality, text ?? 'quiet'); this.riskArmed = true; this.riskAt = 0; this.riskFrames = 0; }
     const px = new Uint8Array(4);
     const finish = () => { try { r.setRenderTarget(null); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); } catch { /* a lost context */ } };
     this.warming++;
@@ -503,21 +531,23 @@ export class Game {
         const t = v as (THREE.Texture & { isRenderTargetTexture?: boolean }) | null;
         if (t && t.isTexture && !t.isRenderTargetTexture && t.image) tex.add(t);
       };
-      this.scene.traverse((o) => {
+      const walk = (o: THREE.Object3D) => {
+        if (phone && !o.visible) return;
         const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
-        if (!m) return;
-        for (const mm of Array.isArray(m) ? m : [m]) {
+        if (m) for (const mm of Array.isArray(m) ? m : [m]) {
           const rec = mm as unknown as Record<string, unknown>;
           for (const k in rec) add(rec[k]);
           const u = (mm as THREE.ShaderMaterial).uniforms;
           if (u) for (const k in u) add(u[k]?.value);
         }
-      });
+        for (const c of o.children) walk(c);
+      };
+      walk(this.scene);
       add(this.scene.environment); add(this.scene.background);
       let i = 0;
       for (const t of tex) {
-        r.initTexture(t);
-        if (++i % 12 === 0) { say((0.25 * i) / tex.size); await breathe(); if (this.ctxLost) return; }
+        r.initTexture(t); this.warmTex.add(t);
+        if (++i % (phone ? 4 : 12) === 0) { say((0.25 * i) / tex.size); await breathe(); if (this.ctxLost) return; }
       }
       say(0.25); await breathe();
       // 2. programs, for the target the main view draws into (the composer's; the live mirrors draw into the same kind)
@@ -551,6 +581,7 @@ export class Game {
         const v = this.view3(); this.car.setOutsideView(!(v === 'cockpit' || v === 'free'));
       }
       this.warmLog = { why: text ?? 'quiet', ms: Math.round(performance.now() - t0), programs: [p0, r.info.programs?.length ?? 0], textures: tex.size, views: list };
+      if (phone) this.riskAt = performance.now();                // the breaker's clock starts: riskTick clears the mark
     } finally {
       this.warming--;
       this.lastDrawn = 0;                                        // the next frame's interval isn't the loading screen's
@@ -733,7 +764,7 @@ export class Game {
     if (d && this.traffic) this.applyDensity();
     if (q) {
       this.stopBench();                    // a graphics check running on the menu is moot once the player picks a preset
-      configureTextures(QUALITY[s.quality].texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true);
+      configureTextures(capPreset(QUALITY[s.quality], this.dev).texture, this.renderer.capabilities.getMaxAnisotropy()); this.applyQuality(true);
       // the new preset prepared before it is driven: mid-drive (the pause screen's Settings) behind a short "Preparing
       // Ultra" sheet; on the menu quietly, for its film camera (the run's warm-up does the rest at its start)
       if (this.attract) void this.warmUp(null); else void this.prepareSwitch();
@@ -1303,6 +1334,14 @@ export class Game {
   // ----------------------------------------------------------------------------------------- graphics quality
   private applyQuality(rebuild = false) {
     const q = this.preset();
+    // (2026-11-24, the iPhone crash) the old preset's GPU memory goes first, before anything of the new one is made: the
+    // composer with every pass's own targets (EffectComposer.dispose frees only its two buffers: the bloom chain and
+    // GTAO's three targets were left behind at every switch), and the Retro pass's target when Retro is leaving. Three
+    // allocates the new targets and textures at their first use (the warm-up or the first frame), so the two presets'
+    // GPU memory is never alive at once (it was: about 616 MB at 393x852 DPR 3, Retro Low's still in place under Ultra's)
+    this.disposeComposer();
+    if (this.style && !(retroOn(this.settings) && !this.benchQ)) { this.style.detach(); this.style = null; }
+    const before = rebuild ? this.sceneTextures() : null;
     this.syncLive();
     this.startScale = this.pickStart();
     this.govScale = this.startScale; this.renderScale = q.renderScale * this.govScale;
@@ -1317,17 +1356,28 @@ export class Game {
       const p = this.phys;
       for (let i = 0; i < 200 && this.roads.update(p.x, p.z, Math.sin(p.psi), Math.cos(p.psi), 6) + this.terrain.update(p.x, p.z, 3) > 0; i++) { /* rebuild what's in view */ }
     }
-    this.composer?.dispose(); this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.grade = null;
     if (q.post) {
       const size = this.renderer.getDrawingBufferSize(new THREE.Vector2());
       const rt = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, samples: q.msaa });
       const c = new EffectComposer(this.renderer, rt);
+      // the second buffer only ever takes full-screen passes (the scene is drawn into the first: draw() puts the buffers
+      // back in order after each frame), so it needs neither MSAA nor a depth buffer: 8 bytes a pixel, not 56
+      c.renderTarget2.dispose();
+      c.renderTarget2 = new THREE.WebGLRenderTarget(Math.max(1, size.x), Math.max(1, size.y), { type: THREE.HalfFloatType, depthBuffer: false });
+      c.writeBuffer = c.renderTarget2; c.readBuffer = c.renderTarget1;
       c.addPass(new RenderPass(this.scene, this.camera));
-      if (q.ao) { this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75; c.addPass(this.gtao); }
+      if (q.ao) {
+        this.gtao = new GTAOPass(this.scene, this.camera, size.x, size.y); this.gtao.blendIntensity = 0.75;
+        // (its AO and denoise targets are drawn full-screen: no depth buffers; the normal pass keeps its depth texture)
+        this.gtao.gtaoRenderTarget.depthBuffer = false; this.gtao.pdRenderTarget.depthBuffer = false;
+        c.addPass(this.gtao);
+      }
       // Ultra's bloom is set so the hypercar's LEDs bloom at night without the sky blowing out: a lower threshold
       // (0.85) lets the lamps and the cluster through, a touch more strength (0.3); High keeps its lighter bloom
       if (q.bloom) {
         this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), q.grade ? 0.3 : 0.22, 0.45, q.grade ? 0.85 : 0.92);
+        // (its chain is drawn full-screen: no depth buffers on its eleven targets)
+        for (const t of [this.bloom.renderTargetBright, ...this.bloom.renderTargetsHorizontal, ...this.bloom.renderTargetsVertical]) t.depthBuffer = false;
         // (2026-11-23) the threshold reads luminance x the frame's alpha: every material writes alpha 1, so nothing
         // changes, except the OC Hypercar's paint, which writes its bloom share (car-mats paint o.bloom): its sunlit
         // white body bloomed as a halo round the whole car on Ultra by day, its LEDs and every other light still bloom
@@ -1371,13 +1421,50 @@ export class Game {
       this.composer = c;
     }
     this.applyStyle();
+    // the textures only the old preset's world, car and look used (Ultra's building atlases and their maps, the car's
+    // high tier, the maps Retro's toon materials don't read...) are let go now, with what the last warm-up uploaded:
+    // three would keep them on the GPU for the session. One the scene takes again later is simply uploaded again then
+    // (each still has its image). Compared against the scene as it will be drawn (after the style is attached).
+    if (before) {
+      const now = this.sceneTextures();
+      for (const t of before) if (!now.has(t)) t.dispose();
+      for (const t of this.warmTex) if (!now.has(t) && !before.has(t)) t.dispose();
+      this.warmTex.clear();
+    }
     this.govLadder(false);                 // the preset's ladder, from the top: the effects as the preset has them
     this.resize(true);                     // a new composer (and grade pass) takes the size even when the canvas kept it
+  }
+  private warmTex = new Set<THREE.Texture>();   // what the last warm-ups uploaded (a preset switch lets go what is unused)
+  // the composer, its buffers and every pass's own targets and materials (after a lost context: dropped, not disposed,
+  // since three's dispose would send the old context's handles to the new one)
+  private disposeComposer(drop = false) {
+    const c = this.composer;
+    this.composer = null; this.bloom = null; this.gtao = null; this.outputSat = null; this.grade = null;
+    if (!c || drop) return;
+    for (const p of c.passes) (p as { dispose?: () => void }).dispose?.();
+    c.dispose();
+  }
+  // every texture the scene's materials hold (not render targets' own): what a preset switch compares, before and after
+  private sceneTextures(): Set<THREE.Texture> {
+    const out = new Set<THREE.Texture>();
+    const add = (v: unknown) => { const t = v as (THREE.Texture & { isRenderTargetTexture?: boolean }) | null; if (t && t.isTexture && !t.isRenderTargetTexture) out.add(t); };
+    this.scene.traverse((o) => {
+      const m = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+      if (!m) return;
+      for (const mm of Array.isArray(m) ? m : [m]) {
+        const rec = mm as unknown as Record<string, unknown>;
+        for (const k in rec) add(rec[k]);
+        const u = (mm as THREE.ShaderMaterial).uniforms;
+        if (u) for (const k in u) add(u[k]?.value);
+      }
+    });
+    return out;
   }
 
   // ----------------------------------------------------------------------------------------- the frame-time governor
   // the preset in force: the graphics check's while it runs, else the player's (Retro on Low its own)
-  private preset(): QualityPreset { return this.benchQ ? QUALITY[this.benchQ] : presetFor(this.settings); }
+  // (on a phone, High and Ultra with render/budget.ts's caps: pixel ratio, shadow map, texture size)
+  private preset(): QualityPreset { return capPreset(this.benchQ ? QUALITY[this.benchQ] : presetFor(this.settings), this.dev); }
   private syncLive() {
     const p = this.preset();
     Object.assign(this.live, p);
@@ -1444,7 +1531,7 @@ export class Game {
     if (this.gtao) this.gtao.enabled = ao;
     if (this.bloom) this.bloom.enabled = bloom;
     const c = this.composer;
-    if (c && c.renderTarget1.samples !== msaa) for (const rt of [c.renderTarget1, c.renderTarget2]) { rt.samples = msaa; rt.dispose(); }
+    if (c && c.renderTarget1.samples !== msaa) { c.renderTarget1.samples = msaa; c.renderTarget1.dispose(); }   // (the second buffer has none: applyQuality)
     const L = this.live;
     if (L.shadows !== shadows || L.drawDistance !== draw) {
       L.shadows = shadows; L.drawDistance = draw;
@@ -1658,20 +1745,37 @@ export class Game {
     this.restorers.add(fn);
     return () => { this.restorers.delete(fn); };
   }
+  // A loss is never answered with a reload (the page keeps its state: the drive waits, paused, under "Graphics reset").
+  // On a phone on High or Ultra, or anywhere in the middle of a warm-up (a preset switch), a loss is most likely the
+  // memory running out, so the game comes back on Retro Low (graphicsPatch('retro'), set as Settings does, so it is
+  // saved and the next boot starts there too) and says so; the player can pick Ultra again. Elsewhere (the app went to
+  // the background, a desktop driver reset) it comes back as it was.
+  lossNote = '';
   private onContextLost = (e: Event) => {
     e.preventDefault();                                         // or the browser never offers it back
     if (this.ctxLost) return;
     this.ctxLost = true;
     this.setPaused(true);
-    this.ev.context(true);
+    const q = this.preset();
+    this.lossNote = '';
+    if (q.post && !this.benchQ && !this.retroDown && !document.hidden && (this.dev.phone || this.warming > 0)) {   // (hidden: the app went to the background, not memory)
+      this.lossNote = `${q.label} needed more graphics memory than this ${this.dev.phone ? 'phone' : 'device'} gave it, so the game comes back on Retro Low. You can pick Ultra again in Settings.`;
+      this.riskArmed = false; this.riskAt = 0; clearGpuRisk();
+      this.retroDown = true;
+      // (the world is rebuilt for Retro Low now, while nothing can be drawn; the restore then makes Retro's targets only)
+      try { if (this.ev.settings) this.ev.settings(graphicsPatch('retro')); else this.updateSettings({ ...this.settings, ...graphicsPatch('retro') }); } catch (err) { console.warn('step down', err); }
+      this.retroDown = false;
+    }
+    this.ev.context(true, this.lossNote);
   };
+  private retroDown = false;
   private onContextRestore = () => {
     if (!this.ctxLost) return;                                  // one restore per loss
     this.ctxLost = false;
     const n = ++this.contextRestores;
     try { this.restoreGpu(); } catch (e) { console.warn('context restore', e); }
     for (const fn of [...this.restorers]) { try { fn(n); } catch (e) { console.warn('context restore hook', e); } }
-    this.ev.context(false);
+    this.ev.context(false, this.lossNote);
   };
   private restoreGpu() {
     // the environment map, drawn again now; any material holding the old map as its own envMap takes the new one
@@ -1703,7 +1807,7 @@ export class Game {
     this.renderer.shadowMap.needsUpdate = true;
     // the composer and its targets made again at the current size, the Retro pass kept. What went with the old context
     // is dropped, not disposed, here and below: three's dispose would send its stale handles to the new context
-    this.composer = null;
+    this.disposeComposer(true);
     this.applyQuality();
     // the garage's reveal stage, if one is open: its own environment map was GPU-only too
     const r = this.rv;
@@ -1973,6 +2077,7 @@ export class Game {
     const interval = this.lastDrawn > 0 ? now - this.lastDrawn : 0; this.lastDrawn = now;
     this.frames++;
     if (this.ctxLost) return;
+    this.riskTick();
     let dt = (now - this.last) / 1000; this.last = now;
     if (!(dt > 0)) dt = 1 / 60;
     dt = Math.min(dt, 0.1);
@@ -2041,7 +2146,13 @@ export class Game {
     // the frame's draw calls and triangles for the overlay: every pass of the main view counted together
     const info = this.renderer.info, auto = info.autoReset;
     info.reset(); info.autoReset = false;
-    if (this.composer) this.composer.render(dt); else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
+    if (this.composer) {
+      const c = this.composer;
+      c.render(dt);
+      // the buffers back in order (an odd number of swapping passes leaves them crossed): the scene is always drawn into
+      // the first, the multisampled one with a depth buffer, so the second needs neither (applyQuality)
+      if (c.readBuffer !== c.renderTarget1) c.swapBuffers();
+    } else if (this.style) this.style.render(this.scene, this.camera, this.env); else this.renderer.render(this.scene, this.camera);
     this.perfCalls = info.render.calls; this.perfTris = info.render.triangles;
     info.autoReset = auto;
     this.env.renderFlare();
@@ -3019,7 +3130,7 @@ export class Game {
     try { f?.dispose(); } catch (e) { console.warn('venue dispose', e); }
     this.footHost?.remove(); this.footHost = null;
     const app = this.host.parentElement; if (app) app.style.display = '';
-    configureTextures(QUALITY[this.settings.quality].texture, this.renderer.capabilities.getMaxAnisotropy());
+    configureTextures(capPreset(QUALITY[this.settings.quality], this.dev).texture, this.renderer.capabilities.getMaxAnisotropy());
     this.ev.foot?.(false);
     this.resize(true);
   }
