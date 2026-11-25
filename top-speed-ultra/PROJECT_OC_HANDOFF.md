@@ -23,6 +23,10 @@ model: routine work to `opus`, hard reasoning to `fable`.
   owner's pick: Discord, a feedback form...). Known failing check: "sleeves from the seat on a phone" (since v27).
   Flaky under load: "the Founder Edition's lights wake" (re-run with the check before it).
 - **Parked:** the 30-second trailer (after launch); the Fable queue below.
+- **iOS Ultra crash (2026-11-24, evening PT):** v32's mid-drive switch to Ultra killed the page on the owner's iPhone;
+  the live link went back to v31 (which measures nearly the same, about 604 MB, so it would very likely crash too). The
+  fix is on branch `claude/ultra-ios-crash` (not pushed, not published); PROGRESS has the tables. It needs the owner's
+  iPhone run before it is published. The Fable queue has the follow-up memory-budget design.
 
 Ready-to-paste prompt for the next chat:
 
@@ -798,6 +802,32 @@ store stays in test mode; honest labels. Proof: npx tsc --noEmit (both configs),
 npm test -- --only=cast, then cast-pack, cast-venues, cast-pack-venues, boot (one Playwright process at a time);
 frames: the pilot beside his sheet front/side/back and head front/3-4/profile, in both venues by day at 2 m in third
 person, the picker at 390x844 DPR 3. Log in PROJECT_OC_PROGRESS.md and PROJECT_OC_CAST.md.
+```
+
+### Fable prompt: a real memory budget for phones (queued 2026-11-24 by the iOS Ultra crash fix)
+
+The owner's iPhone died on a mid-drive switch to Ultra (v32). Branch `claude/ultra-ios-crash` shipped safe caps
+(render/budget.ts: pixel ratio 1.5, 2K shadows, lean building atlases, no canvas MSAA on phones; the old preset freed
+first; no leaks; a crash-loop breaker; a lost context steps down to Retro Low). Measured with the WebGL call model at
+393x852 DPR 3: Ultra about 300 MB of GPU memory (was 616), start on Ultra about 334 MB (was 644). That is a cap, not a
+budget: the JS heap (110-220 MB), the CPU canvases every procedural texture keeps, and the other WebGL users (the garage
+stage, the venues) are counted against nothing, and nothing reacts to the phone's real headroom.
+
+```
+Fable prompt. Project OC (top-speed-ultra), a memory/LOD budget for phones. Branch: a new claude/mem-budget from
+claude/ultra-ios-crash. Read CLAUDE.md, PROJECT_OC_TECHNICAL_NOTES.md ("The phone's graphics-memory budget", "The
+warm-up", "A lost WebGL context", the governor), src/game/render/budget.ts, src/game/Game.ts (applyQuality, warmJob,
+onContextLost), src/game/textures.ts, src/game/world/Roads.ts and Terrain.ts, tests/gpu-mem.mjs. Design and build: one
+page-wide memory budget (GPU model + JS heap + texture source canvases) with per-preset LOD and texture tiers that fit
+it on a 4 GB and a 6 GB iPhone; free texture source canvases after upload where the context-restore path can rebuild
+them (restoreGpu re-uploads from the CPU source today, so a freed source must be re-paintable); sign and label textures
+pooled or atlased; a memory rung for the governor (or a budget check before a switch) instead of fixed caps; decide
+whether GTAO belongs on phones at all. Rules: don't re-theme; store in test mode; don't touch the garage paint preview
+(another session's); Retro Low must look the same. Proof: tests/gpu-mem.mjs tables at 393x852@3 and 375x667@2 for a
+start on Ultra, a mid-drive switch and three Ultra<->Retro round trips (peak, steady, back to baseline);
+`npx tsc --noEmit -p .`, `npm run build`, `npm test -- --only=boot,render,phone` (the phone memory check stays green);
+the owner's own iPhone run (start on Ultra, switch mid-drive three times, background the app and come back). Log in
+PROJECT_OC_PROGRESS.md.
 ```
 
 ## Opus queue (routine items waiting for a daytime session)
