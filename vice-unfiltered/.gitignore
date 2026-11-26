@@ -12,3 +12,6 @@ deliverables/
 CLAUDE_MASTER_PROMPT.md
 ASSET_NOTES.md
 BATCH_TRACKER.csv
+
+# Hand-off doc has the owner's campaign details and local paths; it travels in the private ZIP only.
+HANDOFF_START_HERE.md
