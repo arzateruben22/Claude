@@ -834,6 +834,23 @@ PROJECT_OC_PROGRESS.md.
 
 ## Opus queue (routine items waiting for a daytime session)
 
+### OC Hypercar 3D upgrade from the owner's Blender master: scheduled for Sunday (after the usage reset)
+
+Branch `claude/hypercar-3d` (on origin) holds `top-speed-ultra/control/hypercar/source/OC_Hypercar_Master.blend` (16 MB,
+the owner's TRELLIS.2-based master; never overwrite it), `BRIEF.md` (his six-phase brief, verbatim, plus notes) and a
+README. Mixed triage: materials, emissives, wheels, cockpit integration and renders on Opus; retopology/LOD design,
+the GLB car's phone memory budget and the physics/collision coupling on Fable (or a fable agent). Prompt:
+
+> Project OC, top-speed-ultra/. Read CLAUDE.md (Lean usage; times in Pacific; triage), PROJECT_OC_HANDOFF.md, then on
+> origin branch claude/hypercar-3d read control/hypercar/source/BRIEF.md and README.md. Work on claude/hypercar-3d (never
+> main; never overwrite OC_Hypercar_Master.blend: work on copies). Do Phase 1 (audit) first and report it to me with
+> renders before changing anything: install Blender headless here (pip bpy or the Linux tarball; ask before changing the
+> network policy), open the .blend, list objects, triangle counts, materials, textures, dimensions and symmetry, check
+> what it packs, and render it small (960x540, Workbench/EEVEE) beside my references. Then propose the plan for Phases
+> 2-6 with a time and usage estimate per phase, and wait for my go. One phase at a time, before/after renders each
+> time, flag geometry that needs manual modeling, free tools only.
+
+
 ### Pre-launch tweak list (owner, 2026-11-24; the owner adds to this after the menu/garage + shard update)
 
 1. **(Moved into the UI batch, claude/ui-batch, at the owner's request 2026-11-24 ~10:50 PM PT.) ABS | TCS: no switches; the handling setting decides** (owner, 2026-11-24: "I think we should take off the abs and
