@@ -268,12 +268,12 @@
     } else sum = '<li class="due"><span>Balance due</span><strong class="num">…</strong></li>';
     var base = tipBase();
     var tips = ["0", "15", "20", "25"].map(function (t) {
-      return '<button type="button" class="pill" data-tip="' + t + '" aria-pressed="' + (st.tipMode === t) + '">' + (t === "0" ? "No tip" : t + "%") + "<small>" + (t === "0" ? "&nbsp;" : money(Math.round(base * Number(t) / 100))) + "</small></button>";
-    }).join("") + '<button type="button" class="pill" data-tip="custom" aria-pressed="' + (st.tipMode === "custom") + '">Other<small>&nbsp;</small></button>';
+      return '<button type="button" class="pill" data-tip="' + t + '" aria-pressed="' + (st.tipMode === t) + '">' + (t === "0" ? "No tip" : t + "%") + "<small>" + (t === "0" ? "Skip it" : money(Math.round(base * Number(t) / 100))) + "</small></button>";
+    }).join("") + '<button type="button" class="pill" data-tip="custom" aria-pressed="' + (st.tipMode === "custom") + '">Other<small>Custom</small></button>';
     var methods = (r.card ? '<button type="button" class="pill" data-m="card" aria-pressed="' + (st.method === "card") + '">Card on file<small>' + esc(r.card) + "</small></button>" : "") +
-      '<button type="button" class="pill" data-m="cash" aria-pressed="' + (st.method === "cash") + '">Cash<small>&nbsp;</small></button>' +
+      '<button type="button" class="pill" data-m="cash" aria-pressed="' + (st.method === "cash") + '">Cash<small>In person</small></button>' +
       (LIVE ? '<button type="button" class="pill" data-m="link" aria-pressed="' + (st.method === "link") + '">Pay link<small>on their phone</small></button>' : "") +
-      '<button type="button" class="pill" data-m="other" aria-pressed="' + (st.method === "other") + '">Other<small>Zelle, a gift…</small></button>';
+      '<button type="button" class="pill" data-m="other" aria-pressed="' + (st.method === "other") + '">Other<small>Zelle, gift card</small></button>';
     root.innerHTML = '<div class="view"><button type="button" class="back" data-back="1">' + I.chev + " Back</button>" +
       '<div class="who"><span class="av" aria-hidden="true">' + esc(initials(r.name || r.email)) + '</span><div><h1>' + esc(r.name || r.email) + "</h1><p>" + esc(fmtTime(r.start_min)) + (dayWord(r.date) ? " · " + esc(dayWord(r.date)) : "") + "</p></div></div>" + chipsHtml(r) +
       '<h2 class="sec"><span>Services</span></h2><ul class="lines">' + svcLines + '</ul><button type="button" class="add" data-sheet="services">' + I.plus + " Add a service</button>" +
