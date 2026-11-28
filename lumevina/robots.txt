@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard.html
+Disallow: /checkout.html
 Disallow: /dist/
 Disallow: /server/
 Disallow: /knowledge/

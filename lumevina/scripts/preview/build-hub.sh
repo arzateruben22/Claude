@@ -17,12 +17,16 @@ cd "$(dirname "$0")/../.."
 mkdir -p "$OUT/img" "$OUT/.bp" "$OUT/.plan"
 node scripts/build-single-file.mjs
 node scripts/build-single-file.mjs dashboard.html dist/dashboard.html
+node scripts/build-single-file.mjs checkout.html dist/checkout.html
 node scripts/build-single-file.mjs shipping-kit.html dist/shipping.html
 node scripts/build-single-file.mjs privacy.html dist/privacy.html
 python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site.html" "Lumevina" v4 file
 python3 scripts/preview/fold.py dist/lumevina.html "$OUT/site-simple.html" "Lumevina" v2 file v4
 python3 scripts/preview/fold-school.py school.html "$OUT/school.html" v4 hub
 cp dist/dashboard.html "$OUT/dashboard.html"; cp dist/privacy.html "$OUT/privacy.html"
+# Evelyn's checkout screen, with booking on the website (v4) so it has guests; its "Your website" tile goes to the hub's copy of the site
+python3 scripts/preview/fold.py dist/checkout.html "$OUT/checkout.html" "Check out" v4 file none
+sed -i 's#"Your website", "index.html"#"Your website", "site.html"#' "$OUT/checkout.html"
 # the dashboard's "Your website" links go to the hub's copy of the site
 sed -i 's/data-site-link href="index.html"/data-site-link href="site.html"/g' "$OUT/dashboard.html"
 python3 docs/blueprint/build.py "$OUT/.bp" >/dev/null && cp "$OUT/.bp/web.html" "$OUT/blueprint.html"
@@ -58,8 +62,11 @@ for f in sorted(os.listdir(out)):
     s = open(path, encoding="utf-8").read()
     if 'class="hub-back"' in s:
         continue
+    back = BACK
+    if f == "checkout.html":   # its tab bar sits at the bottom: the way back goes top right
+        back = back.replace('left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%)', 'right:12px;top:calc(10px + env(safe-area-inset-top))')
     i = s.lower().rfind("</body>")
-    s = s[:i] + BACK + s[i:] if i != -1 else s + BACK
+    s = s[:i] + back + s[i:] if i != -1 else s + back
     open(path, "w", encoding="utf-8").write(s)
 PY
 # each card's picture of the page it opens (docs/hub/img; refresh with scripts/preview/hub-shots.mjs "$OUT")

@@ -753,7 +753,7 @@
       <a href="#settings">Settings</a>
     </nav>
     <a class="btn btn-ghost nav-site" data-site-link href="index.html">Your website</a>
-    <a class="btn btn-solid nav-book" href="#checkout">Check out</a>
+    <a class="btn btn-solid nav-book" href="checkout.html">Check out</a>
     <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <span></span><span></span>
     </button>
@@ -772,7 +772,7 @@
       <a href="#settings" style="--i:6"><span class="mm-num" aria-hidden="true">07</span>Settings</a>
     </nav>
     <div class="mm-actions">
-      <a class="btn btn-solid mm-book" href="#checkout">Check out a client</a>
+      <a class="btn btn-solid mm-book" href="checkout.html">Check out a client</a>
       <div class="mm-quick">
         <button class="mm-tile" type="button" data-new-sale><svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="mm-label">New sale</span></button>
         <a class="mm-tile" data-site-link href="index.html"><svg class="mm-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18"/></svg><span class="mm-label">Your website</span></a>
@@ -2855,6 +2855,11 @@
       box.scrollIntoView({ behavior: focus ? "smooth" : "auto", block: "start" });
       if (focus) document.getElementById("crm-search").focus({ preventScroll: true });
     };
+    /* booking on the website (v3, v4): the Check out buttons open the Checkout screen (checkout.html). In v2 booking is on
+       GlossGenius, so there are no visits to close out here, and they go to the client list as before. */
+    var checkoutScreen = !!(window.LumevinaFeatures && /^v[34]$/.test(window.LumevinaFeatures.version));
+    if (!checkoutScreen) Array.prototype.forEach.call(document.querySelectorAll('a[href="checkout.html"]'), function (a) { a.setAttribute("href", "#checkout"); });
+    if (checkoutScreen && location.hash === "#checkout") { location.replace("checkout.html"); }
     Array.prototype.forEach.call(document.querySelectorAll('a[href="#checkout"]'), function (a) {
       a.addEventListener("click", function (e) { e.preventDefault(); try { history.replaceState(null, "", "#checkout"); } catch (x) { /* sandboxed */ } toCheckout(true); });
     });

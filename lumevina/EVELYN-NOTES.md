@@ -870,3 +870,6 @@ The member curve keeps the same weekly pace as before, only three weeks sooner (
 
 ## Nov 24, 2026: product names on the homepage shelf
 The "On the shelf now" cards on the homepage showed only a photo, price and Add: the name and size were hidden, and the cards had a blank gap. Each card now says what it is (name, two lines at most, and its size).
+
+## Nov 28, 2026: the Checkout screen
+A new screen for closing out a guest, `checkout.html` (the dashboard's Check out button opens it once booking runs on the website). Today's guests are listed with what they still owe after their deposit. Tap a guest and everything is already filled in: the services they booked, their deposit taken off, a tip (she'll find her usual one already chosen), and the card on file. Products come from the shelf, counted against the inventory: only what's in stock, never more than is on the shelf, and the stock comes down when the guest is charged. A note appears when something is running low. A tab bar (Dashboard, Checkout, Calendar, Clients, More) keeps the rest of the studio one tap away. Normal checkout is two taps: the guest, then Charge. Gift-certificate redemption at checkout isn't in this screen yet.
