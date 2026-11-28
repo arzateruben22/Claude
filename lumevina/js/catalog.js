@@ -136,6 +136,9 @@
 
   window.LUMEVINA_CATALOG = {
     asOf: "2026-11-28",
+    /* the moment this count was entered: a count a browser saved before it is the previous recount and gives way to this
+       one; one typed after it stands (js/inventory.js). Set it to now whenever the counts here change. */
+    countedAt: "2026-11-28T03:27:10Z",
     brands: [FR, GM, MX, CI, FF, KX, DM, SV],
     /* in routine order: cleanse, tone, treat, moisturize, protect */
     categories: ["Cleansers", "Toners & mists", "Serums", "Acne & spot care", "Moisturizers", "Eye care", "Sun care", "Masks", "Supplements", "More"],

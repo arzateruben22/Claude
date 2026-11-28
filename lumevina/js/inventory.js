@@ -33,6 +33,10 @@
   var notCounting = function () { var c = window.LUMEVINA_CONFIG; return !!(c && c.shop && c.shop.countStock === false); };
 
   var num = function (n) { return Number(n || 0); };
+  /* The catalog's counts are Evelyn's latest count (CAT.asOf). A count this browser saved stands over the
+     catalog's only if it was changed after that moment (a sale, or a count she typed in the dashboard); older saved
+     counts are the previous recount and give way, so a new recount reaches every browser that opens the shop. */
+  var countedAfter = function () { var t = Date.parse(CAT.countedAt || (CAT.asOf ? CAT.asOf + "T23:59:59" : "")); return isNaN(t) ? 0 : t; };
   var read = function () {
     try { var s = JSON.parse(localStorage.getItem(KEY)); return Array.isArray(s) ? s : []; }
     catch (e) { return []; }
@@ -50,7 +54,7 @@
       var p = {};
       Object.keys(c).forEach(function (k) { p[k] = c[k]; });
       if (notCounting() && !c.counted) p.stock = null;   // the guide's counts came from screenshots: not trusted yet (a count Evelyn gave herself stands)
-      if (s.stock !== undefined) p.stock = s.stock;
+      if (s.stock !== undefined && s.stockAt && Date.parse(s.stockAt) > countedAfter()) { p.stock = s.stock; p.stockAt = s.stockAt; }
       if (s.price != null && s.priceSet) { p.price = s.price; p.priceSet = true; }
       if (s.cost != null) p.cost = s.cost;
       if (s.confirmed) { p.confirmed = true; p.draft = false; if (s.name) p.name = s.name; }
@@ -81,7 +85,7 @@
     try {
       localStorage.setItem(KEY, JSON.stringify(inv.map(function (p) {
         return { id: p.id, brand: p.brand, name: p.name, price: p.price, priceSet: !!p.priceSet,
-          stock: p.stock, cost: p.cost, cat: p.cat, draft: !!p.draft, confirmed: !!p.confirmed,
+          stock: p.stock, stockAt: p.stockAt || null, cost: p.cost, cat: p.cat, draft: !!p.draft, confirmed: !!p.confirmed,
           hidden: !!p.hidden, custom: !!p.custom, note: p.note || "" };
       })));
     } catch (e) { /* private mode */ }
@@ -137,14 +141,14 @@
   var decrement = function (id, qty) {
     var p = get(id);
     if (!p || p.stock == null) return;
-    p.stock = Math.max(0, num(p.stock) - num(qty || 1));
+    p.stock = Math.max(0, num(p.stock) - num(qty || 1)); p.stockAt = new Date().toISOString();
     persist();
   };
   /* an in-person sale (the dashboard's Sell) */
   var sell = function (id, qty) { decrement(id, qty); var p = get(id); return p ? remote({ action: "sell", id: p.id, qty: num(qty || 1) }) : Promise.resolve(null); };
   var setStock = function (id, n) {
     var p = get(id); if (!p) return Promise.resolve(null);
-    p.stock = n === null ? null : Math.max(0, Math.round(num(n))); persist();
+    p.stock = n === null ? null : Math.max(0, Math.round(num(n))); p.stockAt = new Date().toISOString(); persist();
     return remote({ action: "shelf_set", id: p.id, stock: p.stock });
   };
   var setPrice = function (id, n) {

@@ -891,3 +891,5 @@ Later on Nov 28, she answered the open questions from the inventory:
 - The two Circadia lip hydrators are named: **Lip Renewing Hydrator - Hibiscus** (4) and **Lip Renewing Hydrator - Naked** (2). They are on the shop now.
 - **InvisiClear Hydrocolloid Spot Patches:** 5 on the shelf, at the $10 she confirmed on Nov 11. She also said "my cost $10": if $10 is her cost and not the price, tell Claude the retail price.
 - **GlyMed Plus Barrier Repair Cream:** $104 is the retail price (the $83.20 was the old guide price) and her cost is $52. The price stays $104; $52 is saved as her cost for the books' margin.
+
+Nov 28: Evelyn saw the old counts. The cause was in the shop's code, not her list: after any sale or edit a browser saved every product's count, and those saved counts then covered the catalog's newer count. Fixed: a new count now always wins over an older saved one, and a count she types in the dashboard after it still sticks. If a page still shows old numbers, close it and open it again.
