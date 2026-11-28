@@ -2,8 +2,9 @@
  *
  * Every product Evelyn sells, from her product guide (October 18, 2026),
  * transcribed from her GlossGenius inventory screenshots, and recounted from
- * her inventory on November 20, 2026 (nine screenshots: every quantity below
- * is from that recount, and the new items on it were added).
+ * her inventory on November 20, 2026 (nine screenshots: the new items on it were
+ * added), and counted again on November 28, 2026 from her inventory spreadsheet
+ * (Lumevina_Spa_Inventory.csv): every quantity below is from that latest count.
  * Prices and quantities are as shown there. One file, read by the
  * website's shop (js/inventory.js) and the owner dashboard.
  *
@@ -61,36 +62,36 @@
 
   var LIST = [
     /* ── Face Reality: 30 entries ── */
-    P(FR, "11% L-Mandelic Serum", 46, 3, "Serums", { inv: "11% Mandelic Serum", slug: "11pct-mandelic-serum", photo: "img/products/face-reality-11-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
-    P(FR, "15% L-Mandelic Serum", 48, 2, "Serums", { inv: "15% Mandelic Serum", slug: "15pct-mandelic-serum", photo: "img/products/face-reality-15-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "11% L-Mandelic Serum", 46, 2, "Serums", { inv: "11% Mandelic Serum", slug: "11pct-mandelic-serum", photo: "img/products/face-reality-11-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "15% L-Mandelic Serum", 48, 0, "Serums", { inv: "15% Mandelic Serum", slug: "15pct-mandelic-serum", photo: "img/products/face-reality-15-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
     P(FR, "2.5% Advanced Acne Med", 29, 5, "Acne & spot care", { inv: "2.5% ADV Acne Med", slug: "2-5pct-adv-acne-med", photo: "img/products/face-reality-2-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
     P(FR, "5% Advanced Acne Med", 30, 5, "Acne & spot care", { inv: "5% ADV Acne Med", slug: "5pct-adv-acne-med", photo: "img/products/face-reality-5-adv-acne-med.webp", size: "1.5 fl oz / 44 ml", about: "Benzoyl peroxide acne medication." }),
     P(FR, "5% L-Mandelic Serum", 42, 4, "Serums", { inv: "5% Mandelic Serum", slug: "5pct-mandelic-serum", photo: "img/products/face-reality-5-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
-    P(FR, "8% L-Mandelic Serum", 44, 5, "Serums", { inv: "8% Mandelic Serum", slug: "8pct-mandelic-serum", photo: "img/products/face-reality-8-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
+    P(FR, "8% L-Mandelic Serum", 44, 4, "Serums", { inv: "8% Mandelic Serum", slug: "8pct-mandelic-serum", photo: "img/products/face-reality-8-mandelic-serum.webp", size: "1 fl oz / 30 ml", about: "Exfoliates and brightens." }),
     P(FR, "Antioxidant Peptide Eye Gel", 48, 4, "Eye care", { inv: "Antioxidant Eye Gel", slug: "antioxidant-eye-gel", photo: "img/products/face-reality-antioxidant-peptide-eye-gel.webp", size: "0.4 fl oz / 12 ml", about: "Smooths and visibly depuffs." }),
-    P(FR, "Barrier Balance Creamy Cleanser", 37, 11, "Cleansers", { inv: "Barrier Cream Cleanser", slug: "barrier-cream-cleanser", photo: "img/products/face-reality-barrier-balance-creamy-cleanser.webp", size: "6 fl oz / 180 ml", about: "A daily calming wash. Acne-safe." }),
-    P(FR, "Barrier Care Gel Cream", 38, 9, "Moisturizers", { inv: "Barrier Gel Cream", slug: "barrier-gel-cream", photo: "img/products/face-reality-barrier-care-gel-cream.webp", size: "2 fl oz / 60 ml", about: "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe." }),
-    P(FR, "Brilliant Defense SPF 50", 42, 9, "Sun care", { inv: "Brilliant Defense 50", slug: "brilliant-defense-50", photo: "img/products/face-reality-brilliant-defense-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe." }),
+    P(FR, "Barrier Balance Creamy Cleanser", 37, 4, "Cleansers", { inv: "Barrier Cream Cleanser", slug: "barrier-cream-cleanser", photo: "img/products/face-reality-barrier-balance-creamy-cleanser.webp", size: "6 fl oz / 180 ml", about: "A daily calming wash. Acne-safe." }),
+    P(FR, "Barrier Care Gel Cream", 38, 5, "Moisturizers", { inv: "Barrier Gel Cream", slug: "barrier-gel-cream", photo: "img/products/face-reality-barrier-care-gel-cream.webp", size: "2 fl oz / 60 ml", about: "Repairs, moisturizes and comforts, with Multi-Restore Complex. Acne-safe." }),
+    P(FR, "Brilliant Defense SPF 50", 42, 8, "Sun care", { inv: "Brilliant Defense 50", slug: "brilliant-defense-50", photo: "img/products/face-reality-brilliant-defense-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with BrightShield Complex. Acne-safe." }),
     P(FR, "Clear Skin Balance", 44, 1, "Supplements", { inv: "Clear Skin Balance - SUP…", slug: "clear-skin-balance", photo: "img/products/face-reality-clear-skin-balance.webp", size: "60 softgels", about: "Omega-3 + antioxidants: a multifunctional dietary supplement for breakout-prone skin.", resolved: "Flag [1] answered by the label photo: Clear Skin Balance, softgel dietary supplement, 60 softgels." }),
-    P(FR, "Cran-Peptide Cream", 33, 78, "Moisturizers", { photo: "img/products/face-reality-cran-peptide-cream.webp", size: "2 fl oz / 60 ml", about: "Rich and restorative. Acne-safe." }),
+    P(FR, "Cran-Peptide Cream", 33, 6, "Moisturizers", { photo: "img/products/face-reality-cran-peptide-cream.webp", size: "2 fl oz / 60 ml", about: "Rich and restorative. Acne-safe." }),
     P(FR, "Daily SPF 30 Plus", 36, 0, "Sun care", { inv: "Daily SPF 30", slug: "daily-spf-30", photo: "img/retail/daily-spf-30.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 30 sunscreen. Acne-safe." }),
     P(FR, "Ultra Gentle Gel Cleanser (travel size)", 14, 0, "Cleansers", { inv: "Gentle Gel Cleanser - TR…", slug: "gentle-gel-cleanser", photo: "img/products/face-reality-ultra-gentle-gel-cleanser-2oz.webp", size: "2 fl oz / 60 ml", about: "A daily antioxidant wash. Acne-safe.", resolved: "Flag [2] confirmed by Evelyn (Oct 19): the travel size of the Ultra Gentle Gel Cleanser, 2 fl oz / 60 ml." }),
-    P(FR, "GlowTone Corrective Serum", 64, 1, "Serums", { inv: "Glowtone Corrective SE…", slug: "glowtone-corrective", photo: "img/products/face-reality-glowtone-corrective-serum.webp", size: "1 fl oz / 30 ml", about: "Targets discoloration, with Hexa-Bright Complex.", resolved: "Flag [3] answered by the label photo: GlowTone Corrective Serum, 1 fl oz / 30 ml." }),
+    P(FR, "GlowTone Corrective Serum", 64, 2, "Serums", { inv: "Glowtone Corrective SE…", slug: "glowtone-corrective", photo: "img/products/face-reality-glowtone-corrective-serum.webp", size: "1 fl oz / 30 ml", about: "Targets discoloration, with Hexa-Bright Complex.", resolved: "Flag [3] answered by the label photo: GlowTone Corrective Serum, 1 fl oz / 30 ml." }),
     P(FR, "HydraBalance Gel", 34, 4, "Moisturizers", { inv: "Hydrabalance Gel", slug: "hydrabalance-gel", photo: "img/products/face-reality-hydrabalance-gel.webp", size: "1.7 fl oz / 50 ml", about: "Hydrates and balances oil. Acne-safe." }),
-    P(FR, "HydraRemedy Gel Serum", 46, 10, "Serums", { photo: "img/products/face-reality-hydraremedy-gel-serum.webp", size: "1.7 fl oz / 50 ml", about: "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe." }),
+    P(FR, "HydraRemedy Gel Serum", 46, 4, "Serums", { photo: "img/products/face-reality-hydraremedy-gel-serum.webp", size: "1.7 fl oz / 50 ml", about: "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe." }),
     P(FR, "HydraCalm Mask", 42, 0, "Masks", { inv: "Hydrcalm Mask", slug: "hydrcalm-mask", photo: "img/products/face-reality-hydracalm-mask.webp", size: "2.5 fl oz / 73 ml", about: "Soothes and boosts hydration.", resolved: "Flag [4] answered by the label photo: HydraCalm Mask, 2.5 fl oz / 73 ml." }),
     P(FR, "invisiClear Hydrocolloid Spot Patches", 10, 0, "Acne & spot care", { inv: "Invisiclear Hydrocoll…", slug: "invisiclear", photo: "img/products/face-reality-invisiclear-spot-patches.webp", size: "24 patches", about: "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.", checked: "Price confirmed by Evelyn, Nov 11.", resolved: "Flag [5] answered by the package photo: invisiClear hydrocolloid spot patches, 24 patches." }),
     P(FR, "L-Mandelic Face and Body Wash", 38, 0, "Cleansers", { inv: "Mandelic Face and Body…", slug: "mandelic-face-and-body", photo: "img/products/face-reality-l-mandelic-face-and-body-wash.webp", size: "6 fl oz / 180 ml", about: "Cleanses and brightens. Acne-safe.", resolved: "Flag [6] answered by the label photo: it's the L-Mandelic Face and Body Wash, 6 fl oz / 180 ml." }),
     P(FR, "Mineral Matte SPF 28", 36, 0, "Sun care", { photo: "img/products/face-reality-mineral-matte-spf-28.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 28 sunscreen. Acne-safe." }),
-    P(FR, "Moisture Balance Toner", 34, 4, "Toners & mists", { photo: "img/products/face-reality-moisture-balance-toner-6oz.webp", size: "6 fl oz / 180 ml", about: "Hydrates and replenishes." }),
+    P(FR, "Moisture Balance Toner", 34, 2, "Toners & mists", { photo: "img/products/face-reality-moisture-balance-toner-6oz.webp", size: "6 fl oz / 180 ml", about: "Hydrates and replenishes." }),
     P(FR, "Moisture Balance Toner (2 fl oz)", 14, 0, "Toners & mists", { inv: "Moisture Balance Toner…", slug: "moisture-balance-toner-14", photo: "img/products/face-reality-moisture-balance-toner-2oz.webp", size: "2 fl oz / 60 ml", about: "Hydrates and replenishes.", resolved: "Flag [7] answered by the label photo: the $14 entry is the 2 fl oz / 60 ml bottle." }),
-    P(FR, "Omni Clear Mist", 40, 4, "Toners & mists", { photo: "img/products/face-reality-omni-clear-mist.webp", size: "3.4 fl oz / 100 ml", about: "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested." }),
-    P(FR, "PowerMineral SPF 50", 42, 10, "Sun care", { inv: "PowderMineral SPF 50", slug: "powdermineral-spf-50", photo: "img/products/face-reality-powermineral-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe." }),
+    P(FR, "Omni Clear Mist", 40, 3, "Toners & mists", { photo: "img/products/face-reality-omni-clear-mist.webp", size: "3.4 fl oz / 100 ml", about: "Stabilized hypochlorous acid, with patented Microcyn technology. Professional grade, dermatologist tested." }),
+    P(FR, "PowerMineral SPF 50", 42, 8, "Sun care", { inv: "PowderMineral SPF 50", slug: "powdermineral-spf-50", photo: "img/products/face-reality-powermineral-spf-50.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 50 sunscreen, with CalmShield Complex. Acne-safe." }),
     P(FR, "Retinal B3 Serum", 54, 3, "Serums", { counted: true, photo: "img/products/face-reality-retinal-b3-serum.webp", size: "1 fl oz / 30 ml", about: "Gently corrects and renews. Acne-safe.", checked: "Evelyn had 2 on Nov 11; her Nov 20 inventory shows 3.", resolved: "Flag [8] answered by the label photo: a Face Reality serum, 1 fl oz / 30 ml." }),
-    P(FR, "Retinol Peptide Serum", 60, 4, "Serums", { photo: "img/products/face-reality-retinol-peptide-serum.webp", size: "1 fl oz / 30 ml", about: "Intensely corrects and renews." }),
-    P(FR, "Soothing Radiance Toner", 32, 10, "Toners & mists", { photo: "img/products/face-reality-soothing-radiance-toner.webp", size: "6 fl oz / 180 ml", about: "Calms and nourishes." }),
+    P(FR, "Retinol Peptide Serum", 60, 3, "Serums", { photo: "img/products/face-reality-retinol-peptide-serum.webp", size: "1 fl oz / 30 ml", about: "Intensely corrects and renews." }),
+    P(FR, "Soothing Radiance Toner", 32, 9, "Toners & mists", { photo: "img/products/face-reality-soothing-radiance-toner.webp", size: "6 fl oz / 180 ml", about: "Calms and nourishes." }),
     P(FR, "Sulfur Spot Treatment", 35, 2, "Acne & spot care", { photo: "img/products/face-reality-sulfur-spot-treatment.webp", size: "1.5 fl oz / 44 ml", about: "A 6% sulfur acne treatment." }),
-    P(FR, "Ultra Gentle Gel Cleanser", 33, 9, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", photo: "img/products/face-reality-ultra-gentle-gel-cleanser-6oz.webp", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
+    P(FR, "Ultra Gentle Gel Cleanser", 33, 6, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", photo: "img/products/face-reality-ultra-gentle-gel-cleanser-6oz.webp", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
 
     /* ── GlyMed Plus: 12 entries ── */
     P(GM, "Barrier Repair Cream", 104, 0, "Moisturizers", { photo: "img/products/glymed-plus-barrier-repair-cream.webp", size: "4 fl oz / 118 ml", about: "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.", checked: "Price set to $104 by Evelyn, Nov 11 (the guide showed $83.20)." }),
@@ -118,22 +119,22 @@
     /* ── Brands new to the shelf on her Nov 20 inventory (name, brand, price and count only; no photo, size or
        label facts yet). Names the screenshots cut off stay as drafts ("…"): clients don't see them until she
        confirms the full name. ── */
-    P(FF, "Eye/Lash Cream", 120, 6, "Eye care", { inv: "Eye/Lash Cream", slug: "eye-lash-cream" }),
-    P(FF, "Lash/Brow Growth Serum", 79, 3, "Serums", { inv: "LASH/BROW GROWTH SERUM", slug: "lash-brow-growth-serum" }),
+    P(FF, "Eye/Lash Cream", 120, 5, "Eye care", { inv: "Eye/Lash Cream", slug: "eye-lash-cream" }),
+    P(FF, "Lash/Brow Growth Serum", 79, 2, "Serums", { inv: "LASH/BROW GROWTH SERUM", slug: "lash-brow-growth-serum" }),
     P(KX, "All Day Glow Vitamin Ser…", 41, 0, "More", { draft: true, inv: "ALL DAY GLOW VITAMIN SER…", slug: "all-day-glow-vitamin-ser" }),
     P(KX, "CICA Home Care Sheet Ma…", 60, 4, "More", { draft: true, inv: "CICA HOME CARE SHEET MA…", slug: "cica-home-care-sheet-ma" }),
     P(DM, "Dermathod Med Shield E…", 64, 5, "More", { draft: true, inv: "DERMATHOD MED SHIELD E…", slug: "med-shield-e" }),
     P(DM, "Dermathod Priming Peel…", 50, 4, "More", { draft: true, inv: "DERMATHOD PRIMING PEEL…", slug: "priming-peel" }),
-    P(SV, "SIV Biome Balancing Ser…", 79, 3, "More", { draft: true, inv: "SIV BIOME BALANCING SER…", slug: "biome-balancing-ser" }),
+    P(SV, "SIV Biome Balancing Ser…", 79, 2, "More", { draft: true, inv: "SIV BIOME BALANCING SER…", slug: "biome-balancing-ser" }),
     P(CI, "Lip Renewing Hydrator -… (first listed)", 16, 4, "More", { draft: true, inv: "LIP RENEWING HYDRATOR -…", slug: "lip-renewing-hydrator-1" }),
-    P(CI, "Lip Renewing Hydrator -… (second listed)", 16, 3, "More", { draft: true, inv: "LIP RENEWING HYDRATOR -…", slug: "lip-renewing-hydrator-2" }),
+    P(CI, "Lip Renewing Hydrator -… (second listed)", 16, 2, "More", { draft: true, inv: "LIP RENEWING HYDRATOR -…", slug: "lip-renewing-hydrator-2" }),
 
     /* ── Lumevina: the Personalized Skin Consultation, online or in person, $75 (a service; the shop shows it as a card after the first group of products, not as a product) ── */
     P("Lumevina", "Personalized Skin Consultation", 75, null, "Consults", { slug: "online-consult", kind: "consult", size: "Online or in person", about: "Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps." }),
   ];
 
   window.LUMEVINA_CATALOG = {
-    asOf: "2026-11-20",
+    asOf: "2026-11-28",
     brands: [FR, GM, MX, CI, FF, KX, DM, SV],
     /* in routine order: cleanse, tone, treat, moisturize, protect */
     categories: ["Cleansers", "Toners & mists", "Serums", "Acne & spot care", "Moisturizers", "Eye care", "Sun care", "Masks", "Supplements", "More"],

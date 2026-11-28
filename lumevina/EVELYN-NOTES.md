@@ -880,3 +880,9 @@ A new screen for closing out a guest, `checkout.html` (the dashboard's Check out
 - **Select payment method:** a screen with the amount big at the top: card on file, tap to pay, pay link, cash, other.
 - **Tap to pay:** the guest pays on their own phone with Apple Pay or Google Pay. A web page can't read a card tapped on Evelyn's phone (that takes Stripe Terminal's iPhone app); this is the web version: a code or link to share, and the screen closes the visit by itself when the payment arrives. Share, text and copy work now; the scannable QR code needs one small open-source library added (js/qrcode.js), which is waiting on approval.
 - Not here yet: sales tax (needs the rate from her accountant; the online shop uses Stripe Tax), splitting a payment between two methods, selling gift cards or memberships at checkout, barcode scanning, custom charges.
+
+## Nov 28, 2026: inventory counted again from her spreadsheet
+Her inventory spreadsheet (Lumevina_Spa_Inventory.csv) is now the count: 131 units across 34 products in stock, 21 sold out. 19 counts changed since Nov 20 (for example the 15% L-Mandelic Serum is now out, the Barrier Balance Creamy Cleanser is down to 4, and the Cran-Peptide Cream reads 6; it had been entered as 78). Prices all matched except one. The shop, the dashboard Inventory, the chat assistant's shelf and the checkout screen all read the new counts.
+- To confirm with Evelyn: the GlyMed Plus Barrier Repair Cream is $83.20 on her spreadsheet and $104 in the shop. Is $83.20 a sale price, or the new price? The shop still shows $104 until she says.
+- To confirm with Evelyn: the second Circadia "Lip Renewing Hydrator" row is 2. The two rows are matched by the order on her list; which variant is which still needs her OK.
+- The InvisiClear spot patches had no price on the spreadsheet ($10 in the shop); they're sold out either way.
