@@ -13,6 +13,7 @@
  *                 screenshot shows it, and clients don't see it until
  *                 Evelyn confirms it in the dashboard (Shop → Needs your OK).
  *   stock: null   The quantity wasn't visible in the screenshot.
+ *   cost          What Evelyn pays for one, when she has told us (it feeds the books' margin).
  *   counted: true Evelyn gave this count herself, so it stands even while
  *                 the shelf isn't counted yet (countStock: false).
  *   checked       What she confirmed in the launch questions, and when.
@@ -80,7 +81,7 @@
     P(FR, "HydraBalance Gel", 34, 4, "Moisturizers", { inv: "Hydrabalance Gel", slug: "hydrabalance-gel", photo: "img/products/face-reality-hydrabalance-gel.webp", size: "1.7 fl oz / 50 ml", about: "Hydrates and balances oil. Acne-safe." }),
     P(FR, "HydraRemedy Gel Serum", 46, 4, "Serums", { photo: "img/products/face-reality-hydraremedy-gel-serum.webp", size: "1.7 fl oz / 50 ml", about: "Hydrates, repairs and soothes, with Tri-Recovery Complex. Acne-safe." }),
     P(FR, "HydraCalm Mask", 42, 0, "Masks", { inv: "Hydrcalm Mask", slug: "hydrcalm-mask", photo: "img/products/face-reality-hydracalm-mask.webp", size: "2.5 fl oz / 73 ml", about: "Soothes and boosts hydration.", resolved: "Flag [4] answered by the label photo: HydraCalm Mask, 2.5 fl oz / 73 ml." }),
-    P(FR, "invisiClear Hydrocolloid Spot Patches", 10, 0, "Acne & spot care", { inv: "Invisiclear Hydrocoll…", slug: "invisiclear", photo: "img/products/face-reality-invisiclear-spot-patches.webp", size: "24 patches", about: "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.", checked: "Price confirmed by Evelyn, Nov 11.", resolved: "Flag [5] answered by the package photo: invisiClear hydrocolloid spot patches, 24 patches." }),
+    P(FR, "invisiClear Hydrocolloid Spot Patches", 10, 5, "Acne & spot care", { inv: "Invisiclear Hydrocoll…", slug: "invisiclear", photo: "img/products/face-reality-invisiclear-spot-patches.webp", size: "24 patches", about: "Professional-grade patches that visibly flatten and drain breakouts. They cover and protect, they're translucent, and they suit all skin types.", checked: "Price confirmed by Evelyn, Nov 11. Counted 5 on Nov 28.", resolved: "Flag [5] answered by the package photo: invisiClear hydrocolloid spot patches, 24 patches." }),
     P(FR, "L-Mandelic Face and Body Wash", 38, 0, "Cleansers", { inv: "Mandelic Face and Body…", slug: "mandelic-face-and-body", photo: "img/products/face-reality-l-mandelic-face-and-body-wash.webp", size: "6 fl oz / 180 ml", about: "Cleanses and brightens. Acne-safe.", resolved: "Flag [6] answered by the label photo: it's the L-Mandelic Face and Body Wash, 6 fl oz / 180 ml." }),
     P(FR, "Mineral Matte SPF 28", 36, 0, "Sun care", { photo: "img/products/face-reality-mineral-matte-spf-28.webp", size: "2 fl oz / 60 ml", about: "Broad-spectrum SPF 28 sunscreen. Acne-safe." }),
     P(FR, "Moisture Balance Toner", 34, 2, "Toners & mists", { photo: "img/products/face-reality-moisture-balance-toner-6oz.webp", size: "6 fl oz / 180 ml", about: "Hydrates and replenishes." }),
@@ -94,7 +95,7 @@
     P(FR, "Ultra Gentle Gel Cleanser", 33, 6, "Cleansers", { inv: "Ultra Gentle Cleanser", slug: "ultra-gentle-cleanser", photo: "img/products/face-reality-ultra-gentle-gel-cleanser-6oz.webp", size: "6 fl oz / 180 ml", about: "A daily antioxidant wash. Acne-safe." }),
 
     /* ── GlyMed Plus: 12 entries ── */
-    P(GM, "Barrier Repair Cream", 104, 0, "Moisturizers", { photo: "img/products/glymed-plus-barrier-repair-cream.webp", size: "4 fl oz / 118 ml", about: "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.", checked: "Price set to $104 by Evelyn, Nov 11 (the guide showed $83.20)." }),
+    P(GM, "Barrier Repair Cream", 104, 0, "Moisturizers", { cost: 52, photo: "img/products/glymed-plus-barrier-repair-cream.webp", size: "4 fl oz / 118 ml", about: "With amino acids. Part of the GlyMed Plus Elite line; step 3 of its routine: balance.", checked: "Price set to $104 by Evelyn, Nov 11 (the guide showed $83.20); on Nov 28 she said $104 is the retail price and her cost is $52." }),
     P(GM, "Cell Protection Balm", 34, 0, "Moisturizers", { photo: "img/products/glymed-plus-cell-protection-balm.webp", size: "2 fl oz / 59 ml", about: "Step 3 of the GlyMed Plus routine: balance." }),
     P(GM, "Eye Calm", 48, 0, "Eye care", { photo: "img/products/glymed-plus-eye-calm.webp", size: "0.3 fl oz / 10 ml", about: "Step 3 of the GlyMed Plus routine: balance." }),
     P(GM, "Firming Eye Cream", 70, 1, "Eye care", { photo: "img/products/glymed-plus-firming-eye-cream.webp", size: "0.3 oz / 10 ml", about: "Part of the GlyMed Plus Elite line; step 3 of its routine: balance." }),
@@ -126,8 +127,8 @@
     P(DM, "Dermathod Med Shield E…", 64, 5, "More", { draft: true, inv: "DERMATHOD MED SHIELD E…", slug: "med-shield-e" }),
     P(DM, "Dermathod Priming Peel…", 50, 4, "More", { draft: true, inv: "DERMATHOD PRIMING PEEL…", slug: "priming-peel" }),
     P(SV, "SIV Biome Balancing Ser…", 79, 2, "More", { draft: true, inv: "SIV BIOME BALANCING SER…", slug: "biome-balancing-ser" }),
-    P(CI, "Lip Renewing Hydrator -… (first listed)", 16, 4, "More", { draft: true, inv: "LIP RENEWING HYDRATOR -…", slug: "lip-renewing-hydrator-1" }),
-    P(CI, "Lip Renewing Hydrator -… (second listed)", 16, 2, "More", { draft: true, inv: "LIP RENEWING HYDRATOR -…", slug: "lip-renewing-hydrator-2" }),
+    P(CI, "Lip Renewing Hydrator - Hibiscus", 16, 4, "More", { inv: "LIP RENEWING HYDRATOR - HIBISCUS", slug: "lip-renewing-hydrator-hibiscus", checked: "Evelyn gave the name (Hibiscus) and the count, Nov 28." }),
+    P(CI, "Lip Renewing Hydrator - Naked", 16, 2, "More", { inv: "LIP RENEWING HYDRATOR - NAKED", slug: "lip-renewing-hydrator-naked", checked: "Evelyn gave the name (Naked) and the count, Nov 28." }),
 
     /* ── Lumevina: the Personalized Skin Consultation, online or in person, $75 (a service; the shop shows it as a card after the first group of products, not as a product) ── */
     P("Lumevina", "Personalized Skin Consultation", 75, null, "Consults", { slug: "online-consult", kind: "consult", size: "Online or in person", about: "Meet with Evelyn to discuss your skin concerns and current routine, and get personalized guidance on products and next steps." }),

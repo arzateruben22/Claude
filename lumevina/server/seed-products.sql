@@ -18,7 +18,7 @@ insert into products (id, name, brand, category, price_cents, stock, hidden, kin
   ('fr-hydrabalance-gel', 'HydraBalance Gel', 'Face Reality', 'Moisturizers', 3400, 4, false, 'product', false),
   ('fr-hydraremedy-gel-serum', 'HydraRemedy Gel Serum', 'Face Reality', 'Serums', 4600, 4, false, 'product', false),
   ('fr-hydrcalm-mask', 'HydraCalm Mask', 'Face Reality', 'Masks', 4200, 0, false, 'product', false),
-  ('fr-invisiclear', 'invisiClear Hydrocolloid Spot Patches', 'Face Reality', 'Acne & spot care', 1000, 0, false, 'product', false),
+  ('fr-invisiclear', 'invisiClear Hydrocolloid Spot Patches', 'Face Reality', 'Acne & spot care', 1000, 5, false, 'product', false),
   ('fr-mandelic-face-and-body', 'L-Mandelic Face and Body Wash', 'Face Reality', 'Cleansers', 3800, 0, false, 'product', false),
   ('fr-mineral-matte-spf-28', 'Mineral Matte SPF 28', 'Face Reality', 'Sun care', 3600, 0, false, 'product', false),
   ('fr-moisture-balance-toner', 'Moisture Balance Toner', 'Face Reality', 'Toners & mists', 3400, 2, false, 'product', false),
@@ -53,7 +53,7 @@ insert into products (id, name, brand, category, price_cents, stock, hidden, kin
   ('dm-med-shield-e', 'Dermathod Med Shield E…', 'Dermathod', 'More', 6400, 5, true, 'product', false),
   ('dm-priming-peel', 'Dermathod Priming Peel…', 'Dermathod', 'More', 5000, 4, true, 'product', false),
   ('siv-biome-balancing-ser', 'SIV Biome Balancing Ser…', 'SIV', 'More', 7900, 2, true, 'product', false),
-  ('ci-lip-renewing-hydrator-1', 'Lip Renewing Hydrator -… (first listed)', 'Circadia', 'More', 1600, 4, true, 'product', false),
-  ('ci-lip-renewing-hydrator-2', 'Lip Renewing Hydrator -… (second listed)', 'Circadia', 'More', 1600, 2, true, 'product', false),
+  ('ci-lip-renewing-hydrator-hibiscus', 'Lip Renewing Hydrator - Hibiscus', 'Circadia', 'More', 1600, 4, false, 'product', false),
+  ('ci-lip-renewing-hydrator-naked', 'Lip Renewing Hydrator - Naked', 'Circadia', 'More', 1600, 2, false, 'product', false),
   ('svc-online-consult', 'Personalized Skin Consultation', 'Lumevina', 'Consults', 7500, null, false, 'consult', false)
 on conflict (id) do update set name = excluded.name, brand = excluded.brand, category = excluded.category, updated_at = now();

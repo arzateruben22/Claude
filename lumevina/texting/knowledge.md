@@ -1741,3 +1741,5 @@ Never promise results or say something is "guaranteed" or "cures" anything. Neve
 - Vitamin Veil Cleansing Oil (Circadia, Cleansers, 6.7 fl oz / 198 ml): $40. A cleansing oil.
 - Eye/Lash Cream (Factor Five, Eye care): $120
 - Lash/Brow Growth Serum (Factor Five, Serums): $79
+- Lip Renewing Hydrator - Hibiscus (Circadia, More): $16
+- Lip Renewing Hydrator - Naked (Circadia, More): $16

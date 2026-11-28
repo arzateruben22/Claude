@@ -886,3 +886,8 @@ Her inventory spreadsheet (Lumevina_Spa_Inventory.csv) is now the count: 131 uni
 - To confirm with Evelyn: the GlyMed Plus Barrier Repair Cream is $83.20 on her spreadsheet and $104 in the shop. Is $83.20 a sale price, or the new price? The shop still shows $104 until she says.
 - To confirm with Evelyn: the second Circadia "Lip Renewing Hydrator" row is 2. The two rows are matched by the order on her list; which variant is which still needs her OK.
 - The InvisiClear spot patches had no price on the spreadsheet ($10 in the shop); they're sold out either way.
+
+Later on Nov 28, she answered the open questions from the inventory:
+- The two Circadia lip hydrators are named: **Lip Renewing Hydrator - Hibiscus** (4) and **Lip Renewing Hydrator - Naked** (2). They are on the shop now.
+- **InvisiClear Hydrocolloid Spot Patches:** 5 on the shelf, at the $10 she confirmed on Nov 11. She also said "my cost $10": if $10 is her cost and not the price, tell Claude the retail price.
+- **GlyMed Plus Barrier Repair Cream:** $104 is the retail price (the $83.20 was the old guide price) and her cost is $52. The price stays $104; $52 is saved as her cost for the books' margin.
